@@ -1,102 +1,129 @@
-# 0.1.2
+## [1.0.0] - 2017-06-20
+### Added
+- New visual identity by [@tylerfortune8](https://github.com/tylerfortune8).
+- Version navigation.
+- Links to latest released version in previous versions.
+- "Why keep a changelog?" section.
+- "Who needs a changelog?" section.
+- "How do I make a changelog?" section.
+- "Frequently Asked Questions" section.
+- New "Guiding Principles" sub-section to "How do I make a changelog?".
+- Simplified and Traditional Chinese translations from [@tianshuo](https://github.com/tianshuo).
+- German translation from [@mpbzh](https://github.com/mpbzh) & [@Art4](https://github.com/Art4).
+- Italian translation from [@azkidenz](https://github.com/azkidenz).
+- Swedish translation from [@magol](https://github.com/magol).
+- Turkish translation from [@karalamalar](https://github.com/karalamalar).
+- French translation from [@zapashcanon](https://github.com/zapashcanon).
+- Brazilian Portugese translation from [@Webysther](https://github.com/Webysther).
+- Polish translation from [@amielucha](https://github.com/amielucha) & [@m-aciek](https://github.com/m-aciek).
+- Russian translation from [@aishek](https://github.com/aishek).
+- Czech translation from [@h4vry](https://github.com/h4vry).
+- Slovak translation from [@jkostolansky](https://github.com/jkostolansky).
+- Korean translation from [@pierceh89](https://github.com/pierceh89).
+- Croatian translation from [@porx](https://github.com/porx).
+- Persian translation from [@Hameds](https://github.com/Hameds).
+- Ukrainian translation from [@osadchyi-s](https://github.com/osadchyi-s).
 
-- [X] Make markdown-toc-header-toc-* customizable - Closes #26
-- [X] Update version
-- [X] Release notes
+### Changed
+- Start using "changelog" over "change log" since it's the common usage.
+- Start versioning based on the current English version at 0.3.0 to help
+translation authors keep things up-to-date.
+- Rewrite "What makes unicorns cry?" section.
+- Rewrite "Ignoring Deprecations" sub-section to clarify the ideal
+  scenario.
+- Improve "Commit log diffs" sub-section to further argument against
+  them.
+- Merge "Why can’t people just use a git log diff?" with "Commit log
+  diffs"
+- Fix typos in Simplified Chinese and Traditional Chinese translations.
+- Fix typos in Brazilian Portuguese translation.
+- Fix typos in Turkish translation.
+- Fix typos in Czech translation.
+- Fix typos in Swedish translation.
+- Improve phrasing in French translation.
+- Fix phrasing and spelling in German translation.
 
-# 0.1.1
+### Removed
+- Section about "changelog" vs "CHANGELOG".
 
-- [X] Update version
-- [X] Fix the problem when generating TOC for document with UTF-8 characters - Closes #24
-- [X] Release notes
+## [0.3.0] - 2015-12-03
+### Added
+- RU translation from [@aishek](https://github.com/aishek).
+- pt-BR translation from [@tallesl](https://github.com/tallesl).
+- es-ES translation from [@ZeliosAriex](https://github.com/ZeliosAriex).
 
-# 0.1.0
+## [0.2.0] - 2015-10-06
+### Changed
+- Remove exclusionary mentions of "open source" since this project can
+benefit both "open" and "closed" source projects equally.
 
-- [X] Update dependencies (markdown-mode)
-- [X] Update version
-- [X] Add template for issues
-- [X] Add markdown-toc-bug-report command
-- [X] Release notes
+## [0.1.0] - 2015-10-06
+### Added
+- Answer "Should you ever rewrite a change log?".
 
-# 0.0.9
+### Changed
+- Improve argument against commit logs.
+- Start following [SemVer](https://semver.org) properly.
 
-- [X] Permit user-custom function to manipulate toc some more - #16
-- [X] Improve testing
-- [X] Clean some code
-- [X] Update version
-- [X] Clean up tests
+## [0.0.8] - 2015-02-17
+### Changed
+- Update year to match in every README example.
+- Reluctantly stop making fun of Brits only, since most of the world
+  writes dates in a strange way.
 
-# 0.0.8
+### Fixed
+- Fix typos in recent README changes.
+- Update outdated unreleased diff link.
 
-- [X] Add test coverage
-- [X] Improve CI code
-- [X] Respect elisp conventions
-- [X] Update version
-- [X] Update version dependencies
-- [X] Release notes
+## [0.0.7] - 2015-02-16
+### Added
+- Link, and make it obvious that date format is ISO 8601.
 
-# 0.0.7
+### Changed
+- Clarified the section on "Is there a standard change log format?".
 
-- [X] Add prefix argument to `markdown-toc/generate-toc' to replace existing TOC at the same location #10
-- [X] Simplify tests launcher
-- [X] Add itest on toc generation when using modifier  [2/2]
-  - [X] Use ert to simplify tests output reading in case of error
-  - [X] Add test on the new use case from #10
-- [X] Update README.md
-- [X] Update version
-- [X] Release notes
+### Fixed
+- Fix Markdown links to tag comparison URL with footnote-style links.
 
-# 0.0.6
+## [0.0.6] - 2014-12-12
+### Added
+- README section on "yanked" releases.
 
-- [X] Fix typo on the markdown header information
-- [X] Strip non-ASCII characters from heading links, to be consistent with GitHub.
-- [X] Update version
-- [X] Release notes
+## [0.0.5] - 2014-08-09
+### Added
+- Markdown links to version tags on release headings.
+- Unreleased section to gather unreleased changes and encourage note
+keeping prior to releases.
 
-# 0.0.5
+## [0.0.4] - 2014-08-09
+### Added
+- Better explanation of the difference between the file ("CHANGELOG")
+and its function "the change log".
 
-- [X] Deploy to Marmalade
-- [X] Use directly markdown-toc, no need to require anything
-- [X] Update documentation about installation procedure (marmalade)
-- [X] Update version
-- [X] Update release notes
+### Changed
+- Refer to a "change log" instead of a "CHANGELOG" throughout the site
+to differentiate between the file and the purpose of the file — the
+logging of changes.
 
-# 0.0.4
+### Removed
+- Remove empty sections from CHANGELOG, they occupy too much space and
+create too much noise in the file. People will have to assume that the
+missing sections were intentionally left out because they contained no
+notable changes.
 
-- [X] If melpa recipe is accepted, update the README.md about how to install
-- [X] Add COPYING file + licence inside markdown-toc.el
-- [X] Simplify packaging (no need to use tarball nor *-pkg.el file)
-- [X] Upgrade version
-- [X] Release notes
+## [0.0.3] - 2014-08-09
+### Added
+- "Why should I care?" section mentioning The Changelog podcast.
 
-# 0.0.3
+## [0.0.2] - 2014-07-10
+### Added
+- Explanation of the recommended reverse chronological release ordering.
 
-- [X] Update an existing TOC
-  - [X] Create a section around TOC
-  - [X] Find if a TOC is already present in buffer
-  - [X] Remove old TOC
-  - [X] Create new one
-- [X] Reference markdown-toc version
-- [X] Reference the inspiration from doctoc
-- [X] Upgrade version
-- [X] Release notes
-
-# 0.0.2
-
-- [X] Prepare filesystem to deploy to melpa (avoid having tests files with the file to package)
-- [X] Upgrade version + package
-- [X] Release notes
-
-# 0.0.1
-
-- [X] Initialize Project
-- [X] Initialize github repository
-- [X] Cask
-- [X] Generate a TOC at point
-- [X] Update header documentation
-- [X] Update README.md about use case
-- [X] Makefile
-- [X] Tests
-- [X] Travis-ci
-- [X] Upgrade version + package
-- [X] Release notes
+## [0.0.1] - 2014-05-31
+### Added
+- This CHANGELOG file to hopefully serve as an evolving example of a
+  standardized open source project CHANGELOG.
+- CNAME file to enable GitHub Pages custom domain
+- README now contains answers to common questions about CHANGELOGs
+- Good examples and basic guidelines, including proper date formatting.
+- Counter-examples: "What makes unicorns cry?"
