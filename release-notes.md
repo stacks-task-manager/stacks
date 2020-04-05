@@ -1,4 +1,4 @@
-### [1.0.0] <span>2017-06-20</span>
+### Stacks v1.0.0 <span>2017-06-20</span>
 - ![](https://img.shields.io/badge/-New-brightgreen) New visual identity by [@tylerfortune8](https://github.com/tylerfortune8).
 - ![](https://img.shields.io/badge/-New-brightgreen) Version navigation.
 - ![](https://img.shields.io/badge/-Improved-blue) Links to latest released version in previous versions.
