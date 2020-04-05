@@ -1,13 +1,12 @@
-## [1.0.0] - 2017-06-20
-### Added
-- New visual identity by [@tylerfortune8](https://github.com/tylerfortune8).
-- Version navigation.
-- Links to latest released version in previous versions.
-- "Why keep a changelog?" section.
-- "Who needs a changelog?" section.
-- "How do I make a changelog?" section.
-- "Frequently Asked Questions" section.
-- New "Guiding Principles" sub-section to "How do I make a changelog?".
+### [1.0.0] - 2017-06-20
+https://img.shields.io/badge/-New-brightgreen New visual identity by [@tylerfortune8](https://github.com/tylerfortune8).
+https://img.shields.io/badge/-New-brightgreen Version navigation.
+https://img.shields.io/badge/-Improved-blue Links to latest released version in previous versions.
+https://img.shields.io/badge/-Improved-blue "Why keep a changelog?" section.
+https://img.shields.io/badge/-Improved-blue "Who needs a changelog?" section.
+https://img.shields.io/badge/-Fixed-red "How do I make a changelog?" section.
+https://img.shields.io/badge/-Fixed-red "Frequently Asked Questions" section.
+https://img.shields.io/badge/-Fixed-red New "Guiding Principles" sub-section to "How do I make a changelog?".
 - Simplified and Traditional Chinese translations from [@tianshuo](https://github.com/tianshuo).
 - German translation from [@mpbzh](https://github.com/mpbzh) & [@Art4](https://github.com/Art4).
 - Italian translation from [@azkidenz](https://github.com/azkidenz).
