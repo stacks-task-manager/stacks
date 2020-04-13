@@ -1,3 +1,6 @@
+### Stacks v0.2.1 <span>2020-04-13</span>
+- ![](https://img.shields.io/badge/-Fixed-red) Board Overview dark mode
+
 ### Stacks v0.2.0 <span>2020-04-13</span>
 - ![](https://img.shields.io/badge/-New-brightgreen) Added Italian translations
 - ![](https://img.shields.io/badge/-New-brightgreen) Board selector menu (now you can switch board with hotkeys)
