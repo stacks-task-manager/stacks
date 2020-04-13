@@ -1,3 +1,11 @@
+### Stacks v0.2.0 <span>2020-04-13</span>
+- ![](https://img.shields.io/badge/-New-brightgreen) Added Italian translations
+- ![](https://img.shields.io/badge/-New-brightgreen) Board selector menu (now you can switch board with hotkeys)
+- ![](https://img.shields.io/badge/-Improved-blue) Inverted board delete buttons (yes/no)
+- ![](https://img.shields.io/badge/-Improved-blue) Inverted board duplicate buttons (yes/no)
+- ![](https://img.shields.io/badge/-Fixed-red) Stack not deleting
+- ![](https://img.shields.io/badge/-Fixed-red) Various typos
+
 ### Stacks v0.1.5 <span>2020-04-07</span>
 - ![](https://img.shields.io/badge/-New-brightgreen) Board overview with charts
 - ![](https://img.shields.io/badge/-New-brightgreen) Menu item to switch between board overview, calendar view (soon) and map view
