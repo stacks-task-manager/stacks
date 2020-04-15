@@ -1,3 +1,13 @@
+### Stacks v0.2.2 <span>2020-04-15</span>
+- ![](https://img.shields.io/badge/-New-brightgreen) Stacks for Windows
+- ![](https://img.shields.io/badge/-New-brightgreen) Task context menu for quick status change
+- ![](https://img.shields.io/badge/-New-brightgreen) Menu items for quickly open an issue or request a feature
+- ![](https://img.shields.io/badge/-Improved-blue) Board Overview placeholders for missing info
+- ![](https://img.shields.io/badge/-Improved-blue) Toolbar icons
+- ![](https://img.shields.io/badge/-Fixed-red) Learn more menu item link
+- ![](https://img.shields.io/badge/-Fixed-red) Notarization for macOS app
+- ![](https://img.shields.io/badge/-Fixed-red) Archives stack theme for dark mode
+
 ### Stacks v0.2.1 <span>2020-04-13</span>
 - ![](https://img.shields.io/badge/-Fixed-red) Board Overview dark mode
 
