@@ -1,3 +1,12 @@
+### Stacks v0.2.3 <span>2020-04-16</span>
+- ![](https://img.shields.io/badge/-New-brightgreen) Stacks for Linux
+- ![](https://img.shields.io/badge/-New-brightgreen) Edit task button (enabled in the preferences)
+- ![](https://img.shields.io/badge/-New-brightgreen) Classiefied content using markdown syntax
+- ![](https://img.shields.io/badge/-New-brightgreen) Visually see estimates and spent time in the task card
+- ![](https://img.shields.io/badge/-Improved-blue) App UI on Windows
+- ![](https://img.shields.io/badge/-Improved-blue) Emoji window for Windows
+- ![](https://img.shields.io/badge/-Fixed-red) Sidebar not closing on Windows
+
 ### Stacks v0.2.2 <span>2020-04-15</span>
 - ![](https://img.shields.io/badge/-New-brightgreen) Stacks for Windows
 - ![](https://img.shields.io/badge/-New-brightgreen) Task context menu for quick status change
