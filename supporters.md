@@ -9,3 +9,6 @@ No Top Supporters yet.
 
 ### Official Supporter <span>$5/month</span>
 * [Graham Seymour](https://www.patreon.com/user/creators?u=3762497)
+
+### Project Contributors
+* Dmitriy Gorbunov - Russian Translation
