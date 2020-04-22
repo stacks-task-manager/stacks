@@ -1,3 +1,11 @@
+### Stacks v0.2.4 <span>2020-04-22</span>
+- ![](https://img.shields.io/badge/-New-brightgreen) Russian translation
+- ![](https://img.shields.io/badge/-Improved-blue) Change Linux executable name
+- ![](https://img.shields.io/badge/-Improved-blue) Changed license
+- ![](https://img.shields.io/badge/-Fixed-red) Open link in external app instead of Stacks' window
+- ![](https://img.shields.io/badge/-Fixed-red) macOS notarization
+
+
 ### Stacks v0.2.3 <span>2020-04-16</span>
 - ![](https://img.shields.io/badge/-New-brightgreen) Stacks for Linux
 - ![](https://img.shields.io/badge/-New-brightgreen) Edit task button (enabled in the preferences)
