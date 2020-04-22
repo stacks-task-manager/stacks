@@ -11,4 +11,4 @@ No Top Supporters yet.
 * [Graham Seymour](https://www.patreon.com/user/creators?u=3762497)
 
 ### Project Contributors
-* Dmitriy Gorbunov - Russian Translation
+* Dmitriy Gorbunov & Vladimir V Kosolapov - Russian Translation
