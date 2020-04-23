@@ -1,3 +1,11 @@
+### Stacks v0.2.5 <span>2020-04-23</span>
+- ![](https://img.shields.io/badge/-New-brightgreen) Translated demo board
+- ![](https://img.shields.io/badge/-New-brightgreen) Romanian translation
+- ![](https://img.shields.io/badge/-New-brightgreen) Link to GitHub for contributing to Stacks translations
+- ![](https://img.shields.io/badge/-Improved-blue) Russian typo fixes
+- ![](https://img.shields.io/badge/-Improved-blue) UI Improvements
+- ![](https://img.shields.io/badge/-Fixed-red) Dark mode for archived task detail
+
 ### Stacks v0.2.4 <span>2020-04-22</span>
 - ![](https://img.shields.io/badge/-New-brightgreen) Russian translation
 - ![](https://img.shields.io/badge/-Improved-blue) Change Linux executable name
