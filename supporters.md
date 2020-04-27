@@ -10,5 +10,8 @@ No Top Supporters yet.
 ### Official Supporter <span>$5/month</span>
 * [Graham Seymour](https://www.patreon.com/user/creators?u=3762497)
 
+### Buy Me A Coffee
+* [Mike @techspaceshare](https://twitter.com/techspaceshare)
+
 ### Project Contributors
 * Dmitriy Gorbunov & Vladimir V Kosolapov - Russian Translation
