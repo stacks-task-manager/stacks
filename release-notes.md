@@ -1,3 +1,10 @@
+### Stacks v0.2.6 <span>2020-05-07</span>
+- ![](https://img.shields.io/badge/-New-brightgreen) Task start date (date picker date range - which will be used for the new GANTT view in future releases)
+- ![](https://img.shields.io/badge/-New-brightgreen) Board hourly fee and overall earning stats
+- ![](https://img.shields.io/badge/-New-brightgreen) Hourly fee overwrite per single task
+- ![](https://img.shields.io/badge/-Improved-blue) Overall UI Improvements
+- ![](https://img.shields.io/badge/-Fixed-red) Task estimate section not shown if only time spent is set
+
 ### Stacks v0.2.5 <span>2020-04-23</span>
 - ![](https://img.shields.io/badge/-New-brightgreen) Translated demo board
 - ![](https://img.shields.io/badge/-New-brightgreen) Romanian translation
