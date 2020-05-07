@@ -3,7 +3,7 @@
 - ![](https://img.shields.io/badge/-New-brightgreen) Board hourly fee and overall earning stats
 - ![](https://img.shields.io/badge/-New-brightgreen) Hourly fee overwrite per single task
 - ![](https://img.shields.io/badge/-Improved-blue) Overall UI Improvements
-- ![](https://img.shields.io/badge/-Fixed-red) Task estimate section not shown if only time spent is set
+- ![](https://img.shields.io/badge/-Fixed-red) Task estimates section not shown if only time spent is set
 
 ### Stacks v0.2.5 <span>2020-04-23</span>
 - ![](https://img.shields.io/badge/-New-brightgreen) Translated demo board
