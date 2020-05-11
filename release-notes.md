@@ -1,3 +1,10 @@
+### Stacks v0.2.7 <span>2020-05-11</span>
+- ![](https://img.shields.io/badge/-New-brightgreen) German translation
+- ![](https://img.shields.io/badge/-New-brightgreen) German demo board
+- ![](https://img.shields.io/badge/-New-brightgreen) Task progress in context menu
+- ![](https://img.shields.io/badge/-New-brightgreen) Upcomming count box in Board Overview
+- ![](https://img.shields.io/badge/-Improved-blue) Start date UI in Task Detail
+
 ### Stacks v0.2.6 <span>2020-05-07</span>
 - ![](https://img.shields.io/badge/-New-brightgreen) Task start date (date picker date range - which will be used for the new GANTT view in future releases)
 - ![](https://img.shields.io/badge/-New-brightgreen) Board hourly fee and overall earning stats
