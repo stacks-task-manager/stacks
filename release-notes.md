@@ -1,6 +1,6 @@
 ### Stacks v0.2.8 <span>2020-05-13</span>
 - ![](https://img.shields.io/badge/-New-brightgreen) Simple way to reorder and delete checklist items from task details
-Attachments now open on click with the default app (alternatively added button to save to a specific path)
+- ![](https://img.shields.io/badge/-New-brightgreen) Attachments now open on click with the default app (alternatively added button to save to a specific path)
 - ![](https://img.shields.io/badge/-Improved-blue) Upon reopening, Stacks will maintain the last seen board
 - ![](https://img.shields.io/badge/-Improved-blue) Start date won't be deleted upon removing the due date
 - ![](https://img.shields.io/badge/-Improved-blue) Smaller bug fixes and improvements
