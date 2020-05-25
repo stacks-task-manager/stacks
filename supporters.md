@@ -13,6 +13,7 @@ No Top Supporters yet.
 
 ### Buy Me A Coffee
 * [Mike @techspaceshare](https://twitter.com/techspaceshare)
+* [Arnel Helja](https://github.com/ahelja)
 
 ### Project Contributors
 * Dmitriy Gorbunov & Vladimir V Kosolapov - Russian Translation
