@@ -15,6 +15,9 @@ No Top Supporters yet.
 * [Mike @techspaceshare](https://twitter.com/techspaceshare)
 * [Arnel Helja](https://github.com/ahelja)
 
+### Other
+* Sebastian Günther
+
 ### Project Contributors
 * Dmitriy Gorbunov & Vladimir V Kosolapov - Russian Translation
 * [Robert Kummer](https://github.com/rokde) - German Translation
