@@ -22,3 +22,4 @@ No Top Supporters yet.
 ### Project Contributors
 * Dmitriy Gorbunov & Vladimir V Kosolapov - Russian Translation
 * [Robert Kummer](https://github.com/rokde) - German Translation
+* Hagen & Maria M. - French Translation
