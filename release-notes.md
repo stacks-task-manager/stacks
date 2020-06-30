@@ -1,3 +1,12 @@
+### Stacks v0.2.9 <span>2020-06-30</span>
+- ![](https://img.shields.io/badge/-New-brightgreen) Extra custom text widget in task detail
+- ![](https://img.shields.io/badge/-New-brightgreen) Added French translation
+- ![](https://img.shields.io/badge/-Improved-blue) New Stack menu not working
+- ![](https://img.shields.io/badge/-Improved-blue) Reorder (some) widgets
+- ![](https://img.shields.io/badge/-Improved-blue) Task description icon title new shows the complete description upon hover
+- ![](https://img.shields.io/badge/-Improved-blue) App window can be resized to 600x400
+- ![](https://img.shields.io/badge/-Fixed-red) Translation link (now also opens in the default browser)
+
 ### Stacks v0.2.8 <span>2020-05-13</span>
 - ![](https://img.shields.io/badge/-New-brightgreen) Simple way to reorder and delete checklist items from task details
 - ![](https://img.shields.io/badge/-New-brightgreen) Attachments now open on click with the default app (alternatively added button to save to a specific path)
