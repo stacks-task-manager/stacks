@@ -20,6 +20,6 @@ No Top Supporters yet.
 * Sebastian Günther
 
 ### Project Contributors
-* Dmitriy Gorbunov & Vladimir V Kosolapov - Russian Translation
+* Dmitriy Gorbunov & Vladimir V Kosolapov & Nikita (Ar4ikov) - Russian Translation
 * [Robert Kummer](https://github.com/rokde) - German Translation
 * Hagen & Maria M. - French Translation
