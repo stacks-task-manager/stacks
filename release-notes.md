@@ -1,3 +1,8 @@
+### Stacks v0.2.10 <span>2020-07-20</span>
+- ![](https://img.shields.io/badge/-New-brightgreen) Option to hide the "New Stack" button
+- ![](https://img.shields.io/badge/-Improved-blue) Russian language improvements
+- ![](https://img.shields.io/badge/-Fixed-red) Other minor bug fixes and performance improvements
+
 ### Stacks v0.2.9 <span>2020-06-30</span>
 - ![](https://img.shields.io/badge/-New-brightgreen) Extra custom text widget in task detail
 - ![](https://img.shields.io/badge/-New-brightgreen) Added French translation
