@@ -1,3 +1,9 @@
+### Stacks v0.2.11 <span>2020-07-29</span>
+- ![](https://img.shields.io/badge/-New-brightgreen) Option add a new Stack to left or right of another Stack
+- ![](https://img.shields.io/badge/-Improved-blue) Update process
+- ![](https://img.shields.io/badge/-Improved-blue) Changed version number to **major.minor.bugfix**
+- ![](https://img.shields.io/badge/-Fixed-red) Other minor bug fixes and performance improvements
+
 ### Stacks v0.2.11 <span>2020-07-27</span>
 - ![](https://img.shields.io/badge/-New-brightgreen) Option to collapse a Stack (double click to open)
 - ![](https://img.shields.io/badge/-Improved-blue) Minor translation improvements
