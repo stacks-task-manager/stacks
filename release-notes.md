@@ -1,4 +1,4 @@
-### Stacks v0.2.11 <span>2020-07-29</span>
+### Stacks v0.3.0 <span>2020-07-29</span>
 - ![](https://img.shields.io/badge/-New-brightgreen) Option add a new Stack to left or right of another Stack
 - ![](https://img.shields.io/badge/-Improved-blue) Update process
 - ![](https://img.shields.io/badge/-Improved-blue) Changed version number to **major.minor.bugfix**
