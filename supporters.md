@@ -23,3 +23,4 @@ No Top Supporters yet.
 * Dmitriy Gorbunov & Vladimir V Kosolapov & Nikita (Ar4ikov) - Russian Translation
 * [Robert Kummer](https://github.com/rokde) - German Translation
 * Hagen & Maria M. - French Translation
+* Williams Melgar - Spanish Translation
