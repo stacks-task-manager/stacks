@@ -9,7 +9,6 @@ No Top Supporters yet.
 
 ### Official Supporter <span>$5/month</span>
 * [Graham Seymour](https://www.patreon.com/user/creators?u=3762497)
-* [Yousef Alsalem](https://www.patreon.com/user/creators?u=33694431)
 
 ### Buy Me A Coffee
 * [Mike @techspaceshare](https://twitter.com/techspaceshare)
@@ -18,6 +17,7 @@ No Top Supporters yet.
 
 ### Other
 * Sebastian Günther
+* Danny Florian
 
 ### Project Contributors
 * Dmitriy Gorbunov & Vladimir V Kosolapov & Nikita (Ar4ikov) - Russian Translation
