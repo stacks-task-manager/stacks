@@ -24,3 +24,4 @@ No Top Supporters yet.
 * [Robert Kummer](https://github.com/rokde) - German Translation
 * Hagen & Maria M. - French Translation
 * Williams Melgar - Spanish Translation
+* [Ufuk Tan](https://github.com/ufukty) - Turkish Translation
