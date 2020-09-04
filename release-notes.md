@@ -1,4 +1,4 @@
-### Stacks v0.5.0 <span>2020-09-04</span>
+### Stacks v0.5.1 <span>2020-09-04</span>
 - ![](https://img.shields.io/badge/-New-brightgreen) Turkish translation
 - ![](https://img.shields.io/badge/-New-brightgreen) Keyboard navigation
 - ![](https://img.shields.io/badge/-New-brightgreen) Menuitem to add new task
