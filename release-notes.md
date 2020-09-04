@@ -1,3 +1,9 @@
+### Stacks v0.5.0 <span>2020-09-04</span>
+- ![](https://img.shields.io/badge/-New-brightgreen) Turkish translation
+- ![](https://img.shields.io/badge/-New-brightgreen) Keyboard navigation
+- ![](https://img.shields.io/badge/-New-brightgreen) Menuitem to add new task
+- ![](https://img.shields.io/badge/-Fixed-red) Other minor bug fixes and performance improvements
+
 ### Stacks v0.4.0 <span>2020-08-06</span>
 - ![](https://img.shields.io/badge/-New-brightgreen) Spanish translation
 - ![](https://img.shields.io/badge/-New-brightgreen) Menu item to open a new Library folder
