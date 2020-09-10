@@ -1,3 +1,14 @@
+### Stacks v0.6.0 <span>2020-09-10</span>
+- ![](https://img.shields.io/badge/-New-brightgreen) Cambodian translation (partial)
+- ![](https://img.shields.io/badge/-New-brightgreen) Navigation menu
+- ![](https://img.shields.io/badge/-New-brightgreen) Task detail title and description new renders Markdown text
+- ![](https://img.shields.io/badge/-Improved-blue) Stacks can now be closed and opened via hotkeys
+- ![](https://img.shields.io/badge/-Improved-blue) Markdown writing in the task title and description. Please check the Markdown cheatsheet window for the new syntax
+- ![](https://img.shields.io/badge/-Fixed-red) Moving around with the keyboard while completed tasks are hidden
+- ![](https://img.shields.io/badge/-Fixed-red) Re-ordering of tasks while completed tasks are hidden
+- ![](https://img.shields.io/badge/-Fixed-red) Other minor bug fixes and performance improvements
+- ![](https://img.shields.io/badge/-Fixed-red) Task info drag and drop color
+
 ### Stacks v0.5.1 <span>2020-09-04</span>
 - ![](https://img.shields.io/badge/-New-brightgreen) Turkish translation
 - ![](https://img.shields.io/badge/-New-brightgreen) Keyboard navigation
