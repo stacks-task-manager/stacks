@@ -1,3 +1,8 @@
+### Stacks v0.6.1 <span>2020-09-14</span>
+- ![](https://img.shields.io/badge/-New-brightgreen) Stack width adjustable from the preferences
+- ![](https://img.shields.io/badge/-Improved-blue) Themed scrollbars
+- ![](https://img.shields.io/badge/-Fixed-red) Other minor bug fixes and performance improvements
+
 ### Stacks v0.6.0 <span>2020-09-10</span>
 - ![](https://img.shields.io/badge/-New-brightgreen) Cambodian translation (partial)
 - ![](https://img.shields.io/badge/-New-brightgreen) Navigation menu
