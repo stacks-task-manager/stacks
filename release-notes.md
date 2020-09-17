@@ -1,3 +1,8 @@
+### Stacks v0.7.0 <span>2020-09-17</span>
+- ![](https://img.shields.io/badge/-New-brightgreen) Datepicker locale based on current language
+- ![](https://img.shields.io/badge/-New-brightgreen) Tags in task context menu
+- ![](https://img.shields.io/badge/-Fixed-red) Dark mode task context menu
+
 ### Stacks v0.6.3 <span>2020-09-16</span>
 - ![](https://img.shields.io/badge/-Improved-blue) Bottom scrollbar
 - ![](https://img.shields.io/badge/-Improved-blue) Stack percentage when collapsed
