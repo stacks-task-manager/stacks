@@ -1,3 +1,19 @@
+### Stacks v0.8.0 <span>2020-10-07</span>
+- ![](https://img.shields.io/badge/-New-brightgreen) Added option to show task description in the card
+- ![](https://img.shields.io/badge/-New-brightgreen) Description popup in the card footer
+- ![](https://img.shields.io/badge/-New-brightgreen) Estimates and time spent popup in the card footer
+- ![](https://img.shields.io/badge/-New-brightgreen) Attachments popup in the card footer
+- ![](https://img.shields.io/badge/-New-brightgreen) Custom colors in the highlight markdown syntax code
+- ![](https://img.shields.io/badge/-New-brightgreen) Custom text colors markdown syntax code
+- ![](https://img.shields.io/badge/-New-brightgreen) Added Beta features toggle in the Preferences
+- ![](https://img.shields.io/badge/-Improved-blue) Improved overall board saving speeds
+- ![](https://img.shields.io/badge/-Improved-blue) Combined the spent time icon with the estimated time in the task card footer
+- ![](https://img.shields.io/badge/-Fixed-red) Task not saving when new and losing focus
+- ![](https://img.shields.io/badge/-Fixed-red) Task set to done from context now updates the progress to 100% correctly
+- ![](https://img.shields.io/badge/-Fixed-red) Fee input not working correctly
+- ![](https://img.shields.io/badge/-Fixed-red) Stack percentage now calculated correctly
+
+
 ### Stacks v0.7.0 <span>2020-09-17</span>
 - ![](https://img.shields.io/badge/-New-brightgreen) Datepicker locale based on current language
 - ![](https://img.shields.io/badge/-New-brightgreen) Tags in task context menu
