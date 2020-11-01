@@ -25,3 +25,4 @@ No Top Supporters yet.
 * Hagen & Maria M. - French Translation
 * Williams Melgar - Spanish Translation
 * [Ufuk Tan](https://github.com/ufukty) - Turkish Translation
+* Joky Satria Pamungkas - Indonesian Translation
