@@ -1,3 +1,13 @@
+### Stacks v0.9.0 <span>2020-11-02</span>
+- ![](https://img.shields.io/badge/-New-brightgreen) Colored/Tinted Stack header
+- ![](https://img.shields.io/badge/-New-brightgreen) Added menu item and hotkey to reload board
+- ![](https://img.shields.io/badge/-New-brightgreen) Added Indonesian translation
+- ![](https://img.shields.io/badge/-Fixed-red) Right click on collapsed Stack
+- ![](https://img.shields.io/badge/-Fixed-red) Server pinging not working
+- ![](https://img.shields.io/badge/-Fixed-red) Switching server accounts
+- ![](https://img.shields.io/badge/-Fixed-red) Stack header/title not updating
+- ![](https://img.shields.io/badge/-Fixed-red) Other minor bug fixes and performance improvements
+
 ### Stacks v0.8.0 <span>2020-10-07</span>
 - ![](https://img.shields.io/badge/-New-brightgreen) Added option to show task description in the card
 - ![](https://img.shields.io/badge/-New-brightgreen) Description popup in the card footer
