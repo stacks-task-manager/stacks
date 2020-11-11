@@ -26,3 +26,4 @@ No Top Supporters yet.
 * Williams Melgar - Spanish Translation
 * [Ufuk Tan](https://github.com/ufukty) - Turkish Translation
 * [Joky Satria Pamungkas](https://github.com/jokysatria) - Indonesian Translation
+* Gabriele Fantin - Italian Translation
