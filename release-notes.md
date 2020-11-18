@@ -1,3 +1,15 @@
+### Stacks v0.10.0 <span>2020-11-18</span>
+- ![](https://img.shields.io/badge/-New-brightgreen) Added folders
+- ![](https://img.shields.io/badge/-New-brightgreen) Added feedback popup
+- ![](https://img.shields.io/badge/-Improved-blue) Translations improvements
+- ![](https://img.shields.io/badge/-Fixed-red) Duplicate board
+- ![](https://img.shields.io/badge/-Fixed-red) Stack copy and move
+- ![](https://img.shields.io/badge/-Fixed-red) Task cover image not updating
+- ![](https://img.shields.io/badge/-Fixed-red) Windows initial start not finding the correct library path
+- ![](https://img.shields.io/badge/-Fixed-red) Library watcher
+- ![](https://img.shields.io/badge/-Fixed-red) Stack title after exited from collapsed mode
+- ![](https://img.shields.io/badge/-Fixed-red) Other minor bug fixes and performance improvements
+
 ### Stacks v0.9.0 <span>2020-11-02</span>
 - ![](https://img.shields.io/badge/-New-brightgreen) Colored/Tinted Stack header
 - ![](https://img.shields.io/badge/-New-brightgreen) Added menu item and hotkey to reload board
