@@ -14,6 +14,8 @@ No Top Supporters yet.
 * [Mike @techspaceshare](https://twitter.com/techspaceshare)
 * [Arnel Helja](https://github.com/ahelja)
 * [Dipesh Sukhani](https://github.com/amateur-dev)
+* Stan Waring
+* Tosin
 
 ### Other
 * Sebastian Günther
