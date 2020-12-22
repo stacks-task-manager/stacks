@@ -30,3 +30,4 @@ No Top Supporters yet.
 * [Ufuk Tan](https://github.com/ufukty) - Turkish Translation
 * [Joky Satria Pamungkas](https://github.com/jokysatria) - Indonesian Translation
 * Gabriele Fantin - Italian Translation
+* David Hontecillas - Spanish Translation
