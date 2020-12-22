@@ -16,6 +16,7 @@ No Top Supporters yet.
 * [Dipesh Sukhani](https://github.com/amateur-dev)
 * Stan Waring
 * Tosin
+* [Rakesh Mane](https://rakeshmane.com/)
 
 ### Other
 * Sebastian Günther
