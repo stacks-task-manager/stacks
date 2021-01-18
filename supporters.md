@@ -17,6 +17,7 @@ No Top Supporters yet.
 * Stan Waring
 * Tosin
 * [Rakesh Mane](https://rakeshmane.com/)
+* Ulisses Alves
 
 ### Other
 * Sebastian Günther
