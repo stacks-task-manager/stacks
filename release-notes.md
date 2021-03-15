@@ -1,3 +1,16 @@
+### Stacks v0.10.5 <span>2021-03-15</span>
+- ![](https://img.shields.io/badge/-New-brightgreen) Added new feedback message
+- ![](https://img.shields.io/badge/-Fixed-red) Fixed cancelling renaming the Board and Folder
+
+### Stacks v0.10.3 <span>2021-01-29</span>
+- ![](https://img.shields.io/badge/-New-brightgreen) Added new feedback message
+- ![](https://img.shields.io/badge/-Fixed-red) Fixed adding a new Stack
+- ![](https://img.shields.io/badge/-Improved-blue) Updated translations
+
+### Stacks v0.10.1 <span>2020-12-05</span>
+- ![](https://img.shields.io/badge/-Fixed-red) Fixed task drag accross the board
+- ![](https://img.shields.io/badge/-Fixed-red) Fixed attaching a link to the task
+
 ### Stacks v0.10.0 <span>2020-11-18</span>
 - ![](https://img.shields.io/badge/-New-brightgreen) Added folders
 - ![](https://img.shields.io/badge/-New-brightgreen) Added feedback popup
