@@ -1,5 +1,7 @@
 ## Summary
 
+Explanation of the change.
+
 ## Changes
 
 -
@@ -10,8 +12,9 @@
 
 ## Screenshots / Recordings (if UI changes)
 
--   Before:
--   After:
+### Before
+
+### After
 
 ## Checklist
 
