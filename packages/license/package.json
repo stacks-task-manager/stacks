@@ -1,0 +1,18 @@
+{
+    "name": "@stacks/license",
+    "version": "1.0.0",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "tsc",
+        "test": "vitest run"
+    },
+    "dependencies": {
+        "@stacks/types": "workspace:*"
+    },
+    "devDependencies": {
+        "@types/node": "^25.0.3",
+        "typescript": "^5.0.0",
+        "vitest": "^4.0.16"
+    }
+}
