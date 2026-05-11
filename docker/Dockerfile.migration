@@ -1,0 +1,18 @@
+# Migration Dockerfile
+# This container runs database migrations before other services start
+
+FROM node:18-alpine
+
+# Set working directory
+WORKDIR /db
+
+# Install dependencies for PostgreSQL client
+RUN apk add --no-cache postgresql-client
+
+# Full db/ artifact (package.json, vendor/stacks-types, migrations, …) from `yarn release:db`
+COPY db ./
+
+RUN yarn install --production
+
+# Wait for database to be ready and run migrations
+CMD ["sh", "-c", "while ! pg_isready -h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER; do echo 'Waiting for database...'; sleep 2; done && echo 'Database is ready, running migrations...' && npm run migrate"]

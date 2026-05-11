@@ -1,0 +1,42 @@
+FROM node:20-bullseye
+
+# Install system dependencies for canvas with specific versions
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libcairo2-dev \
+    libpango1.0-dev \
+    libjpeg-dev \
+    libgif-dev \
+    python3 \
+    python3-pip \
+    pkg-config \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set environment variables for canvas compilation
+ENV PYTHON=/usr/bin/python3
+ENV npm_config_cache_max=0
+ENV CANVAS_PREBUILT=1
+
+# Set working directory
+WORKDIR /server
+
+# Install node-gyp globally
+RUN npm install -g node-gyp
+
+# Copy package files and install dependencies
+COPY server/package.json ./
+RUN yarn install --production
+
+# Copy application files
+COPY server .
+
+# Remove any existing node_modules and reinstall to ensure compatibility
+RUN rm -rf node_modules && yarn install --production
+
+# Create necessary directories
+RUN mkdir -p /server/uploads /server/previews
+
+# Expose port
+EXPOSE 3000
+
+CMD ["node", "server.js"]

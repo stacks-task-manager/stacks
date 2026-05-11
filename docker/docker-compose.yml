@@ -1,0 +1,80 @@
+services:
+    migration:
+        build:
+            context: .
+            dockerfile: Dockerfile.migration
+        env_file:
+            - .env
+        environment:
+            - POSTGRES_HOST=postgres
+        depends_on:
+            postgres:
+                condition: service_healthy
+        restart: "no"
+
+    stacks:
+        build:
+            context: .
+            dockerfile: Dockerfile.server
+        working_dir: /server
+        ports:
+            - "3000:3000"
+        env_file:
+            - .env
+        environment:
+            - POSTGRES_HOST=postgres
+        volumes:
+            # Persist uploads
+            - ./data/uploads:/server/uploads
+            - ./data/previews:/server/previews
+            # Persist logs
+            - ./logs:/var/log
+            # Persist license key
+            - ./license.key:/server/license.key
+        depends_on:
+            postgres:
+                condition: service_healthy
+            migration:
+                condition: service_completed_successfully
+        restart: unless-stopped
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 60s
+
+    email:
+        build:
+            context: .
+            dockerfile: Dockerfile.email
+        working_dir: /email-service
+        env_file:
+            - .env
+        environment:
+            - POSTGRES_HOST=postgres
+        depends_on:
+            postgres:
+                condition: service_healthy
+            migration:
+                condition: service_completed_successfully
+        restart: unless-stopped
+        healthcheck:
+            test: ["CMD", "node", "-e", "process.exit(0)"]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 30s
+
+    postgres:
+        image: postgres:15-alpine
+        env_file:
+            - .env
+        volumes:
+            - ./data/db:/var/lib/postgresql/data
+        restart: unless-stopped
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U postgres"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
