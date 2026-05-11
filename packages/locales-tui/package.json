@@ -1,0 +1,26 @@
+{
+    "name": "@stacks/locales-tui",
+    "version": "0.1.0",
+    "private": true,
+    "type": "module",
+    "description": "Terminal UI for managing server/app locale JSON files",
+    "scripts": {
+        "start": "tsx src/cli.tsx",
+        "build": "tsc",
+        "test": "vitest run"
+    },
+    "dependencies": {
+        "@stacks/translations": "workspace:*",
+        "ink": "^4.4.1",
+        "ink-select-input": "^5.0.0",
+        "ink-text-input": "^5.0.0",
+        "react": "^18.3.1",
+        "typescript": "^5.7.3"
+    },
+    "devDependencies": {
+        "@types/node": "^22.10.0",
+        "@types/react": "^18.3.12",
+        "tsx": "^4.19.2",
+        "vitest": "^3.0.5"
+    }
+}
