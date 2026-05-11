@@ -1,0 +1,28 @@
+{
+  "name": "@stacks/types",
+  "version": "1.0.103",
+  "description": "",
+  "main": "dist/index.js",
+  "type": "module",
+  "module": "dist/index.js",
+  "types": "src/index.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "setup": "yarn install",
+    "prepare": "tsc",
+    "dev": "tsc --watch --preserveWatchOutput",
+    "compile": "tsc",
+    "build": "tsc && yarn dist",
+    "dist": "yarn pack --out stacks-types-v%v.tgz"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/react": "^19",
+    "typescript": "^5.9.2"
+  }
+}
