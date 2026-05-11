@@ -1,0 +1,836 @@
+[
+    {
+        "title": "Patient Smith - Annual Checkup",
+        "description": "Detailed description for \"Patient Smith - Annual Checkup\". This task involves several steps and requires attention to detail.",
+        "id": "9dfe2ee2-acc0-43c6-b8b6-dd6b8ea2e8f6",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [],
+        "tint": "#64748B",
+        "stack": "aee75166-29f2-4be6-bcad-a599b8da5f0f",
+        "estimate": 50400,
+        "priority": "high",
+        "duedate": "2026-02-13 19:26:06",
+        "position": 0
+    },
+    {
+        "title": "Review Blood Work - Doe",
+        "description": "Detailed description for \"Review Blood Work - Doe\". This task involves several steps and requires attention to detail.",
+        "id": "803d9a25-e593-416e-b1ef-5ee4972783ca",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [],
+        "tint": "#64748B",
+        "stack": "aee75166-29f2-4be6-bcad-a599b8da5f0f",
+        "estimate": 54000,
+        "priority": "medium",
+        "duedate": "2026-03-06 19:26:06",
+        "position": 1
+    },
+    {
+        "title": "Vaccination Schedule",
+        "description": "Detailed description for \"Vaccination Schedule\". This task involves several steps and requires attention to detail.",
+        "id": "852de8bc-cf5c-48d0-8298-2cb0b2222c5f",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [],
+        "tint": "#64748B",
+        "stack": "aee75166-29f2-4be6-bcad-a599b8da5f0f",
+        "estimate": 18000,
+        "priority": "low",
+        "duedate": "2026-02-26 19:26:06",
+        "position": 2
+    },
+    {
+        "title": "Update Patient Records",
+        "description": "Detailed description for \"Update Patient Records\". This task involves several steps and requires attention to detail.",
+        "id": "f071c185-6990-4359-bd88-8123f45dba64",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [
+            "9b1f60af-df45-4b85-a217-235640f23e52"
+        ],
+        "tint": "#64748B",
+        "stack": "aee75166-29f2-4be6-bcad-a599b8da5f0f",
+        "estimate": 36000,
+        "priority": "medium",
+        "duedate": "2026-03-06 19:26:06",
+        "position": 3
+    },
+    {
+        "title": "Prescription Refill",
+        "description": "Detailed description for \"Prescription Refill\". This task involves several steps and requires attention to detail.",
+        "id": "93b29ab8-990a-4cd9-aaab-edade9c45193",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [],
+        "tint": "#64748B",
+        "stack": "aee75166-29f2-4be6-bcad-a599b8da5f0f",
+        "estimate": 14400,
+        "priority": "low",
+        "duedate": "2026-02-08 19:26:06",
+        "position": 4
+    },
+    {
+        "title": "Emergency Consult",
+        "description": "Detailed description for \"Emergency Consult\". This task involves several steps and requires attention to detail.",
+        "id": "898d79f3-d690-45cf-b1a7-7375a8406c80",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [],
+        "tint": "#64748B",
+        "stack": "aee75166-29f2-4be6-bcad-a599b8da5f0f",
+        "estimate": 28800,
+        "priority": "low",
+        "duedate": "2026-02-18 19:26:06",
+        "position": 5
+    },
+    {
+        "title": "Staff Meeting",
+        "description": "Detailed description for \"Staff Meeting\". This task involves several steps and requires attention to detail.",
+        "id": "993a0730-f712-4ff0-9323-21df23d61ec5",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [],
+        "tint": "#64748B",
+        "stack": "aee75166-29f2-4be6-bcad-a599b8da5f0f",
+        "estimate": 14400,
+        "priority": "high",
+        "duedate": "2026-02-24 19:26:06",
+        "position": 6
+    },
+    {
+        "title": "Insurance Claim",
+        "description": "Detailed description for \"Insurance Claim\". This task involves several steps and requires attention to detail.",
+        "id": "7b49d270-d472-4b4e-a310-72a2d8997c1d",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [
+            "dc756809-7ae7-497d-baac-d30cc3c0e7d8",
+            "b5287e25-fb9b-4c9c-ace8-1be2b7491b20"
+        ],
+        "tint": "#64748B",
+        "stack": "aee75166-29f2-4be6-bcad-a599b8da5f0f",
+        "estimate": 61200,
+        "priority": "low",
+        "duedate": "2026-02-18 19:26:06",
+        "position": 7
+    },
+    {
+        "title": "New Patient Intake",
+        "description": "Detailed description for \"New Patient Intake\". This task involves several steps and requires attention to detail.",
+        "id": "faeadd93-0aec-4a60-9d6c-9a7ca1ff5445",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [
+            "9b1f60af-df45-4b85-a217-235640f23e52"
+        ],
+        "tint": "#64748B",
+        "stack": "aee75166-29f2-4be6-bcad-a599b8da5f0f",
+        "estimate": 54000,
+        "priority": "low",
+        "duedate": "2026-02-13 19:26:06",
+        "position": 8
+    },
+    {
+        "title": "Verify Insurance Eligibility",
+        "description": "Detailed description for \"Verify Insurance Eligibility\". This task involves several steps and requires attention to detail.",
+        "id": "89a171e8-c7ad-4f35-ac70-47546a027f47",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [
+            "7dc1ea5c-ed61-4675-9f44-aefd52c14a56"
+        ],
+        "tint": "#64748B",
+        "stack": "aee75166-29f2-4be6-bcad-a599b8da5f0f",
+        "estimate": 54000,
+        "priority": "medium",
+        "duedate": "2026-02-20 19:26:06",
+        "position": 9
+    },
+    {
+        "title": "Process Co-payments",
+        "description": "Detailed description for \"Process Co-payments\". This task involves several steps and requires attention to detail.",
+        "id": "1b1d90a9-fa21-4d84-b4e0-1e21b999e5f9",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [],
+        "tint": "#64748B",
+        "stack": "aee75166-29f2-4be6-bcad-a599b8da5f0f",
+        "estimate": 54000,
+        "priority": "low",
+        "duedate": "2026-03-05 19:26:06",
+        "position": 10
+    },
+    {
+        "title": "Schedule Follow-up",
+        "description": "Detailed description for \"Schedule Follow-up\". This task involves several steps and requires attention to detail.",
+        "id": "1492e053-ca27-46e3-95e2-79ad1562cfc3",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [
+            "7dc1ea5c-ed61-4675-9f44-aefd52c14a56",
+            "9b1f60af-df45-4b85-a217-235640f23e52"
+        ],
+        "tint": "#3B82F6",
+        "stack": "40a26e02-8f01-4b95-81bf-1994672dc875",
+        "estimate": 46800,
+        "priority": "high",
+        "duedate": "2026-03-02 19:26:06",
+        "position": 0
+    },
+    {
+        "title": "Referral Letter - Cardiology",
+        "description": "Detailed description for \"Referral Letter - Cardiology\". This task involves several steps and requires attention to detail.",
+        "id": "92e2a2e0-8c73-49db-b932-0f150f1002fe",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [
+            "dc756809-7ae7-497d-baac-d30cc3c0e7d8"
+        ],
+        "tint": "#3B82F6",
+        "stack": "40a26e02-8f01-4b95-81bf-1994672dc875",
+        "estimate": 36000,
+        "priority": "medium",
+        "duedate": "2026-02-18 19:26:06",
+        "position": 1
+    },
+    {
+        "title": "Referral Letter - Dermatology",
+        "description": "Detailed description for \"Referral Letter - Dermatology\". This task involves several steps and requires attention to detail.",
+        "id": "bb01aa16-7589-44e7-a54e-cbbb9df74bcf",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [],
+        "tint": "#3B82F6",
+        "stack": "40a26e02-8f01-4b95-81bf-1994672dc875",
+        "estimate": 68400,
+        "priority": "low",
+        "duedate": "2026-02-21 19:26:06",
+        "position": 2
+    },
+    {
+        "title": "Lab Result Analysis",
+        "description": "Detailed description for \"Lab Result Analysis\". This task involves several steps and requires attention to detail.",
+        "id": "a424bc4a-c7fd-4d65-b25d-717085d6664f",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [
+            "dc756809-7ae7-497d-baac-d30cc3c0e7d8"
+        ],
+        "tint": "#3B82F6",
+        "stack": "40a26e02-8f01-4b95-81bf-1994672dc875",
+        "estimate": 3600,
+        "priority": "medium",
+        "duedate": "2026-02-28 19:26:06",
+        "position": 3
+    },
+    {
+        "title": "X-Ray Review",
+        "description": "Detailed description for \"X-Ray Review\". This task involves several steps and requires attention to detail.",
+        "id": "12701106-0ca8-4203-aac9-049e8e6a72fa",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [],
+        "tint": "#3B82F6",
+        "stack": "40a26e02-8f01-4b95-81bf-1994672dc875",
+        "estimate": 57600,
+        "priority": "high",
+        "duedate": "2026-03-03 19:26:06",
+        "position": 4
+    },
+    {
+        "title": "MRI Report Assessment",
+        "description": "Detailed description for \"MRI Report Assessment\". This task involves several steps and requires attention to detail.",
+        "id": "3f7802c1-03da-4e02-94f4-d14823f0ae52",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [
+            "b5287e25-fb9b-4c9c-ace8-1be2b7491b20"
+        ],
+        "tint": "#3B82F6",
+        "stack": "40a26e02-8f01-4b95-81bf-1994672dc875",
+        "estimate": 43200,
+        "priority": "medium",
+        "duedate": "2026-02-18 19:26:06",
+        "position": 5
+    },
+    {
+        "title": "CT Scan Consultation",
+        "description": "Detailed description for \"CT Scan Consultation\". This task involves several steps and requires attention to detail.",
+        "id": "c2d46614-04af-4d76-8a44-39dc92f759e8",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [
+            "dc756809-7ae7-497d-baac-d30cc3c0e7d8"
+        ],
+        "tint": "#3B82F6",
+        "stack": "40a26e02-8f01-4b95-81bf-1994672dc875",
+        "estimate": 50400,
+        "priority": "low",
+        "duedate": "2026-03-02 19:26:06",
+        "position": 6
+    },
+    {
+        "title": "Telehealth Appointment",
+        "description": "Detailed description for \"Telehealth Appointment\". This task involves several steps and requires attention to detail.",
+        "id": "bc08b7dd-631f-4039-b9ac-e72c246c3346",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [
+            "dc756809-7ae7-497d-baac-d30cc3c0e7d8",
+            "b5287e25-fb9b-4c9c-ace8-1be2b7491b20"
+        ],
+        "tint": "#3B82F6",
+        "stack": "40a26e02-8f01-4b95-81bf-1994672dc875",
+        "estimate": 72000,
+        "priority": "high",
+        "duedate": "2026-02-22 19:26:06",
+        "position": 7
+    },
+    {
+        "title": "Walk-in Patient Triage",
+        "description": "Detailed description for \"Walk-in Patient Triage\". This task involves several steps and requires attention to detail.",
+        "id": "f51543d3-9215-4d4f-ad44-d4cd4ec16c7a",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [
+            "7dc1ea5c-ed61-4675-9f44-aefd52c14a56",
+            "dc756809-7ae7-497d-baac-d30cc3c0e7d8"
+        ],
+        "tint": "#3B82F6",
+        "stack": "40a26e02-8f01-4b95-81bf-1994672dc875",
+        "estimate": 54000,
+        "priority": "low",
+        "duedate": "2026-02-06 19:26:06",
+        "position": 8
+    },
+    {
+        "title": "Sterilize Instruments",
+        "description": "Detailed description for \"Sterilize Instruments\". This task involves several steps and requires attention to detail.",
+        "id": "d0103d18-d00d-444f-ad42-0e876f012f17",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [],
+        "tint": "#3B82F6",
+        "stack": "40a26e02-8f01-4b95-81bf-1994672dc875",
+        "estimate": 18000,
+        "priority": "medium",
+        "duedate": "2026-02-08 19:26:06",
+        "position": 9
+    },
+    {
+        "title": "Restock Medical Supplies",
+        "description": "Detailed description for \"Restock Medical Supplies\". This task involves several steps and requires attention to detail.",
+        "id": "eaf1fe8b-9735-438b-8836-3f1056233a05",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [
+            "9b1f60af-df45-4b85-a217-235640f23e52"
+        ],
+        "tint": "#F59E0B",
+        "stack": "fa5d0a33-da5c-4bf9-a291-096731d54684",
+        "estimate": 39600,
+        "priority": "low",
+        "duedate": "2026-02-27 19:26:06",
+        "position": 0
+    },
+    {
+        "title": "Check Expiry Dates on Meds",
+        "description": "Detailed description for \"Check Expiry Dates on Meds\". This task involves several steps and requires attention to detail.",
+        "id": "a402ba34-c94b-46a3-b536-7bd231517600",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [
+            "dc756809-7ae7-497d-baac-d30cc3c0e7d8"
+        ],
+        "tint": "#F59E0B",
+        "stack": "fa5d0a33-da5c-4bf9-a291-096731d54684",
+        "estimate": 18000,
+        "priority": "medium",
+        "duedate": "2026-03-01 19:26:06",
+        "position": 1
+    },
+    {
+        "title": "Calibrate Equipment",
+        "description": "Detailed description for \"Calibrate Equipment\". This task involves several steps and requires attention to detail.",
+        "id": "70706b6f-b96b-48a1-8944-d2af40d65b53",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [
+            "7dc1ea5c-ed61-4675-9f44-aefd52c14a56",
+            "dc756809-7ae7-497d-baac-d30cc3c0e7d8"
+        ],
+        "tint": "#F59E0B",
+        "stack": "fa5d0a33-da5c-4bf9-a291-096731d54684",
+        "estimate": 61200,
+        "priority": "low",
+        "duedate": "2026-03-01 19:26:06",
+        "position": 2
+    },
+    {
+        "title": "Update EMR Software",
+        "description": "Detailed description for \"Update EMR Software\". This task involves several steps and requires attention to detail.",
+        "id": "7c49380a-1b1e-4a68-9bd0-7c6f70708cd3",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [],
+        "tint": "#F59E0B",
+        "stack": "fa5d0a33-da5c-4bf9-a291-096731d54684",
+        "estimate": 36000,
+        "priority": "high",
+        "duedate": "2026-02-13 19:26:06",
+        "position": 3
+    },
+    {
+        "title": "Backup Patient Data",
+        "description": "Detailed description for \"Backup Patient Data\". This task involves several steps and requires attention to detail.",
+        "id": "5eb7ace6-520f-4990-938b-7b5292fd1a29",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [],
+        "tint": "#F59E0B",
+        "stack": "fa5d0a33-da5c-4bf9-a291-096731d54684",
+        "estimate": 21600,
+        "priority": "high",
+        "duedate": "2026-02-20 19:26:06",
+        "position": 4
+    },
+    {
+        "title": "HIPAA Compliance Audit",
+        "description": "Detailed description for \"HIPAA Compliance Audit\". This task involves several steps and requires attention to detail.",
+        "id": "2da38d29-09c6-4b84-a60b-37e76f132790",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [
+            "7dc1ea5c-ed61-4675-9f44-aefd52c14a56"
+        ],
+        "tint": "#F59E0B",
+        "stack": "fa5d0a33-da5c-4bf9-a291-096731d54684",
+        "estimate": 72000,
+        "priority": "medium",
+        "duedate": "2026-02-19 19:26:06",
+        "position": 5
+    },
+    {
+        "title": "Staff Training Session",
+        "description": "Detailed description for \"Staff Training Session\". This task involves several steps and requires attention to detail.",
+        "id": "25c09d99-7d52-4bf1-ae16-e09f8766749b",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [
+            "b5287e25-fb9b-4c9c-ace8-1be2b7491b20"
+        ],
+        "tint": "#F59E0B",
+        "stack": "fa5d0a33-da5c-4bf9-a291-096731d54684",
+        "estimate": 10800,
+        "priority": "low",
+        "duedate": "2026-02-09 19:26:06",
+        "position": 6
+    },
+    {
+        "title": "Review Medical Journals",
+        "description": "Detailed description for \"Review Medical Journals\". This task involves several steps and requires attention to detail.",
+        "id": "97f73db1-81b3-4f5e-8b16-3f040c8fd716",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [
+            "7dc1ea5c-ed61-4675-9f44-aefd52c14a56",
+            "dc756809-7ae7-497d-baac-d30cc3c0e7d8"
+        ],
+        "tint": "#F59E0B",
+        "stack": "fa5d0a33-da5c-4bf9-a291-096731d54684",
+        "estimate": 64800,
+        "priority": "high",
+        "duedate": "2026-02-16 19:26:06",
+        "position": 7
+    },
+    {
+        "title": "Case Study Discussion",
+        "description": "Detailed description for \"Case Study Discussion\". This task involves several steps and requires attention to detail.",
+        "id": "abbd9f78-3f5c-4487-9835-f2051137c9c5",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [
+            "9b1f60af-df45-4b85-a217-235640f23e52"
+        ],
+        "tint": "#F59E0B",
+        "stack": "fa5d0a33-da5c-4bf9-a291-096731d54684",
+        "estimate": 28800,
+        "priority": "medium",
+        "duedate": "2026-02-05 19:26:06",
+        "position": 8
+    },
+    {
+        "title": "Draft Medical Report",
+        "description": "Detailed description for \"Draft Medical Report\". This task involves several steps and requires attention to detail.",
+        "id": "ef9af0b4-7030-4d1d-8331-bff3228161cb",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [
+            "b5287e25-fb9b-4c9c-ace8-1be2b7491b20"
+        ],
+        "tint": "#F59E0B",
+        "stack": "fa5d0a33-da5c-4bf9-a291-096731d54684",
+        "estimate": 54000,
+        "priority": "high",
+        "duedate": "2026-02-15 19:26:06",
+        "position": 9
+    },
+    {
+        "title": "Sign Off Lab Orders",
+        "description": "Detailed description for \"Sign Off Lab Orders\". This task involves several steps and requires attention to detail.",
+        "id": "8664eefe-f57e-4dd6-ad3c-d5e6effeb937",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [
+            "dc756809-7ae7-497d-baac-d30cc3c0e7d8",
+            "b5287e25-fb9b-4c9c-ace8-1be2b7491b20"
+        ],
+        "tint": "#F59E0B",
+        "stack": "fa5d0a33-da5c-4bf9-a291-096731d54684",
+        "estimate": 28800,
+        "priority": "low",
+        "duedate": "2026-02-17 19:26:06",
+        "position": 10
+    },
+    {
+        "title": "Consult with Specialist",
+        "description": "Detailed description for \"Consult with Specialist\". This task involves several steps and requires attention to detail.",
+        "id": "c2c503a0-1d0d-4013-9509-398fbfc4e27c",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [],
+        "tint": "#F59E0B",
+        "stack": "fa5d0a33-da5c-4bf9-a291-096731d54684",
+        "estimate": 72000,
+        "priority": "low",
+        "duedate": "2026-02-17 19:26:06",
+        "position": 11
+    },
+    {
+        "title": "Patient Education Session",
+        "description": "Detailed description for \"Patient Education Session\". This task involves several steps and requires attention to detail.",
+        "id": "ff33c21a-9464-4bbd-9395-a485eaddf2e7",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [
+            "7dc1ea5c-ed61-4675-9f44-aefd52c14a56"
+        ],
+        "tint": "#F59E0B",
+        "stack": "fa5d0a33-da5c-4bf9-a291-096731d54684",
+        "estimate": 18000,
+        "priority": "low",
+        "duedate": "2026-02-14 19:26:06",
+        "position": 12
+    },
+    {
+        "title": "Post-op Checkup",
+        "description": "Detailed description for \"Post-op Checkup\". This task involves several steps and requires attention to detail.",
+        "id": "88de5bdb-56ef-404e-a87c-054eaef641e0",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [],
+        "tint": "#8B5CF6",
+        "stack": "ddb1f78e-5e4a-4bc3-8b1f-f2851fab9b15",
+        "estimate": 57600,
+        "priority": "medium",
+        "duedate": "2026-02-24 19:26:06",
+        "position": 0
+    },
+    {
+        "title": "Prenatal Visit",
+        "description": "Detailed description for \"Prenatal Visit\". This task involves several steps and requires attention to detail.",
+        "id": "5b0805fa-42b9-4ab7-877d-e0816ec29e54",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [],
+        "tint": "#8B5CF6",
+        "stack": "ddb1f78e-5e4a-4bc3-8b1f-f2851fab9b15",
+        "estimate": 57600,
+        "priority": "low",
+        "duedate": "2026-03-06 19:26:06",
+        "position": 1
+    },
+    {
+        "title": "Pediatric Growth Check",
+        "description": "Detailed description for \"Pediatric Growth Check\". This task involves several steps and requires attention to detail.",
+        "id": "03a9625f-e35e-4105-8bff-e1658d4e6a29",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [],
+        "tint": "#8B5CF6",
+        "stack": "ddb1f78e-5e4a-4bc3-8b1f-f2851fab9b15",
+        "estimate": 39600,
+        "priority": "medium",
+        "duedate": "2026-03-04 19:26:06",
+        "position": 2
+    },
+    {
+        "title": "Geriatric Assessment",
+        "description": "Detailed description for \"Geriatric Assessment\". This task involves several steps and requires attention to detail.",
+        "id": "53f9aa45-82b9-4d84-9d73-79b5dc0bab44",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [],
+        "tint": "#8B5CF6",
+        "stack": "ddb1f78e-5e4a-4bc3-8b1f-f2851fab9b15",
+        "estimate": 46800,
+        "priority": "low",
+        "duedate": "2026-03-06 19:26:06",
+        "position": 3
+    },
+    {
+        "title": "Chronic Disease Management",
+        "description": "Detailed description for \"Chronic Disease Management\". This task involves several steps and requires attention to detail.",
+        "id": "517f080f-5948-49ce-8b44-5af0828a1330",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [
+            "dc756809-7ae7-497d-baac-d30cc3c0e7d8"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "ddb1f78e-5e4a-4bc3-8b1f-f2851fab9b15",
+        "estimate": 10800,
+        "priority": "low",
+        "duedate": "2026-02-09 19:26:06",
+        "position": 4
+    },
+    {
+        "title": "Pain Management Consult",
+        "description": "Detailed description for \"Pain Management Consult\". This task involves several steps and requires attention to detail.",
+        "id": "38fd37d2-7cbd-463c-9016-fb6d4c131786",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [
+            "9b1f60af-df45-4b85-a217-235640f23e52",
+            "dc756809-7ae7-497d-baac-d30cc3c0e7d8"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "ddb1f78e-5e4a-4bc3-8b1f-f2851fab9b15",
+        "estimate": 39600,
+        "priority": "low",
+        "duedate": "2026-02-12 19:26:06",
+        "position": 5
+    },
+    {
+        "title": "Flu Shot Clinic",
+        "description": "Detailed description for \"Flu Shot Clinic\". This task involves several steps and requires attention to detail.",
+        "id": "ef6dc3af-bc82-4087-899a-044066ff2d12",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [
+            "b5287e25-fb9b-4c9c-ace8-1be2b7491b20"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "ddb1f78e-5e4a-4bc3-8b1f-f2851fab9b15",
+        "estimate": 46800,
+        "priority": "high",
+        "duedate": "2026-02-21 19:26:06",
+        "position": 6
+    },
+    {
+        "title": "COVID-19 Screening",
+        "description": "Detailed description for \"COVID-19 Screening\". This task involves several steps and requires attention to detail.",
+        "id": "d4ba178a-8ca5-4147-b14d-2e89703a4063",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [],
+        "tint": "#8B5CF6",
+        "stack": "ddb1f78e-5e4a-4bc3-8b1f-f2851fab9b15",
+        "estimate": 46800,
+        "priority": "medium",
+        "duedate": "2026-02-06 19:26:06",
+        "position": 7
+    },
+    {
+        "title": "Wound Care",
+        "description": "Detailed description for \"Wound Care\". This task involves several steps and requires attention to detail.",
+        "id": "418e9ee1-fc15-4b75-98dd-e6127613c7b0",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [],
+        "tint": "#8B5CF6",
+        "stack": "ddb1f78e-5e4a-4bc3-8b1f-f2851fab9b15",
+        "estimate": 14400,
+        "priority": "medium",
+        "duedate": "2026-03-01 19:26:06",
+        "position": 8
+    },
+    {
+        "title": "Suture Removal",
+        "description": "Detailed description for \"Suture Removal\". This task involves several steps and requires attention to detail.",
+        "id": "34405520-ea78-4617-80b6-341cecaa2814",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [
+            "b5287e25-fb9b-4c9c-ace8-1be2b7491b20",
+            "dc756809-7ae7-497d-baac-d30cc3c0e7d8"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "ddb1f78e-5e4a-4bc3-8b1f-f2851fab9b15",
+        "estimate": 39600,
+        "priority": "low",
+        "duedate": "2026-02-24 19:26:06",
+        "position": 9
+    },
+    {
+        "title": "Cast Application",
+        "description": "Detailed description for \"Cast Application\". This task involves several steps and requires attention to detail.",
+        "id": "1b6b83fa-5d3b-4205-bcb0-06a3fc0d0b75",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [
+            "9b1f60af-df45-4b85-a217-235640f23e52",
+            "7dc1ea5c-ed61-4675-9f44-aefd52c14a56"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "ddb1f78e-5e4a-4bc3-8b1f-f2851fab9b15",
+        "estimate": 7200,
+        "priority": "medium",
+        "duedate": "2026-03-03 19:26:06",
+        "position": 10
+    },
+    {
+        "title": "Splint Adjustment",
+        "description": "Detailed description for \"Splint Adjustment\". This task involves several steps and requires attention to detail.",
+        "id": "69375899-a994-433e-9eb2-845f74bebe40",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [
+            "b5287e25-fb9b-4c9c-ace8-1be2b7491b20"
+        ],
+        "tint": "#10B981",
+        "stack": "4f112cf9-569b-457a-a4a3-05eec0d80717",
+        "estimate": 7200,
+        "priority": "medium",
+        "duedate": "2026-02-05 19:26:06",
+        "position": 0
+    },
+    {
+        "title": "Blood Pressure Monitoring",
+        "description": "Detailed description for \"Blood Pressure Monitoring\". This task involves several steps and requires attention to detail.",
+        "id": "6b43bda1-3015-479f-bf47-5a2f46930673",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [],
+        "tint": "#10B981",
+        "stack": "4f112cf9-569b-457a-a4a3-05eec0d80717",
+        "estimate": 3600,
+        "priority": "low",
+        "duedate": "2026-02-10 19:26:06",
+        "position": 1
+    },
+    {
+        "title": "Diabetes Education",
+        "description": "Detailed description for \"Diabetes Education\". This task involves several steps and requires attention to detail.",
+        "id": "8fbe72d0-8486-4f13-af10-9f3b56e2aa50",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [],
+        "tint": "#10B981",
+        "stack": "4f112cf9-569b-457a-a4a3-05eec0d80717",
+        "estimate": 46800,
+        "priority": "low",
+        "duedate": "2026-02-14 19:26:06",
+        "position": 2
+    },
+    {
+        "title": "Nutrition Counseling",
+        "description": "Detailed description for \"Nutrition Counseling\". This task involves several steps and requires attention to detail.",
+        "id": "d1aed9ec-1e7d-46d9-84c9-e59e2ac84a92",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [],
+        "tint": "#10B981",
+        "stack": "4f112cf9-569b-457a-a4a3-05eec0d80717",
+        "estimate": 7200,
+        "priority": "low",
+        "duedate": "2026-03-05 19:26:06",
+        "position": 3
+    },
+    {
+        "title": "Mental Health Screening",
+        "description": "Detailed description for \"Mental Health Screening\". This task involves several steps and requires attention to detail.",
+        "id": "6b95d0b2-8971-457f-a7b7-9dc5c49ed080",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [
+            "b5287e25-fb9b-4c9c-ace8-1be2b7491b20"
+        ],
+        "tint": "#10B981",
+        "stack": "4f112cf9-569b-457a-a4a3-05eec0d80717",
+        "estimate": 10800,
+        "priority": "high",
+        "duedate": "2026-03-01 19:26:06",
+        "position": 4
+    },
+    {
+        "title": "Prescription Authorization",
+        "description": "Detailed description for \"Prescription Authorization\". This task involves several steps and requires attention to detail.",
+        "id": "6b36cd19-83fd-4a90-9ff5-366e34b6987a",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [
+            "9b1f60af-df45-4b85-a217-235640f23e52"
+        ],
+        "tint": "#10B981",
+        "stack": "4f112cf9-569b-457a-a4a3-05eec0d80717",
+        "estimate": 10800,
+        "priority": "high",
+        "duedate": "2026-02-26 19:26:06",
+        "position": 5
+    },
+    {
+        "title": "Pharmacy Consultation",
+        "description": "Detailed description for \"Pharmacy Consultation\". This task involves several steps and requires attention to detail.",
+        "id": "67703205-f095-4919-96b5-8ec941a6696e",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [
+            "7dc1ea5c-ed61-4675-9f44-aefd52c14a56"
+        ],
+        "tint": "#10B981",
+        "stack": "4f112cf9-569b-457a-a4a3-05eec0d80717",
+        "estimate": 21600,
+        "priority": "high",
+        "duedate": "2026-02-28 19:26:06",
+        "position": 6
+    },
+    {
+        "title": "Billing Dispute Resolution",
+        "description": "Detailed description for \"Billing Dispute Resolution\". This task involves several steps and requires attention to detail.",
+        "id": "f0b5ebb1-b180-467e-bc4c-14e0c2a7ea8d",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [],
+        "tint": "#10B981",
+        "stack": "4f112cf9-569b-457a-a4a3-05eec0d80717",
+        "estimate": 64800,
+        "priority": "high",
+        "duedate": "2026-02-16 19:26:06",
+        "position": 7
+    },
+    {
+        "title": "Submit Medicare Claims",
+        "description": "Detailed description for \"Submit Medicare Claims\". This task involves several steps and requires attention to detail.",
+        "id": "32dc5150-7afa-492e-be18-72b947a81c74",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [
+            "b5287e25-fb9b-4c9c-ace8-1be2b7491b20",
+            "dc756809-7ae7-497d-baac-d30cc3c0e7d8"
+        ],
+        "tint": "#10B981",
+        "stack": "4f112cf9-569b-457a-a4a3-05eec0d80717",
+        "estimate": 68400,
+        "priority": "low",
+        "duedate": "2026-02-23 19:26:06",
+        "position": 8
+    },
+    {
+        "title": "Update Fee Schedule",
+        "description": "Detailed description for \"Update Fee Schedule\". This task involves several steps and requires attention to detail.",
+        "id": "e8d588c3-36bb-4213-bbb9-943f39d5ed5b",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [
+            "b5287e25-fb9b-4c9c-ace8-1be2b7491b20"
+        ],
+        "tint": "#10B981",
+        "stack": "4f112cf9-569b-457a-a4a3-05eec0d80717",
+        "estimate": 28800,
+        "priority": "medium",
+        "duedate": "2026-03-01 19:26:06",
+        "position": 9
+    },
+    {
+        "title": "Patient Smith - Annual Checkup (2)",
+        "description": "Detailed description for \"Patient Smith - Annual Checkup (2)\". This task involves several steps and requires attention to detail.",
+        "id": "5de0daf7-0bfd-4757-9419-d867111c7e73",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [
+            "7dc1ea5c-ed61-4675-9f44-aefd52c14a56"
+        ],
+        "tint": "#10B981",
+        "stack": "4f112cf9-569b-457a-a4a3-05eec0d80717",
+        "estimate": 36000,
+        "priority": "high",
+        "duedate": "2026-03-04 19:26:06",
+        "position": 10
+    },
+    {
+        "title": "Review Blood Work - Doe (2)",
+        "description": "Detailed description for \"Review Blood Work - Doe (2)\". This task involves several steps and requires attention to detail.",
+        "id": "b1d3a4a0-a864-498b-807a-ccfcd7dd278d",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [
+            "7dc1ea5c-ed61-4675-9f44-aefd52c14a56",
+            "9b1f60af-df45-4b85-a217-235640f23e52"
+        ],
+        "tint": "#10B981",
+        "stack": "4f112cf9-569b-457a-a4a3-05eec0d80717",
+        "estimate": 10800,
+        "priority": "high",
+        "duedate": "2026-02-18 19:26:06",
+        "position": 11
+    },
+    {
+        "title": "Vaccination Schedule (2)",
+        "description": "Detailed description for \"Vaccination Schedule (2)\". This task involves several steps and requires attention to detail.",
+        "id": "ca783efd-d0e1-480b-b2d3-f069a1962cf0",
+        "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "tags": [],
+        "tint": "#10B981",
+        "stack": "4f112cf9-569b-457a-a4a3-05eec0d80717",
+        "estimate": 18000,
+        "priority": "low",
+        "duedate": "2026-03-06 19:26:06",
+        "position": 12
+    }
+]

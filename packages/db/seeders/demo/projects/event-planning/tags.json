@@ -1,0 +1,72 @@
+[
+    {
+        "id": "72e5ad36-c744-4c38-b119-28600f4cac57",
+        "title": "Venue",
+        "color": "#3B82F6",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "72866e79-2023-4724-9088-39185f07e73a",
+        "title": "Catering",
+        "color": "#10B981",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "ceee2c69-9ad4-4473-8356-0200f1e713b9",
+        "title": "Speakers",
+        "color": "#8B5CF6",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "714f34bb-2cfa-4c08-9165-a5c2a6a984e7",
+        "title": "AV & Tech",
+        "color": "#F59E0B",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "43fc556b-4b94-445e-ab8d-3540d64cfa30",
+        "title": "Registration",
+        "color": "#EF4444",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "108f00fa-b231-487d-8d56-a9dc7225b6b8",
+        "title": "Marketing",
+        "color": "#EC4899",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "16195ca9-696d-4c70-9340-8ac969e779c8",
+        "title": "Urgent",
+        "color": "#DC2626",
+        "type": "status",
+        "section": "projects"
+    },
+    {
+        "id": "b790af37-53a5-4829-8f1b-856cd596e1d3",
+        "title": "Milestone",
+        "color": "#7C3AED",
+        "type": "status",
+        "section": "projects"
+    },
+    {
+        "id": "73e92104-1629-41a6-9a84-28cd756ced03",
+        "title": "Vendor",
+        "color": "#059669",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "c117e611-24c8-466a-b3ee-3368ac1edc11",
+        "title": "Budget",
+        "color": "#D97706",
+        "type": "tag",
+        "section": "projects"
+    }
+]

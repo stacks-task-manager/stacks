@@ -1,0 +1,63 @@
+{
+  "entityName": "Notification",
+  "tableName": "notifications",
+  "attributes": {
+    "id": {
+      "type": "UUID",
+      "defaultValue": "UUIDV4",
+      "primaryKey": true
+    },
+    "title": {
+      "type": "STRING",
+      "allowNull": false
+    },
+    "subtitle": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "recordId": {
+      "type": "UUID",
+      "allowNull": false
+    },
+    "recordType": {
+      "type": "STRING",
+      "allowNull": false
+    },
+    "date": {
+      "type": "DATE",
+      "allowNull": false
+    },
+    "delivered": {
+      "type": "DATE",
+      "allowNull": false,
+      "defaultValue": "NOW"
+    },
+    "tenant": {
+      "type": "STRING",
+      "allowNull": false
+    },
+    "createdBy": {
+      "type": "STRING",
+      "allowNull": false
+    },
+    "deletedBy": {
+      "type": "UUID",
+      "allowNull": true
+    },
+    "created": {
+      "type": "DATE",
+      "allowNull": false,
+      "defaultValue": "NOW"
+    },
+    "updated": {
+      "type": "DATE",
+      "allowNull": false,
+      "defaultValue": "NOW"
+    },
+    "deleted": {
+      "type": "DATE",
+      "allowNull": true
+    }
+  },
+  "options": {}
+}

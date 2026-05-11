@@ -1,0 +1,58 @@
+[
+    {
+        "id": "9bc2409b-9aee-47d3-a8ec-fd6efd4c4657",
+        "title": "Keynote",
+        "color": "#06B6D4",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "6ab119d8-4700-4872-aa14-8ca75bb88a49",
+        "title": "Workshops",
+        "color": "#6366F1",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "fbe6d5b6-5522-489f-8e74-08d210906351",
+        "title": "Catering",
+        "color": "#3B82F6",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "fc56be03-c314-40af-9e52-2fc6c2bb2b17",
+        "title": "AV",
+        "color": "#06B6D4",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "19aa41f3-0edc-4c1c-9a51-43bbff5b41d6",
+        "title": "Marketing",
+        "color": "#F59E0B",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "4a5e482c-9b2b-4678-b5e3-e7aedff407f2",
+        "title": "Confirmed",
+        "color": "#EF4444",
+        "type": "status",
+        "section": "projects"
+    },
+    {
+        "id": "54eb38d5-69e7-46f8-a39e-d571070b113e",
+        "title": "Pending",
+        "color": "#EC4899",
+        "type": "status",
+        "section": "projects"
+    },
+    {
+        "id": "fe6cdad0-7945-4c7e-b294-83c80e3e98b9",
+        "title": "Paid",
+        "color": "#EF4444",
+        "type": "status",
+        "section": "projects"
+    }
+]

@@ -1,0 +1,42 @@
+[
+    {
+        "id": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "title": "Career Hunt",
+        "estimate": 360000,
+        "stacks": [
+            {
+                "title": "Leads",
+                "tint": "#F59E0B",
+                "id": "b7b1d1f7-5808-42cd-9171-41998067a943"
+            },
+            {
+                "title": "Applied",
+                "tint": "#F97316",
+                "id": "757a4ffc-fc3e-4f3e-a9c3-6e00ccef667b"
+            },
+            {
+                "title": "Interviewing",
+                "tint": "#64748B",
+                "id": "845a137e-a4f1-4276-9d64-aee7f0deac78"
+            },
+            {
+                "title": "Offer",
+                "tint": "#6366F1",
+                "id": "02a9b5db-b11e-4d85-ae2b-818f0956da8b"
+            },
+            {
+                "title": "Accepted",
+                "tint": "#06B6D4",
+                "id": "1ea1720b-c599-48a8-b066-787bbbe48b66"
+            },
+            {
+                "title": "Rejected",
+                "tint": "#EC4899",
+                "id": "c9d835a1-f70c-48f2-af5e-ab59ec2e00b3"
+            }
+        ],
+        "hourlyRate": 73,
+        "currency": "USD",
+        "health": "good"
+    }
+]

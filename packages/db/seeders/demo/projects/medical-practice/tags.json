@@ -1,0 +1,30 @@
+[
+    {
+        "id": "dc756809-7ae7-497d-baac-d30cc3c0e7d8",
+        "title": "Urgent",
+        "color": "#EF4444",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "9b1f60af-df45-4b85-a217-235640f23e52",
+        "title": "Routine",
+        "color": "#10B981",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "7dc1ea5c-ed61-4675-9f44-aefd52c14a56",
+        "title": "Follow-up",
+        "color": "#06B6D4",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "b5287e25-fb9b-4c9c-ace8-1be2b7491b20",
+        "title": "Admin",
+        "color": "#94A3B8",
+        "type": "tag",
+        "section": "projects"
+    }
+]

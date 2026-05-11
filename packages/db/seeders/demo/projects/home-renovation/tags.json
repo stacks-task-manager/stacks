@@ -1,0 +1,58 @@
+[
+    {
+        "id": "85a7f8aa-65ba-4e5c-9738-6f47221d9e77",
+        "title": "Kitchen",
+        "color": "#F97316",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "0cb1a288-f9a4-47eb-8c3d-313a1fb99a05",
+        "title": "Bathroom",
+        "color": "#F97316",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "53c09559-2372-456d-8e68-64c049be2b66",
+        "title": "Garden",
+        "color": "#6366F1",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "66311ecd-1904-4630-83a4-dc1a320e2e3d",
+        "title": "Living Room",
+        "color": "#EF4444",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "41caeba7-705c-45f2-8d36-f4df2d3da7cd",
+        "title": "Bedroom",
+        "color": "#6366F1",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "6866818f-a917-4115-917b-e119fcf50ad5",
+        "title": "Permit Pending",
+        "color": "#EC4899",
+        "type": "status",
+        "section": "projects"
+    },
+    {
+        "id": "72648a6e-609d-4904-958f-add669d77ac1",
+        "title": "Material Ordered",
+        "color": "#10B981",
+        "type": "status",
+        "section": "projects"
+    },
+    {
+        "id": "547f744a-f8e7-41b6-92a7-ae95a47af42e",
+        "title": "Installed",
+        "color": "#8B5CF6",
+        "type": "status",
+        "section": "projects"
+    }
+]

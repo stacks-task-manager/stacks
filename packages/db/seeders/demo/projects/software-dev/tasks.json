@@ -1,0 +1,263 @@
+[
+    {
+        "title": "Project Requirements Gathering",
+        "description": "Conduct stakeholder interviews, define functional and non-functional requirements, create user stories, and establish project scope and acceptance criteria.",
+        "id": "2e0c93be-0dfa-467e-acf5-17d78fa7fbc3",
+        "project": "45fd4b7f-47b3-405d-a555-58606107ea15",
+        "tags": [
+            "s9t9c0d1-e2f3-a4b5-c6d7-e8f9a0b1c2d3"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "6fd05462-1e06-4027-95a2-40b4eaa6d6c7",
+        "estimate": 32400,
+        "priority": "high",
+        "duedate": "2024-04-05 17:00:00",
+        "position": 0
+    },
+    {
+        "title": "Technical Architecture Design",
+        "description": "Design system architecture, choose technology stack, define data models, API specifications, and create technical documentation.",
+        "id": "5d7ee0bc-7cc5-4100-bb91-a3e83bc76752",
+        "project": "45fd4b7f-47b3-405d-a555-58606107ea15",
+        "tags": [
+            "s2t2b3c4-d5e6-f7a8-b9c0-d1e2f3a4b5c6",
+            "s9t9c0d1-e2f3-a4b5-c6d7-e8f9a0b1c2d3"
+        ],
+        "tint": "#3B82F6",
+        "stack": "97af4c39-6f99-4900-b324-3d190c1fc2db",
+        "estimate": 43200,
+        "priority": "high",
+        "position": 0
+    },
+    {
+        "title": "Database Schema Design",
+        "description": "Create comprehensive database schema with proper relationships, indexes, constraints, and migration scripts for the task management system.",
+        "id": "a549e942-2f10-4b5c-af0c-41931d6c5da9",
+        "project": "45fd4b7f-47b3-405d-a555-58606107ea15",
+        "tags": [
+            "s3t3c4d5-e6f7-a8b9-c0d1-e2f3a4b5c6d7"
+        ],
+        "tint": "#3B82F6",
+        "stack": "97af4c39-6f99-4900-b324-3d190c1fc2db",
+        "estimate": 28800,
+        "priority": "high",
+        "position": 1
+    },
+    {
+        "title": "User Authentication System",
+        "description": "Implement secure user registration, login, password reset, and session management with JWT tokens and role-based access control.",
+        "id": "a84b1c8e-fd12-4e7b-ad16-758b3388a868",
+        "project": "45fd4b7f-47b3-405d-a555-58606107ea15",
+        "tags": [
+            "s2t2b3c4-d5e6-f7a8-b9c0-d1e2f3a4b5c6",
+            "s0t0d1e2-f3a4-b5c6-d7e8-f9a0b1c2d3e4"
+        ],
+        "tint": "#F59E0B",
+        "stack": "5018c7b5-4aae-4b3e-9bbb-2ef851a5d893",
+        "estimate": 36000,
+        "priority": "high",
+        "position": 0
+    },
+    {
+        "title": "Task CRUD API Development",
+        "description": "Build RESTful APIs for task creation, reading, updating, and deletion with proper validation, error handling, and documentation.",
+        "id": "5a356d97-90af-49ca-b4aa-99ff0ec4b847",
+        "project": "45fd4b7f-47b3-405d-a555-58606107ea15",
+        "tags": [
+            "s4t4d5e6-f7a8-b9c0-d1e2-f3a4b5c6d7e8",
+            "s2t2b3c4-d5e6-f7a8-b9c0-d1e2f3a4b5c6"
+        ],
+        "tint": "#F59E0B",
+        "stack": "5018c7b5-4aae-4b3e-9bbb-2ef851a5d893",
+        "estimate": 39600,
+        "priority": "medium",
+        "position": 1
+    },
+    {
+        "title": "Frontend Component Library",
+        "description": "Develop reusable React components for task cards, forms, modals, navigation, and responsive layouts following design system principles.",
+        "id": "164bef26-867e-4755-8152-d2e3ecc92180",
+        "project": "45fd4b7f-47b3-405d-a555-58606107ea15",
+        "tags": [
+            "s1t1a2b3-c4d5-e6f7-a8b9-c0d1e2f3a4b5"
+        ],
+        "tint": "#F59E0B",
+        "stack": "5018c7b5-4aae-4b3e-9bbb-2ef851a5d893",
+        "estimate": 50400,
+        "priority": "medium",
+        "position": 2
+    },
+    {
+        "title": "Task Dashboard Implementation",
+        "description": "Create interactive dashboard with task filtering, sorting, search functionality, and different view modes (list, kanban, calendar).",
+        "id": "86fd6470-09c9-433d-9a67-0990b6ef120d",
+        "project": "45fd4b7f-47b3-405d-a555-58606107ea15",
+        "tags": [
+            "s1t1a2b3-c4d5-e6f7-a8b9-c0d1e2f3a4b5",
+            "s8t8b9c0-d1e2-f3a4-b5c6-d7e8f9a0b1c2"
+        ],
+        "tint": "#F59E0B",
+        "stack": "5018c7b5-4aae-4b3e-9bbb-2ef851a5d893",
+        "estimate": 46800,
+        "priority": "medium",
+        "position": 3
+    },
+    {
+        "title": "Real-time Notifications",
+        "description": "Implement WebSocket-based real-time notifications for task updates, assignments, and deadline reminders with browser push notifications.",
+        "id": "5e30e3da-5455-4d4f-af6b-0c075f8a073e",
+        "project": "45fd4b7f-47b3-405d-a555-58606107ea15",
+        "tags": [
+            "s2t2b3c4-d5e6-f7a8-b9c0-d1e2f3a4b5c6",
+            "s8t8b9c0-d1e2-f3a4-b5c6-d7e8f9a0b1c2"
+        ],
+        "tint": "#F59E0B",
+        "stack": "5018c7b5-4aae-4b3e-9bbb-2ef851a5d893",
+        "estimate": 32400,
+        "priority": "low",
+        "position": 4
+    },
+    {
+        "title": "Team Collaboration Features",
+        "description": "Build team management, task assignment, commenting system, and activity feeds to enable collaborative task management.",
+        "id": "de0a1709-94a9-49b2-badf-56cbe17bc124",
+        "project": "45fd4b7f-47b3-405d-a555-58606107ea15",
+        "tags": [
+            "s8t8b9c0-d1e2-f3a4-b5c6-d7e8f9a0b1c2",
+            "s4t4d5e6-f7a8-b9c0-d1e2-f3a4b5c6d7e8"
+        ],
+        "tint": "#F59E0B",
+        "stack": "5018c7b5-4aae-4b3e-9bbb-2ef851a5d893",
+        "estimate": 54000,
+        "priority": "medium",
+        "position": 5
+    },
+    {
+        "title": "Unit Testing Implementation",
+        "description": "Write comprehensive unit tests for all components, services, and API endpoints with 90%+ code coverage using Jest and React Testing Library.",
+        "id": "c4a10f90-0aae-4a3c-af4c-645151db1813",
+        "project": "45fd4b7f-47b3-405d-a555-58606107ea15",
+        "tags": [
+            "s5t5e6f7-a8b9-c0d1-e2f3-a4b5c6d7e8f9"
+        ],
+        "tint": "#EF4444",
+        "stack": "1db0392b-e127-46db-8ef5-4e439beda046",
+        "estimate": 43200,
+        "priority": "medium",
+        "position": 0
+    },
+    {
+        "title": "Integration Testing Suite",
+        "description": "Develop end-to-end integration tests covering user workflows, API interactions, and database operations using Cypress or Playwright.",
+        "id": "9746bdaf-9006-4a48-a644-6ec71529842c",
+        "project": "45fd4b7f-47b3-405d-a555-58606107ea15",
+        "tags": [
+            "s5t5e6f7-a8b9-c0d1-e2f3-a4b5c6d7e8f9"
+        ],
+        "tint": "#EF4444",
+        "stack": "1db0392b-e127-46db-8ef5-4e439beda046",
+        "estimate": 36000,
+        "priority": "medium",
+        "position": 1
+    },
+    {
+        "title": "Performance Optimization",
+        "description": "Optimize application performance through code splitting, lazy loading, database query optimization, and caching strategies.",
+        "id": "119db54f-0187-4b4f-9baa-17110798b8a9",
+        "project": "45fd4b7f-47b3-405d-a555-58606107ea15",
+        "tags": [
+            "s1t1a2b3-c4d5-e6f7-a8b9-c0d1e2f3a4b5",
+            "s2t2b3c4-d5e6-f7a8-b9c0-d1e2f3a4b5c6"
+        ],
+        "tint": "#EF4444",
+        "stack": "1db0392b-e127-46db-8ef5-4e439beda046",
+        "estimate": 28800,
+        "priority": "low",
+        "position": 2
+    },
+    {
+        "title": "Security Audit & Hardening",
+        "description": "Conduct security review, implement input validation, SQL injection prevention, XSS protection, and secure authentication practices.",
+        "id": "3d8d958f-48d1-4f0f-8393-51f403b3cef2",
+        "project": "45fd4b7f-47b3-405d-a555-58606107ea15",
+        "tags": [
+            "s0t0d1e2-f3a4-b5c6-d7e8-f9a0b1c2d3e4"
+        ],
+        "tint": "#EF4444",
+        "stack": "1db0392b-e127-46db-8ef5-4e439beda046",
+        "estimate": 25200,
+        "priority": "high",
+        "position": 3
+    },
+    {
+        "title": "CI/CD Pipeline Setup",
+        "description": "Configure automated build, test, and deployment pipeline using GitHub Actions with staging and production environments.",
+        "id": "c9a4ac9f-e32c-4f5e-8b2d-9bca9a4dfc19",
+        "project": "45fd4b7f-47b3-405d-a555-58606107ea15",
+        "tags": [
+            "s6t6f7a8-b9c0-d1e2-f3a4-b5c6d7e8f9a0"
+        ],
+        "tint": "#10B981",
+        "stack": "93b3a5e6-ca54-4b48-88ed-039bd906bbc0",
+        "estimate": 32400,
+        "priority": "medium",
+        "position": 0
+    },
+    {
+        "title": "Production Deployment",
+        "description": "Deploy application to production environment with proper monitoring, logging, backup strategies, and rollback procedures.",
+        "id": "12653acb-6c02-41ab-9c8a-cb9a2a52b1ed",
+        "project": "45fd4b7f-47b3-405d-a555-58606107ea15",
+        "tags": [
+            "s6t6f7a8-b9c0-d1e2-f3a4-b5c6d7e8f9a0"
+        ],
+        "tint": "#10B981",
+        "stack": "93b3a5e6-ca54-4b48-88ed-039bd906bbc0",
+        "estimate": 21600,
+        "priority": "high",
+        "position": 1
+    },
+    {
+        "title": "Bug Fix: Task Deletion Issue",
+        "description": "Investigate and fix the issue where deleted tasks are still appearing in some dashboard views due to caching problems.",
+        "id": "de3a272d-a42c-4472-aefb-a9e510c6d12d",
+        "project": "45fd4b7f-47b3-405d-a555-58606107ea15",
+        "tags": [
+            "s7t7a8b9-c0d1-e2f3-a4b5-c6d7e8f9a0b1",
+            "s1t1a2b3-c4d5-e6f7-a8b9-c0d1e2f3a4b5"
+        ],
+        "tint": "#06B6D4",
+        "stack": "35399ad9-7878-439b-98b4-9374db6759a2",
+        "estimate": 7200,
+        "priority": "high",
+        "position": 0
+    },
+    {
+        "title": "Documentation & User Guide",
+        "description": "Create comprehensive API documentation, user manual, deployment guide, and developer onboarding documentation.",
+        "id": "bc801592-7873-49d6-b32c-da2748918916",
+        "project": "45fd4b7f-47b3-405d-a555-58606107ea15",
+        "tags": [
+            "s9t9c0d1-e2f3-a4b5-c6d7-e8f9a0b1c2d3"
+        ],
+        "tint": "#06B6D4",
+        "stack": "6fd05462-1e06-4027-95a2-40b4eaa6d6c7",
+        "estimate": 18000,
+        "priority": "low",
+        "position": 1
+    },
+    {
+        "title": "Monitoring & Analytics Setup",
+        "description": "Implement application monitoring, error tracking, performance metrics, and user analytics using tools like Sentry and Google Analytics.",
+        "id": "168af1a9-9bf8-42e4-9bdb-786ed38d0e52",
+        "project": "45fd4b7f-47b3-405d-a555-58606107ea15",
+        "tags": [
+            "s6t6f7a8-b9c0-d1e2-f3a4-b5c6d7e8f9a0"
+        ],
+        "tint": "#06B6D4",
+        "stack": "93b3a5e6-ca54-4b48-88ed-039bd906bbc0",
+        "estimate": 14400,
+        "priority": "medium",
+        "position": 2
+    }
+]

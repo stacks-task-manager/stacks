@@ -1,0 +1,55 @@
+{
+  "entityName": "Role",
+  "tableName": "roles",
+  "attributes": {
+    "id": {
+      "type": "UUID",
+      "defaultValue": "UUIDV4",
+      "primaryKey": true
+    },
+    "tenant": {
+      "type": "UUID",
+      "allowNull": false
+    },
+    "createdBy": {
+      "type": "UUID",
+      "allowNull": false
+    },
+    "updatedBy": {
+      "type": "UUID",
+      "allowNull": false
+    },
+    "deletedBy": {
+      "type": "UUID",
+      "allowNull": true
+    },
+    "created": {
+      "type": "DATE",
+      "defaultValue": "NOW",
+      "allowNull": false
+    },
+    "updated": {
+      "type": "DATE",
+      "defaultValue": "NOW",
+      "allowNull": false
+    },
+    "deleted": {
+      "type": "DATE",
+      "allowNull": true
+    },
+    "title": {
+      "type": "STRING",
+      "allowNull": false
+    },
+    "description": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "disabled": {
+      "type": "BOOLEAN",
+      "allowNull": false,
+      "defaultValue": false
+    }
+  },
+  "options": {}
+}

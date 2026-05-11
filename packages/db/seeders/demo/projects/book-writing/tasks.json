@@ -1,0 +1,993 @@
+[
+    {
+        "title": "Create Character Profiles",
+        "description": "Description for Create Character Profiles",
+        "id": "2722d0ed-020c-4af1-b466-14aee1c3293f",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "7ecdd73c-8bcc-4600-92de-7ce7d3a3828a",
+            "d6b512c1-3ea7-4134-80b7-6a806c5a052f"
+        ],
+        "tint": null,
+        "stack": "ac1c7775-c6d2-4b84-ad90-c966a099b4a5",
+        "estimate": 36000,
+        "priority": "low",
+        "duedate": "2026-03-29 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "Outline Plot",
+        "description": "Description for Outline Plot",
+        "id": "2c4e9492-ab01-41ea-bb90-64e970f46063",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "d406250d-9f7e-4f03-8f60-e9e31ee74e24"
+        ],
+        "tint": "#F97316",
+        "stack": "ac1c7775-c6d2-4b84-ad90-c966a099b4a5",
+        "estimate": 28800,
+        "priority": "medium",
+        "duedate": "2026-03-03 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "Write Chapter 1",
+        "description": "Description for Write Chapter 1",
+        "id": "e5553ef0-3f72-4430-8b4b-4be84ab4e062",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "d6b512c1-3ea7-4134-80b7-6a806c5a052f",
+            "7f33ac68-eba4-4614-9d56-7698bc3bf18c"
+        ],
+        "tint": null,
+        "stack": "ac1c7775-c6d2-4b84-ad90-c966a099b4a5",
+        "estimate": 10800,
+        "priority": "high",
+        "duedate": "2026-03-25 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "Write Chapter 2",
+        "description": "Description for Write Chapter 2",
+        "id": "a150bd2c-3aaa-4354-b1ee-f269d38cc44d",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "d6b512c1-3ea7-4134-80b7-6a806c5a052f",
+            "47623f40-17b4-4c90-993c-20ddc13c761e"
+        ],
+        "tint": "#10B981",
+        "stack": "ac1c7775-c6d2-4b84-ad90-c966a099b4a5",
+        "estimate": 14400,
+        "priority": "low",
+        "duedate": "2026-02-18 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Edit Chapter 3",
+        "description": "Description for Edit Chapter 3",
+        "id": "41f4b7e8-9c71-46b0-901d-2b42d916f552",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [],
+        "tint": null,
+        "stack": "ac1c7775-c6d2-4b84-ad90-c966a099b4a5",
+        "estimate": 36000,
+        "priority": "medium",
+        "duedate": "2026-03-10 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Fix Plot Hole",
+        "description": "Description for Fix Plot Hole",
+        "id": "dd29fc3d-8c13-4f6d-98a0-e4ac4221699b",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "7f33ac68-eba4-4614-9d56-7698bc3bf18c"
+        ],
+        "tint": null,
+        "stack": "ac1c7775-c6d2-4b84-ad90-c966a099b4a5",
+        "estimate": 10800,
+        "priority": "high",
+        "duedate": "2026-03-18 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "Design Cover",
+        "description": "Description for Design Cover",
+        "id": "a44411b0-ed8c-4e34-8d6b-fdeb04215518",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [],
+        "tint": null,
+        "stack": "ac1c7775-c6d2-4b84-ad90-c966a099b4a5",
+        "estimate": 32400,
+        "priority": "low",
+        "duedate": "2026-03-14 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "Format for Kindle",
+        "description": "Description for Format for Kindle",
+        "id": "906dbb7f-00a9-4b9a-9632-abcb1f12b797",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "7ecdd73c-8bcc-4600-92de-7ce7d3a3828a",
+            "8a0766fd-14a0-4598-ae2d-cde71a2c3af1"
+        ],
+        "tint": "#EF4444",
+        "stack": "ac1c7775-c6d2-4b84-ad90-c966a099b4a5",
+        "estimate": 21600,
+        "priority": "high",
+        "duedate": "2026-02-23 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "Send to Editor",
+        "description": "Description for Send to Editor",
+        "id": "ccbc3798-7879-4855-bc1f-773aa8d05dc0",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "8a0766fd-14a0-4598-ae2d-cde71a2c3af1"
+        ],
+        "tint": null,
+        "stack": "ac1c7775-c6d2-4b84-ad90-c966a099b4a5",
+        "estimate": 3600,
+        "priority": "high",
+        "duedate": "2026-03-18 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "Review Beta Feedback",
+        "description": "Description for Review Beta Feedback",
+        "id": "90395208-eed5-4709-ba60-0e598b792337",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "1c83f03a-4924-41f0-a004-55d2aedadd4d"
+        ],
+        "tint": null,
+        "stack": "ac1c7775-c6d2-4b84-ad90-c966a099b4a5",
+        "estimate": 36000,
+        "priority": "low",
+        "duedate": "2026-03-08 20:00:36",
+        "position": 9
+    },
+    {
+        "title": "Write Blurb",
+        "description": "Description for Write Blurb",
+        "id": "fd7f0ac4-aedf-4246-87a7-2625df860bc4",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "25bf8a71-f269-4dca-ae26-3332b86d9a02"
+        ],
+        "tint": "#EF4444",
+        "stack": "ac1c7775-c6d2-4b84-ad90-c966a099b4a5",
+        "estimate": 3600,
+        "priority": "low",
+        "duedate": "2026-03-14 20:00:36",
+        "position": 10
+    },
+    {
+        "title": "Setup Author Website",
+        "description": "Description for Setup Author Website",
+        "id": "54ea7f5f-b62e-467d-9c03-1ddbe3ff2fdb",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "25bf8a71-f269-4dca-ae26-3332b86d9a02",
+            "1c83f03a-4924-41f0-a004-55d2aedadd4d"
+        ],
+        "tint": "#06B6D4",
+        "stack": "97bbb97b-5a16-41ca-b558-44d655060110",
+        "estimate": 28800,
+        "priority": "high",
+        "duedate": "2026-03-05 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "Launch Social Media",
+        "description": "Description for Launch Social Media",
+        "id": "5dabe427-bf30-425a-ac3f-24f0abf5b6b8",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [],
+        "tint": null,
+        "stack": "97bbb97b-5a16-41ca-b558-44d655060110",
+        "estimate": 21600,
+        "priority": "low",
+        "duedate": "2026-03-03 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "Submit to Agents",
+        "description": "Description for Submit to Agents",
+        "id": "e22a23c8-b9c1-4120-86bb-e08d4480cbfe",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "1c83f03a-4924-41f0-a004-55d2aedadd4d"
+        ],
+        "tint": "#F97316",
+        "stack": "97bbb97b-5a16-41ca-b558-44d655060110",
+        "estimate": 28800,
+        "priority": "high",
+        "duedate": "2026-02-22 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "Query Letters",
+        "description": "Description for Query Letters",
+        "id": "431209ec-e8da-4c02-9901-e65cfaa1ea76",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [],
+        "tint": "#06B6D4",
+        "stack": "97bbb97b-5a16-41ca-b558-44d655060110",
+        "estimate": 18000,
+        "priority": "high",
+        "duedate": "2026-03-17 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Create Character Profiles (2)",
+        "description": "Description for Create Character Profiles (2)",
+        "id": "7994f0cb-fdfc-47b4-ac54-c63e17b8ea20",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "d6b512c1-3ea7-4134-80b7-6a806c5a052f"
+        ],
+        "tint": "#EF4444",
+        "stack": "97bbb97b-5a16-41ca-b558-44d655060110",
+        "estimate": 7200,
+        "priority": "high",
+        "duedate": "2026-04-03 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Outline Plot (2)",
+        "description": "Description for Outline Plot (2)",
+        "id": "9c29317c-be4c-44f1-857a-81ecada4c0b3",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "7f33ac68-eba4-4614-9d56-7698bc3bf18c",
+            "7ecdd73c-8bcc-4600-92de-7ce7d3a3828a",
+            "47623f40-17b4-4c90-993c-20ddc13c761e"
+        ],
+        "tint": null,
+        "stack": "97bbb97b-5a16-41ca-b558-44d655060110",
+        "estimate": 25200,
+        "priority": "medium",
+        "duedate": "2026-04-03 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "Write Chapter 1 (2)",
+        "description": "Description for Write Chapter 1 (2)",
+        "id": "dccdda64-fad5-463e-aca4-af736b752f54",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "8a0766fd-14a0-4598-ae2d-cde71a2c3af1"
+        ],
+        "tint": null,
+        "stack": "97bbb97b-5a16-41ca-b558-44d655060110",
+        "estimate": 21600,
+        "priority": "high",
+        "duedate": "2026-04-02 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "Write Chapter 2 (2)",
+        "description": "Description for Write Chapter 2 (2)",
+        "id": "a863ff0b-f655-4752-ad21-4ea345dab959",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [],
+        "tint": null,
+        "stack": "97bbb97b-5a16-41ca-b558-44d655060110",
+        "estimate": 32400,
+        "priority": "medium",
+        "duedate": "2026-02-28 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "Edit Chapter 3 (2)",
+        "description": "Description for Edit Chapter 3 (2)",
+        "id": "50e661d6-afed-4410-ada0-e2ddf0d1e383",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [],
+        "tint": null,
+        "stack": "97bbb97b-5a16-41ca-b558-44d655060110",
+        "estimate": 3600,
+        "priority": "high",
+        "duedate": "2026-02-09 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "Fix Plot Hole (2)",
+        "description": "Description for Fix Plot Hole (2)",
+        "id": "1b0ff92a-0715-4266-9965-3c827f5f80c1",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "8a0766fd-14a0-4598-ae2d-cde71a2c3af1"
+        ],
+        "tint": null,
+        "stack": "97bbb97b-5a16-41ca-b558-44d655060110",
+        "estimate": 7200,
+        "priority": "medium",
+        "duedate": "2026-03-20 20:00:36",
+        "position": 9
+    },
+    {
+        "title": "Design Cover (2)",
+        "description": "Description for Design Cover (2)",
+        "id": "4fd408cc-472b-49de-89c9-d242643c031c",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [],
+        "tint": "#10B981",
+        "stack": "97bbb97b-5a16-41ca-b558-44d655060110",
+        "estimate": 14400,
+        "priority": "low",
+        "duedate": "2026-02-18 20:00:36",
+        "position": 10
+    },
+    {
+        "title": "Format for Kindle (2)",
+        "description": "Description for Format for Kindle (2)",
+        "id": "b63ef1fb-0dab-4136-b432-95f56a7869f6",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "7f33ac68-eba4-4614-9d56-7698bc3bf18c"
+        ],
+        "tint": null,
+        "stack": "97bbb97b-5a16-41ca-b558-44d655060110",
+        "estimate": 14400,
+        "priority": "low",
+        "duedate": "2026-03-16 20:00:36",
+        "position": 11
+    },
+    {
+        "title": "Send to Editor (2)",
+        "description": "Description for Send to Editor (2)",
+        "id": "120377fd-4b8a-4127-88aa-d984f2fd0c80",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "d6b512c1-3ea7-4134-80b7-6a806c5a052f"
+        ],
+        "tint": "#64748B",
+        "stack": "97bbb97b-5a16-41ca-b558-44d655060110",
+        "estimate": 28800,
+        "priority": "low",
+        "duedate": "2026-02-26 20:00:36",
+        "position": 12
+    },
+    {
+        "title": "Review Beta Feedback (2)",
+        "description": "Description for Review Beta Feedback (2)",
+        "id": "a827411c-08db-4776-8ae5-95712a4a4dc4",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "1c83f03a-4924-41f0-a004-55d2aedadd4d"
+        ],
+        "tint": null,
+        "stack": "97bbb97b-5a16-41ca-b558-44d655060110",
+        "estimate": 14400,
+        "priority": "low",
+        "duedate": "2026-04-03 20:00:36",
+        "position": 13
+    },
+    {
+        "title": "Write Blurb (2)",
+        "description": "Description for Write Blurb (2)",
+        "id": "635af575-3a9d-4dcd-870a-3f49317c8bbd",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "7f33ac68-eba4-4614-9d56-7698bc3bf18c",
+            "25bf8a71-f269-4dca-ae26-3332b86d9a02"
+        ],
+        "tint": null,
+        "stack": "83abd741-fb04-4ea7-81b5-8025701f4d38",
+        "estimate": 36000,
+        "priority": "low",
+        "duedate": "2026-02-25 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "Setup Author Website (2)",
+        "description": "Description for Setup Author Website (2)",
+        "id": "e7b31e6f-595e-451a-898a-a8dc0d6d3008",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "d6b512c1-3ea7-4134-80b7-6a806c5a052f",
+            "1c83f03a-4924-41f0-a004-55d2aedadd4d"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "83abd741-fb04-4ea7-81b5-8025701f4d38",
+        "estimate": 3600,
+        "priority": "low",
+        "duedate": "2026-03-23 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "Launch Social Media (2)",
+        "description": "Description for Launch Social Media (2)",
+        "id": "2f51238a-d6ce-44a9-8e49-5504bda49aba",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "25bf8a71-f269-4dca-ae26-3332b86d9a02",
+            "1c83f03a-4924-41f0-a004-55d2aedadd4d",
+            "8a0766fd-14a0-4598-ae2d-cde71a2c3af1"
+        ],
+        "tint": null,
+        "stack": "83abd741-fb04-4ea7-81b5-8025701f4d38",
+        "estimate": 21600,
+        "priority": "low",
+        "duedate": "2026-03-26 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "Submit to Agents (2)",
+        "description": "Description for Submit to Agents (2)",
+        "id": "b863a8c8-eecc-4e0a-a0c8-e41a91f2e55f",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "7ecdd73c-8bcc-4600-92de-7ce7d3a3828a",
+            "d406250d-9f7e-4f03-8f60-e9e31ee74e24"
+        ],
+        "tint": "#EF4444",
+        "stack": "83abd741-fb04-4ea7-81b5-8025701f4d38",
+        "estimate": 18000,
+        "priority": "high",
+        "duedate": "2026-03-01 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Query Letters (2)",
+        "description": "Description for Query Letters (2)",
+        "id": "0858cee3-034e-4564-a654-390a090bff42",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "7ecdd73c-8bcc-4600-92de-7ce7d3a3828a",
+            "8a0766fd-14a0-4598-ae2d-cde71a2c3af1"
+        ],
+        "tint": "#06B6D4",
+        "stack": "83abd741-fb04-4ea7-81b5-8025701f4d38",
+        "estimate": 28800,
+        "priority": "high",
+        "duedate": "2026-03-21 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Create Character Profiles (3)",
+        "description": "Description for Create Character Profiles (3)",
+        "id": "a5c4d8a0-ed65-4e1c-bbcd-d8374b467fde",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "8a0766fd-14a0-4598-ae2d-cde71a2c3af1"
+        ],
+        "tint": "#3B82F6",
+        "stack": "83abd741-fb04-4ea7-81b5-8025701f4d38",
+        "estimate": 14400,
+        "priority": "medium",
+        "duedate": "2026-02-19 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "Outline Plot (3)",
+        "description": "Description for Outline Plot (3)",
+        "id": "b0b22e16-63e0-4478-b506-6304febe9d91",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "25bf8a71-f269-4dca-ae26-3332b86d9a02",
+            "d406250d-9f7e-4f03-8f60-e9e31ee74e24"
+        ],
+        "tint": "#06B6D4",
+        "stack": "83abd741-fb04-4ea7-81b5-8025701f4d38",
+        "estimate": 18000,
+        "priority": "low",
+        "duedate": "2026-02-09 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "Write Chapter 1 (3)",
+        "description": "Description for Write Chapter 1 (3)",
+        "id": "42f2fb5a-8094-4604-88e8-37e0480f4a01",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "d6b512c1-3ea7-4134-80b7-6a806c5a052f",
+            "47623f40-17b4-4c90-993c-20ddc13c761e"
+        ],
+        "tint": null,
+        "stack": "83abd741-fb04-4ea7-81b5-8025701f4d38",
+        "estimate": 18000,
+        "priority": "high",
+        "duedate": "2026-02-08 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "Write Chapter 2 (3)",
+        "description": "Description for Write Chapter 2 (3)",
+        "id": "ca940f4f-5e02-4964-9e5a-53bef2bf0a54",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "25bf8a71-f269-4dca-ae26-3332b86d9a02",
+            "d6b512c1-3ea7-4134-80b7-6a806c5a052f",
+            "47623f40-17b4-4c90-993c-20ddc13c761e"
+        ],
+        "tint": "#F97316",
+        "stack": "83abd741-fb04-4ea7-81b5-8025701f4d38",
+        "estimate": 14400,
+        "priority": "high",
+        "duedate": "2026-03-12 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "Edit Chapter 3 (3)",
+        "description": "Description for Edit Chapter 3 (3)",
+        "id": "25c01adf-eca3-4bf3-b418-5ed8c00d0f86",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "7f33ac68-eba4-4614-9d56-7698bc3bf18c",
+            "d6b512c1-3ea7-4134-80b7-6a806c5a052f"
+        ],
+        "tint": "#F59E0B",
+        "stack": "83abd741-fb04-4ea7-81b5-8025701f4d38",
+        "estimate": 36000,
+        "priority": "low",
+        "duedate": "2026-03-29 20:00:36",
+        "position": 9
+    },
+    {
+        "title": "Fix Plot Hole (3)",
+        "description": "Description for Fix Plot Hole (3)",
+        "id": "e894a926-29ab-4478-80c5-cdfea892c705",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "d406250d-9f7e-4f03-8f60-e9e31ee74e24"
+        ],
+        "tint": "#06B6D4",
+        "stack": "e59312ae-ab25-4970-a69e-2ca1e0a82e46",
+        "estimate": 10800,
+        "priority": "medium",
+        "duedate": "2026-03-31 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "Design Cover (3)",
+        "description": "Description for Design Cover (3)",
+        "id": "94335e24-1c2a-49f0-90bc-0efbb11ff5ef",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "7f33ac68-eba4-4614-9d56-7698bc3bf18c",
+            "47623f40-17b4-4c90-993c-20ddc13c761e"
+        ],
+        "tint": "#6366F1",
+        "stack": "e59312ae-ab25-4970-a69e-2ca1e0a82e46",
+        "estimate": 28800,
+        "priority": "high",
+        "duedate": "2026-02-14 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "Format for Kindle (3)",
+        "description": "Description for Format for Kindle (3)",
+        "id": "97ebd70f-084a-42b1-93d1-b92b4730a47b",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "25bf8a71-f269-4dca-ae26-3332b86d9a02",
+            "d6b512c1-3ea7-4134-80b7-6a806c5a052f"
+        ],
+        "tint": "#F59E0B",
+        "stack": "e59312ae-ab25-4970-a69e-2ca1e0a82e46",
+        "estimate": 3600,
+        "priority": "high",
+        "duedate": "2026-02-28 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "Send to Editor (3)",
+        "description": "Description for Send to Editor (3)",
+        "id": "9e387c39-f384-40a7-8146-ab1f75f39e6a",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "7ecdd73c-8bcc-4600-92de-7ce7d3a3828a",
+            "1c83f03a-4924-41f0-a004-55d2aedadd4d"
+        ],
+        "tint": null,
+        "stack": "e59312ae-ab25-4970-a69e-2ca1e0a82e46",
+        "estimate": 7200,
+        "priority": "low",
+        "duedate": "2026-02-23 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Review Beta Feedback (3)",
+        "description": "Description for Review Beta Feedback (3)",
+        "id": "7dadcdea-fe9f-447b-b592-f9891e5a1db8",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "7f33ac68-eba4-4614-9d56-7698bc3bf18c",
+            "1c83f03a-4924-41f0-a004-55d2aedadd4d"
+        ],
+        "tint": "#F97316",
+        "stack": "e59312ae-ab25-4970-a69e-2ca1e0a82e46",
+        "estimate": 28800,
+        "priority": "low",
+        "duedate": "2026-02-12 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Write Blurb (3)",
+        "description": "Description for Write Blurb (3)",
+        "id": "c4f1b233-edad-463c-b0dc-7feb1f007784",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "d406250d-9f7e-4f03-8f60-e9e31ee74e24"
+        ],
+        "tint": null,
+        "stack": "e59312ae-ab25-4970-a69e-2ca1e0a82e46",
+        "estimate": 28800,
+        "priority": "high",
+        "duedate": "2026-02-21 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "Setup Author Website (3)",
+        "description": "Description for Setup Author Website (3)",
+        "id": "c500ec8c-ea6e-4183-937c-9fd4d549b95b",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [],
+        "tint": "#8B5CF6",
+        "stack": "e59312ae-ab25-4970-a69e-2ca1e0a82e46",
+        "estimate": 25200,
+        "priority": "high",
+        "duedate": "2026-04-03 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "Launch Social Media (3)",
+        "description": "Description for Launch Social Media (3)",
+        "id": "3641233f-cb1b-49bc-b171-8c98ff3d44d1",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "25bf8a71-f269-4dca-ae26-3332b86d9a02",
+            "d6b512c1-3ea7-4134-80b7-6a806c5a052f",
+            "d406250d-9f7e-4f03-8f60-e9e31ee74e24"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "e59312ae-ab25-4970-a69e-2ca1e0a82e46",
+        "estimate": 3600,
+        "priority": "low",
+        "duedate": "2026-03-25 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "Submit to Agents (3)",
+        "description": "Description for Submit to Agents (3)",
+        "id": "f05d015c-69ba-44dc-b651-3fcf07904acd",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "7ecdd73c-8bcc-4600-92de-7ce7d3a3828a"
+        ],
+        "tint": null,
+        "stack": "e59312ae-ab25-4970-a69e-2ca1e0a82e46",
+        "estimate": 32400,
+        "priority": "low",
+        "duedate": "2026-03-07 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "Query Letters (3)",
+        "description": "Description for Query Letters (3)",
+        "id": "bc59efd3-c7c2-4ba5-8768-adf33692cd7f",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "7ecdd73c-8bcc-4600-92de-7ce7d3a3828a"
+        ],
+        "tint": "#F59E0B",
+        "stack": "e59312ae-ab25-4970-a69e-2ca1e0a82e46",
+        "estimate": 7200,
+        "priority": "medium",
+        "duedate": "2026-03-05 20:00:36",
+        "position": 9
+    },
+    {
+        "title": "Create Character Profiles (4)",
+        "description": "Description for Create Character Profiles (4)",
+        "id": "cf36b1c9-0fc7-483a-83a6-1aa6809f3e14",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "d6b512c1-3ea7-4134-80b7-6a806c5a052f",
+            "25bf8a71-f269-4dca-ae26-3332b86d9a02",
+            "8a0766fd-14a0-4598-ae2d-cde71a2c3af1"
+        ],
+        "tint": "#EC4899",
+        "stack": "e59312ae-ab25-4970-a69e-2ca1e0a82e46",
+        "estimate": 32400,
+        "priority": "medium",
+        "duedate": "2026-02-28 20:00:36",
+        "position": 10
+    },
+    {
+        "title": "Outline Plot (4)",
+        "description": "Description for Outline Plot (4)",
+        "id": "195988aa-80ab-4fbe-a9b6-80a91b7b7a31",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "1c83f03a-4924-41f0-a004-55d2aedadd4d",
+            "d406250d-9f7e-4f03-8f60-e9e31ee74e24"
+        ],
+        "tint": null,
+        "stack": "e59312ae-ab25-4970-a69e-2ca1e0a82e46",
+        "estimate": 32400,
+        "priority": "medium",
+        "duedate": "2026-02-13 20:00:36",
+        "position": 11
+    },
+    {
+        "title": "Write Chapter 1 (4)",
+        "description": "Description for Write Chapter 1 (4)",
+        "id": "35e1349c-59fc-4d7f-ae2d-988242513c92",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "d406250d-9f7e-4f03-8f60-e9e31ee74e24"
+        ],
+        "tint": null,
+        "stack": "e59312ae-ab25-4970-a69e-2ca1e0a82e46",
+        "estimate": 32400,
+        "priority": "low",
+        "duedate": "2026-04-04 20:00:36",
+        "position": 12
+    },
+    {
+        "title": "Write Chapter 2 (4)",
+        "description": "Description for Write Chapter 2 (4)",
+        "id": "8aea4528-6f3c-4099-a1be-0643d09fe4d9",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [],
+        "tint": "#8B5CF6",
+        "stack": "e59312ae-ab25-4970-a69e-2ca1e0a82e46",
+        "estimate": 14400,
+        "priority": "low",
+        "duedate": "2026-02-19 20:00:36",
+        "position": 13
+    },
+    {
+        "title": "Edit Chapter 3 (4)",
+        "description": "Description for Edit Chapter 3 (4)",
+        "id": "39576fbf-fdc1-493a-b302-ba252df7d598",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "1c83f03a-4924-41f0-a004-55d2aedadd4d",
+            "7f33ac68-eba4-4614-9d56-7698bc3bf18c"
+        ],
+        "tint": null,
+        "stack": "e59312ae-ab25-4970-a69e-2ca1e0a82e46",
+        "estimate": 7200,
+        "priority": "high",
+        "duedate": "2026-02-14 20:00:36",
+        "position": 14
+    },
+    {
+        "title": "Fix Plot Hole (4)",
+        "description": "Description for Fix Plot Hole (4)",
+        "id": "4b3fd6a8-0473-4f6b-877f-5c14cd08146c",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "1c83f03a-4924-41f0-a004-55d2aedadd4d",
+            "d406250d-9f7e-4f03-8f60-e9e31ee74e24"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "cd9fc3fd-0f37-45c4-b592-e67b0a9fb3c0",
+        "estimate": 25200,
+        "priority": "low",
+        "duedate": "2026-02-18 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "Design Cover (4)",
+        "description": "Description for Design Cover (4)",
+        "id": "ba08d3c3-a683-4e6c-8098-9ebdc65c55ed",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "1c83f03a-4924-41f0-a004-55d2aedadd4d",
+            "25bf8a71-f269-4dca-ae26-3332b86d9a02",
+            "d406250d-9f7e-4f03-8f60-e9e31ee74e24"
+        ],
+        "tint": "#64748B",
+        "stack": "cd9fc3fd-0f37-45c4-b592-e67b0a9fb3c0",
+        "estimate": 21600,
+        "priority": "low",
+        "duedate": "2026-02-21 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "Format for Kindle (4)",
+        "description": "Description for Format for Kindle (4)",
+        "id": "41df9872-b002-4f57-bcc5-a1198125dff0",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "7f33ac68-eba4-4614-9d56-7698bc3bf18c"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "cd9fc3fd-0f37-45c4-b592-e67b0a9fb3c0",
+        "estimate": 18000,
+        "priority": "high",
+        "duedate": "2026-02-05 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "Send to Editor (4)",
+        "description": "Description for Send to Editor (4)",
+        "id": "a7e4be84-4e9c-4835-ac1b-3f4fccf2a25f",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "1c83f03a-4924-41f0-a004-55d2aedadd4d"
+        ],
+        "tint": "#6366F1",
+        "stack": "cd9fc3fd-0f37-45c4-b592-e67b0a9fb3c0",
+        "estimate": 21600,
+        "priority": "medium",
+        "duedate": "2026-03-30 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Review Beta Feedback (4)",
+        "description": "Description for Review Beta Feedback (4)",
+        "id": "06017cef-1e0d-4694-af7b-e36bea7eaffd",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [],
+        "tint": null,
+        "stack": "cd9fc3fd-0f37-45c4-b592-e67b0a9fb3c0",
+        "estimate": 36000,
+        "priority": "low",
+        "duedate": "2026-03-11 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Write Blurb (4)",
+        "description": "Description for Write Blurb (4)",
+        "id": "8f72ff5c-171f-45cc-a636-b1a10036da32",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "8a0766fd-14a0-4598-ae2d-cde71a2c3af1"
+        ],
+        "tint": "#F97316",
+        "stack": "cd9fc3fd-0f37-45c4-b592-e67b0a9fb3c0",
+        "estimate": 36000,
+        "priority": "low",
+        "duedate": "2026-02-11 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "Setup Author Website (4)",
+        "description": "Description for Setup Author Website (4)",
+        "id": "a023af5d-4001-4be1-853f-8fdde71d8e06",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "8a0766fd-14a0-4598-ae2d-cde71a2c3af1"
+        ],
+        "tint": null,
+        "stack": "cd9fc3fd-0f37-45c4-b592-e67b0a9fb3c0",
+        "estimate": 14400,
+        "priority": "high",
+        "duedate": "2026-03-05 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "Launch Social Media (4)",
+        "description": "Description for Launch Social Media (4)",
+        "id": "03658df7-c88e-420d-b5ca-26d12bfa3ee2",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "1c83f03a-4924-41f0-a004-55d2aedadd4d",
+            "d6b512c1-3ea7-4134-80b7-6a806c5a052f"
+        ],
+        "tint": null,
+        "stack": "cd9fc3fd-0f37-45c4-b592-e67b0a9fb3c0",
+        "estimate": 10800,
+        "priority": "high",
+        "duedate": "2026-03-17 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "Submit to Agents (4)",
+        "description": "Description for Submit to Agents (4)",
+        "id": "981e828d-a535-4b62-a6a2-abdffb10fe46",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "25bf8a71-f269-4dca-ae26-3332b86d9a02",
+            "1c83f03a-4924-41f0-a004-55d2aedadd4d"
+        ],
+        "tint": null,
+        "stack": "cd9fc3fd-0f37-45c4-b592-e67b0a9fb3c0",
+        "estimate": 10800,
+        "priority": "high",
+        "duedate": "2026-03-08 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "Query Letters (4)",
+        "description": "Description for Query Letters (4)",
+        "id": "2318cdf4-6586-4d81-a1e3-b28ac1d39787",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "d6b512c1-3ea7-4134-80b7-6a806c5a052f",
+            "7ecdd73c-8bcc-4600-92de-7ce7d3a3828a",
+            "8a0766fd-14a0-4598-ae2d-cde71a2c3af1"
+        ],
+        "tint": "#EF4444",
+        "stack": "cd9fc3fd-0f37-45c4-b592-e67b0a9fb3c0",
+        "estimate": 10800,
+        "priority": "low",
+        "duedate": "2026-02-28 20:00:36",
+        "position": 9
+    },
+    {
+        "title": "Create Character Profiles (5)",
+        "description": "Description for Create Character Profiles (5)",
+        "id": "494840a6-d2e0-4340-ac26-84215d05f2dc",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "7ecdd73c-8bcc-4600-92de-7ce7d3a3828a"
+        ],
+        "tint": null,
+        "stack": "cd9fc3fd-0f37-45c4-b592-e67b0a9fb3c0",
+        "estimate": 3600,
+        "priority": "medium",
+        "duedate": "2026-03-15 20:00:36",
+        "position": 10
+    },
+    {
+        "title": "Outline Plot (5)",
+        "description": "Description for Outline Plot (5)",
+        "id": "7ba3a99e-9ce5-4250-abce-3b615d227a24",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "8a0766fd-14a0-4598-ae2d-cde71a2c3af1"
+        ],
+        "tint": "#6366F1",
+        "stack": "cd9fc3fd-0f37-45c4-b592-e67b0a9fb3c0",
+        "estimate": 21600,
+        "priority": "low",
+        "duedate": "2026-02-07 20:00:36",
+        "position": 11
+    },
+    {
+        "title": "Write Chapter 1 (5)",
+        "description": "Description for Write Chapter 1 (5)",
+        "id": "4ea68e47-849f-4059-a80d-73409e7f7bac",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "1c83f03a-4924-41f0-a004-55d2aedadd4d"
+        ],
+        "tint": null,
+        "stack": "cd9fc3fd-0f37-45c4-b592-e67b0a9fb3c0",
+        "estimate": 32400,
+        "priority": "low",
+        "duedate": "2026-03-03 20:00:36",
+        "position": 12
+    },
+    {
+        "title": "Write Chapter 2 (5)",
+        "description": "Description for Write Chapter 2 (5)",
+        "id": "8fbe5cba-ffb3-4780-b628-b958ea39d492",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "d6b512c1-3ea7-4134-80b7-6a806c5a052f",
+            "1c83f03a-4924-41f0-a004-55d2aedadd4d"
+        ],
+        "tint": "#64748B",
+        "stack": "cd9fc3fd-0f37-45c4-b592-e67b0a9fb3c0",
+        "estimate": 7200,
+        "priority": "high",
+        "duedate": "2026-02-09 20:00:36",
+        "position": 13
+    },
+    {
+        "title": "Edit Chapter 3 (5)",
+        "description": "Description for Edit Chapter 3 (5)",
+        "id": "853d02be-01f7-4d22-a8ea-2afb2a1ad34c",
+        "project": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "tags": [
+            "d6b512c1-3ea7-4134-80b7-6a806c5a052f"
+        ],
+        "tint": "#64748B",
+        "stack": "cd9fc3fd-0f37-45c4-b592-e67b0a9fb3c0",
+        "estimate": 18000,
+        "priority": "high",
+        "duedate": "2026-03-11 20:00:36",
+        "position": 14
+    }
+]

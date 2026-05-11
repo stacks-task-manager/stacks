@@ -1,0 +1,58 @@
+[
+    {
+        "id": "ba82161f-ab89-4411-b90b-f7dd78c94bad",
+        "title": "5k",
+        "color": "#06B6D4",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "1789838b-7735-4f49-954c-40ae1534b531",
+        "title": "10k",
+        "color": "#EC4899",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "970c9db2-f136-42b9-b614-cdeb56cb2725",
+        "title": "Half",
+        "color": "#EC4899",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "ea5f84b5-b0b0-406c-a63a-6a7dfcd5eb95",
+        "title": "Full",
+        "color": "#06B6D4",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "937dcfad-868e-4618-9e33-7e3af0d748f6",
+        "title": "Recovery",
+        "color": "#F97316",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "812bd54d-64be-4159-ad15-04dc8da94785",
+        "title": "Injured",
+        "color": "#3B82F6",
+        "type": "status",
+        "section": "projects"
+    },
+    {
+        "id": "6d619346-b827-4b56-af0d-e0ca88be3e96",
+        "title": "Rest Day",
+        "color": "#64748B",
+        "type": "status",
+        "section": "projects"
+    },
+    {
+        "id": "690c4633-fb21-4857-9c16-76be0ca9eeb3",
+        "title": "PR",
+        "color": "#10B981",
+        "type": "status",
+        "section": "projects"
+    }
+]

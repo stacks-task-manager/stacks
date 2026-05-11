@@ -1,0 +1,58 @@
+[
+    {
+        "id": "beb8dcce-7396-432e-9a9c-a5ecc13c6f92",
+        "title": "YouTube",
+        "color": "#F97316",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "0f1bd24b-7add-40f6-8506-94439c8d2805",
+        "title": "TikTok",
+        "color": "#F59E0B",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "bd5f5711-3fe6-4d45-b1db-f93b05e39683",
+        "title": "Instagram",
+        "color": "#F97316",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "a83fd1e1-474a-4186-a422-637b0d5a01cf",
+        "title": "Sponsor",
+        "color": "#10B981",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "748a0e1f-0075-4b7e-9885-9c0dcfc10acc",
+        "title": "Collab",
+        "color": "#F59E0B",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "202bb03c-cc32-4fc8-be95-bace76288574",
+        "title": "Copyright Check",
+        "color": "#EF4444",
+        "type": "status",
+        "section": "projects"
+    },
+    {
+        "id": "8b246dbd-1e56-45fc-9db4-a4d9d82a9873",
+        "title": "Rendering",
+        "color": "#8B5CF6",
+        "type": "status",
+        "section": "projects"
+    },
+    {
+        "id": "53311f54-4e06-4088-a9f8-7a5ff10dd43d",
+        "title": "Uploaded",
+        "color": "#6366F1",
+        "type": "status",
+        "section": "projects"
+    }
+]

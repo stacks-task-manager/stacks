@@ -1,0 +1,37 @@
+[
+    {
+        "id": "82fe22c4-3c7e-4cbf-a754-74b0b11df079",
+        "title": "SaaS Product Roadmap",
+        "estimate": 360000,
+        "stacks": [
+            {
+                "title": "Q1",
+                "tint": "#6366F1",
+                "id": "c267d37c-8536-44b4-a12b-943187747c3c"
+            },
+            {
+                "title": "Q2",
+                "tint": "#10B981",
+                "id": "10c9697f-82fe-4f81-b671-16e8b3ff3c64"
+            },
+            {
+                "title": "Q3",
+                "tint": "#64748B",
+                "id": "f542dd29-8ea3-4a7c-b78f-0e0bd3dce872"
+            },
+            {
+                "title": "Q4",
+                "tint": "#8B5CF6",
+                "id": "56257e0e-667f-4860-954f-de802d5755c6"
+            },
+            {
+                "title": "Backlog",
+                "tint": "#10B981",
+                "id": "01850421-ed3d-4c5c-9af0-e52c6633cc33"
+            }
+        ],
+        "hourlyRate": 110,
+        "currency": "USD",
+        "health": "good"
+    }
+]

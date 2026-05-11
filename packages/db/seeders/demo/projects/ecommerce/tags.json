@@ -1,0 +1,72 @@
+[
+    {
+        "id": "1f583b09-56d4-4d84-ae9a-31c6648f585e",
+        "title": "Frontend",
+        "color": "#3B82F6",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "7227c350-4930-4cd2-af50-f654578f9899",
+        "title": "Backend",
+        "color": "#10B981",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "59a466d1-6605-4053-8ed8-c1e455279d6f",
+        "title": "Database",
+        "color": "#8B5CF6",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "f19416d1-76dd-4905-8711-5476e13b58c8",
+        "title": "Payment",
+        "color": "#F59E0B",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "ecf1e646-3104-4913-bc34-6e4ad5eacb1c",
+        "title": "Security",
+        "color": "#EF4444",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "edec8cfd-d8ab-4d12-9a29-c82e0ccfc4fc",
+        "title": "Performance",
+        "color": "#06B6D4",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "1062bb41-4ea7-4498-acf9-f919289784d2",
+        "title": "Mobile",
+        "color": "#84CC16",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "f925f2ba-d70c-4a20-9fe4-1a19be942c9c",
+        "title": "Analytics",
+        "color": "#F97316",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "23d0f0a3-cd55-4e8d-b309-d73ed00596ce",
+        "title": "SEO",
+        "color": "#EC4899",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "a4da782b-a8ff-4c03-9af3-4504c6e6a813",
+        "title": "Bug",
+        "color": "#DC2626",
+        "type": "status",
+        "section": "projects"
+    }
+]

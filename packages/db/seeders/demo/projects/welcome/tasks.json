@@ -1,0 +1,376 @@
+[
+    {
+        "title": "Start a timer or directly log time ⏲️ on any task, assign it to anyone, mark it as billable and billed or not.",
+        "description": "",
+        "id": "26419406-b27d-4647-bb4e-6177cb4a2826",
+        "project": "d1ba6c8b-a3b4-4b39-8ec2-add4f35b17ab",
+        "tags": [],
+        "tint": "#8ac926",
+        "stack": "b2c61f67-dc58-41e8-9b61-d9846a125180",
+        "estimate": 128439,
+        "position": 0
+    },
+    {
+        "title": "Track time spent working on your tasks by setting an estimated period ⏱️",
+        "description": "",
+        "id": "b29fd9c1-b68c-4753-abf8-147e98809223",
+        "project": "d1ba6c8b-a3b4-4b39-8ec2-add4f35b17ab",
+        "progress": 90,
+        "done": false,
+        "estimate": 248632,
+        "stack": "ed08aaa5-011d-4b99-b723-3580c97f6b02",
+        "position": 0
+    },
+    {
+        "title": "Set a due date for your tasks ⏰ to not forget about important things.",
+        "description": "",
+        "id": "966deacd-a0af-456d-a718-39d4767ddbda",
+        "duedate": "2023-12-29 00:00:00",
+        "done": false,
+        "progress": 10,
+        "status": "dab4a7cc-e339-44d9-b765-fcd5245c5574",
+        "project": "d1ba6c8b-a3b4-4b39-8ec2-add4f35b17ab",
+        "estimate": 220275,
+        "stack": "b2c61f67-dc58-41e8-9b61-d9846a125180",
+        "position": 1
+    },
+    {
+        "title": "You can also add attachments to your tasks 📎",
+        "description": "",
+        "id": "23659a92-db91-4e91-beed-1abbf776ad79",
+        "project": "d1ba6c8b-a3b4-4b39-8ec2-add4f35b17ab",
+        "stack": "30871531-6526-4053-be9c-a6717100e48a",
+        "estimate": 115913,
+        "position": 0
+    },
+    {
+        "title": "Trip to Yosemite with my friends? 🏕 Create a notepad with your itineraries, things to see and the adventures you want to share with your friends and love ones.",
+        "description": "",
+        "id": "0c6b1b00-4316-449f-b812-7ff6ae262011",
+        "tags": [
+            "bd9f2ff1-e20a-46f2-a08c-ce4d94c32d7d"
+        ],
+        "cover": true,
+        "project": "d1ba6c8b-a3b4-4b39-8ec2-add4f35b17ab",
+        "stack": "b2c61f67-dc58-41e8-9b61-d9846a125180",
+        "estimate": 178068,
+        "position": 2
+    },
+    {
+        "title": "Write your task using markdown and highlight everything that's important so you don't forget. There also underline so you can emphasize the important things or strike out everything that's already complete. Almost forgot to mention, you can also enter links Stacks and code blocks",
+        "description": "",
+        "id": "bac19903-603a-4010-90e4-17bc5182a612",
+        "status": "dab4a7cc-e339-44d9-b765-fcd5245c5574",
+        "project": "d1ba6c8b-a3b4-4b39-8ec2-add4f35b17ab",
+        "progress": 80,
+        "done": false,
+        "stack": "ed08aaa5-011d-4b99-b723-3580c97f6b02",
+        "estimate": 135499,
+        "position": 1
+    },
+    {
+        "title": "Change the status of the tasks to improve task categorization and filtering.",
+        "description": "",
+        "id": "414e813c-c977-49de-93f0-e14a2b6c74b0",
+        "status": "dab4a7cc-e339-44d9-b765-fcd5245c5574",
+        "priority": "high",
+        "project": "d1ba6c8b-a3b4-4b39-8ec2-add4f35b17ab",
+        "stack": "c74c9aba-ca59-4818-ad87-741c72bdf58b",
+        "estimate": 98784,
+        "position": 0
+    },
+    {
+        "title": "Colored tagging system",
+        "description": "",
+        "id": "a0454e9a-bc6a-4000-b4a9-31c5947841bd",
+        "tags": [
+            "a1cea300-ce87-4cd4-bba9-970597dd218a",
+            "high-priority",
+            "info-missing",
+            "ccbdceaf-a4b4-475b-9b9d-2fe1aa47daea",
+            "e3604f1d-3b78-4dc0-b38d-11a3487c99ec",
+            "bd9f2ff1-e20a-46f2-a08c-ce4d94c32d7d",
+            "60371005-6c02-4099-b8c6-2e770e1f1318",
+            "9676ed89-c501-474a-8753-e8ab5edc8eff"
+        ],
+        "project": "d1ba6c8b-a3b4-4b39-8ec2-add4f35b17ab",
+        "progress": 20,
+        "done": false,
+        "stack": "30871531-6526-4053-be9c-a6717100e48a",
+        "estimate": 274077,
+        "position": 1
+    },
+    {
+        "title": "Custom fields will give your tasks more power and a pinch of personality. Open Project settings to add your first fields now.",
+        "description": "",
+        "id": "be2df512-bbc7-4c0d-be2d-2cc7cefd805e",
+        "project": "d1ba6c8b-a3b4-4b39-8ec2-add4f35b17ab",
+        "tags": [],
+        "stack": "b2c61f67-dc58-41e8-9b61-d9846a125180",
+        "estimate": 231669,
+        "position": 3
+    },
+    {
+        "title": "You need to add a wider description, no problem Stacks got you covered. Click the task and fill the Description field 😉",
+        "description": "Lorem ipsum dolor sit amet, an enim persius molestiae sea, quo ut tation tacimates interesset, vel sumo numquam ne. Quo ut probo errem veniam, ius te causae gloriatur. Vis ea prima prompta quaerendum, dico propriae an ius, an lucilius repudiare sed. Quod unum pri no, vis delectus definitiones ei, meis tincidunt ne qui.\n\nDolor veniam molestiae pro an, ea omnesque postulant partiendo eum. Essent facilis cum ne, at mel luptatum sententiae efficiendi. Mea ludus labores an, mundi evertitur ea cum. Ne nec augue movet torquatos, no iudicabit adolescens quo.",
+        "id": "2c82faf9-6159-4e89-9433-e15bb57837a0",
+        "status": "621479ff-ce46-4536-ad96-50c9df1327af",
+        "project": "d1ba6c8b-a3b4-4b39-8ec2-add4f35b17ab",
+        "progress": 90,
+        "done": false,
+        "stack": "ed08aaa5-011d-4b99-b723-3580c97f6b02",
+        "estimate": 77235,
+        "position": 2
+    },
+    {
+        "title": "Mark task as done ✅",
+        "description": "",
+        "id": "3d4901e4-fe71-45e1-a772-1fb6e3f2c7a8",
+        "done": false,
+        "project": "d1ba6c8b-a3b4-4b39-8ec2-add4f35b17ab",
+        "progress": 50,
+        "stack": "c74c9aba-ca59-4818-ad87-741c72bdf58b",
+        "estimate": 28993,
+        "position": 1
+    },
+    {
+        "title": "With our People view, you can easily manage and view your customers and colleagues, making it easy to stay on top of your contacts and relationships. 👫",
+        "description": "",
+        "id": "d5a10a1a-f499-45ef-9bb1-1d392d52f7b2",
+        "project": "d1ba6c8b-a3b4-4b39-8ec2-add4f35b17ab",
+        "tags": [],
+        "stack": "30871531-6526-4053-be9c-a6717100e48a",
+        "estimate": 163341,
+        "position": 2
+    },
+    {
+        "title": "Add a map widget by entering an address or location 🗺️",
+        "description": "",
+        "id": "103d08dd-1c6f-4cc2-bc6c-0cce1997f71d",
+        "project": "d1ba6c8b-a3b4-4b39-8ec2-add4f35b17ab",
+        "stack": "b2c61f67-dc58-41e8-9b61-d9846a125180",
+        "estimate": 185196,
+        "position": 4
+    },
+    {
+        "title": "Stay on top of your to-do's and upcoming tasks with the powerful backlogs column in the Board view. Click the button in the top-right toolbar to toggle the backlogs visibility.",
+        "description": "",
+        "id": "5aaa78ff-5961-4248-bb0c-03e95f4e95b5",
+        "project": "d1ba6c8b-a3b4-4b39-8ec2-add4f35b17ab",
+        "tags": [],
+        "priority": "medium",
+        "stack": "ed08aaa5-011d-4b99-b723-3580c97f6b02",
+        "estimate": 155149,
+        "position": 3
+    },
+    {
+        "title": "Drag and Drop to move a task between stacks",
+        "description": "",
+        "id": "1514b62f-7c5d-437d-b1f4-54e74d23aee9",
+        "project": "d1ba6c8b-a3b4-4b39-8ec2-add4f35b17ab",
+        "progress": 90,
+        "done": false,
+        "tint": "#8338ec",
+        "stack": "c74c9aba-ca59-4818-ad87-741c72bdf58b",
+        "estimate": 117684,
+        "position": 2
+    },
+    {
+        "title": "Click to open and edit a task",
+        "description": "",
+        "id": "2c62462d-520d-4fd6-bf15-8f3a1cbc23ad",
+        "done": false,
+        "project": "d1ba6c8b-a3b4-4b39-8ec2-add4f35b17ab",
+        "progress": 60,
+        "stack": "30871531-6526-4053-be9c-a6717100e48a",
+        "estimate": 194859,
+        "position": 3
+    },
+    {
+        "title": "Set your priorities straight 🚩 and make sure everything is done in the correct order!",
+        "description": "",
+        "id": "b0172cb2-8b0e-417e-bb7a-cdae97ba798d",
+        "priority": "medium",
+        "project": "d1ba6c8b-a3b4-4b39-8ec2-add4f35b17ab",
+        "progress": 20,
+        "done": false,
+        "stack": "b2c61f67-dc58-41e8-9b61-d9846a125180",
+        "estimate": 38713,
+        "position": 5
+    },
+    {
+        "title": "Enable task progress :100: from Preferences to view the overall state of the current stack state",
+        "description": "",
+        "id": "92c556dd-ec2e-4863-a0e9-d4d29d88ed75",
+        "status": "ba6e378c-5a7b-429e-a90f-53dfbfc05f1b",
+        "project": "d1ba6c8b-a3b4-4b39-8ec2-add4f35b17ab",
+        "progress": 50,
+        "done": false,
+        "stack": "ed08aaa5-011d-4b99-b723-3580c97f6b02",
+        "estimate": 164708,
+        "position": 4
+    },
+    {
+        "title": "Are you working in the dark 🌙? Turn on Dark Mode from the preferences for a great viewing experience especially in low-light environments 🌚.",
+        "description": "",
+        "id": "0e32215a-f0a4-406b-ac9e-b63b284e134d",
+        "project": "d1ba6c8b-a3b4-4b39-8ec2-add4f35b17ab",
+        "progress": 20,
+        "done": false,
+        "tags": [],
+        "tint": "#fb5607",
+        "stack": "c74c9aba-ca59-4818-ad87-741c72bdf58b",
+        "estimate": 211075,
+        "position": 3
+    },
+    {
+        "title": "Tasks support all your favorite emojis  😎. Checkout the Emoji Cheatsheet in the View menu or just paste one directly",
+        "description": "",
+        "id": "3cf1c415-f537-41a6-84da-1697589dd735",
+        "priority": "low",
+        "done": false,
+        "progress": 30,
+        "status": "dab4a7cc-e339-44d9-b765-fcd5245c5574",
+        "project": "d1ba6c8b-a3b4-4b39-8ec2-add4f35b17ab",
+        "tint": "#3a86ff",
+        "stack": "30871531-6526-4053-be9c-a6717100e48a",
+        "estimate": 305193,
+        "position": 4
+    },
+    {
+        "title": "Assign tasks to People 👨🏽‍💻",
+        "description": "",
+        "id": "e7c92a63-451f-42f4-9e0a-3f8896d83328",
+        "tags": [],
+        "project": "d1ba6c8b-a3b4-4b39-8ec2-add4f35b17ab",
+        "progress": 80,
+        "done": false,
+        "stack": "b2c61f67-dc58-41e8-9b61-d9846a125180",
+        "estimate": 269249,
+        "position": 6
+    },
+    {
+        "title": "Do you have any confidential content you dont want prying eyes to see 🔒? Use the custom confidential tool in the task description to hide your secrets 😈",
+        "description": "<p>This is my password <confidential text=\"$password123\"></confidential></p>\n",
+        "id": "7203f8f6-24b9-4c95-9a24-32fda6920fed",
+        "status": "74c7f007-cdf9-4b97-a38e-d2ff9add191e",
+        "project": "d1ba6c8b-a3b4-4b39-8ec2-add4f35b17ab",
+        "progress": 10,
+        "done": false,
+        "stack": "ed08aaa5-011d-4b99-b723-3580c97f6b02",
+        "estimate": 45305,
+        "position": 5
+    },
+    {
+        "title": "Sync your library over DropBox, iCloud Drive or any file syncing service ☁️",
+        "description": "",
+        "id": "fc2b9c2b-6c66-4d52-9cf4-8706bc9c8b89",
+        "tags": [
+            "9676ed89-c501-474a-8753-e8ab5edc8eff"
+        ],
+        "cover": true,
+        "project": "d1ba6c8b-a3b4-4b39-8ec2-add4f35b17ab",
+        "stack": "c74c9aba-ca59-4818-ad87-741c72bdf58b",
+        "estimate": 344915,
+        "position": 4
+    },
+    {
+        "title": "Make sure you don't let your tasks expire ❗",
+        "description": "",
+        "id": "93e4b6f7-54b7-4bd4-8a3a-e7939156be0c",
+        "duedate": "2022-03-07T23:00:00.000Z",
+        "tags": [
+            "a1cea300-ce87-4cd4-bba9-970597dd218a"
+        ],
+        "project": "d1ba6c8b-a3b4-4b39-8ec2-add4f35b17ab",
+        "progress": 30,
+        "done": false,
+        "stack": "30871531-6526-4053-be9c-a6717100e48a",
+        "estimate": 14118,
+        "position": 5
+    },
+    {
+        "title": "Check out the all the available views: Board, List, Table, Overview, Time, Attachments, World and Gantt. Each of them provides a better alternative for seeing your assignments and progress in various ways. Open the Project Settings to manage your favourite view.",
+        "description": "",
+        "id": "cc062cd4-d371-4307-85ec-b7d2d8b5163e",
+        "project": "d1ba6c8b-a3b4-4b39-8ec2-add4f35b17ab",
+        "progress": 20,
+        "done": false,
+        "stack": "b2c61f67-dc58-41e8-9b61-d9846a125180",
+        "estimate": 23933,
+        "position": 7
+    },
+    {
+        "title": "Adding multiple tasks at once wasn't been this easy until now. Open the Quick task popup and start typing. Every new line will create a new task.",
+        "description": "",
+        "id": "183cc2ea-4d62-426a-a979-306ff46ba269",
+        "project": "d1ba6c8b-a3b4-4b39-8ec2-add4f35b17ab",
+        "tags": [
+            "8851a9d0-dfbe-4fdd-a227-605806457650",
+            "9676ed89-c501-474a-8753-e8ab5edc8eff"
+        ],
+        "stack": "ed08aaa5-011d-4b99-b723-3580c97f6b02",
+        "estimate": 121188,
+        "position": 6
+    },
+    {
+        "title": "The Calendar view, you can easily view and share events alongside tasks that have a start or due date and even birthdays, making it easy to keep track of all your events, both personal and team-related. 📅 ",
+        "description": "",
+        "id": "45173543-a1a2-4f44-8051-f3b69faee325",
+        "project": "d1ba6c8b-a3b4-4b39-8ec2-add4f35b17ab",
+        "tags": [
+            "c15d8759-126e-44cc-bcc6-5421efe57056"
+        ],
+        "stack": "c74c9aba-ca59-4818-ad87-741c72bdf58b",
+        "estimate": 50318,
+        "position": 5
+    },
+    {
+        "title": "Customize your Board view with the ability to select which information is displayed on each task card, allowing you to focus on what matters most.🥇",
+        "description": "",
+        "id": "0af8a91f-ab1c-416f-b017-b304cf7126d6",
+        "project": "d1ba6c8b-a3b4-4b39-8ec2-add4f35b17ab",
+        "tags": [
+            "bd9f2ff1-e20a-46f2-a08c-ce4d94c32d7d"
+        ],
+        "tint": "#ff006e",
+        "stack": "30871531-6526-4053-be9c-a6717100e48a",
+        "estimate": 79431,
+        "position": 6
+    },
+    {
+        "title": "Sort your tasks into stacks and move them around according to your needs and priorities.",
+        "description": "",
+        "id": "336015ff-6cde-4aa8-bca2-e4d5f729d21f",
+        "project": "d1ba6c8b-a3b4-4b39-8ec2-add4f35b17ab",
+        "tags": [],
+        "stack": "b2c61f67-dc58-41e8-9b61-d9846a125180",
+        "estimate": 258071,
+        "position": 8
+    },
+    {
+        "title": "The Reports view is a powerful tool that allows you to quickly analyse and understand the progress of your projects, and make informed decisions to keep your team on track. 📈",
+        "description": "",
+        "id": "6db53442-aade-4dd0-9525-65a32c126b8a",
+        "project": "d1ba6c8b-a3b4-4b39-8ec2-add4f35b17ab",
+        "tags": [
+            "bd9f2ff1-e20a-46f2-a08c-ce4d94c32d7d"
+        ],
+        "priority": "low",
+        "stack": "ed08aaa5-011d-4b99-b723-3580c97f6b02",
+        "estimate": 85922,
+        "position": 7
+    },
+    {
+        "title": "Effortlessly manage your projects with the powerful filtering capabilities, allowing you to quickly find the task you need and save your filters for future use. Open the filters from the top-right toolbar.",
+        "description": "",
+        "id": "2255bf79-765d-41d7-8b97-4261a5b70c45",
+        "project": "d1ba6c8b-a3b4-4b39-8ec2-add4f35b17ab",
+        "tags": [],
+        "status": "74c7f007-cdf9-4b97-a38e-d2ff9add191e",
+        "tint": "#8338ec",
+        "stack": "c74c9aba-ca59-4818-ad87-741c72bdf58b",
+        "estimate": 85232,
+        "position": 6
+    }
+]

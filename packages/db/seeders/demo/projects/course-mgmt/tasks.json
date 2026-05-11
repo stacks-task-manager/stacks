@@ -1,0 +1,973 @@
+[
+    {
+        "title": "Define Learning Outcomes",
+        "description": "Description for Define Learning Outcomes",
+        "id": "f8b4ab49-0f2d-49ea-91e9-65e3358831ce",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "06d6b246-112d-49b2-be88-317063a42661",
+            "987d6c96-ed52-4a0f-b9e3-a131ea4d5212",
+            "e6d28746-b2ab-4081-9d12-5336d2880e2c"
+        ],
+        "tint": null,
+        "stack": "03e5af38-1eb2-4e4f-91aa-dd0d6b3d4b39",
+        "estimate": 18000,
+        "priority": "high",
+        "duedate": "2026-03-22 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "Create Slide Deck",
+        "description": "Description for Create Slide Deck",
+        "id": "ccd66ee3-f932-4b0a-bb17-ec72f4b1a130",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "13bc7041-894b-442a-9dfe-296ad8982fc0",
+            "06d6b246-112d-49b2-be88-317063a42661",
+            "e6d28746-b2ab-4081-9d12-5336d2880e2c"
+        ],
+        "tint": null,
+        "stack": "03e5af38-1eb2-4e4f-91aa-dd0d6b3d4b39",
+        "estimate": 28800,
+        "priority": "high",
+        "duedate": "2026-03-19 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "Record Video 1",
+        "description": "Description for Record Video 1",
+        "id": "6e1698cb-1f04-461a-bad0-9d24b51bb122",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "6ba327fa-efa6-436c-b34d-b56c631aca58"
+        ],
+        "tint": null,
+        "stack": "03e5af38-1eb2-4e4f-91aa-dd0d6b3d4b39",
+        "estimate": 7200,
+        "priority": "low",
+        "duedate": "2026-03-02 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "Record Video 2",
+        "description": "Description for Record Video 2",
+        "id": "3ef5b1c7-7d88-47f9-ac27-135de54e50aa",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "e6d28746-b2ab-4081-9d12-5336d2880e2c"
+        ],
+        "tint": "#EF4444",
+        "stack": "03e5af38-1eb2-4e4f-91aa-dd0d6b3d4b39",
+        "estimate": 3600,
+        "priority": "high",
+        "duedate": "2026-03-06 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Edit Audio",
+        "description": "Description for Edit Audio",
+        "id": "701f94be-64be-4495-afda-6d0301efa8ec",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [],
+        "tint": null,
+        "stack": "03e5af38-1eb2-4e4f-91aa-dd0d6b3d4b39",
+        "estimate": 18000,
+        "priority": "medium",
+        "duedate": "2026-03-15 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Create Quiz Questions",
+        "description": "Description for Create Quiz Questions",
+        "id": "2d1f2366-1002-486c-bc7d-8457eda7d541",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "13bc7041-894b-442a-9dfe-296ad8982fc0",
+            "06d6b246-112d-49b2-be88-317063a42661",
+            "5fd95ae4-6582-4ee9-9af8-9bb383f1283b"
+        ],
+        "tint": "#10B981",
+        "stack": "03e5af38-1eb2-4e4f-91aa-dd0d6b3d4b39",
+        "estimate": 18000,
+        "priority": "medium",
+        "duedate": "2026-02-25 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "Write Workbook",
+        "description": "Description for Write Workbook",
+        "id": "6d8417ed-caa4-4e30-9ccf-855924ae3737",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "13bc7041-894b-442a-9dfe-296ad8982fc0",
+            "06d6b246-112d-49b2-be88-317063a42661"
+        ],
+        "tint": null,
+        "stack": "03e5af38-1eb2-4e4f-91aa-dd0d6b3d4b39",
+        "estimate": 18000,
+        "priority": "medium",
+        "duedate": "2026-03-21 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "Setup Teachable",
+        "description": "Description for Setup Teachable",
+        "id": "dc40aa2f-21df-43b9-ba5d-34d69d2987bb",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "6ba327fa-efa6-436c-b34d-b56c631aca58"
+        ],
+        "tint": "#EF4444",
+        "stack": "03e5af38-1eb2-4e4f-91aa-dd0d6b3d4b39",
+        "estimate": 14400,
+        "priority": "medium",
+        "duedate": "2026-02-28 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "Record Intro",
+        "description": "Description for Record Intro",
+        "id": "08e10ffe-bb5f-4eff-adbb-1ec32c8238be",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "13bc7041-894b-442a-9dfe-296ad8982fc0",
+            "19cac2e3-575e-4928-b30f-b7878545db49",
+            "e6d28746-b2ab-4081-9d12-5336d2880e2c"
+        ],
+        "tint": "#F59E0B",
+        "stack": "03e5af38-1eb2-4e4f-91aa-dd0d6b3d4b39",
+        "estimate": 32400,
+        "priority": "medium",
+        "duedate": "2026-02-13 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "Create Sales Page",
+        "description": "Description for Create Sales Page",
+        "id": "eda6db05-2a47-4b15-adde-78ec6a776689",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "0ff4f8ba-5c25-491c-b1ae-37ba6533cb45"
+        ],
+        "tint": "#EF4444",
+        "stack": "03e5af38-1eb2-4e4f-91aa-dd0d6b3d4b39",
+        "estimate": 25200,
+        "priority": "low",
+        "duedate": "2026-03-02 20:00:36",
+        "position": 9
+    },
+    {
+        "title": "Email Sequence",
+        "description": "Description for Email Sequence",
+        "id": "b70bf3fc-2423-4e82-af03-fb36ecb6c767",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "0ff4f8ba-5c25-491c-b1ae-37ba6533cb45",
+            "987d6c96-ed52-4a0f-b9e3-a131ea4d5212",
+            "5fd95ae4-6582-4ee9-9af8-9bb383f1283b"
+        ],
+        "tint": "#F59E0B",
+        "stack": "03e5af38-1eb2-4e4f-91aa-dd0d6b3d4b39",
+        "estimate": 36000,
+        "priority": "low",
+        "duedate": "2026-03-08 20:00:36",
+        "position": 10
+    },
+    {
+        "title": "Webinar Prep",
+        "description": "Description for Webinar Prep",
+        "id": "2cb69d29-ae52-45af-a03a-50cd0f805daa",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [],
+        "tint": "#EC4899",
+        "stack": "03e5af38-1eb2-4e4f-91aa-dd0d6b3d4b39",
+        "estimate": 14400,
+        "priority": "high",
+        "duedate": "2026-02-16 20:00:36",
+        "position": 11
+    },
+    {
+        "title": "Affiliate Program",
+        "description": "Description for Affiliate Program",
+        "id": "beb19675-dee6-4e7d-ac13-d740326a2f9e",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "06d6b246-112d-49b2-be88-317063a42661",
+            "0ff4f8ba-5c25-491c-b1ae-37ba6533cb45"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "03e5af38-1eb2-4e4f-91aa-dd0d6b3d4b39",
+        "estimate": 21600,
+        "priority": "high",
+        "duedate": "2026-02-17 20:00:36",
+        "position": 12
+    },
+    {
+        "title": "Student Onboarding",
+        "description": "Description for Student Onboarding",
+        "id": "e553ce87-8479-4992-b07e-d90024e18416",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "0ff4f8ba-5c25-491c-b1ae-37ba6533cb45"
+        ],
+        "tint": "#EC4899",
+        "stack": "03e5af38-1eb2-4e4f-91aa-dd0d6b3d4b39",
+        "estimate": 36000,
+        "priority": "medium",
+        "duedate": "2026-03-23 20:00:36",
+        "position": 13
+    },
+    {
+        "title": "Community Management",
+        "description": "Description for Community Management",
+        "id": "28777633-cbc5-4e18-bd51-2e5b4f4b77a7",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "987d6c96-ed52-4a0f-b9e3-a131ea4d5212",
+            "5fd95ae4-6582-4ee9-9af8-9bb383f1283b"
+        ],
+        "tint": "#6366F1",
+        "stack": "03e5af38-1eb2-4e4f-91aa-dd0d6b3d4b39",
+        "estimate": 32400,
+        "priority": "medium",
+        "duedate": "2026-02-11 20:00:36",
+        "position": 14
+    },
+    {
+        "title": "Define Learning Outcomes (2)",
+        "description": "Description for Define Learning Outcomes (2)",
+        "id": "7e74fb15-18bf-43fa-9769-58109058ec4b",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "6ba327fa-efa6-436c-b34d-b56c631aca58"
+        ],
+        "tint": "#EC4899",
+        "stack": "d064150b-3658-42f3-850d-e8d2b356f5db",
+        "estimate": 10800,
+        "priority": "medium",
+        "duedate": "2026-02-05 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "Create Slide Deck (2)",
+        "description": "Description for Create Slide Deck (2)",
+        "id": "a18a31e1-0146-4d5d-8584-5cb7cbfc61c6",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "987d6c96-ed52-4a0f-b9e3-a131ea4d5212",
+            "13bc7041-894b-442a-9dfe-296ad8982fc0"
+        ],
+        "tint": "#3B82F6",
+        "stack": "d064150b-3658-42f3-850d-e8d2b356f5db",
+        "estimate": 21600,
+        "priority": "medium",
+        "duedate": "2026-04-05 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "Record Video 1 (2)",
+        "description": "Description for Record Video 1 (2)",
+        "id": "9528ff74-cace-49aa-9011-23e4f85564f0",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "13bc7041-894b-442a-9dfe-296ad8982fc0",
+            "0ff4f8ba-5c25-491c-b1ae-37ba6533cb45",
+            "5fd95ae4-6582-4ee9-9af8-9bb383f1283b"
+        ],
+        "tint": "#64748B",
+        "stack": "d064150b-3658-42f3-850d-e8d2b356f5db",
+        "estimate": 14400,
+        "priority": "high",
+        "duedate": "2026-03-30 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "Record Video 2 (2)",
+        "description": "Description for Record Video 2 (2)",
+        "id": "ae763037-7312-4b48-ac40-c77844d85aa4",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "0ff4f8ba-5c25-491c-b1ae-37ba6533cb45",
+            "6ba327fa-efa6-436c-b34d-b56c631aca58"
+        ],
+        "tint": "#06B6D4",
+        "stack": "d064150b-3658-42f3-850d-e8d2b356f5db",
+        "estimate": 7200,
+        "priority": "low",
+        "duedate": "2026-02-20 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Edit Audio (2)",
+        "description": "Description for Edit Audio (2)",
+        "id": "b677d07b-e7ac-47f0-aa80-7631a26b3688",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [],
+        "tint": null,
+        "stack": "d064150b-3658-42f3-850d-e8d2b356f5db",
+        "estimate": 25200,
+        "priority": "medium",
+        "duedate": "2026-02-25 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Create Quiz Questions (2)",
+        "description": "Description for Create Quiz Questions (2)",
+        "id": "d1d781fc-d5ad-4a5a-be2d-520867a89f42",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [],
+        "tint": null,
+        "stack": "d064150b-3658-42f3-850d-e8d2b356f5db",
+        "estimate": 32400,
+        "priority": "high",
+        "duedate": "2026-02-17 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "Write Workbook (2)",
+        "description": "Description for Write Workbook (2)",
+        "id": "62ba3d26-6b4b-4751-8c8e-95a5e9e1f460",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "0ff4f8ba-5c25-491c-b1ae-37ba6533cb45",
+            "987d6c96-ed52-4a0f-b9e3-a131ea4d5212",
+            "5fd95ae4-6582-4ee9-9af8-9bb383f1283b"
+        ],
+        "tint": null,
+        "stack": "d064150b-3658-42f3-850d-e8d2b356f5db",
+        "estimate": 3600,
+        "priority": "low",
+        "duedate": "2026-02-20 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "Setup Teachable (2)",
+        "description": "Description for Setup Teachable (2)",
+        "id": "c9d31c14-1f78-4278-864f-527d45efdaa5",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "19cac2e3-575e-4928-b30f-b7878545db49"
+        ],
+        "tint": "#EF4444",
+        "stack": "d064150b-3658-42f3-850d-e8d2b356f5db",
+        "estimate": 32400,
+        "priority": "medium",
+        "duedate": "2026-02-22 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "Record Intro (2)",
+        "description": "Description for Record Intro (2)",
+        "id": "3e633e7b-246c-4b4b-86a8-298fd646cde3",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "13bc7041-894b-442a-9dfe-296ad8982fc0"
+        ],
+        "tint": null,
+        "stack": "d064150b-3658-42f3-850d-e8d2b356f5db",
+        "estimate": 14400,
+        "priority": "high",
+        "duedate": "2026-02-10 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "Create Sales Page (2)",
+        "description": "Description for Create Sales Page (2)",
+        "id": "428c5d03-ab1d-4ef2-b637-dd24f37d7738",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "19cac2e3-575e-4928-b30f-b7878545db49"
+        ],
+        "tint": "#64748B",
+        "stack": "d064150b-3658-42f3-850d-e8d2b356f5db",
+        "estimate": 10800,
+        "priority": "high",
+        "duedate": "2026-02-14 20:00:36",
+        "position": 9
+    },
+    {
+        "title": "Email Sequence (2)",
+        "description": "Description for Email Sequence (2)",
+        "id": "2b9ac5e7-f2b2-4c8e-9611-0095655770d0",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "19cac2e3-575e-4928-b30f-b7878545db49",
+            "e6d28746-b2ab-4081-9d12-5336d2880e2c"
+        ],
+        "tint": null,
+        "stack": "d064150b-3658-42f3-850d-e8d2b356f5db",
+        "estimate": 10800,
+        "priority": "medium",
+        "duedate": "2026-03-04 20:00:36",
+        "position": 10
+    },
+    {
+        "title": "Webinar Prep (2)",
+        "description": "Description for Webinar Prep (2)",
+        "id": "25a6d38c-69df-4a8c-912d-c83caff3b0b1",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "6ba327fa-efa6-436c-b34d-b56c631aca58"
+        ],
+        "tint": "#64748B",
+        "stack": "d064150b-3658-42f3-850d-e8d2b356f5db",
+        "estimate": 36000,
+        "priority": "high",
+        "duedate": "2026-02-10 20:00:36",
+        "position": 11
+    },
+    {
+        "title": "Affiliate Program (2)",
+        "description": "Description for Affiliate Program (2)",
+        "id": "db86715f-d80e-48a5-892d-2235e5ebe946",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "0ff4f8ba-5c25-491c-b1ae-37ba6533cb45",
+            "19cac2e3-575e-4928-b30f-b7878545db49"
+        ],
+        "tint": "#F97316",
+        "stack": "d064150b-3658-42f3-850d-e8d2b356f5db",
+        "estimate": 7200,
+        "priority": "high",
+        "duedate": "2026-02-10 20:00:36",
+        "position": 12
+    },
+    {
+        "title": "Student Onboarding (2)",
+        "description": "Description for Student Onboarding (2)",
+        "id": "154e36ab-0f53-41f5-8888-fef67b2a8082",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "13bc7041-894b-442a-9dfe-296ad8982fc0"
+        ],
+        "tint": null,
+        "stack": "d064150b-3658-42f3-850d-e8d2b356f5db",
+        "estimate": 36000,
+        "priority": "medium",
+        "duedate": "2026-03-04 20:00:36",
+        "position": 13
+    },
+    {
+        "title": "Community Management (2)",
+        "description": "Description for Community Management (2)",
+        "id": "2db919e5-48bf-489a-8f05-e13fc983a087",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "19cac2e3-575e-4928-b30f-b7878545db49",
+            "13bc7041-894b-442a-9dfe-296ad8982fc0",
+            "6ba327fa-efa6-436c-b34d-b56c631aca58"
+        ],
+        "tint": null,
+        "stack": "d064150b-3658-42f3-850d-e8d2b356f5db",
+        "estimate": 36000,
+        "priority": "low",
+        "duedate": "2026-03-10 20:00:36",
+        "position": 14
+    },
+    {
+        "title": "Define Learning Outcomes (3)",
+        "description": "Description for Define Learning Outcomes (3)",
+        "id": "433dc09d-ead1-40a7-a9a4-deaf0506fec8",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "13bc7041-894b-442a-9dfe-296ad8982fc0"
+        ],
+        "tint": "#06B6D4",
+        "stack": "67e6d466-5c1f-45f3-a3a9-b359461090d7",
+        "estimate": 18000,
+        "priority": "medium",
+        "duedate": "2026-04-03 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "Create Slide Deck (3)",
+        "description": "Description for Create Slide Deck (3)",
+        "id": "a15e2f33-5983-4572-9798-e55d6152ae66",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "0ff4f8ba-5c25-491c-b1ae-37ba6533cb45",
+            "19cac2e3-575e-4928-b30f-b7878545db49"
+        ],
+        "tint": "#10B981",
+        "stack": "67e6d466-5c1f-45f3-a3a9-b359461090d7",
+        "estimate": 14400,
+        "priority": "medium",
+        "duedate": "2026-03-23 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "Record Video 1 (3)",
+        "description": "Description for Record Video 1 (3)",
+        "id": "3dc73470-8317-4698-81d5-88faaa2a5efb",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "13bc7041-894b-442a-9dfe-296ad8982fc0",
+            "987d6c96-ed52-4a0f-b9e3-a131ea4d5212",
+            "e6d28746-b2ab-4081-9d12-5336d2880e2c"
+        ],
+        "tint": "#6366F1",
+        "stack": "67e6d466-5c1f-45f3-a3a9-b359461090d7",
+        "estimate": 3600,
+        "priority": "medium",
+        "duedate": "2026-04-05 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "Record Video 2 (3)",
+        "description": "Description for Record Video 2 (3)",
+        "id": "ba5b0657-1255-4153-954d-e076ac880091",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "06d6b246-112d-49b2-be88-317063a42661",
+            "987d6c96-ed52-4a0f-b9e3-a131ea4d5212"
+        ],
+        "tint": "#EC4899",
+        "stack": "67e6d466-5c1f-45f3-a3a9-b359461090d7",
+        "estimate": 28800,
+        "priority": "low",
+        "duedate": "2026-03-06 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Edit Audio (3)",
+        "description": "Description for Edit Audio (3)",
+        "id": "357cdace-3ec6-4879-ba70-a06f81448bcc",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "19cac2e3-575e-4928-b30f-b7878545db49",
+            "0ff4f8ba-5c25-491c-b1ae-37ba6533cb45",
+            "6ba327fa-efa6-436c-b34d-b56c631aca58"
+        ],
+        "tint": "#10B981",
+        "stack": "67e6d466-5c1f-45f3-a3a9-b359461090d7",
+        "estimate": 36000,
+        "priority": "low",
+        "duedate": "2026-02-26 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Create Quiz Questions (3)",
+        "description": "Description for Create Quiz Questions (3)",
+        "id": "4539e450-78eb-4d71-b3c2-443b1387ddf3",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "19cac2e3-575e-4928-b30f-b7878545db49",
+            "e6d28746-b2ab-4081-9d12-5336d2880e2c"
+        ],
+        "tint": null,
+        "stack": "67e6d466-5c1f-45f3-a3a9-b359461090d7",
+        "estimate": 14400,
+        "priority": "high",
+        "duedate": "2026-02-08 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "Write Workbook (3)",
+        "description": "Description for Write Workbook (3)",
+        "id": "45eefcbb-b5a3-4106-a387-2b117dbd2bb6",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "6ba327fa-efa6-436c-b34d-b56c631aca58"
+        ],
+        "tint": null,
+        "stack": "67e6d466-5c1f-45f3-a3a9-b359461090d7",
+        "estimate": 3600,
+        "priority": "medium",
+        "duedate": "2026-04-05 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "Setup Teachable (3)",
+        "description": "Description for Setup Teachable (3)",
+        "id": "1611c2c0-a981-473b-ac59-6d4c27fbee95",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "e6d28746-b2ab-4081-9d12-5336d2880e2c"
+        ],
+        "tint": null,
+        "stack": "67e6d466-5c1f-45f3-a3a9-b359461090d7",
+        "estimate": 18000,
+        "priority": "medium",
+        "duedate": "2026-02-24 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "Record Intro (3)",
+        "description": "Description for Record Intro (3)",
+        "id": "64216ffe-6cb9-46ed-8bfa-949c6dc491db",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "06d6b246-112d-49b2-be88-317063a42661",
+            "19cac2e3-575e-4928-b30f-b7878545db49",
+            "5fd95ae4-6582-4ee9-9af8-9bb383f1283b"
+        ],
+        "tint": "#3B82F6",
+        "stack": "67e6d466-5c1f-45f3-a3a9-b359461090d7",
+        "estimate": 25200,
+        "priority": "medium",
+        "duedate": "2026-03-26 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "Create Sales Page (3)",
+        "description": "Description for Create Sales Page (3)",
+        "id": "e638a0fb-2679-499d-ade4-470ec8ca5f31",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "19cac2e3-575e-4928-b30f-b7878545db49",
+            "5fd95ae4-6582-4ee9-9af8-9bb383f1283b"
+        ],
+        "tint": null,
+        "stack": "67e6d466-5c1f-45f3-a3a9-b359461090d7",
+        "estimate": 32400,
+        "priority": "low",
+        "duedate": "2026-04-04 20:00:36",
+        "position": 9
+    },
+    {
+        "title": "Email Sequence (3)",
+        "description": "Description for Email Sequence (3)",
+        "id": "580c7a97-5b37-4539-9143-c8d5d31cfd25",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "5fd95ae4-6582-4ee9-9af8-9bb383f1283b"
+        ],
+        "tint": "#6366F1",
+        "stack": "cc826ef9-a66d-4215-8b56-11bd28ce8f59",
+        "estimate": 32400,
+        "priority": "high",
+        "duedate": "2026-02-24 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "Webinar Prep (3)",
+        "description": "Description for Webinar Prep (3)",
+        "id": "ff32eae6-6bb2-4f13-afe0-31f4fca31171",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [],
+        "tint": "#EC4899",
+        "stack": "cc826ef9-a66d-4215-8b56-11bd28ce8f59",
+        "estimate": 18000,
+        "priority": "high",
+        "duedate": "2026-03-28 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "Affiliate Program (3)",
+        "description": "Description for Affiliate Program (3)",
+        "id": "d0a89f49-3866-4640-98b1-fa6dd071508e",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "06d6b246-112d-49b2-be88-317063a42661"
+        ],
+        "tint": "#10B981",
+        "stack": "cc826ef9-a66d-4215-8b56-11bd28ce8f59",
+        "estimate": 21600,
+        "priority": "high",
+        "duedate": "2026-02-05 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "Student Onboarding (3)",
+        "description": "Description for Student Onboarding (3)",
+        "id": "25225a17-9d0f-44b1-8d4a-77173f0b1dc5",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [],
+        "tint": "#8B5CF6",
+        "stack": "cc826ef9-a66d-4215-8b56-11bd28ce8f59",
+        "estimate": 10800,
+        "priority": "low",
+        "duedate": "2026-03-20 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Community Management (3)",
+        "description": "Description for Community Management (3)",
+        "id": "f269834e-34c5-4785-bdc3-162fcc8b5847",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "e6d28746-b2ab-4081-9d12-5336d2880e2c"
+        ],
+        "tint": null,
+        "stack": "cc826ef9-a66d-4215-8b56-11bd28ce8f59",
+        "estimate": 32400,
+        "priority": "medium",
+        "duedate": "2026-02-06 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Define Learning Outcomes (4)",
+        "description": "Description for Define Learning Outcomes (4)",
+        "id": "e66875b4-efd4-40a8-9460-6994ca208478",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [],
+        "tint": "#06B6D4",
+        "stack": "cc826ef9-a66d-4215-8b56-11bd28ce8f59",
+        "estimate": 21600,
+        "priority": "high",
+        "duedate": "2026-02-26 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "Create Slide Deck (4)",
+        "description": "Description for Create Slide Deck (4)",
+        "id": "f20af92d-4ad6-4db0-87cc-a88ddfdaa090",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [],
+        "tint": "#8B5CF6",
+        "stack": "cc826ef9-a66d-4215-8b56-11bd28ce8f59",
+        "estimate": 18000,
+        "priority": "low",
+        "duedate": "2026-04-05 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "Record Video 1 (4)",
+        "description": "Description for Record Video 1 (4)",
+        "id": "79d14ac9-b2b7-42a3-905f-f38cbe62b285",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "19cac2e3-575e-4928-b30f-b7878545db49"
+        ],
+        "tint": "#06B6D4",
+        "stack": "cc826ef9-a66d-4215-8b56-11bd28ce8f59",
+        "estimate": 3600,
+        "priority": "high",
+        "duedate": "2026-03-21 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "Record Video 2 (4)",
+        "description": "Description for Record Video 2 (4)",
+        "id": "41c68e4b-5e2f-4907-9df1-b4aed28b73da",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "13bc7041-894b-442a-9dfe-296ad8982fc0"
+        ],
+        "tint": null,
+        "stack": "cc826ef9-a66d-4215-8b56-11bd28ce8f59",
+        "estimate": 21600,
+        "priority": "high",
+        "duedate": "2026-03-25 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "Edit Audio (4)",
+        "description": "Description for Edit Audio (4)",
+        "id": "54354fa2-9112-48a7-bcd3-89fdf24f6288",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "19cac2e3-575e-4928-b30f-b7878545db49",
+            "0ff4f8ba-5c25-491c-b1ae-37ba6533cb45",
+            "e6d28746-b2ab-4081-9d12-5336d2880e2c"
+        ],
+        "tint": null,
+        "stack": "cc826ef9-a66d-4215-8b56-11bd28ce8f59",
+        "estimate": 7200,
+        "priority": "medium",
+        "duedate": "2026-03-21 20:00:36",
+        "position": 9
+    },
+    {
+        "title": "Create Quiz Questions (4)",
+        "description": "Description for Create Quiz Questions (4)",
+        "id": "72d78c17-92ea-40c1-b538-852a022d4f26",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "6ba327fa-efa6-436c-b34d-b56c631aca58"
+        ],
+        "tint": null,
+        "stack": "cc826ef9-a66d-4215-8b56-11bd28ce8f59",
+        "estimate": 18000,
+        "priority": "high",
+        "duedate": "2026-03-03 20:00:36",
+        "position": 10
+    },
+    {
+        "title": "Write Workbook (4)",
+        "description": "Description for Write Workbook (4)",
+        "id": "8aa968be-e30d-4902-89f4-053b8e0f0dfb",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "19cac2e3-575e-4928-b30f-b7878545db49",
+            "5fd95ae4-6582-4ee9-9af8-9bb383f1283b"
+        ],
+        "tint": null,
+        "stack": "cc826ef9-a66d-4215-8b56-11bd28ce8f59",
+        "estimate": 28800,
+        "priority": "low",
+        "duedate": "2026-02-05 20:00:36",
+        "position": 11
+    },
+    {
+        "title": "Setup Teachable (4)",
+        "description": "Description for Setup Teachable (4)",
+        "id": "8eb52c00-98b3-4ecc-abaa-80573217e214",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "e6d28746-b2ab-4081-9d12-5336d2880e2c"
+        ],
+        "tint": null,
+        "stack": "e21d696a-d4b3-40a7-ad7a-28d209f931d1",
+        "estimate": 25200,
+        "priority": "medium",
+        "duedate": "2026-03-20 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "Record Intro (4)",
+        "description": "Description for Record Intro (4)",
+        "id": "f68bb385-9c69-49c2-b0f3-7ca20aff7118",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [],
+        "tint": null,
+        "stack": "e21d696a-d4b3-40a7-ad7a-28d209f931d1",
+        "estimate": 14400,
+        "priority": "low",
+        "duedate": "2026-02-28 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "Create Sales Page (4)",
+        "description": "Description for Create Sales Page (4)",
+        "id": "40d96d79-59a4-4d38-83ee-4a4627f3de2e",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "06d6b246-112d-49b2-be88-317063a42661",
+            "e6d28746-b2ab-4081-9d12-5336d2880e2c"
+        ],
+        "tint": "#EC4899",
+        "stack": "e21d696a-d4b3-40a7-ad7a-28d209f931d1",
+        "estimate": 25200,
+        "priority": "high",
+        "duedate": "2026-03-01 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "Email Sequence (4)",
+        "description": "Description for Email Sequence (4)",
+        "id": "e45c3108-77b6-42ac-871c-bcd6ead2651c",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "0ff4f8ba-5c25-491c-b1ae-37ba6533cb45"
+        ],
+        "tint": null,
+        "stack": "e21d696a-d4b3-40a7-ad7a-28d209f931d1",
+        "estimate": 7200,
+        "priority": "medium",
+        "duedate": "2026-02-10 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Webinar Prep (4)",
+        "description": "Description for Webinar Prep (4)",
+        "id": "dbe413c1-4fb8-4f8b-901e-f9af3acad7ac",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "13bc7041-894b-442a-9dfe-296ad8982fc0",
+            "19cac2e3-575e-4928-b30f-b7878545db49",
+            "5fd95ae4-6582-4ee9-9af8-9bb383f1283b"
+        ],
+        "tint": null,
+        "stack": "e21d696a-d4b3-40a7-ad7a-28d209f931d1",
+        "estimate": 28800,
+        "priority": "low",
+        "duedate": "2026-02-23 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Affiliate Program (4)",
+        "description": "Description for Affiliate Program (4)",
+        "id": "7959c446-c212-4264-bd16-f7618b71760a",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "e6d28746-b2ab-4081-9d12-5336d2880e2c"
+        ],
+        "tint": null,
+        "stack": "e21d696a-d4b3-40a7-ad7a-28d209f931d1",
+        "estimate": 7200,
+        "priority": "medium",
+        "duedate": "2026-02-22 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "Student Onboarding (4)",
+        "description": "Description for Student Onboarding (4)",
+        "id": "8710ea70-8eab-495d-8f3e-b915840864d8",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "13bc7041-894b-442a-9dfe-296ad8982fc0",
+            "06d6b246-112d-49b2-be88-317063a42661"
+        ],
+        "tint": "#6366F1",
+        "stack": "e21d696a-d4b3-40a7-ad7a-28d209f931d1",
+        "estimate": 36000,
+        "priority": "high",
+        "duedate": "2026-03-27 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "Community Management (4)",
+        "description": "Description for Community Management (4)",
+        "id": "a9c064da-31a4-4f98-8991-6665120928d5",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "13bc7041-894b-442a-9dfe-296ad8982fc0",
+            "0ff4f8ba-5c25-491c-b1ae-37ba6533cb45"
+        ],
+        "tint": "#F97316",
+        "stack": "e21d696a-d4b3-40a7-ad7a-28d209f931d1",
+        "estimate": 28800,
+        "priority": "medium",
+        "duedate": "2026-02-18 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "Define Learning Outcomes (5)",
+        "description": "Description for Define Learning Outcomes (5)",
+        "id": "9412d4d3-4e93-450b-a674-7fee615dbc2c",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "13bc7041-894b-442a-9dfe-296ad8982fc0",
+            "19cac2e3-575e-4928-b30f-b7878545db49",
+            "6ba327fa-efa6-436c-b34d-b56c631aca58"
+        ],
+        "tint": "#6366F1",
+        "stack": "e21d696a-d4b3-40a7-ad7a-28d209f931d1",
+        "estimate": 25200,
+        "priority": "medium",
+        "duedate": "2026-03-07 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "Create Slide Deck (5)",
+        "description": "Description for Create Slide Deck (5)",
+        "id": "2e46d13c-be32-4321-803e-abc92f435a80",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "987d6c96-ed52-4a0f-b9e3-a131ea4d5212",
+            "e6d28746-b2ab-4081-9d12-5336d2880e2c"
+        ],
+        "tint": null,
+        "stack": "e21d696a-d4b3-40a7-ad7a-28d209f931d1",
+        "estimate": 3600,
+        "priority": "medium",
+        "duedate": "2026-03-15 20:00:36",
+        "position": 9
+    },
+    {
+        "title": "Record Video 1 (5)",
+        "description": "Description for Record Video 1 (5)",
+        "id": "e5499fe7-c916-4ed0-9485-1a993bc53619",
+        "project": "07057501-674f-46cc-b770-a09161c8f296",
+        "tags": [
+            "5fd95ae4-6582-4ee9-9af8-9bb383f1283b"
+        ],
+        "tint": "#F97316",
+        "stack": "e21d696a-d4b3-40a7-ad7a-28d209f931d1",
+        "estimate": 14400,
+        "priority": "medium",
+        "duedate": "2026-03-01 20:00:36",
+        "position": 10
+    }
+]

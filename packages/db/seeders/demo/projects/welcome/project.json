@@ -1,0 +1,32 @@
+[
+    {
+        "id": "d1ba6c8b-a3b4-4b39-8ec2-add4f35b17ab",
+        "title": "Welcome to Stacks",
+        "estimate": 4320000,
+        "stacks": [
+            {
+                "title": "To do",
+                "tint": "#32BAF5",
+                "id": "b2c61f67-dc58-41e8-9b61-d9846a125180"
+            },
+            {
+                "title": "On hold",
+                "tint": "#d62828",
+                "id": "c74c9aba-ca59-4818-ad87-741c72bdf58b"
+            },
+            {
+                "title": "Doing",
+                "tint": "#FF6C35",
+                "id": "ed08aaa5-011d-4b99-b723-3580c97f6b02"
+            },
+            {
+                "title": "Done",
+                "tint": "#00e6b2",
+                "id": "30871531-6526-4053-be9c-a6717100e48a"
+            }
+        ],
+        "hourlyRate": 35,
+        "currency": "USD",
+        "health": "good"
+    }
+]

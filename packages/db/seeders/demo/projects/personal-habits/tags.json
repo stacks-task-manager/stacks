@@ -1,0 +1,30 @@
+[
+    {
+        "id": "2c17159e-f3df-483f-9e80-3804956fdefb",
+        "title": "Gym",
+        "color": "#F59E0B",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "77b1bfe2-107d-4023-bec8-e2fc31f5cdd6",
+        "title": "Diet",
+        "color": "#10B981",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "e513a8c5-5326-45d1-a746-fce99f28be58",
+        "title": "Reading",
+        "color": "#8B5CF6",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "3792e91d-acb9-462a-a092-bfc4feb67605",
+        "title": "Meditation",
+        "color": "#6366F1",
+        "type": "tag",
+        "section": "projects"
+    }
+]

@@ -1,0 +1,178 @@
+[
+    {
+        "title": "Hot Lead",
+        "color": "#EF4444",
+        "section": "projects",
+        "id": "941a1221-41e2-447a-829b-b80928ce632d",
+        "type": "tag",
+        "parent": "f2e8c4a1-9b7d-4c3e-8f1a-2d5b6c9e8f7a"
+    },
+    {
+        "title": "Warm Lead",
+        "color": "#F59E0B",
+        "section": "projects",
+        "id": "89f7242f-914a-493d-bf3d-fce804404a2f",
+        "type": "tag",
+        "parent": "f2e8c4a1-9b7d-4c3e-8f1a-2d5b6c9e8f7a"
+    },
+    {
+        "title": "Cold Lead",
+        "color": "#3B82F6",
+        "section": "projects",
+        "id": "5b873b9b-81fe-4889-8788-6bd7be0f43c6",
+        "type": "tag",
+        "parent": "f2e8c4a1-9b7d-4c3e-8f1a-2d5b6c9e8f7a"
+    },
+    {
+        "title": "Enterprise",
+        "color": "#7C3AED",
+        "section": "projects",
+        "id": "236ba819-9f44-4938-bccd-4631cb8a646d",
+        "type": "tag",
+        "parent": "f2e8c4a1-9b7d-4c3e-8f1a-2d5b6c9e8f7a"
+    },
+    {
+        "title": "SMB",
+        "color": "#059669",
+        "section": "projects",
+        "id": "555cb9b1-c923-4b1e-8bd5-20b1275f9bdc",
+        "type": "tag",
+        "parent": "f2e8c4a1-9b7d-4c3e-8f1a-2d5b6c9e8f7a"
+    },
+    {
+        "title": "Startup",
+        "color": "#DC2626",
+        "section": "projects",
+        "id": "3877985e-7702-43bf-982d-6b1b00205ca9",
+        "type": "tag",
+        "parent": "f2e8c4a1-9b7d-4c3e-8f1a-2d5b6c9e8f7a"
+    },
+    {
+        "title": "Technology",
+        "color": "#1D4ED8",
+        "section": "projects",
+        "id": "5760410f-4b8f-4843-8630-5e1b4e696a81",
+        "type": "tag",
+        "parent": "f2e8c4a1-9b7d-4c3e-8f1a-2d5b6c9e8f7a"
+    },
+    {
+        "title": "Healthcare",
+        "color": "#BE185D",
+        "section": "projects",
+        "id": "8a3d1071-16cb-4a02-a785-323cbb268259",
+        "type": "tag",
+        "parent": "f2e8c4a1-9b7d-4c3e-8f1a-2d5b6c9e8f7a"
+    },
+    {
+        "title": "Finance",
+        "color": "#047857",
+        "section": "projects",
+        "id": "c1d9ee6a-2da0-46d3-9fbb-2fe0fae5a251",
+        "type": "tag",
+        "parent": "f2e8c4a1-9b7d-4c3e-8f1a-2d5b6c9e8f7a"
+    },
+    {
+        "title": "Manufacturing",
+        "color": "#92400E",
+        "section": "projects",
+        "id": "10668e42-04cd-4299-b5d0-06c0a3e783fb",
+        "type": "tag",
+        "parent": "f2e8c4a1-9b7d-4c3e-8f1a-2d5b6c9e8f7a"
+    },
+    {
+        "title": "Retail",
+        "color": "#7C2D12",
+        "section": "projects",
+        "id": "dd9a4bc5-3e6e-45c6-b07c-7bd54d45de2c",
+        "type": "tag",
+        "parent": "f2e8c4a1-9b7d-4c3e-8f1a-2d5b6c9e8f7a"
+    },
+    {
+        "title": "Inbound Lead",
+        "color": "#10B981",
+        "section": "projects",
+        "id": "1b16e489-d32c-4ce9-8582-a725829dc5fc",
+        "type": "tag",
+        "parent": "f2e8c4a1-9b7d-4c3e-8f1a-2d5b6c9e8f7a"
+    },
+    {
+        "title": "Outbound Lead",
+        "color": "#F59E0B",
+        "section": "projects",
+        "id": "a29f4ac9-12fc-48c2-90d3-13de944ef70d",
+        "type": "tag",
+        "parent": "f2e8c4a1-9b7d-4c3e-8f1a-2d5b6c9e8f7a"
+    },
+    {
+        "title": "Referral",
+        "color": "#8B5CF6",
+        "section": "projects",
+        "id": "95e18410-866b-423a-a1fa-afa33d2e77b2",
+        "type": "tag",
+        "parent": "f2e8c4a1-9b7d-4c3e-8f1a-2d5b6c9e8f7a"
+    },
+    {
+        "title": "Trade Show",
+        "color": "#EC4899",
+        "section": "projects",
+        "id": "f5a2bb85-8728-4920-be60-654d580dea52",
+        "type": "tag",
+        "parent": "f2e8c4a1-9b7d-4c3e-8f1a-2d5b6c9e8f7a"
+    },
+    {
+        "title": "Social Media",
+        "color": "#06B6D4",
+        "section": "projects",
+        "id": "0dea827f-1061-4efb-8b78-00999cf594e9",
+        "type": "tag",
+        "parent": "f2e8c4a1-9b7d-4c3e-8f1a-2d5b6c9e8f7a"
+    },
+    {
+        "title": "High Value",
+        "color": "#DC2626",
+        "section": "projects",
+        "id": "b449a317-cc10-4fa9-be82-726168fbdacf",
+        "type": "tag",
+        "parent": "f2e8c4a1-9b7d-4c3e-8f1a-2d5b6c9e8f7a"
+    },
+    {
+        "title": "Medium Value",
+        "color": "#F59E0B",
+        "section": "projects",
+        "id": "2ddd8cad-0c28-44ee-bb1f-b616fde98842",
+        "type": "tag",
+        "parent": "f2e8c4a1-9b7d-4c3e-8f1a-2d5b6c9e8f7a"
+    },
+    {
+        "title": "Low Value",
+        "color": "#6B7280",
+        "section": "projects",
+        "id": "b28214a0-9b52-4d53-83b0-91da2aed3d3b",
+        "type": "tag",
+        "parent": "f2e8c4a1-9b7d-4c3e-8f1a-2d5b6c9e8f7a"
+    },
+    {
+        "title": "Decision Maker",
+        "color": "#7C3AED",
+        "section": "projects",
+        "id": "89259d96-4deb-44d7-9c3a-48ac23ebba42",
+        "type": "tag",
+        "parent": "f2e8c4a1-9b7d-4c3e-8f1a-2d5b6c9e8f7a"
+    },
+    {
+        "title": "Influencer",
+        "color": "#059669",
+        "section": "projects",
+        "id": "70e36225-7a2d-4be2-9a76-8c7e8e0e92f3",
+        "type": "tag",
+        "parent": "f2e8c4a1-9b7d-4c3e-8f1a-2d5b6c9e8f7a"
+    },
+    {
+        "title": "Champion",
+        "color": "#DC2626",
+        "section": "projects",
+        "id": "a58b5599-6902-4590-bbfe-99d8ab9b3160",
+        "type": "tag",
+        "parent": "f2e8c4a1-9b7d-4c3e-8f1a-2d5b6c9e8f7a"
+    }
+]

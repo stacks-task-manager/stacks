@@ -1,0 +1,32 @@
+[
+    {
+        "id": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "title": "House Chores & Maintenance",
+        "estimate": 576000,
+        "stacks": [
+            {
+                "title": "Backlog",
+                "tint": "#94A3B8",
+                "id": "ae7bea91-bede-4a1f-a55e-49421022a9f9"
+            },
+            {
+                "title": "Next Up",
+                "tint": "#F59E0B",
+                "id": "0716a9eb-fef6-431b-96d5-1748fcb3ed34"
+            },
+            {
+                "title": "In Progress",
+                "tint": "#3B82F6",
+                "id": "26c740ae-9d25-48a9-ae15-e2b076f1ff83"
+            },
+            {
+                "title": "Done",
+                "tint": "#10B981",
+                "id": "a3798ce7-285b-4708-a19d-7b75dbc6124f"
+            }
+        ],
+        "hourlyRate": 100,
+        "currency": "USD",
+        "health": "good"
+    }
+]

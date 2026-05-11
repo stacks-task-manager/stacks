@@ -1,0 +1,30 @@
+[
+    {
+        "id": "981f5764-66c7-4a33-977b-de8af1ae46e2",
+        "title": "Cleaning",
+        "color": "#EF4444",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "cc14c1cb-2b09-4dc7-86b6-dbdec8c3ec71",
+        "title": "Shopping",
+        "color": "#8B5CF6",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "b8687dbe-5aa2-4958-a2a1-31d99c141ef3",
+        "title": "Maintenance",
+        "color": "#F97316",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "488e29b7-add0-4492-b8ff-6cfa8922a892",
+        "title": "Bills",
+        "color": "#06B6D4",
+        "type": "tag",
+        "section": "projects"
+    }
+]

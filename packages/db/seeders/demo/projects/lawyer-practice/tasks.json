@@ -1,0 +1,890 @@
+[
+    {
+        "title": "Client Meeting - Jones Case",
+        "description": "Detailed description for \"Client Meeting - Jones Case\". This task involves several steps and requires attention to detail.",
+        "id": "f24792aa-025f-4aae-81ec-8ed8480a8bb9",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [
+            "e6b55772-8254-477b-87d1-a8fff24fb2b8"
+        ],
+        "tint": "#64748B",
+        "stack": "ddd47eca-32a1-4fa8-a163-adabb04e5b94",
+        "estimate": 32400,
+        "priority": "medium",
+        "duedate": "2026-02-28 19:26:06",
+        "position": 0
+    },
+    {
+        "title": "Deposition Prep",
+        "description": "Detailed description for \"Deposition Prep\". This task involves several steps and requires attention to detail.",
+        "id": "9b411b46-9256-4a0b-9d3b-f33414c3c883",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [
+            "b8ea1793-e6ae-4ba3-bfbb-6a2b174f6ac0"
+        ],
+        "tint": "#64748B",
+        "stack": "ddd47eca-32a1-4fa8-a163-adabb04e5b94",
+        "estimate": 25200,
+        "priority": "medium",
+        "duedate": "2026-02-12 19:26:06",
+        "position": 1
+    },
+    {
+        "title": "File Motion to Dismiss",
+        "description": "Detailed description for \"File Motion to Dismiss\". This task involves several steps and requires attention to detail.",
+        "id": "cdbdc4e6-e448-46c6-af59-93cde26559dc",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [
+            "b8ea1793-e6ae-4ba3-bfbb-6a2b174f6ac0",
+            "014a03ca-c18a-4a0c-8c85-44ce915e02b6"
+        ],
+        "tint": "#64748B",
+        "stack": "ddd47eca-32a1-4fa8-a163-adabb04e5b94",
+        "estimate": 32400,
+        "priority": "high",
+        "duedate": "2026-02-21 19:26:06",
+        "position": 2
+    },
+    {
+        "title": "Draft Contract Review",
+        "description": "Detailed description for \"Draft Contract Review\". This task involves several steps and requires attention to detail.",
+        "id": "69ec8500-33b3-40cf-8aaf-a6ef5971787a",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [
+            "dfdbb370-2e23-4af1-a018-812ca23ea4c0"
+        ],
+        "tint": "#64748B",
+        "stack": "ddd47eca-32a1-4fa8-a163-adabb04e5b94",
+        "estimate": 54000,
+        "priority": "medium",
+        "duedate": "2026-03-04 19:26:06",
+        "position": 3
+    },
+    {
+        "title": "Court Hearing - Smith",
+        "description": "Detailed description for \"Court Hearing - Smith\". This task involves several steps and requires attention to detail.",
+        "id": "02ed1627-f24f-4ccd-9444-bbf27dc491b3",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [
+            "b8ea1793-e6ae-4ba3-bfbb-6a2b174f6ac0"
+        ],
+        "tint": "#64748B",
+        "stack": "ddd47eca-32a1-4fa8-a163-adabb04e5b94",
+        "estimate": 46800,
+        "priority": "medium",
+        "duedate": "2026-02-22 19:26:06",
+        "position": 4
+    },
+    {
+        "title": "Client Billing Review",
+        "description": "Detailed description for \"Client Billing Review\". This task involves several steps and requires attention to detail.",
+        "id": "af4bcbcc-fd5d-424c-85f5-1f705db98f16",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [
+            "014a03ca-c18a-4a0c-8c85-44ce915e02b6"
+        ],
+        "tint": "#64748B",
+        "stack": "ddd47eca-32a1-4fa8-a163-adabb04e5b94",
+        "estimate": 21600,
+        "priority": "medium",
+        "duedate": "2026-02-11 19:26:06",
+        "position": 5
+    },
+    {
+        "title": "Evidence Gathering",
+        "description": "Detailed description for \"Evidence Gathering\". This task involves several steps and requires attention to detail.",
+        "id": "521fb898-f9a4-4246-98ff-2cd1f9c707c3",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [],
+        "tint": "#64748B",
+        "stack": "ddd47eca-32a1-4fa8-a163-adabb04e5b94",
+        "estimate": 50400,
+        "priority": "medium",
+        "duedate": "2026-02-08 19:26:06",
+        "position": 6
+    },
+    {
+        "title": "Witness Interview",
+        "description": "Detailed description for \"Witness Interview\". This task involves several steps and requires attention to detail.",
+        "id": "cec66fd8-fee1-41f7-8904-d49923c54b80",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [],
+        "tint": "#64748B",
+        "stack": "ddd47eca-32a1-4fa8-a163-adabb04e5b94",
+        "estimate": 36000,
+        "priority": "high",
+        "duedate": "2026-02-06 19:26:06",
+        "position": 7
+    },
+    {
+        "title": "Initial Consultation",
+        "description": "Detailed description for \"Initial Consultation\". This task involves several steps and requires attention to detail.",
+        "id": "92c0e21b-4579-4fe8-85f9-7751b5c2a143",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [
+            "b8ea1793-e6ae-4ba3-bfbb-6a2b174f6ac0",
+            "014a03ca-c18a-4a0c-8c85-44ce915e02b6"
+        ],
+        "tint": "#64748B",
+        "stack": "ddd47eca-32a1-4fa8-a163-adabb04e5b94",
+        "estimate": 18000,
+        "priority": "medium",
+        "duedate": "2026-02-14 19:26:06",
+        "position": 8
+    },
+    {
+        "title": "Conflict of Interest Check",
+        "description": "Detailed description for \"Conflict of Interest Check\". This task involves several steps and requires attention to detail.",
+        "id": "0e1b7eca-c2f1-4285-bcd9-95786b514508",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [],
+        "tint": "#64748B",
+        "stack": "ddd47eca-32a1-4fa8-a163-adabb04e5b94",
+        "estimate": 39600,
+        "priority": "low",
+        "duedate": "2026-02-22 19:26:06",
+        "position": 9
+    },
+    {
+        "title": "Draft Retainer Agreement",
+        "description": "Detailed description for \"Draft Retainer Agreement\". This task involves several steps and requires attention to detail.",
+        "id": "5599d575-e9b3-4335-85ce-76e284febf96",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [],
+        "tint": "#8B5CF6",
+        "stack": "c0e9dda3-dc1e-4031-816c-1302d9522cf8",
+        "estimate": 21600,
+        "priority": "medium",
+        "duedate": "2026-03-02 19:26:06",
+        "position": 0
+    },
+    {
+        "title": "Legal Research - Precedent",
+        "description": "Detailed description for \"Legal Research - Precedent\". This task involves several steps and requires attention to detail.",
+        "id": "68c4df50-99fe-4c8e-8005-cd0ad959be27",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [
+            "dfdbb370-2e23-4af1-a018-812ca23ea4c0"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "c0e9dda3-dc1e-4031-816c-1302d9522cf8",
+        "estimate": 64800,
+        "priority": "medium",
+        "duedate": "2026-03-01 19:26:06",
+        "position": 1
+    },
+    {
+        "title": "Review Case Law",
+        "description": "Detailed description for \"Review Case Law\". This task involves several steps and requires attention to detail.",
+        "id": "ad7c28ab-92bd-4d8b-b119-2e580d053ddb",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [],
+        "tint": "#8B5CF6",
+        "stack": "c0e9dda3-dc1e-4031-816c-1302d9522cf8",
+        "estimate": 3600,
+        "priority": "high",
+        "duedate": "2026-02-21 19:26:06",
+        "position": 2
+    },
+    {
+        "title": "Draft Complaint",
+        "description": "Detailed description for \"Draft Complaint\". This task involves several steps and requires attention to detail.",
+        "id": "b4c990ea-f309-4b49-9787-9289ab7b843e",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [
+            "e6b55772-8254-477b-87d1-a8fff24fb2b8",
+            "014a03ca-c18a-4a0c-8c85-44ce915e02b6"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "c0e9dda3-dc1e-4031-816c-1302d9522cf8",
+        "estimate": 3600,
+        "priority": "medium",
+        "duedate": "2026-02-15 19:26:06",
+        "position": 3
+    },
+    {
+        "title": "File Answer to Complaint",
+        "description": "Detailed description for \"File Answer to Complaint\". This task involves several steps and requires attention to detail.",
+        "id": "5722235d-1bc2-48bf-a8be-d40c68017c1c",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [
+            "e6b55772-8254-477b-87d1-a8fff24fb2b8"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "c0e9dda3-dc1e-4031-816c-1302d9522cf8",
+        "estimate": 32400,
+        "priority": "medium",
+        "duedate": "2026-03-03 19:26:06",
+        "position": 4
+    },
+    {
+        "title": "Draft Interrogatories",
+        "description": "Detailed description for \"Draft Interrogatories\". This task involves several steps and requires attention to detail.",
+        "id": "445758dd-2d48-489f-8b1b-b512cbcf31ef",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [],
+        "tint": "#8B5CF6",
+        "stack": "c0e9dda3-dc1e-4031-816c-1302d9522cf8",
+        "estimate": 50400,
+        "priority": "high",
+        "duedate": "2026-02-09 19:26:06",
+        "position": 5
+    },
+    {
+        "title": "Respond to Discovery",
+        "description": "Detailed description for \"Respond to Discovery\". This task involves several steps and requires attention to detail.",
+        "id": "c502e6e6-81e0-4338-ab62-d72e4b6cbfb9",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [
+            "dfdbb370-2e23-4af1-a018-812ca23ea4c0"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "c0e9dda3-dc1e-4031-816c-1302d9522cf8",
+        "estimate": 61200,
+        "priority": "low",
+        "duedate": "2026-02-13 19:26:06",
+        "position": 6
+    },
+    {
+        "title": "Review Opposing Counsel Docs",
+        "description": "Detailed description for \"Review Opposing Counsel Docs\". This task involves several steps and requires attention to detail.",
+        "id": "0a23b02e-2a64-4690-9620-54458cf269c4",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [
+            "dfdbb370-2e23-4af1-a018-812ca23ea4c0"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "c0e9dda3-dc1e-4031-816c-1302d9522cf8",
+        "estimate": 21600,
+        "priority": "high",
+        "duedate": "2026-03-04 19:26:06",
+        "position": 7
+    },
+    {
+        "title": "Subpoena Records",
+        "description": "Detailed description for \"Subpoena Records\". This task involves several steps and requires attention to detail.",
+        "id": "0166c594-3c7c-48a9-9f0e-14c8a07f26ec",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [],
+        "tint": "#8B5CF6",
+        "stack": "c0e9dda3-dc1e-4031-816c-1302d9522cf8",
+        "estimate": 28800,
+        "priority": "high",
+        "duedate": "2026-02-13 19:26:06",
+        "position": 8
+    },
+    {
+        "title": "Prepare Exhibit List",
+        "description": "Detailed description for \"Prepare Exhibit List\". This task involves several steps and requires attention to detail.",
+        "id": "ad7ed308-2ddc-47d8-ad10-4f03ab39b9e9",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [],
+        "tint": "#8B5CF6",
+        "stack": "c0e9dda3-dc1e-4031-816c-1302d9522cf8",
+        "estimate": 36000,
+        "priority": "high",
+        "duedate": "2026-02-21 19:26:06",
+        "position": 9
+    },
+    {
+        "title": "Prepare Witness List",
+        "description": "Detailed description for \"Prepare Witness List\". This task involves several steps and requires attention to detail.",
+        "id": "5aef51e6-34d0-49d3-b9e0-dfddd1646e03",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [
+            "b8ea1793-e6ae-4ba3-bfbb-6a2b174f6ac0"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "c0e9dda3-dc1e-4031-816c-1302d9522cf8",
+        "estimate": 39600,
+        "priority": "low",
+        "duedate": "2026-02-22 19:26:06",
+        "position": 10
+    },
+    {
+        "title": "Jury Instruction Draft",
+        "description": "Detailed description for \"Jury Instruction Draft\". This task involves several steps and requires attention to detail.",
+        "id": "7d0d30e1-3bee-45ba-888c-fffb55f3a94f",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [
+            "b8ea1793-e6ae-4ba3-bfbb-6a2b174f6ac0"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "c0e9dda3-dc1e-4031-816c-1302d9522cf8",
+        "estimate": 14400,
+        "priority": "high",
+        "duedate": "2026-02-21 19:26:06",
+        "position": 11
+    },
+    {
+        "title": "Opening Statement Prep",
+        "description": "Detailed description for \"Opening Statement Prep\". This task involves several steps and requires attention to detail.",
+        "id": "8b9fd4e9-6a1a-4233-a296-6d0c4f5af5dc",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [
+            "b8ea1793-e6ae-4ba3-bfbb-6a2b174f6ac0"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "c0e9dda3-dc1e-4031-816c-1302d9522cf8",
+        "estimate": 32400,
+        "priority": "high",
+        "duedate": "2026-02-22 19:26:06",
+        "position": 12
+    },
+    {
+        "title": "Closing Argument Prep",
+        "description": "Detailed description for \"Closing Argument Prep\". This task involves several steps and requires attention to detail.",
+        "id": "ac68d42f-6d5c-4448-b6d1-c8bd73fcf769",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [
+            "b8ea1793-e6ae-4ba3-bfbb-6a2b174f6ac0"
+        ],
+        "tint": "#F59E0B",
+        "stack": "14a6c195-e25a-4c1c-a067-f7585e59f891",
+        "estimate": 32400,
+        "priority": "high",
+        "duedate": "2026-03-06 19:26:06",
+        "position": 0
+    },
+    {
+        "title": "Settlement Negotiation",
+        "description": "Detailed description for \"Settlement Negotiation\". This task involves several steps and requires attention to detail.",
+        "id": "618868ec-3e24-4f2d-88b4-e01402204abe",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [
+            "dfdbb370-2e23-4af1-a018-812ca23ea4c0",
+            "b8ea1793-e6ae-4ba3-bfbb-6a2b174f6ac0"
+        ],
+        "tint": "#F59E0B",
+        "stack": "14a6c195-e25a-4c1c-a067-f7585e59f891",
+        "estimate": 64800,
+        "priority": "low",
+        "duedate": "2026-03-05 19:26:06",
+        "position": 1
+    },
+    {
+        "title": "Mediation Session",
+        "description": "Detailed description for \"Mediation Session\". This task involves several steps and requires attention to detail.",
+        "id": "bbe01199-4ede-4510-a25c-79c9a3e7f4ff",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [
+            "dfdbb370-2e23-4af1-a018-812ca23ea4c0"
+        ],
+        "tint": "#F59E0B",
+        "stack": "14a6c195-e25a-4c1c-a067-f7585e59f891",
+        "estimate": 50400,
+        "priority": "high",
+        "duedate": "2026-02-23 19:26:06",
+        "position": 2
+    },
+    {
+        "title": "Arbitration Hearing",
+        "description": "Detailed description for \"Arbitration Hearing\". This task involves several steps and requires attention to detail.",
+        "id": "c81a24d2-9f40-428a-b7a6-03a083c2da1d",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [
+            "b8ea1793-e6ae-4ba3-bfbb-6a2b174f6ac0",
+            "dfdbb370-2e23-4af1-a018-812ca23ea4c0"
+        ],
+        "tint": "#F59E0B",
+        "stack": "14a6c195-e25a-4c1c-a067-f7585e59f891",
+        "estimate": 57600,
+        "priority": "high",
+        "duedate": "2026-02-07 19:26:06",
+        "position": 3
+    },
+    {
+        "title": "Client Status Update",
+        "description": "Detailed description for \"Client Status Update\". This task involves several steps and requires attention to detail.",
+        "id": "15e881b8-cf32-4bf8-8d73-32dedf721bc0",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [
+            "e6b55772-8254-477b-87d1-a8fff24fb2b8"
+        ],
+        "tint": "#F59E0B",
+        "stack": "14a6c195-e25a-4c1c-a067-f7585e59f891",
+        "estimate": 7200,
+        "priority": "high",
+        "duedate": "2026-02-08 19:26:06",
+        "position": 4
+    },
+    {
+        "title": "Review Police Report",
+        "description": "Detailed description for \"Review Police Report\". This task involves several steps and requires attention to detail.",
+        "id": "7ff560ea-b831-4b3e-8467-c6c998d5a49b",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [],
+        "tint": "#F59E0B",
+        "stack": "14a6c195-e25a-4c1c-a067-f7585e59f891",
+        "estimate": 72000,
+        "priority": "low",
+        "duedate": "2026-03-01 19:26:06",
+        "position": 5
+    },
+    {
+        "title": "Analyze Medical Records",
+        "description": "Detailed description for \"Analyze Medical Records\". This task involves several steps and requires attention to detail.",
+        "id": "e56114ea-4517-407c-8d3e-bbeb5804bf05",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [],
+        "tint": "#F59E0B",
+        "stack": "14a6c195-e25a-4c1c-a067-f7585e59f891",
+        "estimate": 68400,
+        "priority": "low",
+        "duedate": "2026-02-05 19:26:06",
+        "position": 6
+    },
+    {
+        "title": "Consult Expert Witness",
+        "description": "Detailed description for \"Consult Expert Witness\". This task involves several steps and requires attention to detail.",
+        "id": "fd9fcc2f-9102-4920-bcd5-a168292dbd85",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [
+            "b8ea1793-e6ae-4ba3-bfbb-6a2b174f6ac0"
+        ],
+        "tint": "#F59E0B",
+        "stack": "14a6c195-e25a-4c1c-a067-f7585e59f891",
+        "estimate": 32400,
+        "priority": "low",
+        "duedate": "2026-02-23 19:26:06",
+        "position": 7
+    },
+    {
+        "title": "Draft Affidavit",
+        "description": "Detailed description for \"Draft Affidavit\". This task involves several steps and requires attention to detail.",
+        "id": "17844167-1375-4617-b129-aa26acf2e785",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [
+            "e6b55772-8254-477b-87d1-a8fff24fb2b8",
+            "014a03ca-c18a-4a0c-8c85-44ce915e02b6"
+        ],
+        "tint": "#F59E0B",
+        "stack": "14a6c195-e25a-4c1c-a067-f7585e59f891",
+        "estimate": 18000,
+        "priority": "low",
+        "duedate": "2026-02-17 19:26:06",
+        "position": 8
+    },
+    {
+        "title": "Notarize Documents",
+        "description": "Detailed description for \"Notarize Documents\". This task involves several steps and requires attention to detail.",
+        "id": "d4e715da-95df-47e1-8ef2-b0031efc3140",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [],
+        "tint": "#F59E0B",
+        "stack": "14a6c195-e25a-4c1c-a067-f7585e59f891",
+        "estimate": 61200,
+        "priority": "medium",
+        "duedate": "2026-02-11 19:26:06",
+        "position": 9
+    },
+    {
+        "title": "Estate Planning Session",
+        "description": "Detailed description for \"Estate Planning Session\". This task involves several steps and requires attention to detail.",
+        "id": "22136cc4-21bb-4259-97cd-538664947a91",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [
+            "dfdbb370-2e23-4af1-a018-812ca23ea4c0"
+        ],
+        "tint": "#F59E0B",
+        "stack": "14a6c195-e25a-4c1c-a067-f7585e59f891",
+        "estimate": 3600,
+        "priority": "high",
+        "duedate": "2026-03-05 19:26:06",
+        "position": 10
+    },
+    {
+        "title": "Will Drafting",
+        "description": "Detailed description for \"Will Drafting\". This task involves several steps and requires attention to detail.",
+        "id": "d54344fb-9d33-482e-bb2b-8f4f60559e3a",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [],
+        "tint": "#F59E0B",
+        "stack": "14a6c195-e25a-4c1c-a067-f7585e59f891",
+        "estimate": 50400,
+        "priority": "high",
+        "duedate": "2026-03-05 19:26:06",
+        "position": 11
+    },
+    {
+        "title": "Trust Formation",
+        "description": "Detailed description for \"Trust Formation\". This task involves several steps and requires attention to detail.",
+        "id": "8c7b5b79-9ff5-4031-b1c1-8cd6c68943f7",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [],
+        "tint": "#F59E0B",
+        "stack": "14a6c195-e25a-4c1c-a067-f7585e59f891",
+        "estimate": 18000,
+        "priority": "medium",
+        "duedate": "2026-03-06 19:26:06",
+        "position": 12
+    },
+    {
+        "title": "Real Estate Closing",
+        "description": "Detailed description for \"Real Estate Closing\". This task involves several steps and requires attention to detail.",
+        "id": "d501f10d-d993-4f98-adb1-9ef52a3f11f2",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [
+            "b8ea1793-e6ae-4ba3-bfbb-6a2b174f6ac0",
+            "014a03ca-c18a-4a0c-8c85-44ce915e02b6"
+        ],
+        "tint": "#F59E0B",
+        "stack": "14a6c195-e25a-4c1c-a067-f7585e59f891",
+        "estimate": 18000,
+        "priority": "low",
+        "duedate": "2026-02-21 19:26:06",
+        "position": 13
+    },
+    {
+        "title": "Title Search Review",
+        "description": "Detailed description for \"Title Search Review\". This task involves several steps and requires attention to detail.",
+        "id": "bb4cbdc0-47ac-438a-81e3-28f3145eae28",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [
+            "b8ea1793-e6ae-4ba3-bfbb-6a2b174f6ac0",
+            "e6b55772-8254-477b-87d1-a8fff24fb2b8"
+        ],
+        "tint": "#F59E0B",
+        "stack": "14a6c195-e25a-4c1c-a067-f7585e59f891",
+        "estimate": 21600,
+        "priority": "medium",
+        "duedate": "2026-02-18 19:26:06",
+        "position": 14
+    },
+    {
+        "title": "Patent Application",
+        "description": "Detailed description for \"Patent Application\". This task involves several steps and requires attention to detail.",
+        "id": "3c97a9a1-f53c-4161-9f66-ca5023de5c68",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [
+            "e6b55772-8254-477b-87d1-a8fff24fb2b8"
+        ],
+        "tint": "#EF4444",
+        "stack": "0e632744-7d44-4965-9793-9db3a7263407",
+        "estimate": 43200,
+        "priority": "medium",
+        "duedate": "2026-02-24 19:26:06",
+        "position": 0
+    },
+    {
+        "title": "Trademark Filing",
+        "description": "Detailed description for \"Trademark Filing\". This task involves several steps and requires attention to detail.",
+        "id": "5c6f0b82-49ed-4926-9023-94d331a698e4",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [],
+        "tint": "#EF4444",
+        "stack": "0e632744-7d44-4965-9793-9db3a7263407",
+        "estimate": 36000,
+        "priority": "high",
+        "duedate": "2026-02-17 19:26:06",
+        "position": 1
+    },
+    {
+        "title": "Corporate Bylaws Draft",
+        "description": "Detailed description for \"Corporate Bylaws Draft\". This task involves several steps and requires attention to detail.",
+        "id": "1dcdecaa-4786-4181-81be-3028d7554852",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [],
+        "tint": "#EF4444",
+        "stack": "0e632744-7d44-4965-9793-9db3a7263407",
+        "estimate": 10800,
+        "priority": "low",
+        "duedate": "2026-02-09 19:26:06",
+        "position": 2
+    },
+    {
+        "title": "LLC Formation",
+        "description": "Detailed description for \"LLC Formation\". This task involves several steps and requires attention to detail.",
+        "id": "ed3efcd0-8a24-46b8-bb7f-0872e7d020c4",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [
+            "b8ea1793-e6ae-4ba3-bfbb-6a2b174f6ac0",
+            "e6b55772-8254-477b-87d1-a8fff24fb2b8"
+        ],
+        "tint": "#EF4444",
+        "stack": "0e632744-7d44-4965-9793-9db3a7263407",
+        "estimate": 10800,
+        "priority": "medium",
+        "duedate": "2026-03-03 19:26:06",
+        "position": 3
+    },
+    {
+        "title": "Employment Contract Review",
+        "description": "Detailed description for \"Employment Contract Review\". This task involves several steps and requires attention to detail.",
+        "id": "03f44fc1-b2a5-4cf8-9231-0f98d5e67472",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [],
+        "tint": "#EF4444",
+        "stack": "0e632744-7d44-4965-9793-9db3a7263407",
+        "estimate": 39600,
+        "priority": "high",
+        "duedate": "2026-02-10 19:26:06",
+        "position": 4
+    },
+    {
+        "title": "NDA Drafting",
+        "description": "Detailed description for \"NDA Drafting\". This task involves several steps and requires attention to detail.",
+        "id": "1c84a11b-2edb-4407-b19c-330635d43f7f",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [],
+        "tint": "#EF4444",
+        "stack": "0e632744-7d44-4965-9793-9db3a7263407",
+        "estimate": 57600,
+        "priority": "low",
+        "duedate": "2026-03-04 19:26:06",
+        "position": 5
+    },
+    {
+        "title": "Compliance Audit",
+        "description": "Detailed description for \"Compliance Audit\". This task involves several steps and requires attention to detail.",
+        "id": "4f744c4d-3cf7-48e5-aec3-3d3cbbe90b1f",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [
+            "dfdbb370-2e23-4af1-a018-812ca23ea4c0",
+            "e6b55772-8254-477b-87d1-a8fff24fb2b8"
+        ],
+        "tint": "#EF4444",
+        "stack": "0e632744-7d44-4965-9793-9db3a7263407",
+        "estimate": 57600,
+        "priority": "medium",
+        "duedate": "2026-02-07 19:26:06",
+        "position": 6
+    },
+    {
+        "title": "Tax Law Consultation",
+        "description": "Detailed description for \"Tax Law Consultation\". This task involves several steps and requires attention to detail.",
+        "id": "b4ab7106-e1e4-47ad-8e5a-6c55484307b8",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [
+            "b8ea1793-e6ae-4ba3-bfbb-6a2b174f6ac0",
+            "e6b55772-8254-477b-87d1-a8fff24fb2b8"
+        ],
+        "tint": "#EF4444",
+        "stack": "0e632744-7d44-4965-9793-9db3a7263407",
+        "estimate": 54000,
+        "priority": "low",
+        "duedate": "2026-03-02 19:26:06",
+        "position": 7
+    },
+    {
+        "title": "Immigration Visa Application",
+        "description": "Detailed description for \"Immigration Visa Application\". This task involves several steps and requires attention to detail.",
+        "id": "46ec847d-dbc3-417d-8779-956d69ad4324",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [],
+        "tint": "#EF4444",
+        "stack": "0e632744-7d44-4965-9793-9db3a7263407",
+        "estimate": 25200,
+        "priority": "medium",
+        "duedate": "2026-03-06 19:26:06",
+        "position": 8
+    },
+    {
+        "title": "Bankruptcy Filing",
+        "description": "Detailed description for \"Bankruptcy Filing\". This task involves several steps and requires attention to detail.",
+        "id": "14cb2106-c275-431b-a85b-7b0ae989331c",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [
+            "dfdbb370-2e23-4af1-a018-812ca23ea4c0"
+        ],
+        "tint": "#EF4444",
+        "stack": "0e632744-7d44-4965-9793-9db3a7263407",
+        "estimate": 21600,
+        "priority": "low",
+        "duedate": "2026-02-24 19:26:06",
+        "position": 9
+    },
+    {
+        "title": "Divorce Settlement Draft",
+        "description": "Detailed description for \"Divorce Settlement Draft\". This task involves several steps and requires attention to detail.",
+        "id": "115aed9b-a398-4663-8c38-3df638a298bf",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [
+            "b8ea1793-e6ae-4ba3-bfbb-6a2b174f6ac0"
+        ],
+        "tint": "#EF4444",
+        "stack": "0e632744-7d44-4965-9793-9db3a7263407",
+        "estimate": 68400,
+        "priority": "high",
+        "duedate": "2026-02-23 19:26:06",
+        "position": 10
+    },
+    {
+        "title": "Custody Hearing Prep",
+        "description": "Detailed description for \"Custody Hearing Prep\". This task involves several steps and requires attention to detail.",
+        "id": "f7dd853e-a48b-4637-9977-2fe4d1a71802",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [
+            "b8ea1793-e6ae-4ba3-bfbb-6a2b174f6ac0"
+        ],
+        "tint": "#10B981",
+        "stack": "e2d0b81b-65e9-4511-8010-a147dcf3d0c5",
+        "estimate": 61200,
+        "priority": "low",
+        "duedate": "2026-02-10 19:26:06",
+        "position": 0
+    },
+    {
+        "title": "Plea Bargain Negotiation",
+        "description": "Detailed description for \"Plea Bargain Negotiation\". This task involves several steps and requires attention to detail.",
+        "id": "30af1f7d-9d80-4862-88c2-29cfa4f715a7",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [],
+        "tint": "#10B981",
+        "stack": "e2d0b81b-65e9-4511-8010-a147dcf3d0c5",
+        "estimate": 25200,
+        "priority": "high",
+        "duedate": "2026-03-06 19:26:06",
+        "position": 1
+    },
+    {
+        "title": "Parole Board Hearing",
+        "description": "Detailed description for \"Parole Board Hearing\". This task involves several steps and requires attention to detail.",
+        "id": "8fd7c07e-4954-4e8c-bb44-463856e10684",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [],
+        "tint": "#10B981",
+        "stack": "e2d0b81b-65e9-4511-8010-a147dcf3d0c5",
+        "estimate": 18000,
+        "priority": "medium",
+        "duedate": "2026-02-10 19:26:06",
+        "position": 2
+    },
+    {
+        "title": "Appellate Brief Writing",
+        "description": "Detailed description for \"Appellate Brief Writing\". This task involves several steps and requires attention to detail.",
+        "id": "b09bc6bd-c9cf-40fc-bd78-f0905b12feab",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [],
+        "tint": "#10B981",
+        "stack": "e2d0b81b-65e9-4511-8010-a147dcf3d0c5",
+        "estimate": 72000,
+        "priority": "medium",
+        "duedate": "2026-02-17 19:26:06",
+        "position": 3
+    },
+    {
+        "title": "Oral Argument Practice",
+        "description": "Detailed description for \"Oral Argument Practice\". This task involves several steps and requires attention to detail.",
+        "id": "84696e6c-01f2-4881-bd11-3ed3cb815330",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [
+            "014a03ca-c18a-4a0c-8c85-44ce915e02b6"
+        ],
+        "tint": "#10B981",
+        "stack": "e2d0b81b-65e9-4511-8010-a147dcf3d0c5",
+        "estimate": 28800,
+        "priority": "high",
+        "duedate": "2026-02-12 19:26:06",
+        "position": 4
+    },
+    {
+        "title": "CLE Credit Course",
+        "description": "Detailed description for \"CLE Credit Course\". This task involves several steps and requires attention to detail.",
+        "id": "63f66cb3-9247-40f7-9907-b2313801c1f2",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [],
+        "tint": "#10B981",
+        "stack": "e2d0b81b-65e9-4511-8010-a147dcf3d0c5",
+        "estimate": 18000,
+        "priority": "high",
+        "duedate": "2026-03-06 19:26:06",
+        "position": 5
+    },
+    {
+        "title": "Client Meeting - Jones Case (2)",
+        "description": "Detailed description for \"Client Meeting - Jones Case (2)\". This task involves several steps and requires attention to detail.",
+        "id": "f2fffde7-4786-4799-9428-744246a32058",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [
+            "dfdbb370-2e23-4af1-a018-812ca23ea4c0",
+            "b8ea1793-e6ae-4ba3-bfbb-6a2b174f6ac0"
+        ],
+        "tint": "#10B981",
+        "stack": "e2d0b81b-65e9-4511-8010-a147dcf3d0c5",
+        "estimate": 68400,
+        "priority": "high",
+        "duedate": "2026-02-09 19:26:06",
+        "position": 6
+    },
+    {
+        "title": "Deposition Prep (2)",
+        "description": "Detailed description for \"Deposition Prep (2)\". This task involves several steps and requires attention to detail.",
+        "id": "3f5de0c7-48d5-47e0-ab93-0dddf6c19fef",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [],
+        "tint": "#10B981",
+        "stack": "e2d0b81b-65e9-4511-8010-a147dcf3d0c5",
+        "estimate": 7200,
+        "priority": "low",
+        "duedate": "2026-02-05 19:26:06",
+        "position": 7
+    },
+    {
+        "title": "File Motion to Dismiss (2)",
+        "description": "Detailed description for \"File Motion to Dismiss (2)\". This task involves several steps and requires attention to detail.",
+        "id": "4e325654-edb5-4a1d-bceb-69a913e98121",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [
+            "014a03ca-c18a-4a0c-8c85-44ce915e02b6"
+        ],
+        "tint": "#10B981",
+        "stack": "e2d0b81b-65e9-4511-8010-a147dcf3d0c5",
+        "estimate": 3600,
+        "priority": "high",
+        "duedate": "2026-02-06 19:26:06",
+        "position": 8
+    },
+    {
+        "title": "Draft Contract Review (2)",
+        "description": "Detailed description for \"Draft Contract Review (2)\". This task involves several steps and requires attention to detail.",
+        "id": "04809a2a-afb8-4382-b886-a3c45af6c051",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [],
+        "tint": "#10B981",
+        "stack": "e2d0b81b-65e9-4511-8010-a147dcf3d0c5",
+        "estimate": 43200,
+        "priority": "low",
+        "duedate": "2026-02-12 19:26:06",
+        "position": 9
+    },
+    {
+        "title": "Court Hearing - Smith (2)",
+        "description": "Detailed description for \"Court Hearing - Smith (2)\". This task involves several steps and requires attention to detail.",
+        "id": "aea8e859-f84b-4dc0-9ec9-d280634368b3",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [],
+        "tint": "#10B981",
+        "stack": "e2d0b81b-65e9-4511-8010-a147dcf3d0c5",
+        "estimate": 14400,
+        "priority": "high",
+        "duedate": "2026-02-17 19:26:06",
+        "position": 10
+    },
+    {
+        "title": "Client Billing Review (2)",
+        "description": "Detailed description for \"Client Billing Review (2)\". This task involves several steps and requires attention to detail.",
+        "id": "eab26262-38fb-4a79-b632-9fe9550dda20",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [],
+        "tint": "#10B981",
+        "stack": "e2d0b81b-65e9-4511-8010-a147dcf3d0c5",
+        "estimate": 64800,
+        "priority": "low",
+        "duedate": "2026-02-25 19:26:06",
+        "position": 11
+    },
+    {
+        "title": "Evidence Gathering (2)",
+        "description": "Detailed description for \"Evidence Gathering (2)\". This task involves several steps and requires attention to detail.",
+        "id": "71355b02-349c-4d42-b03b-1adbf63071f8",
+        "project": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "tags": [],
+        "tint": "#10B981",
+        "stack": "e2d0b81b-65e9-4511-8010-a147dcf3d0c5",
+        "estimate": 25200,
+        "priority": "high",
+        "duedate": "2026-02-08 19:26:06",
+        "position": 12
+    }
+]

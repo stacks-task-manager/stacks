@@ -1,0 +1,58 @@
+[
+    {
+        "id": "8a39e09b-dea3-48d0-b0b1-52600c6c52d5",
+        "title": "Feature",
+        "color": "#EC4899",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "282a502c-571e-45e5-9f46-2a9aa78016ff",
+        "title": "Enhancement",
+        "color": "#EC4899",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "38a38e64-1d47-407d-aa09-2c2ac73c2a40",
+        "title": "Tech Debt",
+        "color": "#EF4444",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "6debd051-b1be-42b6-8480-a850b1345ca5",
+        "title": "Research",
+        "color": "#64748B",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "dfa395fc-47ab-47ae-9629-1d3837a6f016",
+        "title": "UX",
+        "color": "#3B82F6",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "9100ab56-5641-4816-83a8-5d098248207c",
+        "title": "At Risk",
+        "color": "#8B5CF6",
+        "type": "status",
+        "section": "projects"
+    },
+    {
+        "id": "71b2aa7b-d40e-4901-a06f-65d5bcd09f80",
+        "title": "On Track",
+        "color": "#06B6D4",
+        "type": "status",
+        "section": "projects"
+    },
+    {
+        "id": "0a31f0ff-df83-4153-928e-97d32160127c",
+        "title": "Scoped",
+        "color": "#F97316",
+        "type": "status",
+        "section": "projects"
+    }
+]

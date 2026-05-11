@@ -1,0 +1,106 @@
+{
+  "entityName": "Project",
+  "tableName": "projects",
+  "attributes": {
+    "id": {
+      "type": "UUID",
+      "defaultValue": "UUIDV4",
+      "primaryKey": true
+    },
+    "tenant": {
+      "type": "UUID",
+      "allowNull": false
+    },
+    "createdBy": {
+      "type": "UUID",
+      "allowNull": false
+    },
+    "updatedBy": {
+      "type": "UUID",
+      "allowNull": false
+    },
+    "deletedBy": {
+      "type": "UUID",
+      "allowNull": true
+    },
+    "created": {
+      "type": "DATE",
+      "defaultValue": "NOW",
+      "allowNull": false
+    },
+    "updated": {
+      "type": "DATE",
+      "defaultValue": "NOW",
+      "allowNull": false
+    },
+    "deleted": {
+      "type": "DATE",
+      "allowNull": true
+    },
+    "description": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "startDate": {
+      "type": "DATE",
+      "allowNull": true
+    },
+    "endDate": {
+      "type": "DATE",
+      "allowNull": true
+    },
+    "health": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "projectOwner": {
+      "type": "UUID",
+      "allowNull": true
+    },
+    "approvers": {
+      "type": "JSONB",
+      "allowNull": true,
+      "defaultValue": []
+    },
+    "automations": {
+      "type": "JSONB",
+      "allowNull": true,
+      "defaultValue": []
+    },
+    "currency": {
+      "type": "STRING",
+      "allowNull": true,
+      "defaultValue": "USD"
+    },
+    "hourlyRate": {
+      "type": "FLOAT",
+      "allowNull": true,
+      "defaultValue": 0
+    },
+    "fields": {
+      "type": "JSONB",
+      "allowNull": true,
+      "defaultValue": []
+    },
+    "backgroundUrl": {
+      "type": "STRING",
+      "allowNull": true,
+      "defaultValue": ""
+    },
+    "includeSubtasks": {
+      "type": "BOOLEAN",
+      "allowNull": true,
+      "defaultValue": false
+    },
+    "frozen": {
+      "type": "BOOLEAN",
+      "allowNull": true,
+      "defaultValue": false
+    },
+    "estimate": {
+      "type": "INTEGER",
+      "allowNull": true
+    }
+  },
+  "options": {}
+}

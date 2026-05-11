@@ -1,0 +1,42 @@
+[
+    {
+        "id": "2e2ae9f8-150b-484e-b41b-cb06d5a8d376",
+        "title": "Customer Relationship Management System",
+        "estimate": 172800,
+        "stacks": [
+            {
+                "title": "Lead Generation",
+                "tint": "#3B82F6",
+                "id": "c6b5754e-8462-4ce6-8236-f9ee2c6af146"
+            },
+            {
+                "title": "Qualification",
+                "tint": "#F59E0B",
+                "id": "35ec8088-945e-47c3-aa59-671af8598c02"
+            },
+            {
+                "title": "Proposal",
+                "tint": "#8B5CF6",
+                "id": "74e98a34-4714-4143-a642-8fbfe134b5a2"
+            },
+            {
+                "title": "Negotiation",
+                "tint": "#EF4444",
+                "id": "ec1a3493-810a-4bee-88f6-417cda129056"
+            },
+            {
+                "title": "Closed Won",
+                "tint": "#10B981",
+                "id": "dcb90743-febb-4760-b43c-295cc2ed5b4f"
+            },
+            {
+                "title": "Closed Lost",
+                "tint": "#6B7280",
+                "id": "1857477c-419a-412e-b8e1-53f836ab2f6a"
+            }
+        ],
+        "hourlyRate": 125,
+        "currency": "USD",
+        "health": "needsAttentions"
+    }
+]

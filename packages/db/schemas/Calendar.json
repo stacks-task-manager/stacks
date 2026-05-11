@@ -1,0 +1,75 @@
+{
+  "entityName": "Calendar",
+  "tableName": "calendar",
+  "attributes": {
+    "id": {
+      "type": "UUID",
+      "defaultValue": "UUIDV4",
+      "primaryKey": true
+    },
+    "tenant": {
+      "type": "UUID",
+      "allowNull": false
+    },
+    "createdBy": {
+      "type": "UUID",
+      "allowNull": false
+    },
+    "updatedBy": {
+      "type": "UUID",
+      "allowNull": false
+    },
+    "deletedBy": {
+      "type": "UUID",
+      "allowNull": true
+    },
+    "created": {
+      "type": "DATE",
+      "defaultValue": "NOW",
+      "allowNull": false
+    },
+    "updated": {
+      "type": "DATE",
+      "defaultValue": "NOW",
+      "allowNull": false
+    },
+    "deleted": {
+      "type": "DATE",
+      "allowNull": true
+    },
+    "resourceId": {
+      "type": "UUID",
+      "allowNull": false
+    },
+    "resourceType": {
+      "type": "STRING",
+      "allowNull": false
+    },
+    "parent": {
+      "type": "UUID",
+      "allowNull": true
+    },
+    "title": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "person": {
+      "type": "UUID",
+      "allowNull": false
+    },
+    "content": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "type": {
+      "type": "STRING",
+      "allowNull": false
+    },
+    "change": {
+      "type": "JSONB",
+      "allowNull": true,
+      "defaultValue": "{"
+    }
+  },
+  "options": {}
+}
