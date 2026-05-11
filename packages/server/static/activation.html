@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User activation - Stacks</title>
+    <link rel="stylesheet" href="/static/assets/css/stacks.min.css" as="style">
+
+</head>
+
+<body>
+    <div class="d-flex flex__center ps-fixed t0 b0 l0 r0 bg-theme-secondary-100 overflow-y-auto">
+        <div class="s-card ws4 bs-lg">
+            <form method="post" action="/auth/activate">
+                <div class="d-flex jc-center mb24 mt24">
+                    <svg data-spot="SpotIdentityXL" class="fc-blue-400"></svg>
+                </div>
+
+                <h2 class="ta-center">User activation</h2>
+
+                <p class="fs-body3 fc-medium">
+                    Hello <strong>{{firstName}}</strong>, to complete your account activation, please enter your
+                    password below.
+                </p>
+
+                <div class="d-flex fd-column g16">
+                    {{#if errors}}
+                    <div class="s-notice s-notice__warning s-notice__important" role="alert">
+                        {{#each errors}}
+                        <div>{{this}}</div>
+                        {{/each}}
+                    </div>
+                    {{/if}}
+
+
+                    <div class="d-flex gy4 fd-column">
+                        <label class="s-label" for="password1">Password</label>
+                        <input class="s-input s-input__md" id="password1" name="password1" type="password"
+                            placeholder="Enter your password here" />
+                    </div>
+                    <div class="d-flex gy4 fd-column">
+                        <label class="s-label" for="password2">Repeat password</label>
+                        <input class="s-input s-input__md" id="password2" name="password2" type="password"
+                            placeholder="Enter your password here" />
+                    </div>
+
+                    <input type="hidden" value="{{token}}" name="token" />
+                    <button class="s-btn s-btn__filled s-btn mt24" type="submit">Activate account</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/static/assets/js/browser.umd.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>User login - Stacks</title>
+        <link rel="stylesheet" href="/static/assets/css/stacks.min.css" as="style" />
+    </head>
+
+    <body>
+        <div class="d-flex flex__center ps-fixed t0 b0 l0 r0 bg-theme-secondary-100 overflow-y-auto">
+            <div class="flex--item">
+                <div class="d-flex ai-center jc-center sm:fd-column-reverse">
+                    <div class="flex--item fs-body2 mr48 sm:mr0 mb128 sm:mb0 sm:pl24 sm:pr24">
+                        <img
+                            class="native mb32 svg-icon"
+                            src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTcyOXB4IiBoZWlnaHQ9IjUxMnB4IiB2aWV3Qm94PSIwIDAgMTcyOSA1MTIiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8dGl0bGU+bG9nbzwvdGl0bGU+CiAgICA8ZyBpZD0iUGFnZS0xIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyBpZD0ibG9nbyI+CiAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUiIGZpbGw9IiMwMDAwMDAiIHg9IjAiIHk9IjAiIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iMTI2Ij48L3JlY3Q+CiAgICAgICAgICAgIDxsaW5lIHgxPSIxNDQiIHkxPSIxMjEiIHgyPSIxNDQiIHkyPSIzMzQuNTc0MTc2IiBpZD0iUGF0aCIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjQwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjwvbGluZT4KICAgICAgICAgICAgPGxpbmUgeDE9IjI1Ni4zMjk2NyIgeTE9IjEyMSIgeDI9IjI1Ni4zMjk2NyIgeTI9IjIzNi4yODU3MTQiIGlkPSJQYXRoIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iNDAiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PC9saW5lPgogICAgICAgICAgICA8bGluZSB4MT0iMzcxLjYxNTM4NSIgeTE9IjEyMSIgeDI9IjM3MS42MTUzODUiIHkyPSIzOTAiIGlkPSJQYXRoIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iNDAiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PC9saW5lPgogICAgICAgICAgICA8dGV4dCBpZD0iU3RhY2tzIiBmb250LWZhbWlseT0iSGlyYWdpbm9TYW5zR0ItVzYsIEhpcmFnaW5vIFNhbnMgR0IiIGZvbnQtc2l6ZT0iMjk3IiBmb250LXdlaWdodD0iNTAwIiBmaWxsPSIjMDAwMDAwIj4KICAgICAgICAgICAgICAgIDx0c3BhbiB4PSI2NDMuNTI5NSIgeT0iMzY5Ij5TdGFja3M8L3RzcGFuPgogICAgICAgICAgICA8L3RleHQ+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4="
+                            height="40"
+                            alt="Stacks"
+                        />
+
+                        <div class="d-flex mb12">
+                            <div class="flex--item fc-blue-400 mr8">
+                                <svg data-icon="IconShield"></svg>
+                            </div>
+                            <div class="flex--item">Self-hosted so completely secure</div>
+                        </div>
+                        <div class="d-flex mb12">
+                            <div class="flex--item fc-blue-400 mr8">
+                                <svg data-icon="IconLock"></svg>
+                            </div>
+                            <div class="flex--item">Your server, your data - no lock-ins</div>
+                        </div>
+                        <div class="d-flex mb24">
+                            <div class="flex--item fc-blue-400 mr8">
+                                <svg data-icon="IconEyeOff"></svg>
+                            </div>
+                            <div class="flex--item">Built with privacy in mind</div>
+                        </div>
+                        <div class="fs-body1 fc-black-400">
+                            Collaborate with team members and share knowledge with your private group.<br />
+                            <a href="https://getstacksapp.com" target="_blank"
+                                >Get your own Stacks server now</a
+                            >.
+                        </div>
+                    </div>
+
+                    <div class="flex--item flex--item5 fl-shrink0">
+                        <div class="wmx4 ta-center fs-title mx-auto mb24 d-none md:d-block sm:mb0"></div>
+
+                        <div id="formContainer" class="mx-auto mb24 p48 sm:p32 bg-white bar-lg bs-xl">
+                            <form
+                                id="login-form"
+                                class="d-flex fd-column gs12 gsy"
+                                action="/register"
+                                method="POST"
+                            >
+                                <h1 class="flex--item fs-headline1 fw-bold lh-xs mb8 ws-nowrap">
+                                    Create your account
+                                </h1>
+                                <div class="flex--item js-terms fs-caption fc-black-400 ta-left">
+                                    By clicking “Sign up”, you agree to our
+                                    <a
+                                        href="https://getstacksapp.com/teams/terms-of-service"
+                                        name="tos"
+                                        target="_blank"
+                                        class="-link"
+                                        >terms of service</a
+                                    >
+                                    and acknowledge you have read our
+                                    <a
+                                        href="https://getstacksapp.com/teams/privacy-policy"
+                                        name="privacy"
+                                        target="_blank"
+                                        class="-link"
+                                        >privacy policy</a
+                                    >.
+                                </div>
+                                <div class="flex--item d-flex fd-column gs4 gsy js-auth-item">
+                                    <label class="flex--item s-label" for="email">Email</label>
+                                    <div class="d-flex ps-relative">
+                                        <input
+                                            class="s-input"
+                                            id="email"
+                                            type="email"
+                                            size="30"
+                                            maxlength="100"
+                                            name="email"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+                                <div class="flex--item d-flex fd-column-reverse gs4 gsy js-auth-item">
+                                    <p class="fs-caption fc-black-400 mt4 mb4">
+                                        Must contain 8+ characters, including at least 1 letter and 1 number.
+                                    </p>
+
+                                    <div class="d-flex ps-relative js-password">
+                                        <input
+                                            class="flex--item s-input"
+                                            type="password"
+                                            name="password"
+                                            id="password"
+                                            autocomplete="new-password"
+                                        />
+
+                                        <svg
+                                            data-icon="IconEye"
+                                            aria-hidden="true"
+                                            class="ps-absolute r8 t8 c-pointer js-hide-password"
+                                            width="14"
+                                            height="14"
+                                        ></svg>
+
+                                        <svg
+                                            data-icon="IconEyeOff"
+                                            aria-hidden="false"
+                                            class="ps-absolute r8 t8 c-pointer js-show-password"
+                                            width="14"
+                                            height="14"
+                                        ></svg>
+                                    </div>
+                                    <div class="d-flex ai-center ps-relative jc-space-between">
+                                        <label class="flex--item s-label" for="password">Password</label>
+                                    </div>
+                                </div>
+
+                                <div class="flex--item d-flex fd-column gs4 gsy js-auth-item">
+                                    <label class="flex--item s-label" for="tenant">Tenant</label>
+                                    <div class="flex--item s-select">
+                                        <select id="tenant" name="tenant" required>
+                                            <option value="" selected>Please select a tenant</option>
+                                            {{#each tenants}}
+                                            <option value="{{id}}">{{title}}</option>
+                                            {{/each}}
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <button
+                                    class="flex--item s-btn s-btn__filled"
+                                    id="submit-button"
+                                    name="submit-button"
+                                >
+                                    Sign up
+                                </button>
+                            </form>
+                        </div>
+
+                        <div
+                            class="mx-auto ta-center fs-body1 p16 mb24 w100 js-redirects sm:mb sm:bb bc-black-225 pb32 wmx5"
+                        >
+                            Already have an account? <a href="/login" name="login">Log in</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="/static/assets/js/browser.umd.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                document.querySelectorAll(".js-hide-password").forEach(element => {
+                    element.addEventListener("click", function () {
+                        document.getElementById("password").setAttribute("type", "password");
+                        element.classList.add("d-none");
+                        document
+                            .querySelectorAll(".js-show-password")
+                            .forEach(el => el.classList.remove("d-none"));
+                    });
+                });
+
+                document.querySelectorAll(".js-show-password").forEach(element => {
+                    element.addEventListener("click", function () {
+                        document.getElementById("password").setAttribute("type", "text");
+                        element.classList.add("d-none");
+                        document
+                            .querySelectorAll(".js-hide-password")
+                            .forEach(el => el.classList.remove("d-none"));
+                    });
+                });
+            });
+        </script>
+    </body>
+</html>

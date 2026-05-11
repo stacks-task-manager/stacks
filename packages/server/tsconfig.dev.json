@@ -1,0 +1,12 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "@stacks/types": ["../types/src/index.ts"],
+            "@stacks/translations": ["../translations/src/index.ts"],
+            "@stacks/db": ["../db/src/index.ts"],
+            "@stacks/license": ["../license/src/index.ts"]
+        }
+    }
+}

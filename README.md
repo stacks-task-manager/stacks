@@ -26,16 +26,16 @@ This repository is a Yarn workspaces monorepo that ships Stacks as a set of serv
 
 ## Getting started
 
--   Development setup: [docs/INSTALLATION.md](docs/INSTALLATION.md)
+-   [Local development setup](docs/INSTALLATION.md)
 -   Local Docker notes: [docs/DOCKER.md](docs/DOCKER.md)
 
 ## License
 
 Stacks is dual-licensed:
 
--   Open source use: [GNU AGPL v3](LICENSE)
+-   Personal open source use: [GNU AGPL v3](LICENSE)
 -   Commercial use: contact [customers@getstacksapp.com](mailto:customers@getstacksapp.com)
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md).
+See [CONTRIBUTING.md](CONTRIBUTING.md)

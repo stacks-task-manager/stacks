@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>User login - Stacks</title>
+        <link rel="stylesheet" href="/static/assets/css/stacks.min.css" as="style" />
+    </head>
+
+    <body>
+        <div class="d-flex flex__center ps-fixed t0 b0 l0 r0 bg-theme-secondary-100 overflow-y-auto">
+            <div class="flex--item">
+                <div class="s-card ws3 bs-lg mb24" data-testid="login-card">
+                    <form method="post" action="/login">
+                        <div class="d-flex jc-center mb24 mt24">
+                            <svg data-spot="SpotForYouLg" class="fc-blue-400"></svg>
+                        </div>
+
+                        <h2 class="ta-center">Login</h2>
+
+                        <div class="d-flex fd-column g16">
+                            {{#if errors}}
+                            <div
+                                class="s-notice s-notice__warning s-notice__important"
+                                role="alert"
+                                data-testid="login-error-messages"
+                            >
+                                {{#each errors}}
+                                <div>{{this}}</div>
+                                {{/each}}
+                            </div>
+                            {{/if}} {{#if success}}
+                            <div
+                                class="s-notice s-notice__success s-notice__important"
+                                role="alert"
+                                data-testid="login-success-messages"
+                            >
+                                {{#each success}}
+                                <div>{{this}}</div>
+                                {{/each}}
+                            </div>
+                            {{/if}}
+
+                            <div class="d-flex gy4 fd-column">
+                                <label class="s-label" for="email">Email</label>
+                                <input
+                                    class="s-input s-input__md"
+                                    id="email"
+                                    name="email"
+                                    type="email"
+                                    placeholder="Your email"
+                                    required
+                                />
+                            </div>
+                            <div class="d-flex gy4 fd-column">
+                                <div class="d-flex ai-center ps-relative jc-space-between">
+                                    <label class="s-label" for="password2">Password</label>
+                                    <a
+                                        class="flex--item s-link fs-caption"
+                                        href="/login/password-recovery"
+                                        data-testid="login-forget-password-link"
+                                    >
+                                        Forgot password?
+                                    </a>
+                                </div>
+                                <input
+                                    class="s-input s-input__md"
+                                    id="password"
+                                    name="password"
+                                    type="password"
+                                    placeholder="Password"
+                                    required
+                                />
+                            </div>
+
+                            <button
+                                class="s-btn s-btn__filled s-btn mt24"
+                                type="submit"
+                                data-testid="login-button"
+                            >
+                                Login
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="mx-auto ta-center fs-body1 p16 pb0 w100 wmx3" data-testid="login-footer">
+                    Don’t have an account? <a href="/register" data-testid="login-register-link">Sign up</a>
+                </div>
+            </div>
+        </div>
+
+        <script src="/static/assets/js/browser.umd.js"></script>
+    </body>
+</html>

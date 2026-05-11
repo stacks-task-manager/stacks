@@ -1,0 +1,113 @@
+/* Shared PDF export layout (used with stacks.min.css; loaded via <base href=".../static/">). */
+
+@page {
+    margin: 14mm;
+}
+
+.pdf-export {
+    max-width: 100%;
+}
+
+.pdf-export .pdf-meta {
+    border-bottom: 1px solid #d6d9dc;
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+}
+
+.pdf-export .pdf-footer {
+    margin-top: 24px;
+    padding-top: 12px;
+    border-top: 1px solid #d6d9dc;
+    font-size: 11px;
+    color: #6a737c;
+}
+
+/* Definition lists (person, project, task) */
+.pdf-export .pdf-section-title {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 20px 0 12px;
+}
+
+.pdf-export .pdf-dl {
+    display: grid;
+    grid-template-columns: minmax(140px, 32%) 1fr;
+    gap: 8px 16px;
+    align-items: start;
+    font-size: 13px;
+}
+
+.pdf-export .pdf-dt {
+    color: #6a737c;
+    font-size: 11px;
+    padding-top: 2px;
+}
+
+.pdf-export .pdf-dd {
+    margin: 0;
+    word-break: break-word;
+}
+
+.pdf-export .pdf-notes,
+.pdf-export .pdf-prose,
+.pdf-export .pdf-desc {
+    white-space: pre-wrap;
+    word-break: break-word;
+    line-height: 1.5;
+}
+
+.pdf-export .pdf-health {
+    text-transform: capitalize;
+}
+
+.pdf-export .pdf-task-block + .pdf-task-block {
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px dashed #e3e6e8;
+}
+
+/* Rich HTML body (notepad) */
+.pdf-export .pdf-body {
+    font-size: 13px;
+    line-height: 1.55;
+    color: #0c0d0e;
+}
+
+.pdf-export .pdf-body :where(h1, h2, h3, h4) {
+    margin: 1em 0 0.5em;
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+.pdf-export .pdf-body :where(p, ul, ol) {
+    margin: 0 0 0.75em;
+}
+
+.pdf-export .pdf-body :where(ul, ol) {
+    padding-left: 1.25em;
+}
+
+.pdf-export .pdf-body img {
+    max-width: 100%;
+    height: auto;
+}
+
+.pdf-export .pdf-body pre,
+.pdf-export .pdf-body code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.9em;
+}
+
+.pdf-export .pdf-body pre {
+    overflow: auto;
+    padding: 12px;
+    background: #f6f8fa;
+    border-radius: 4px;
+}
+
+.pdf-export .pdf-fallback {
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 11px;
+}
