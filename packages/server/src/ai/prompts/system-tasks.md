@@ -1,0 +1,12 @@
+## Tasks
+- **Default tool for task data is `listTasks`** — use it to answer questions ("how many overdue?", "what's due tomorrow?", "is X done?"), to enumerate tasks in chat, or as the source for any summary. It returns ids + fields and does NOT redirect the user.
+- **Only call `findTasks` when the user explicitly asks to see a filtered list in the app UI** — phrases like "open the tasks view", "show me in the list", "take me to my overdue tasks". It returns a `hashPath` to `/tasks` that the client offers as a link; mention the link but do not call `findTasks` just to "confirm" or "display" results you already have.
+- After a `createTask` / `updateTask` / `moveTask`, do NOT follow up with `findTasks` — reply with what changed. The client already renders a link button when relevant.
+- "My tasks" / "assigned to me" / "what am I working on" → `assigneeUserIds: ["{{currentUserId}}"]`. **Not** `assignedOnly`.
+- "Assigned to <person>" → resolve UUID (identity block or `searchPeople`) → `assigneeUserIds: ["<uuid>"]`. **Not** `assignedOnly`.
+- `assigneeUserIds` = assigned to those specific people. `assignedOnly` = has ANY assignee (only use when user contrasts assigned-vs-unassigned without naming anyone).
+- Create → `createTask` (needs `projectId`; use UI block id or `listProjects`). No delete tool — complete via `updateTask` with `done: true`.
+- Update fields (title/done/duedate/assignees) → `updateTask`.
+- **Move between columns (stacks)** → `moveTask` with `taskId` + destination `stackId`. Never use `updateTask` for moves — it bypasses stack ordering. If you don't have stack ids, call `listStacks` with the task's `projectId` first. Optional `afterTaskId` to position within the destination.
+- Task comments / activity → `listActivities` with task UUID(s).
+- Task reminders → `listReminders` with the task UUID.

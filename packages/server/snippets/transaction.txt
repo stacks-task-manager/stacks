@@ -1,0 +1,26 @@
+import sequelize from "../db"; // Your Sequelize instance
+import EntityA from "../entity/EntityA"; // Hypothetical EntityA model
+import EntityB from "../entity/EntityB"; // Hypothetical EntityB model
+
+async function createRelatedEntities(dataA: any, dataB: any) {
+    const transaction = await sequelize.transaction();
+    try {
+        // Create an instance of EntityA within the transaction
+        const newEntityA = await EntityA.create(dataA, { transaction });
+
+        // Use some data from newEntityA to create EntityB
+        const relatedDataB = { ...dataB, entityAId: newEntityA.id };
+        const newEntityB = await EntityB.create(relatedDataB, { transaction });
+
+        // If all operations are successful, commit the transaction
+        await transaction.commit();
+        console.log("Entities created successfully and transaction committed.");
+        return { entityA: newEntityA, entityB: newEntityB };
+
+    } catch (error) {
+        // If any operation fails, roll back the entire transaction
+        await transaction.rollback();
+        console.error("Error creating entities, transaction rolled back:", error);
+        throw new Error("Failed to create related entities.");
+    }
+}
