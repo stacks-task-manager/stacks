@@ -1,0 +1,16 @@
+{
+    "default": {
+        "welcome": {
+            "en": "Welcome to %appName%!"
+        },
+        "password-reset": {
+            "en": "Reset your %appName% password"
+        },
+        "registration": {
+            "en": "Confirm your %appName% account"
+        },
+        "notification": {
+            "en": "%title%"
+        }
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "outDir": "dist",
+        "target": "ESNext",
+        "module": "es2022",
+        "moduleResolution": "node",
+        "strict": true,
+        "skipLibCheck": true,
+        "noEmit": false,
+        "types": ["node"],
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "allowSyntheticDefaultImports": true,
+        "declaration": false,
+        "sourceMap": false,
+        "jsx": "react-jsx",
+        "jsxImportSource": "react",
+        "esModuleInterop": true
+    },
+    "include": ["src/**/*", "emails"],
+    "exclude": ["dist/**/*", "node_modules/**/*"]
+}
