@@ -1,0 +1,40 @@
+{
+  "name": "@stacks/email-service",
+  "version": "1.0.93",
+  "type": "commonjs",
+  "license": "ISC",
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "bundle": "yarn pre-bundle && node esbuild.config.js && yarn post-bundle",
+    "pre-bundle": "node pre-build.js",
+    "post-bundle": "node post-build.js",
+    "setup": "yarn install",
+    "dev": "tsx watch --tsconfig tsconfig.dev.json --inspect --env-file=.env src/index.ts",
+    "dev:email": "email dev --port 3005",
+    "start": "node dist/email-service.js"
+  },
+  "dependencies": {
+    "@react-email/components": "^0.5.0",
+    "@react-email/render": "^1.2.0",
+    "nodemailer": "^6.9.8",
+    "pg": "^8.15.6",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "sequelize": "^6.37.7"
+  },
+  "devDependencies": {
+    "@react-email/preview-server": "4.2.8",
+    "@stacks/db": "workspace:*",
+    "@stacks/types": "workspace:*",
+    "@types/node": "^20.11.17",
+    "@types/nodemailer": "^6.4.14",
+    "@types/pg": "^8.11.14",
+    "@types/react": "^19.1.10",
+    "@types/react-dom": "^19.1.7",
+    "@types/sequelize": "^4.28.20",
+    "esbuild": "^0.25.8",
+    "react-email": "^4.2.8",
+    "tsx": "^4.7.1",
+    "typescript": "^5.8.3"
+  }
+}
