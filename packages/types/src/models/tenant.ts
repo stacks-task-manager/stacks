@@ -1,0 +1,10 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+export interface ITenant {
+    id: string;
+    title: string;
+    description: string;
+    expiry: Date;
+    disabled: boolean;
+    created: Date;
+    updated: Date;
+}
