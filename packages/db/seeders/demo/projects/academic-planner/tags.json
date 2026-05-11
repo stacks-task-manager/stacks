@@ -1,0 +1,30 @@
+[
+    {
+        "id": "b26104c3-d51b-4924-a6a1-1566269fb02c",
+        "title": "Math",
+        "color": "#6366F1",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "8927f7fd-0eac-4c36-9178-5ae5a4428aba",
+        "title": "Physics",
+        "color": "#06B6D4",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "8af93d43-7042-4967-b410-2c7e487a6f19",
+        "title": "History",
+        "color": "#F97316",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "ebfc69e4-9212-4832-be42-44938c9ec577",
+        "title": "Research",
+        "color": "#8B5CF6",
+        "type": "tag",
+        "section": "projects"
+    }
+]

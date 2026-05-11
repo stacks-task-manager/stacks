@@ -1,0 +1,58 @@
+[
+    {
+        "id": "60a79023-b8b6-4e9b-b55f-e5a2fc6ba0de",
+        "title": "Venue",
+        "color": "#10B981",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "8557df2c-ec79-4ade-b4d0-ff2cd8528259",
+        "title": "Catering",
+        "color": "#EF4444",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "2d3ced09-77bf-4f30-8740-7dc157d97744",
+        "title": "Attire",
+        "color": "#F59E0B",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "28565bc4-a404-49a7-a104-3b1a91dea5e7",
+        "title": "Music",
+        "color": "#3B82F6",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "bf417739-18da-4953-b72d-b89861d89dc6",
+        "title": "Photography",
+        "color": "#3B82F6",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "b0a248f4-7e7c-453c-80f6-17e132c45d0c",
+        "title": "Deposit Paid",
+        "color": "#EF4444",
+        "type": "status",
+        "section": "projects"
+    },
+    {
+        "id": "941648ba-e742-4d5a-933b-89d96f6b464e",
+        "title": "Contract Signed",
+        "color": "#EF4444",
+        "type": "status",
+        "section": "projects"
+    },
+    {
+        "id": "e4e707d2-b3f9-4794-987d-44f3d41e490c",
+        "title": "Pending Response",
+        "color": "#06B6D4",
+        "type": "status",
+        "section": "projects"
+    }
+]

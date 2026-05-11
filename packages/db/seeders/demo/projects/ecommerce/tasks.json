@@ -1,0 +1,269 @@
+[
+    {
+        "title": "Market Research & Competitor Analysis",
+        "description": "Conduct comprehensive market research to identify target audience, analyze competitor platforms (Amazon, Shopify stores), and define unique value propositions for our e-commerce platform.",
+        "id": "9672b522-752f-4625-bd66-574b1d860fca",
+        "project": "15b633d8-98c3-46ba-b17d-d143cc0aeeea",
+        "tags": [
+            "e9t9c0d1-e2f3-a4b5-c6d7-e8f9a0b1c2d3"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "b51e9da6-d68e-4a12-b86f-fd1aa3f14638",
+        "estimate": 28800,
+        "priority": "high",
+        "duedate": "2024-04-01 17:00:00",
+        "position": 0
+    },
+    {
+        "title": "Product Catalog Requirements",
+        "description": "Define product catalog structure, categories, attributes, pricing models, and inventory management requirements. Include support for variants, bundles, and digital products.",
+        "id": "88703dd1-1c6f-49d0-8baa-4ae418ba28f9",
+        "project": "15b633d8-98c3-46ba-b17d-d143cc0aeeea",
+        "tags": [
+            "e3t3c4d5-e6f7-a8b9-c0d1-e2f3a4b5c6d7"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "b51e9da6-d68e-4a12-b86f-fd1aa3f14638",
+        "estimate": 21600,
+        "priority": "high",
+        "position": 1
+    },
+    {
+        "title": "User Experience Design & Wireframes",
+        "description": "Create user journey maps, wireframes, and high-fidelity mockups for customer-facing pages including homepage, product pages, cart, checkout, and user account areas.",
+        "id": "8be9445c-08bc-48fb-a565-9ea5268a08a4",
+        "project": "15b633d8-98c3-46ba-b17d-d143cc0aeeea",
+        "tags": [
+            "e1t1a2b3-c4d5-e6f7-a8b9-c0d1e2f3a4b5",
+            "e7t7a8b9-c0d1-e2f3-a4b5-c6d7e8f9a0b1"
+        ],
+        "tint": "#3B82F6",
+        "stack": "86e6e1e8-7c45-47ab-9f01-75d08d498508",
+        "estimate": 43200,
+        "priority": "high",
+        "position": 0
+    },
+    {
+        "title": "Database Schema Design",
+        "description": "Design comprehensive database schema for products, users, orders, payments, inventory, reviews, and analytics. Include proper indexing and relationship mapping.",
+        "id": "03181764-5018-4a37-97e1-861a3831174e",
+        "project": "15b633d8-98c3-46ba-b17d-d143cc0aeeea",
+        "tags": [
+            "e3t3c4d5-e6f7-a8b9-c0d1-e2f3a4b5c6d7",
+            "e2t2b3c4-d5e6-f7a8-b9c0-d1e2f3a4b5c6"
+        ],
+        "tint": "#3B82F6",
+        "stack": "86e6e1e8-7c45-47ab-9f01-75d08d498508",
+        "estimate": 36000,
+        "priority": "high",
+        "position": 1
+    },
+    {
+        "title": "Frontend Component Library",
+        "description": "Develop reusable React components for product cards, filters, search, navigation, forms, and responsive layouts. Implement design system and accessibility standards.",
+        "id": "a7f2fe23-9521-45d8-ad1c-88e1e02a7200",
+        "project": "15b633d8-98c3-46ba-b17d-d143cc0aeeea",
+        "tags": [
+            "e1t1a2b3-c4d5-e6f7-a8b9-c0d1e2f3a4b5",
+            "e7t7a8b9-c0d1-e2f3-a4b5-c6d7e8f9a0b1"
+        ],
+        "tint": "#F59E0B",
+        "stack": "7fcdebae-43ad-42b6-8993-727ba7f89159",
+        "estimate": 57600,
+        "priority": "medium",
+        "position": 0
+    },
+    {
+        "title": "Product API Development",
+        "description": "Build RESTful APIs for product management, search, filtering, and recommendations. Include pagination, caching, and rate limiting.",
+        "id": "1a65fc89-e8e1-4603-a288-2180313f5a23",
+        "project": "15b633d8-98c3-46ba-b17d-d143cc0aeeea",
+        "tags": [
+            "e2t2b3c4-d5e6-f7a8-b9c0-d1e2f3a4b5c6",
+            "e6t6f7a8-b9c0-d1e2-f3a4-b5c6d7e8f9a0"
+        ],
+        "tint": "#F59E0B",
+        "stack": "7fcdebae-43ad-42b6-8993-727ba7f89159",
+        "estimate": 50400,
+        "priority": "medium",
+        "position": 1
+    },
+    {
+        "title": "Shopping Cart & Session Management",
+        "description": "Implement shopping cart functionality with persistent sessions, guest checkout support, and cart abandonment recovery features.",
+        "id": "573f608e-fc5e-4bfb-ba4a-bb5f2535f980",
+        "project": "15b633d8-98c3-46ba-b17d-d143cc0aeeea",
+        "tags": [
+            "e1t1a2b3-c4d5-e6f7-a8b9-c0d1e2f3a4b5",
+            "e2t2b3c4-d5e6-f7a8-b9c0-d1e2f3a4b5c6"
+        ],
+        "tint": "#F59E0B",
+        "stack": "7fcdebae-43ad-42b6-8993-727ba7f89159",
+        "estimate": 39600,
+        "priority": "high",
+        "position": 2
+    },
+    {
+        "title": "Payment Gateway Integration",
+        "description": "Integrate multiple payment providers (Stripe, PayPal, Apple Pay) with secure tokenization, fraud detection, and PCI compliance measures.",
+        "id": "f96519b5-981e-4ffe-b9bf-a142dd33f479",
+        "project": "15b633d8-98c3-46ba-b17d-d143cc0aeeea",
+        "tags": [
+            "e4t4d5e6-f7a8-b9c0-d1e2-f3a4b5c6d7e8",
+            "e5t5e6f7-a8b9-c0d1-e2f3-a4b5c6d7e8f9"
+        ],
+        "tint": "#F59E0B",
+        "stack": "7fcdebae-43ad-42b6-8993-727ba7f89159",
+        "estimate": 64800,
+        "priority": "high",
+        "position": 3
+    },
+    {
+        "title": "User Authentication & Profiles",
+        "description": "Implement secure user registration, login, password recovery, and profile management with social login options and email verification.",
+        "id": "b72d2e3a-dfd6-4dad-9457-d873e62a7f84",
+        "project": "15b633d8-98c3-46ba-b17d-d143cc0aeeea",
+        "tags": [
+            "e2t2b3c4-d5e6-f7a8-b9c0-d1e2f3a4b5c6",
+            "e5t5e6f7-a8b9-c0d1-e2f3-a4b5c6d7e8f9"
+        ],
+        "tint": "#F59E0B",
+        "stack": "7fcdebae-43ad-42b6-8993-727ba7f89159",
+        "estimate": 46800,
+        "priority": "medium",
+        "position": 4
+    },
+    {
+        "title": "Order Management System",
+        "description": "Build comprehensive order processing workflow including order creation, status tracking, inventory updates, and notification system.",
+        "id": "5cf3623c-5940-42c3-801f-3d68616276f1",
+        "project": "15b633d8-98c3-46ba-b17d-d143cc0aeeea",
+        "tags": [
+            "e2t2b3c4-d5e6-f7a8-b9c0-d1e2f3a4b5c6",
+            "e3t3c4d5-e6f7-a8b9-c0d1-e2f3a4b5c6d7"
+        ],
+        "tint": "#F59E0B",
+        "stack": "7fcdebae-43ad-42b6-8993-727ba7f89159",
+        "estimate": 54000,
+        "priority": "medium",
+        "position": 5
+    },
+    {
+        "title": "Search & Filtering System",
+        "description": "Implement advanced product search with filters, sorting, autocomplete, and search analytics. Include Elasticsearch integration for performance.",
+        "id": "4d26d2d6-17a3-4e10-a94f-5296b99a2e76",
+        "project": "15b633d8-98c3-46ba-b17d-d143cc0aeeea",
+        "tags": [
+            "e1t1a2b3-c4d5-e6f7-a8b9-c0d1e2f3a4b5",
+            "e6t6f7a8-b9c0-d1e2-f3a4-b5c6d7e8f9a0"
+        ],
+        "tint": "#F59E0B",
+        "stack": "7fcdebae-43ad-42b6-8993-727ba7f89159",
+        "estimate": 43200,
+        "priority": "medium",
+        "position": 6
+    },
+    {
+        "title": "Unit Testing Suite",
+        "description": "Develop comprehensive unit tests for all components, APIs, and business logic. Achieve 90%+ code coverage with automated test reporting.",
+        "id": "c4106984-75ac-430d-ba94-5dbecdb8bf6e",
+        "project": "15b633d8-98c3-46ba-b17d-d143cc0aeeea",
+        "tags": [
+            "e1t1a2b3-c4d5-e6f7-a8b9-c0d1e2f3a4b5",
+            "e2t2b3c4-d5e6-f7a8-b9c0-d1e2f3a4b5c6"
+        ],
+        "tint": "#EF4444",
+        "stack": "29d63cbb-69a0-480a-9c91-15808768ee26",
+        "estimate": 36000,
+        "priority": "medium",
+        "position": 0
+    },
+    {
+        "title": "Performance Testing & Optimization",
+        "description": "Conduct load testing, optimize database queries, implement caching strategies, and ensure the platform can handle 1000+ concurrent users.",
+        "id": "bd29f4c7-3250-4148-8ecf-ed057f4b59e3",
+        "project": "15b633d8-98c3-46ba-b17d-d143cc0aeeea",
+        "tags": [
+            "e6t6f7a8-b9c0-d1e2-f3a4-b5c6d7e8f9a0"
+        ],
+        "tint": "#EF4444",
+        "stack": "29d63cbb-69a0-480a-9c91-15808768ee26",
+        "estimate": 28800,
+        "priority": "high",
+        "position": 1
+    },
+    {
+        "title": "Security Audit & Penetration Testing",
+        "description": "Perform comprehensive security testing including SQL injection, XSS, CSRF protection, and data encryption validation.",
+        "id": "bcad50c1-a462-4e57-ad7e-cd8ae39a53bd",
+        "project": "15b633d8-98c3-46ba-b17d-d143cc0aeeea",
+        "tags": [
+            "e5t5e6f7-a8b9-c0d1-e2f3-a4b5c6d7e8f9"
+        ],
+        "tint": "#EF4444",
+        "stack": "29d63cbb-69a0-480a-9c91-15808768ee26",
+        "estimate": 32400,
+        "priority": "high",
+        "position": 2
+    },
+    {
+        "title": "Production Deployment Setup",
+        "description": "Configure production environment with CI/CD pipeline, monitoring, logging, backup strategies, and disaster recovery procedures.",
+        "id": "1b14d854-c290-4169-9d59-a4bb852e259b",
+        "project": "15b633d8-98c3-46ba-b17d-d143cc0aeeea",
+        "tags": [
+            "e2t2b3c4-d5e6-f7a8-b9c0-d1e2f3a4b5c6",
+            "e5t5e6f7-a8b9-c0d1-e2f3-a4b5c6d7e8f9"
+        ],
+        "tint": "#10B981",
+        "stack": "64d2203e-a58e-420e-aecb-42e6b670bb3f",
+        "estimate": 39600,
+        "priority": "medium",
+        "position": 0
+    },
+    {
+        "title": "Analytics & Reporting Dashboard",
+        "description": "Implement comprehensive analytics tracking for sales, user behavior, conversion rates, and business intelligence reporting.",
+        "id": "d70b1659-307c-48c0-aec9-930420218197",
+        "project": "15b633d8-98c3-46ba-b17d-d143cc0aeeea",
+        "tags": [
+            "e8t8b9c0-d1e2-f3a4-b5c6-d7e8f9a0b1c2",
+            "e1t1a2b3-c4d5-e6f7-a8b9-c0d1e2f3a4b5"
+        ],
+        "tint": "#10B981",
+        "stack": "64d2203e-a58e-420e-aecb-42e6b670bb3f",
+        "estimate": 50400,
+        "priority": "low",
+        "position": 1
+    },
+    {
+        "title": "Mobile App Optimization",
+        "description": "Optimize the platform for mobile devices with responsive design, touch interactions, and progressive web app features.",
+        "id": "d91875d8-8be8-46d9-b754-3772f33081f7",
+        "project": "15b633d8-98c3-46ba-b17d-d143cc0aeeea",
+        "tags": [
+            "e7t7a8b9-c0d1-e2f3-a4b5-c6d7e8f9a0b1",
+            "e1t1a2b3-c4d5-e6f7-a8b9-c0d1e2f3a4b5"
+        ],
+        "tint": "#10B981",
+        "stack": "64d2203e-a58e-420e-aecb-42e6b670bb3f",
+        "estimate": 36000,
+        "priority": "medium",
+        "position": 2
+    },
+    {
+        "title": "Live Monitoring & Health Checks",
+        "description": "Set up real-time monitoring, alerting, health checks, and automated scaling for production environment.",
+        "id": "8c76b39e-73e5-40cd-a2ed-8510665c405e",
+        "project": "15b633d8-98c3-46ba-b17d-d143cc0aeeea",
+        "tags": [
+            "e6t6f7a8-b9c0-d1e2-f3a4-b5c6d7e8f9a0",
+            "e2t2b3c4-d5e6-f7a8-b9c0-d1e2f3a4b5c6"
+        ],
+        "tint": "#06B6D4",
+        "stack": "fc34e196-bc26-4851-a872-025b8ff7491d",
+        "estimate": 25200,
+        "priority": "medium",
+        "position": 0
+    }
+]

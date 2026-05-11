@@ -1,0 +1,890 @@
+[
+    {
+        "title": "Hire Architect",
+        "description": "Description for Hire Architect",
+        "id": "39ed6dc8-d6bf-412b-9e04-487acf21f34a",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "85a7f8aa-65ba-4e5c-9738-6f47221d9e77"
+        ],
+        "tint": "#6366F1",
+        "stack": "9fd414b7-f79d-4cf6-9397-c0009d819f95",
+        "estimate": 28800,
+        "priority": "low",
+        "duedate": "2026-04-05 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "Get Permits",
+        "description": "Description for Get Permits",
+        "id": "1b745bcb-80e4-4d18-bb7a-9a1db103f84f",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "41caeba7-705c-45f2-8d36-f4df2d3da7cd",
+            "547f744a-f8e7-41b6-92a7-ae95a47af42e"
+        ],
+        "tint": null,
+        "stack": "9fd414b7-f79d-4cf6-9397-c0009d819f95",
+        "estimate": 28800,
+        "priority": "low",
+        "duedate": "2026-03-04 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "Demo Kitchen Cabinets",
+        "description": "Description for Demo Kitchen Cabinets",
+        "id": "09c9e39c-f259-42a0-930f-48061b7e4350",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "6866818f-a917-4115-917b-e119fcf50ad5"
+        ],
+        "tint": null,
+        "stack": "9fd414b7-f79d-4cf6-9397-c0009d819f95",
+        "estimate": 18000,
+        "priority": "low",
+        "duedate": "2026-02-24 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "Install Plumbing",
+        "description": "Description for Install Plumbing",
+        "id": "3a25ed14-1491-4bdb-84f1-f84f4a6d77ef",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "72648a6e-609d-4904-958f-add669d77ac1"
+        ],
+        "tint": null,
+        "stack": "9fd414b7-f79d-4cf6-9397-c0009d819f95",
+        "estimate": 32400,
+        "priority": "low",
+        "duedate": "2026-03-22 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Wire Electricity",
+        "description": "Description for Wire Electricity",
+        "id": "d2c3d1b9-b2dc-4c06-8497-e31fc3e286c0",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "0cb1a288-f9a4-47eb-8c3d-313a1fb99a05"
+        ],
+        "tint": "#F59E0B",
+        "stack": "9fd414b7-f79d-4cf6-9397-c0009d819f95",
+        "estimate": 7200,
+        "priority": "high",
+        "duedate": "2026-03-05 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Drywall Installation",
+        "description": "Description for Drywall Installation",
+        "id": "3a359f86-9301-4089-9ea3-b92d31168207",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "547f744a-f8e7-41b6-92a7-ae95a47af42e"
+        ],
+        "tint": "#EC4899",
+        "stack": "9fd414b7-f79d-4cf6-9397-c0009d819f95",
+        "estimate": 21600,
+        "priority": "high",
+        "duedate": "2026-02-09 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "Paint Walls",
+        "description": "Description for Paint Walls",
+        "id": "e8451fd2-684b-4d87-a9ef-37b6c41a78d6",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "0cb1a288-f9a4-47eb-8c3d-313a1fb99a05",
+            "6866818f-a917-4115-917b-e119fcf50ad5"
+        ],
+        "tint": "#10B981",
+        "stack": "9fd414b7-f79d-4cf6-9397-c0009d819f95",
+        "estimate": 21600,
+        "priority": "medium",
+        "duedate": "2026-03-24 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "Lay Flooring",
+        "description": "Description for Lay Flooring",
+        "id": "844343c5-8023-4ca0-ac50-3c60b5e1500b",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [],
+        "tint": null,
+        "stack": "9fd414b7-f79d-4cf6-9397-c0009d819f95",
+        "estimate": 25200,
+        "priority": "high",
+        "duedate": "2026-02-14 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "Install Fixtures",
+        "description": "Description for Install Fixtures",
+        "id": "80148539-582b-409e-8af2-29f4dd78a591",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "53c09559-2372-456d-8e68-64c049be2b66",
+            "0cb1a288-f9a4-47eb-8c3d-313a1fb99a05"
+        ],
+        "tint": null,
+        "stack": "9fd414b7-f79d-4cf6-9397-c0009d819f95",
+        "estimate": 7200,
+        "priority": "low",
+        "duedate": "2026-03-13 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "Buy Furniture",
+        "description": "Description for Buy Furniture",
+        "id": "f4007700-74ed-4044-b9d1-e42776b30c5f",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "85a7f8aa-65ba-4e5c-9738-6f47221d9e77"
+        ],
+        "tint": null,
+        "stack": "9fd414b7-f79d-4cf6-9397-c0009d819f95",
+        "estimate": 7200,
+        "priority": "medium",
+        "duedate": "2026-02-20 20:00:36",
+        "position": 9
+    },
+    {
+        "title": "Landscaping",
+        "description": "Description for Landscaping",
+        "id": "56a4fa59-67b1-4b3f-b5a7-508b2c7742c3",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "41caeba7-705c-45f2-8d36-f4df2d3da7cd",
+            "53c09559-2372-456d-8e68-64c049be2b66"
+        ],
+        "tint": "#64748B",
+        "stack": "9fd414b7-f79d-4cf6-9397-c0009d819f95",
+        "estimate": 28800,
+        "priority": "medium",
+        "duedate": "2026-02-06 20:00:36",
+        "position": 10
+    },
+    {
+        "title": "Install Windows",
+        "description": "Description for Install Windows",
+        "id": "48a6f4f2-9939-4a7f-9915-dd4a4740f956",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "85a7f8aa-65ba-4e5c-9738-6f47221d9e77",
+            "72648a6e-609d-4904-958f-add669d77ac1"
+        ],
+        "tint": null,
+        "stack": "9fd414b7-f79d-4cf6-9397-c0009d819f95",
+        "estimate": 3600,
+        "priority": "high",
+        "duedate": "2026-03-15 20:00:36",
+        "position": 11
+    },
+    {
+        "title": "Roof Repair",
+        "description": "Description for Roof Repair",
+        "id": "805b588f-547f-48de-a747-aecbd09e3626",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "53c09559-2372-456d-8e68-64c049be2b66"
+        ],
+        "tint": null,
+        "stack": "9fd414b7-f79d-4cf6-9397-c0009d819f95",
+        "estimate": 7200,
+        "priority": "medium",
+        "duedate": "2026-02-13 20:00:36",
+        "position": 12
+    },
+    {
+        "title": "Insulation",
+        "description": "Description for Insulation",
+        "id": "5203b1a3-68a7-40d6-ac4e-1cb578fac5d8",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "41caeba7-705c-45f2-8d36-f4df2d3da7cd"
+        ],
+        "tint": null,
+        "stack": "f9b94f3e-9610-43b6-86eb-c3723a09a08b",
+        "estimate": 21600,
+        "priority": "medium",
+        "duedate": "2026-03-24 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "Final Inspection",
+        "description": "Description for Final Inspection",
+        "id": "9e879340-247f-4e15-a133-067e4167cfc5",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [],
+        "tint": "#EF4444",
+        "stack": "f9b94f3e-9610-43b6-86eb-c3723a09a08b",
+        "estimate": 21600,
+        "priority": "medium",
+        "duedate": "2026-03-27 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "Hire Architect (2)",
+        "description": "Description for Hire Architect (2)",
+        "id": "e5961b9d-1530-44e1-b645-59374ac7e3bc",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "85a7f8aa-65ba-4e5c-9738-6f47221d9e77",
+            "66311ecd-1904-4630-83a4-dc1a320e2e3d",
+            "6866818f-a917-4115-917b-e119fcf50ad5"
+        ],
+        "tint": "#EC4899",
+        "stack": "f9b94f3e-9610-43b6-86eb-c3723a09a08b",
+        "estimate": 10800,
+        "priority": "high",
+        "duedate": "2026-03-28 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "Get Permits (2)",
+        "description": "Description for Get Permits (2)",
+        "id": "80901012-331c-46ce-a938-9def2c7571c0",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "0cb1a288-f9a4-47eb-8c3d-313a1fb99a05"
+        ],
+        "tint": "#10B981",
+        "stack": "f9b94f3e-9610-43b6-86eb-c3723a09a08b",
+        "estimate": 3600,
+        "priority": "low",
+        "duedate": "2026-02-10 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Demo Kitchen Cabinets (2)",
+        "description": "Description for Demo Kitchen Cabinets (2)",
+        "id": "9dfaf058-da7f-4a48-9a2d-ef65aeeae5ed",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "41caeba7-705c-45f2-8d36-f4df2d3da7cd"
+        ],
+        "tint": "#EF4444",
+        "stack": "f9b94f3e-9610-43b6-86eb-c3723a09a08b",
+        "estimate": 10800,
+        "priority": "low",
+        "duedate": "2026-02-11 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Install Plumbing (2)",
+        "description": "Description for Install Plumbing (2)",
+        "id": "b1e1b6fb-c90a-472d-9a31-cd15d54b196a",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "85a7f8aa-65ba-4e5c-9738-6f47221d9e77",
+            "53c09559-2372-456d-8e68-64c049be2b66",
+            "72648a6e-609d-4904-958f-add669d77ac1"
+        ],
+        "tint": "#6366F1",
+        "stack": "f9b94f3e-9610-43b6-86eb-c3723a09a08b",
+        "estimate": 7200,
+        "priority": "low",
+        "duedate": "2026-03-30 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "Wire Electricity (2)",
+        "description": "Description for Wire Electricity (2)",
+        "id": "9168744d-55ed-4dd5-b268-563f5c1c38d3",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "53c09559-2372-456d-8e68-64c049be2b66",
+            "72648a6e-609d-4904-958f-add669d77ac1"
+        ],
+        "tint": "#EC4899",
+        "stack": "f9b94f3e-9610-43b6-86eb-c3723a09a08b",
+        "estimate": 7200,
+        "priority": "high",
+        "duedate": "2026-03-26 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "Drywall Installation (2)",
+        "description": "Description for Drywall Installation (2)",
+        "id": "faf5b50d-964e-4770-bcac-200722577e93",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "66311ecd-1904-4630-83a4-dc1a320e2e3d",
+            "72648a6e-609d-4904-958f-add669d77ac1"
+        ],
+        "tint": "#06B6D4",
+        "stack": "f9b94f3e-9610-43b6-86eb-c3723a09a08b",
+        "estimate": 32400,
+        "priority": "high",
+        "duedate": "2026-02-17 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "Paint Walls (2)",
+        "description": "Description for Paint Walls (2)",
+        "id": "7aa72647-53e2-434d-a845-df1e9b7a26ec",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "53c09559-2372-456d-8e68-64c049be2b66"
+        ],
+        "tint": "#10B981",
+        "stack": "f9b94f3e-9610-43b6-86eb-c3723a09a08b",
+        "estimate": 18000,
+        "priority": "medium",
+        "duedate": "2026-04-04 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "Lay Flooring (2)",
+        "description": "Description for Lay Flooring (2)",
+        "id": "b5f41f38-f861-44d5-8417-6f9d7e3ab176",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "41caeba7-705c-45f2-8d36-f4df2d3da7cd"
+        ],
+        "tint": "#F97316",
+        "stack": "f9b94f3e-9610-43b6-86eb-c3723a09a08b",
+        "estimate": 7200,
+        "priority": "medium",
+        "duedate": "2026-02-08 20:00:36",
+        "position": 9
+    },
+    {
+        "title": "Install Fixtures (2)",
+        "description": "Description for Install Fixtures (2)",
+        "id": "89a25002-88d0-4d11-a230-70c023f39dd8",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "72648a6e-609d-4904-958f-add669d77ac1"
+        ],
+        "tint": null,
+        "stack": "f04c1541-2404-424d-9cab-804468d0267b",
+        "estimate": 32400,
+        "priority": "medium",
+        "duedate": "2026-02-20 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "Buy Furniture (2)",
+        "description": "Description for Buy Furniture (2)",
+        "id": "eeac8c6a-71a3-4759-8412-b41b8467bed7",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "85a7f8aa-65ba-4e5c-9738-6f47221d9e77",
+            "66311ecd-1904-4630-83a4-dc1a320e2e3d"
+        ],
+        "tint": null,
+        "stack": "f04c1541-2404-424d-9cab-804468d0267b",
+        "estimate": 7200,
+        "priority": "high",
+        "duedate": "2026-02-16 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "Landscaping (2)",
+        "description": "Description for Landscaping (2)",
+        "id": "bf7b6b25-2735-49ab-a0ee-40af01c60eeb",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "41caeba7-705c-45f2-8d36-f4df2d3da7cd"
+        ],
+        "tint": "#EC4899",
+        "stack": "f04c1541-2404-424d-9cab-804468d0267b",
+        "estimate": 25200,
+        "priority": "high",
+        "duedate": "2026-03-27 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "Install Windows (2)",
+        "description": "Description for Install Windows (2)",
+        "id": "3499cbb2-d862-4965-9270-10698b917ab5",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "41caeba7-705c-45f2-8d36-f4df2d3da7cd",
+            "72648a6e-609d-4904-958f-add669d77ac1"
+        ],
+        "tint": null,
+        "stack": "f04c1541-2404-424d-9cab-804468d0267b",
+        "estimate": 21600,
+        "priority": "medium",
+        "duedate": "2026-03-20 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Roof Repair (2)",
+        "description": "Description for Roof Repair (2)",
+        "id": "091a492f-c2bf-4f00-8afa-70ac67705963",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "6866818f-a917-4115-917b-e119fcf50ad5"
+        ],
+        "tint": null,
+        "stack": "f04c1541-2404-424d-9cab-804468d0267b",
+        "estimate": 21600,
+        "priority": "medium",
+        "duedate": "2026-02-22 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Insulation (2)",
+        "description": "Description for Insulation (2)",
+        "id": "624272ac-b619-43b6-8473-3ef485b03c85",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "85a7f8aa-65ba-4e5c-9738-6f47221d9e77",
+            "0cb1a288-f9a4-47eb-8c3d-313a1fb99a05"
+        ],
+        "tint": null,
+        "stack": "f04c1541-2404-424d-9cab-804468d0267b",
+        "estimate": 14400,
+        "priority": "medium",
+        "duedate": "2026-03-25 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "Final Inspection (2)",
+        "description": "Description for Final Inspection (2)",
+        "id": "746123fe-b58f-44f5-a384-277486daefc6",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "53c09559-2372-456d-8e68-64c049be2b66",
+            "72648a6e-609d-4904-958f-add669d77ac1"
+        ],
+        "tint": null,
+        "stack": "f04c1541-2404-424d-9cab-804468d0267b",
+        "estimate": 10800,
+        "priority": "high",
+        "duedate": "2026-04-01 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "Hire Architect (3)",
+        "description": "Description for Hire Architect (3)",
+        "id": "cd02cf26-0218-4c93-abb7-9a3e7131bbff",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "66311ecd-1904-4630-83a4-dc1a320e2e3d",
+            "85a7f8aa-65ba-4e5c-9738-6f47221d9e77",
+            "547f744a-f8e7-41b6-92a7-ae95a47af42e"
+        ],
+        "tint": "#F97316",
+        "stack": "f04c1541-2404-424d-9cab-804468d0267b",
+        "estimate": 21600,
+        "priority": "low",
+        "duedate": "2026-03-23 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "Get Permits (3)",
+        "description": "Description for Get Permits (3)",
+        "id": "94f2d001-0613-4421-ba6b-883d2fefa36d",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "66311ecd-1904-4630-83a4-dc1a320e2e3d",
+            "6866818f-a917-4115-917b-e119fcf50ad5"
+        ],
+        "tint": "#F97316",
+        "stack": "f04c1541-2404-424d-9cab-804468d0267b",
+        "estimate": 10800,
+        "priority": "low",
+        "duedate": "2026-03-11 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "Demo Kitchen Cabinets (3)",
+        "description": "Description for Demo Kitchen Cabinets (3)",
+        "id": "74c0b82f-b35a-4522-af77-84809f857194",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "53c09559-2372-456d-8e68-64c049be2b66"
+        ],
+        "tint": "#EC4899",
+        "stack": "f04c1541-2404-424d-9cab-804468d0267b",
+        "estimate": 10800,
+        "priority": "low",
+        "duedate": "2026-02-12 20:00:36",
+        "position": 9
+    },
+    {
+        "title": "Install Plumbing (3)",
+        "description": "Description for Install Plumbing (3)",
+        "id": "e1d50aa2-354e-48b3-855e-fbd2f08fefeb",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "66311ecd-1904-4630-83a4-dc1a320e2e3d",
+            "6866818f-a917-4115-917b-e119fcf50ad5"
+        ],
+        "tint": null,
+        "stack": "069b713e-9105-46ad-8d7b-ad8d498911e2",
+        "estimate": 10800,
+        "priority": "low",
+        "duedate": "2026-02-24 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "Wire Electricity (3)",
+        "description": "Description for Wire Electricity (3)",
+        "id": "15cd82e5-50e0-4de6-ab8d-0a0052941fdf",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "66311ecd-1904-4630-83a4-dc1a320e2e3d",
+            "547f744a-f8e7-41b6-92a7-ae95a47af42e"
+        ],
+        "tint": null,
+        "stack": "069b713e-9105-46ad-8d7b-ad8d498911e2",
+        "estimate": 18000,
+        "priority": "medium",
+        "duedate": "2026-03-22 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "Drywall Installation (3)",
+        "description": "Description for Drywall Installation (3)",
+        "id": "5dea83d0-977c-4f81-9421-15d87314e8d8",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "72648a6e-609d-4904-958f-add669d77ac1"
+        ],
+        "tint": null,
+        "stack": "069b713e-9105-46ad-8d7b-ad8d498911e2",
+        "estimate": 14400,
+        "priority": "medium",
+        "duedate": "2026-03-21 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "Paint Walls (3)",
+        "description": "Description for Paint Walls (3)",
+        "id": "82d9a2b6-ee51-4cf7-964c-61e063e462a3",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "85a7f8aa-65ba-4e5c-9738-6f47221d9e77"
+        ],
+        "tint": "#10B981",
+        "stack": "069b713e-9105-46ad-8d7b-ad8d498911e2",
+        "estimate": 3600,
+        "priority": "low",
+        "duedate": "2026-04-03 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Lay Flooring (3)",
+        "description": "Description for Lay Flooring (3)",
+        "id": "cfb0ae8b-75c7-4177-91ee-3e2aa78556aa",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [],
+        "tint": null,
+        "stack": "069b713e-9105-46ad-8d7b-ad8d498911e2",
+        "estimate": 3600,
+        "priority": "low",
+        "duedate": "2026-02-15 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Install Fixtures (3)",
+        "description": "Description for Install Fixtures (3)",
+        "id": "a2ed0cc3-d6e2-4a79-a44e-56df862a5253",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "41caeba7-705c-45f2-8d36-f4df2d3da7cd"
+        ],
+        "tint": null,
+        "stack": "069b713e-9105-46ad-8d7b-ad8d498911e2",
+        "estimate": 28800,
+        "priority": "medium",
+        "duedate": "2026-02-26 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "Buy Furniture (3)",
+        "description": "Description for Buy Furniture (3)",
+        "id": "641e606b-ed38-48d4-817f-50cb6b269821",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "547f744a-f8e7-41b6-92a7-ae95a47af42e"
+        ],
+        "tint": "#06B6D4",
+        "stack": "069b713e-9105-46ad-8d7b-ad8d498911e2",
+        "estimate": 21600,
+        "priority": "high",
+        "duedate": "2026-03-21 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "Landscaping (3)",
+        "description": "Description for Landscaping (3)",
+        "id": "95779d1f-b1fb-4a07-afd7-605dab2f8ecd",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "41caeba7-705c-45f2-8d36-f4df2d3da7cd",
+            "66311ecd-1904-4630-83a4-dc1a320e2e3d"
+        ],
+        "tint": null,
+        "stack": "069b713e-9105-46ad-8d7b-ad8d498911e2",
+        "estimate": 28800,
+        "priority": "high",
+        "duedate": "2026-03-24 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "Install Windows (3)",
+        "description": "Description for Install Windows (3)",
+        "id": "17aa951e-0342-45a3-93f7-9ef5b4082452",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "85a7f8aa-65ba-4e5c-9738-6f47221d9e77",
+            "72648a6e-609d-4904-958f-add669d77ac1"
+        ],
+        "tint": null,
+        "stack": "069b713e-9105-46ad-8d7b-ad8d498911e2",
+        "estimate": 32400,
+        "priority": "low",
+        "duedate": "2026-02-10 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "Roof Repair (3)",
+        "description": "Description for Roof Repair (3)",
+        "id": "d3a29cf6-202d-43f0-a7e5-c51136608705",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "41caeba7-705c-45f2-8d36-f4df2d3da7cd",
+            "53c09559-2372-456d-8e68-64c049be2b66",
+            "547f744a-f8e7-41b6-92a7-ae95a47af42e"
+        ],
+        "tint": null,
+        "stack": "069b713e-9105-46ad-8d7b-ad8d498911e2",
+        "estimate": 28800,
+        "priority": "high",
+        "duedate": "2026-04-03 20:00:36",
+        "position": 9
+    },
+    {
+        "title": "Insulation (3)",
+        "description": "Description for Insulation (3)",
+        "id": "78d7d0f3-1d67-4878-91e3-d67fcc600895",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "41caeba7-705c-45f2-8d36-f4df2d3da7cd",
+            "6866818f-a917-4115-917b-e119fcf50ad5"
+        ],
+        "tint": "#EC4899",
+        "stack": "069b713e-9105-46ad-8d7b-ad8d498911e2",
+        "estimate": 28800,
+        "priority": "high",
+        "duedate": "2026-02-05 20:00:36",
+        "position": 10
+    },
+    {
+        "title": "Final Inspection (3)",
+        "description": "Description for Final Inspection (3)",
+        "id": "33ebc135-1b69-47ea-b2d5-94605bc3eca8",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [],
+        "tint": null,
+        "stack": "069b713e-9105-46ad-8d7b-ad8d498911e2",
+        "estimate": 10800,
+        "priority": "medium",
+        "duedate": "2026-02-28 20:00:36",
+        "position": 11
+    },
+    {
+        "title": "Hire Architect (4)",
+        "description": "Description for Hire Architect (4)",
+        "id": "c879a89e-6a6d-4a40-8e48-b4fbe0509312",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "6866818f-a917-4115-917b-e119fcf50ad5"
+        ],
+        "tint": null,
+        "stack": "069b713e-9105-46ad-8d7b-ad8d498911e2",
+        "estimate": 3600,
+        "priority": "medium",
+        "duedate": "2026-03-20 20:00:36",
+        "position": 12
+    },
+    {
+        "title": "Get Permits (4)",
+        "description": "Description for Get Permits (4)",
+        "id": "702fe32a-1a64-40fb-b555-f8a7a467ba14",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "0cb1a288-f9a4-47eb-8c3d-313a1fb99a05",
+            "72648a6e-609d-4904-958f-add669d77ac1"
+        ],
+        "tint": null,
+        "stack": "069b713e-9105-46ad-8d7b-ad8d498911e2",
+        "estimate": 10800,
+        "priority": "low",
+        "duedate": "2026-03-27 20:00:36",
+        "position": 13
+    },
+    {
+        "title": "Demo Kitchen Cabinets (4)",
+        "description": "Description for Demo Kitchen Cabinets (4)",
+        "id": "6acee27e-d3f3-496c-814a-79e8a50a2bd6",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "0cb1a288-f9a4-47eb-8c3d-313a1fb99a05",
+            "41caeba7-705c-45f2-8d36-f4df2d3da7cd",
+            "6866818f-a917-4115-917b-e119fcf50ad5"
+        ],
+        "tint": "#EC4899",
+        "stack": "602df10d-1862-406b-b6f9-97c1e624f94e",
+        "estimate": 25200,
+        "priority": "low",
+        "duedate": "2026-03-23 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "Install Plumbing (4)",
+        "description": "Description for Install Plumbing (4)",
+        "id": "b3d3bcbb-8ff8-4cab-9250-74c7c694f206",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [],
+        "tint": "#6366F1",
+        "stack": "602df10d-1862-406b-b6f9-97c1e624f94e",
+        "estimate": 18000,
+        "priority": "high",
+        "duedate": "2026-02-07 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "Wire Electricity (4)",
+        "description": "Description for Wire Electricity (4)",
+        "id": "a00a2519-afa2-42a3-a8af-6e6177b2c652",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "53c09559-2372-456d-8e68-64c049be2b66",
+            "66311ecd-1904-4630-83a4-dc1a320e2e3d"
+        ],
+        "tint": null,
+        "stack": "602df10d-1862-406b-b6f9-97c1e624f94e",
+        "estimate": 3600,
+        "priority": "high",
+        "duedate": "2026-03-13 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "Drywall Installation (4)",
+        "description": "Description for Drywall Installation (4)",
+        "id": "f5bcae64-73c5-4b3f-a88a-57846061dd6d",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "53c09559-2372-456d-8e68-64c049be2b66"
+        ],
+        "tint": "#06B6D4",
+        "stack": "602df10d-1862-406b-b6f9-97c1e624f94e",
+        "estimate": 32400,
+        "priority": "medium",
+        "duedate": "2026-03-11 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Paint Walls (4)",
+        "description": "Description for Paint Walls (4)",
+        "id": "2799c33c-11a9-4b27-aa83-b97e4d68a237",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [],
+        "tint": "#8B5CF6",
+        "stack": "602df10d-1862-406b-b6f9-97c1e624f94e",
+        "estimate": 32400,
+        "priority": "low",
+        "duedate": "2026-02-27 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Lay Flooring (4)",
+        "description": "Description for Lay Flooring (4)",
+        "id": "7e1770dd-a52c-4e56-a0d3-7d1f2f223ecb",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "66311ecd-1904-4630-83a4-dc1a320e2e3d",
+            "547f744a-f8e7-41b6-92a7-ae95a47af42e"
+        ],
+        "tint": "#EF4444",
+        "stack": "602df10d-1862-406b-b6f9-97c1e624f94e",
+        "estimate": 3600,
+        "priority": "medium",
+        "duedate": "2026-02-16 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "Install Fixtures (4)",
+        "description": "Description for Install Fixtures (4)",
+        "id": "1fe89969-3829-4aa1-9501-4775345f3eb8",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "85a7f8aa-65ba-4e5c-9738-6f47221d9e77",
+            "53c09559-2372-456d-8e68-64c049be2b66"
+        ],
+        "tint": null,
+        "stack": "602df10d-1862-406b-b6f9-97c1e624f94e",
+        "estimate": 14400,
+        "priority": "high",
+        "duedate": "2026-02-10 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "Buy Furniture (4)",
+        "description": "Description for Buy Furniture (4)",
+        "id": "ec5c2e29-2ad1-412e-9d32-a9945a4b15da",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [],
+        "tint": null,
+        "stack": "602df10d-1862-406b-b6f9-97c1e624f94e",
+        "estimate": 25200,
+        "priority": "high",
+        "duedate": "2026-03-29 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "Landscaping (4)",
+        "description": "Description for Landscaping (4)",
+        "id": "e886a6bb-a2f4-434c-a903-ec2db87508f7",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "66311ecd-1904-4630-83a4-dc1a320e2e3d"
+        ],
+        "tint": "#F59E0B",
+        "stack": "602df10d-1862-406b-b6f9-97c1e624f94e",
+        "estimate": 21600,
+        "priority": "low",
+        "duedate": "2026-03-22 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "Install Windows (4)",
+        "description": "Description for Install Windows (4)",
+        "id": "59572ec4-0e26-4e54-9f7c-71bfb04ae3f2",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "41caeba7-705c-45f2-8d36-f4df2d3da7cd",
+            "53c09559-2372-456d-8e68-64c049be2b66"
+        ],
+        "tint": "#EF4444",
+        "stack": "602df10d-1862-406b-b6f9-97c1e624f94e",
+        "estimate": 32400,
+        "priority": "medium",
+        "duedate": "2026-02-13 20:00:36",
+        "position": 9
+    },
+    {
+        "title": "Roof Repair (4)",
+        "description": "Description for Roof Repair (4)",
+        "id": "5e0ef304-8cf4-486a-bef9-39317cd1d4b6",
+        "project": "37073459-9733-48b1-80a6-f875119e8703",
+        "tags": [
+            "85a7f8aa-65ba-4e5c-9738-6f47221d9e77"
+        ],
+        "tint": null,
+        "stack": "602df10d-1862-406b-b6f9-97c1e624f94e",
+        "estimate": 36000,
+        "priority": "high",
+        "duedate": "2026-03-23 20:00:36",
+        "position": 10
+    }
+]

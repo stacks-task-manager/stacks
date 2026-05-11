@@ -1,0 +1,260 @@
+[
+    {
+        "id": "f9ef442c-9382-4c67-a80e-f2b3ec8914f7",
+        "title": "Define Event Objectives and Theme",
+        "description": "Establish clear goals, target audience, and overall theme for the annual corporate conference",
+        "project": "30403245-6874-4789-84fc-96250233b96d",
+        "tags": [
+            "ep-milestone"
+        ],
+        "tint": "blue",
+        "stack": "c19d2fda-c5e3-4927-b994-2c04f88ead26",
+        "estimate": 8,
+        "priority": "high",
+        "duedate": "2024-04-15",
+        "position": 0
+    },
+    {
+        "id": "dc30f87b-333f-40ec-b85a-11f28a9053ff",
+        "title": "Set Event Budget and Financial Framework",
+        "description": "Create comprehensive budget breakdown including venue, catering, speakers, marketing, and contingency funds",
+        "project": "30403245-6874-4789-84fc-96250233b96d",
+        "tags": [
+            "ep-budget",
+            "ep-milestone"
+        ],
+        "tint": "blue",
+        "stack": "c19d2fda-c5e3-4927-b994-2c04f88ead26",
+        "estimate": 6,
+        "priority": "high",
+        "duedate": "2024-04-18",
+        "position": 1
+    },
+    {
+        "id": "2fefae34-967f-4b1f-b0c2-6ceab0b81e60",
+        "title": "Research and Shortlist Venues",
+        "description": "Identify potential venues that meet capacity, location, and technical requirements for the conference",
+        "project": "30403245-6874-4789-84fc-96250233b96d",
+        "tags": [
+            "ep-venue"
+        ],
+        "tint": "green",
+        "stack": "1e7ea9af-50be-4c7a-82f4-e8ee55a1de70",
+        "estimate": 12,
+        "priority": "high",
+        "duedate": "2024-04-22",
+        "position": 0
+    },
+    {
+        "id": "3bc1a7dc-fcc1-432b-a705-c934b49cdbd0",
+        "title": "Book Venue and Negotiate Contract",
+        "description": "Finalize venue selection, negotiate terms, and secure booking with signed contract",
+        "project": "30403245-6874-4789-84fc-96250233b96d",
+        "tags": [
+            "ep-venue",
+            "ep-milestone"
+        ],
+        "tint": "green",
+        "stack": "1e7ea9af-50be-4c7a-82f4-e8ee55a1de70",
+        "estimate": 8,
+        "priority": "high",
+        "duedate": "2024-04-25",
+        "position": 1
+    },
+    {
+        "id": "64ad3a6c-bd2d-44d7-93af-6ad7f86c99de",
+        "title": "Identify and Contact Keynote Speakers",
+        "description": "Research industry experts, reach out to potential keynote speakers, and secure commitments",
+        "project": "30403245-6874-4789-84fc-96250233b96d",
+        "tags": [
+            "ep-speakers"
+        ],
+        "tint": "blue",
+        "stack": "c19d2fda-c5e3-4927-b994-2c04f88ead26",
+        "estimate": 16,
+        "priority": "high",
+        "duedate": "2024-05-01",
+        "position": 2
+    },
+    {
+        "id": "3b525580-1e35-438d-a28a-18f5e997ff86",
+        "title": "Design Event Branding and Materials",
+        "description": "Create visual identity, logos, banners, signage, and promotional materials for the conference",
+        "project": "30403245-6874-4789-84fc-96250233b96d",
+        "tags": [
+            "ep-marketing"
+        ],
+        "tint": "purple",
+        "stack": "108f00fa-b231-487d-8d56-a9dc7225b6b8",
+        "estimate": 20,
+        "priority": "medium",
+        "duedate": "2024-05-05",
+        "position": 0
+    },
+    {
+        "id": "528c518d-1538-4054-bfa5-3d77b7398ab5",
+        "title": "Set Up Registration System",
+        "description": "Implement online registration platform with payment processing and attendee management",
+        "project": "30403245-6874-4789-84fc-96250233b96d",
+        "tags": [
+            "ep-registration"
+        ],
+        "tint": "purple",
+        "stack": "108f00fa-b231-487d-8d56-a9dc7225b6b8",
+        "estimate": 12,
+        "priority": "high",
+        "duedate": "2024-05-08",
+        "position": 1
+    },
+    {
+        "id": "75036beb-d532-434a-ba2e-23dbaadd5546",
+        "title": "Plan Catering and Menu Selection",
+        "description": "Coordinate with catering vendors, finalize menu options, and arrange for dietary restrictions",
+        "project": "30403245-6874-4789-84fc-96250233b96d",
+        "tags": [
+            "ep-catering",
+            "ep-vendor"
+        ],
+        "tint": "green",
+        "stack": "1e7ea9af-50be-4c7a-82f4-e8ee55a1de70",
+        "estimate": 10,
+        "priority": "medium",
+        "duedate": "2024-05-12",
+        "position": 2
+    },
+    {
+        "id": "d58ac993-ab65-46c5-963b-8309b0e25406",
+        "title": "Coordinate AV and Technical Requirements",
+        "description": "Plan audio-visual setup, lighting, microphones, projectors, and live streaming capabilities",
+        "project": "30403245-6874-4789-84fc-96250233b96d",
+        "tags": [
+            "ep-av-tech",
+            "ep-vendor"
+        ],
+        "tint": "green",
+        "stack": "1e7ea9af-50be-4c7a-82f4-e8ee55a1de70",
+        "estimate": 14,
+        "priority": "high",
+        "duedate": "2024-05-15",
+        "position": 3
+    },
+    {
+        "id": "2867f5ef-fdf3-4146-812f-74585a68115f",
+        "title": "Launch Marketing Campaign",
+        "description": "Execute multi-channel marketing strategy including social media, email, and industry partnerships",
+        "project": "30403245-6874-4789-84fc-96250233b96d",
+        "tags": [
+            "ep-marketing"
+        ],
+        "tint": "purple",
+        "stack": "108f00fa-b231-487d-8d56-a9dc7225b6b8",
+        "estimate": 25,
+        "priority": "medium",
+        "duedate": "2024-05-20",
+        "position": 2
+    },
+    {
+        "id": "11d05be0-c7a5-49b9-b6a2-97b99f72cd05",
+        "title": "Manage Speaker Logistics",
+        "description": "Coordinate travel, accommodation, and technical requirements for all speakers",
+        "project": "30403245-6874-4789-84fc-96250233b96d",
+        "tags": [
+            "ep-speakers"
+        ],
+        "tint": "green",
+        "stack": "1e7ea9af-50be-4c7a-82f4-e8ee55a1de70",
+        "estimate": 18,
+        "priority": "medium",
+        "duedate": "2024-06-01",
+        "position": 4
+    },
+    {
+        "id": "729ef263-d5d7-4b90-93d1-32b458b0d65b",
+        "title": "Finalize Event Schedule and Agenda",
+        "description": "Create detailed timeline, session schedules, and coordinate with all stakeholders",
+        "project": "30403245-6874-4789-84fc-96250233b96d",
+        "tags": [
+            "ep-milestone"
+        ],
+        "tint": "blue",
+        "stack": "c19d2fda-c5e3-4927-b994-2c04f88ead26",
+        "estimate": 8,
+        "priority": "high",
+        "duedate": "2024-06-05",
+        "position": 3
+    },
+    {
+        "id": "444a2c53-5fcb-47ff-b094-7ed13f930e82",
+        "title": "Conduct Pre-Event Setup",
+        "description": "Oversee venue setup, test all technical equipment, and coordinate vendor arrivals",
+        "project": "30403245-6874-4789-84fc-96250233b96d",
+        "tags": [
+            "ep-urgent"
+        ],
+        "tint": "orange",
+        "stack": "927e9fa0-7b9f-4e89-93df-28c6adcd9353",
+        "estimate": 16,
+        "priority": "high",
+        "duedate": "2024-06-14",
+        "position": 0
+    },
+    {
+        "id": "39db4194-21b9-41ba-a1d5-5f43e95a2f7d",
+        "title": "Execute Event Day Operations",
+        "description": "Manage all aspects of event execution including registration, sessions, and troubleshooting",
+        "project": "30403245-6874-4789-84fc-96250233b96d",
+        "tags": [
+            "ep-urgent",
+            "ep-milestone"
+        ],
+        "tint": "orange",
+        "stack": "927e9fa0-7b9f-4e89-93df-28c6adcd9353",
+        "estimate": 12,
+        "priority": "high",
+        "duedate": "2024-06-15",
+        "position": 1
+    },
+    {
+        "id": "76910250-3229-46cd-a660-8c21be9cd1fb",
+        "title": "Coordinate Event Breakdown",
+        "description": "Oversee venue cleanup, equipment return, and final vendor settlements",
+        "project": "30403245-6874-4789-84fc-96250233b96d",
+        "tags": [
+            "ep-vendor"
+        ],
+        "tint": "orange",
+        "stack": "927e9fa0-7b9f-4e89-93df-28c6adcd9353",
+        "estimate": 6,
+        "priority": "medium",
+        "duedate": "2024-06-16",
+        "position": 2
+    },
+    {
+        "id": "031b4dd2-6cc5-4e84-905e-a6ff5410150e",
+        "title": "Collect Attendee Feedback",
+        "description": "Distribute and analyze post-event surveys to gather insights and improvement suggestions",
+        "project": "30403245-6874-4789-84fc-96250233b96d",
+        "tags": [],
+        "tint": "pink",
+        "stack": "76fac388-d5f9-432a-b6d9-a8307c999d39",
+        "estimate": 8,
+        "priority": "medium",
+        "duedate": "2024-06-20",
+        "position": 0
+    },
+    {
+        "id": "b39223d6-4c43-492a-aba6-1b6d890cecd7",
+        "title": "Prepare Event ROI Analysis",
+        "description": "Analyze event success metrics, budget performance, and return on investment",
+        "project": "30403245-6874-4789-84fc-96250233b96d",
+        "tags": [
+            "ep-budget"
+        ],
+        "tint": "pink",
+        "stack": "76fac388-d5f9-432a-b6d9-a8307c999d39",
+        "estimate": 10,
+        "priority": "low",
+        "duedate": "2024-06-25",
+        "position": 1
+    }
+]

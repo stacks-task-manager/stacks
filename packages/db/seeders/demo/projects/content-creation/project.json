@@ -1,0 +1,42 @@
+[
+    {
+        "id": "09595199-260b-4c0c-bc65-0df6aaba5d9c",
+        "title": "Content Creation Pipeline",
+        "estimate": 360000,
+        "stacks": [
+            {
+                "title": "Ideas",
+                "tint": "#64748B",
+                "id": "bc4e4929-d49d-4bfe-80d9-0444f4bc2b16"
+            },
+            {
+                "title": "Scripting",
+                "tint": "#F59E0B",
+                "id": "017e9625-a026-464d-a888-9cfc1b73b30e"
+            },
+            {
+                "title": "Filming",
+                "tint": "#3B82F6",
+                "id": "3ef85de1-01eb-49df-8758-ed5c1aa27ab7"
+            },
+            {
+                "title": "Editing",
+                "tint": "#64748B",
+                "id": "264f422d-6718-4007-b44d-1aeff0196dda"
+            },
+            {
+                "title": "Thumbnail",
+                "tint": "#3B82F6",
+                "id": "1f387bdc-4870-4f92-9178-101131b62dbb"
+            },
+            {
+                "title": "Published",
+                "tint": "#10B981",
+                "id": "4db6ca7c-1b7f-4dfc-897a-b43179afb7e7"
+            }
+        ],
+        "hourlyRate": 150,
+        "currency": "USD",
+        "health": "good"
+    }
+]

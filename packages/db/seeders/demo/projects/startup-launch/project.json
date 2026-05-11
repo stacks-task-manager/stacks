@@ -1,0 +1,37 @@
+[
+    {
+        "id": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "title": "Startup Launchpad",
+        "estimate": 360000,
+        "stacks": [
+            {
+                "title": "Legal",
+                "tint": "#8B5CF6",
+                "id": "c288b6c8-30a3-4799-8d61-fc2c48102fe1"
+            },
+            {
+                "title": "Product",
+                "tint": "#8B5CF6",
+                "id": "2ae08ec8-035a-4cfe-88cf-e0b6d7f00fc6"
+            },
+            {
+                "title": "Marketing",
+                "tint": "#F97316",
+                "id": "a5d57090-9955-47aa-9653-520ca7597e0c"
+            },
+            {
+                "title": "Sales",
+                "tint": "#06B6D4",
+                "id": "106f8296-c8e1-4bab-85fe-6c5fb4220ba0"
+            },
+            {
+                "title": "Fundraising",
+                "tint": "#64748B",
+                "id": "ee52c12e-f225-42b3-935d-78f2f5bece0f"
+            }
+        ],
+        "hourlyRate": 94,
+        "currency": "USD",
+        "health": "good"
+    }
+]

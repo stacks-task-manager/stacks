@@ -1,0 +1,35 @@
+{
+    "id": "30403245-6874-4789-84fc-96250233b96d",
+    "title": "Corporate Event Planning - Annual Conference",
+    "estimate": 302400,
+    "stacks": [
+        {
+            "id": "c19d2fda-c5e3-4927-b994-2c04f88ead26",
+            "title": "Planning & Concept",
+            "tint": "blue"
+        },
+        {
+            "id": "1e7ea9af-50be-4c7a-82f4-e8ee55a1de70",
+            "title": "Logistics & Coordination",
+            "tint": "green"
+        },
+        {
+            "id": "108f00fa-b231-487d-8d56-a9dc7225b6b8",
+            "title": "Marketing & Promotion",
+            "tint": "purple"
+        },
+        {
+            "id": "927e9fa0-7b9f-4e89-93df-28c6adcd9353",
+            "title": "Event Execution",
+            "tint": "orange"
+        },
+        {
+            "id": "76fac388-d5f9-432a-b6d9-a8307c999d39",
+            "title": "Follow-up & Analysis",
+            "tint": "pink"
+        }
+    ],
+    "hourlyRate": 65,
+    "currency": "USD",
+    "health": "atRisk"
+}

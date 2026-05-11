@@ -1,0 +1,164 @@
+{
+  "entityName": "Task",
+  "tableName": "tasks",
+  "attributes": {
+    "id": {
+      "type": "UUID",
+      "defaultValue": "UUIDV4",
+      "primaryKey": true
+    },
+    "tenant": {
+      "type": "UUID",
+      "allowNull": false
+    },
+    "createdBy": {
+      "type": "UUID",
+      "allowNull": false
+    },
+    "updatedBy": {
+      "type": "UUID",
+      "allowNull": false
+    },
+    "deletedBy": {
+      "type": "UUID",
+      "allowNull": true
+    },
+    "created": {
+      "type": "DATE",
+      "defaultValue": "NOW",
+      "allowNull": false
+    },
+    "updated": {
+      "type": "DATE",
+      "defaultValue": "NOW",
+      "allowNull": false
+    },
+    "deleted": {
+      "type": "DATE",
+      "allowNull": true
+    },
+    "title": {
+      "type": "TEXT",
+      "allowNull": false
+    },
+    "description": {
+      "type": "TEXT",
+      "allowNull": true
+    },
+    "project": {
+      "type": "UUID",
+      "allowNull": false
+    },
+    "stack": {
+      "type": "UUID",
+      "allowNull": false
+    },
+    "position": {
+      "type": "INTEGER",
+      "allowNull": true,
+      "defaultValue": 0
+    },
+    "startdate": {
+      "type": "DATE",
+      "allowNull": true
+    },
+    "duedate": {
+      "type": "DATE",
+      "allowNull": true
+    },
+    "dodate": {
+      "type": "DATE",
+      "allowNull": true
+    },
+    "cover": {
+      "type": "BOOLEAN",
+      "allowNull": true
+    },
+    "done": {
+      "type": "BOOLEAN",
+      "allowNull": true,
+      "defaultValue": false
+    },
+    "estimate": {
+      "type": "INTEGER",
+      "allowNull": true,
+      "defaultValue": 0
+    },
+    "progress": {
+      "type": "INTEGER",
+      "allowNull": true
+    },
+    "hourlyFee": {
+      "type": "FLOAT",
+      "allowNull": true
+    },
+    "feeCurrency": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "priority": {
+      "type": "ENUM",
+      "allowNull": true,
+      "defaultValue": "none"
+    },
+    "parent": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "siblingPosition": {
+      "type": "INTEGER",
+      "allowNull": true,
+      "defaultValue": 0
+    },
+    "sprint": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "tint": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "assignees": {
+      "type": "JSONB",
+      "allowNull": true,
+      "defaultValue": []
+    },
+    "tags": {
+      "type": "JSONB",
+      "allowNull": true,
+      "defaultValue": []
+    },
+    "status": {
+      "type": "UUID",
+      "allowNull": true
+    },
+    "repeats": {
+      "type": "JSONB",
+      "allowNull": true
+    },
+    "links": {
+      "type": "JSONB",
+      "allowNull": true,
+      "defaultValue": []
+    },
+    "locations": {
+      "type": "JSONB",
+      "allowNull": true,
+      "defaultValue": []
+    },
+    "timeSpent": {
+      "type": "INTEGER",
+      "allowNull": true,
+      "defaultValue": 0
+    },
+    "completed": {
+      "type": "DATE",
+      "allowNull": true
+    },
+    "archived": {
+      "type": "DATE",
+      "allowNull": true
+    }
+  },
+  "options": {}
+}

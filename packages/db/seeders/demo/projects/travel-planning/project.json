@@ -1,0 +1,37 @@
+[
+    {
+        "id": "440c5238-af5c-4321-b7da-5439ea4981d3",
+        "title": "Eurotrip Itinerary",
+        "estimate": 360000,
+        "stacks": [
+            {
+                "title": "Research",
+                "tint": "#3B82F6",
+                "id": "22a18d7c-f88f-43b7-b5cf-3da87b76974a"
+            },
+            {
+                "title": "Booking",
+                "tint": "#F59E0B",
+                "id": "f6bc1166-ee8c-4a28-aea8-e16ac4a4bc9d"
+            },
+            {
+                "title": "Itinerary",
+                "tint": "#10B981",
+                "id": "5e3069de-9f35-4de8-aafe-57f42e0c41a2"
+            },
+            {
+                "title": "Packing",
+                "tint": "#8B5CF6",
+                "id": "68ae9afe-997d-4c29-8f59-facc1ac87f97"
+            },
+            {
+                "title": "Memories",
+                "tint": "#6366F1",
+                "id": "11838321-ff39-48d3-844a-ebdf742bddde"
+            }
+        ],
+        "hourlyRate": 114,
+        "currency": "USD",
+        "health": "good"
+    }
+]

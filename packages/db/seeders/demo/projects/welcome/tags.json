@@ -1,0 +1,202 @@
+[
+    {
+        "title": "Bugs",
+        "color": "#d90429",
+        "section": "projects",
+        "id": "72027c2b-f8aa-4a34-8231-45f576a329ba",
+        "type": "tag",
+        "parent": "d8fbc4f8-a1da-4648-ac36-ac39d1d95c0e"
+    },
+    {
+        "title": "Not Started",
+        "color": "#93b7be",
+        "section": "projects",
+        "id": "055855e5-bd9b-49fb-89c7-d8047d20e483",
+        "type": "tag",
+        "parent": "d8fbc4f8-a1da-4648-ac36-ac39d1d95c0e"
+    },
+    {
+        "title": "On Hold",
+        "color": "#32BAF5",
+        "section": "projects",
+        "id": "082848ce-f031-479a-8764-c96f5ef07ed4",
+        "type": "tag",
+        "parent": "d8fbc4f8-a1da-4648-ac36-ac39d1d95c0e"
+    },
+    {
+        "title": "Completed",
+        "color": "#00e6b2",
+        "section": "projects",
+        "id": "49272c57-d9a6-4f47-a95a-680b4a59207a",
+        "type": "tag",
+        "parent": "d8fbc4f8-a1da-4648-ac36-ac39d1d95c0e"
+    },
+    {
+        "title": "Progressing",
+        "color": "#f2d56e",
+        "section": "projects",
+        "id": "aff54a34-f793-4f59-a489-13c09fce0319",
+        "type": "tag",
+        "parent": "d8fbc4f8-a1da-4648-ac36-ac39d1d95c0e"
+    },
+    {
+        "title": "Urgent",
+        "color": "#fdc500",
+        "section": "projects",
+        "id": "9341b87a-e778-4ed9-a18d-618e47b4e84a",
+        "type": "tag",
+        "parent": "d8fbc4f8-a1da-4648-ac36-ac39d1d95c0e"
+    },
+    {
+        "title": "In Review",
+        "color": "#0ad2ff",
+        "section": "projects",
+        "id": "d857e210-ce7e-4985-8756-ae90b8ed069d",
+        "type": "tag",
+        "parent": "d8fbc4f8-a1da-4648-ac36-ac39d1d95c0e"
+    },
+    {
+        "title": "Customer",
+        "color": "#ffca3a",
+        "section": "people",
+        "id": "8627da28-9d73-4d50-b7ed-6e61ce0be295",
+        "type": "tag",
+        "parent": "d8fbc4f8-a1da-4648-ac36-ac39d1d95c0e"
+    },
+    {
+        "title": "Client",
+        "color": "#d90429",
+        "section": "people",
+        "id": "ad029c0a-1790-4212-9448-a745695d1175",
+        "type": "tag",
+        "parent": "d8fbc4f8-a1da-4648-ac36-ac39d1d95c0e"
+    },
+    {
+        "title": "Constractor",
+        "color": "#ff595e",
+        "section": "people",
+        "id": "a5e0c398-39a1-4d4e-82fa-ba5786dd31b7",
+        "type": "tag",
+        "parent": "d8fbc4f8-a1da-4648-ac36-ac39d1d95c0e"
+    },
+    {
+        "title": "Developer",
+        "color": "#8ac926",
+        "section": "people",
+        "id": "d274f504-2ed8-436a-9237-92a8d955acbe",
+        "type": "tag",
+        "parent": "d8fbc4f8-a1da-4648-ac36-ac39d1d95c0e"
+    },
+    {
+        "title": "Freelancer",
+        "color": "#1982c4",
+        "section": "people",
+        "id": "ac3035b4-6d80-4d5e-abdd-2b8bdb969cf8",
+        "type": "tag",
+        "parent": "d8fbc4f8-a1da-4648-ac36-ac39d1d95c0e"
+    },
+    {
+        "title": "Friend",
+        "color": "#f72585",
+        "section": "people",
+        "id": "1b69d1f6-e4bf-4575-9e8b-453ff8c6e667",
+        "type": "tag",
+        "parent": "d8fbc4f8-a1da-4648-ac36-ac39d1d95c0e"
+    },
+    {
+        "title": "Collaborator",
+        "color": "#8338ec",
+        "section": "people",
+        "id": "ff451a55-94f6-4cc8-b34f-155946b0e1a3",
+        "type": "tag",
+        "parent": "d8fbc4f8-a1da-4648-ac36-ac39d1d95c0e"
+    },
+    {
+        "title": "Prospective client",
+        "color": "#fca311",
+        "section": "people",
+        "id": "01a0cfc3-71ab-4e99-a492-b02d93dfdf3e",
+        "type": "tag",
+        "parent": "d8fbc4f8-a1da-4648-ac36-ac39d1d95c0e"
+    },
+    {
+        "title": "Other",
+        "color": "#03045e",
+        "section": "people",
+        "id": "90ae769b-a4f6-49b1-a17d-8be8bc0efdf8",
+        "type": "tag",
+        "parent": "d8fbc4f8-a1da-4648-ac36-ac39d1d95c0e"
+    },
+    {
+        "title": "High Priority",
+        "color": "#FFDC00",
+        "section": "projects",
+        "id": "ac1543f0-39df-44d4-809b-b197b605cb16",
+        "type": "status",
+        "parent": "d8fbc4f8-a1da-4648-ac36-ac39d1d95c0e"
+    },
+    {
+        "title": "On Track",
+        "color": "#92d632",
+        "section": "projects",
+        "id": "93230601-fe9d-4731-ba7b-2aa505916bfd",
+        "type": "status",
+        "parent": "d8fbc4f8-a1da-4648-ac36-ac39d1d95c0e"
+    },
+    {
+        "title": "Off Track",
+        "color": "#f37cbc",
+        "section": "projects",
+        "id": "b07790ff-4bb2-4008-9151-5c453ff7b1e6",
+        "type": "status",
+        "parent": "d8fbc4f8-a1da-4648-ac36-ac39d1d95c0e"
+    },
+    {
+        "title": "Missing Info",
+        "color": "#FF9C00",
+        "section": "projects",
+        "id": "01955279-30aa-4d71-b97a-8b1010acc57b",
+        "type": "status",
+        "parent": "d8fbc4f8-a1da-4648-ac36-ac39d1d95c0e"
+    },
+    {
+        "title": "Paying",
+        "color": "#8ac926",
+        "section": "people",
+        "id": "5ea1800d-3eaf-4a02-932b-70ef45ce15d3",
+        "type": "status",
+        "parent": "d8fbc4f8-a1da-4648-ac36-ac39d1d95c0e"
+    },
+    {
+        "title": "Unpaying",
+        "color": "#e63946",
+        "section": "people",
+        "id": "3c3da971-683c-4b6f-a415-a44f637c4b74",
+        "type": "status",
+        "parent": "d8fbc4f8-a1da-4648-ac36-ac39d1d95c0e"
+    },
+    {
+        "title": "Needs update",
+        "color": "#f77f00",
+        "section": "people",
+        "id": "56a4a2c3-9f65-4b9a-8c56-494dbe220806",
+        "type": "status",
+        "parent": "d8fbc4f8-a1da-4648-ac36-ac39d1d95c0e"
+    },
+    {
+        "title": "Need to contact",
+        "color": "#3a0ca3",
+        "section": "people",
+        "id": "81164864-8a24-4955-b44b-891905970603",
+        "type": "status",
+        "parent": "d8fbc4f8-a1da-4648-ac36-ac39d1d95c0e"
+    },
+    {
+        "title": "Documents missing",
+        "color": "#f72585",
+        "section": "people",
+        "id": "aed022b1-c771-41fd-8ca6-5e0fc3a8e925",
+        "type": "status",
+        "parent": "d8fbc4f8-a1da-4648-ac36-ac39d1d95c0e"
+    }
+]

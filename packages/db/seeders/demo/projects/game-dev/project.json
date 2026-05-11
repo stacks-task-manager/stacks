@@ -1,0 +1,42 @@
+[
+    {
+        "id": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "title": "Indie Game Development",
+        "estimate": 360000,
+        "stacks": [
+            {
+                "title": "Concept",
+                "tint": "#6366F1",
+                "id": "232f77f1-def3-44f4-88cd-f523c4a5b3fe"
+            },
+            {
+                "title": "Art",
+                "tint": "#F59E0B",
+                "id": "2cdd00be-86b8-4456-b6e1-b01a74fd1fbf"
+            },
+            {
+                "title": "Code",
+                "tint": "#F97316",
+                "id": "14d7dd82-bd6d-4f66-8b3d-093edbdb9810"
+            },
+            {
+                "title": "Sound",
+                "tint": "#10B981",
+                "id": "11f15172-5a27-4afe-9524-1d465eea7d2e"
+            },
+            {
+                "title": "QA",
+                "tint": "#F97316",
+                "id": "da8378a1-ab6d-46c3-83dc-8eea5f288dfd"
+            },
+            {
+                "title": "Release",
+                "tint": "#06B6D4",
+                "id": "4705a124-15cb-4f7f-9513-22b8de8765dd"
+            }
+        ],
+        "hourlyRate": 59,
+        "currency": "USD",
+        "health": "good"
+    }
+]

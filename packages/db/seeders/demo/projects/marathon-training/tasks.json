@@ -1,0 +1,907 @@
+[
+    {
+        "title": "Buy Running Shoes",
+        "description": "Description for Buy Running Shoes",
+        "id": "a6cd9665-8f5d-4da3-bc0a-28c2bea7c07e",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "812bd54d-64be-4159-ad15-04dc8da94785"
+        ],
+        "tint": "#EF4444",
+        "stack": "815ecd7e-ddc6-4d98-97c5-5044ab8e1d55",
+        "estimate": 32400,
+        "priority": "high",
+        "duedate": "2026-03-23 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "3 Mile Run",
+        "description": "Description for 3 Mile Run",
+        "id": "daa56218-6399-4147-bf54-886ca259ea39",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [],
+        "tint": "#10B981",
+        "stack": "815ecd7e-ddc6-4d98-97c5-5044ab8e1d55",
+        "estimate": 7200,
+        "priority": "medium",
+        "duedate": "2026-02-27 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "5 Mile Tempo",
+        "description": "Description for 5 Mile Tempo",
+        "id": "f30fbd20-e75a-47c9-b78f-7f674908c261",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "970c9db2-f136-42b9-b614-cdeb56cb2725",
+            "ea5f84b5-b0b0-406c-a63a-6a7dfcd5eb95"
+        ],
+        "tint": null,
+        "stack": "815ecd7e-ddc6-4d98-97c5-5044ab8e1d55",
+        "estimate": 10800,
+        "priority": "medium",
+        "duedate": "2026-03-24 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "10 Mile Long Run",
+        "description": "Description for 10 Mile Long Run",
+        "id": "697dabbc-ebc4-4d21-96eb-6d3ad0f2d313",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "ea5f84b5-b0b0-406c-a63a-6a7dfcd5eb95",
+            "937dcfad-868e-4618-9e33-7e3af0d748f6",
+            "6d619346-b827-4b56-af0d-e0ca88be3e96"
+        ],
+        "tint": "#EF4444",
+        "stack": "815ecd7e-ddc6-4d98-97c5-5044ab8e1d55",
+        "estimate": 3600,
+        "priority": "high",
+        "duedate": "2026-03-08 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Interval Training",
+        "description": "Description for Interval Training",
+        "id": "1667058b-a362-4708-ab6a-456e2c781a84",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "6d619346-b827-4b56-af0d-e0ca88be3e96"
+        ],
+        "tint": null,
+        "stack": "815ecd7e-ddc6-4d98-97c5-5044ab8e1d55",
+        "estimate": 3600,
+        "priority": "high",
+        "duedate": "2026-02-22 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Hill Repeats",
+        "description": "Description for Hill Repeats",
+        "id": "1e2be324-dcb9-4238-a6a3-f0fecfcaf338",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "970c9db2-f136-42b9-b614-cdeb56cb2725",
+            "ba82161f-ab89-4411-b90b-f7dd78c94bad"
+        ],
+        "tint": "#3B82F6",
+        "stack": "815ecd7e-ddc6-4d98-97c5-5044ab8e1d55",
+        "estimate": 10800,
+        "priority": "high",
+        "duedate": "2026-03-28 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "Cross Training",
+        "description": "Description for Cross Training",
+        "id": "adb90492-105d-4683-a056-c07c9d751d78",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "6d619346-b827-4b56-af0d-e0ca88be3e96"
+        ],
+        "tint": null,
+        "stack": "815ecd7e-ddc6-4d98-97c5-5044ab8e1d55",
+        "estimate": 14400,
+        "priority": "low",
+        "duedate": "2026-02-10 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "Stretch Session",
+        "description": "Description for Stretch Session",
+        "id": "0dd51e9f-810e-4a8d-a4c8-eb7f2cbe12c0",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "6d619346-b827-4b56-af0d-e0ca88be3e96"
+        ],
+        "tint": "#6366F1",
+        "stack": "815ecd7e-ddc6-4d98-97c5-5044ab8e1d55",
+        "estimate": 18000,
+        "priority": "medium",
+        "duedate": "2026-02-18 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "Hydration Plan",
+        "description": "Description for Hydration Plan",
+        "id": "52df3a9a-b4f6-423f-9a41-dbeee5de32ec",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "ba82161f-ab89-4411-b90b-f7dd78c94bad",
+            "ea5f84b5-b0b0-406c-a63a-6a7dfcd5eb95"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "815ecd7e-ddc6-4d98-97c5-5044ab8e1d55",
+        "estimate": 10800,
+        "priority": "high",
+        "duedate": "2026-03-04 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "Carb Loading",
+        "description": "Description for Carb Loading",
+        "id": "00a29b39-05cd-444b-b570-71c5c7d7c7a1",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "690c4633-fb21-4857-9c16-76be0ca9eeb3"
+        ],
+        "tint": "#64748B",
+        "stack": "815ecd7e-ddc6-4d98-97c5-5044ab8e1d55",
+        "estimate": 3600,
+        "priority": "medium",
+        "duedate": "2026-03-18 20:00:36",
+        "position": 9
+    },
+    {
+        "title": "Pick up Bib",
+        "description": "Description for Pick up Bib",
+        "id": "41741e5b-8e69-448c-b868-daa0b333e91d",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [],
+        "tint": "#F97316",
+        "stack": "b1c6b671-57d4-4d07-a0cd-8c89bb6f2063",
+        "estimate": 10800,
+        "priority": "high",
+        "duedate": "2026-03-26 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "Race Strategy",
+        "description": "Description for Race Strategy",
+        "id": "46149473-cd8a-4456-88c5-79d0ed5efa94",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "970c9db2-f136-42b9-b614-cdeb56cb2725",
+            "ba82161f-ab89-4411-b90b-f7dd78c94bad",
+            "690c4633-fb21-4857-9c16-76be0ca9eeb3"
+        ],
+        "tint": "#10B981",
+        "stack": "b1c6b671-57d4-4d07-a0cd-8c89bb6f2063",
+        "estimate": 18000,
+        "priority": "high",
+        "duedate": "2026-03-29 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "Massage Therapy",
+        "description": "Description for Massage Therapy",
+        "id": "3fff2e82-6b15-4cfe-80a8-ae5692e9dbae",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "812bd54d-64be-4159-ad15-04dc8da94785"
+        ],
+        "tint": null,
+        "stack": "b1c6b671-57d4-4d07-a0cd-8c89bb6f2063",
+        "estimate": 28800,
+        "priority": "low",
+        "duedate": "2026-03-14 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "Ice Bath",
+        "description": "Description for Ice Bath",
+        "id": "71564cf2-17e8-4569-9079-74e54b7de08f",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "970c9db2-f136-42b9-b614-cdeb56cb2725"
+        ],
+        "tint": "#06B6D4",
+        "stack": "b1c6b671-57d4-4d07-a0cd-8c89bb6f2063",
+        "estimate": 18000,
+        "priority": "low",
+        "duedate": "2026-02-26 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Celebrate Finish",
+        "description": "Description for Celebrate Finish",
+        "id": "a748b145-d730-4366-a24c-f53172bac6b0",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "ea5f84b5-b0b0-406c-a63a-6a7dfcd5eb95",
+            "970c9db2-f136-42b9-b614-cdeb56cb2725"
+        ],
+        "tint": "#06B6D4",
+        "stack": "b1c6b671-57d4-4d07-a0cd-8c89bb6f2063",
+        "estimate": 36000,
+        "priority": "medium",
+        "duedate": "2026-03-08 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Buy Running Shoes (2)",
+        "description": "Description for Buy Running Shoes (2)",
+        "id": "745bf4f4-e4b2-4109-925d-37d48b2a869e",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "937dcfad-868e-4618-9e33-7e3af0d748f6",
+            "ea5f84b5-b0b0-406c-a63a-6a7dfcd5eb95",
+            "6d619346-b827-4b56-af0d-e0ca88be3e96"
+        ],
+        "tint": null,
+        "stack": "b1c6b671-57d4-4d07-a0cd-8c89bb6f2063",
+        "estimate": 28800,
+        "priority": "low",
+        "duedate": "2026-02-19 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "3 Mile Run (2)",
+        "description": "Description for 3 Mile Run (2)",
+        "id": "a422486a-a0ff-4118-b298-742a1ae557f2",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "970c9db2-f136-42b9-b614-cdeb56cb2725",
+            "690c4633-fb21-4857-9c16-76be0ca9eeb3"
+        ],
+        "tint": null,
+        "stack": "b1c6b671-57d4-4d07-a0cd-8c89bb6f2063",
+        "estimate": 28800,
+        "priority": "low",
+        "duedate": "2026-02-08 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "5 Mile Tempo (2)",
+        "description": "Description for 5 Mile Tempo (2)",
+        "id": "c57fe82b-3a56-4cde-8353-fd1b5f3d8b3d",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "ea5f84b5-b0b0-406c-a63a-6a7dfcd5eb95",
+            "970c9db2-f136-42b9-b614-cdeb56cb2725",
+            "690c4633-fb21-4857-9c16-76be0ca9eeb3"
+        ],
+        "tint": "#64748B",
+        "stack": "b1c6b671-57d4-4d07-a0cd-8c89bb6f2063",
+        "estimate": 21600,
+        "priority": "low",
+        "duedate": "2026-02-13 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "10 Mile Long Run (2)",
+        "description": "Description for 10 Mile Long Run (2)",
+        "id": "04c138d9-4a05-409d-902a-b3bc1e77be1b",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [],
+        "tint": null,
+        "stack": "b1c6b671-57d4-4d07-a0cd-8c89bb6f2063",
+        "estimate": 10800,
+        "priority": "low",
+        "duedate": "2026-04-02 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "Interval Training (2)",
+        "description": "Description for Interval Training (2)",
+        "id": "97baadaa-7c01-4101-a84e-d145e98c67ff",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "1789838b-7735-4f49-954c-40ae1534b531",
+            "812bd54d-64be-4159-ad15-04dc8da94785"
+        ],
+        "tint": null,
+        "stack": "b1c6b671-57d4-4d07-a0cd-8c89bb6f2063",
+        "estimate": 25200,
+        "priority": "low",
+        "duedate": "2026-03-22 20:00:36",
+        "position": 9
+    },
+    {
+        "title": "Hill Repeats (2)",
+        "description": "Description for Hill Repeats (2)",
+        "id": "1f46d042-e34a-4d86-8f4d-b4c9cec90cf1",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [],
+        "tint": null,
+        "stack": "b1c6b671-57d4-4d07-a0cd-8c89bb6f2063",
+        "estimate": 32400,
+        "priority": "medium",
+        "duedate": "2026-02-14 20:00:36",
+        "position": 10
+    },
+    {
+        "title": "Cross Training (2)",
+        "description": "Description for Cross Training (2)",
+        "id": "c63232c7-32da-4411-8f69-a2d80b24d26e",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "ba82161f-ab89-4411-b90b-f7dd78c94bad",
+            "1789838b-7735-4f49-954c-40ae1534b531"
+        ],
+        "tint": "#EC4899",
+        "stack": "b1c6b671-57d4-4d07-a0cd-8c89bb6f2063",
+        "estimate": 18000,
+        "priority": "medium",
+        "duedate": "2026-02-10 20:00:36",
+        "position": 11
+    },
+    {
+        "title": "Stretch Session (2)",
+        "description": "Description for Stretch Session (2)",
+        "id": "ca6b7ee0-d485-4342-bf09-230d7977a449",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "970c9db2-f136-42b9-b614-cdeb56cb2725",
+            "812bd54d-64be-4159-ad15-04dc8da94785"
+        ],
+        "tint": "#06B6D4",
+        "stack": "b1c6b671-57d4-4d07-a0cd-8c89bb6f2063",
+        "estimate": 21600,
+        "priority": "high",
+        "duedate": "2026-03-29 20:00:36",
+        "position": 12
+    },
+    {
+        "title": "Hydration Plan (2)",
+        "description": "Description for Hydration Plan (2)",
+        "id": "6aa1ff1f-161d-4771-9f6b-bf03f2f1db9d",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "937dcfad-868e-4618-9e33-7e3af0d748f6"
+        ],
+        "tint": null,
+        "stack": "b1c6b671-57d4-4d07-a0cd-8c89bb6f2063",
+        "estimate": 21600,
+        "priority": "low",
+        "duedate": "2026-03-06 20:00:36",
+        "position": 13
+    },
+    {
+        "title": "Carb Loading (2)",
+        "description": "Description for Carb Loading (2)",
+        "id": "4a432176-0b8d-4357-a601-ec0b4e7e9f6d",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "ba82161f-ab89-4411-b90b-f7dd78c94bad"
+        ],
+        "tint": null,
+        "stack": "480e5060-dc9c-4468-9ce5-a6af1e5b82a0",
+        "estimate": 18000,
+        "priority": "high",
+        "duedate": "2026-03-08 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "Pick up Bib (2)",
+        "description": "Description for Pick up Bib (2)",
+        "id": "ea57052f-eac3-423c-94b9-8fc028fa6667",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "937dcfad-868e-4618-9e33-7e3af0d748f6",
+            "812bd54d-64be-4159-ad15-04dc8da94785"
+        ],
+        "tint": "#64748B",
+        "stack": "480e5060-dc9c-4468-9ce5-a6af1e5b82a0",
+        "estimate": 32400,
+        "priority": "high",
+        "duedate": "2026-03-30 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "Race Strategy (2)",
+        "description": "Description for Race Strategy (2)",
+        "id": "62afa89a-71d3-488f-aae0-444256b1c36e",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "6d619346-b827-4b56-af0d-e0ca88be3e96"
+        ],
+        "tint": "#06B6D4",
+        "stack": "480e5060-dc9c-4468-9ce5-a6af1e5b82a0",
+        "estimate": 7200,
+        "priority": "low",
+        "duedate": "2026-02-16 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "Massage Therapy (2)",
+        "description": "Description for Massage Therapy (2)",
+        "id": "991168c2-8ded-4fda-a425-9d22b80c801c",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "970c9db2-f136-42b9-b614-cdeb56cb2725",
+            "6d619346-b827-4b56-af0d-e0ca88be3e96"
+        ],
+        "tint": null,
+        "stack": "480e5060-dc9c-4468-9ce5-a6af1e5b82a0",
+        "estimate": 28800,
+        "priority": "high",
+        "duedate": "2026-02-27 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Ice Bath (2)",
+        "description": "Description for Ice Bath (2)",
+        "id": "cfb934b5-163c-41c1-8d4f-dc523dcdb80d",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [],
+        "tint": null,
+        "stack": "480e5060-dc9c-4468-9ce5-a6af1e5b82a0",
+        "estimate": 36000,
+        "priority": "high",
+        "duedate": "2026-04-02 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Celebrate Finish (2)",
+        "description": "Description for Celebrate Finish (2)",
+        "id": "c9e22c04-666c-4f60-afbb-9de400a12e30",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "ba82161f-ab89-4411-b90b-f7dd78c94bad",
+            "937dcfad-868e-4618-9e33-7e3af0d748f6"
+        ],
+        "tint": null,
+        "stack": "480e5060-dc9c-4468-9ce5-a6af1e5b82a0",
+        "estimate": 32400,
+        "priority": "high",
+        "duedate": "2026-04-04 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "Buy Running Shoes (3)",
+        "description": "Description for Buy Running Shoes (3)",
+        "id": "333f3251-4de9-4dc8-b677-23ff8af0a67a",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "1789838b-7735-4f49-954c-40ae1534b531"
+        ],
+        "tint": "#3B82F6",
+        "stack": "480e5060-dc9c-4468-9ce5-a6af1e5b82a0",
+        "estimate": 3600,
+        "priority": "high",
+        "duedate": "2026-03-16 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "3 Mile Run (3)",
+        "description": "Description for 3 Mile Run (3)",
+        "id": "934a3b64-2286-4d64-8d7a-fe693f935ad5",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "ba82161f-ab89-4411-b90b-f7dd78c94bad",
+            "937dcfad-868e-4618-9e33-7e3af0d748f6",
+            "690c4633-fb21-4857-9c16-76be0ca9eeb3"
+        ],
+        "tint": "#EF4444",
+        "stack": "480e5060-dc9c-4468-9ce5-a6af1e5b82a0",
+        "estimate": 3600,
+        "priority": "high",
+        "duedate": "2026-03-07 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "5 Mile Tempo (3)",
+        "description": "Description for 5 Mile Tempo (3)",
+        "id": "5148e63a-a351-4a54-81c0-b163bfb74ce5",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "ba82161f-ab89-4411-b90b-f7dd78c94bad",
+            "937dcfad-868e-4618-9e33-7e3af0d748f6"
+        ],
+        "tint": "#64748B",
+        "stack": "480e5060-dc9c-4468-9ce5-a6af1e5b82a0",
+        "estimate": 10800,
+        "priority": "high",
+        "duedate": "2026-03-13 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "10 Mile Long Run (3)",
+        "description": "Description for 10 Mile Long Run (3)",
+        "id": "d4478803-edc7-47ac-9ccf-03ca10363d35",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "ba82161f-ab89-4411-b90b-f7dd78c94bad",
+            "970c9db2-f136-42b9-b614-cdeb56cb2725"
+        ],
+        "tint": null,
+        "stack": "480e5060-dc9c-4468-9ce5-a6af1e5b82a0",
+        "estimate": 28800,
+        "priority": "low",
+        "duedate": "2026-02-21 20:00:36",
+        "position": 9
+    },
+    {
+        "title": "Interval Training (3)",
+        "description": "Description for Interval Training (3)",
+        "id": "7395f386-842c-47e2-82eb-2e6428cdca25",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "690c4633-fb21-4857-9c16-76be0ca9eeb3"
+        ],
+        "tint": null,
+        "stack": "480e5060-dc9c-4468-9ce5-a6af1e5b82a0",
+        "estimate": 28800,
+        "priority": "low",
+        "duedate": "2026-02-21 20:00:36",
+        "position": 10
+    },
+    {
+        "title": "Hill Repeats (3)",
+        "description": "Description for Hill Repeats (3)",
+        "id": "8ff68e07-2276-4013-b93b-f00d0192f725",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "ba82161f-ab89-4411-b90b-f7dd78c94bad",
+            "6d619346-b827-4b56-af0d-e0ca88be3e96"
+        ],
+        "tint": null,
+        "stack": "480e5060-dc9c-4468-9ce5-a6af1e5b82a0",
+        "estimate": 18000,
+        "priority": "low",
+        "duedate": "2026-04-03 20:00:36",
+        "position": 11
+    },
+    {
+        "title": "Cross Training (3)",
+        "description": "Description for Cross Training (3)",
+        "id": "76c050d0-a852-4c5a-98e3-9b792e201fc3",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "ba82161f-ab89-4411-b90b-f7dd78c94bad",
+            "812bd54d-64be-4159-ad15-04dc8da94785"
+        ],
+        "tint": null,
+        "stack": "480e5060-dc9c-4468-9ce5-a6af1e5b82a0",
+        "estimate": 7200,
+        "priority": "high",
+        "duedate": "2026-02-11 20:00:36",
+        "position": 12
+    },
+    {
+        "title": "Stretch Session (3)",
+        "description": "Description for Stretch Session (3)",
+        "id": "f1051a36-955f-4a06-afce-793f6bec1f2b",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "1789838b-7735-4f49-954c-40ae1534b531"
+        ],
+        "tint": "#10B981",
+        "stack": "051d9355-52bc-4ccd-95c6-b9fea9b100a7",
+        "estimate": 36000,
+        "priority": "low",
+        "duedate": "2026-02-25 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "Hydration Plan (3)",
+        "description": "Description for Hydration Plan (3)",
+        "id": "6779b5a8-dfbb-454a-bc32-ad389fc4cd46",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "937dcfad-868e-4618-9e33-7e3af0d748f6",
+            "ba82161f-ab89-4411-b90b-f7dd78c94bad"
+        ],
+        "tint": "#EC4899",
+        "stack": "051d9355-52bc-4ccd-95c6-b9fea9b100a7",
+        "estimate": 10800,
+        "priority": "high",
+        "duedate": "2026-03-21 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "Carb Loading (3)",
+        "description": "Description for Carb Loading (3)",
+        "id": "eae7e031-82f0-418c-8c5a-5efe4186c054",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "ea5f84b5-b0b0-406c-a63a-6a7dfcd5eb95",
+            "ba82161f-ab89-4411-b90b-f7dd78c94bad"
+        ],
+        "tint": "#EC4899",
+        "stack": "051d9355-52bc-4ccd-95c6-b9fea9b100a7",
+        "estimate": 3600,
+        "priority": "high",
+        "duedate": "2026-02-16 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "Pick up Bib (3)",
+        "description": "Description for Pick up Bib (3)",
+        "id": "8b0413f2-435f-4830-a588-f16424c27ff4",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "ea5f84b5-b0b0-406c-a63a-6a7dfcd5eb95",
+            "690c4633-fb21-4857-9c16-76be0ca9eeb3"
+        ],
+        "tint": "#6366F1",
+        "stack": "051d9355-52bc-4ccd-95c6-b9fea9b100a7",
+        "estimate": 28800,
+        "priority": "medium",
+        "duedate": "2026-03-16 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Race Strategy (3)",
+        "description": "Description for Race Strategy (3)",
+        "id": "d2318521-f2b4-46bb-8103-62ea46c5a18a",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "ba82161f-ab89-4411-b90b-f7dd78c94bad",
+            "970c9db2-f136-42b9-b614-cdeb56cb2725"
+        ],
+        "tint": "#F97316",
+        "stack": "051d9355-52bc-4ccd-95c6-b9fea9b100a7",
+        "estimate": 7200,
+        "priority": "low",
+        "duedate": "2026-02-06 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Massage Therapy (3)",
+        "description": "Description for Massage Therapy (3)",
+        "id": "26ac98e0-d2b6-4dba-b6fb-307b0bf5477e",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "1789838b-7735-4f49-954c-40ae1534b531",
+            "812bd54d-64be-4159-ad15-04dc8da94785"
+        ],
+        "tint": "#F59E0B",
+        "stack": "051d9355-52bc-4ccd-95c6-b9fea9b100a7",
+        "estimate": 21600,
+        "priority": "high",
+        "duedate": "2026-03-24 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "Ice Bath (3)",
+        "description": "Description for Ice Bath (3)",
+        "id": "dab4aaf4-da8c-496d-b612-67dcb5c3c1a2",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "6d619346-b827-4b56-af0d-e0ca88be3e96"
+        ],
+        "tint": "#F59E0B",
+        "stack": "051d9355-52bc-4ccd-95c6-b9fea9b100a7",
+        "estimate": 14400,
+        "priority": "low",
+        "duedate": "2026-02-15 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "Celebrate Finish (3)",
+        "description": "Description for Celebrate Finish (3)",
+        "id": "37484cba-b40e-4b92-be8b-4a09407be663",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "ea5f84b5-b0b0-406c-a63a-6a7dfcd5eb95",
+            "970c9db2-f136-42b9-b614-cdeb56cb2725",
+            "690c4633-fb21-4857-9c16-76be0ca9eeb3"
+        ],
+        "tint": "#10B981",
+        "stack": "051d9355-52bc-4ccd-95c6-b9fea9b100a7",
+        "estimate": 32400,
+        "priority": "high",
+        "duedate": "2026-03-09 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "Buy Running Shoes (4)",
+        "description": "Description for Buy Running Shoes (4)",
+        "id": "119666a8-a29d-4289-b470-3433f09baa8e",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "937dcfad-868e-4618-9e33-7e3af0d748f6"
+        ],
+        "tint": "#64748B",
+        "stack": "051d9355-52bc-4ccd-95c6-b9fea9b100a7",
+        "estimate": 36000,
+        "priority": "low",
+        "duedate": "2026-03-12 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "3 Mile Run (4)",
+        "description": "Description for 3 Mile Run (4)",
+        "id": "d2cb3bf0-5cd2-4ffc-bd90-13962c531e73",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "1789838b-7735-4f49-954c-40ae1534b531",
+            "6d619346-b827-4b56-af0d-e0ca88be3e96"
+        ],
+        "tint": null,
+        "stack": "051d9355-52bc-4ccd-95c6-b9fea9b100a7",
+        "estimate": 25200,
+        "priority": "high",
+        "duedate": "2026-03-20 20:00:36",
+        "position": 9
+    },
+    {
+        "title": "5 Mile Tempo (4)",
+        "description": "Description for 5 Mile Tempo (4)",
+        "id": "24386048-fe01-4d62-8459-4d3191af4057",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "ba82161f-ab89-4411-b90b-f7dd78c94bad",
+            "690c4633-fb21-4857-9c16-76be0ca9eeb3"
+        ],
+        "tint": "#EF4444",
+        "stack": "051d9355-52bc-4ccd-95c6-b9fea9b100a7",
+        "estimate": 21600,
+        "priority": "high",
+        "duedate": "2026-03-15 20:00:36",
+        "position": 10
+    },
+    {
+        "title": "10 Mile Long Run (4)",
+        "description": "Description for 10 Mile Long Run (4)",
+        "id": "d8e8675e-e071-4ccd-8e28-ac170053a52e",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "ea5f84b5-b0b0-406c-a63a-6a7dfcd5eb95",
+            "970c9db2-f136-42b9-b614-cdeb56cb2725",
+            "690c4633-fb21-4857-9c16-76be0ca9eeb3"
+        ],
+        "tint": null,
+        "stack": "c339f4da-5be1-4000-8625-2b4883b685fa",
+        "estimate": 10800,
+        "priority": "low",
+        "duedate": "2026-03-23 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "Interval Training (4)",
+        "description": "Description for Interval Training (4)",
+        "id": "9b5995df-9e14-44c6-ad08-827ca4dbc4aa",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "ba82161f-ab89-4411-b90b-f7dd78c94bad",
+            "937dcfad-868e-4618-9e33-7e3af0d748f6",
+            "690c4633-fb21-4857-9c16-76be0ca9eeb3"
+        ],
+        "tint": "#3B82F6",
+        "stack": "c339f4da-5be1-4000-8625-2b4883b685fa",
+        "estimate": 32400,
+        "priority": "high",
+        "duedate": "2026-03-01 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "Hill Repeats (4)",
+        "description": "Description for Hill Repeats (4)",
+        "id": "d91f81da-9a44-4037-a59a-d32d8da076f6",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "970c9db2-f136-42b9-b614-cdeb56cb2725",
+            "ba82161f-ab89-4411-b90b-f7dd78c94bad"
+        ],
+        "tint": null,
+        "stack": "c339f4da-5be1-4000-8625-2b4883b685fa",
+        "estimate": 3600,
+        "priority": "medium",
+        "duedate": "2026-03-11 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "Cross Training (4)",
+        "description": "Description for Cross Training (4)",
+        "id": "b2db633f-b5c6-4487-990f-0cbfda0c4054",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "ba82161f-ab89-4411-b90b-f7dd78c94bad",
+            "812bd54d-64be-4159-ad15-04dc8da94785"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "c339f4da-5be1-4000-8625-2b4883b685fa",
+        "estimate": 25200,
+        "priority": "low",
+        "duedate": "2026-03-30 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Stretch Session (4)",
+        "description": "Description for Stretch Session (4)",
+        "id": "35c95be9-cb6f-4e3c-9303-6da10307ca20",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [],
+        "tint": null,
+        "stack": "c339f4da-5be1-4000-8625-2b4883b685fa",
+        "estimate": 28800,
+        "priority": "low",
+        "duedate": "2026-03-19 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Hydration Plan (4)",
+        "description": "Description for Hydration Plan (4)",
+        "id": "a1a76cd7-3a9c-402f-bd45-f4056f316601",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "1789838b-7735-4f49-954c-40ae1534b531",
+            "ea5f84b5-b0b0-406c-a63a-6a7dfcd5eb95",
+            "6d619346-b827-4b56-af0d-e0ca88be3e96"
+        ],
+        "tint": "#10B981",
+        "stack": "c339f4da-5be1-4000-8625-2b4883b685fa",
+        "estimate": 3600,
+        "priority": "high",
+        "duedate": "2026-03-04 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "Carb Loading (4)",
+        "description": "Description for Carb Loading (4)",
+        "id": "e28d9a2c-4246-497a-ae0a-c60c68b480be",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "937dcfad-868e-4618-9e33-7e3af0d748f6",
+            "970c9db2-f136-42b9-b614-cdeb56cb2725",
+            "6d619346-b827-4b56-af0d-e0ca88be3e96"
+        ],
+        "tint": null,
+        "stack": "c339f4da-5be1-4000-8625-2b4883b685fa",
+        "estimate": 18000,
+        "priority": "low",
+        "duedate": "2026-02-19 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "Pick up Bib (4)",
+        "description": "Description for Pick up Bib (4)",
+        "id": "9e5e64dc-0e7b-46fe-8b58-edfd643da1e7",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "970c9db2-f136-42b9-b614-cdeb56cb2725"
+        ],
+        "tint": "#EC4899",
+        "stack": "c339f4da-5be1-4000-8625-2b4883b685fa",
+        "estimate": 25200,
+        "priority": "medium",
+        "duedate": "2026-03-17 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "Race Strategy (4)",
+        "description": "Description for Race Strategy (4)",
+        "id": "77358a37-2088-4c4a-80d3-bd4ea9cf8fd4",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "970c9db2-f136-42b9-b614-cdeb56cb2725",
+            "1789838b-7735-4f49-954c-40ae1534b531",
+            "6d619346-b827-4b56-af0d-e0ca88be3e96"
+        ],
+        "tint": "#F97316",
+        "stack": "c339f4da-5be1-4000-8625-2b4883b685fa",
+        "estimate": 28800,
+        "priority": "medium",
+        "duedate": "2026-02-06 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "Massage Therapy (4)",
+        "description": "Description for Massage Therapy (4)",
+        "id": "ee7bfc31-078c-494a-9026-dd3ef990ea46",
+        "project": "815a6769-32d4-4267-b88c-9e2699330844",
+        "tags": [
+            "970c9db2-f136-42b9-b614-cdeb56cb2725",
+            "ba82161f-ab89-4411-b90b-f7dd78c94bad"
+        ],
+        "tint": "#3B82F6",
+        "stack": "c339f4da-5be1-4000-8625-2b4883b685fa",
+        "estimate": 18000,
+        "priority": "low",
+        "duedate": "2026-03-03 20:00:36",
+        "position": 9
+    }
+]

@@ -1,0 +1,23 @@
+{
+    "entityName": "EmailQueue",
+    "tableName": "email_queue",
+    "attributes": {
+        "id": { "type": "INTEGER", "primaryKey": true },
+        "userId": { "type": "UUID", "allowNull": false },
+        "template": { "type": "STRING", "allowNull": false },
+        "data": { "type": "JSONB", "allowNull": false, "defaultValue": "{}" },
+        "status": { "type": "ENUM", "allowNull": false, "defaultValue": "pending" },
+        "sentAt": { "type": "DATE", "allowNull": true },
+        "failureReason": { "type": "TEXT", "allowNull": true },
+        "retryCount": { "type": "INTEGER", "allowNull": false, "defaultValue": 0 },
+        "scheduledAt": { "type": "DATE", "allowNull": true, "defaultValue": "NOW" },
+        "locale": { "type": "STRING", "allowNull": false, "defaultValue": "en" },
+        "createdBy": { "type": "UUID", "allowNull": false },
+        "updatedBy": { "type": "UUID", "allowNull": false },
+        "deletedBy": { "type": "UUID", "allowNull": true },
+        "created": { "type": "DATE", "allowNull": false, "defaultValue": "NOW" },
+        "updated": { "type": "DATE", "allowNull": false, "defaultValue": "NOW" },
+        "deleted": { "type": "DATE", "allowNull": false, "defaultValue": "NOW" }
+    },
+    "options": {}
+}

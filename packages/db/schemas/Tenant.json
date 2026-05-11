@@ -1,0 +1,39 @@
+{
+  "entityName": "Tenant",
+  "tableName": "tenants",
+  "attributes": {
+    "id": {
+      "type": "UUID",
+      "defaultValue": "UUIDV4",
+      "primaryKey": true
+    },
+    "title": {
+      "type": "STRING",
+      "allowNull": false
+    },
+    "description": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "disabled": {
+      "type": "BOOLEAN",
+      "allowNull": true,
+      "defaultValue": false
+    },
+    "expiry": {
+      "type": "DATE",
+      "allowNull": false
+    },
+    "created": {
+      "type": "DATE",
+      "allowNull": false,
+      "defaultValue": "NOW"
+    },
+    "updated": {
+      "type": "DATE",
+      "allowNull": false,
+      "defaultValue": "NOW"
+    }
+  },
+  "options": {}
+}

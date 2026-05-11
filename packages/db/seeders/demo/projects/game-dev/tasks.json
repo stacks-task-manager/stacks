@@ -1,0 +1,1176 @@
+[
+    {
+        "title": "Player Movement",
+        "description": "Description for Player Movement",
+        "id": "912e78bc-2b57-4797-95dc-4dfb743fe5bb",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [],
+        "tint": null,
+        "stack": "232f77f1-def3-44f4-88cd-f523c4a5b3fe",
+        "estimate": 36000,
+        "priority": "high",
+        "duedate": "2026-02-22 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "Enemy AI",
+        "description": "Description for Enemy AI",
+        "id": "6de63c5f-52f5-4060-ae67-7e7dc5f94ea2",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "02eb9a24-044f-4b1c-a44b-6efa4ab2ae0d"
+        ],
+        "tint": null,
+        "stack": "232f77f1-def3-44f4-88cd-f523c4a5b3fe",
+        "estimate": 7200,
+        "priority": "medium",
+        "duedate": "2026-03-03 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "Level 1 Design",
+        "description": "Description for Level 1 Design",
+        "id": "3ed8d79a-803d-4832-b4fb-e00aaf5efe19",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "a947d765-5473-47cd-9773-1178938b3cc4"
+        ],
+        "tint": null,
+        "stack": "232f77f1-def3-44f4-88cd-f523c4a5b3fe",
+        "estimate": 25200,
+        "priority": "high",
+        "duedate": "2026-02-05 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "Main Menu UI",
+        "description": "Description for Main Menu UI",
+        "id": "f05c376d-46cc-4c0e-b852-2894bd092bbe",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "bf9513d2-4d3e-439a-a2ed-1bc6636d690b"
+        ],
+        "tint": "#64748B",
+        "stack": "232f77f1-def3-44f4-88cd-f523c4a5b3fe",
+        "estimate": 21600,
+        "priority": "medium",
+        "duedate": "2026-03-11 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Save System",
+        "description": "Description for Save System",
+        "id": "79028baf-0dc2-4cca-9d6d-c7b9d5b33cf0",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [],
+        "tint": null,
+        "stack": "232f77f1-def3-44f4-88cd-f523c4a5b3fe",
+        "estimate": 10800,
+        "priority": "high",
+        "duedate": "2026-02-23 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Sound Effects",
+        "description": "Description for Sound Effects",
+        "id": "10dc0555-1951-44a5-8a80-ebe1872420c6",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "07ba61fd-f503-427a-906a-34ace00309dc",
+            "02eb9a24-044f-4b1c-a44b-6efa4ab2ae0d",
+            "47599de8-14d6-4f8b-beb7-d04adedb4eab"
+        ],
+        "tint": "#F59E0B",
+        "stack": "232f77f1-def3-44f4-88cd-f523c4a5b3fe",
+        "estimate": 36000,
+        "priority": "medium",
+        "duedate": "2026-02-09 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "Background Music",
+        "description": "Description for Background Music",
+        "id": "b57ef946-acf1-4ded-b901-61d57297068b",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "70253f1f-fda6-4817-a7b4-9bb409dd842d",
+            "bf9513d2-4d3e-439a-a2ed-1bc6636d690b"
+        ],
+        "tint": "#6366F1",
+        "stack": "232f77f1-def3-44f4-88cd-f523c4a5b3fe",
+        "estimate": 21600,
+        "priority": "high",
+        "duedate": "2026-03-20 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "Boss Fight",
+        "description": "Description for Boss Fight",
+        "id": "f45846e5-c3a2-4a05-9ada-211714b6d0da",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "b2fd48e6-ab99-4b0e-82f7-524465f62b93",
+            "07ba61fd-f503-427a-906a-34ace00309dc"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "232f77f1-def3-44f4-88cd-f523c4a5b3fe",
+        "estimate": 25200,
+        "priority": "high",
+        "duedate": "2026-02-14 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "Inventory System",
+        "description": "Description for Inventory System",
+        "id": "e02999d9-ed58-43f4-a058-c916fa072509",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "a947d765-5473-47cd-9773-1178938b3cc4"
+        ],
+        "tint": "#10B981",
+        "stack": "232f77f1-def3-44f4-88cd-f523c4a5b3fe",
+        "estimate": 7200,
+        "priority": "high",
+        "duedate": "2026-03-18 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "Dialog System",
+        "description": "Description for Dialog System",
+        "id": "425605e5-5b00-4ccb-8ba4-87610cbf7d27",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "bf9513d2-4d3e-439a-a2ed-1bc6636d690b"
+        ],
+        "tint": null,
+        "stack": "232f77f1-def3-44f4-88cd-f523c4a5b3fe",
+        "estimate": 14400,
+        "priority": "low",
+        "duedate": "2026-03-09 20:00:36",
+        "position": 9
+    },
+    {
+        "title": "Collision Detection",
+        "description": "Description for Collision Detection",
+        "id": "31ff800b-dfbb-4068-a718-0aac4b0e7e82",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [],
+        "tint": null,
+        "stack": "232f77f1-def3-44f4-88cd-f523c4a5b3fe",
+        "estimate": 10800,
+        "priority": "medium",
+        "duedate": "2026-03-21 20:00:36",
+        "position": 10
+    },
+    {
+        "title": "Particle Effects",
+        "description": "Description for Particle Effects",
+        "id": "e9b37880-3601-4d58-bd23-6853203b32fc",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "70253f1f-fda6-4817-a7b4-9bb409dd842d"
+        ],
+        "tint": null,
+        "stack": "232f77f1-def3-44f4-88cd-f523c4a5b3fe",
+        "estimate": 14400,
+        "priority": "high",
+        "duedate": "2026-03-02 20:00:36",
+        "position": 11
+    },
+    {
+        "title": "Game Over Screen",
+        "description": "Description for Game Over Screen",
+        "id": "70b1876b-b355-4b87-9f75-ace29ea0565d",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "a947d765-5473-47cd-9773-1178938b3cc4",
+            "47599de8-14d6-4f8b-beb7-d04adedb4eab"
+        ],
+        "tint": null,
+        "stack": "232f77f1-def3-44f4-88cd-f523c4a5b3fe",
+        "estimate": 21600,
+        "priority": "medium",
+        "duedate": "2026-02-22 20:00:36",
+        "position": 12
+    },
+    {
+        "title": "Tutorial",
+        "description": "Description for Tutorial",
+        "id": "4e30c835-fb97-4950-afbc-3fe1ec6a0c6a",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "07ba61fd-f503-427a-906a-34ace00309dc",
+            "70253f1f-fda6-4817-a7b4-9bb409dd842d"
+        ],
+        "tint": null,
+        "stack": "232f77f1-def3-44f4-88cd-f523c4a5b3fe",
+        "estimate": 36000,
+        "priority": "low",
+        "duedate": "2026-02-22 20:00:36",
+        "position": 13
+    },
+    {
+        "title": "Steam Integration",
+        "description": "Description for Steam Integration",
+        "id": "86f81a7d-b3fe-470a-b588-425e2b4f9f0c",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "70253f1f-fda6-4817-a7b4-9bb409dd842d",
+            "ad6050d3-929b-48c2-96b4-f01271a1f6f3"
+        ],
+        "tint": "#64748B",
+        "stack": "2cdd00be-86b8-4456-b6e1-b01a74fd1fbf",
+        "estimate": 18000,
+        "priority": "low",
+        "duedate": "2026-03-24 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "Player Movement (2)",
+        "description": "Description for Player Movement (2)",
+        "id": "20d2c0ef-587a-419e-818a-a77a6a87f4c2",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "b2fd48e6-ab99-4b0e-82f7-524465f62b93"
+        ],
+        "tint": null,
+        "stack": "2cdd00be-86b8-4456-b6e1-b01a74fd1fbf",
+        "estimate": 36000,
+        "priority": "medium",
+        "duedate": "2026-02-09 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "Enemy AI (2)",
+        "description": "Description for Enemy AI (2)",
+        "id": "ee10af7c-2c14-44a7-a695-a38697e8d79d",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [],
+        "tint": null,
+        "stack": "2cdd00be-86b8-4456-b6e1-b01a74fd1fbf",
+        "estimate": 32400,
+        "priority": "low",
+        "duedate": "2026-02-23 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "Level 1 Design (2)",
+        "description": "Description for Level 1 Design (2)",
+        "id": "e438af89-ba49-4640-8ad4-a3fd22870733",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "a947d765-5473-47cd-9773-1178938b3cc4",
+            "ad6050d3-929b-48c2-96b4-f01271a1f6f3"
+        ],
+        "tint": "#F97316",
+        "stack": "2cdd00be-86b8-4456-b6e1-b01a74fd1fbf",
+        "estimate": 32400,
+        "priority": "low",
+        "duedate": "2026-04-05 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Main Menu UI (2)",
+        "description": "Description for Main Menu UI (2)",
+        "id": "b1339b8e-1404-4191-adfa-56f706ac87f7",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "07ba61fd-f503-427a-906a-34ace00309dc",
+            "bf9513d2-4d3e-439a-a2ed-1bc6636d690b"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "2cdd00be-86b8-4456-b6e1-b01a74fd1fbf",
+        "estimate": 32400,
+        "priority": "high",
+        "duedate": "2026-03-09 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Save System (2)",
+        "description": "Description for Save System (2)",
+        "id": "42f5559a-102a-4ccc-a673-04990ff85c39",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "a947d765-5473-47cd-9773-1178938b3cc4"
+        ],
+        "tint": null,
+        "stack": "2cdd00be-86b8-4456-b6e1-b01a74fd1fbf",
+        "estimate": 36000,
+        "priority": "medium",
+        "duedate": "2026-03-13 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "Sound Effects (2)",
+        "description": "Description for Sound Effects (2)",
+        "id": "51b65c7c-7aca-4ece-b53b-01d04eb72212",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "a947d765-5473-47cd-9773-1178938b3cc4",
+            "b2fd48e6-ab99-4b0e-82f7-524465f62b93",
+            "bf9513d2-4d3e-439a-a2ed-1bc6636d690b"
+        ],
+        "tint": null,
+        "stack": "2cdd00be-86b8-4456-b6e1-b01a74fd1fbf",
+        "estimate": 21600,
+        "priority": "high",
+        "duedate": "2026-02-08 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "Background Music (2)",
+        "description": "Description for Background Music (2)",
+        "id": "f6d057b5-5226-486f-bcf2-554e7004dc34",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [],
+        "tint": "#64748B",
+        "stack": "2cdd00be-86b8-4456-b6e1-b01a74fd1fbf",
+        "estimate": 28800,
+        "priority": "medium",
+        "duedate": "2026-03-10 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "Boss Fight (2)",
+        "description": "Description for Boss Fight (2)",
+        "id": "c4ba0f5d-3b84-4d1e-a110-83f9d9b2d3d0",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "b2fd48e6-ab99-4b0e-82f7-524465f62b93",
+            "ad6050d3-929b-48c2-96b4-f01271a1f6f3"
+        ],
+        "tint": null,
+        "stack": "2cdd00be-86b8-4456-b6e1-b01a74fd1fbf",
+        "estimate": 7200,
+        "priority": "low",
+        "duedate": "2026-02-26 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "Inventory System (2)",
+        "description": "Description for Inventory System (2)",
+        "id": "35833e9e-c09b-4421-aee5-03833d6507fa",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [],
+        "tint": null,
+        "stack": "2cdd00be-86b8-4456-b6e1-b01a74fd1fbf",
+        "estimate": 36000,
+        "priority": "low",
+        "duedate": "2026-04-04 20:00:36",
+        "position": 9
+    },
+    {
+        "title": "Dialog System (2)",
+        "description": "Description for Dialog System (2)",
+        "id": "2be17960-b237-4814-b368-b6d6b994d7b8",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [],
+        "tint": "#EF4444",
+        "stack": "2cdd00be-86b8-4456-b6e1-b01a74fd1fbf",
+        "estimate": 32400,
+        "priority": "medium",
+        "duedate": "2026-03-01 20:00:36",
+        "position": 10
+    },
+    {
+        "title": "Collision Detection (2)",
+        "description": "Description for Collision Detection (2)",
+        "id": "c4052eb8-c84f-459a-895c-5c44710938e7",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "70253f1f-fda6-4817-a7b4-9bb409dd842d"
+        ],
+        "tint": null,
+        "stack": "2cdd00be-86b8-4456-b6e1-b01a74fd1fbf",
+        "estimate": 32400,
+        "priority": "low",
+        "duedate": "2026-02-19 20:00:36",
+        "position": 11
+    },
+    {
+        "title": "Particle Effects (2)",
+        "description": "Description for Particle Effects (2)",
+        "id": "d7c1e8d9-0d95-4ea8-8bca-b73f949fb4de",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "a947d765-5473-47cd-9773-1178938b3cc4",
+            "47599de8-14d6-4f8b-beb7-d04adedb4eab"
+        ],
+        "tint": null,
+        "stack": "2cdd00be-86b8-4456-b6e1-b01a74fd1fbf",
+        "estimate": 36000,
+        "priority": "high",
+        "duedate": "2026-02-15 20:00:36",
+        "position": 12
+    },
+    {
+        "title": "Game Over Screen (2)",
+        "description": "Description for Game Over Screen (2)",
+        "id": "8beb9d9e-aa43-48b9-95a4-545803a7a4d6",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [],
+        "tint": null,
+        "stack": "14d7dd82-bd6d-4f66-8b3d-093edbdb9810",
+        "estimate": 21600,
+        "priority": "high",
+        "duedate": "2026-02-25 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "Tutorial (2)",
+        "description": "Description for Tutorial (2)",
+        "id": "6a90b7af-256e-4619-97e4-ea4f8827aef5",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [],
+        "tint": null,
+        "stack": "14d7dd82-bd6d-4f66-8b3d-093edbdb9810",
+        "estimate": 18000,
+        "priority": "high",
+        "duedate": "2026-03-08 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "Steam Integration (2)",
+        "description": "Description for Steam Integration (2)",
+        "id": "292fe78c-afa9-405c-a603-bccda86d0520",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "ad6050d3-929b-48c2-96b4-f01271a1f6f3"
+        ],
+        "tint": null,
+        "stack": "14d7dd82-bd6d-4f66-8b3d-093edbdb9810",
+        "estimate": 28800,
+        "priority": "high",
+        "duedate": "2026-03-09 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "Player Movement (3)",
+        "description": "Description for Player Movement (3)",
+        "id": "0b55bbe8-e74a-40db-a769-de6bdb4d30c6",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [],
+        "tint": null,
+        "stack": "14d7dd82-bd6d-4f66-8b3d-093edbdb9810",
+        "estimate": 18000,
+        "priority": "high",
+        "duedate": "2026-02-19 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Enemy AI (3)",
+        "description": "Description for Enemy AI (3)",
+        "id": "e12f7f33-2b6e-432d-ad64-0513e615d1bd",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "a947d765-5473-47cd-9773-1178938b3cc4",
+            "70253f1f-fda6-4817-a7b4-9bb409dd842d"
+        ],
+        "tint": null,
+        "stack": "14d7dd82-bd6d-4f66-8b3d-093edbdb9810",
+        "estimate": 10800,
+        "priority": "high",
+        "duedate": "2026-02-15 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Level 1 Design (3)",
+        "description": "Description for Level 1 Design (3)",
+        "id": "18b09ff8-17dd-4b6e-ab3f-4ab3c083b483",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [],
+        "tint": null,
+        "stack": "14d7dd82-bd6d-4f66-8b3d-093edbdb9810",
+        "estimate": 32400,
+        "priority": "low",
+        "duedate": "2026-02-19 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "Main Menu UI (3)",
+        "description": "Description for Main Menu UI (3)",
+        "id": "5268b12f-a26c-4ed0-a03b-6927a85b857a",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "02eb9a24-044f-4b1c-a44b-6efa4ab2ae0d"
+        ],
+        "tint": "#F59E0B",
+        "stack": "14d7dd82-bd6d-4f66-8b3d-093edbdb9810",
+        "estimate": 32400,
+        "priority": "low",
+        "duedate": "2026-03-03 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "Save System (3)",
+        "description": "Description for Save System (3)",
+        "id": "6af9c023-d8d4-465c-830d-f5fe7cfd1777",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [],
+        "tint": "#06B6D4",
+        "stack": "14d7dd82-bd6d-4f66-8b3d-093edbdb9810",
+        "estimate": 28800,
+        "priority": "low",
+        "duedate": "2026-02-12 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "Sound Effects (3)",
+        "description": "Description for Sound Effects (3)",
+        "id": "e5314190-9663-4e68-8910-a58f39c8a8d8",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "70253f1f-fda6-4817-a7b4-9bb409dd842d"
+        ],
+        "tint": "#EC4899",
+        "stack": "14d7dd82-bd6d-4f66-8b3d-093edbdb9810",
+        "estimate": 21600,
+        "priority": "medium",
+        "duedate": "2026-03-26 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "Background Music (3)",
+        "description": "Description for Background Music (3)",
+        "id": "eafebb96-988e-4d90-bbbc-a8e08c3c5ad1",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [],
+        "tint": "#64748B",
+        "stack": "14d7dd82-bd6d-4f66-8b3d-093edbdb9810",
+        "estimate": 32400,
+        "priority": "low",
+        "duedate": "2026-03-01 20:00:36",
+        "position": 9
+    },
+    {
+        "title": "Boss Fight (3)",
+        "description": "Description for Boss Fight (3)",
+        "id": "14b8699d-a017-4bd4-b35a-b3482ed29a5b",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "a947d765-5473-47cd-9773-1178938b3cc4",
+            "02eb9a24-044f-4b1c-a44b-6efa4ab2ae0d",
+            "ad6050d3-929b-48c2-96b4-f01271a1f6f3"
+        ],
+        "tint": null,
+        "stack": "11f15172-5a27-4afe-9524-1d465eea7d2e",
+        "estimate": 3600,
+        "priority": "low",
+        "duedate": "2026-03-08 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "Inventory System (3)",
+        "description": "Description for Inventory System (3)",
+        "id": "2a88ee5f-cc20-455f-bc5e-33ddeee73fc9",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "02eb9a24-044f-4b1c-a44b-6efa4ab2ae0d",
+            "ad6050d3-929b-48c2-96b4-f01271a1f6f3"
+        ],
+        "tint": "#F97316",
+        "stack": "11f15172-5a27-4afe-9524-1d465eea7d2e",
+        "estimate": 25200,
+        "priority": "medium",
+        "duedate": "2026-03-01 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "Dialog System (3)",
+        "description": "Description for Dialog System (3)",
+        "id": "b31b7bf4-5788-420e-a4ef-db159cc383ca",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "07ba61fd-f503-427a-906a-34ace00309dc",
+            "70253f1f-fda6-4817-a7b4-9bb409dd842d"
+        ],
+        "tint": null,
+        "stack": "11f15172-5a27-4afe-9524-1d465eea7d2e",
+        "estimate": 7200,
+        "priority": "medium",
+        "duedate": "2026-02-18 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "Collision Detection (3)",
+        "description": "Description for Collision Detection (3)",
+        "id": "e902163f-0a33-4dc3-b648-c35698fc5c22",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "02eb9a24-044f-4b1c-a44b-6efa4ab2ae0d",
+            "a947d765-5473-47cd-9773-1178938b3cc4"
+        ],
+        "tint": "#EF4444",
+        "stack": "11f15172-5a27-4afe-9524-1d465eea7d2e",
+        "estimate": 25200,
+        "priority": "high",
+        "duedate": "2026-02-28 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Particle Effects (3)",
+        "description": "Description for Particle Effects (3)",
+        "id": "bdd073a9-7df0-4596-a87b-0e3e299b253c",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "bf9513d2-4d3e-439a-a2ed-1bc6636d690b"
+        ],
+        "tint": null,
+        "stack": "11f15172-5a27-4afe-9524-1d465eea7d2e",
+        "estimate": 10800,
+        "priority": "high",
+        "duedate": "2026-03-09 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Game Over Screen (3)",
+        "description": "Description for Game Over Screen (3)",
+        "id": "8de3256e-a752-4fea-842c-ed45a9e94271",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [],
+        "tint": "#64748B",
+        "stack": "11f15172-5a27-4afe-9524-1d465eea7d2e",
+        "estimate": 3600,
+        "priority": "low",
+        "duedate": "2026-03-22 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "Tutorial (3)",
+        "description": "Description for Tutorial (3)",
+        "id": "8e42ad1d-1eca-4509-82a8-4e4e15935425",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [],
+        "tint": null,
+        "stack": "11f15172-5a27-4afe-9524-1d465eea7d2e",
+        "estimate": 21600,
+        "priority": "high",
+        "duedate": "2026-04-03 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "Steam Integration (3)",
+        "description": "Description for Steam Integration (3)",
+        "id": "d3b78825-42ab-4669-9bc5-4d26fcdb4d4b",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "b2fd48e6-ab99-4b0e-82f7-524465f62b93",
+            "70253f1f-fda6-4817-a7b4-9bb409dd842d"
+        ],
+        "tint": null,
+        "stack": "11f15172-5a27-4afe-9524-1d465eea7d2e",
+        "estimate": 28800,
+        "priority": "high",
+        "duedate": "2026-04-01 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "Player Movement (4)",
+        "description": "Description for Player Movement (4)",
+        "id": "0fe48f8d-8b80-4bb5-9d1a-0c873b1ca973",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "bf9513d2-4d3e-439a-a2ed-1bc6636d690b"
+        ],
+        "tint": "#3B82F6",
+        "stack": "11f15172-5a27-4afe-9524-1d465eea7d2e",
+        "estimate": 21600,
+        "priority": "medium",
+        "duedate": "2026-02-19 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "Enemy AI (4)",
+        "description": "Description for Enemy AI (4)",
+        "id": "ddd3f4c5-5d5d-4d44-8d05-a56a4030f463",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "a947d765-5473-47cd-9773-1178938b3cc4",
+            "47599de8-14d6-4f8b-beb7-d04adedb4eab"
+        ],
+        "tint": "#06B6D4",
+        "stack": "11f15172-5a27-4afe-9524-1d465eea7d2e",
+        "estimate": 21600,
+        "priority": "medium",
+        "duedate": "2026-03-04 20:00:36",
+        "position": 9
+    },
+    {
+        "title": "Level 1 Design (4)",
+        "description": "Description for Level 1 Design (4)",
+        "id": "023a575f-c731-4c3e-9b5e-3fe46ed290f0",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "02eb9a24-044f-4b1c-a44b-6efa4ab2ae0d",
+            "70253f1f-fda6-4817-a7b4-9bb409dd842d"
+        ],
+        "tint": "#10B981",
+        "stack": "11f15172-5a27-4afe-9524-1d465eea7d2e",
+        "estimate": 10800,
+        "priority": "low",
+        "duedate": "2026-02-15 20:00:36",
+        "position": 10
+    },
+    {
+        "title": "Main Menu UI (4)",
+        "description": "Description for Main Menu UI (4)",
+        "id": "a27fc2e9-3466-4e68-bbf5-f11b53755c77",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "b2fd48e6-ab99-4b0e-82f7-524465f62b93",
+            "ad6050d3-929b-48c2-96b4-f01271a1f6f3"
+        ],
+        "tint": "#EC4899",
+        "stack": "11f15172-5a27-4afe-9524-1d465eea7d2e",
+        "estimate": 36000,
+        "priority": "high",
+        "duedate": "2026-03-02 20:00:36",
+        "position": 11
+    },
+    {
+        "title": "Save System (4)",
+        "description": "Description for Save System (4)",
+        "id": "4c5644f8-511b-4a69-b328-51da087f2eda",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "47599de8-14d6-4f8b-beb7-d04adedb4eab"
+        ],
+        "tint": "#EF4444",
+        "stack": "11f15172-5a27-4afe-9524-1d465eea7d2e",
+        "estimate": 25200,
+        "priority": "low",
+        "duedate": "2026-03-26 20:00:36",
+        "position": 12
+    },
+    {
+        "title": "Sound Effects (4)",
+        "description": "Description for Sound Effects (4)",
+        "id": "94d356dd-081f-47c4-906f-050b841170d4",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "47599de8-14d6-4f8b-beb7-d04adedb4eab"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "11f15172-5a27-4afe-9524-1d465eea7d2e",
+        "estimate": 14400,
+        "priority": "low",
+        "duedate": "2026-02-14 20:00:36",
+        "position": 13
+    },
+    {
+        "title": "Background Music (4)",
+        "description": "Description for Background Music (4)",
+        "id": "6f8a9353-d2dc-411b-8553-37dee57fc475",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "b2fd48e6-ab99-4b0e-82f7-524465f62b93",
+            "a947d765-5473-47cd-9773-1178938b3cc4",
+            "ad6050d3-929b-48c2-96b4-f01271a1f6f3"
+        ],
+        "tint": "#10B981",
+        "stack": "11f15172-5a27-4afe-9524-1d465eea7d2e",
+        "estimate": 36000,
+        "priority": "medium",
+        "duedate": "2026-02-09 20:00:36",
+        "position": 14
+    },
+    {
+        "title": "Boss Fight (4)",
+        "description": "Description for Boss Fight (4)",
+        "id": "7e7ba607-667b-487c-9c36-007cc42dd02b",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "07ba61fd-f503-427a-906a-34ace00309dc"
+        ],
+        "tint": "#F97316",
+        "stack": "da8378a1-ab6d-46c3-83dc-8eea5f288dfd",
+        "estimate": 32400,
+        "priority": "medium",
+        "duedate": "2026-03-17 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "Inventory System (4)",
+        "description": "Description for Inventory System (4)",
+        "id": "e4e6cb8b-15e1-4c51-9269-d830f4d74223",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [],
+        "tint": null,
+        "stack": "da8378a1-ab6d-46c3-83dc-8eea5f288dfd",
+        "estimate": 14400,
+        "priority": "low",
+        "duedate": "2026-03-23 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "Dialog System (4)",
+        "description": "Description for Dialog System (4)",
+        "id": "a0b12eb9-47f7-4f6d-8437-28bf11235a1f",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "b2fd48e6-ab99-4b0e-82f7-524465f62b93",
+            "bf9513d2-4d3e-439a-a2ed-1bc6636d690b"
+        ],
+        "tint": null,
+        "stack": "da8378a1-ab6d-46c3-83dc-8eea5f288dfd",
+        "estimate": 28800,
+        "priority": "high",
+        "duedate": "2026-02-24 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "Collision Detection (4)",
+        "description": "Description for Collision Detection (4)",
+        "id": "502b5c83-84c9-4a07-ad01-288283200125",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "a947d765-5473-47cd-9773-1178938b3cc4",
+            "70253f1f-fda6-4817-a7b4-9bb409dd842d"
+        ],
+        "tint": "#10B981",
+        "stack": "da8378a1-ab6d-46c3-83dc-8eea5f288dfd",
+        "estimate": 14400,
+        "priority": "medium",
+        "duedate": "2026-02-12 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Particle Effects (4)",
+        "description": "Description for Particle Effects (4)",
+        "id": "fa22cc6d-6edf-488d-ae86-7ef69f33580c",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "02eb9a24-044f-4b1c-a44b-6efa4ab2ae0d",
+            "bf9513d2-4d3e-439a-a2ed-1bc6636d690b"
+        ],
+        "tint": "#EF4444",
+        "stack": "da8378a1-ab6d-46c3-83dc-8eea5f288dfd",
+        "estimate": 18000,
+        "priority": "low",
+        "duedate": "2026-03-22 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Game Over Screen (4)",
+        "description": "Description for Game Over Screen (4)",
+        "id": "012ae248-4630-444b-b472-a08c5b4da578",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "02eb9a24-044f-4b1c-a44b-6efa4ab2ae0d"
+        ],
+        "tint": "#3B82F6",
+        "stack": "da8378a1-ab6d-46c3-83dc-8eea5f288dfd",
+        "estimate": 21600,
+        "priority": "medium",
+        "duedate": "2026-03-05 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "Tutorial (4)",
+        "description": "Description for Tutorial (4)",
+        "id": "81d32352-c12d-476d-8804-85347a441c67",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "02eb9a24-044f-4b1c-a44b-6efa4ab2ae0d"
+        ],
+        "tint": null,
+        "stack": "da8378a1-ab6d-46c3-83dc-8eea5f288dfd",
+        "estimate": 28800,
+        "priority": "medium",
+        "duedate": "2026-02-12 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "Steam Integration (4)",
+        "description": "Description for Steam Integration (4)",
+        "id": "7fc22b5a-d40b-4a5d-851a-364ed18dd98a",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "07ba61fd-f503-427a-906a-34ace00309dc"
+        ],
+        "tint": null,
+        "stack": "da8378a1-ab6d-46c3-83dc-8eea5f288dfd",
+        "estimate": 14400,
+        "priority": "medium",
+        "duedate": "2026-02-19 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "Player Movement (5)",
+        "description": "Description for Player Movement (5)",
+        "id": "10a199eb-bdea-4237-82a8-1da4fa8f1e71",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "02eb9a24-044f-4b1c-a44b-6efa4ab2ae0d",
+            "b2fd48e6-ab99-4b0e-82f7-524465f62b93"
+        ],
+        "tint": "#64748B",
+        "stack": "da8378a1-ab6d-46c3-83dc-8eea5f288dfd",
+        "estimate": 7200,
+        "priority": "medium",
+        "duedate": "2026-03-12 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "Enemy AI (5)",
+        "description": "Description for Enemy AI (5)",
+        "id": "1895e821-01a2-4b8e-b9ce-c33c4d6cc4a3",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "02eb9a24-044f-4b1c-a44b-6efa4ab2ae0d",
+            "a947d765-5473-47cd-9773-1178938b3cc4",
+            "47599de8-14d6-4f8b-beb7-d04adedb4eab"
+        ],
+        "tint": null,
+        "stack": "da8378a1-ab6d-46c3-83dc-8eea5f288dfd",
+        "estimate": 32400,
+        "priority": "medium",
+        "duedate": "2026-03-14 20:00:36",
+        "position": 9
+    },
+    {
+        "title": "Level 1 Design (5)",
+        "description": "Description for Level 1 Design (5)",
+        "id": "a54e9adf-34b8-403e-95da-9c2abe37c4de",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "07ba61fd-f503-427a-906a-34ace00309dc",
+            "02eb9a24-044f-4b1c-a44b-6efa4ab2ae0d"
+        ],
+        "tint": "#F59E0B",
+        "stack": "da8378a1-ab6d-46c3-83dc-8eea5f288dfd",
+        "estimate": 18000,
+        "priority": "low",
+        "duedate": "2026-03-16 20:00:36",
+        "position": 10
+    },
+    {
+        "title": "Main Menu UI (5)",
+        "description": "Description for Main Menu UI (5)",
+        "id": "9a3e9539-b10f-4b8f-839b-5f00c154cd20",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "70253f1f-fda6-4817-a7b4-9bb409dd842d"
+        ],
+        "tint": null,
+        "stack": "4705a124-15cb-4f7f-9513-22b8de8765dd",
+        "estimate": 10800,
+        "priority": "high",
+        "duedate": "2026-04-01 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "Save System (5)",
+        "description": "Description for Save System (5)",
+        "id": "74ae6bcf-8dad-438c-85d8-b6669170e8af",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "02eb9a24-044f-4b1c-a44b-6efa4ab2ae0d",
+            "b2fd48e6-ab99-4b0e-82f7-524465f62b93",
+            "bf9513d2-4d3e-439a-a2ed-1bc6636d690b"
+        ],
+        "tint": "#F59E0B",
+        "stack": "4705a124-15cb-4f7f-9513-22b8de8765dd",
+        "estimate": 18000,
+        "priority": "low",
+        "duedate": "2026-02-19 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "Sound Effects (5)",
+        "description": "Description for Sound Effects (5)",
+        "id": "6a4f9901-8ee2-43d7-859c-56f3100dcc38",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "70253f1f-fda6-4817-a7b4-9bb409dd842d",
+            "ad6050d3-929b-48c2-96b4-f01271a1f6f3"
+        ],
+        "tint": null,
+        "stack": "4705a124-15cb-4f7f-9513-22b8de8765dd",
+        "estimate": 3600,
+        "priority": "low",
+        "duedate": "2026-04-02 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "Background Music (5)",
+        "description": "Description for Background Music (5)",
+        "id": "eae3e534-c2f1-48f9-98ce-8aced1cf8e71",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [],
+        "tint": null,
+        "stack": "4705a124-15cb-4f7f-9513-22b8de8765dd",
+        "estimate": 10800,
+        "priority": "high",
+        "duedate": "2026-02-06 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Boss Fight (5)",
+        "description": "Description for Boss Fight (5)",
+        "id": "55199598-60c3-4cf8-a6f2-9d94a3ec4866",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "ad6050d3-929b-48c2-96b4-f01271a1f6f3"
+        ],
+        "tint": null,
+        "stack": "4705a124-15cb-4f7f-9513-22b8de8765dd",
+        "estimate": 36000,
+        "priority": "medium",
+        "duedate": "2026-02-10 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Inventory System (5)",
+        "description": "Description for Inventory System (5)",
+        "id": "847ff3ec-7afc-44fd-89a8-b99c09fa1e2d",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [],
+        "tint": "#06B6D4",
+        "stack": "4705a124-15cb-4f7f-9513-22b8de8765dd",
+        "estimate": 3600,
+        "priority": "medium",
+        "duedate": "2026-03-14 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "Dialog System (5)",
+        "description": "Description for Dialog System (5)",
+        "id": "70d09c1b-924b-4adc-8538-f38615085794",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [],
+        "tint": "#10B981",
+        "stack": "4705a124-15cb-4f7f-9513-22b8de8765dd",
+        "estimate": 32400,
+        "priority": "high",
+        "duedate": "2026-03-11 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "Collision Detection (5)",
+        "description": "Description for Collision Detection (5)",
+        "id": "31cfddde-043d-4149-bbd0-031d16dcd759",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "a947d765-5473-47cd-9773-1178938b3cc4",
+            "07ba61fd-f503-427a-906a-34ace00309dc"
+        ],
+        "tint": null,
+        "stack": "4705a124-15cb-4f7f-9513-22b8de8765dd",
+        "estimate": 18000,
+        "priority": "high",
+        "duedate": "2026-02-17 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "Particle Effects (5)",
+        "description": "Description for Particle Effects (5)",
+        "id": "1c6e8c35-bb7f-407b-84cd-49f98cdf78ac",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "b2fd48e6-ab99-4b0e-82f7-524465f62b93",
+            "70253f1f-fda6-4817-a7b4-9bb409dd842d",
+            "ad6050d3-929b-48c2-96b4-f01271a1f6f3"
+        ],
+        "tint": null,
+        "stack": "4705a124-15cb-4f7f-9513-22b8de8765dd",
+        "estimate": 21600,
+        "priority": "low",
+        "duedate": "2026-03-27 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "Game Over Screen (5)",
+        "description": "Description for Game Over Screen (5)",
+        "id": "2f4fdb62-da13-4166-8a01-55c6c41263ec",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "70253f1f-fda6-4817-a7b4-9bb409dd842d",
+            "b2fd48e6-ab99-4b0e-82f7-524465f62b93"
+        ],
+        "tint": null,
+        "stack": "4705a124-15cb-4f7f-9513-22b8de8765dd",
+        "estimate": 14400,
+        "priority": "high",
+        "duedate": "2026-02-13 20:00:36",
+        "position": 9
+    },
+    {
+        "title": "Tutorial (5)",
+        "description": "Description for Tutorial (5)",
+        "id": "e894cbf3-f8ac-437d-8d44-2f5ea3f56e1b",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "02eb9a24-044f-4b1c-a44b-6efa4ab2ae0d",
+            "a947d765-5473-47cd-9773-1178938b3cc4"
+        ],
+        "tint": null,
+        "stack": "4705a124-15cb-4f7f-9513-22b8de8765dd",
+        "estimate": 32400,
+        "priority": "medium",
+        "duedate": "2026-02-05 20:00:36",
+        "position": 10
+    },
+    {
+        "title": "Steam Integration (5)",
+        "description": "Description for Steam Integration (5)",
+        "id": "47295251-2d95-4a6e-af40-004ca66b0a42",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "b2fd48e6-ab99-4b0e-82f7-524465f62b93"
+        ],
+        "tint": "#EC4899",
+        "stack": "4705a124-15cb-4f7f-9513-22b8de8765dd",
+        "estimate": 21600,
+        "priority": "high",
+        "duedate": "2026-02-23 20:00:36",
+        "position": 11
+    },
+    {
+        "title": "Player Movement (6)",
+        "description": "Description for Player Movement (6)",
+        "id": "834027a6-c459-49cc-89a2-80a7e621e6fb",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "07ba61fd-f503-427a-906a-34ace00309dc"
+        ],
+        "tint": "#F97316",
+        "stack": "4705a124-15cb-4f7f-9513-22b8de8765dd",
+        "estimate": 28800,
+        "priority": "high",
+        "duedate": "2026-03-08 20:00:36",
+        "position": 12
+    },
+    {
+        "title": "Enemy AI (6)",
+        "description": "Description for Enemy AI (6)",
+        "id": "11d6e7cb-1ef8-418d-84b5-1cb0918bc20d",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "70253f1f-fda6-4817-a7b4-9bb409dd842d"
+        ],
+        "tint": null,
+        "stack": "4705a124-15cb-4f7f-9513-22b8de8765dd",
+        "estimate": 7200,
+        "priority": "high",
+        "duedate": "2026-02-05 20:00:36",
+        "position": 13
+    },
+    {
+        "title": "Level 1 Design (6)",
+        "description": "Description for Level 1 Design (6)",
+        "id": "403775b3-78ba-4222-abcf-8ff239b3c350",
+        "project": "1e63c6c7-da2d-472d-b249-0bfe6aa21f9d",
+        "tags": [
+            "07ba61fd-f503-427a-906a-34ace00309dc",
+            "b2fd48e6-ab99-4b0e-82f7-524465f62b93",
+            "ad6050d3-929b-48c2-96b4-f01271a1f6f3"
+        ],
+        "tint": null,
+        "stack": "4705a124-15cb-4f7f-9513-22b8de8765dd",
+        "estimate": 21600,
+        "priority": "medium",
+        "duedate": "2026-03-28 20:00:36",
+        "position": 14
+    }
+]

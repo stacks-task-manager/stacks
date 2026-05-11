@@ -1,0 +1,72 @@
+{
+  "entityName": "Tag",
+  "tableName": "tags",
+  "attributes": {
+    "id": {
+      "type": "UUID",
+      "defaultValue": "UUIDV4",
+      "primaryKey": true
+    },
+    "tenant": {
+      "type": "UUID",
+      "allowNull": false
+    },
+    "createdBy": {
+      "type": "UUID",
+      "allowNull": false
+    },
+    "updatedBy": {
+      "type": "UUID",
+      "allowNull": false
+    },
+    "deletedBy": {
+      "type": "UUID",
+      "allowNull": true
+    },
+    "created": {
+      "type": "DATE",
+      "defaultValue": "NOW",
+      "allowNull": false
+    },
+    "updated": {
+      "type": "DATE",
+      "defaultValue": "NOW",
+      "allowNull": false
+    },
+    "deleted": {
+      "type": "DATE",
+      "allowNull": true
+    },
+    "title": {
+      "type": "STRING",
+      "allowNull": false
+    },
+    "color": {
+      "type": "STRING",
+      "allowNull": false
+    },
+    "section": {
+      "type": {
+        "type": "ENUM",
+        "values": [
+          "...Object.values(TAGSECTION"
+        ]
+      },
+      "allowNull": false
+    },
+    "type": {
+      "type": {
+        "type": "ENUM",
+        "values": [
+          "...Object.values(TAGTYPE"
+        ]
+      },
+      "allowNull": false
+    },
+    "parent": {
+      "type": "UUID",
+      "allowNull": true
+    }
+  },
+  "options": {}
+}

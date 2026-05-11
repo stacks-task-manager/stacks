@@ -1,0 +1,247 @@
+[
+    {
+        "title": "Market Research & Competitor Analysis",
+        "description": "Conduct comprehensive market research, analyze competitor campaigns, identify target audience segments, and define unique value propositions for the product launch.",
+        "id": "42984c73-39da-42d1-9454-dca1eb4c9ff1",
+        "project": "4dcd4f1b-4649-4d46-a13c-082ad374102e",
+        "tags": [
+            "m8t8b9c0-d1e2-f3a4-b5c6-d7e8f9a0b1c2"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "ea9ce4e7-87db-442d-9e19-8fa9dd26f2a3",
+        "estimate": 28800,
+        "priority": "high",
+        "duedate": "2024-04-08 17:00:00",
+        "position": 0
+    },
+    {
+        "title": "Campaign Strategy Development",
+        "description": "Develop comprehensive marketing strategy including campaign objectives, KPIs, budget allocation, timeline, and channel mix for maximum ROI.",
+        "id": "aeb463f9-d57b-48c7-8635-f8217369cd06",
+        "project": "4dcd4f1b-4649-4d46-a13c-082ad374102e",
+        "tags": [
+            "m8t8b9c0-d1e2-f3a4-b5c6-d7e8f9a0b1c2"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "ea9ce4e7-87db-442d-9e19-8fa9dd26f2a3",
+        "estimate": 36000,
+        "priority": "high",
+        "position": 1
+    },
+    {
+        "title": "Brand Messaging & Positioning",
+        "description": "Define brand voice, key messaging pillars, value propositions, and positioning statements that resonate with target audience segments.",
+        "id": "e5730b8b-cc82-4bb1-a3e9-805ab59825cc",
+        "project": "4dcd4f1b-4649-4d46-a13c-082ad374102e",
+        "tags": [
+            "m8t8b9c0-d1e2-f3a4-b5c6-d7e8f9a0b1c2",
+            "m7t7a8b9-c0d1-e2f3-a4b5-c6d7e8f9a0b1"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "ea9ce4e7-87db-442d-9e19-8fa9dd26f2a3",
+        "estimate": 25200,
+        "priority": "high",
+        "position": 2
+    },
+    {
+        "title": "Creative Asset Development",
+        "description": "Design and produce visual assets including logos, banners, social media graphics, video content, and promotional materials for all campaign channels.",
+        "id": "793d7165-0726-41c5-bafe-6b5044786e0c",
+        "project": "4dcd4f1b-4649-4d46-a13c-082ad374102e",
+        "tags": [
+            "m7t7a8b9-c0d1-e2f3-a4b5-c6d7e8f9a0b1"
+        ],
+        "tint": "#3B82F6",
+        "stack": "0acf1997-397f-4f5b-88aa-71ecf4e4d688",
+        "estimate": 57600,
+        "priority": "medium",
+        "position": 0
+    },
+    {
+        "title": "Website Landing Page Creation",
+        "description": "Design and develop dedicated landing pages for the campaign with optimized conversion funnels, A/B testing setup, and mobile responsiveness.",
+        "id": "1486dbdc-0718-4b68-9e78-4fa5a01cd93a",
+        "project": "4dcd4f1b-4649-4d46-a13c-082ad374102e",
+        "tags": [
+            "m3t3c4d5-e6f7-a8b9-c0d1-e2f3a4b5c6d7",
+            "m5t5e6f7-a8b9-c0d1-e2f3-a4b5c6d7e8f9"
+        ],
+        "tint": "#3B82F6",
+        "stack": "0acf1997-397f-4f5b-88aa-71ecf4e4d688",
+        "estimate": 43200,
+        "priority": "high",
+        "position": 1
+    },
+    {
+        "title": "Content Calendar Planning",
+        "description": "Create comprehensive content calendar with blog posts, social media content, email sequences, and promotional materials scheduled across all channels.",
+        "id": "28ca59ba-7b71-4c8f-a04f-1201f6c300a0",
+        "project": "4dcd4f1b-4649-4d46-a13c-082ad374102e",
+        "tags": [
+            "m3t3c4d5-e6f7-a8b9-c0d1-e2f3a4b5c6d7",
+            "m1t1a2b3-c4d5-e6f7-a8b9-c0d1e2f3a4b5"
+        ],
+        "tint": "#3B82F6",
+        "stack": "0acf1997-397f-4f5b-88aa-71ecf4e4d688",
+        "estimate": 32400,
+        "priority": "medium",
+        "position": 2
+    },
+    {
+        "title": "Social Media Campaign Setup",
+        "description": "Set up and configure social media campaigns across Facebook, Instagram, Twitter, and LinkedIn with targeted audience segments and ad creatives.",
+        "id": "68c05d89-9bc9-40a8-b799-81179971e681",
+        "project": "4dcd4f1b-4649-4d46-a13c-082ad374102e",
+        "tags": [
+            "m1t1a2b3-c4d5-e6f7-a8b9-c0d1e2f3a4b5",
+            "m4t4d5e6-f7a8-b9c0-d1e2-f3a4b5c6d7e8"
+        ],
+        "tint": "#F59E0B",
+        "stack": "16baef66-9d92-4333-a367-56e5b95d12c1",
+        "estimate": 39600,
+        "priority": "high",
+        "position": 0
+    },
+    {
+        "title": "Email Marketing Campaign",
+        "description": "Design and implement email marketing sequences including welcome series, product announcements, and nurture campaigns with personalization and automation.",
+        "id": "6145ce93-4f08-4f3e-8c86-7e7c167e0636",
+        "project": "4dcd4f1b-4649-4d46-a13c-082ad374102e",
+        "tags": [
+            "m2t2b3c4-d5e6-f7a8-b9c0-d1e2f3a4b5c6"
+        ],
+        "tint": "#F59E0B",
+        "stack": "0acf1997-397f-4f5b-88aa-71ecf4e4d688",
+        "estimate": 36000,
+        "priority": "medium",
+        "position": 3
+    },
+    {
+        "title": "Google Ads Campaign Launch",
+        "description": "Create and launch Google Ads campaigns including search, display, and YouTube ads with keyword research, ad copy optimization, and landing page alignment.",
+        "id": "0f043c51-3d65-4db7-9939-6b1c6540e03d",
+        "project": "4dcd4f1b-4649-4d46-a13c-082ad374102e",
+        "tags": [
+            "m4t4d5e6-f7a8-b9c0-d1e2-f3a4b5c6d7e8",
+            "m5t5e6f7-a8b9-c0d1-e2f3-a4b5c6d7e8f9"
+        ],
+        "tint": "#F59E0B",
+        "stack": "16baef66-9d92-4333-a367-56e5b95d12c1",
+        "estimate": 46800,
+        "priority": "high",
+        "position": 1
+    },
+    {
+        "title": "Influencer Partnership Program",
+        "description": "Identify, reach out to, and collaborate with relevant influencers and brand ambassadors to amplify campaign reach and credibility.",
+        "id": "8862b701-8f69-4e12-abe9-da10e97d61df",
+        "project": "4dcd4f1b-4649-4d46-a13c-082ad374102e",
+        "tags": [
+            "m1t1a2b3-c4d5-e6f7-a8b9-c0d1e2f3a4b5"
+        ],
+        "tint": "#F59E0B",
+        "stack": "16baef66-9d92-4333-a367-56e5b95d12c1",
+        "estimate": 28800,
+        "priority": "low",
+        "position": 2
+    },
+    {
+        "title": "PR & Media Outreach",
+        "description": "Develop press releases, media kits, and conduct outreach to journalists, bloggers, and industry publications for earned media coverage.",
+        "id": "915edbb1-76c5-4693-9d73-c1878d20b8c5",
+        "project": "4dcd4f1b-4649-4d46-a13c-082ad374102e",
+        "tags": [
+            "m3t3c4d5-e6f7-a8b9-c0d1-e2f3a4b5c6d7"
+        ],
+        "tint": "#F59E0B",
+        "stack": "16baef66-9d92-4333-a367-56e5b95d12c1",
+        "estimate": 25200,
+        "priority": "low",
+        "position": 3
+    },
+    {
+        "title": "Campaign Performance Monitoring",
+        "description": "Set up comprehensive tracking and monitoring systems to track campaign performance across all channels with real-time dashboards and alerts.",
+        "id": "46871737-e019-407a-a136-b326b7977111",
+        "project": "4dcd4f1b-4649-4d46-a13c-082ad374102e",
+        "tags": [
+            "m6t6f7a8-b9c0-d1e2-f3a4-b5c6d7e8f9a0"
+        ],
+        "tint": "#EF4444",
+        "stack": "16baef66-9d92-4333-a367-56e5b95d12c1",
+        "estimate": 21600,
+        "priority": "high",
+        "position": 4
+    },
+    {
+        "title": "A/B Testing & Optimization",
+        "description": "Conduct systematic A/B tests on ad creatives, landing pages, email subject lines, and campaign elements to optimize performance and conversion rates.",
+        "id": "644b676c-c7a0-466d-85c4-4b560d01b6c9",
+        "project": "4dcd4f1b-4649-4d46-a13c-082ad374102e",
+        "tags": [
+            "m6t6f7a8-b9c0-d1e2-f3a4-b5c6d7e8f9a0"
+        ],
+        "tint": "#EF4444",
+        "stack": "5e51f53d-b201-4810-be03-3afd15e7f1ef",
+        "estimate": 32400,
+        "priority": "medium",
+        "position": 0
+    },
+    {
+        "title": "Budget Management & Optimization",
+        "description": "Monitor campaign spend across all channels, optimize budget allocation based on performance data, and ensure ROI targets are met.",
+        "id": "3cc24c2b-c69b-45ec-bed9-026426dc4715",
+        "project": "4dcd4f1b-4649-4d46-a13c-082ad374102e",
+        "tags": [
+            "m6t6f7a8-b9c0-d1e2-f3a4-b5c6d7e8f9a0",
+            "m9t9c0d1-e2f3-a4b5-c6d7-e8f9a0b1c2d3"
+        ],
+        "tint": "#EF4444",
+        "stack": "5e51f53d-b201-4810-be03-3afd15e7f1ef",
+        "estimate": 18000,
+        "priority": "high",
+        "position": 1
+    },
+    {
+        "title": "Campaign Performance Analysis",
+        "description": "Analyze campaign performance data, generate insights, identify successful strategies, and document lessons learned for future campaigns.",
+        "id": "8115078a-05fe-4c84-8654-276446068a87",
+        "project": "4dcd4f1b-4649-4d46-a13c-082ad374102e",
+        "tags": [
+            "m6t6f7a8-b9c0-d1e2-f3a4-b5c6d7e8f9a0"
+        ],
+        "tint": "#10B981",
+        "stack": "5e51f53d-b201-4810-be03-3afd15e7f1ef",
+        "estimate": 28800,
+        "priority": "medium",
+        "position": 2
+    },
+    {
+        "title": "ROI & Attribution Reporting",
+        "description": "Create comprehensive reports showing return on investment, attribution modeling, customer acquisition costs, and lifetime value analysis.",
+        "id": "69f86d7f-e68c-4cd9-9a7a-82cb7ce2cb6f",
+        "project": "4dcd4f1b-4649-4d46-a13c-082ad374102e",
+        "tags": [
+            "m6t6f7a8-b9c0-d1e2-f3a4-b5c6d7e8f9a0"
+        ],
+        "tint": "#10B981",
+        "stack": "01ef54b5-c109-4f5d-a27b-787d8273395d",
+        "estimate": 25200,
+        "priority": "medium",
+        "position": 0
+    },
+    {
+        "title": "Post-Campaign Strategy Recommendations",
+        "description": "Develop strategic recommendations for future campaigns based on performance data, market insights, and optimization opportunities identified.",
+        "id": "045d1e12-2ec6-4567-bf20-1bef0f2970c4",
+        "project": "4dcd4f1b-4649-4d46-a13c-082ad374102e",
+        "tags": [
+            "m8t8b9c0-d1e2-f3a4-b5c6-d7e8f9a0b1c2"
+        ],
+        "tint": "#10B981",
+        "stack": "01ef54b5-c109-4f5d-a27b-787d8273395d",
+        "estimate": 21600,
+        "priority": "low",
+        "position": 1
+    }
+]

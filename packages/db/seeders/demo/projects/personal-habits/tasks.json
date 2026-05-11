@@ -1,0 +1,704 @@
+[
+    {
+        "title": "30 min Cardio",
+        "description": "Detailed description for \"30 min Cardio\". This task involves several steps and requires attention to detail.",
+        "id": "c0c8fe48-427c-4535-98ed-8873b7883a6e",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [],
+        "tint": "#94A3B8",
+        "stack": "2de37c35-b841-422d-9018-85582971b678",
+        "estimate": 46800,
+        "priority": "low",
+        "duedate": "2026-02-27 19:26:06",
+        "position": 0
+    },
+    {
+        "title": "Meal Prep Sunday",
+        "description": "Detailed description for \"Meal Prep Sunday\". This task involves several steps and requires attention to detail.",
+        "id": "d7ba0dd4-14a6-4515-87ea-cd8152cbdff5",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [
+            "2c17159e-f3df-483f-9e80-3804956fdefb",
+            "3792e91d-acb9-462a-a092-bfc4feb67605"
+        ],
+        "tint": "#94A3B8",
+        "stack": "2de37c35-b841-422d-9018-85582971b678",
+        "estimate": 28800,
+        "priority": "medium",
+        "duedate": "2026-02-20 19:26:06",
+        "position": 1
+    },
+    {
+        "title": "Read 20 pages",
+        "description": "Detailed description for \"Read 20 pages\". This task involves several steps and requires attention to detail.",
+        "id": "a47dbf52-f33d-4f37-a2e8-76fab5ff1fe2",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [],
+        "tint": "#94A3B8",
+        "stack": "2de37c35-b841-422d-9018-85582971b678",
+        "estimate": 64800,
+        "priority": "low",
+        "duedate": "2026-03-03 19:26:06",
+        "position": 2
+    },
+    {
+        "title": "10 min meditation",
+        "description": "Detailed description for \"10 min meditation\". This task involves several steps and requires attention to detail.",
+        "id": "fd41e785-7086-426d-aa48-a3fb622690ad",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [
+            "3792e91d-acb9-462a-a092-bfc4feb67605",
+            "e513a8c5-5326-45d1-a746-fce99f28be58"
+        ],
+        "tint": "#94A3B8",
+        "stack": "2de37c35-b841-422d-9018-85582971b678",
+        "estimate": 50400,
+        "priority": "medium",
+        "duedate": "2026-02-23 19:26:06",
+        "position": 3
+    },
+    {
+        "title": "Drink 3L Water",
+        "description": "Detailed description for \"Drink 3L Water\". This task involves several steps and requires attention to detail.",
+        "id": "feea604d-9d83-41c5-96da-6d61243347c6",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [],
+        "tint": "#94A3B8",
+        "stack": "2de37c35-b841-422d-9018-85582971b678",
+        "estimate": 68400,
+        "priority": "high",
+        "duedate": "2026-02-10 19:26:06",
+        "position": 4
+    },
+    {
+        "title": "Yoga Session",
+        "description": "Detailed description for \"Yoga Session\". This task involves several steps and requires attention to detail.",
+        "id": "05068e84-5165-484a-8b52-444a45f8b1cc",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [],
+        "tint": "#94A3B8",
+        "stack": "2de37c35-b841-422d-9018-85582971b678",
+        "estimate": 10800,
+        "priority": "high",
+        "duedate": "2026-02-14 19:26:06",
+        "position": 5
+    },
+    {
+        "title": "No Sugar Day",
+        "description": "Detailed description for \"No Sugar Day\". This task involves several steps and requires attention to detail.",
+        "id": "f4056d78-a169-4fda-84e0-8b1c5de051ca",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [
+            "3792e91d-acb9-462a-a092-bfc4feb67605",
+            "e513a8c5-5326-45d1-a746-fce99f28be58"
+        ],
+        "tint": "#94A3B8",
+        "stack": "2de37c35-b841-422d-9018-85582971b678",
+        "estimate": 39600,
+        "priority": "medium",
+        "duedate": "2026-02-13 19:26:06",
+        "position": 6
+    },
+    {
+        "title": "Sleep 8 Hours",
+        "description": "Detailed description for \"Sleep 8 Hours\". This task involves several steps and requires attention to detail.",
+        "id": "b968e014-ac15-4a23-850c-9b2643218ffe",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [
+            "3792e91d-acb9-462a-a092-bfc4feb67605"
+        ],
+        "tint": "#94A3B8",
+        "stack": "2de37c35-b841-422d-9018-85582971b678",
+        "estimate": 61200,
+        "priority": "medium",
+        "duedate": "2026-02-24 19:26:06",
+        "position": 7
+    },
+    {
+        "title": "Morning stretching",
+        "description": "Detailed description for \"Morning stretching\". This task involves several steps and requires attention to detail.",
+        "id": "813b1d17-8de3-4657-8346-90baf67a3927",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [
+            "77b1bfe2-107d-4023-bec8-e2fc31f5cdd6",
+            "e513a8c5-5326-45d1-a746-fce99f28be58"
+        ],
+        "tint": "#94A3B8",
+        "stack": "2de37c35-b841-422d-9018-85582971b678",
+        "estimate": 72000,
+        "priority": "low",
+        "duedate": "2026-02-11 19:26:06",
+        "position": 8
+    },
+    {
+        "title": "Take vitamins",
+        "description": "Detailed description for \"Take vitamins\". This task involves several steps and requires attention to detail.",
+        "id": "19705466-f23d-46b6-aef8-75767b4dee9c",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [
+            "e513a8c5-5326-45d1-a746-fce99f28be58"
+        ],
+        "tint": "#94A3B8",
+        "stack": "2de37c35-b841-422d-9018-85582971b678",
+        "estimate": 46800,
+        "priority": "medium",
+        "duedate": "2026-02-16 19:26:06",
+        "position": 9
+    },
+    {
+        "title": "Journaling",
+        "description": "Detailed description for \"Journaling\". This task involves several steps and requires attention to detail.",
+        "id": "32cc22ff-7d1a-4402-a563-e2e967ca5604",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [
+            "e513a8c5-5326-45d1-a746-fce99f28be58",
+            "77b1bfe2-107d-4023-bec8-e2fc31f5cdd6"
+        ],
+        "tint": "#94A3B8",
+        "stack": "2de37c35-b841-422d-9018-85582971b678",
+        "estimate": 39600,
+        "priority": "medium",
+        "duedate": "2026-02-08 19:26:06",
+        "position": 10
+    },
+    {
+        "title": "Practice gratitude",
+        "description": "Detailed description for \"Practice gratitude\". This task involves several steps and requires attention to detail.",
+        "id": "d885c1e9-16c0-4a94-b1f7-7c307bb26ee4",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [
+            "e513a8c5-5326-45d1-a746-fce99f28be58"
+        ],
+        "tint": "#94A3B8",
+        "stack": "2de37c35-b841-422d-9018-85582971b678",
+        "estimate": 21600,
+        "priority": "medium",
+        "duedate": "2026-02-16 19:26:06",
+        "position": 11
+    },
+    {
+        "title": "Digital detox hour",
+        "description": "Detailed description for \"Digital detox hour\". This task involves several steps and requires attention to detail.",
+        "id": "3475eaf3-9639-4220-af20-ab2f0a541962",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [],
+        "tint": "#3B82F6",
+        "stack": "23afea0b-2e17-46a2-bed8-f43968c5ad42",
+        "estimate": 14400,
+        "priority": "low",
+        "duedate": "2026-02-25 19:26:06",
+        "position": 0
+    },
+    {
+        "title": "Walk 10,000 steps",
+        "description": "Detailed description for \"Walk 10,000 steps\". This task involves several steps and requires attention to detail.",
+        "id": "19046253-ba2d-4418-8721-4e9c24dee97e",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [],
+        "tint": "#3B82F6",
+        "stack": "23afea0b-2e17-46a2-bed8-f43968c5ad42",
+        "estimate": 39600,
+        "priority": "high",
+        "duedate": "2026-03-06 19:26:06",
+        "position": 1
+    },
+    {
+        "title": "Core workout",
+        "description": "Detailed description for \"Core workout\". This task involves several steps and requires attention to detail.",
+        "id": "006340ac-d823-4ec7-a587-5d28d26429fa",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [
+            "3792e91d-acb9-462a-a092-bfc4feb67605",
+            "77b1bfe2-107d-4023-bec8-e2fc31f5cdd6"
+        ],
+        "tint": "#3B82F6",
+        "stack": "23afea0b-2e17-46a2-bed8-f43968c5ad42",
+        "estimate": 7200,
+        "priority": "medium",
+        "duedate": "2026-02-11 19:26:06",
+        "position": 2
+    },
+    {
+        "title": "Upper body training",
+        "description": "Detailed description for \"Upper body training\". This task involves several steps and requires attention to detail.",
+        "id": "a6a39ee9-1c23-478c-8114-d3f9c1fdd5bf",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [
+            "3792e91d-acb9-462a-a092-bfc4feb67605",
+            "77b1bfe2-107d-4023-bec8-e2fc31f5cdd6"
+        ],
+        "tint": "#3B82F6",
+        "stack": "23afea0b-2e17-46a2-bed8-f43968c5ad42",
+        "estimate": 72000,
+        "priority": "medium",
+        "duedate": "2026-02-28 19:26:06",
+        "position": 3
+    },
+    {
+        "title": "Leg day workout",
+        "description": "Detailed description for \"Leg day workout\". This task involves several steps and requires attention to detail.",
+        "id": "0a4c9501-e4c7-4739-8b10-f46c4e75be69",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [
+            "2c17159e-f3df-483f-9e80-3804956fdefb"
+        ],
+        "tint": "#3B82F6",
+        "stack": "23afea0b-2e17-46a2-bed8-f43968c5ad42",
+        "estimate": 72000,
+        "priority": "medium",
+        "duedate": "2026-02-28 19:26:06",
+        "position": 4
+    },
+    {
+        "title": "HIIT session",
+        "description": "Detailed description for \"HIIT session\". This task involves several steps and requires attention to detail.",
+        "id": "6e95aa69-e89f-4b4b-92fe-7b43d1f75dc0",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [
+            "77b1bfe2-107d-4023-bec8-e2fc31f5cdd6"
+        ],
+        "tint": "#3B82F6",
+        "stack": "23afea0b-2e17-46a2-bed8-f43968c5ad42",
+        "estimate": 28800,
+        "priority": "low",
+        "duedate": "2026-02-07 19:26:06",
+        "position": 5
+    },
+    {
+        "title": "Swimming laps",
+        "description": "Detailed description for \"Swimming laps\". This task involves several steps and requires attention to detail.",
+        "id": "ef60b1bd-5bec-40ad-938f-7410bc92ab69",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [
+            "2c17159e-f3df-483f-9e80-3804956fdefb",
+            "e513a8c5-5326-45d1-a746-fce99f28be58"
+        ],
+        "tint": "#3B82F6",
+        "stack": "23afea0b-2e17-46a2-bed8-f43968c5ad42",
+        "estimate": 54000,
+        "priority": "low",
+        "duedate": "2026-02-28 19:26:06",
+        "position": 6
+    },
+    {
+        "title": "Cycling",
+        "description": "Detailed description for \"Cycling\". This task involves several steps and requires attention to detail.",
+        "id": "7d6caa61-b1f1-4051-a468-de069c13a36d",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [
+            "2c17159e-f3df-483f-9e80-3804956fdefb"
+        ],
+        "tint": "#3B82F6",
+        "stack": "23afea0b-2e17-46a2-bed8-f43968c5ad42",
+        "estimate": 18000,
+        "priority": "high",
+        "duedate": "2026-02-27 19:26:06",
+        "position": 7
+    },
+    {
+        "title": "Hiking",
+        "description": "Detailed description for \"Hiking\". This task involves several steps and requires attention to detail.",
+        "id": "84d7d215-3c78-4b0c-9ef8-cb60554c83aa",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [
+            "3792e91d-acb9-462a-a092-bfc4feb67605"
+        ],
+        "tint": "#3B82F6",
+        "stack": "23afea0b-2e17-46a2-bed8-f43968c5ad42",
+        "estimate": 64800,
+        "priority": "medium",
+        "duedate": "2026-02-22 19:26:06",
+        "position": 8
+    },
+    {
+        "title": "Mindfulness practice",
+        "description": "Detailed description for \"Mindfulness practice\". This task involves several steps and requires attention to detail.",
+        "id": "d6438443-17e7-4d47-819e-e8e6a3de557b",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [
+            "e513a8c5-5326-45d1-a746-fce99f28be58",
+            "3792e91d-acb9-462a-a092-bfc4feb67605"
+        ],
+        "tint": "#3B82F6",
+        "stack": "23afea0b-2e17-46a2-bed8-f43968c5ad42",
+        "estimate": 61200,
+        "priority": "high",
+        "duedate": "2026-03-05 19:26:06",
+        "position": 9
+    },
+    {
+        "title": "Breathing exercises",
+        "description": "Detailed description for \"Breathing exercises\". This task involves several steps and requires attention to detail.",
+        "id": "397a3123-d236-4566-ae9f-56285245958c",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [
+            "e513a8c5-5326-45d1-a746-fce99f28be58",
+            "2c17159e-f3df-483f-9e80-3804956fdefb"
+        ],
+        "tint": "#10B981",
+        "stack": "1d5fad03-6495-4fd5-a775-36e34c89c621",
+        "estimate": 39600,
+        "priority": "low",
+        "duedate": "2026-03-06 19:26:06",
+        "position": 0
+    },
+    {
+        "title": "Cold shower",
+        "description": "Detailed description for \"Cold shower\". This task involves several steps and requires attention to detail.",
+        "id": "612556c2-9274-499a-91d2-3b1a5f5f3ee0",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [
+            "77b1bfe2-107d-4023-bec8-e2fc31f5cdd6",
+            "3792e91d-acb9-462a-a092-bfc4feb67605"
+        ],
+        "tint": "#10B981",
+        "stack": "1d5fad03-6495-4fd5-a775-36e34c89c621",
+        "estimate": 32400,
+        "priority": "high",
+        "duedate": "2026-02-20 19:26:06",
+        "position": 1
+    },
+    {
+        "title": "Intermittent fasting",
+        "description": "Detailed description for \"Intermittent fasting\". This task involves several steps and requires attention to detail.",
+        "id": "e987bb27-96ce-4936-8ce0-91cc4f26d586",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [],
+        "tint": "#10B981",
+        "stack": "1d5fad03-6495-4fd5-a775-36e34c89c621",
+        "estimate": 43200,
+        "priority": "low",
+        "duedate": "2026-02-27 19:26:06",
+        "position": 2
+    },
+    {
+        "title": "Eat 5 servings of veg",
+        "description": "Detailed description for \"Eat 5 servings of veg\". This task involves several steps and requires attention to detail.",
+        "id": "1d574c7e-ba82-46e7-b450-2da996399852",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [],
+        "tint": "#10B981",
+        "stack": "1d5fad03-6495-4fd5-a775-36e34c89c621",
+        "estimate": 68400,
+        "priority": "high",
+        "duedate": "2026-02-12 19:26:06",
+        "position": 3
+    },
+    {
+        "title": "Limit caffeine",
+        "description": "Detailed description for \"Limit caffeine\". This task involves several steps and requires attention to detail.",
+        "id": "ee370564-62d3-4d77-993b-438e824962ad",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [
+            "3792e91d-acb9-462a-a092-bfc4feb67605"
+        ],
+        "tint": "#10B981",
+        "stack": "1d5fad03-6495-4fd5-a775-36e34c89c621",
+        "estimate": 28800,
+        "priority": "medium",
+        "duedate": "2026-02-18 19:26:06",
+        "position": 4
+    },
+    {
+        "title": "No alcohol",
+        "description": "Detailed description for \"No alcohol\". This task involves several steps and requires attention to detail.",
+        "id": "88776466-8ba0-4360-a500-c45776d52293",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [
+            "3792e91d-acb9-462a-a092-bfc4feb67605",
+            "77b1bfe2-107d-4023-bec8-e2fc31f5cdd6"
+        ],
+        "tint": "#10B981",
+        "stack": "1d5fad03-6495-4fd5-a775-36e34c89c621",
+        "estimate": 28800,
+        "priority": "low",
+        "duedate": "2026-02-09 19:26:06",
+        "position": 5
+    },
+    {
+        "title": "Read non-fiction",
+        "description": "Detailed description for \"Read non-fiction\". This task involves several steps and requires attention to detail.",
+        "id": "b297ef8b-ada8-438c-894a-8606e980e5fb",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [
+            "3792e91d-acb9-462a-a092-bfc4feb67605",
+            "2c17159e-f3df-483f-9e80-3804956fdefb"
+        ],
+        "tint": "#10B981",
+        "stack": "1d5fad03-6495-4fd5-a775-36e34c89c621",
+        "estimate": 3600,
+        "priority": "low",
+        "duedate": "2026-02-24 19:26:06",
+        "position": 6
+    },
+    {
+        "title": "Listen to educational podcast",
+        "description": "Detailed description for \"Listen to educational podcast\". This task involves several steps and requires attention to detail.",
+        "id": "98f779ae-9bd1-4500-b3db-a0aa38ec45bb",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [
+            "2c17159e-f3df-483f-9e80-3804956fdefb"
+        ],
+        "tint": "#10B981",
+        "stack": "1d5fad03-6495-4fd5-a775-36e34c89c621",
+        "estimate": 14400,
+        "priority": "high",
+        "duedate": "2026-02-25 19:26:06",
+        "position": 7
+    },
+    {
+        "title": "Learn 5 new words",
+        "description": "Detailed description for \"Learn 5 new words\". This task involves several steps and requires attention to detail.",
+        "id": "e0ebe327-ce33-4df7-aca0-cee5ca3ea0e8",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [],
+        "tint": "#10B981",
+        "stack": "1d5fad03-6495-4fd5-a775-36e34c89c621",
+        "estimate": 50400,
+        "priority": "high",
+        "duedate": "2026-02-24 19:26:06",
+        "position": 8
+    },
+    {
+        "title": "Practice a language",
+        "description": "Detailed description for \"Practice a language\". This task involves several steps and requires attention to detail.",
+        "id": "45421e2c-8577-418f-bec5-a86850cf17e5",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [
+            "e513a8c5-5326-45d1-a746-fce99f28be58"
+        ],
+        "tint": "#10B981",
+        "stack": "1d5fad03-6495-4fd5-a775-36e34c89c621",
+        "estimate": 39600,
+        "priority": "medium",
+        "duedate": "2026-02-17 19:26:06",
+        "position": 9
+    },
+    {
+        "title": "Play instrument",
+        "description": "Detailed description for \"Play instrument\". This task involves several steps and requires attention to detail.",
+        "id": "2363c5e0-59d6-4257-a02b-867c22dbada7",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [
+            "2c17159e-f3df-483f-9e80-3804956fdefb"
+        ],
+        "tint": "#10B981",
+        "stack": "1d5fad03-6495-4fd5-a775-36e34c89c621",
+        "estimate": 43200,
+        "priority": "low",
+        "duedate": "2026-02-21 19:26:06",
+        "position": 10
+    },
+    {
+        "title": "Call a friend",
+        "description": "Detailed description for \"Call a friend\". This task involves several steps and requires attention to detail.",
+        "id": "e252bbf3-3552-443e-a799-c73997e31774",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [],
+        "tint": "#EF4444",
+        "stack": "791b7b6e-bd25-493b-a0aa-ce269049dd9b",
+        "estimate": 68400,
+        "priority": "high",
+        "duedate": "2026-02-21 19:26:06",
+        "position": 0
+    },
+    {
+        "title": "Quality time with family",
+        "description": "Detailed description for \"Quality time with family\". This task involves several steps and requires attention to detail.",
+        "id": "69fc2141-c94b-40fb-ac62-81336d6efd53",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [
+            "3792e91d-acb9-462a-a092-bfc4feb67605",
+            "77b1bfe2-107d-4023-bec8-e2fc31f5cdd6"
+        ],
+        "tint": "#EF4444",
+        "stack": "791b7b6e-bd25-493b-a0aa-ce269049dd9b",
+        "estimate": 28800,
+        "priority": "medium",
+        "duedate": "2026-02-19 19:26:06",
+        "position": 1
+    },
+    {
+        "title": "Volunteer work",
+        "description": "Detailed description for \"Volunteer work\". This task involves several steps and requires attention to detail.",
+        "id": "66cd1a14-6605-4b1d-b3dc-e078d189cfec",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [
+            "e513a8c5-5326-45d1-a746-fce99f28be58",
+            "77b1bfe2-107d-4023-bec8-e2fc31f5cdd6"
+        ],
+        "tint": "#EF4444",
+        "stack": "791b7b6e-bd25-493b-a0aa-ce269049dd9b",
+        "estimate": 21600,
+        "priority": "medium",
+        "duedate": "2026-02-20 19:26:06",
+        "position": 2
+    },
+    {
+        "title": "Random act of kindness",
+        "description": "Detailed description for \"Random act of kindness\". This task involves several steps and requires attention to detail.",
+        "id": "13a21ebe-941a-4104-97fa-a736854fefe9",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [
+            "77b1bfe2-107d-4023-bec8-e2fc31f5cdd6"
+        ],
+        "tint": "#EF4444",
+        "stack": "791b7b6e-bd25-493b-a0aa-ce269049dd9b",
+        "estimate": 46800,
+        "priority": "high",
+        "duedate": "2026-02-10 19:26:06",
+        "position": 3
+    },
+    {
+        "title": "Save 10% of income",
+        "description": "Detailed description for \"Save 10% of income\". This task involves several steps and requires attention to detail.",
+        "id": "4f655c03-68e1-413f-92c5-449f09b5253e",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [],
+        "tint": "#EF4444",
+        "stack": "791b7b6e-bd25-493b-a0aa-ce269049dd9b",
+        "estimate": 10800,
+        "priority": "high",
+        "duedate": "2026-02-23 19:26:06",
+        "position": 4
+    },
+    {
+        "title": "Review investments",
+        "description": "Detailed description for \"Review investments\". This task involves several steps and requires attention to detail.",
+        "id": "f31346d2-54c7-49ed-a817-83a747cb4142",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [],
+        "tint": "#EF4444",
+        "stack": "791b7b6e-bd25-493b-a0aa-ce269049dd9b",
+        "estimate": 43200,
+        "priority": "medium",
+        "duedate": "2026-03-02 19:26:06",
+        "position": 5
+    },
+    {
+        "title": "Track expenses",
+        "description": "Detailed description for \"Track expenses\". This task involves several steps and requires attention to detail.",
+        "id": "203551fa-c830-4ed0-82c5-8dd30cc6e2fb",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [],
+        "tint": "#EF4444",
+        "stack": "791b7b6e-bd25-493b-a0aa-ce269049dd9b",
+        "estimate": 14400,
+        "priority": "low",
+        "duedate": "2026-03-03 19:26:06",
+        "position": 6
+    },
+    {
+        "title": "Update vision board",
+        "description": "Detailed description for \"Update vision board\". This task involves several steps and requires attention to detail.",
+        "id": "e87ca604-ac41-4800-b873-965b96d9b484",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [
+            "e513a8c5-5326-45d1-a746-fce99f28be58"
+        ],
+        "tint": "#EF4444",
+        "stack": "791b7b6e-bd25-493b-a0aa-ce269049dd9b",
+        "estimate": 54000,
+        "priority": "high",
+        "duedate": "2026-02-21 19:26:06",
+        "position": 7
+    },
+    {
+        "title": "Set weekly goals",
+        "description": "Detailed description for \"Set weekly goals\". This task involves several steps and requires attention to detail.",
+        "id": "b8024cd4-5595-4f34-b33b-b577ad322a40",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [],
+        "tint": "#EF4444",
+        "stack": "791b7b6e-bd25-493b-a0aa-ce269049dd9b",
+        "estimate": 43200,
+        "priority": "low",
+        "duedate": "2026-02-16 19:26:06",
+        "position": 8
+    },
+    {
+        "title": "Review monthly goals",
+        "description": "Detailed description for \"Review monthly goals\". This task involves several steps and requires attention to detail.",
+        "id": "1d3bc5b3-f3eb-4c58-b9c8-2834321a382e",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [],
+        "tint": "#EF4444",
+        "stack": "791b7b6e-bd25-493b-a0aa-ce269049dd9b",
+        "estimate": 68400,
+        "priority": "medium",
+        "duedate": "2026-02-22 19:26:06",
+        "position": 9
+    },
+    {
+        "title": "Clean workspace",
+        "description": "Detailed description for \"Clean workspace\". This task involves several steps and requires attention to detail.",
+        "id": "6f4264b0-5491-4f1c-aa29-7f2061385eb6",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [
+            "2c17159e-f3df-483f-9e80-3804956fdefb"
+        ],
+        "tint": "#EF4444",
+        "stack": "791b7b6e-bd25-493b-a0aa-ce269049dd9b",
+        "estimate": 3600,
+        "priority": "low",
+        "duedate": "2026-02-08 19:26:06",
+        "position": 10
+    },
+    {
+        "title": "Organize email inbox",
+        "description": "Detailed description for \"Organize email inbox\". This task involves several steps and requires attention to detail.",
+        "id": "f3b9842e-9a4c-4b5f-a518-61f3480a3595",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [],
+        "tint": "#EF4444",
+        "stack": "791b7b6e-bd25-493b-a0aa-ce269049dd9b",
+        "estimate": 68400,
+        "priority": "medium",
+        "duedate": "2026-03-01 19:26:06",
+        "position": 11
+    },
+    {
+        "title": "Unsubscribe from junk mail",
+        "description": "Detailed description for \"Unsubscribe from junk mail\". This task involves several steps and requires attention to detail.",
+        "id": "dfbadc62-412a-4654-9934-7fae06d5aafa",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [
+            "2c17159e-f3df-483f-9e80-3804956fdefb",
+            "e513a8c5-5326-45d1-a746-fce99f28be58"
+        ],
+        "tint": "#EF4444",
+        "stack": "791b7b6e-bd25-493b-a0aa-ce269049dd9b",
+        "estimate": 64800,
+        "priority": "high",
+        "duedate": "2026-02-23 19:26:06",
+        "position": 12
+    },
+    {
+        "title": "Update resume",
+        "description": "Detailed description for \"Update resume\". This task involves several steps and requires attention to detail.",
+        "id": "cb69bcad-d9e3-4322-8892-5c88335e2f5c",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [
+            "77b1bfe2-107d-4023-bec8-e2fc31f5cdd6"
+        ],
+        "tint": "#EF4444",
+        "stack": "791b7b6e-bd25-493b-a0aa-ce269049dd9b",
+        "estimate": 36000,
+        "priority": "high",
+        "duedate": "2026-02-06 19:26:06",
+        "position": 13
+    },
+    {
+        "title": "Network connection",
+        "description": "Detailed description for \"Network connection\". This task involves several steps and requires attention to detail.",
+        "id": "d1c6dc27-d171-4807-9528-4156cf5113dd",
+        "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "tags": [],
+        "tint": "#EF4444",
+        "stack": "791b7b6e-bd25-493b-a0aa-ce269049dd9b",
+        "estimate": 39600,
+        "priority": "high",
+        "duedate": "2026-02-23 19:26:06",
+        "position": 14
+    }
+]

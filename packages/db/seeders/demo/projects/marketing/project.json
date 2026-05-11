@@ -1,0 +1,37 @@
+[
+    {
+        "id": "4dcd4f1b-4649-4d46-a13c-082ad374102e",
+        "title": "Digital Marketing Campaign - Product Launch",
+        "estimate": 1200934,
+        "stacks": [
+            {
+                "title": "Strategy & Planning",
+                "tint": "#8B5CF6",
+                "id": "ea9ce4e7-87db-442d-9e19-8fa9dd26f2a3"
+            },
+            {
+                "title": "Content Creation",
+                "tint": "#3B82F6",
+                "id": "0acf1997-397f-4f5b-88aa-71ecf4e4d688"
+            },
+            {
+                "title": "Campaign Execution",
+                "tint": "#F59E0B",
+                "id": "16baef66-9d92-4333-a367-56e5b95d12c1"
+            },
+            {
+                "title": "Monitoring & Optimization",
+                "tint": "#EF4444",
+                "id": "5e51f53d-b201-4810-be03-3afd15e7f1ef"
+            },
+            {
+                "title": "Analysis & Reporting",
+                "tint": "#10B981",
+                "id": "01ef54b5-c109-4f5d-a27b-787d8273395d"
+            }
+        ],
+        "hourlyRate": 75,
+        "currency": "EUR",
+        "health": "good"
+    }
+]

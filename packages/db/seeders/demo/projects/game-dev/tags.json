@@ -1,0 +1,58 @@
+[
+    {
+        "id": "b2fd48e6-ab99-4b0e-82f7-524465f62b93",
+        "title": "UI",
+        "color": "#64748B",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "07ba61fd-f503-427a-906a-34ace00309dc",
+        "title": "Mechanics",
+        "color": "#8B5CF6",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "70253f1f-fda6-4817-a7b4-9bb409dd842d",
+        "title": "Level Design",
+        "color": "#F97316",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "02eb9a24-044f-4b1c-a44b-6efa4ab2ae0d",
+        "title": "Bugs",
+        "color": "#6366F1",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "a947d765-5473-47cd-9773-1178938b3cc4",
+        "title": "Story",
+        "color": "#F97316",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "47599de8-14d6-4f8b-beb7-d04adedb4eab",
+        "title": "Blocked",
+        "color": "#3B82F6",
+        "type": "status",
+        "section": "projects"
+    },
+    {
+        "id": "ad6050d3-929b-48c2-96b4-f01271a1f6f3",
+        "title": "Needs Review",
+        "color": "#EC4899",
+        "type": "status",
+        "section": "projects"
+    },
+    {
+        "id": "bf9513d2-4d3e-439a-a2ed-1bc6636d690b",
+        "title": "Glitchy",
+        "color": "#6366F1",
+        "type": "status",
+        "section": "projects"
+    }
+]

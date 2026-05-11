@@ -1,0 +1,1109 @@
+[
+    {
+        "title": "Update Resume",
+        "description": "Description for Update Resume",
+        "id": "ec94f7ca-18ce-4e9e-8b1f-b5d2eb62785d",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6"
+        ],
+        "tint": null,
+        "stack": "b7b1d1f7-5808-42cd-9171-41998067a943",
+        "estimate": 32400,
+        "priority": "high",
+        "duedate": "2026-03-02 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "Update LinkedIn",
+        "description": "Description for Update LinkedIn",
+        "id": "90c6878a-11de-4026-93f3-6635cf648b90",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6"
+        ],
+        "tint": "#EF4444",
+        "stack": "b7b1d1f7-5808-42cd-9171-41998067a943",
+        "estimate": 3600,
+        "priority": "high",
+        "duedate": "2026-02-27 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "Apply to Google",
+        "description": "Description for Apply to Google",
+        "id": "47de6d0a-4309-4f3d-9be4-6cb062743268",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6",
+            "3bc01082-e2c3-4953-801f-b61e3abbbb25"
+        ],
+        "tint": null,
+        "stack": "b7b1d1f7-5808-42cd-9171-41998067a943",
+        "estimate": 18000,
+        "priority": "medium",
+        "duedate": "2026-02-09 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "Apply to Amazon",
+        "description": "Description for Apply to Amazon",
+        "id": "f83ae3c6-f951-4876-b1bc-e23d8682ed2a",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6"
+        ],
+        "tint": "#F59E0B",
+        "stack": "b7b1d1f7-5808-42cd-9171-41998067a943",
+        "estimate": 32400,
+        "priority": "high",
+        "duedate": "2026-02-12 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Phone Screen with Recruiter",
+        "description": "Description for Phone Screen with Recruiter",
+        "id": "0ba5596c-ce10-4dcd-9e14-3aeb5d9976fc",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "38ca3927-6b8a-4877-92ba-26f261bf4c9e",
+            "6a83ea67-5798-4aa5-8381-06b5dba99664"
+        ],
+        "tint": null,
+        "stack": "b7b1d1f7-5808-42cd-9171-41998067a943",
+        "estimate": 36000,
+        "priority": "low",
+        "duedate": "2026-03-26 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Technical Interview",
+        "description": "Description for Technical Interview",
+        "id": "d8227217-b897-4764-8457-a36aed305efa",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6",
+            "6a83ea67-5798-4aa5-8381-06b5dba99664",
+            "26ac8a8f-f577-4fa5-85a1-dc48da3cb2e7"
+        ],
+        "tint": null,
+        "stack": "b7b1d1f7-5808-42cd-9171-41998067a943",
+        "estimate": 18000,
+        "priority": "high",
+        "duedate": "2026-03-04 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "System Design Interview",
+        "description": "Description for System Design Interview",
+        "id": "f2d1f506-d1c2-4343-a00c-ce5e9ec19f3d",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6",
+            "3bc01082-e2c3-4953-801f-b61e3abbbb25"
+        ],
+        "tint": "#EF4444",
+        "stack": "b7b1d1f7-5808-42cd-9171-41998067a943",
+        "estimate": 7200,
+        "priority": "high",
+        "duedate": "2026-03-27 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "Behavioral Interview",
+        "description": "Description for Behavioral Interview",
+        "id": "b685e8eb-5384-46ed-b27e-c92ca20430bb",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6",
+            "3bc01082-e2c3-4953-801f-b61e3abbbb25",
+            "1eb6eb0f-5ec9-4bbf-a481-0008b55da80a"
+        ],
+        "tint": null,
+        "stack": "b7b1d1f7-5808-42cd-9171-41998067a943",
+        "estimate": 18000,
+        "priority": "high",
+        "duedate": "2026-03-14 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "Send Thank You Email",
+        "description": "Description for Send Thank You Email",
+        "id": "d94f9e30-f01e-4033-a346-eacd194a1764",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6"
+        ],
+        "tint": null,
+        "stack": "b7b1d1f7-5808-42cd-9171-41998067a943",
+        "estimate": 3600,
+        "priority": "high",
+        "duedate": "2026-02-06 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "Negotiate Salary",
+        "description": "Description for Negotiate Salary",
+        "id": "9e90d6fc-5d5d-46fc-a6cd-cd4f548cc9f5",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6",
+            "b23f8ef6-53a8-4bf1-ad8a-48a04de73734"
+        ],
+        "tint": "#F97316",
+        "stack": "b7b1d1f7-5808-42cd-9171-41998067a943",
+        "estimate": 18000,
+        "priority": "medium",
+        "duedate": "2026-02-20 20:00:36",
+        "position": 9
+    },
+    {
+        "title": "Review Offer Letter",
+        "description": "Description for Review Offer Letter",
+        "id": "90a721dc-b3f8-480b-a877-f28ac2cea8ab",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6",
+            "3bc01082-e2c3-4953-801f-b61e3abbbb25",
+            "1eb6eb0f-5ec9-4bbf-a481-0008b55da80a",
+            "b23f8ef6-53a8-4bf1-ad8a-48a04de73734"
+        ],
+        "tint": "#6366F1",
+        "stack": "b7b1d1f7-5808-42cd-9171-41998067a943",
+        "estimate": 18000,
+        "priority": "medium",
+        "duedate": "2026-03-27 20:00:36",
+        "position": 10
+    },
+    {
+        "title": "Background Check",
+        "description": "Description for Background Check",
+        "id": "be37e0ff-8245-44b2-a1b5-ff9bb66b1b96",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "38ca3927-6b8a-4877-92ba-26f261bf4c9e"
+        ],
+        "tint": null,
+        "stack": "757a4ffc-fc3e-4f3e-a9c3-6e00ccef667b",
+        "estimate": 3600,
+        "priority": "low",
+        "duedate": "2026-04-02 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "Give Notice",
+        "description": "Description for Give Notice",
+        "id": "c5754090-e9a7-4bc0-9889-f80b054f1d4c",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6",
+            "1eb6eb0f-5ec9-4bbf-a481-0008b55da80a"
+        ],
+        "tint": null,
+        "stack": "757a4ffc-fc3e-4f3e-a9c3-6e00ccef667b",
+        "estimate": 7200,
+        "priority": "low",
+        "duedate": "2026-02-22 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "Onboarding Prep",
+        "description": "Description for Onboarding Prep",
+        "id": "191af75f-08e7-4490-a0bc-1fa40ac3a34b",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6"
+        ],
+        "tint": "#10B981",
+        "stack": "757a4ffc-fc3e-4f3e-a9c3-6e00ccef667b",
+        "estimate": 7200,
+        "priority": "low",
+        "duedate": "2026-03-07 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "Networking Coffee",
+        "description": "Description for Networking Coffee",
+        "id": "c25aea18-f2a4-40b8-b6f9-84642f4d9d4f",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6"
+        ],
+        "tint": null,
+        "stack": "757a4ffc-fc3e-4f3e-a9c3-6e00ccef667b",
+        "estimate": 18000,
+        "priority": "high",
+        "duedate": "2026-03-03 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Update Resume (2)",
+        "description": "Description for Update Resume (2)",
+        "id": "c4f94f53-cc15-45bf-a6ec-db69efd46f71",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6"
+        ],
+        "tint": "#64748B",
+        "stack": "757a4ffc-fc3e-4f3e-a9c3-6e00ccef667b",
+        "estimate": 7200,
+        "priority": "medium",
+        "duedate": "2026-02-17 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Update LinkedIn (2)",
+        "description": "Description for Update LinkedIn (2)",
+        "id": "549cc8a9-9c70-4473-a8c3-dd76a05a2611",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "38ca3927-6b8a-4877-92ba-26f261bf4c9e"
+        ],
+        "tint": "#6366F1",
+        "stack": "757a4ffc-fc3e-4f3e-a9c3-6e00ccef667b",
+        "estimate": 25200,
+        "priority": "high",
+        "duedate": "2026-03-17 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "Apply to Google (2)",
+        "description": "Description for Apply to Google (2)",
+        "id": "4ef1a445-1511-4c21-8cd0-25783037bfc2",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6",
+            "3bc01082-e2c3-4953-801f-b61e3abbbb25"
+        ],
+        "tint": null,
+        "stack": "757a4ffc-fc3e-4f3e-a9c3-6e00ccef667b",
+        "estimate": 21600,
+        "priority": "medium",
+        "duedate": "2026-03-18 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "Apply to Amazon (2)",
+        "description": "Description for Apply to Amazon (2)",
+        "id": "a162038c-4fe0-4383-851f-d4486e8bb367",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6",
+            "26ac8a8f-f577-4fa5-85a1-dc48da3cb2e7"
+        ],
+        "tint": "#F97316",
+        "stack": "757a4ffc-fc3e-4f3e-a9c3-6e00ccef667b",
+        "estimate": 18000,
+        "priority": "low",
+        "duedate": "2026-03-15 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "Phone Screen with Recruiter (2)",
+        "description": "Description for Phone Screen with Recruiter (2)",
+        "id": "3d95a768-e5f9-4492-a303-a258af0a9c52",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6",
+            "3bc01082-e2c3-4953-801f-b61e3abbbb25",
+            "26ac8a8f-f577-4fa5-85a1-dc48da3cb2e7"
+        ],
+        "tint": "#F97316",
+        "stack": "757a4ffc-fc3e-4f3e-a9c3-6e00ccef667b",
+        "estimate": 32400,
+        "priority": "low",
+        "duedate": "2026-02-14 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "Technical Interview (2)",
+        "description": "Description for Technical Interview (2)",
+        "id": "b07c7839-39e9-485c-b37d-2435d99a3594",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6"
+        ],
+        "tint": null,
+        "stack": "757a4ffc-fc3e-4f3e-a9c3-6e00ccef667b",
+        "estimate": 14400,
+        "priority": "low",
+        "duedate": "2026-02-18 20:00:36",
+        "position": 9
+    },
+    {
+        "title": "System Design Interview (2)",
+        "description": "Description for System Design Interview (2)",
+        "id": "bcc56365-74c1-4758-b4b8-aa0a36718614",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "38ca3927-6b8a-4877-92ba-26f261bf4c9e",
+            "6a83ea67-5798-4aa5-8381-06b5dba99664",
+            "26ac8a8f-f577-4fa5-85a1-dc48da3cb2e7"
+        ],
+        "tint": "#10B981",
+        "stack": "757a4ffc-fc3e-4f3e-a9c3-6e00ccef667b",
+        "estimate": 28800,
+        "priority": "low",
+        "duedate": "2026-03-12 20:00:36",
+        "position": 10
+    },
+    {
+        "title": "Behavioral Interview (2)",
+        "description": "Description for Behavioral Interview (2)",
+        "id": "9d46b586-9794-48a1-9a55-c862969372a3",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6",
+            "6a83ea67-5798-4aa5-8381-06b5dba99664"
+        ],
+        "tint": null,
+        "stack": "757a4ffc-fc3e-4f3e-a9c3-6e00ccef667b",
+        "estimate": 25200,
+        "priority": "low",
+        "duedate": "2026-03-30 20:00:36",
+        "position": 11
+    },
+    {
+        "title": "Send Thank You Email (2)",
+        "description": "Description for Send Thank You Email (2)",
+        "id": "ca1391d4-ccc3-48f4-b82c-50db5583b19c",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6"
+        ],
+        "tint": "#64748B",
+        "stack": "757a4ffc-fc3e-4f3e-a9c3-6e00ccef667b",
+        "estimate": 25200,
+        "priority": "high",
+        "duedate": "2026-02-25 20:00:36",
+        "position": 12
+    },
+    {
+        "title": "Negotiate Salary (2)",
+        "description": "Description for Negotiate Salary (2)",
+        "id": "72e30d8c-ca8d-4151-9ff0-613db94a8e56",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6",
+            "b23f8ef6-53a8-4bf1-ad8a-48a04de73734"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "845a137e-a4f1-4276-9d64-aee7f0deac78",
+        "estimate": 10800,
+        "priority": "medium",
+        "duedate": "2026-02-06 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "Review Offer Letter (2)",
+        "description": "Description for Review Offer Letter (2)",
+        "id": "03fa5c83-a8ab-4b36-94eb-e691dd09be9f",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6",
+            "b23f8ef6-53a8-4bf1-ad8a-48a04de73734"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "845a137e-a4f1-4276-9d64-aee7f0deac78",
+        "estimate": 25200,
+        "priority": "low",
+        "duedate": "2026-03-15 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "Background Check (2)",
+        "description": "Description for Background Check (2)",
+        "id": "ef2ddbf4-7b35-4989-9c8c-9973f1029d55",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6",
+            "6a83ea67-5798-4aa5-8381-06b5dba99664"
+        ],
+        "tint": "#EC4899",
+        "stack": "845a137e-a4f1-4276-9d64-aee7f0deac78",
+        "estimate": 3600,
+        "priority": "low",
+        "duedate": "2026-03-02 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "Give Notice (2)",
+        "description": "Description for Give Notice (2)",
+        "id": "e88257d4-668b-4957-823d-9091ca551481",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "845a137e-a4f1-4276-9d64-aee7f0deac78",
+        "estimate": 21600,
+        "priority": "high",
+        "duedate": "2026-02-05 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Onboarding Prep (2)",
+        "description": "Description for Onboarding Prep (2)",
+        "id": "03b9ec50-b059-4299-a7f8-796ed9fb0c23",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "38ca3927-6b8a-4877-92ba-26f261bf4c9e"
+        ],
+        "tint": "#EC4899",
+        "stack": "845a137e-a4f1-4276-9d64-aee7f0deac78",
+        "estimate": 32400,
+        "priority": "medium",
+        "duedate": "2026-02-08 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Networking Coffee (2)",
+        "description": "Description for Networking Coffee (2)",
+        "id": "c303d10d-3531-4b0f-8b7d-5afaf6ae0118",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "38ca3927-6b8a-4877-92ba-26f261bf4c9e"
+        ],
+        "tint": null,
+        "stack": "845a137e-a4f1-4276-9d64-aee7f0deac78",
+        "estimate": 18000,
+        "priority": "high",
+        "duedate": "2026-03-25 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "Update Resume (3)",
+        "description": "Description for Update Resume (3)",
+        "id": "166cec40-3c9f-40cf-a231-268693fc5cbe",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6"
+        ],
+        "tint": null,
+        "stack": "845a137e-a4f1-4276-9d64-aee7f0deac78",
+        "estimate": 36000,
+        "priority": "high",
+        "duedate": "2026-03-31 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "Update LinkedIn (3)",
+        "description": "Description for Update LinkedIn (3)",
+        "id": "19840ae1-c570-4dbe-8327-91988912af13",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6"
+        ],
+        "tint": "#EF4444",
+        "stack": "845a137e-a4f1-4276-9d64-aee7f0deac78",
+        "estimate": 18000,
+        "priority": "medium",
+        "duedate": "2026-02-13 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "Apply to Google (3)",
+        "description": "Description for Apply to Google (3)",
+        "id": "5825db86-6b7c-4878-be7a-e04841793075",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6",
+            "3bc01082-e2c3-4953-801f-b61e3abbbb25",
+            "1eb6eb0f-5ec9-4bbf-a481-0008b55da80a"
+        ],
+        "tint": "#EC4899",
+        "stack": "845a137e-a4f1-4276-9d64-aee7f0deac78",
+        "estimate": 3600,
+        "priority": "low",
+        "duedate": "2026-03-13 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "Apply to Amazon (3)",
+        "description": "Description for Apply to Amazon (3)",
+        "id": "ae42bfac-a9ff-49f9-a6bc-baa0f8a778f0",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6"
+        ],
+        "tint": "#F97316",
+        "stack": "845a137e-a4f1-4276-9d64-aee7f0deac78",
+        "estimate": 14400,
+        "priority": "medium",
+        "duedate": "2026-02-07 20:00:36",
+        "position": 9
+    },
+    {
+        "title": "Phone Screen with Recruiter (3)",
+        "description": "Description for Phone Screen with Recruiter (3)",
+        "id": "34d13956-f390-415d-a96f-1ea57ad013df",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "38ca3927-6b8a-4877-92ba-26f261bf4c9e",
+            "3bc01082-e2c3-4953-801f-b61e3abbbb25"
+        ],
+        "tint": "#6366F1",
+        "stack": "02a9b5db-b11e-4d85-ae2b-818f0956da8b",
+        "estimate": 10800,
+        "priority": "low",
+        "duedate": "2026-03-16 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "Technical Interview (3)",
+        "description": "Description for Technical Interview (3)",
+        "id": "0655fb2c-4a6a-4bfd-a4e6-76aaab69b10f",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6",
+            "6a83ea67-5798-4aa5-8381-06b5dba99664",
+            "1eb6eb0f-5ec9-4bbf-a481-0008b55da80a"
+        ],
+        "tint": "#EF4444",
+        "stack": "02a9b5db-b11e-4d85-ae2b-818f0956da8b",
+        "estimate": 32400,
+        "priority": "medium",
+        "duedate": "2026-03-31 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "System Design Interview (3)",
+        "description": "Description for System Design Interview (3)",
+        "id": "ca12673c-c677-4f19-b56c-30667ac4e627",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "38ca3927-6b8a-4877-92ba-26f261bf4c9e"
+        ],
+        "tint": null,
+        "stack": "02a9b5db-b11e-4d85-ae2b-818f0956da8b",
+        "estimate": 3600,
+        "priority": "low",
+        "duedate": "2026-02-26 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "Behavioral Interview (3)",
+        "description": "Description for Behavioral Interview (3)",
+        "id": "49093331-4544-4cb4-9b11-0105cb79340b",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6",
+            "6a83ea67-5798-4aa5-8381-06b5dba99664",
+            "49257b8c-40d6-4557-9b46-542feae3955f"
+        ],
+        "tint": "#F59E0B",
+        "stack": "02a9b5db-b11e-4d85-ae2b-818f0956da8b",
+        "estimate": 14400,
+        "priority": "medium",
+        "duedate": "2026-03-22 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Send Thank You Email (3)",
+        "description": "Description for Send Thank You Email (3)",
+        "id": "ff3fa8c8-0860-4603-9b31-9676752f16b8",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6"
+        ],
+        "tint": null,
+        "stack": "02a9b5db-b11e-4d85-ae2b-818f0956da8b",
+        "estimate": 28800,
+        "priority": "medium",
+        "duedate": "2026-04-02 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Negotiate Salary (3)",
+        "description": "Description for Negotiate Salary (3)",
+        "id": "ece8b594-56f8-42b4-951b-f12012916310",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "38ca3927-6b8a-4877-92ba-26f261bf4c9e",
+            "6a83ea67-5798-4aa5-8381-06b5dba99664",
+            "b23f8ef6-53a8-4bf1-ad8a-48a04de73734"
+        ],
+        "tint": "#3B82F6",
+        "stack": "02a9b5db-b11e-4d85-ae2b-818f0956da8b",
+        "estimate": 36000,
+        "priority": "medium",
+        "duedate": "2026-03-04 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "Review Offer Letter (3)",
+        "description": "Description for Review Offer Letter (3)",
+        "id": "6ec7f091-ff08-418d-ac73-f45c049c9434",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6",
+            "b23f8ef6-53a8-4bf1-ad8a-48a04de73734"
+        ],
+        "tint": "#EC4899",
+        "stack": "02a9b5db-b11e-4d85-ae2b-818f0956da8b",
+        "estimate": 25200,
+        "priority": "medium",
+        "duedate": "2026-04-02 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "Background Check (3)",
+        "description": "Description for Background Check (3)",
+        "id": "cb29779c-8977-4ed8-a855-b8e1df327113",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "38ca3927-6b8a-4877-92ba-26f261bf4c9e",
+            "3bc01082-e2c3-4953-801f-b61e3abbbb25"
+        ],
+        "tint": null,
+        "stack": "02a9b5db-b11e-4d85-ae2b-818f0956da8b",
+        "estimate": 32400,
+        "priority": "medium",
+        "duedate": "2026-02-06 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "Give Notice (3)",
+        "description": "Description for Give Notice (3)",
+        "id": "c358c1de-c10d-41dc-8b89-b72140756b2a",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6",
+            "6a83ea67-5798-4aa5-8381-06b5dba99664"
+        ],
+        "tint": null,
+        "stack": "02a9b5db-b11e-4d85-ae2b-818f0956da8b",
+        "estimate": 36000,
+        "priority": "low",
+        "duedate": "2026-03-08 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "Onboarding Prep (3)",
+        "description": "Description for Onboarding Prep (3)",
+        "id": "73bf1567-616e-4195-9d1d-69327d163d7d",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "38ca3927-6b8a-4877-92ba-26f261bf4c9e"
+        ],
+        "tint": null,
+        "stack": "02a9b5db-b11e-4d85-ae2b-818f0956da8b",
+        "estimate": 10800,
+        "priority": "high",
+        "duedate": "2026-04-02 20:00:36",
+        "position": 9
+    },
+    {
+        "title": "Networking Coffee (3)",
+        "description": "Description for Networking Coffee (3)",
+        "id": "51f4f196-d94b-45e3-adb1-24bc3e2af6d2",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6"
+        ],
+        "tint": null,
+        "stack": "1ea1720b-c599-48a8-b066-787bbbe48b66",
+        "estimate": 36000,
+        "priority": "low",
+        "duedate": "2026-02-11 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "Update Resume (4)",
+        "description": "Description for Update Resume (4)",
+        "id": "208740c5-2c9b-4f35-a777-60418454d1bc",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "38ca3927-6b8a-4877-92ba-26f261bf4c9e"
+        ],
+        "tint": "#64748B",
+        "stack": "1ea1720b-c599-48a8-b066-787bbbe48b66",
+        "estimate": 21600,
+        "priority": "medium",
+        "duedate": "2026-03-11 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "Update LinkedIn (4)",
+        "description": "Description for Update LinkedIn (4)",
+        "id": "2bac93b5-c3e5-4101-819c-9914fbc81a09",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6"
+        ],
+        "tint": null,
+        "stack": "1ea1720b-c599-48a8-b066-787bbbe48b66",
+        "estimate": 36000,
+        "priority": "high",
+        "duedate": "2026-04-02 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "Apply to Google (4)",
+        "description": "Description for Apply to Google (4)",
+        "id": "5305c94b-983e-4131-8dee-7c50822e2f63",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6",
+            "6a83ea67-5798-4aa5-8381-06b5dba99664",
+            "1eb6eb0f-5ec9-4bbf-a481-0008b55da80a"
+        ],
+        "tint": "#10B981",
+        "stack": "1ea1720b-c599-48a8-b066-787bbbe48b66",
+        "estimate": 36000,
+        "priority": "medium",
+        "duedate": "2026-03-09 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Apply to Amazon (4)",
+        "description": "Description for Apply to Amazon (4)",
+        "id": "d0470b76-6ee7-44df-a21d-d8950fb03895",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6",
+            "3bc01082-e2c3-4953-801f-b61e3abbbb25",
+            "1eb6eb0f-5ec9-4bbf-a481-0008b55da80a",
+            "49257b8c-40d6-4557-9b46-542feae3955f"
+        ],
+        "tint": null,
+        "stack": "1ea1720b-c599-48a8-b066-787bbbe48b66",
+        "estimate": 7200,
+        "priority": "medium",
+        "duedate": "2026-02-23 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Phone Screen with Recruiter (4)",
+        "description": "Description for Phone Screen with Recruiter (4)",
+        "id": "97b557a6-f717-4552-ae67-55f69e8869f0",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "38ca3927-6b8a-4877-92ba-26f261bf4c9e",
+            "3bc01082-e2c3-4953-801f-b61e3abbbb25"
+        ],
+        "tint": null,
+        "stack": "1ea1720b-c599-48a8-b066-787bbbe48b66",
+        "estimate": 7200,
+        "priority": "medium",
+        "duedate": "2026-02-27 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "Technical Interview (4)",
+        "description": "Description for Technical Interview (4)",
+        "id": "f056bc01-78d1-4092-a28f-fea68bf2d912",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "38ca3927-6b8a-4877-92ba-26f261bf4c9e",
+            "26ac8a8f-f577-4fa5-85a1-dc48da3cb2e7"
+        ],
+        "tint": null,
+        "stack": "1ea1720b-c599-48a8-b066-787bbbe48b66",
+        "estimate": 7200,
+        "priority": "low",
+        "duedate": "2026-03-07 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "System Design Interview (4)",
+        "description": "Description for System Design Interview (4)",
+        "id": "e00ea502-83a9-44bb-a382-bca7c05a0d8b",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6",
+            "26ac8a8f-f577-4fa5-85a1-dc48da3cb2e7"
+        ],
+        "tint": null,
+        "stack": "1ea1720b-c599-48a8-b066-787bbbe48b66",
+        "estimate": 18000,
+        "priority": "low",
+        "duedate": "2026-02-17 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "Behavioral Interview (4)",
+        "description": "Description for Behavioral Interview (4)",
+        "id": "e3406228-f6d4-4253-8817-c36a2d15d061",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6",
+            "3bc01082-e2c3-4953-801f-b61e3abbbb25"
+        ],
+        "tint": null,
+        "stack": "1ea1720b-c599-48a8-b066-787bbbe48b66",
+        "estimate": 10800,
+        "priority": "low",
+        "duedate": "2026-03-11 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "Send Thank You Email (4)",
+        "description": "Description for Send Thank You Email (4)",
+        "id": "618daeb3-43f2-4ace-9fba-3973161956a6",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "38ca3927-6b8a-4877-92ba-26f261bf4c9e"
+        ],
+        "tint": null,
+        "stack": "1ea1720b-c599-48a8-b066-787bbbe48b66",
+        "estimate": 21600,
+        "priority": "low",
+        "duedate": "2026-03-16 20:00:36",
+        "position": 9
+    },
+    {
+        "title": "Negotiate Salary (4)",
+        "description": "Description for Negotiate Salary (4)",
+        "id": "53ccb25c-88bb-4197-9040-b59673b66117",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6",
+            "6a83ea67-5798-4aa5-8381-06b5dba99664",
+            "b23f8ef6-53a8-4bf1-ad8a-48a04de73734"
+        ],
+        "tint": null,
+        "stack": "1ea1720b-c599-48a8-b066-787bbbe48b66",
+        "estimate": 10800,
+        "priority": "medium",
+        "duedate": "2026-03-03 20:00:36",
+        "position": 10
+    },
+    {
+        "title": "Review Offer Letter (4)",
+        "description": "Description for Review Offer Letter (4)",
+        "id": "3a81e297-d10f-48f3-bbf0-f39a44772dc3",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6",
+            "b23f8ef6-53a8-4bf1-ad8a-48a04de73734"
+        ],
+        "tint": null,
+        "stack": "1ea1720b-c599-48a8-b066-787bbbe48b66",
+        "estimate": 36000,
+        "priority": "medium",
+        "duedate": "2026-03-06 20:00:36",
+        "position": 11
+    },
+    {
+        "title": "Background Check (4)",
+        "description": "Description for Background Check (4)",
+        "id": "702b4750-d818-4013-abaf-232204628718",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6"
+        ],
+        "tint": "#EC4899",
+        "stack": "1ea1720b-c599-48a8-b066-787bbbe48b66",
+        "estimate": 25200,
+        "priority": "high",
+        "duedate": "2026-02-27 20:00:36",
+        "position": 12
+    },
+    {
+        "title": "Give Notice (4)",
+        "description": "Description for Give Notice (4)",
+        "id": "f815be1b-1457-4b83-a650-baa950825558",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "38ca3927-6b8a-4877-92ba-26f261bf4c9e",
+            "3bc01082-e2c3-4953-801f-b61e3abbbb25"
+        ],
+        "tint": "#06B6D4",
+        "stack": "1ea1720b-c599-48a8-b066-787bbbe48b66",
+        "estimate": 25200,
+        "priority": "low",
+        "duedate": "2026-03-08 20:00:36",
+        "position": 13
+    },
+    {
+        "title": "Onboarding Prep (4)",
+        "description": "Description for Onboarding Prep (4)",
+        "id": "13d64d96-fa6c-4f25-bada-2f1491cd7ae9",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6"
+        ],
+        "tint": "#10B981",
+        "stack": "1ea1720b-c599-48a8-b066-787bbbe48b66",
+        "estimate": 32400,
+        "priority": "low",
+        "duedate": "2026-04-05 20:00:36",
+        "position": 14
+    },
+    {
+        "title": "Networking Coffee (4)",
+        "description": "Description for Networking Coffee (4)",
+        "id": "d849e703-9941-4360-b420-e0b3b41009cf",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6"
+        ],
+        "tint": null,
+        "stack": "c9d835a1-f70c-48f2-af5e-ab59ec2e00b3",
+        "estimate": 25200,
+        "priority": "low",
+        "duedate": "2026-02-13 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "Update Resume (5)",
+        "description": "Description for Update Resume (5)",
+        "id": "262365e4-f0fb-4512-9c30-7d56d592a197",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6"
+        ],
+        "tint": null,
+        "stack": "c9d835a1-f70c-48f2-af5e-ab59ec2e00b3",
+        "estimate": 18000,
+        "priority": "high",
+        "duedate": "2026-03-31 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "Update LinkedIn (5)",
+        "description": "Description for Update LinkedIn (5)",
+        "id": "ebb48da0-73a8-455e-86b3-e44a283de40b",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "38ca3927-6b8a-4877-92ba-26f261bf4c9e"
+        ],
+        "tint": null,
+        "stack": "c9d835a1-f70c-48f2-af5e-ab59ec2e00b3",
+        "estimate": 32400,
+        "priority": "medium",
+        "duedate": "2026-03-09 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "Apply to Google (5)",
+        "description": "Description for Apply to Google (5)",
+        "id": "f9d3e70f-c88f-4ef9-8a11-fc623ab90dba",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "38ca3927-6b8a-4877-92ba-26f261bf4c9e",
+            "3bc01082-e2c3-4953-801f-b61e3abbbb25"
+        ],
+        "tint": "#F59E0B",
+        "stack": "c9d835a1-f70c-48f2-af5e-ab59ec2e00b3",
+        "estimate": 3600,
+        "priority": "low",
+        "duedate": "2026-03-17 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Apply to Amazon (5)",
+        "description": "Description for Apply to Amazon (5)",
+        "id": "ce2f0b4f-4687-4418-9971-704283ec7f6a",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6",
+            "3bc01082-e2c3-4953-801f-b61e3abbbb25"
+        ],
+        "tint": null,
+        "stack": "c9d835a1-f70c-48f2-af5e-ab59ec2e00b3",
+        "estimate": 32400,
+        "priority": "low",
+        "duedate": "2026-02-26 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Phone Screen with Recruiter (5)",
+        "description": "Description for Phone Screen with Recruiter (5)",
+        "id": "423f2823-a9b0-4eec-8834-df363fcf56da",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6",
+            "6a83ea67-5798-4aa5-8381-06b5dba99664",
+            "26ac8a8f-f577-4fa5-85a1-dc48da3cb2e7"
+        ],
+        "tint": null,
+        "stack": "c9d835a1-f70c-48f2-af5e-ab59ec2e00b3",
+        "estimate": 10800,
+        "priority": "high",
+        "duedate": "2026-02-20 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "Technical Interview (5)",
+        "description": "Description for Technical Interview (5)",
+        "id": "424e4410-9f2f-4216-bc27-9f91ff3e824a",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6",
+            "3bc01082-e2c3-4953-801f-b61e3abbbb25",
+            "49257b8c-40d6-4557-9b46-542feae3955f"
+        ],
+        "tint": "#F97316",
+        "stack": "c9d835a1-f70c-48f2-af5e-ab59ec2e00b3",
+        "estimate": 18000,
+        "priority": "medium",
+        "duedate": "2026-02-19 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "System Design Interview (5)",
+        "description": "Description for System Design Interview (5)",
+        "id": "e9c1769c-e9e5-4f9c-b638-a9f527681af0",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6"
+        ],
+        "tint": null,
+        "stack": "c9d835a1-f70c-48f2-af5e-ab59ec2e00b3",
+        "estimate": 28800,
+        "priority": "medium",
+        "duedate": "2026-03-25 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "Behavioral Interview (5)",
+        "description": "Description for Behavioral Interview (5)",
+        "id": "b286f10b-6612-4503-a3fe-d251b5bcadf5",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6",
+            "6a83ea67-5798-4aa5-8381-06b5dba99664",
+            "1eb6eb0f-5ec9-4bbf-a481-0008b55da80a"
+        ],
+        "tint": null,
+        "stack": "c9d835a1-f70c-48f2-af5e-ab59ec2e00b3",
+        "estimate": 21600,
+        "priority": "high",
+        "duedate": "2026-03-16 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "Send Thank You Email (5)",
+        "description": "Description for Send Thank You Email (5)",
+        "id": "75d760d6-897b-4625-8557-8e06142bc792",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "38ca3927-6b8a-4877-92ba-26f261bf4c9e"
+        ],
+        "tint": "#3B82F6",
+        "stack": "c9d835a1-f70c-48f2-af5e-ab59ec2e00b3",
+        "estimate": 3600,
+        "priority": "low",
+        "duedate": "2026-02-14 20:00:36",
+        "position": 9
+    },
+    {
+        "title": "Negotiate Salary (5)",
+        "description": "Description for Negotiate Salary (5)",
+        "id": "0777af2f-8a23-4cb3-b192-ef91d0c976e1",
+        "project": "03049f30-b01c-43b8-acb3-85360b8c1586",
+        "tags": [
+            "188d9b64-55fd-4073-9d49-791820837af6",
+            "3bc01082-e2c3-4953-801f-b61e3abbbb25",
+            "b23f8ef6-53a8-4bf1-ad8a-48a04de73734"
+        ],
+        "tint": "#3B82F6",
+        "stack": "c9d835a1-f70c-48f2-af5e-ab59ec2e00b3",
+        "estimate": 25200,
+        "priority": "low",
+        "duedate": "2026-02-27 20:00:36",
+        "position": 10
+    }
+]

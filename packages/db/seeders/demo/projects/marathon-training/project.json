@@ -1,0 +1,37 @@
+[
+    {
+        "id": "815a6769-32d4-4267-b88c-9e2699330844",
+        "title": "Marathon Training",
+        "estimate": 360000,
+        "stacks": [
+            {
+                "title": "Base Building",
+                "tint": "#3B82F6",
+                "id": "815ecd7e-ddc6-4d98-97c5-5044ab8e1d55"
+            },
+            {
+                "title": "Speed Work",
+                "tint": "#EF4444",
+                "id": "b1c6b671-57d4-4d07-a0cd-8c89bb6f2063"
+            },
+            {
+                "title": "Long Runs",
+                "tint": "#8B5CF6",
+                "id": "480e5060-dc9c-4468-9ce5-a6af1e5b82a0"
+            },
+            {
+                "title": "Taper",
+                "tint": "#06B6D4",
+                "id": "051d9355-52bc-4ccd-95c6-b9fea9b100a7"
+            },
+            {
+                "title": "Race Day",
+                "tint": "#64748B",
+                "id": "c339f4da-5be1-4000-8625-2b4883b685fa"
+            }
+        ],
+        "hourlyRate": 147,
+        "currency": "USD",
+        "health": "good"
+    }
+]

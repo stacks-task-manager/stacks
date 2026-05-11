@@ -1,0 +1,42 @@
+[
+    {
+        "id": "45fd4b7f-47b3-405d-a555-58606107ea15",
+        "title": "Software Development Project - Task Management App",
+        "estimate": 345600,
+        "stacks": [
+            {
+                "title": "Planning & Analysis",
+                "tint": "#8B5CF6",
+                "id": "6fd05462-1e06-4027-95a2-40b4eaa6d6c7"
+            },
+            {
+                "title": "Design & Architecture",
+                "tint": "#3B82F6",
+                "id": "97af4c39-6f99-4900-b324-3d190c1fc2db"
+            },
+            {
+                "title": "Development",
+                "tint": "#F59E0B",
+                "id": "5018c7b5-4aae-4b3e-9bbb-2ef851a5d893"
+            },
+            {
+                "title": "Testing & QA",
+                "tint": "#EF4444",
+                "id": "1db0392b-e127-46db-8ef5-4e439beda046"
+            },
+            {
+                "title": "Deployment",
+                "tint": "#10B981",
+                "id": "93b3a5e6-ca54-4b48-88ed-039bd906bbc0"
+            },
+            {
+                "title": "Maintenance",
+                "tint": "#06B6D4",
+                "id": "35399ad9-7878-439b-98b4-9374db6759a2"
+            }
+        ],
+        "hourlyRate": 85,
+        "currency": "EUR",
+        "health": "good"
+    }
+]

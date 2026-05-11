@@ -1,0 +1,915 @@
+[
+    {
+        "title": "Register Company",
+        "description": "Description for Register Company",
+        "id": "a307859a-95a3-4d31-8a1a-73e755187361",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [],
+        "tint": "#F59E0B",
+        "stack": "c288b6c8-30a3-4799-8d61-fc2c48102fe1",
+        "estimate": 3600,
+        "priority": "medium",
+        "duedate": "2026-03-04 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "Open Bank Account",
+        "description": "Description for Open Bank Account",
+        "id": "797cbd97-d36a-4c47-833a-6004e62562c1",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [],
+        "tint": "#6366F1",
+        "stack": "c288b6c8-30a3-4799-8d61-fc2c48102fe1",
+        "estimate": 28800,
+        "priority": "high",
+        "duedate": "2026-03-03 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "Draft Co-founder Agreement",
+        "description": "Description for Draft Co-founder Agreement",
+        "id": "cdade5d2-9746-4f9a-b624-36cd64420f99",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "5ee25305-f2d1-4db6-b964-e0034d2953f3"
+        ],
+        "tint": "#6366F1",
+        "stack": "c288b6c8-30a3-4799-8d61-fc2c48102fe1",
+        "estimate": 18000,
+        "priority": "medium",
+        "duedate": "2026-03-07 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "Build Landing Page",
+        "description": "Description for Build Landing Page",
+        "id": "eda0e44a-1965-4024-949a-c8be1acedf1d",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "25d51af1-f16b-4c52-a57e-62b2e9344d15",
+            "f5f4525c-85cf-436d-9279-cc7a4043c299"
+        ],
+        "tint": null,
+        "stack": "c288b6c8-30a3-4799-8d61-fc2c48102fe1",
+        "estimate": 21600,
+        "priority": "medium",
+        "duedate": "2026-02-15 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Set up CRM",
+        "description": "Description for Set up CRM",
+        "id": "f4fa3ae3-6984-426d-be34-12efbba572f5",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "b636094f-d30d-4b8c-b18a-5ae6ac606f33"
+        ],
+        "tint": "#06B6D4",
+        "stack": "c288b6c8-30a3-4799-8d61-fc2c48102fe1",
+        "estimate": 21600,
+        "priority": "low",
+        "duedate": "2026-02-17 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Define Pricing",
+        "description": "Description for Define Pricing",
+        "id": "cc3a4622-6b33-472d-8ca7-cf175f4f7eb6",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "b636094f-d30d-4b8c-b18a-5ae6ac606f33"
+        ],
+        "tint": "#6366F1",
+        "stack": "c288b6c8-30a3-4799-8d61-fc2c48102fe1",
+        "estimate": 25200,
+        "priority": "medium",
+        "duedate": "2026-02-05 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "Create Sales Deck",
+        "description": "Description for Create Sales Deck",
+        "id": "ae58d34d-8bfc-4dc4-9f7a-e9beecf89623",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "7011f0ca-8dc9-4aee-b2d0-f2feec29ed6c",
+            "f5f4525c-85cf-436d-9279-cc7a4043c299"
+        ],
+        "tint": null,
+        "stack": "c288b6c8-30a3-4799-8d61-fc2c48102fe1",
+        "estimate": 10800,
+        "priority": "low",
+        "duedate": "2026-04-01 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "Reach out to Investors",
+        "description": "Description for Reach out to Investors",
+        "id": "45940e31-5638-4789-b7d0-c2a6d6a611b4",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "577c17d7-1e1b-4cdb-9b88-6ac16788f2e7"
+        ],
+        "tint": "#EF4444",
+        "stack": "c288b6c8-30a3-4799-8d61-fc2c48102fe1",
+        "estimate": 21600,
+        "priority": "high",
+        "duedate": "2026-02-11 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "Hire CTO",
+        "description": "Description for Hire CTO",
+        "id": "80c6d758-fb5b-4af0-908c-86d9d737e832",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "25d51af1-f16b-4c52-a57e-62b2e9344d15",
+            "5ee25305-f2d1-4db6-b964-e0034d2953f3"
+        ],
+        "tint": "#06B6D4",
+        "stack": "c288b6c8-30a3-4799-8d61-fc2c48102fe1",
+        "estimate": 21600,
+        "priority": "medium",
+        "duedate": "2026-02-12 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "Conduct User Interviews",
+        "description": "Description for Conduct User Interviews",
+        "id": "24bf761f-644e-4418-8079-eebffa236bd6",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "577c17d7-1e1b-4cdb-9b88-6ac16788f2e7",
+            "25d51af1-f16b-4c52-a57e-62b2e9344d15",
+            "33eab67d-1275-45f6-b88f-386d24aaf9b2"
+        ],
+        "tint": null,
+        "stack": "c288b6c8-30a3-4799-8d61-fc2c48102fe1",
+        "estimate": 14400,
+        "priority": "low",
+        "duedate": "2026-04-05 20:00:36",
+        "position": 9
+    },
+    {
+        "title": "Setup Analytics",
+        "description": "Description for Setup Analytics",
+        "id": "9874be02-56c0-4d9f-8824-3c829c11fc13",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "25d51af1-f16b-4c52-a57e-62b2e9344d15"
+        ],
+        "tint": null,
+        "stack": "2ae08ec8-035a-4cfe-88cf-e0b6d7f00fc6",
+        "estimate": 14400,
+        "priority": "high",
+        "duedate": "2026-03-20 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "Run Ad Campaign",
+        "description": "Description for Run Ad Campaign",
+        "id": "82fb2a64-5090-424c-9939-ca5d30232adb",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "0c488792-9b50-4657-974a-f59bac428a4e"
+        ],
+        "tint": "#EF4444",
+        "stack": "2ae08ec8-035a-4cfe-88cf-e0b6d7f00fc6",
+        "estimate": 36000,
+        "priority": "low",
+        "duedate": "2026-02-16 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "Write Blog Post",
+        "description": "Description for Write Blog Post",
+        "id": "36e358a0-49bb-4b11-afe2-537fcbc70a01",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "25d51af1-f16b-4c52-a57e-62b2e9344d15",
+            "33eab67d-1275-45f6-b88f-386d24aaf9b2"
+        ],
+        "tint": "#06B6D4",
+        "stack": "2ae08ec8-035a-4cfe-88cf-e0b6d7f00fc6",
+        "estimate": 25200,
+        "priority": "medium",
+        "duedate": "2026-03-17 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "Attend Networking Event",
+        "description": "Description for Attend Networking Event",
+        "id": "e0de8b18-b88b-4bd4-889f-9bfad81fe0f4",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "0c488792-9b50-4657-974a-f59bac428a4e",
+            "5ee25305-f2d1-4db6-b964-e0034d2953f3"
+        ],
+        "tint": "#F97316",
+        "stack": "2ae08ec8-035a-4cfe-88cf-e0b6d7f00fc6",
+        "estimate": 25200,
+        "priority": "high",
+        "duedate": "2026-03-11 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Prepare Financial Projections",
+        "description": "Description for Prepare Financial Projections",
+        "id": "74dbbce2-03eb-4215-bfc2-a30b2840a7ab",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "33eab67d-1275-45f6-b88f-386d24aaf9b2"
+        ],
+        "tint": null,
+        "stack": "2ae08ec8-035a-4cfe-88cf-e0b6d7f00fc6",
+        "estimate": 10800,
+        "priority": "high",
+        "duedate": "2026-02-27 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Register Company (2)",
+        "description": "Description for Register Company (2)",
+        "id": "a7fd07cd-53b3-4f65-8bbf-e7127c406fbf",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "33eab67d-1275-45f6-b88f-386d24aaf9b2"
+        ],
+        "tint": "#F97316",
+        "stack": "2ae08ec8-035a-4cfe-88cf-e0b6d7f00fc6",
+        "estimate": 32400,
+        "priority": "high",
+        "duedate": "2026-02-18 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "Open Bank Account (2)",
+        "description": "Description for Open Bank Account (2)",
+        "id": "de4da989-ee23-4054-8f40-1115d316b8a7",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "25d51af1-f16b-4c52-a57e-62b2e9344d15",
+            "b636094f-d30d-4b8c-b18a-5ae6ac606f33"
+        ],
+        "tint": "#EF4444",
+        "stack": "2ae08ec8-035a-4cfe-88cf-e0b6d7f00fc6",
+        "estimate": 32400,
+        "priority": "low",
+        "duedate": "2026-03-03 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "Draft Co-founder Agreement (2)",
+        "description": "Description for Draft Co-founder Agreement (2)",
+        "id": "5dea5888-d451-4fdd-8c56-1d4e047dcb38",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [],
+        "tint": null,
+        "stack": "2ae08ec8-035a-4cfe-88cf-e0b6d7f00fc6",
+        "estimate": 36000,
+        "priority": "medium",
+        "duedate": "2026-02-25 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "Build Landing Page (2)",
+        "description": "Description for Build Landing Page (2)",
+        "id": "1054abd1-e45b-4a6d-aab6-a3c9c82ca3de",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "b636094f-d30d-4b8c-b18a-5ae6ac606f33",
+            "5ee25305-f2d1-4db6-b964-e0034d2953f3"
+        ],
+        "tint": "#3B82F6",
+        "stack": "2ae08ec8-035a-4cfe-88cf-e0b6d7f00fc6",
+        "estimate": 14400,
+        "priority": "medium",
+        "duedate": "2026-02-06 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "Set up CRM (2)",
+        "description": "Description for Set up CRM (2)",
+        "id": "81448afb-3f0a-49b8-9a8c-0423e5bccc46",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [],
+        "tint": "#10B981",
+        "stack": "2ae08ec8-035a-4cfe-88cf-e0b6d7f00fc6",
+        "estimate": 32400,
+        "priority": "high",
+        "duedate": "2026-03-23 20:00:36",
+        "position": 9
+    },
+    {
+        "title": "Define Pricing (2)",
+        "description": "Description for Define Pricing (2)",
+        "id": "0c824651-52f2-4fee-bc90-c9068d4fb0de",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "b636094f-d30d-4b8c-b18a-5ae6ac606f33",
+            "f5f4525c-85cf-436d-9279-cc7a4043c299"
+        ],
+        "tint": "#6366F1",
+        "stack": "a5d57090-9955-47aa-9653-520ca7597e0c",
+        "estimate": 10800,
+        "priority": "low",
+        "duedate": "2026-04-04 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "Create Sales Deck (2)",
+        "description": "Description for Create Sales Deck (2)",
+        "id": "db84a09a-1e8d-46b7-8c88-7e684d804b37",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "5ee25305-f2d1-4db6-b964-e0034d2953f3"
+        ],
+        "tint": "#EC4899",
+        "stack": "a5d57090-9955-47aa-9653-520ca7597e0c",
+        "estimate": 7200,
+        "priority": "medium",
+        "duedate": "2026-03-05 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "Reach out to Investors (2)",
+        "description": "Description for Reach out to Investors (2)",
+        "id": "205a204e-f0d5-4204-872b-6a76678473b6",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "0c488792-9b50-4657-974a-f59bac428a4e",
+            "33eab67d-1275-45f6-b88f-386d24aaf9b2"
+        ],
+        "tint": null,
+        "stack": "a5d57090-9955-47aa-9653-520ca7597e0c",
+        "estimate": 10800,
+        "priority": "medium",
+        "duedate": "2026-02-23 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "Hire CTO (2)",
+        "description": "Description for Hire CTO (2)",
+        "id": "3cbf80f6-0559-46bc-8ae2-610a176da15a",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "0c488792-9b50-4657-974a-f59bac428a4e",
+            "25d51af1-f16b-4c52-a57e-62b2e9344d15",
+            "33eab67d-1275-45f6-b88f-386d24aaf9b2"
+        ],
+        "tint": null,
+        "stack": "a5d57090-9955-47aa-9653-520ca7597e0c",
+        "estimate": 21600,
+        "priority": "low",
+        "duedate": "2026-03-24 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Conduct User Interviews (2)",
+        "description": "Description for Conduct User Interviews (2)",
+        "id": "b4f59a8e-f79c-4640-838e-f46f9a71640f",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "577c17d7-1e1b-4cdb-9b88-6ac16788f2e7",
+            "33eab67d-1275-45f6-b88f-386d24aaf9b2"
+        ],
+        "tint": null,
+        "stack": "a5d57090-9955-47aa-9653-520ca7597e0c",
+        "estimate": 7200,
+        "priority": "medium",
+        "duedate": "2026-03-18 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Setup Analytics (2)",
+        "description": "Description for Setup Analytics (2)",
+        "id": "75ca7322-ab4c-41f6-9990-b2c13ed5a322",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "b636094f-d30d-4b8c-b18a-5ae6ac606f33",
+            "f5f4525c-85cf-436d-9279-cc7a4043c299"
+        ],
+        "tint": null,
+        "stack": "a5d57090-9955-47aa-9653-520ca7597e0c",
+        "estimate": 3600,
+        "priority": "low",
+        "duedate": "2026-02-12 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "Run Ad Campaign (2)",
+        "description": "Description for Run Ad Campaign (2)",
+        "id": "d811c91a-1f4f-4205-91b1-4c3cf5af3f73",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "25d51af1-f16b-4c52-a57e-62b2e9344d15",
+            "0c488792-9b50-4657-974a-f59bac428a4e",
+            "5ee25305-f2d1-4db6-b964-e0034d2953f3"
+        ],
+        "tint": null,
+        "stack": "a5d57090-9955-47aa-9653-520ca7597e0c",
+        "estimate": 14400,
+        "priority": "medium",
+        "duedate": "2026-03-29 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "Write Blog Post (2)",
+        "description": "Description for Write Blog Post (2)",
+        "id": "8356fbf2-39bf-4bc2-af76-ca9b9426ebc0",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [],
+        "tint": "#3B82F6",
+        "stack": "a5d57090-9955-47aa-9653-520ca7597e0c",
+        "estimate": 3600,
+        "priority": "low",
+        "duedate": "2026-03-16 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "Attend Networking Event (2)",
+        "description": "Description for Attend Networking Event (2)",
+        "id": "4f006b51-77b6-4e8e-9484-aae183f697e8",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "b636094f-d30d-4b8c-b18a-5ae6ac606f33"
+        ],
+        "tint": null,
+        "stack": "a5d57090-9955-47aa-9653-520ca7597e0c",
+        "estimate": 14400,
+        "priority": "high",
+        "duedate": "2026-03-15 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "Prepare Financial Projections (2)",
+        "description": "Description for Prepare Financial Projections (2)",
+        "id": "f96ecc8f-0ab8-462a-a8f8-0d5e2ee47d69",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "577c17d7-1e1b-4cdb-9b88-6ac16788f2e7",
+            "25d51af1-f16b-4c52-a57e-62b2e9344d15",
+            "33eab67d-1275-45f6-b88f-386d24aaf9b2"
+        ],
+        "tint": null,
+        "stack": "a5d57090-9955-47aa-9653-520ca7597e0c",
+        "estimate": 18000,
+        "priority": "high",
+        "duedate": "2026-03-30 20:00:36",
+        "position": 9
+    },
+    {
+        "title": "Register Company (3)",
+        "description": "Description for Register Company (3)",
+        "id": "7bab3010-6f95-46f6-9920-373791268c03",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "7011f0ca-8dc9-4aee-b2d0-f2feec29ed6c",
+            "25d51af1-f16b-4c52-a57e-62b2e9344d15"
+        ],
+        "tint": null,
+        "stack": "a5d57090-9955-47aa-9653-520ca7597e0c",
+        "estimate": 14400,
+        "priority": "medium",
+        "duedate": "2026-03-17 20:00:36",
+        "position": 10
+    },
+    {
+        "title": "Open Bank Account (3)",
+        "description": "Description for Open Bank Account (3)",
+        "id": "41b3cc6c-0f04-4545-81a1-b87e729bd0f1",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "0c488792-9b50-4657-974a-f59bac428a4e",
+            "b636094f-d30d-4b8c-b18a-5ae6ac606f33",
+            "33eab67d-1275-45f6-b88f-386d24aaf9b2"
+        ],
+        "tint": null,
+        "stack": "a5d57090-9955-47aa-9653-520ca7597e0c",
+        "estimate": 14400,
+        "priority": "high",
+        "duedate": "2026-03-12 20:00:36",
+        "position": 11
+    },
+    {
+        "title": "Draft Co-founder Agreement (3)",
+        "description": "Description for Draft Co-founder Agreement (3)",
+        "id": "381b5144-bdde-47ff-97c1-796d05056281",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "b636094f-d30d-4b8c-b18a-5ae6ac606f33",
+            "577c17d7-1e1b-4cdb-9b88-6ac16788f2e7",
+            "33eab67d-1275-45f6-b88f-386d24aaf9b2"
+        ],
+        "tint": "#EC4899",
+        "stack": "a5d57090-9955-47aa-9653-520ca7597e0c",
+        "estimate": 14400,
+        "priority": "high",
+        "duedate": "2026-02-17 20:00:36",
+        "position": 12
+    },
+    {
+        "title": "Build Landing Page (3)",
+        "description": "Description for Build Landing Page (3)",
+        "id": "77efe6f0-b4c1-4aba-9b69-b1228fd12367",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "0c488792-9b50-4657-974a-f59bac428a4e",
+            "7011f0ca-8dc9-4aee-b2d0-f2feec29ed6c"
+        ],
+        "tint": "#3B82F6",
+        "stack": "a5d57090-9955-47aa-9653-520ca7597e0c",
+        "estimate": 36000,
+        "priority": "low",
+        "duedate": "2026-04-05 20:00:36",
+        "position": 13
+    },
+    {
+        "title": "Set up CRM (3)",
+        "description": "Description for Set up CRM (3)",
+        "id": "7f586498-f3d1-4f8c-9f97-d4d24f87bafc",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "7011f0ca-8dc9-4aee-b2d0-f2feec29ed6c",
+            "f5f4525c-85cf-436d-9279-cc7a4043c299"
+        ],
+        "tint": null,
+        "stack": "a5d57090-9955-47aa-9653-520ca7597e0c",
+        "estimate": 21600,
+        "priority": "high",
+        "duedate": "2026-03-20 20:00:36",
+        "position": 14
+    },
+    {
+        "title": "Define Pricing (3)",
+        "description": "Description for Define Pricing (3)",
+        "id": "6e3a6969-9c53-4a58-a13c-2f38963fcc64",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "7011f0ca-8dc9-4aee-b2d0-f2feec29ed6c",
+            "5ee25305-f2d1-4db6-b964-e0034d2953f3"
+        ],
+        "tint": null,
+        "stack": "106f8296-c8e1-4bab-85fe-6c5fb4220ba0",
+        "estimate": 21600,
+        "priority": "high",
+        "duedate": "2026-02-24 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "Create Sales Deck (3)",
+        "description": "Description for Create Sales Deck (3)",
+        "id": "50fb2422-f2e2-4959-ac81-d01bdc238571",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "0c488792-9b50-4657-974a-f59bac428a4e",
+            "33eab67d-1275-45f6-b88f-386d24aaf9b2"
+        ],
+        "tint": null,
+        "stack": "106f8296-c8e1-4bab-85fe-6c5fb4220ba0",
+        "estimate": 10800,
+        "priority": "medium",
+        "duedate": "2026-03-18 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "Reach out to Investors (3)",
+        "description": "Description for Reach out to Investors (3)",
+        "id": "a5cd7794-c455-4310-87f0-959596895e18",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "33eab67d-1275-45f6-b88f-386d24aaf9b2"
+        ],
+        "tint": "#06B6D4",
+        "stack": "106f8296-c8e1-4bab-85fe-6c5fb4220ba0",
+        "estimate": 14400,
+        "priority": "medium",
+        "duedate": "2026-02-05 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "Hire CTO (3)",
+        "description": "Description for Hire CTO (3)",
+        "id": "9cb95cef-2912-4b2b-9e92-fefcfab81989",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "25d51af1-f16b-4c52-a57e-62b2e9344d15",
+            "7011f0ca-8dc9-4aee-b2d0-f2feec29ed6c"
+        ],
+        "tint": "#EC4899",
+        "stack": "106f8296-c8e1-4bab-85fe-6c5fb4220ba0",
+        "estimate": 32400,
+        "priority": "high",
+        "duedate": "2026-02-13 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Conduct User Interviews (3)",
+        "description": "Description for Conduct User Interviews (3)",
+        "id": "8bc2e5e2-881f-47be-9edd-2a1031dccfc9",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "7011f0ca-8dc9-4aee-b2d0-f2feec29ed6c",
+            "25d51af1-f16b-4c52-a57e-62b2e9344d15",
+            "5ee25305-f2d1-4db6-b964-e0034d2953f3"
+        ],
+        "tint": null,
+        "stack": "106f8296-c8e1-4bab-85fe-6c5fb4220ba0",
+        "estimate": 28800,
+        "priority": "high",
+        "duedate": "2026-03-11 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Setup Analytics (3)",
+        "description": "Description for Setup Analytics (3)",
+        "id": "cffd568a-5073-4742-b4e5-749a1c5c2c6e",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [],
+        "tint": "#F59E0B",
+        "stack": "106f8296-c8e1-4bab-85fe-6c5fb4220ba0",
+        "estimate": 3600,
+        "priority": "medium",
+        "duedate": "2026-03-20 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "Run Ad Campaign (3)",
+        "description": "Description for Run Ad Campaign (3)",
+        "id": "8de18d5c-28a2-45b5-9b45-98d64dd4ae59",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "25d51af1-f16b-4c52-a57e-62b2e9344d15"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "106f8296-c8e1-4bab-85fe-6c5fb4220ba0",
+        "estimate": 7200,
+        "priority": "medium",
+        "duedate": "2026-03-30 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "Write Blog Post (3)",
+        "description": "Description for Write Blog Post (3)",
+        "id": "819d330a-8965-4fdf-9061-34086988fec1",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "0c488792-9b50-4657-974a-f59bac428a4e",
+            "5ee25305-f2d1-4db6-b964-e0034d2953f3"
+        ],
+        "tint": null,
+        "stack": "106f8296-c8e1-4bab-85fe-6c5fb4220ba0",
+        "estimate": 21600,
+        "priority": "high",
+        "duedate": "2026-02-15 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "Attend Networking Event (3)",
+        "description": "Description for Attend Networking Event (3)",
+        "id": "1f84ae39-429d-4780-8fa4-b65920258782",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "b636094f-d30d-4b8c-b18a-5ae6ac606f33"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "106f8296-c8e1-4bab-85fe-6c5fb4220ba0",
+        "estimate": 18000,
+        "priority": "low",
+        "duedate": "2026-04-03 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "Prepare Financial Projections (3)",
+        "description": "Description for Prepare Financial Projections (3)",
+        "id": "0fdba016-2452-416d-af26-561d25fa7520",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "0c488792-9b50-4657-974a-f59bac428a4e",
+            "577c17d7-1e1b-4cdb-9b88-6ac16788f2e7",
+            "f5f4525c-85cf-436d-9279-cc7a4043c299"
+        ],
+        "tint": null,
+        "stack": "106f8296-c8e1-4bab-85fe-6c5fb4220ba0",
+        "estimate": 25200,
+        "priority": "medium",
+        "duedate": "2026-02-10 20:00:36",
+        "position": 9
+    },
+    {
+        "title": "Register Company (4)",
+        "description": "Description for Register Company (4)",
+        "id": "1b0a7feb-ef24-4d56-955c-ce42d69de181",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "b636094f-d30d-4b8c-b18a-5ae6ac606f33",
+            "7011f0ca-8dc9-4aee-b2d0-f2feec29ed6c"
+        ],
+        "tint": null,
+        "stack": "ee52c12e-f225-42b3-935d-78f2f5bece0f",
+        "estimate": 7200,
+        "priority": "high",
+        "duedate": "2026-02-12 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "Open Bank Account (4)",
+        "description": "Description for Open Bank Account (4)",
+        "id": "452034f1-19d9-46e5-b1e1-99359c6b5b13",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "b636094f-d30d-4b8c-b18a-5ae6ac606f33"
+        ],
+        "tint": "#06B6D4",
+        "stack": "ee52c12e-f225-42b3-935d-78f2f5bece0f",
+        "estimate": 10800,
+        "priority": "low",
+        "duedate": "2026-03-19 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "Draft Co-founder Agreement (4)",
+        "description": "Description for Draft Co-founder Agreement (4)",
+        "id": "94accc45-64fe-45c8-a0b3-86bfe28f611a",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "577c17d7-1e1b-4cdb-9b88-6ac16788f2e7",
+            "33eab67d-1275-45f6-b88f-386d24aaf9b2"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "ee52c12e-f225-42b3-935d-78f2f5bece0f",
+        "estimate": 21600,
+        "priority": "medium",
+        "duedate": "2026-02-13 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "Build Landing Page (4)",
+        "description": "Description for Build Landing Page (4)",
+        "id": "f0a45649-9630-4775-af36-4b549e0fc884",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "25d51af1-f16b-4c52-a57e-62b2e9344d15",
+            "b636094f-d30d-4b8c-b18a-5ae6ac606f33",
+            "33eab67d-1275-45f6-b88f-386d24aaf9b2"
+        ],
+        "tint": null,
+        "stack": "ee52c12e-f225-42b3-935d-78f2f5bece0f",
+        "estimate": 10800,
+        "priority": "high",
+        "duedate": "2026-03-26 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Set up CRM (4)",
+        "description": "Description for Set up CRM (4)",
+        "id": "e33ca6cf-8e91-40e8-a139-d0df6de4b569",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "7011f0ca-8dc9-4aee-b2d0-f2feec29ed6c",
+            "5ee25305-f2d1-4db6-b964-e0034d2953f3"
+        ],
+        "tint": "#10B981",
+        "stack": "ee52c12e-f225-42b3-935d-78f2f5bece0f",
+        "estimate": 14400,
+        "priority": "high",
+        "duedate": "2026-02-14 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Define Pricing (4)",
+        "description": "Description for Define Pricing (4)",
+        "id": "a8b83558-79d1-4839-96a2-6e2ed3c628b5",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "0c488792-9b50-4657-974a-f59bac428a4e"
+        ],
+        "tint": null,
+        "stack": "ee52c12e-f225-42b3-935d-78f2f5bece0f",
+        "estimate": 18000,
+        "priority": "medium",
+        "duedate": "2026-02-05 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "Create Sales Deck (4)",
+        "description": "Description for Create Sales Deck (4)",
+        "id": "99bf5e20-0428-432a-85a8-1dafa76b8bab",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "b636094f-d30d-4b8c-b18a-5ae6ac606f33"
+        ],
+        "tint": null,
+        "stack": "ee52c12e-f225-42b3-935d-78f2f5bece0f",
+        "estimate": 32400,
+        "priority": "medium",
+        "duedate": "2026-03-19 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "Reach out to Investors (4)",
+        "description": "Description for Reach out to Investors (4)",
+        "id": "71a94fcd-a23b-4a2f-b1ad-c5c7c93310db",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "0c488792-9b50-4657-974a-f59bac428a4e",
+            "25d51af1-f16b-4c52-a57e-62b2e9344d15",
+            "f5f4525c-85cf-436d-9279-cc7a4043c299"
+        ],
+        "tint": "#EF4444",
+        "stack": "ee52c12e-f225-42b3-935d-78f2f5bece0f",
+        "estimate": 32400,
+        "priority": "low",
+        "duedate": "2026-03-16 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "Hire CTO (4)",
+        "description": "Description for Hire CTO (4)",
+        "id": "e6e7dde8-6e71-45b7-baf2-8017e3e0f425",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "0c488792-9b50-4657-974a-f59bac428a4e"
+        ],
+        "tint": "#EF4444",
+        "stack": "ee52c12e-f225-42b3-935d-78f2f5bece0f",
+        "estimate": 28800,
+        "priority": "high",
+        "duedate": "2026-04-05 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "Conduct User Interviews (4)",
+        "description": "Description for Conduct User Interviews (4)",
+        "id": "64167fdd-6526-4755-966e-4d7df986f154",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "b636094f-d30d-4b8c-b18a-5ae6ac606f33"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "ee52c12e-f225-42b3-935d-78f2f5bece0f",
+        "estimate": 21600,
+        "priority": "low",
+        "duedate": "2026-03-06 20:00:36",
+        "position": 9
+    },
+    {
+        "title": "Setup Analytics (4)",
+        "description": "Description for Setup Analytics (4)",
+        "id": "f120cf56-c6ba-4132-aa42-b1f0d505551d",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [],
+        "tint": "#F59E0B",
+        "stack": "ee52c12e-f225-42b3-935d-78f2f5bece0f",
+        "estimate": 36000,
+        "priority": "medium",
+        "duedate": "2026-02-06 20:00:36",
+        "position": 10
+    },
+    {
+        "title": "Run Ad Campaign (4)",
+        "description": "Description for Run Ad Campaign (4)",
+        "id": "bc1ec6be-e32a-41b4-910e-aefbb2793e0e",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "b636094f-d30d-4b8c-b18a-5ae6ac606f33"
+        ],
+        "tint": "#EC4899",
+        "stack": "ee52c12e-f225-42b3-935d-78f2f5bece0f",
+        "estimate": 25200,
+        "priority": "high",
+        "duedate": "2026-03-29 20:00:36",
+        "position": 11
+    },
+    {
+        "title": "Write Blog Post (4)",
+        "description": "Description for Write Blog Post (4)",
+        "id": "15bfd3eb-bf0a-4689-aa85-e0966cdf2d58",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "f5f4525c-85cf-436d-9279-cc7a4043c299"
+        ],
+        "tint": "#6366F1",
+        "stack": "ee52c12e-f225-42b3-935d-78f2f5bece0f",
+        "estimate": 18000,
+        "priority": "high",
+        "duedate": "2026-03-10 20:00:36",
+        "position": 12
+    },
+    {
+        "title": "Attend Networking Event (4)",
+        "description": "Description for Attend Networking Event (4)",
+        "id": "874e32f8-63ab-4d9e-a11d-f0ca0448a170",
+        "project": "7c1a5215-1926-411f-a0d4-342cea78bd31",
+        "tags": [
+            "0c488792-9b50-4657-974a-f59bac428a4e",
+            "b636094f-d30d-4b8c-b18a-5ae6ac606f33"
+        ],
+        "tint": "#EF4444",
+        "stack": "ee52c12e-f225-42b3-935d-78f2f5bece0f",
+        "estimate": 18000,
+        "priority": "high",
+        "duedate": "2026-03-21 20:00:36",
+        "position": 13
+    }
+]

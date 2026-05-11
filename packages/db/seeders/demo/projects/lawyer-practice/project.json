@@ -1,0 +1,37 @@
+[
+    {
+        "id": "9c32bdff-b85b-4927-9d7e-65dc2f1948b8",
+        "title": "Legal Case Management",
+        "estimate": 576000,
+        "stacks": [
+            {
+                "title": "Intake",
+                "tint": "#64748B",
+                "id": "ddd47eca-32a1-4fa8-a163-adabb04e5b94"
+            },
+            {
+                "title": "Discovery",
+                "tint": "#8B5CF6",
+                "id": "c0e9dda3-dc1e-4031-816c-1302d9522cf8"
+            },
+            {
+                "title": "Research",
+                "tint": "#F59E0B",
+                "id": "14a6c195-e25a-4c1c-a067-f7585e59f891"
+            },
+            {
+                "title": "Court Prep",
+                "tint": "#EF4444",
+                "id": "0e632744-7d44-4965-9793-9db3a7263407"
+            },
+            {
+                "title": "Closed",
+                "tint": "#10B981",
+                "id": "e2d0b81b-65e9-4511-8010-a147dcf3d0c5"
+            }
+        ],
+        "hourlyRate": 100,
+        "currency": "USD",
+        "health": "good"
+    }
+]

@@ -1,0 +1,216 @@
+{
+  "entityName": "User",
+  "tableName": "users",
+  "attributes": {
+    "id": {
+      "type": "UUID",
+      "defaultValue": "UUIDV4",
+      "primaryKey": true
+    },
+    "email": {
+      "type": "STRING",
+      "allowNull": false
+    },
+    "password": {
+      "type": "STRING",
+      "allowNull": false
+    },
+    "firstName": {
+      "type": "STRING",
+      "allowNull": false
+    },
+    "lastName": {
+      "type": "STRING",
+      "allowNull": false
+    },
+    "avatar": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "gender": {
+      "type": {
+        "type": "ENUM",
+        "values": [
+          "...Object.values(PEOPLE_GENDER"
+        ]
+      },
+      "allowNull": true,
+      "defaultValue": "PEOPLE_GENDER.OTHER"
+    },
+    "nickname": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "title": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "jobTitle": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "company": {
+      "type": "UUID",
+      "allowNull": true
+    },
+    "officePhone": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "cellPhone": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "homePhone": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "fax": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "address": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "county": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "zip": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "city": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "country": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "address2": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "website": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "notes": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "socialTwitter": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "socialFacebook": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "socialLinkedin": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "socialInstagram": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "socialOther": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "personalId": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "userId": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "tags": {
+      "type": "JSONB",
+      "allowNull": true,
+      "defaultValue": []
+    },
+    "status": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "role": {
+      "type": "UUID",
+      "allowNull": false
+    },
+    "birthday": {
+      "type": "DATE",
+      "allowNull": true
+    },
+    "tenant": {
+      "type": "STRING",
+      "allowNull": false
+    },
+    "admin": {
+      "type": "BOOLEAN",
+      "allowNull": true,
+      "defaultValue": false
+    },
+    "real": {
+      "type": "BOOLEAN",
+      "allowNull": true,
+      "defaultValue": false
+    },
+    "onlineStatus": {
+      "type": {
+        "type": "ENUM",
+        "values": [
+          "...Object.values(USER_ONLINE_STATUS"
+        ]
+      },
+      "allowNull": true
+    },
+    "disabled": {
+      "type": "BOOLEAN",
+      "allowNull": true,
+      "defaultValue": false
+    },
+    "system": {
+      "type": "BOOLEAN",
+      "allowNull": true,
+      "defaultValue": false
+    },
+    "token": {
+      "type": "STRING",
+      "allowNull": true,
+      "defaultValue": null
+    },
+    "oauthTokens": {
+      "type": "JSONB",
+      "allowNull": true,
+      "defaultValue": "{"
+    },
+    "deletedBy": {
+      "type": "UUID",
+      "allowNull": true
+    },
+    "lastOnline": {
+      "type": "DATE",
+      "allowNull": true
+    },
+    "created": {
+      "type": "DATE",
+      "allowNull": false,
+      "defaultValue": "NOW"
+    },
+    "updated": {
+      "type": "DATE",
+      "allowNull": false,
+      "defaultValue": "NOW"
+    },
+    "deleted": {
+      "type": "DATE",
+      "allowNull": true
+    }
+  },
+  "options": {}
+}

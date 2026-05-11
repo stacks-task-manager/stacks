@@ -1,0 +1,58 @@
+[
+    {
+        "id": "148811a9-c54d-464b-8619-54d0576b9aa0",
+        "title": "Vocals",
+        "color": "#6366F1",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "e5054fce-c219-4aa1-806d-c8315e50bb5e",
+        "title": "Guitars",
+        "color": "#8B5CF6",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "3fc034dd-7ede-4c81-8557-9df7f8f7eea5",
+        "title": "Drums",
+        "color": "#EC4899",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "869593a4-f35e-449c-94e5-736257f3c6e9",
+        "title": "Synth",
+        "color": "#06B6D4",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "0dede067-be00-4722-97d6-0d9cdd49cf47",
+        "title": "Lyrics",
+        "color": "#06B6D4",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "392ac4ad-07a2-44bc-ada7-729975c29552",
+        "title": "Rough Mix",
+        "color": "#EC4899",
+        "type": "status",
+        "section": "projects"
+    },
+    {
+        "id": "0cab18bb-ec3d-4230-9ff7-35b2a131d4dc",
+        "title": "Final",
+        "color": "#6366F1",
+        "type": "status",
+        "section": "projects"
+    },
+    {
+        "id": "fe6d0570-d505-4366-a9b8-4ec896c4627f",
+        "title": "Needs Re-take",
+        "color": "#F59E0B",
+        "type": "status",
+        "section": "projects"
+    }
+]

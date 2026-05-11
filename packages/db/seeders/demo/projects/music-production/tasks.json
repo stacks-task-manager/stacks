@@ -1,0 +1,912 @@
+[
+    {
+        "title": "Write Song 1",
+        "description": "Description for Write Song 1",
+        "id": "3dd23fd8-fcfb-433f-890c-29117c4d2459",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "148811a9-c54d-464b-8619-54d0576b9aa0"
+        ],
+        "tint": null,
+        "stack": "2b639d5c-a2d3-4f11-b347-7f15324cff7e",
+        "estimate": 32400,
+        "priority": "high",
+        "duedate": "2026-04-05 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "Record Drum Track",
+        "description": "Description for Record Drum Track",
+        "id": "44c7647c-3164-4548-b9d7-9be1b08f1d78",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "3fc034dd-7ede-4c81-8557-9df7f8f7eea5",
+            "0cab18bb-ec3d-4230-9ff7-35b2a131d4dc"
+        ],
+        "tint": "#EC4899",
+        "stack": "2b639d5c-a2d3-4f11-b347-7f15324cff7e",
+        "estimate": 14400,
+        "priority": "low",
+        "duedate": "2026-04-03 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "Record Bass Line",
+        "description": "Description for Record Bass Line",
+        "id": "cbd7234c-f5e5-487f-9239-2da6ce8bc011",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "3fc034dd-7ede-4c81-8557-9df7f8f7eea5"
+        ],
+        "tint": "#6366F1",
+        "stack": "2b639d5c-a2d3-4f11-b347-7f15324cff7e",
+        "estimate": 7200,
+        "priority": "low",
+        "duedate": "2026-03-05 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "Layer Vocals",
+        "description": "Description for Layer Vocals",
+        "id": "9fecc0fb-9658-4375-ab2b-0f45350ddd20",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "e5054fce-c219-4aa1-806d-c8315e50bb5e",
+            "869593a4-f35e-449c-94e5-736257f3c6e9",
+            "392ac4ad-07a2-44bc-ada7-729975c29552"
+        ],
+        "tint": null,
+        "stack": "2b639d5c-a2d3-4f11-b347-7f15324cff7e",
+        "estimate": 7200,
+        "priority": "high",
+        "duedate": "2026-03-16 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Add Synths",
+        "description": "Description for Add Synths",
+        "id": "81d7f586-e780-4b89-92f3-8c00ff2665d2",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "0dede067-be00-4722-97d6-0d9cdd49cf47"
+        ],
+        "tint": null,
+        "stack": "2b639d5c-a2d3-4f11-b347-7f15324cff7e",
+        "estimate": 21600,
+        "priority": "high",
+        "duedate": "2026-03-16 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Mix Track 1",
+        "description": "Description for Mix Track 1",
+        "id": "7ef5bf7e-a33c-463d-8da7-840ea0b96993",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "e5054fce-c219-4aa1-806d-c8315e50bb5e",
+            "3fc034dd-7ede-4c81-8557-9df7f8f7eea5",
+            "392ac4ad-07a2-44bc-ada7-729975c29552"
+        ],
+        "tint": "#3B82F6",
+        "stack": "2b639d5c-a2d3-4f11-b347-7f15324cff7e",
+        "estimate": 10800,
+        "priority": "medium",
+        "duedate": "2026-02-10 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "Mix Track 2",
+        "description": "Description for Mix Track 2",
+        "id": "6b20df5c-9964-4314-aaa4-9dc8e0909442",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "0dede067-be00-4722-97d6-0d9cdd49cf47",
+            "e5054fce-c219-4aa1-806d-c8315e50bb5e"
+        ],
+        "tint": "#3B82F6",
+        "stack": "2b639d5c-a2d3-4f11-b347-7f15324cff7e",
+        "estimate": 28800,
+        "priority": "low",
+        "duedate": "2026-02-17 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "Mastering Session",
+        "description": "Description for Mastering Session",
+        "id": "026f0ecb-0751-4142-a481-ac408d3579b2",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "148811a9-c54d-464b-8619-54d0576b9aa0",
+            "392ac4ad-07a2-44bc-ada7-729975c29552"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "2b639d5c-a2d3-4f11-b347-7f15324cff7e",
+        "estimate": 7200,
+        "priority": "low",
+        "duedate": "2026-04-05 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "Album Art",
+        "description": "Description for Album Art",
+        "id": "447a3c46-ac4e-4b1b-b7ae-29e19ac17e59",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "869593a4-f35e-449c-94e5-736257f3c6e9",
+            "0dede067-be00-4722-97d6-0d9cdd49cf47",
+            "392ac4ad-07a2-44bc-ada7-729975c29552"
+        ],
+        "tint": "#EF4444",
+        "stack": "2b639d5c-a2d3-4f11-b347-7f15324cff7e",
+        "estimate": 7200,
+        "priority": "high",
+        "duedate": "2026-02-22 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "Upload to Spotify",
+        "description": "Description for Upload to Spotify",
+        "id": "7fa76258-1b17-4684-bb06-bf6325e9a47f",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "869593a4-f35e-449c-94e5-736257f3c6e9"
+        ],
+        "tint": "#F97316",
+        "stack": "2b639d5c-a2d3-4f11-b347-7f15324cff7e",
+        "estimate": 36000,
+        "priority": "low",
+        "duedate": "2026-03-23 20:00:36",
+        "position": 9
+    },
+    {
+        "title": "Register Copyright",
+        "description": "Description for Register Copyright",
+        "id": "3f1c61f3-d829-434c-a22a-462ab6e9708e",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [],
+        "tint": null,
+        "stack": "2b639d5c-a2d3-4f11-b347-7f15324cff7e",
+        "estimate": 36000,
+        "priority": "low",
+        "duedate": "2026-03-30 20:00:36",
+        "position": 10
+    },
+    {
+        "title": "Filming Music Video",
+        "description": "Description for Filming Music Video",
+        "id": "cdf98e87-bd1a-4c56-b7e0-817eab8a0dc5",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [],
+        "tint": "#10B981",
+        "stack": "f6ec240b-8c16-47ec-95d1-c77287116274",
+        "estimate": 3600,
+        "priority": "high",
+        "duedate": "2026-03-21 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "Press Release",
+        "description": "Description for Press Release",
+        "id": "47be6d6e-c008-4afc-8be3-e65b44ca8b39",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [],
+        "tint": "#06B6D4",
+        "stack": "f6ec240b-8c16-47ec-95d1-c77287116274",
+        "estimate": 21600,
+        "priority": "low",
+        "duedate": "2026-03-29 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "Radio Promo",
+        "description": "Description for Radio Promo",
+        "id": "dca9657d-df6a-4aeb-aa7e-da6b402c0888",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [],
+        "tint": null,
+        "stack": "f6ec240b-8c16-47ec-95d1-c77287116274",
+        "estimate": 10800,
+        "priority": "high",
+        "duedate": "2026-03-20 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "Rehearsal",
+        "description": "Description for Rehearsal",
+        "id": "ad6a53b3-a196-418c-bcdc-9862966a360b",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "392ac4ad-07a2-44bc-ada7-729975c29552"
+        ],
+        "tint": null,
+        "stack": "f6ec240b-8c16-47ec-95d1-c77287116274",
+        "estimate": 14400,
+        "priority": "medium",
+        "duedate": "2026-03-20 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Write Song 1 (2)",
+        "description": "Description for Write Song 1 (2)",
+        "id": "84141598-1910-4b42-8d2a-42bf30d4b6a4",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "3fc034dd-7ede-4c81-8557-9df7f8f7eea5"
+        ],
+        "tint": "#EF4444",
+        "stack": "f6ec240b-8c16-47ec-95d1-c77287116274",
+        "estimate": 28800,
+        "priority": "low",
+        "duedate": "2026-03-03 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Record Drum Track (2)",
+        "description": "Description for Record Drum Track (2)",
+        "id": "ee21ced1-f11c-49d9-974a-b152d811d241",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "869593a4-f35e-449c-94e5-736257f3c6e9"
+        ],
+        "tint": null,
+        "stack": "f6ec240b-8c16-47ec-95d1-c77287116274",
+        "estimate": 3600,
+        "priority": "medium",
+        "duedate": "2026-02-12 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "Record Bass Line (2)",
+        "description": "Description for Record Bass Line (2)",
+        "id": "afdc32a0-b2e4-4cb7-a776-d42c65eb3d67",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "0dede067-be00-4722-97d6-0d9cdd49cf47",
+            "e5054fce-c219-4aa1-806d-c8315e50bb5e"
+        ],
+        "tint": "#EF4444",
+        "stack": "f6ec240b-8c16-47ec-95d1-c77287116274",
+        "estimate": 25200,
+        "priority": "medium",
+        "duedate": "2026-03-07 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "Layer Vocals (2)",
+        "description": "Description for Layer Vocals (2)",
+        "id": "da9b6b75-eb46-44b4-8429-32f6d43b2ab8",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [],
+        "tint": "#EF4444",
+        "stack": "f6ec240b-8c16-47ec-95d1-c77287116274",
+        "estimate": 7200,
+        "priority": "high",
+        "duedate": "2026-03-03 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "Add Synths (2)",
+        "description": "Description for Add Synths (2)",
+        "id": "3e6ba7e0-6796-49f0-80d9-4042b923fee6",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [],
+        "tint": "#EF4444",
+        "stack": "f6ec240b-8c16-47ec-95d1-c77287116274",
+        "estimate": 21600,
+        "priority": "medium",
+        "duedate": "2026-02-15 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "Mix Track 1 (2)",
+        "description": "Description for Mix Track 1 (2)",
+        "id": "725339d4-d20c-43b4-ac21-66bb3638066e",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "fe6d0570-d505-4366-a9b8-4ec896c4627f"
+        ],
+        "tint": null,
+        "stack": "f6ec240b-8c16-47ec-95d1-c77287116274",
+        "estimate": 3600,
+        "priority": "medium",
+        "duedate": "2026-03-24 20:00:36",
+        "position": 9
+    },
+    {
+        "title": "Mix Track 2 (2)",
+        "description": "Description for Mix Track 2 (2)",
+        "id": "92629ffc-23d3-4e0c-bcbb-cdfdafda9c52",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "148811a9-c54d-464b-8619-54d0576b9aa0",
+            "fe6d0570-d505-4366-a9b8-4ec896c4627f"
+        ],
+        "tint": null,
+        "stack": "f6ec240b-8c16-47ec-95d1-c77287116274",
+        "estimate": 10800,
+        "priority": "medium",
+        "duedate": "2026-03-01 20:00:36",
+        "position": 10
+    },
+    {
+        "title": "Mastering Session (2)",
+        "description": "Description for Mastering Session (2)",
+        "id": "fd1ffc1b-3547-40dd-9154-f4f84e4fafe6",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "148811a9-c54d-464b-8619-54d0576b9aa0",
+            "3fc034dd-7ede-4c81-8557-9df7f8f7eea5"
+        ],
+        "tint": "#F59E0B",
+        "stack": "f6ec240b-8c16-47ec-95d1-c77287116274",
+        "estimate": 18000,
+        "priority": "low",
+        "duedate": "2026-02-18 20:00:36",
+        "position": 11
+    },
+    {
+        "title": "Album Art (2)",
+        "description": "Description for Album Art (2)",
+        "id": "19b5f130-806c-4344-9688-6447874c7eac",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "3fc034dd-7ede-4c81-8557-9df7f8f7eea5",
+            "0dede067-be00-4722-97d6-0d9cdd49cf47",
+            "0cab18bb-ec3d-4230-9ff7-35b2a131d4dc"
+        ],
+        "tint": "#06B6D4",
+        "stack": "f6ec240b-8c16-47ec-95d1-c77287116274",
+        "estimate": 21600,
+        "priority": "medium",
+        "duedate": "2026-03-16 20:00:36",
+        "position": 12
+    },
+    {
+        "title": "Upload to Spotify (2)",
+        "description": "Description for Upload to Spotify (2)",
+        "id": "677ee54f-aff5-4ddb-aaa0-b2aca59b61f8",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "392ac4ad-07a2-44bc-ada7-729975c29552"
+        ],
+        "tint": null,
+        "stack": "f6ec240b-8c16-47ec-95d1-c77287116274",
+        "estimate": 32400,
+        "priority": "medium",
+        "duedate": "2026-03-07 20:00:36",
+        "position": 13
+    },
+    {
+        "title": "Register Copyright (2)",
+        "description": "Description for Register Copyright (2)",
+        "id": "ac7a0d8f-df3f-4296-8de3-5a3768d36bbc",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [],
+        "tint": null,
+        "stack": "e0bbfed8-73b6-4a41-977b-f0cc1a658581",
+        "estimate": 7200,
+        "priority": "low",
+        "duedate": "2026-03-07 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "Filming Music Video (2)",
+        "description": "Description for Filming Music Video (2)",
+        "id": "778bfa93-0c32-4d68-91b7-923439e3d761",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "148811a9-c54d-464b-8619-54d0576b9aa0",
+            "869593a4-f35e-449c-94e5-736257f3c6e9"
+        ],
+        "tint": "#EF4444",
+        "stack": "e0bbfed8-73b6-4a41-977b-f0cc1a658581",
+        "estimate": 21600,
+        "priority": "medium",
+        "duedate": "2026-03-13 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "Press Release (2)",
+        "description": "Description for Press Release (2)",
+        "id": "4a087954-70e8-4c78-880c-743d581aa172",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [],
+        "tint": null,
+        "stack": "e0bbfed8-73b6-4a41-977b-f0cc1a658581",
+        "estimate": 32400,
+        "priority": "low",
+        "duedate": "2026-03-10 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "Radio Promo (2)",
+        "description": "Description for Radio Promo (2)",
+        "id": "6533996a-7122-4eb5-981d-16678f637daa",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "3fc034dd-7ede-4c81-8557-9df7f8f7eea5"
+        ],
+        "tint": "#3B82F6",
+        "stack": "e0bbfed8-73b6-4a41-977b-f0cc1a658581",
+        "estimate": 10800,
+        "priority": "low",
+        "duedate": "2026-03-28 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Rehearsal (2)",
+        "description": "Description for Rehearsal (2)",
+        "id": "438de206-3046-4003-98f6-501cfc4386d4",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "0dede067-be00-4722-97d6-0d9cdd49cf47"
+        ],
+        "tint": null,
+        "stack": "e0bbfed8-73b6-4a41-977b-f0cc1a658581",
+        "estimate": 36000,
+        "priority": "high",
+        "duedate": "2026-03-23 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Write Song 1 (3)",
+        "description": "Description for Write Song 1 (3)",
+        "id": "e40c74c9-f143-4f17-b253-e6715d30922c",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "3fc034dd-7ede-4c81-8557-9df7f8f7eea5",
+            "148811a9-c54d-464b-8619-54d0576b9aa0",
+            "0cab18bb-ec3d-4230-9ff7-35b2a131d4dc"
+        ],
+        "tint": "#6366F1",
+        "stack": "e0bbfed8-73b6-4a41-977b-f0cc1a658581",
+        "estimate": 25200,
+        "priority": "high",
+        "duedate": "2026-02-26 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "Record Drum Track (3)",
+        "description": "Description for Record Drum Track (3)",
+        "id": "d8d784cf-124b-481d-886f-8a81154356cf",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "0cab18bb-ec3d-4230-9ff7-35b2a131d4dc"
+        ],
+        "tint": "#6366F1",
+        "stack": "e0bbfed8-73b6-4a41-977b-f0cc1a658581",
+        "estimate": 7200,
+        "priority": "medium",
+        "duedate": "2026-02-09 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "Record Bass Line (3)",
+        "description": "Description for Record Bass Line (3)",
+        "id": "059d7e81-fe31-4db5-b76b-659989b43f66",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "0dede067-be00-4722-97d6-0d9cdd49cf47",
+            "869593a4-f35e-449c-94e5-736257f3c6e9",
+            "fe6d0570-d505-4366-a9b8-4ec896c4627f"
+        ],
+        "tint": "#EF4444",
+        "stack": "e0bbfed8-73b6-4a41-977b-f0cc1a658581",
+        "estimate": 10800,
+        "priority": "medium",
+        "duedate": "2026-02-07 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "Layer Vocals (3)",
+        "description": "Description for Layer Vocals (3)",
+        "id": "77ef3997-7345-4243-a16d-5ddfd98319cc",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "3fc034dd-7ede-4c81-8557-9df7f8f7eea5",
+            "148811a9-c54d-464b-8619-54d0576b9aa0"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "e0bbfed8-73b6-4a41-977b-f0cc1a658581",
+        "estimate": 3600,
+        "priority": "medium",
+        "duedate": "2026-03-17 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "Add Synths (3)",
+        "description": "Description for Add Synths (3)",
+        "id": "63172cc0-36ec-4df4-986b-ccef0812e85b",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [],
+        "tint": "#6366F1",
+        "stack": "e0bbfed8-73b6-4a41-977b-f0cc1a658581",
+        "estimate": 28800,
+        "priority": "medium",
+        "duedate": "2026-02-28 20:00:36",
+        "position": 9
+    },
+    {
+        "title": "Mix Track 1 (3)",
+        "description": "Description for Mix Track 1 (3)",
+        "id": "7c69f85d-c653-424f-9e7f-4dd98e0945e9",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "fe6d0570-d505-4366-a9b8-4ec896c4627f"
+        ],
+        "tint": null,
+        "stack": "a231f801-4358-47da-99c9-32c79c82ed13",
+        "estimate": 3600,
+        "priority": "high",
+        "duedate": "2026-03-17 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "Mix Track 2 (3)",
+        "description": "Description for Mix Track 2 (3)",
+        "id": "54391d0e-909e-4862-b67d-8b055c6aa908",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [],
+        "tint": "#64748B",
+        "stack": "a231f801-4358-47da-99c9-32c79c82ed13",
+        "estimate": 36000,
+        "priority": "high",
+        "duedate": "2026-03-23 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "Mastering Session (3)",
+        "description": "Description for Mastering Session (3)",
+        "id": "9c6cbc5c-98b3-4cbd-8f18-30836559313d",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "3fc034dd-7ede-4c81-8557-9df7f8f7eea5"
+        ],
+        "tint": null,
+        "stack": "a231f801-4358-47da-99c9-32c79c82ed13",
+        "estimate": 7200,
+        "priority": "medium",
+        "duedate": "2026-02-24 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "Album Art (3)",
+        "description": "Description for Album Art (3)",
+        "id": "90ef16db-db7f-44d8-9f07-b48d5e9a111e",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "148811a9-c54d-464b-8619-54d0576b9aa0",
+            "392ac4ad-07a2-44bc-ada7-729975c29552"
+        ],
+        "tint": null,
+        "stack": "a231f801-4358-47da-99c9-32c79c82ed13",
+        "estimate": 14400,
+        "priority": "high",
+        "duedate": "2026-02-13 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Upload to Spotify (3)",
+        "description": "Description for Upload to Spotify (3)",
+        "id": "3e044c9e-54f3-44c3-b1ea-64c2fe942bfa",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "0dede067-be00-4722-97d6-0d9cdd49cf47",
+            "392ac4ad-07a2-44bc-ada7-729975c29552"
+        ],
+        "tint": null,
+        "stack": "a231f801-4358-47da-99c9-32c79c82ed13",
+        "estimate": 14400,
+        "priority": "high",
+        "duedate": "2026-02-07 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Register Copyright (3)",
+        "description": "Description for Register Copyright (3)",
+        "id": "d1382ba8-f686-4262-a7a8-b106a3b2f678",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "148811a9-c54d-464b-8619-54d0576b9aa0",
+            "e5054fce-c219-4aa1-806d-c8315e50bb5e",
+            "fe6d0570-d505-4366-a9b8-4ec896c4627f"
+        ],
+        "tint": null,
+        "stack": "a231f801-4358-47da-99c9-32c79c82ed13",
+        "estimate": 25200,
+        "priority": "medium",
+        "duedate": "2026-02-08 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "Filming Music Video (3)",
+        "description": "Description for Filming Music Video (3)",
+        "id": "f974544b-561a-4982-9afe-5c838556a671",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "0cab18bb-ec3d-4230-9ff7-35b2a131d4dc"
+        ],
+        "tint": "#06B6D4",
+        "stack": "a231f801-4358-47da-99c9-32c79c82ed13",
+        "estimate": 36000,
+        "priority": "high",
+        "duedate": "2026-02-09 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "Press Release (3)",
+        "description": "Description for Press Release (3)",
+        "id": "ac9744e7-ec15-42e3-b7ce-733a0000bc0b",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [],
+        "tint": "#8B5CF6",
+        "stack": "a231f801-4358-47da-99c9-32c79c82ed13",
+        "estimate": 14400,
+        "priority": "high",
+        "duedate": "2026-03-13 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "Radio Promo (3)",
+        "description": "Description for Radio Promo (3)",
+        "id": "f8d03d61-95c9-4902-bb4c-0becf150fae0",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "0dede067-be00-4722-97d6-0d9cdd49cf47",
+            "fe6d0570-d505-4366-a9b8-4ec896c4627f"
+        ],
+        "tint": null,
+        "stack": "a231f801-4358-47da-99c9-32c79c82ed13",
+        "estimate": 32400,
+        "priority": "medium",
+        "duedate": "2026-02-07 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "Rehearsal (3)",
+        "description": "Description for Rehearsal (3)",
+        "id": "c9a0456f-6e8a-47d1-a887-f7594c2f1953",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [],
+        "tint": "#F59E0B",
+        "stack": "a231f801-4358-47da-99c9-32c79c82ed13",
+        "estimate": 3600,
+        "priority": "low",
+        "duedate": "2026-02-21 20:00:36",
+        "position": 9
+    },
+    {
+        "title": "Write Song 1 (4)",
+        "description": "Description for Write Song 1 (4)",
+        "id": "d6ad2e54-c968-4c5b-b57f-d406e73adef6",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "3fc034dd-7ede-4c81-8557-9df7f8f7eea5",
+            "0dede067-be00-4722-97d6-0d9cdd49cf47"
+        ],
+        "tint": "#6366F1",
+        "stack": "a231f801-4358-47da-99c9-32c79c82ed13",
+        "estimate": 10800,
+        "priority": "high",
+        "duedate": "2026-02-21 20:00:36",
+        "position": 10
+    },
+    {
+        "title": "Record Drum Track (4)",
+        "description": "Description for Record Drum Track (4)",
+        "id": "544ba1d9-2b78-4d06-83aa-93b40e952b67",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "e5054fce-c219-4aa1-806d-c8315e50bb5e",
+            "869593a4-f35e-449c-94e5-736257f3c6e9"
+        ],
+        "tint": "#3B82F6",
+        "stack": "a231f801-4358-47da-99c9-32c79c82ed13",
+        "estimate": 25200,
+        "priority": "low",
+        "duedate": "2026-02-25 20:00:36",
+        "position": 11
+    },
+    {
+        "title": "Record Bass Line (4)",
+        "description": "Description for Record Bass Line (4)",
+        "id": "0106acf6-0b75-47d0-a9be-f8bf3478bdb6",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "148811a9-c54d-464b-8619-54d0576b9aa0"
+        ],
+        "tint": null,
+        "stack": "a231f801-4358-47da-99c9-32c79c82ed13",
+        "estimate": 18000,
+        "priority": "low",
+        "duedate": "2026-02-08 20:00:36",
+        "position": 12
+    },
+    {
+        "title": "Layer Vocals (4)",
+        "description": "Description for Layer Vocals (4)",
+        "id": "f7931342-1abf-4a87-b167-53120ffd6e0b",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "0dede067-be00-4722-97d6-0d9cdd49cf47"
+        ],
+        "tint": "#F59E0B",
+        "stack": "e22a078f-eea5-44e3-bb82-b8c96f6c95eb",
+        "estimate": 7200,
+        "priority": "low",
+        "duedate": "2026-02-10 20:00:36",
+        "position": 0
+    },
+    {
+        "title": "Add Synths (4)",
+        "description": "Description for Add Synths (4)",
+        "id": "043d49be-4a3c-4c7e-ac14-53c69e73a479",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "fe6d0570-d505-4366-a9b8-4ec896c4627f"
+        ],
+        "tint": null,
+        "stack": "e22a078f-eea5-44e3-bb82-b8c96f6c95eb",
+        "estimate": 36000,
+        "priority": "high",
+        "duedate": "2026-02-14 20:00:36",
+        "position": 1
+    },
+    {
+        "title": "Mix Track 1 (4)",
+        "description": "Description for Mix Track 1 (4)",
+        "id": "b738953d-e6f3-48ca-b64e-f05416eaee43",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "3fc034dd-7ede-4c81-8557-9df7f8f7eea5",
+            "392ac4ad-07a2-44bc-ada7-729975c29552"
+        ],
+        "tint": null,
+        "stack": "e22a078f-eea5-44e3-bb82-b8c96f6c95eb",
+        "estimate": 18000,
+        "priority": "low",
+        "duedate": "2026-03-25 20:00:36",
+        "position": 2
+    },
+    {
+        "title": "Mix Track 2 (4)",
+        "description": "Description for Mix Track 2 (4)",
+        "id": "228039e1-861f-49de-ba1f-1609b46bb43c",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "3fc034dd-7ede-4c81-8557-9df7f8f7eea5"
+        ],
+        "tint": null,
+        "stack": "e22a078f-eea5-44e3-bb82-b8c96f6c95eb",
+        "estimate": 14400,
+        "priority": "high",
+        "duedate": "2026-03-23 20:00:36",
+        "position": 3
+    },
+    {
+        "title": "Mastering Session (4)",
+        "description": "Description for Mastering Session (4)",
+        "id": "daad11e5-b0ad-432e-ae8f-f50cc1763f4f",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "148811a9-c54d-464b-8619-54d0576b9aa0"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "e22a078f-eea5-44e3-bb82-b8c96f6c95eb",
+        "estimate": 32400,
+        "priority": "high",
+        "duedate": "2026-02-19 20:00:36",
+        "position": 4
+    },
+    {
+        "title": "Album Art (4)",
+        "description": "Description for Album Art (4)",
+        "id": "979792ac-9857-4652-9657-247df1528d6f",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "869593a4-f35e-449c-94e5-736257f3c6e9",
+            "3fc034dd-7ede-4c81-8557-9df7f8f7eea5",
+            "fe6d0570-d505-4366-a9b8-4ec896c4627f"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "e22a078f-eea5-44e3-bb82-b8c96f6c95eb",
+        "estimate": 3600,
+        "priority": "low",
+        "duedate": "2026-03-08 20:00:36",
+        "position": 5
+    },
+    {
+        "title": "Upload to Spotify (4)",
+        "description": "Description for Upload to Spotify (4)",
+        "id": "58fba293-bd1c-4da2-99f2-a242184b995c",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "869593a4-f35e-449c-94e5-736257f3c6e9",
+            "3fc034dd-7ede-4c81-8557-9df7f8f7eea5",
+            "0cab18bb-ec3d-4230-9ff7-35b2a131d4dc"
+        ],
+        "tint": "#64748B",
+        "stack": "e22a078f-eea5-44e3-bb82-b8c96f6c95eb",
+        "estimate": 14400,
+        "priority": "high",
+        "duedate": "2026-03-20 20:00:36",
+        "position": 6
+    },
+    {
+        "title": "Register Copyright (4)",
+        "description": "Description for Register Copyright (4)",
+        "id": "c56df8fd-8a50-42e2-968b-00d1d3ff210f",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "0dede067-be00-4722-97d6-0d9cdd49cf47",
+            "3fc034dd-7ede-4c81-8557-9df7f8f7eea5",
+            "fe6d0570-d505-4366-a9b8-4ec896c4627f"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "e22a078f-eea5-44e3-bb82-b8c96f6c95eb",
+        "estimate": 18000,
+        "priority": "medium",
+        "duedate": "2026-03-22 20:00:36",
+        "position": 7
+    },
+    {
+        "title": "Filming Music Video (4)",
+        "description": "Description for Filming Music Video (4)",
+        "id": "da7c3068-7e2a-4af3-b60a-37f833e80b7a",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [],
+        "tint": "#10B981",
+        "stack": "e22a078f-eea5-44e3-bb82-b8c96f6c95eb",
+        "estimate": 36000,
+        "priority": "medium",
+        "duedate": "2026-03-06 20:00:36",
+        "position": 8
+    },
+    {
+        "title": "Press Release (4)",
+        "description": "Description for Press Release (4)",
+        "id": "d3cb8be0-b31f-4598-b5f6-a28505e264be",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [],
+        "tint": "#6366F1",
+        "stack": "e22a078f-eea5-44e3-bb82-b8c96f6c95eb",
+        "estimate": 7200,
+        "priority": "low",
+        "duedate": "2026-02-21 20:00:36",
+        "position": 9
+    },
+    {
+        "title": "Radio Promo (4)",
+        "description": "Description for Radio Promo (4)",
+        "id": "2276c791-668e-41fb-8784-c9a85224022d",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "3fc034dd-7ede-4c81-8557-9df7f8f7eea5",
+            "0dede067-be00-4722-97d6-0d9cdd49cf47",
+            "0cab18bb-ec3d-4230-9ff7-35b2a131d4dc"
+        ],
+        "tint": null,
+        "stack": "e22a078f-eea5-44e3-bb82-b8c96f6c95eb",
+        "estimate": 36000,
+        "priority": "medium",
+        "duedate": "2026-03-11 20:00:36",
+        "position": 10
+    },
+    {
+        "title": "Rehearsal (4)",
+        "description": "Description for Rehearsal (4)",
+        "id": "7817018a-b530-4b15-9a2a-8759cf1d51bb",
+        "project": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "tags": [
+            "148811a9-c54d-464b-8619-54d0576b9aa0",
+            "869593a4-f35e-449c-94e5-736257f3c6e9",
+            "392ac4ad-07a2-44bc-ada7-729975c29552"
+        ],
+        "tint": "#64748B",
+        "stack": "e22a078f-eea5-44e3-bb82-b8c96f6c95eb",
+        "estimate": 3600,
+        "priority": "low",
+        "duedate": "2026-03-10 20:00:36",
+        "position": 11
+    }
+]

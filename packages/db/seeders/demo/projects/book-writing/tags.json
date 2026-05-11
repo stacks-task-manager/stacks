@@ -1,0 +1,58 @@
+[
+    {
+        "id": "d6b512c1-3ea7-4134-80b7-6a806c5a052f",
+        "title": "Chapter 1",
+        "color": "#06B6D4",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "25bf8a71-f269-4dca-ae26-3332b86d9a02",
+        "title": "Character Dev",
+        "color": "#06B6D4",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "7f33ac68-eba4-4614-9d56-7698bc3bf18c",
+        "title": "World Building",
+        "color": "#8B5CF6",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "7ecdd73c-8bcc-4600-92de-7ce7d3a3828a",
+        "title": "Marketing",
+        "color": "#F59E0B",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "1c83f03a-4924-41f0-a004-55d2aedadd4d",
+        "title": "Plot",
+        "color": "#6366F1",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "d406250d-9f7e-4f03-8f60-e9e31ee74e24",
+        "title": "Writer Block",
+        "color": "#64748B",
+        "type": "status",
+        "section": "projects"
+    },
+    {
+        "id": "47623f40-17b4-4c90-993c-20ddc13c761e",
+        "title": "Revised",
+        "color": "#6366F1",
+        "type": "status",
+        "section": "projects"
+    },
+    {
+        "id": "8a0766fd-14a0-4598-ae2d-cde71a2c3af1",
+        "title": "Finalized",
+        "color": "#64748B",
+        "type": "status",
+        "section": "projects"
+    }
+]

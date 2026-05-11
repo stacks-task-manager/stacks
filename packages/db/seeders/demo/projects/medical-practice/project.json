@@ -1,0 +1,37 @@
+[
+    {
+        "id": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
+        "title": "Medical Practice Management",
+        "estimate": 576000,
+        "stacks": [
+            {
+                "title": "Check-in",
+                "tint": "#64748B",
+                "id": "aee75166-29f2-4be6-bcad-a599b8da5f0f"
+            },
+            {
+                "title": "Examination",
+                "tint": "#3B82F6",
+                "id": "40a26e02-8f01-4b95-81bf-1994672dc875"
+            },
+            {
+                "title": "Lab Results",
+                "tint": "#F59E0B",
+                "id": "fa5d0a33-da5c-4bf9-a291-096731d54684"
+            },
+            {
+                "title": "Diagnosis",
+                "tint": "#8B5CF6",
+                "id": "ddb1f78e-5e4a-4bc3-8b1f-f2851fab9b15"
+            },
+            {
+                "title": "Treatment",
+                "tint": "#10B981",
+                "id": "4f112cf9-569b-457a-a4a3-05eec0d80717"
+            }
+        ],
+        "hourlyRate": 100,
+        "currency": "USD",
+        "health": "good"
+    }
+]

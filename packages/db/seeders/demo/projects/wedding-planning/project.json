@@ -1,0 +1,37 @@
+[
+    {
+        "id": "aa823efb-1089-4368-869d-a10969fb4d84",
+        "title": "Wedding Planning",
+        "estimate": 360000,
+        "stacks": [
+            {
+                "title": "To Do",
+                "tint": "#8B5CF6",
+                "id": "6cb1c9b2-ec61-4d59-90f6-556f589658eb"
+            },
+            {
+                "title": "Vendors",
+                "tint": "#3B82F6",
+                "id": "0a9ec334-f14f-492f-9e94-feb541940a6f"
+            },
+            {
+                "title": "Guests",
+                "tint": "#F59E0B",
+                "id": "0b8dcc59-121f-4cac-bc49-9c0b276f5402"
+            },
+            {
+                "title": "Logistics",
+                "tint": "#10B981",
+                "id": "65d47429-d567-4a1d-8058-5dad316da177"
+            },
+            {
+                "title": "Done",
+                "tint": "#06B6D4",
+                "id": "17287438-aaef-40cc-8775-99744debec39"
+            }
+        ],
+        "hourlyRate": 147,
+        "currency": "USD",
+        "health": "good"
+    }
+]
