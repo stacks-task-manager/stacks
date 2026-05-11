@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" class="theme-light">
+<head>
+  <meta charset="utf-8" />
+  <title>Project export</title>
+  <link rel="stylesheet" href="assets/css/stacks.min.css" />
+  <link rel="stylesheet" href="export/pdf/pdf-export.css" />
+</head>
+<body class="bg-theme-secondary-100">
+  <div class="pdf-export p16 sm:p24">
+    {{#with data}}
+    <header class="pdf-meta d-flex ai-start jc-space-between fw-wrap gs8">
+      <div class="flex--item fl1 wmn0">
+        <div class="fs-fine fc-black-400 tt-uppercase ls05 mb4">Export</div>
+        <h1 class="fs-headline1 fw-normal lh-xs m0">{{coalesce title id}}</h1>
+        {{#if health}}
+        <div class="mt8">
+          <span class="s-badge s-badge__sm s-badge__filled pdf-health">{{health}}</span>
+        </div>
+        {{/if}}
+      </div>
+      <div class="ta-right fs-caption fc-black-400">
+        <div class="fw-bold fc-black-800">Project</div>
+        <div class="mt4">ID <span class="ff-mono">{{id}}</span></div>
+      </div>
+    </header>
+
+    <div class="s-card bs-sm p16 sm:p24">
+      <h2 class="pdf-section-title m0">Schedule &amp; budget</h2>
+      <dl class="pdf-dl">
+        <dt class="pdf-dt">Start</dt><dd class="pdf-dd">{{formatDate startDate}}</dd>
+        <dt class="pdf-dt">End</dt><dd class="pdf-dd">{{formatDate endDate}}</dd>
+        <dt class="pdf-dt">Hourly rate</dt><dd class="pdf-dd">{{#if hourlyRate}}{{hourlyRate}} {{coalesce currency "USD"}}{{else}}—{{/if}}</dd>
+        <dt class="pdf-dt">Estimate</dt><dd class="pdf-dd">{{#if estimate}}{{estimate}}{{else}}—{{/if}}</dd>
+        <dt class="pdf-dt">Inbox</dt><dd class="pdf-dd">{{#if inbox}}Yes{{else}}No{{/if}}</dd>
+      </dl>
+
+      <h2 class="pdf-section-title">People &amp; company</h2>
+      <dl class="pdf-dl">
+        <dt class="pdf-dt">Company</dt><dd class="pdf-dd">{{coalesce company "—"}}</dd>
+        <dt class="pdf-dt">Owner</dt><dd class="pdf-dd">{{coalesce projectOwner "—"}}</dd>
+        <dt class="pdf-dt">Approvers</dt>
+        <dd class="pdf-dd">
+          {{#if approvers.length}}
+            {{#each approvers}}<span class="ff-mono">{{this}}</span>{{#unless @last}}, {{/unless}}{{/each}}
+          {{else}}
+            —
+          {{/if}}
+        </dd>
+      </dl>
+
+      {{#if description}}
+      <h2 class="pdf-section-title">Description</h2>
+      <div class="pdf-prose fs-body2">{{description}}</div>
+      {{/if}}
+
+      {{#if notes}}
+      <h2 class="pdf-section-title">Notes</h2>
+      <div class="pdf-prose fs-body2">{{notes}}</div>
+      {{/if}}
+
+      {{#if fields.length}}
+      <h2 class="pdf-section-title">Custom fields</h2>
+      <pre class="s-code-block m0 fs-caption">{{json fields}}</pre>
+      {{/if}}
+
+      {{#if automations.length}}
+      <h2 class="pdf-section-title">Automations</h2>
+      <pre class="s-code-block m0 fs-caption">{{json automations}}</pre>
+      {{/if}}
+
+      <h2 class="pdf-section-title">Record</h2>
+      <dl class="pdf-dl">
+        <dt class="pdf-dt">Created</dt><dd class="pdf-dd">{{formatDate created}}</dd>
+        <dt class="pdf-dt">Updated</dt><dd class="pdf-dd">{{formatDate updated}}</dd>
+      </dl>
+    </div>
+    {{/with}}
+
+    <footer class="pdf-footer">
+      Generated {{formatDate generatedAt}} · Stacks
+    </footer>
+  </div>
+</body>
+</html>

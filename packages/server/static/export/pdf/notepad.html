@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" class="theme-light">
+<head>
+  <meta charset="utf-8" />
+  <title>Notepad export</title>
+  <link rel="stylesheet" href="assets/css/stacks.min.css" />
+  <link rel="stylesheet" href="export/pdf/pdf-export.css" />
+</head>
+<body class="bg-theme-secondary-100">
+  <div class="pdf-export p16 sm:p24">
+    <header class="pdf-meta d-flex ai-center jc-space-between fw-wrap gs8">
+      <div>
+        <div class="fs-fine fc-black-400 tt-uppercase ls05 mb4">Export</div>
+        <h1 class="fs-headline1 fw-normal lh-xs m0">Notepad</h1>
+        <p class="fs-body2 fc-black-500 m0 mt4">Rich text as exported from the editor.</p>
+      </div>
+    </header>
+
+    <div class="s-card bs-sm p16 sm:p24">
+      {{#if (isString data)}}
+      <div class="pdf-body stacks-content">{{{data}}}</div>
+      {{else}}
+      <p class="fc-black-500 fs-body2 m0 mb8">No HTML body was provided; raw payload:</p>
+      <pre class="pdf-fallback s-code-block m0">{{json data}}</pre>
+      {{/if}}
+    </div>
+
+    <footer class="pdf-footer">
+      Generated {{formatDate generatedAt}} · Stacks
+    </footer>
+  </div>
+</body>
+</html>
