@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512px" height="512px" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>app-icon</title>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="app-icon">
+            <rect id="Rectangle" fill="#000000" x="0" y="0" width="512" height="512" rx="126"></rect>
+            <line x1="144" y1="121" x2="144" y2="334.574176" id="Path" stroke="#FFFFFF" stroke-width="40" stroke-linecap="round" stroke-linejoin="round"></line>
+            <line x1="256.32967" y1="121" x2="256.32967" y2="236.285714" id="Path" stroke="#FFFFFF" stroke-width="40" stroke-linecap="round" stroke-linejoin="round"></line>
+            <line x1="371.615385" y1="121" x2="371.615385" y2="390" id="Path" stroke="#FFFFFF" stroke-width="40" stroke-linecap="round" stroke-linejoin="round"></line>
+        </g>
+    </g>
+</svg>
