@@ -28,6 +28,7 @@ This repository is a Yarn workspaces monorepo that ships Stacks as a set of serv
 
 -   [Local development setup](docs/INSTALLATION.md)
 -   Local Docker notes: [docs/DOCKER.md](docs/DOCKER.md)
+-   [E2E testing with Playwright](docs/E2E.md)
 
 ## License
 
