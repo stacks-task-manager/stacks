@@ -1,354 +1,90 @@
-# Stacks Installation Guide
+# Installation Guide
 
-This guide provides comprehensive instructions for installing and deploying Stacks using Docker.
+This guide provides comprehensive instructions for installing Stacks dependencies for development.
 
 ## Prerequisites
 
-- Docker and Docker Compose installed on your system
-- At least 2GB of available RAM
-- 5GB of free disk space
-- Internet connection for downloading dependencies
+-   Node.js 18.0.0 or higher (Node 20 recommended)
+-   At least 2GB of available RAM
+-   5GB of free disk space
+-   Internet connection for downloading dependencies
 
-## Quick Start with Docker
+## Installing dependencies
 
-### 1. Clone or Download the Release
-
-Either clone the repository or download the release files to your server:
+From the root of the project, run the following command to install dependencies:
 
 ```bash
-# If cloning the repository
-git clone <repository-url>
-cd stacks-hono
-
-# Or if using release files, extract them to a directory
+yarn install
 ```
 
-### 2. Navigate to Docker Directory
+followed by:
 
 ```bash
-cd docker
+yarn setup
 ```
 
-### 3. Start the Services
+## Setting up environment variables
+
+Every (almost) package inside Stacks has its own environment variables file (`.env`). You can customize. Run the following command to generate the default values:
 
 ```bash
-docker-compose up -d
+# From the root of the project
+cp packages/db/env.example packages/db/.env
+cp packages/email-service/env.example packages/email-service/.env
+cp packages/server/env.example packages/server/.env
 ```
 
-This will start three services:
-- **Stacks Server** (port 3000) - Main application
-- **Email Service** - Background email processing
-- **PostgreSQL Database** - Data storage
+## Development license key
 
-### 4. Access the Application
+### 1. Request a development license key
 
-Once all services are running, access Stacks at:
-```
-http://localhost:3000
-```
+To run Stacks in development mode, you need a development license key. You can request one by going to the following link:
 
-## Environment Configuration
+[Join the dev program](https://getstacksapp.com/dev-program/)
 
-### Server Environment Variables
+### 2. Using the development license key
 
-The main server requires the following environment variables. You can customize these in the `docker-compose.yml` file:
+Once you receive the license key via email, copy and paste the key into the `packages/server/license.key` file.
 
-#### Core Application Settings
-```bash
-# Application port (default: 3000)
-APP_PORT=3000
+## Running the application
 
-# Environment mode
-NODE_ENV=production
+### 1. Running the servers
 
-# Enable database query logging (set to false in production)
-DEBUG_DB=false
-
-# Security secrets (CHANGE THESE IN PRODUCTION)
-COOKIE_SECRET=your-secure-cookie-secret
-JWT_SECRET=your-very-secure-jwt-secret
-
-# File management
-DELETE_FILES=false  # Whether to permanently delete files when users delete them
-CACHE=true          # HTTP API response cache (opt-in; unset or any other value disables it)
-```
-
-#### Database Configuration
-```bash
-POSTGRES_HOST=postgres
-POSTGRES_PORT=5432
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=postgres
-POSTGRES_DB=stacks_hono
-```
-
-#### Google OAuth (Optional)
-To enable Google Calendar integration and OAuth login:
-
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project or select an existing one
-3. Enable the Google Calendar API
-4. Create OAuth 2.0 credentials
-5. Add your domain/IP to authorized redirect URIs: `http://your-domain:3000/auth/google/callback`
+The recommended way would be opening multi terminals and running the following commands:
 
 ```bash
-GOOGLE_CLIENT_ID=your-google-client-id
-GOOGLE_CLIENT_SECRET=your-google-client-secret
-GOOGLE_REDIRECT_URI=http://your-domain:3000/auth/google/callback
+# From the root of the project
+yarn dev:server
+yarn dev:app
+yarn dev:mobile # only for mobile development
 ```
 
-### Email Service Environment Variables
+### 2. Opening the app
 
-The email service handles background email processing:
+Open your web browser and visit [http://localhost:3000](http://localhost:3000)
 
-#### SMTP Configuration
-```bash
-# SMTP server settings
-SMTP_HOST=smtp.gmail.com        # Your SMTP server
-SMTP_PORT=587                   # SMTP port (587 for TLS, 465 for SSL)
-SMTP_SECURE=false               # true for SSL (port 465), false for TLS (port 587)
-SMTP_USER=your-email@gmail.com  # SMTP username
-SMTP_PASSWORD=your-app-password # SMTP password or app password
+### 3. Opening the mobile app
 
-# Email sender information
-SMTP_FROM_NAME=Stacks Notifications
-SMTP_FROM_EMAIL=your-email@gmail.com
+Open your mobile device and scan the QR code displayed in the terminal to open the mobile app.
 
-# Processing settings
-EMAIL_PROCESS_INTERVAL=60000    # Check for emails every 60 seconds
-PUBLIC_URL=http://localhost:3000  # Your public URL for email links
-```
+### 4. Opening the desktop app
 
-#### Popular SMTP Providers
+Open your desktop device and scan the QR code displayed in the terminal to open the desktop app.
 
-**Gmail:**
-```bash
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_SECURE=false
-# Use App Password instead of regular password
-```
+## Scripts
 
-**Outlook/Hotmail:**
-```bash
-SMTP_HOST=smtp-mail.outlook.com
-SMTP_PORT=587
-SMTP_SECURE=false
-```
+All commands are run from the repo root using `yarn <script>`.
 
-**SendGrid:**
-```bash
-SMTP_HOST=smtp.sendgrid.net
-SMTP_PORT=587
-SMTP_SECURE=false
-SMTP_USER=apikey
-SMTP_PASSWORD=your-sendgrid-api-key
-```
-
-## Production Deployment
-
-### 1. Security Considerations
-
-**Change Default Secrets:**
-```bash
-# Generate secure random strings for these values
-COOKIE_SECRET=$(openssl rand -base64 32)
-JWT_SECRET=$(openssl rand -base64 64)
-```
-
-**Database Security:**
-- Change the default PostgreSQL password
-- Consider using a managed database service
-- Enable SSL connections if possible
-
-### 2. Custom Docker Compose
-
-Create a production `docker-compose.yml` with your custom environment variables:
-
-```yaml
-services:
-  stacks:
-    build:
-      context: .
-      dockerfile: Dockerfile.server
-    working_dir: /server
-    ports:
-      - "3000:3000"
-    environment:
-      - NODE_ENV=production
-      - POSTGRES_HOST=postgres
-      - POSTGRES_PORT=5432
-      - POSTGRES_USER=your_db_user
-      - POSTGRES_PASSWORD=your_secure_password
-      - POSTGRES_DB=stacks_hono
-      - APP_PORT=3000
-      - DEBUG_DB=false
-      - COOKIE_SECRET=your-secure-cookie-secret
-      - JWT_SECRET=your-very-secure-jwt-secret
-      - DELETE_FILES=false
-      - CACHE=true
-      - GOOGLE_CLIENT_ID=your-google-client-id
-      - GOOGLE_CLIENT_SECRET=your-google-client-secret
-      - GOOGLE_REDIRECT_URI=https://your-domain.com/auth/google/callback
-    volumes:
-      - uploads_data:/server/uploads
-      - previews_data:/server/previews
-      - ./logs:/var/log
-    depends_on:
-      postgres:
-        condition: service_healthy
-    restart: unless-stopped
-
-  email:
-    build:
-      context: .
-      dockerfile: Dockerfile.email
-    working_dir: /email-service
-    environment:
-      - NODE_ENV=production
-      - POSTGRES_HOST=postgres
-      - POSTGRES_PORT=5432
-      - POSTGRES_USER=your_db_user
-      - POSTGRES_PASSWORD=your_secure_password
-      - POSTGRES_DB=stacks_hono
-      - SMTP_HOST=your-smtp-host
-      - SMTP_PORT=587
-      - SMTP_SECURE=false
-      - SMTP_USER=your-email@domain.com
-      - SMTP_PASSWORD=your-smtp-password
-      - SMTP_FROM_NAME=Your App Name
-      - SMTP_FROM_EMAIL=your-email@domain.com
-      - EMAIL_PROCESS_INTERVAL=60000
-      - PUBLIC_URL=https://your-domain.com
-    depends_on:
-      postgres:
-        condition: service_healthy
-    restart: unless-stopped
-
-  postgres:
-    image: postgres:15-alpine
-    environment:
-      - POSTGRES_USER=your_db_user
-      - POSTGRES_PASSWORD=your_secure_password
-      - POSTGRES_DB=stacks_hono
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U your_db_user"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-volumes:
-  postgres_data:
-    driver: local
-  uploads_data:
-    driver: local
-  previews_data:
-    driver: local
-```
-
-### 3. Reverse Proxy Setup
-
-For production, use a reverse proxy like Nginx:
-
-```nginx
-server {
-    listen 80;
-    server_name your-domain.com;
-    
-    location / {
-        proxy_pass http://localhost:3000;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-}
-```
-
-## Maintenance
-
-### Viewing Logs
-```bash
-# View all service logs
-docker-compose logs
-
-# View specific service logs
-docker-compose logs stacks
-docker-compose logs email
-docker-compose logs postgres
-
-# Follow logs in real-time
-docker-compose logs -f
-```
-
-### Updating
-```bash
-# Stop services
-docker-compose down
-
-# Pull latest images (if using pre-built images)
-docker-compose pull
-
-# Rebuild and start
-docker-compose up -d --build
-```
-
-### Backup
-```bash
-# Backup database
-docker-compose exec postgres pg_dump -U postgres stacks_hono > backup.sql
-
-# Backup uploaded files
-docker cp $(docker-compose ps -q stacks):/server/uploads ./uploads-backup
-```
-
-### Restore
-```bash
-# Restore database
-docker-compose exec -T postgres psql -U postgres stacks_hono < backup.sql
-
-# Restore uploaded files
-docker cp ./uploads-backup $(docker-compose ps -q stacks):/server/uploads
-```
-
-## Troubleshooting
-
-### Common Issues
-
-1. **Port already in use:**
-   - Change the port mapping in docker-compose.yml: `"3001:3000"`
-
-2. **Database connection failed:**
-   - Ensure PostgreSQL service is healthy: `docker-compose ps`
-   - Check database credentials in environment variables
-
-3. **Email not sending:**
-   - Verify SMTP credentials and settings
-   - Check email service logs: `docker-compose logs email`
-   - Ensure firewall allows outbound SMTP connections
-
-4. **Google OAuth not working:**
-   - Verify redirect URI matches exactly
-   - Ensure Google Calendar API is enabled
-   - Check client ID and secret are correct
-
-### Health Checks
-
-The application includes health check endpoints:
-- Server health: `http://localhost:3000/health`
-- Check service status: `docker-compose ps`
-
-## Support
-
-For additional support:
-1. Check the application logs for error messages
-2. Verify all environment variables are set correctly
-3. Ensure all required ports are available
-4. Check Docker and Docker Compose versions are up to date
-
----
-
-**Note:** This installation guide assumes you're using the Docker deployment method. For development setup or custom installations, refer to the individual package documentation in the `packages/` directory.
+-   `yarn setup`: clean install + build internal workspace packages (types/db/license/translations) and finalize workspace wiring.
+-   `yarn dev`: start a full local dev environment (internal libs + web app + server) in watch mode.
+-   `yarn dev:app`: start the web app dev server.
+-   `yarn dev:server`: start the API server in watch mode (includes building internal libs first).
+-   `yarn dev:email`: start the email service in watch mode.
+-   `yarn dev:mobile`: start the Expo mobile app.
+-   `yarn dev:locales`: run the locales TUI tool.
+-   `yarn build`: build all packages (internal libs, app, server, email service).
+-   `yarn test:server` / `yarn test:server:unit`: run server tests.
+-   `yarn test:e2e` (or `:ui`, `:headed`): run Playwright end-to-end tests.
+-   `yarn release`: create a runnable `releases/` bundle (server + app + email service + db + Docker assets).
+-   `yarn run:docker`: run the generated `releases/` bundle via `docker-compose`.
+-   `yarn clean`: remove build artifacts and reset the workspace.

@@ -26,26 +26,8 @@ This repository is a Yarn workspaces monorepo that ships Stacks as a set of serv
 
 ## Getting started
 
--   Docker-based install and deployment: [docs/INSTALLATION.md](docs/INSTALLATION.md)
+-   Development setup: [docs/INSTALLATION.md](docs/INSTALLATION.md)
 -   Local Docker notes: [docs/DOCKER.md](docs/DOCKER.md)
-
-## Scripts
-
-All commands are run from the repo root using `yarn <script>`.
-
--   `yarn setup`: clean install + build internal workspace packages (types/db/license/translations) and finalize workspace wiring.
--   `yarn dev`: start a full local dev environment (internal libs + web app + server) in watch mode.
--   `yarn dev:app`: start the web app dev server.
--   `yarn dev:server`: start the API server in watch mode (includes building internal libs first).
--   `yarn dev:email`: start the email service in watch mode.
--   `yarn dev:mobile`: start the Expo mobile app.
--   `yarn dev:locales`: run the locales TUI tool.
--   `yarn build`: build all packages (internal libs, app, server, email service).
--   `yarn test:server` / `yarn test:server:unit`: run server tests.
--   `yarn test:e2e` (or `:ui`, `:headed`): run Playwright end-to-end tests.
--   `yarn release`: create a runnable `releases/` bundle (server + app + email service + db + Docker assets).
--   `yarn run:docker`: run the generated `releases/` bundle via `docker-compose`.
--   `yarn clean`: remove build artifacts and reset the workspace.
 
 ## License
 
