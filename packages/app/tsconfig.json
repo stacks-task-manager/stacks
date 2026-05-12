@@ -1,0 +1,35 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "lib": ["dom", "es2015", "es2016", "es2017", "es2021", "es2022"],
+        "allowJs": true,
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "strict": true,
+        "forceConsistentCasingInFileNames": true,
+        "module": "esnext",
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "noEmit": true,
+        "jsx": "react-jsx",
+        "baseUrl": "src",
+        "experimentalDecorators": true,
+        "strictNullChecks": true,
+        "types": ["node", "resize-observer-browser", "jest", "webpack-env"],
+        "paths": {
+            "@stacks/types": ["../../types/src/index.ts"],
+            "@stacks/translations": ["../../translations/src/index.ts"],
+            "@tiptap/react/menus": ["../node_modules/@tiptap/react/dist/menus/index.d.ts"]
+        }
+    },
+    "include": [
+        "./typings/*.d.ts",
+        "./src/**/*.ts",
+        "./src/**/*.d.ts",
+        "./src/**/*.tsx",
+        "./src/app/widgets/editor/plugins/EmojiPickerPlugin/emoji-list.js"
+    ],
+    "exclude": ["jest_cache"]
+}

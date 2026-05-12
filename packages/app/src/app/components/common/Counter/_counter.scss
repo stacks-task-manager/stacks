@@ -1,0 +1,32 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.counter {
+    border-radius: 4px;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: stretch;
+    background-color: rgba(0, 0, 0, 0.2);
+    font-size: 10px;
+    color: $white;
+    font-weight: 700;
+
+    > div {
+        padding: 0 4px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 15px;
+        min-width: 16px;
+    }
+
+    .danger {
+        background-color: rgba($vermilion3, 0.9);
+    }
+
+    .warning {
+        background-color: $orange3;
+    }
+
+    .success {
+        background-color: $green4;
+    }
+}

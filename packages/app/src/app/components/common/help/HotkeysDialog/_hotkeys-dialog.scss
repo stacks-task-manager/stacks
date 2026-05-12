@@ -1,0 +1,36 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.#{$ns}-hotkey-column {
+    overflow-y: initial;
+}
+
+.#{$ns}-hotkey {
+    &:after {
+        content: "";
+        z-index: -1;
+        position: absolute;
+        top: -5px;
+        bottom: -5px;
+        left: -5px;
+        right: -5px;
+        background-color: $light-gray4;
+        border-radius: 4px;
+        display: none;
+    }
+
+    &:hover {
+        position: relative;
+        z-index: 1;
+
+        &:after {
+            display: block;
+        }
+    }
+}
+
+.#{$ns}-dark {
+    .#{$ns}-hotkey {
+        &:after {
+            background-color: $dark-gray3;
+        }
+    }
+}

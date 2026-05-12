@@ -1,0 +1,40 @@
+/* Draggable - Minimal styles for drag interaction feedback */
+
+.draggable {
+    cursor: grab;
+    user-select: none;
+    /* Base transition for smooth movement when reordering */
+    transition:
+        transform 0.25s cubic-bezier(0.2, 0, 0, 1),
+        opacity 0.2s cubic-bezier(0.2, 0, 0, 1);
+    will-change: transform;
+}
+
+.draggable:active,
+.draggable--dragging {
+    cursor: grabbing;
+}
+
+/*
+ * Source row in the list while dragging: must be hidden via CSS class, not only inline styles —
+ * React re-renders after drag state updates can overwrite imperative element.style (e.g. from ...rest).
+ */
+.draggable.draggable--placeholder {
+    pointer-events: none;
+    position: fixed !important;
+    left: -10000px !important;
+    top: 0 !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transition: none;
+}
+
+/* Placeholder - Base styles (can be overridden via custom className) */
+.dnd-placeholder {
+    background-color: rgba(0, 0, 0, 0.02);
+    border: 1px dashed rgba(0, 0, 0, 0.15);
+    border-radius: 6px;
+    box-sizing: border-box;
+    pointer-events: none;
+    flex-shrink: 0;
+}

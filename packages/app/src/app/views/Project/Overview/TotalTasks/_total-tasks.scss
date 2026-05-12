@@ -1,0 +1,32 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.total-tasks {
+    font-size: 55px;
+    font-weight: 800;
+    text-align: center;
+    color: $dark-gray3;
+
+    > span {
+        font-size: 30px;
+    }
+}
+
+.total-stacks {
+    color: $gray3;
+    text-align: center;
+
+    strong {
+        color: $dark-gray3;
+    }
+}
+
+.#{$ns}-dark {
+    .total-tasks {
+        color: $light-gray1;
+    }
+
+    .total-stacks {
+        strong {
+            color: $gray5;
+        }
+    }
+}

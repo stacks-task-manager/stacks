@@ -1,0 +1,14 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+#my-tasks {
+    h5 {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin: 0;
+    }
+
+    .#{$ns}-collapse-body {
+        margin-top: 15px;
+    }
+}

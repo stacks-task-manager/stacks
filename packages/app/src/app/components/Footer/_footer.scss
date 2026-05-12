@@ -1,0 +1,23 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.footer {
+    flex-shrink: 0;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+
+    .spacer {
+        width: 5px;
+    }
+
+    .separator {
+        width: 1px;
+        background-color: $gray1;
+        margin: 0 8px;
+        height: 15px;
+    }
+}

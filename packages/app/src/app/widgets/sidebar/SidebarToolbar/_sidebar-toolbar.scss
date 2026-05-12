@@ -1,0 +1,14 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+#sidebar-toolbar {
+    height: $toolbar-height;
+    // border-bottom: 1px solid #202b33;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 10px;
+    gap: 5px;
+
+    .#{$ns}-icon {
+        color: $gray3;
+    }
+}

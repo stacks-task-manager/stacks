@@ -1,0 +1,39 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+@import "~normalize.css/normalize.css";
+@import "~@blueprintjs/core/lib/css/blueprint.css";
+@import "~@blueprintjs/icons/lib/css/blueprint-icons.css";
+@import "~@blueprintjs/datetime/lib/css/blueprint-datetime.css";
+@import "~@blueprintjs/select/lib/css/blueprint-select.css";
+@import "~@blueprintjs/core/lib/scss/variables";
+@import "~leaflet/dist/leaflet.css";
+
+// * {
+//     user-select: none;
+// }
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    -webkit-font-smoothing: antialiased;
+}
+
+@import "app/vars";
+@import "app/app";
+@import "app/components";
+@import "app/views";
+@import "app/styles";
+@import "app/hooks";
+@import "app/widgets";
+
+.#{$ns}-callout {
+    margin-bottom: 15px;
+}

@@ -1,0 +1,30 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.#{$ns}-tag {
+    &.custom-tag {
+        // text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.2);
+        // border: 1px solid transparent;
+        font-weight: 500;
+    }
+
+    &.noMargins {
+        margin-bottom: 0;
+    }
+
+    &.small {
+        padding: 0px 6px;
+        font-size: 10px;
+        line-height: 13px;
+        min-height: 12px;
+    }
+}
+
+.tags-rest {
+    color: $white;
+    cursor: pointer;
+}
+
+.#{$ns}-popover-target {
+    &.custom-tag-tooltip {
+        display: inline-flex;
+    }
+}

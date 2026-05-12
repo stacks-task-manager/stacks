@@ -1,0 +1,56 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.#{$cns} {
+    // Week header
+    .fc-col-header-cell-cushion {
+        padding: 0;
+        display: flex;
+        font-weight: 500;
+        padding: 12px;
+
+        &:hover {
+            text-decoration: none;
+        }
+    }
+    .day-header {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-transform: uppercase;
+
+        .day-name {
+            font-size: 10px;
+        }
+        .day-number {
+            font-size: 22px;
+        }
+    }
+    .fc-col-header-cell-cushion {
+        color: $dark-gray5;
+    }
+    .fc-day-past {
+        .fc-col-header-cell-cushion {
+            color: $gray3;
+        }
+    }
+    .fc-day-today {
+        .fc-col-header-cell-cushion {
+            font-weight: bold;
+
+            .day-number {
+                border-radius: 30px;
+                width: 26px;
+                height: 26px;
+                line-height: 26px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: $white;
+                background-color: $today-color;
+                font-size: 16px;
+            }
+        }
+    }
+    .fc-timegrid-slot-minor {
+        border-top-style: none;
+    }
+}

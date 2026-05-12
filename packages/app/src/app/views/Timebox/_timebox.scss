@@ -1,0 +1,329 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+@import "./timebox-dashboard";
+
+#timebox {
+    display: flex;
+}
+
+.timebox-rows {
+    display: flex;
+    flex-direction: column;
+    // gap: 5px;
+}
+
+.timebox-row-group {
+    &.is-current-hour {
+        position: relative;
+
+        &::after {
+            content: "";
+            position: absolute;
+            left: 25px;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            background-color: rgba(202, 240, 248, 0.5);
+            z-index: 1;
+            border-radius: 6px;
+            pointer-events: none;
+        }
+    }
+}
+
+.timebox-mind-dump {
+    position: relative;
+
+    &::before {
+        content: "";
+        border-radius: 3px;
+        border: 1px solid $light-gray1;
+        position: absolute;
+        top: -5px;
+        bottom: -5px;
+        left: -5px;
+        right: -5px;
+    }
+}
+
+.current-hour-indicator {
+    position: absolute;
+    left: 0;
+    right: 0;
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0.8;
+
+    // &::before {
+    //     position: absolute;
+    //     content: "";
+    //     background-color: $vermilion3;
+    //     width: 10px;
+    //     height: 10px;
+    //     border-radius: 5px;
+    //     left: 40px;
+    //     top: -5px;
+    // }
+
+    &::after {
+        position: absolute;
+        content: "";
+        // background-color: #ffc8dd;
+        background-color: $vermilion3;
+        height: 1px;
+        // left: 0;
+        left: 40px;
+        right: 0;
+        z-index: -1;
+        top: 50%;
+    }
+
+    span {
+        position: absolute;
+        // left: -30px;
+        left: 0px;
+        transform: translateY(-50%);
+        font-size: 10px;
+        // background-color: #ffc8dd;
+        color: $white;
+        background-color: $vermilion3;
+        border-radius: 5px;
+        // text-align: center;
+        text-align: right;
+        font-weight: bold;
+        padding: 1px 6px;
+        z-index: 2;
+        display: block;
+        // background-color: orange;
+        // display: none;
+    }
+}
+
+.timebox-row {
+    display: flex;
+    gap: 5px;
+    align-items: stretch;
+    min-height: 30px;
+
+    &--time {
+        flex-shrink: 0;
+        display: flex;
+        font-weight: bold;
+        align-items: center;
+        // align-items: flex-start;
+        font-size: 16px;
+        z-index: 9;
+        gap: 10px;
+        // margin-top: 5px;
+    }
+
+    &--content {
+        flex-grow: 2;
+        min-width: 0;
+        display: flex;
+        align-items: center;
+        // z-index: 20;
+
+        // textarea {
+        //     border: none;
+        //     width: 100%;
+        //     outline: none;
+        //     resize: none;
+        //     background-color: transparent;
+        //     padding-left: 0;
+        //     padding-right: 0;
+
+        //     &::placeholder {
+        //         opacity: 0;
+        //     }
+
+        //     &:focus::placeholder {
+        //         opacity: 1;
+        //     }
+        // }
+    }
+
+    &.secondary {
+        .timebox-row--time {
+            font-size: 12px;
+        }
+
+        .timebox-row--label {
+            opacity: 0.5;
+        }
+    }
+
+    &.bordered {
+        .timebox-row--content {
+            border-bottom: 1px solid $light-gray1;
+        }
+    }
+}
+
+.timebox-label {
+    font-size: 16px;
+    font-weight: bold;
+    text-align: right;
+
+    &.secondary {
+        font-size: 12px;
+        opacity: 0.5;
+    }
+}
+
+.timebox-section {
+    &--title-wrapper {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+    }
+
+    &--title {
+        font-size: 16px;
+        font-weight: 600;
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+    }
+
+    &--subtitle {
+        font-size: 13px;
+    }
+
+    &--content {}
+
+    &:not(.collapsible) {
+        .timebox-section--subtitle {
+            margin-top: 3px;
+        }
+    }
+
+    &.spaced {
+        .timebox-section--content {
+            margin-top: 15px;
+        }
+    }
+
+    &.sticky {
+        .timebox-section--wrapper {
+            background-color: $app-background-light;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+    }
+}
+
+.timebox-tags-icon {
+    .#{$ns}-icon {
+        box-shadow: 0 0 0 1px $white;
+        border-radius: 50%;
+
+        &:not(:first-child) {
+            margin-left: -6px;
+        }
+    }
+}
+
+/* TIMEBOX MENU BUTTON */
+.timebox-action-button {
+    visibility: hidden;
+
+    &.#{$ns}-active,
+    &.active {
+        visibility: visible;
+    }
+}
+
+.timebox-row {
+    &:hover {
+        .timebox-action-button {
+            visibility: visible;
+        }
+    }
+}
+
+.#{$ns}-dark {
+    .timebox-row {
+        &.bordered {
+            .timebox-row--content {
+                border-bottom-color: $dark-gray5;
+            }
+        }
+    }
+
+    .timebox-row-group {
+        &.is-current-hour {
+            &::after {
+                background-color: rgba($gray1, 0.2);
+            }
+        }
+
+        .current-hour-indicator {
+            &::after {
+                background-color: $dark-gray1;
+            }
+
+            span {
+                background-color: $dark-gray1;
+            }
+        }
+    }
+
+    .timebox-weekly {
+        &--row {
+            &.auto {
+                background-color: $dark-gray2;
+            }
+        }
+    }
+
+    .timebox-section {
+        &.sticky {
+            .timebox-section--wrapper {
+                background-color: $dark-gray2;
+            }
+        }
+    }
+}
+
+.repeat-dialog {
+    width: 235px;
+
+    .#{$ns}-dialog-body {
+        .days-buttons {
+            .#{$ns}-button {
+                padding: 0;
+                font-size: 12px;
+                min-width: 30px;
+                min-height: 30px;
+            }
+        }
+
+        .weekdays-buttons {
+            .#{$ns}-button {
+                padding: 0;
+            }
+        }
+
+        .months-buttons {
+            .#{$ns}-button-group {
+                display: flex;
+                justify-content: stretch;
+
+                .#{$ns}-button {
+                    padding: 0;
+                    min-width: 0;
+                    width: 25.5%;
+                    height: 50px;
+                }
+            }
+        }
+
+        .days-buttons,
+        .months-buttons {
+            .#{$ns}-button-group {
+                margin-bottom: -1px;
+            }
+        }
+    }
+}

@@ -1,0 +1,18 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.#{$ns}-progress-bar {
+    &.continuous {
+        border-radius: 40px;
+        overflow: hidden;
+        display: flex;
+        height: 15px;
+        gap: 2px;
+        background-color: $white;
+
+        .#{$ns}-progress-meter {
+            display: inline-block;
+            border-radius: 0;
+            position: initial;
+            cursor: pointer;
+        }
+    }
+}

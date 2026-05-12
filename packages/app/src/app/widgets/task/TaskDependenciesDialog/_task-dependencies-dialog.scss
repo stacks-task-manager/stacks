@@ -1,0 +1,44 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.task-dependencies-dialog {
+    width: 800px;
+
+    .#{$ns}-dialog-body {
+        display: flex;
+        max-height: 50vh;
+        gap: 20px;
+
+        > div {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-width: 0;
+
+            &:first-child {
+                width: 220px;
+                flex-shrink: 0;
+            }
+
+            &:last-child {
+                flex-grow: 2;
+            }
+        }
+    }
+
+    .#{$ns}-input-group {
+        flex-grow: 0;
+    }
+
+    .#{$ns}-menu {
+        width: 100%;
+        padding: 0;
+    }
+
+    .#{$ns}-menu-item {
+        outline: none;
+    }
+
+    .#{$ns}-control {
+        margin-bottom: 0;
+        pointer-events: none;
+    }
+}

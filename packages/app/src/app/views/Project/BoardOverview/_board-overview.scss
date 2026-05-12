@@ -1,0 +1,218 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+#board-overview {
+    position: absolute;
+    // top: 0;
+    top: 100px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    // z-index: 10;
+    background-color: white;
+    overflow-y: auto;
+    // flex-wrap: wrap;
+
+    .board-overview-wrapper {
+        display: flex;
+        align-items: stretch;
+    }
+
+    .board-overview-sidebar {
+        width: 300px;
+        flex-shrink: 0;
+        border-right: 1px solid $light-gray4;
+        padding: 20px 15px;
+        background-color: #f9f9f9;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        top: 0;
+        overflow-y: auto;
+    }
+
+    .board-overview-separator {
+        height: 30px;
+        border-bottom: 1px solid $light-gray5;
+        margin-bottom: 30px;
+
+        &.negative {
+            margin-left: -15px;
+            margin-right: -15px;
+            border-color: $light-gray4;
+        }
+    }
+
+    .board-overview-main {
+        flex-grow: 2;
+        padding-top: 20px;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 300px;
+        overflow-y: auto;
+    }
+
+    .board-overview-boxes {
+        display: flex;
+        justify-content: space-evenly;
+        padding: 20px;
+    }
+
+    .board-overview-box {
+        border: 1px solid $light-gray4;
+        background-color: #f9f9f9;
+        padding: 20px 0;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 2;
+        margin: 0 10px;
+        border-radius: 4px;
+        width: 100px;
+
+        .#{$ns}-dark & {
+            background-color: $dark-gray3;
+            border-color: $dark-gray2;
+        }
+
+        strong {
+            font-size: 48px;
+            font-weight: 800;
+        }
+
+        &.total strong {
+            color: $dark-gray4;
+
+            .#{$ns}-dark & {
+                color: $gray3;
+            }
+        }
+
+        &.idle strong {
+            color: #ffca11;
+        }
+        &.doing strong {
+            color: #0088fe;
+        }
+        &.done strong {
+            color: #00b3b3;
+        }
+        &.overdue strong {
+            color: #db3737;
+        }
+
+        &.upcoming strong {
+            color: #87a629;
+        }
+
+        &.archived {
+            background-color: #f1f8ff;
+            strong {
+                color: #004ca0;
+            }
+
+            .#{$ns}-dark & {
+                background-color: #05265f;
+
+                strong {
+                    color: #a0bfe2;
+                }
+            }
+        }
+    }
+
+    .board-overview-tags {
+        display: flex;
+        flex-wrap: wrap;
+
+        .board-overview-tag {
+            border-radius: 40px;
+            height: 30px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            background-color: $light-gray2;
+            padding: 2px 15px;
+            display: flex;
+            align-items: center;
+            color: #fff;
+        }
+    }
+
+    .board-overview-estimates {
+        padding-left: 20px;
+        padding-right: 20px;
+        font-weight: 400;
+
+        i {
+            float: right;
+            font-style: normal;
+            font-weight: 600;
+        }
+    }
+
+    .estimated-box,
+    .spent-box,
+    .remaining-box {
+        width: 10px;
+        height: 10px;
+        display: inline-block;
+        margin-right: 10px;
+    }
+
+    .estimated-box {
+        background-color: #0088fe;
+    }
+    .spent-box {
+        background-color: #ff8042;
+    }
+    .remaining-box {
+        background-color: #00b3b3;
+    }
+
+    h3 {
+        text-align: center;
+    }
+
+    p {
+        font-size: 12px;
+        color: #738694;
+        text-align: center;
+        margin-bottom: 80px;
+    }
+
+    &.#{$ns}-dark {
+        .board-overview-sidebar {
+            background-color: $dark-gray3;
+            border-right-color: $dark-gray2;
+        }
+
+        .board-overview-separator {
+            border-bottom-color: $dark-gray3;
+
+            &.negative {
+                border-bottom-color: $dark-gray2;
+            }
+        }
+
+        .board-overview-main {
+            background-color: $dark-gray4;
+        }
+
+        .board-overview-box {
+            background-color: $dark-gray3;
+            border-color: $dark-gray2;
+
+            &.total strong {
+                color: $gray3;
+            }
+
+            &.archived {
+                background-color: #05265f;
+
+                strong {
+                    color: #a0bfe2;
+                }
+            }
+        }
+    }
+}

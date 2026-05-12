@@ -1,0 +1,848 @@
+[
+    {
+        "title": "Global",
+        "kotkeys": [
+            {
+                "title": "Toggle preferences",
+                "combos": {
+                    "win32": ["ctrl", ","],
+                    "darwin": ["meta", ","],
+                    "linux": ["ctrl", ","]
+                }
+            },
+            {
+                "title": "Search",
+                "combos": {
+                    "win32": ["ctrl", "K"],
+                    "darwin": ["meta", "K"],
+                    "linux": ["ctrl", "K"]
+                }
+            },
+            {
+                "title": "Show hotkeys",
+                "combos": {
+                    "win32": ["ctrl", "/"],
+                    "darwin": ["meta", "/"],
+                    "linux": ["ctrl", "/"]
+                }
+            },
+            {
+                "title": "Toggle sidebar",
+                "combos": {
+                    "win32": ["ctrl", "B"],
+                    "darwin": ["meta", "B"],
+                    "linux": ["ctrl", "B"]
+                }
+            },
+            {
+                "title": "Show Home",
+                "combos": {
+                    "win32": ["ctrl", "alt", "H"],
+                    "darwin": ["meta", "shift", "H"],
+                    "linux": ["ctrl", "alt", "H"]
+                }
+            },
+            {
+                "title": "Show People",
+                "combos": {
+                    "win32": ["ctrl", "alt", "P"],
+                    "darwin": ["meta", "shift", "P"],
+                    "linux": ["ctrl", "alt", "P"]
+                }
+            },
+            {
+                "title": "Show Calendar",
+                "combos": {
+                    "win32": ["ctrl", "alt", "C"],
+                    "darwin": ["meta", "shift", "C"],
+                    "linux": ["ctrl", "alt", "C"]
+                }
+            },
+            {
+                "title": "Show My Tasks",
+                "combos": {
+                    "win32": ["ctrl", "alt", "T"],
+                    "darwin": ["meta", "shift", "T"],
+                    "linux": ["ctrl", "alt", "T"]
+                }
+            },
+            {
+                "title": "Show Reports",
+                "combos": {
+                    "win32": ["ctrl", "alt", "R"],
+                    "darwin": ["meta", "shift", "R"],
+                    "linux": ["ctrl", "alt", "R"]
+                }
+            },
+            {
+                "title": "Show Archived",
+                "combos": {
+                    "win32": ["ctrl", "alt", "A"],
+                    "darwin": ["meta", "shift", "A"],
+                    "linux": ["ctrl", "alt", "A"]
+                }
+            },
+            {
+                "title": "Show Bookmarks",
+                "combos": {
+                    "win32": ["ctrl", "alt", "B"],
+                    "darwin": ["meta", "shift", "B"],
+                    "linux": ["ctrl", "alt", "B"]
+                }
+            },
+            {
+                "title": "Show Inbox",
+                "combos": {
+                    "win32": ["ctrl", "alt", "I"],
+                    "darwin": ["meta", "shift", "I"],
+                    "linux": ["ctrl", "alt", "I"]
+                }
+            },
+            {
+                "title": "Reload app",
+                "combos": {
+                    "win32": ["ctrl", "R"],
+                    "darwin": ["meta", "alt", "R"],
+                    "linux": ["ctrl", "R"]
+                }
+            },
+            {
+                "title": "Minimize window",
+                "combos": {
+                    "win32": ["ctrl", "M"],
+                    "darwin": ["meta", "M"],
+                    "linux": ["ctrl", "M"]
+                }
+            },
+            {
+                "title": "Toggle fullscreen",
+                "combos": {
+                    "win32": ["F11"],
+                    "darwin": ["ctrl", "meta", "F"],
+                    "linux": []
+                }
+            },
+            {
+                "title": "Open quick add popup",
+                "combos": {
+                    "win32": ["Q"],
+                    "darwin": ["Q"],
+                    "linux": ["Q"]
+                }
+            },
+            {
+                "title": "Quick add folder",
+                "combos": {
+                    "win32": ["Q", "F"],
+                    "darwin": ["Q", "F"],
+                    "linux": ["Q", "F"]
+                }
+            },
+            {
+                "title": "Quick add project",
+                "combos": {
+                    "win32": ["Q", "P"],
+                    "darwin": ["Q", "P"],
+                    "linux": ["Q", "P"]
+                }
+            },
+            {
+                "title": "Quick add task",
+                "combos": {
+                    "win32": ["Q", "T"],
+                    "darwin": ["Q", "T"],
+                    "linux": ["Q", "T"]
+                }
+            },
+            {
+                "title": "Quick add notepad",
+                "combos": {
+                    "win32": ["Q", "N"],
+                    "darwin": ["Q", "N"],
+                    "linux": ["Q", "N"]
+                }
+            },
+            {
+                "title": "Quick add file",
+                "combos": {
+                    "win32": ["Q", "F"],
+                    "darwin": ["Q", "F"],
+                    "linux": ["Q", "F"]
+                }
+            },
+            {
+                "title": "Quick add goal",
+                "combos": {
+                    "win32": ["Q", "G"],
+                    "darwin": ["Q", "G"],
+                    "linux": ["Q", "G"]
+                }
+            },
+            {
+                "title": "Quick add bookmark",
+                "combos": {
+                    "win32": ["Q", "B"],
+                    "darwin": ["Q", "B"],
+                    "linux": ["Q", "B"]
+                }
+            },
+            {
+                "title": "Go back",
+                "combos": {
+                    "win32": ["Ctrl", "["],
+                    "darwin": ["Cmd", "["],
+                    "linux": ["Ctrl", "["]
+                }
+            },
+            {
+                "title": "Go forward",
+                "combos": {
+                    "win32": ["Ctrl", "]"],
+                    "darwin": ["Cmd", "]"],
+                    "linux": ["Ctrl", "]"]
+                }
+            }
+        ]
+    },
+    {
+        "title": "Project",
+        "kotkeys": [
+            {
+                "title": "Switch view",
+                "tooltip": "This may differ depending on the current project view types selected in the Project settings.",
+                "combos": {
+                    "win32": ["ctrl", "1", "...", "7"],
+                    "darwin": ["meta", "1", "...", "7"],
+                    "linux": ["ctrl", "1", "...", "7"]
+                }
+            },
+            {
+                "title": "Add new task",
+                "combos": {
+                    "win32": ["ctrl", "N"],
+                    "darwin": ["meta", "N"],
+                    "linux": ["ctrl", "N"]
+                }
+            },
+            {
+                "title": "Filter project",
+                "combos": {
+                    "win32": ["ctrl", "F"],
+                    "darwin": ["meta", "F"],
+                    "linux": ["ctrl", "F"]
+                }
+            },
+            {
+                "title": "Collapse Stack",
+                "combos": {
+                    "win32": ["shift", "left"],
+                    "darwin": ["shift", "left"],
+                    "linux": ["shift", "left"]
+                }
+            },
+            {
+                "title": "Uncollapse Stack",
+                "combos": {
+                    "win32": ["shift", "right"],
+                    "darwin": ["shift", "right"],
+                    "linux": ["shift", "right"]
+                }
+            },
+            {
+                "title": "Move between tasks and stacks",
+                "combos": {
+                    "win32": ["left", "right", "up", "down"],
+                    "darwin": ["left", "right", "up", "down"],
+                    "linux": ["left", "right", "up", "down"]
+                }
+            },
+            {
+                "title": "Select task/s",
+                "combos": {
+                    "win32": ["shift", "down"],
+                    "darwin": ["shift", "down"],
+                    "linux": ["shift", "down"]
+                }
+            },
+            {
+                "title": "Unselect task/s",
+                "combos": {
+                    "win32": ["shift", "up"],
+                    "darwin": ["shift", "up"],
+                    "linux": ["shift", "up"]
+                }
+            },
+            {
+                "title": "Select/unselect specific task",
+                "combos": {
+                    "win32": ["ctrl", "Click"],
+                    "darwin": ["meta", "Click"],
+                    "linux": ["ctrl", "Click"]
+                }
+            }
+        ]
+    },
+    {
+        "title": "Task details",
+        "kotkeys": [
+            {
+                "title": "Toggle fullscreen",
+                "combos": {
+                    "win32": ["shift", "X"],
+                    "darwin": ["shift", "X"],
+                    "linux": ["shift", "X"]
+                }
+            },
+            {
+                "title": "Delete task",
+                "combos": {
+                    "win32": ["shift", "backspace"],
+                    "darwin": ["shift", "backspace"],
+                    "linux": ["shift", "backspace"]
+                }
+            },
+            {
+                "title": "Toggle task state",
+                "combos": {
+                    "win32": ["shift", "C"],
+                    "darwin": ["shift", "C"],
+                    "linux": ["shift", "C"]
+                }
+            },
+            {
+                "title": "Add new subtask",
+                "tooltip": "Only when subtasks are enabled in Preferences",
+                "combos": {
+                    "win32": ["shift", "S"],
+                    "darwin": ["shift", "S"],
+                    "linux": ["shift", "S"]
+                }
+            },
+            {
+                "title": "Assign task",
+                "tooltip": "Only when assignees are enabled in Preferences",
+                "combos": {
+                    "win32": ["shift", "A"],
+                    "darwin": ["shift", "A"],
+                    "linux": ["shift", "A"]
+                }
+            },
+            {
+                "title": "Set priority",
+                "tooltip": "Only when priority is enabled in Preferences",
+                "combos": {
+                    "win32": ["shift", "P"],
+                    "darwin": ["shift", "P"],
+                    "linux": ["shift", "P"]
+                }
+            },
+            {
+                "title": "Assign tags",
+                "tooltip": "Only when tags are enabled in Preferences",
+                "combos": {
+                    "win32": ["shift", "T"],
+                    "darwin": ["shift", "T"],
+                    "linux": ["shift", "T"]
+                }
+            },
+            {
+                "title": "Assign a status",
+                "tooltip": "Only when statuses are enabled in Preferences",
+                "combos": {
+                    "win32": ["shift", "Y"],
+                    "darwin": ["shift", "Y"],
+                    "linux": ["shift", "Y"]
+                }
+            },
+            {
+                "title": "Open start date",
+                "tooltip": "Only when start date is enabled in Preferences",
+                "combos": {
+                    "win32": ["shift", "G"],
+                    "darwin": ["shift", "G"],
+                    "linux": ["shift", "G"]
+                }
+            },
+            {
+                "title": "Open due date",
+                "tooltip": "Only when due date is enabled in Preferences",
+                "combos": {
+                    "win32": ["shift", "D"],
+                    "darwin": ["shift", "D"],
+                    "linux": ["shift", "D"]
+                }
+            },
+            {
+                "title": "Attach file",
+                "tooltip": "Only when attachments are enabled in Preferences",
+                "combos": {
+                    "win32": ["shift", "F"],
+                    "darwin": ["shift", "F"],
+                    "linux": ["shift", "F"]
+                }
+            },
+            {
+                "title": "Log time",
+                "tooltip": "Only when time entries are enabled in Preferences",
+                "combos": {
+                    "win32": ["shift", "L"],
+                    "darwin": ["shift", "L"],
+                    "linux": ["shift", "L"]
+                }
+            },
+            {
+                "title": "Start/stop timer",
+                "tooltip": "Only when time entries are enabled in Preferences",
+                "combos": {
+                    "win32": ["shift", "M"],
+                    "darwin": ["shift", "M"],
+                    "linux": ["shift", "M"]
+                }
+            },
+            {
+                "title": "Set progress",
+                "tooltip": "Only when progress is enabled in Preferences",
+                "combos": {
+                    "win32": ["shift", "O"],
+                    "darwin": ["shift", "O"],
+                    "linux": ["shift", "O"]
+                }
+            },
+            {
+                "title": "Add cover image",
+                "tooltip": "Only when cover image is enabled in Preferences",
+                "combos": {
+                    "win32": ["shift", "V"],
+                    "darwin": ["shift", "V"],
+                    "linux": ["shift", "V"]
+                }
+            },
+            {
+                "title": "Change stack/column",
+                "tooltip": "Only when stack selector is enabled in Preferences",
+                "combos": {
+                    "win32": ["shift", "B"],
+                    "darwin": ["shift", "B"],
+                    "linux": ["shift", "B"]
+                }
+            },
+            {
+                "title": "Add new comment",
+                "tooltip": "Only when comments are enabled in Preferences",
+                "combos": {
+                    "win32": ["/"],
+                    "darwin": ["/"],
+                    "linux": ["/"]
+                }
+            }
+        ]
+    },
+    {
+        "title": "People",
+        "kotkeys": [
+            {
+                "title": "Add new person",
+                "combos": {
+                    "win32": ["ctrl", "N"],
+                    "darwin": ["meta", "N"],
+                    "linux": ["ctrl", "N"]
+                }
+            },
+            {
+                "title": "Add new company",
+                "combos": {
+                    "win32": ["ctrl", "N"],
+                    "darwin": ["meta", "N"],
+                    "linux": ["ctrl", "N"]
+                }
+            },
+            {
+                "title": "Switch to Contacts view",
+                "combos": {
+                    "win32": ["ctrl", "1"],
+                    "darwin": ["meta", "1"],
+                    "linux": ["ctrl", "1"]
+                }
+            },
+            {
+                "title": "Switch to Companies view",
+                "combos": {
+                    "win32": ["ctrl", "2"],
+                    "darwin": ["meta", "2"],
+                    "linux": ["ctrl", "2"]
+                }
+            },
+            {
+                "title": "Switch to Workload view",
+                "combos": {
+                    "win32": ["ctrl", "3"],
+                    "darwin": ["meta", "3"],
+                    "linux": ["ctrl", "3"]
+                }
+            },
+            {
+                "title": "Edit/save person/company",
+                "combos": {
+                    "win32": ["shift", "E"],
+                    "darwin": ["shift", "E"],
+                    "linux": ["shift", "E"]
+                }
+            },
+            {
+                "title": "Attach avatar/logo",
+                "combos": {
+                    "win32": ["shift", "A"],
+                    "darwin": ["shift", "A"],
+                    "linux": ["shift", "A"]
+                }
+            },
+            {
+                "title": "Set tags",
+                "combos": {
+                    "win32": ["shift", "T"],
+                    "darwin": ["shift", "T"],
+                    "linux": ["shift", "T"]
+                }
+            },
+            {
+                "title": "Set status",
+                "combos": {
+                    "win32": ["shift", "S"],
+                    "darwin": ["shift", "S"],
+                    "linux": ["shift", "S"]
+                }
+            },
+            {
+                "title": "Toggle favorite",
+                "combos": {
+                    "win32": ["shift", "F"],
+                    "darwin": ["shift", "F"],
+                    "linux": ["shift", "F"]
+                }
+            }
+        ]
+    },
+    {
+        "title": "Calendar",
+        "kotkeys": [
+            {
+                "title": "Add new event",
+                "combos": {
+                    "win32": ["ctrl", "N"],
+                    "darwin": ["meta", "N"],
+                    "linux": ["ctrl", "N"]
+                }
+            },
+            {
+                "title": "Next page",
+                "combos": {
+                    "win32": ["right"],
+                    "darwin": ["right"],
+                    "linux": ["right"]
+                }
+            },
+            {
+                "title": "Previous page",
+                "combos": {
+                    "win32": ["left"],
+                    "darwin": ["left"],
+                    "linux": ["left"]
+                }
+            },
+            {
+                "title": "Go to today",
+                "combos": {
+                    "win32": ["down"],
+                    "darwin": ["down"],
+                    "linux": ["down"]
+                }
+            },
+            {
+                "title": "Go to today (alternative)",
+                "combos": {
+                    "win32": ["ctrl", "T"],
+                    "darwin": ["meta", "T"],
+                    "linux": ["ctrl", "T"]
+                }
+            },
+            {
+                "title": "Toggle unassigned tasks",
+                "combos": {
+                    "win32": ["ctrl", "U"],
+                    "darwin": ["meta", "U"],
+                    "linux": ["ctrl", "U"]
+                }
+            },
+            {
+                "title": "Toggle filters",
+                "combos": {
+                    "win32": ["ctrl", "F"],
+                    "darwin": ["meta", "F"],
+                    "linux": ["ctrl", "F"]
+                }
+            },
+            {
+                "title": "Day view",
+                "combos": {
+                    "win32": ["ctrl", "1"],
+                    "darwin": ["meta", "1"],
+                    "linux": ["ctrl", "1"]
+                }
+            },
+            {
+                "title": "Week view",
+                "combos": {
+                    "win32": ["ctrl", "2"],
+                    "darwin": ["meta", "2"],
+                    "linux": ["ctrl", "2"]
+                }
+            },
+            {
+                "title": "Month view",
+                "combos": {
+                    "win32": ["ctrl", "3"],
+                    "darwin": ["meta", "3"],
+                    "linux": ["ctrl", "3"]
+                }
+            }
+        ]
+    },
+    {
+        "title": "Notepad",
+        "kotkeys": [
+            {
+                "title": "Autocomplete people",
+                "tooltip": "Start typing the person's name after the @ e.g. @mike",
+                "combos": {
+                    "win32": ["@"],
+                    "darwin": ["@"],
+                    "linux": ["@"]
+                }
+            },
+            {
+                "title": "Autocomplete projects, tasks, notepads and more",
+                "tooltip": "Start typing the tasks title after the [[ e.g. [[something",
+                "combos": {
+                    "win32": ["[["],
+                    "darwin": ["[["],
+                    "linux": ["[["]
+                }
+            }
+        ]
+    },
+    {
+        "title": "Timebox",
+        "kotkeys": [
+            {
+                "title": "Switch Daily view",
+                "combos": {
+                    "win32": ["ctrl", "1"],
+                    "darwin": ["meta", "1"],
+                    "linux": ["ctrl", "1"]
+                }
+            },
+            {
+                "title": "Switch Weekly view",
+                "combos": {
+                    "win32": ["ctrl", "2"],
+                    "darwin": ["meta", "2"],
+                    "linux": ["ctrl", "2"]
+                }
+            },
+            {
+                "title": "Switch Overview",
+                "combos": {
+                    "win32": ["ctrl", "3"],
+                    "darwin": ["meta", "3"],
+                    "linux": ["ctrl", "3"]
+                }
+            },
+            {
+                "title": "Go to tomorrow",
+                "combos": {
+                    "win32": ["right"],
+                    "darwin": ["right"],
+                    "linux": ["right"]
+                }
+            },
+            {
+                "title": "Go to yesterday",
+                "combos": {
+                    "win32": ["left"],
+                    "darwin": ["left"],
+                    "linux": ["left"]
+                }
+            },
+            {
+                "title": "Go to today",
+                "combos": {
+                    "win32": ["down"],
+                    "darwin": ["down"],
+                    "linux": ["down"]
+                }
+            }
+        ]
+    },
+    {
+        "title": "Inbox",
+        "kotkeys": [
+            {
+                "title": "Add new task",
+                "combos": {
+                    "win32": ["ctrl", "N"],
+                    "darwin": ["meta", "N"],
+                    "linux": ["ctrl", "N"]
+                }
+            },
+            {
+                "title": "Filter inbox",
+                "combos": {
+                    "win32": ["ctrl", "F"],
+                    "darwin": ["meta", "F"],
+                    "linux": ["ctrl", "F"]
+                }
+            }
+        ]
+    },
+    {
+        "title": "Description editor",
+        "kotkeys": [
+            {
+                "title": "Preview markdown",
+                "combos": {
+                    "win32": ["ctrl", "P"],
+                    "darwin": ["meta", "P"],
+                    "linux": ["ctrl", "P"]
+                }
+            },
+            {
+                "title": "Bold",
+                "combos": {
+                    "win32": ["ctrl", "B"],
+                    "darwin": ["meta", "B"],
+                    "linux": ["ctrl", "B"]
+                }
+            },
+            {
+                "title": "Italic",
+                "combos": {
+                    "win32": ["ctrl", "I"],
+                    "darwin": ["meta", "I"],
+                    "linux": ["ctrl", "I"]
+                }
+            },
+            {
+                "title": "Strikethrough",
+                "combos": {
+                    "win32": ["ctrl", "shift", "X"],
+                    "darwin": ["meta", "shift", "X"],
+                    "linux": ["ctrl", "shift", "X"]
+                }
+            },
+            {
+                "title": "Underline",
+                "combos": {
+                    "win32": ["ctrl", "shift", "U"],
+                    "darwin": ["meta", "shift", "U"],
+                    "linux": ["ctrl", "shift", "U"]
+                }
+            },
+            {
+                "title": "Link",
+                "combos": {
+                    "win32": ["ctrl", "K"],
+                    "darwin": ["meta", "K"],
+                    "linux": ["ctrl", "K"]
+                }
+            },
+            {
+                "title": "Quote",
+                "combos": {
+                    "win32": ["ctrl", "Q"],
+                    "darwin": ["meta", "Q"],
+                    "linux": ["ctrl", "Q"]
+                }
+            },
+            {
+                "title": "Code",
+                "combos": {
+                    "win32": ["ctrl", "J"],
+                    "darwin": ["meta", "J"],
+                    "linux": ["ctrl", "J"]
+                }
+            },
+            {
+                "title": "Block Code",
+                "combos": {
+                    "win32": ["ctrl", "shift", "J"],
+                    "darwin": ["meta", "shift", "J"],
+                    "linux": ["ctrl", "shift", "J"]
+                }
+            },
+            {
+                "title": "Image",
+                "combos": {
+                    "win32": ["ctrl", "shift", "I"],
+                    "darwin": ["meta", "shift", "I"],
+                    "linux": ["ctrl", "shift", "I"]
+                }
+            },
+            {
+                "title": "Checked list",
+                "combos": {
+                    "win32": ["ctrl", "shift", "C"],
+                    "darwin": ["meta", "shift", "C"],
+                    "linux": ["ctrl", "shift", "C"]
+                }
+            },
+            {
+                "title": "Unordered list",
+                "combos": {
+                    "win32": ["ctrl", "shift", "L"],
+                    "darwin": ["meta", "shift", "L"],
+                    "linux": ["ctrl", "shift", "L"]
+                }
+            },
+            {
+                "title": "Ordered list",
+                "combos": {
+                    "win32": ["ctrl", "shift", "O"],
+                    "darwin": ["meta", "shift", "O"],
+                    "linux": ["ctrl", "shift", "O"]
+                }
+            },
+            {
+                "title": "Autocomplete records",
+                "combos": {
+                    "win32": ["[[", "...", "type title"],
+                    "darwin": ["[[", "...", "type title"],
+                    "linux": ["[[", "...", "type title"]
+                }
+            },
+            {
+                "title": "Autocomplete people",
+                "combos": {
+                    "win32": ["@", "...", "type name"],
+                    "darwin": ["@", "...", "type name"],
+                    "linux": ["@", "...", "type name"]
+                }
+            },
+            {
+                "title": "Autocomplete tags",
+                "combos": {
+                    "win32": ["#", "...", "type tag name"],
+                    "darwin": ["#", "...", "type tag name"],
+                    "linux": ["#", "...", "type tag name"]
+                }
+            },
+            {
+                "title": "Autocomplete emoji",
+                "combos": {
+                    "win32": [":", "...", "type name"],
+                    "darwin": [":", "...", "type name"],
+                    "linux": [":", "...", "type name"]
+                }
+            }
+        ]
+    }
+]

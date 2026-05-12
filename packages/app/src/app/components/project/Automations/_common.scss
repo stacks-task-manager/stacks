@@ -1,0 +1,62 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.automation-row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 30px;
+
+    &--drag {
+        position: absolute;
+        left: -30px;
+        width: 30px;
+        height: 30px;
+        align-items: center;
+        justify-content: center;
+        cursor: grab;
+        display: none;
+        opacity: 0.3;
+
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+
+    &--name {
+        flex-grow: 2;
+    }
+
+    &--options {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-right: -20px;
+    }
+
+    &:hover {
+        .automation-row--drag {
+            display: flex;
+        }
+    }
+}
+
+.automation-box-row {
+    display: flex;
+    background-color: $white;
+    border-radius: 4px;
+    padding: 10px;
+    position: relative;
+    border: 1px solid $gray5;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-grow: 2;
+}
+
+.#{$ns}-dark {
+    .automation-box-row {
+        background-color: $dark-gray3;
+        border-color: $dark-gray4;
+    }
+}

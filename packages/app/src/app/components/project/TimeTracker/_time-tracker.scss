@@ -1,0 +1,119 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.time-tracker-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .time-tracker {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 3px 6px;
+        background-color: $light-gray5;
+        border-radius: 10px;
+        height: 28px;
+        cursor: pointer;
+
+        .time-tracker-spacer {
+            flex-grow: 2;
+        }
+
+        .#{$ns}-icon {
+            margin: 0;
+        }
+
+        .clock-icon {
+            color: $pt-intent-success;
+        }
+
+        .stop-icon {
+            display: none;
+            color: $pt-intent-danger;
+        }
+
+        .arrow-icon {
+            display: none;
+        }
+
+        &:hover {
+            // background-color: $light-gray4;
+            background-color: rgba($pt-intent-success, 0.1);
+            box-shadow: 0 0 0 1px rgba($pt-intent-success, 0.4);
+
+            .stop-icon {
+                display: block;
+            }
+
+            .clock-icon {
+                display: none;
+            }
+        }
+    }
+
+    &.detailed {
+        width: 100%;
+        padding: 5px;
+        border-radius: 4px;
+        align-items: flex-start;
+        gap: 3px;
+        // margin-bottom: 10px;
+        background-color: $white;
+        box-shadow: 0 0 0 1px $light-gray2;
+
+        a {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
+            max-width: 100%;
+            min-width: 0;
+            font-size: 16px;
+            padding: 0 5px;
+        }
+
+        .#{$ns}-popover-target {
+            display: block;
+            width: 100%;
+        }
+
+        .time-tracker {
+            font-size: 20px;
+            width: 100%;
+            background-color: transparent;
+            border-radius: 999px;
+            font-weight: 600;
+            gap: 8px;
+        }
+
+        &:hover {
+            background-color: $light-gray4;
+
+            .time-tracker {
+                background-color: $light-gray1;
+
+                .arrow-icon {
+                    display: inline;
+                }
+            }
+        }
+    }
+}
+
+.#{$ns}-dark {
+    .time-tracker {
+        background-color: $dark-gray5;
+    }
+
+    .time-tracker-wrapper {
+        &.detailed {
+            background-color: $dark-gray4;
+            box-shadow: 0 0 0 1px $dark-gray2;
+
+            &:hover {
+                .time-tracker {
+                    background-color: $dark-gray3;
+                }
+            }
+        }
+    }
+}

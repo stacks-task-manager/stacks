@@ -1,0 +1,25 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.#{$ns}-menu {
+    &.stacks-menu {
+        &.has-new {
+            padding-bottom: 0;
+        }
+
+        .#{$ns}-menu-item {
+            align-items: center;
+        }
+
+        .#{$ns}-menu-item-label {
+            display: flex;
+            align-items: center;
+        }
+
+        &.nested {
+            padding: 0;
+        }
+    }
+
+    &.new-stack-menu {
+        padding-top: 0;
+    }
+}

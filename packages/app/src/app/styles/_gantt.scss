@@ -1,0 +1,113 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.#{$ns}-dark {
+    .gantt-body {
+        color: $light-gray5;
+        background: $dark-gray3;
+        border-color: $dark-gray1;
+    }
+
+    .gantt-table-header-cell {
+        // background-color: $dark-gray1;
+        border-color: $dark-gray1;
+    }
+
+    .gantt-time-axis-major,
+    .gantt-time-axis-minor {
+        color: $light-gray5;
+        border-color: $dark-gray1;
+    }
+
+    .gantt-time-axis-scale-select {
+        .gantt-trigger {
+            background-color: $dark-gray3;
+            border-color: $dark-gray1;
+
+            .gantt-text {
+                color: $light-gray5;
+            }
+        }
+    }
+
+    .gantt-table-header-head-cell {
+        color: $light-gray5;
+    }
+
+    .gantt-body main {
+        border-color: $dark-gray1;
+    }
+
+    .gantt-table-body-cell {
+        color: $light-gray5;
+        border-color: $dark-gray1;
+
+        > div {
+            background-color: transparent !important;
+        }
+    }
+
+    .gantt-task-bar-date-text {
+        color: $light-gray5;
+    }
+
+    .gantt-task-bar-label {
+        color: $gray5;
+    }
+
+    .gantt-chart-svg-renderer {
+        g {
+            stroke: $dark-gray1 !important;
+        }
+    }
+
+    &:hover {
+        .gantt-chart-svg-renderer {
+            g {
+                &:last-child {
+                    stroke: $gray1 !important;
+                    fill: $gray1 !important;
+                }
+            }
+        }
+    }
+
+    .gantt-task-bar-date-text {
+        color: $light-gray5;
+    }
+
+    .gantt-task-bar-label {
+        color: $gray5;
+    }
+
+    .gantt-task-bar-resize-bg {
+        box-shadow: 0 2px 4px 0 $dark-gray1;
+        border-color: $dark-gray2;
+        background-color: $dark-gray2;
+    }
+
+    .gantt-task-bar-resize-handle {
+        background-color: $dark-gray2;
+    }
+
+    .gantt-invalid-task-bar-date {
+        color: $light-gray5;
+    }
+
+    .gantt-row-toggler {
+        color: $light-gray5;
+        background-color: transparent;
+    }
+
+    .gantt-row-toggler > i {
+        background-color: $dark-gray2;
+        border-radius: 3px;
+    }
+
+    .gantt-divider-icon-wrapper {
+        border-color: $dark-gray2 !important;
+        background-color: $dark-gray2 !important;
+    }
+
+    .gantt-shadow.gantt-scrolling {
+        box-shadow: -3px 0 7px 0 $dark-gray1;
+    }
+}

@@ -1,0 +1,21 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.project-settings-field {
+    a {
+        cursor: default;
+    }
+
+    .drag-handle {
+        opacity: 0.4;
+        cursor: grab;
+
+        &:active {
+            opacity: 1;
+        }
+    }
+
+    &:hover {
+        .drag-handle {
+            opacity: 0.8;
+        }
+    }
+}

@@ -1,0 +1,21 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.#{$ns}-checkbox {
+    &.simple {
+        margin-bottom: 0;
+        padding-left: 16px;
+
+        .#{$ns}-control-indicator {
+            margin-left: -16px;
+            margin-right: 0;
+        }
+    }
+
+    &.no-margins {
+        margin-bottom: 0;
+    }
+}
+
+.#{$ns}-control input:checked ~ .#{$ns}-control-indicator {
+    box-shadow: none;
+    background-color: $blue;
+}

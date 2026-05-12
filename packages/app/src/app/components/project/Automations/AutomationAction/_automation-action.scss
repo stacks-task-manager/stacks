@@ -1,0 +1,86 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.automation-action {
+    margin-bottom: 15px;
+    justify-content: space-between;
+
+    &:after {
+        content: "";
+        width: 1px;
+        background-color: $gray5;
+        position: absolute;
+        left: 50%;
+        bottom: -16px;
+        height: 15px;
+        z-index: 1;
+    }
+
+    &.dragging {
+        // background-color: red;
+        &:after {
+            display: none;
+        }
+    }
+    &:hover {
+        .automation-action-delete {
+            display: inline-flex;
+        }
+
+        .automation-action-drag-handle {
+            display: inline-flex;
+        }
+    }
+}
+
+.automation-action-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.automation-action-icon {
+    border-radius: 4px;
+    border: 1px solid $gray5;
+    background-color: $light-gray5;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: $dark-gray5;
+}
+
+.automation-action-delete {
+    display: none;
+}
+
+.automation-action-drag-handle {
+    position: absolute;
+    left: -30px;
+    opacity: 0.3;
+    cursor: move;
+    display: none;
+    width: 30px;
+    height: 30px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+        opacity: 0.8;
+    }
+}
+
+.#{$ns}-dark {
+    .automation-action {
+        &:after {
+            background-color: $dark-gray5;
+        }
+    }
+
+    .automation-action-icon {
+        background-color: $dark-gray2;
+        border-color: $dark-gray1;
+        color: $white;
+    }
+}

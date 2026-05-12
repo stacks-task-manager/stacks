@@ -1,0 +1,6 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+import { nanoid } from "nanoid";
+
+export const uuidv4 = () => {
+    return nanoid(20);
+};

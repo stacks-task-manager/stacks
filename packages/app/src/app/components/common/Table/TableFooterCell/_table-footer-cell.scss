@@ -1,0 +1,92 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.custom-html-table {
+    tfoot {
+        td {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            background-color: $white;
+            box-shadow: 0 -1px 0 $light-gray3 inset;
+
+            &:first-child {
+                box-shadow: 0 -1px 0 $light-gray3 inset, 1px -1px 0 $light-gray3 inset;
+                border-top-left-radius: 3px;
+                border-bottom-left-radius: 3px;
+            }
+
+            &:last-child {
+                box-shadow: 0 -1px 0 $light-gray3 inset, -1px -1px 0 $light-gray3 inset;
+                border-top-right-radius: 3px;
+                border-bottom-right-radius: 3px;
+            }
+
+            &.secondary {
+                background-color: #fad9992b;
+            }
+        }
+
+        &.detached {
+            td {
+                box-shadow: 0 -1px 0 $light-gray3 inset, 0 1px 0 $light-gray3 inset;
+
+                &:first-child {
+                    box-shadow: 0 -1px 0 $light-gray3 inset, 1px -1px 0 $light-gray3 inset,
+                        0 1px 0 $light-gray3 inset;
+                }
+
+                &:last-child {
+                    box-shadow: 0 -1px 0 $light-gray3 inset, -1px -1px 0 $light-gray3 inset,
+                        0 1px 0 $light-gray3 inset;
+                }
+            }
+        }
+    }
+
+    .table-footer-cell {
+        padding: 10px 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        min-width: 0;
+
+        &.center {
+            justify-content: center;
+        }
+
+        &.right {
+            justify-content: flex-end;
+        }
+    }
+}
+
+.#{$ns}-dark {
+    .custom-html-table {
+        tfoot {
+            td {
+                background-color: $dark-gray3;
+                box-shadow: 0 -1px 0 $dark-gray2 inset;
+
+                &.secondary {
+                    background-color: $dark-gray2;
+                }
+            }
+
+            &.detached {
+                td {
+                    box-shadow: 0 -1px 0 $gray1 inset, 0 1px 0 $gray1 inset;
+
+                    &:first-child {
+                        box-shadow: 0 -1px 0 $gray1 inset, 1px -1px 0 $gray1 inset, 0 1px 0 $gray1 inset;
+                    }
+
+                    &:last-child {
+                        box-shadow: 0 -1px 0 $gray1 inset, -1px -1px 0 $gray1 inset, 0 1px 0 $gray1 inset;
+                    }
+                }
+            }
+        }
+    }
+}

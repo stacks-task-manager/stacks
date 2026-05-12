@@ -1,0 +1,33 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.autocomplete-container {
+    background-color: $white;
+    max-height: 350px;
+
+    &.#{$ns}-dark {
+        background-color: $dark-gray4;
+    }
+
+    ul {
+        border-radius: 3px;
+        list-style: none;
+        margin: 0;
+        min-width: 180px;
+        padding: 5px;
+        text-align: left;
+    }
+
+    span {
+        margin-right: 0;
+
+        &.autocomplete-icon {
+            margin-right: 7px;
+        }
+    }
+
+    div {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 300px;
+    }
+}

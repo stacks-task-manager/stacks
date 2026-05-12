@@ -1,0 +1,84 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.drop-zone {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    overflow: hidden;
+    z-index: 20;
+    background-color: rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(1px);
+
+    .drop-zone-inner {
+        position: absolute;
+        border-radius: 10px;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+        background-color: #fefefe;
+        left: 30px;
+        right: 30px;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 250px;
+        max-height: 90%;
+        display: flex;
+        align-items: stretch;
+        justify-content: stretch;
+    }
+
+    &.narrow {
+        .drop-zone-inner {
+            left: 10px;
+            right: 10px;
+        }
+    }
+
+    .drop-area {
+        width: 100%;
+        margin: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 30px;
+        border: 1px dashed $gray5;
+        border-radius: 10px;
+
+        span {
+            color: $gray3;
+        }
+
+        div {
+            margin-top: 10px;
+            font-size: 13px;
+        }
+    }
+
+    &:hover {
+        .drop-area {
+            background-color: #ecf2ff;
+            border: 1px solid $blue3;
+        }
+    }
+
+    &.over {
+        .drop-area {
+            border-color: $blue2;
+        }
+    }
+}
+
+.#{$ns}-dark {
+    .drop-zone {
+        .drop-zone-inner {
+            background-color: $dark-gray5;
+        }
+
+        &:hover {
+            .drop-area {
+                background-color: $dark-gray4;
+                border: 1px solid $gray1;
+            }
+        }
+    }
+}

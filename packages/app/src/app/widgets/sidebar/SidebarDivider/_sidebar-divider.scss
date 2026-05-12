@@ -1,0 +1,11 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.sidebar-divider {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5px 0 20px;
+    color: $gray3;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}

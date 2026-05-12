@@ -1,0 +1,22 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.comments-input {
+    background-color: $light-gray5;
+    border-top: 1px solid $light-gray3;
+    width: 100%;
+    display: flex;
+    padding: 15px 0;
+    position: sticky;
+    bottom: 0;
+    padding-right: 10px;
+
+    .text-editor {
+        flex-grow: 2;
+    }
+}
+
+.#{$ns}-dark {
+    .comments-input {
+        background-color: $dark-gray3;
+        border-top-color: $dark-gray2;
+    }
+}

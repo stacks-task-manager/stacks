@@ -1,0 +1,117 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+$tl: "timeline";
+
+.#{$tl} {
+    box-shadow: 0 0 0 1px $light-gray4;
+    border-left: 8px solid;
+    border-radius: 3px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background-color: $white;
+    width: 100%;
+}
+
+.#{$tl}__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    left: 0;
+    padding: 10px;
+    padding-bottom: 0;
+    background-color: $white;
+    z-index: 20;
+}
+
+.#{$tl}__title {
+    font-size: 18px;
+}
+
+.#{$tl}__accessory {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.#{$tl}__rows {
+    padding: 0 10px;
+}
+
+.#{$tl}__row {
+    display: inline-flex;
+    flex-direction: column;
+}
+
+.#{$tl}__days {
+    display: inline-flex;
+    gap: 5px;
+    align-items: stretch;
+
+    &--total-wrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    &--total {
+        display: inline-flex;
+        align-items: center;
+        border-radius: 3px;
+        border: 2px solid;
+        background-color: $white;
+        position: relative;
+        z-index: 10;
+        height: 24px;
+        padding: 0 5px;
+        font-size: 12px;
+        margin-top: -10px;
+
+        small {
+            font-size: 9px;
+        }
+    }
+}
+
+.#{$tl}__today-progress {
+    position: absolute;
+    width: 1px;
+    top: 0;
+    bottom: 0;
+    background-color: $light-gray1;
+
+    span {
+        display: block;
+        position: absolute;
+        bottom: 100%;
+        background-color: $dark-gray2;
+        font-size: 11px;
+        padding: 2px 3px;
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+        border-bottom-right-radius: 3px;
+        display: none;
+        color: $light-gray5;
+        z-index: 20;
+    }
+}
+
+@import "timeline-row";
+@import "timeline-day";
+
+.#{$ns}-dark {
+    .#{$tl} {
+        background-color: $dark-gray3;
+        box-shadow: 0 0 0 1px $dark-gray1;
+    }
+
+    .#{$tl}__header {
+        background-color: $dark-gray3;
+    }
+
+    .#{$tl}__today-progress {
+        background-color: $gray1;
+    }
+}

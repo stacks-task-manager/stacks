@@ -1,0 +1,18 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.location-menu-item {
+    .#{$ns}-button {
+        display: none;
+        min-width: 20px;
+        min-height: 20px;
+    }
+
+    &:hover {
+        .#{$ns}-button {
+            display: inline-flex;
+        }
+    }
+
+    .#{$ns}-button.#{$ns}-active {
+        display: inline-flex;
+    }
+}

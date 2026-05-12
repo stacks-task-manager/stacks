@@ -1,0 +1,299 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.preferences {
+    padding-bottom: 0;
+    margin-right: 0;
+
+    * {
+        user-select: none;
+    }
+
+    .#{$ns}-tab-panel {
+        flex-grow: 2;
+    }
+
+    .preference-panel {
+        max-height: 80vh;
+        min-height: 40vh;
+        overflow-y: auto;
+        padding-right: 20px;
+        padding-left: 2px;
+    }
+
+    .preference-panel-center {
+        display: flex;
+        align-items: center;
+        padding: 0;
+    }
+}
+
+.preferences2 {
+    h6 {
+        text-transform: uppercase;
+        margin-bottom: 15px;
+        font-size: 13px;
+    }
+
+    .narrow {
+        margin-bottom: 0;
+    }
+
+    .cols {
+        display: flex;
+        justify-content: space-evenly;
+
+        .col {
+            width: 100%;
+
+            &.center {
+                align-items: center;
+                display: flex;
+
+                * {
+                    margin: 0;
+                }
+            }
+
+            &:first-child {
+                padding-right: 15px;
+            }
+
+            &:last-child {
+                padding-left: 15px;
+            }
+        }
+    }
+
+    .section-separator {
+        height: 30px;
+    }
+
+    .#{$ns}-tab-panel {
+        min-height: 500px;
+    }
+}
+
+.themes {
+    display: flex;
+    justify-content: center;
+    padding: 40px 0;
+
+    div {
+        flex: 0 0 240px;
+        align-items: center;
+        height: 170px;
+        background-size: contain;
+        border: 2px solid transparent;
+        border-radius: 3px;
+        background-repeat: no-repeat;
+        background-position: 50%;
+        cursor: pointer;
+        margin: 0 10px;
+        padding: 5px;
+
+        &.active {
+            box-shadow: 0 0 0 2px $blue1;
+        }
+    }
+
+    svg {
+        max-width: 100%;
+        height: 100%;
+    }
+}
+
+.about-panel {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding-top: 30px;
+
+    .icon {
+        // background-color: $white;
+        // border-radius: 20px;
+        width: 120px;
+        height: 120px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        // box-shadow: 0 0 0 2px $light-gray1;
+        // margin-bottom: 50px;
+
+        svg {
+            width: 90%;
+            height: 90%;
+        }
+    }
+
+    p {
+        margin-bottom: 15px;
+        text-align: center;
+    }
+}
+
+/* TASK DETAILS */
+.td-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.td-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    // grid-template-rows: 1fr 1fr 1fr;
+    gap: 20px;
+}
+
+.td-rows-wrapper {
+    min-height: 10px;
+
+    .#{$ns}-popover-target {
+        display: block;
+    }
+}
+
+.td-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background-color: $light-gray3;
+    padding: 20px 15px;
+    border-radius: 5px;
+
+    &.unassigned {
+        position: relative;
+        border: 1px dashed $gray5;
+
+        &:after {
+            content: "+";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: $gray5;
+            font-size: 24px;
+        }
+    }
+}
+
+.td-row-item {
+    display: flex;
+    align-items: center;
+    background-color: $blue;
+    border-color: transparent;
+    color: $white;
+    border-radius: 4px;
+    padding: 0 15px;
+    gap: 5px;
+    height: 30px;
+    position: relative;
+    margin-bottom: 15px;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+
+    .#{$ns}-button {
+        position: absolute;
+        border-radius: 50%;
+        top: -8px;
+        right: -8px;
+        visibility: hidden;
+    }
+
+    &:hover {
+        .#{$ns}-button {
+            visibility: visible;
+        }
+    }
+}
+
+.td-col {
+    cursor: pointer;
+    background-color: $light-gray3;
+    height: 80px;
+    width: 100%;
+    border-radius: 5px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+
+    &.unassigned {
+        position: relative;
+        border: 1px dashed $gray5;
+
+        &:after {
+            content: "+";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: $gray5;
+            font-size: 24px;
+        }
+    }
+
+    &.assigned {
+        background-color: $blue;
+        border-color: transparent;
+        color: $white;
+    }
+
+    &.small {
+        height: 30px;
+    }
+
+    .#{$ns}-button {
+        position: absolute;
+        border-radius: 50%;
+        top: -8px;
+        right: -8px;
+        visibility: hidden;
+    }
+
+    &:hover {
+        .#{$ns}-button {
+            visibility: visible;
+        }
+    }
+}
+
+.td-picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    overflow-y: auto;
+}
+
+.td-button {
+    width: 22%;
+    // padding: 15px;
+    height: 50px;
+    background-color: $blue;
+    color: $white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+}
+
+.#{$ns}-dark {
+    .td-rows {
+        background-color: $dark-gray3;
+    }
+
+    .td-col {
+        background-color: $dark-gray3;
+
+        &.unassigned {
+            border-color: $gray1;
+        }
+
+        &.assigned {
+            background-color: $blue;
+        }
+    }
+}

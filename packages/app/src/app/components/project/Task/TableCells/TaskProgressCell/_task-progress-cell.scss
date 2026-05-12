@@ -1,0 +1,83 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.table-progress-cell {
+    border-radius: 20px;
+    background-color: $light-gray5;
+    width: 100%;
+    display: flex;
+    align-items: stretch;
+    position: relative;
+    height: 20px;
+    overflow: hidden;
+
+    &.interactive {
+        cursor: pointer;
+    }
+
+    div {
+        background-color: $forest5;
+        position: relative;
+        overflow: hidden;
+        color: $white;
+    }
+
+    &.animated {
+        div {
+            animation: slideIn 500ms cubic-bezier(0.33, 0, 0.18, 0.99);
+        }
+    }
+
+    span {
+        position: absolute;
+        font-size: 14px;
+        font-weight: 600;
+        top: 50%;
+        left: 7px;
+        transform: translateY(-50%);
+    }
+
+    small {
+        position: absolute;
+        top: 80%;
+        left: 7px;
+        font-size: 12px;
+        transform: translateY(-80%);
+    }
+
+    &.subtitle {
+        span {
+            margin-top: -7px;
+        }
+    }
+
+    &.large {
+        height: 40px;
+    }
+}
+
+.table-progress-wrapper {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    .#{$ns}-popover-target {
+        width: 100%;
+    }
+}
+
+.#{$ns}-dark {
+    .table-progress-cell {
+        background-color: $gray1;
+        div {
+            background-color: $dark-gray1;
+        }
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(-100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}

@@ -1,0 +1,228 @@
+import React from "react";
+import { Translate } from "react-i18nify";
+
+import Log from "app/utils/log";
+import { IPanelInterface } from ".";
+import { DragDropContext, Draggable, Droppable, DropResult } from "@hello-pangea/dnd";
+import { TASKDETAILMATRIX } from "@stacks/types";
+import { Button, Intent } from "@blueprintjs/core";
+import { Icon, SettingRow } from "app/components/common";
+import { produce } from "immer";
+import classNames from "classnames";
+
+type IDragItem = {
+    label: string;
+    id: string;
+    icon: string;
+}
+const ITEMS: IDragItem[] = [
+    { label: "Assignees", id: "assignees", icon: "users" },
+    { label: "Priority", id: "priority", icon: "flag" },
+    { label: "Status", id: "status", icon: "activity" },
+    { label: "Repeats", id: "repeats", icon: "refresh-ccw" },
+    { label: "Progress", id: "progress", icon: "tags" },
+    { label: "Tags", id: "tags", icon: "tags" },
+    { label: "Projects", id: "projects", icon: "tags" },
+    { label: "Estimate", id: "estimate", icon: "clock-check" },
+    { label: "Stack", id: "stack", icon: "tags" },
+    { label: "Time Spent", id: "timespent", icon: "clock-stopwatch" },
+    { label: "Start Date", id: "startdate", icon: "calendar-plus-02" },
+    { label: "Due Date", id: "duedate", icon: "calendar-minus-02" },
+    { label: "Do Date", id: "dodate", icon: "calendar-check-02" },
+];
+
+type IMatrixRow = [string | undefined, string | undefined, string | undefined];
+
+interface ITaskDetailsPanelState {
+    matrix: IMatrixRow[];
+}
+
+export class TaskDetailsPanel extends React.Component<IPanelInterface, ITaskDetailsPanelState> {
+    constructor(props: IPanelInterface) {
+        super(props);
+
+        this.state = {
+            matrix: [
+                [undefined, undefined, undefined],
+                [undefined, undefined, undefined],
+                [undefined, undefined, undefined],
+            ],
+        }
+    }
+
+    render() {
+        Log.info("[Component][TaskDetailsPanel]", "render");
+        const { preferences, onChange } = this.props;
+
+        const matrixIds: string[] = [];
+        for (const row of preferences.taskDetailsMatrix) {
+            for (const col of row) {
+                if (col) matrixIds.push(col);
+            }
+        }
+        for (const row of preferences.taskDetailsRows) {
+            matrixIds.push(row);
+        }
+
+        return (
+            <div className="preference-panel">
+                <DragDropContext onDragEnd={this.handleDragEnd}>
+                    <div className="td-grid">
+                        <SettingRow
+                            title="Task details grid sections"
+                            description={<Translate value="preferences.match-stacks-colors-calendar" />}
+                            last
+                        >
+                            <div className="td-grid">
+                                {preferences.taskDetailsMatrix.map((row, rowIndex) => (
+                                    <div className="td-row" key={`row-${rowIndex}`}>
+                                        {row.map((col, colIndex) => (
+                                            <Droppable key={`col-${rowIndex}-${colIndex}`} droppableId={`${rowIndex}-${colIndex}`}>
+                                                {(provided, snapshot) => (
+                                                    <div
+                                                        className={classNames("td-col", {
+                                                            "draging-over": snapshot.isDraggingOver,
+                                                            unassigned: !preferences.taskDetailsMatrix[rowIndex][colIndex],
+                                                            assigned: Boolean(preferences.taskDetailsMatrix[rowIndex][colIndex]),
+                                                        })}
+                                                        {...provided.droppableProps}
+                                                        ref={provided.innerRef}
+                                                    >
+                                                        {this.renderAssigned(preferences.taskDetailsMatrix[rowIndex][colIndex])}
+                                                        {provided.placeholder}
+
+                                                        {preferences.taskDetailsMatrix[rowIndex][colIndex] && <Button small icon={<Icon icon="trash" />} intent={Intent.DANGER} onClick={() => this.handleRemoveGrid(rowIndex, colIndex)} />}
+                                                    </div>
+                                                )}
+                                            </Droppable>
+                                        ))}
+                                    </div>
+                                ))}
+                            </div>
+                        </SettingRow>
+
+                        <SettingRow
+                            title="Task details rows sections"
+                            last
+                        >
+                            <div className={classNames("td-rows", { unassigned: preferences.taskDetailsRows.length === 0 })}>
+                                <Droppable droppableId="rows">
+                                    {provided => (
+                                        <div className="td-rows-wrapper" {...provided.droppableProps} ref={provided.innerRef}>
+                                            {preferences.taskDetailsRows.map((row, rowIndex) => (
+                                                <Draggable key={rowIndex} draggableId={row} index={rowIndex}>
+                                                    {(provided, snapshot) => (
+                                                        <div className="td-row-item" ref={provided.innerRef}
+                                                            {...provided.draggableProps}
+                                                            {...provided.dragHandleProps}
+                                                        >
+                                                            {this.renderAssigned(row)} <Button small icon={<Icon icon="trash" />} intent={Intent.DANGER} onClick={() => this.handleRemoveRow(rowIndex)} />
+                                                        </div>
+                                                    )}
+                                                </Draggable>
+                                            ))}
+                                            {provided.placeholder}
+                                        </div>
+                                    )}
+                                </Droppable>
+                            </div>
+                        </SettingRow>
+
+
+
+                        <SettingRow
+                            title="Task details info"
+                            description="Drag any of the items from the list below to the grid or rows section"
+                            last
+                        >
+                            <Droppable droppableId="unassigned">
+                                {provided => (
+                                    <div
+                                        className="td-picker"
+                                        {...provided.droppableProps}
+                                        ref={provided.innerRef}
+                                    >
+                                        {ITEMS.filter((item: IDragItem) => !matrixIds.includes(item.id)).map((item, index) => (
+                                            <Draggable key={item.id} draggableId={item.id} index={index}>
+                                                {(provided, snapshot) => (
+                                                    <div className="td-button" ref={provided.innerRef}
+                                                        {...provided.draggableProps}
+                                                        {...provided.dragHandleProps}
+                                                    >
+                                                        <Icon icon={item.icon} />
+                                                        {item.label}
+                                                    </div>
+                                                )}
+                                            </Draggable>
+                                        ))}
+                                        {provided.placeholder}
+                                    </div>
+                                )}
+                            </Droppable>
+                        </SettingRow>
+                    </div>
+                </DragDropContext>
+            </div>
+        );
+    }
+
+    private renderAssigned = (id?: string) => {
+        if (!id) return null;
+        const item = ITEMS.find((item: IDragItem) => item.id === id);
+        return (
+            <>
+                <Icon icon={item!.icon} />
+                {item!.label}
+            </>
+        );
+    }
+
+    private handleDragEnd = (result: DropResult) => {
+        const { source, destination, draggableId } = result;
+        if (!destination) return;
+
+        if (source.droppableId === "unassigned") {
+            if (destination.droppableId === "rows") {
+                const rows = [...this.props.preferences.taskDetailsRows];
+                rows.splice(destination.index, 0, draggableId as TASKDETAILMATRIX);
+                this.props.onChange("taskDetailsRows", rows);
+            } else if (destination.droppableId !== "unassigned") {
+                const destIndexes = destination.droppableId.split("-").map(index => Number(index));
+                const matrix = produce(this.props.preferences.taskDetailsMatrix, draftMatrix => {
+                    draftMatrix[destIndexes[0]][destIndexes[1]] = draggableId as TASKDETAILMATRIX;
+                })
+                this.props.onChange("taskDetailsMatrix", matrix);
+            }
+        } else if (source.droppableId === "rows" && destination.droppableId === "rows") {
+            const rows = [...this.props.preferences.taskDetailsRows];
+            const movedRow = this.props.preferences.taskDetailsRows[source.index];
+            rows.splice(source.index, 1);
+            rows.splice(destination.index, 0, movedRow);
+            this.props.onChange("taskDetailsRows", rows);
+        } else if (source.droppableId === "rows") {
+            const rows = [...this.props.preferences.taskDetailsRows];
+            const movedRow = this.props.preferences.taskDetailsRows[source.index];
+            rows.splice(source.index, 1);
+            this.props.onChange("taskDetailsRows", rows);
+
+            const destIndexes = destination.droppableId.split("-").map(index => Number(index));
+            const matrix = produce(this.props.preferences.taskDetailsMatrix, draftMatrix => {
+                draftMatrix[destIndexes[0]][destIndexes[1]] = movedRow;
+            })
+            this.props.onChange("taskDetailsMatrix", matrix);
+        }
+    }
+
+    private handleRemoveGrid = (rowIndex: number, colIndex: number) => {
+        const matrix = produce(this.props.preferences.taskDetailsMatrix, draftMatrix => {
+            draftMatrix[rowIndex][colIndex] = undefined;
+        })
+        this.props.onChange("taskDetailsMatrix", matrix);
+    }
+
+    private handleRemoveRow = (index: number) => {
+        const rows = [...this.props.preferences.taskDetailsRows];
+        rows.splice(index, 1);
+        this.props.onChange("taskDetailsRows", rows);
+    }
+}

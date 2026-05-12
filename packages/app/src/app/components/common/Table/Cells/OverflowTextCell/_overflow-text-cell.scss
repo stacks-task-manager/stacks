@@ -1,0 +1,65 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.overflow-text-cell {
+    position: relative;
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &.interactive {
+        cursor: pointer;
+    }
+
+    &.faded {
+        &:after {
+            content: "";
+            position: absolute;
+            height: 20px;
+            width: 100px;
+            background: rgb(255, 255, 255);
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
+            right: 0;
+            top: 0;
+        }
+    }
+
+    &:first-child {
+        max-width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    > * {
+        white-space: nowrap;
+    }
+}
+
+.#{$ns}-dark {
+    .overflow-text-cell {
+        &:after {
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, $dark-gray3 100%);
+        }
+    }
+
+    .custom-html-table {
+        tr {
+            &:hover {
+                .overflow-text-cell {
+                    &.faded {
+                        &:after {
+                            background: linear-gradient(
+                                90deg,
+                                rgba(255, 255, 255, 0) 0%,
+                                lighten($dark-gray5, 2%) 100%
+                            );
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

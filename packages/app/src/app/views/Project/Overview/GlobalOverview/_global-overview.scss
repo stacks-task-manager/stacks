@@ -1,0 +1,21 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.global-tasks-overview {
+    &__perncentages {
+        width: 180px;
+        margin: 0 auto;
+    }
+
+    &__perncentage {
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    &__labels {
+        > div {
+            font-weight: 600;
+            &:last-child {
+                text-align: center;
+            }
+        }
+    }
+}

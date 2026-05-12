@@ -1,0 +1,32 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.automation-new-action {
+    border-color: $blue;
+    gap: initial;
+    margin-bottom: 15px;
+    justify-content: space-between;
+
+    &:after {
+        content: "";
+        width: 1px;
+        background-color: $gray5;
+        position: absolute;
+        left: 50%;
+        bottom: -16px;
+        height: 15px;
+        z-index: 1;
+    }
+
+    &__content {
+        flex-grow: 2;
+        display: flex;
+        align-items: center;
+    }
+}
+
+.#{$ns}-dark {
+    .automation-new-action {
+        &:after {
+            background-color: $dark-gray5;
+        }
+    }
+}

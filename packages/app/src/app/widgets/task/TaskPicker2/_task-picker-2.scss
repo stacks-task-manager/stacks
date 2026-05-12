@@ -1,0 +1,22 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.task-picker-2 {
+    .#{$ns}-menu {
+        padding: 0;
+    }
+
+    .#{$ns}-panel-stack2 {
+        height: 400px;
+    }
+
+    .#{$ns}-panel-stack2-view {
+        overflow: hidden;
+
+        .layout-grid {
+            min-height: 0;
+        }
+    }
+}
+
+.task-picker-dialog {
+    width: 350px;
+}

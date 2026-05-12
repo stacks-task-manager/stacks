@@ -1,0 +1,28 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.#{$ns}-tabs {
+    &.settings {
+        .#{$ns}-tab-list {
+            margin-left: 20px;
+        }
+
+        .settings-tab-section {
+            display: flex;
+            align-items: center;
+            // margin-bottom: 5px;
+            opacity: 0.5;
+            position: relative;
+            padding-left: 10px;
+            margin-top: 8px;
+            font-size: 12px;
+            font-weight: 600;
+
+            .#{$ns}-icon {
+                position: absolute;
+                left: -14px;
+                top: 50%;
+                transform: translateY(-50%);
+                opacity: 0.5;
+            }
+        }
+    }
+}

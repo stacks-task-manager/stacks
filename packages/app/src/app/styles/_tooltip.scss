@@ -1,0 +1,11 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.#{$ns}-tooltip {
+    .#{$ns}-popover-content {
+        max-width: 300px;
+        word-break: break-word;
+    }
+}
+
+.#{$ns}-tag.#{$ns}-popover-target {
+    display: inline-flex;
+}

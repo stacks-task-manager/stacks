@@ -1,0 +1,48 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.custom-tabs {
+    .#{$ns}-tab-list {
+        border-top-right-radius: 6px;
+        border-top-left-radius: 6px;
+        overflow: hidden;
+        background-color: $white;
+        position: relative;
+        z-index: 1;
+        align-items: center;
+        padding-right: 10px;
+
+        &:after {
+            content: "";
+            position: absolute;
+            bottom: 1px;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background-color: $light-gray1;
+            z-index: -1;
+        }
+    }
+
+    .#{$ns}-tab-indicator-wrapper {
+        margin: 0;
+    }
+
+    .#{$ns}-tab {
+        // margin: 0 15px;
+        margin: 0;
+        padding: 12px 20px;
+        outline: none;
+        font-weight: 500;
+    }
+}
+
+.#{$ns}-dark {
+    .custom-tabs {
+        .#{$ns}-tab-list {
+            background-color: $dark-gray4;
+
+            &:after {
+                background-color: $dark-gray1;
+            }
+        }
+    }
+}

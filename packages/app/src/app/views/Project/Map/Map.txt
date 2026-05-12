@@ -1,0 +1,225 @@
+import React from "react";
+import { AnchorButton } from "@blueprintjs/core";
+import { Map as MapView, TileLayer, Marker, Tooltip } from "react-leaflet";
+import L from "leaflet";
+import { Route } from "react-router-dom";
+
+import { IStack } from "@stacks/types";
+import { ITask, ITaskInfoGroup } from "@stacks/types";
+
+import { md } from "app/utils/string";
+import Log from "app/utils/log";
+
+import MarkerIcon from "../../../../assets/marker-icon.png";
+// import MarkerArchivedIcon from "../../../../assets/marker-icon-archived.png";
+import MarkerIcon2X from "../../../../assets/marker-icon-2x.png";
+// import MarkerIconArchived2X from "../../../../assets/marker-icon-archived-2x.png";
+import MarkerShadow from "../../../../assets/marker-shadow.png";
+import { TaskDetail } from "app/components";
+import { IProject } from "@stacks/types";
+
+interface IMapProps {
+    project: IProject;
+    onTaskOpen: (task: ITask) => void;
+}
+
+interface IMapState {
+    isPopupVisible: boolean;
+    zoom?: number;
+}
+
+const MarkerPoint = new L.Icon({
+    iconUrl: MarkerIcon,
+    iconRetinaUrl: MarkerIcon2X,
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -26],
+    iconSize: [25, 41],
+    shadowUrl: MarkerShadow,
+    shadowSize: [41, 41],
+    shadowAnchor: [12, 41],
+});
+
+// const MarkerArchivedPoint = new L.Icon({
+//     iconUrl: MarkerArchivedIcon,
+//     iconRetinaUrl: MarkerIconArchived2X,
+//     iconAnchor: [12, 41],
+//     popupAnchor: [1, -26],
+//     iconSize: [25, 41],
+//     shadowUrl: MarkerShadow,
+//     shadowSize: [41, 41],
+//     shadowAnchor: [12, 41],
+// });
+
+export class Map extends React.PureComponent<IMapProps, IMapState> {
+    private mapRef: MapView | null = null;
+    private coordinates: [number, number][] = [];
+    private markerRefs: { [key: string]: Marker } = {};
+
+    constructor(props: IMapProps) {
+        super(props);
+
+        this.state = {
+            isPopupVisible: false,
+        };
+    }
+
+    componentDidMount() {
+        this.handleFitBounds();
+    }
+
+    render() {
+        Log.info("[Component][MapNested]", "render");
+
+        return (
+            <div id="map">
+                <MapView
+                    animate={true}
+                    zoom={10}
+                    center={[0, 0]}
+                    ref={node => (this.mapRef = node)}
+                    onzoomend={this.handleZoom}
+                >
+                    <TileLayer
+                        attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a>'
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
+
+                    {this.renderMarkers()}
+
+                    <Tooltip
+                        content="Show all marker tooltips"
+                        usePortal
+                        className="popup-toggle-button"
+                    >
+                        <AnchorButton
+                            icon="chat"
+                            active={this.state.isPopupVisible}
+                            onClick={this.handleTogglePopups}
+                        />
+                    </Tooltip>
+                </MapView>
+
+                <Route path="/project/:id/:task" component={TaskDetail} />
+            </div>
+        );
+    }
+
+    private renderMarkers = () => {
+        const { project } = this.props;
+        const { stacks } = project;
+        const markers: React.ReactElement[] = [];
+
+        // archived.forEach((task: ITask) => {
+        //     if (task.extensions) {
+        //         task.extensions.forEach((info: ITaskInfoGroup) => {
+        //             if (info.type === "location" && info.content) {
+        //                 info.content.forEach(
+        //                     (marker: [number, number], index: number) => {
+        //                         this.coordinates.push(marker);
+        //                         markers.push(
+        //                             <Marker
+        //                                 key={`${task.id}-${index}`}
+        //                                 icon={MarkerArchivedPoint}
+        //                                 position={marker}
+        //                                 ondblclick={() =>
+        //                                     this.handleMarkerClick(task)
+        //                                 }
+        //                             >
+        //                                 <Popup>{md(task.title)}</Popup>
+        //                             </Marker>
+        //                         );
+        //                     }
+        //                 );
+        //             }
+        //         });
+        //     }
+        // });
+
+        const shouldShowTooltip =
+            this.state.isPopupVisible ||
+            (this.state.zoom && this.state.zoom >= 7);
+
+        stacks.forEach((stack: IStack) => {
+            stack.tasks.forEach((task: ITask) => {
+                if (task.extensions) {
+                    task.extensions.forEach((info: ITaskInfoGroup) => {
+                        if (info.type === "location" && info.content) {
+                            info.content.forEach(
+                                (marker: [number, number], index: number) => {
+                                    this.coordinates.push(marker);
+                                    markers.push(
+                                        <Marker
+                                            key={`${task.id}-${index}`}
+                                            icon={MarkerPoint}
+                                            position={marker}
+                                            ondblclick={() =>
+                                                this.handleMarkerClick(task)
+                                            }
+                                            ref={(node: Marker) =>
+                                                (this.markerRefs[
+                                                    `${task.id}-${marker.join(
+                                                        "-"
+                                                    )}`
+                                                ] = node)
+                                            }
+                                        >
+                                            {shouldShowTooltip && (
+                                                <Tooltip
+                                                    direction="top"
+                                                    offset={[0, -30]}
+                                                    opacity={1}
+                                                    permanent
+                                                >
+                                                    {md(task.title)}
+                                                </Tooltip>
+                                            )}
+                                        </Marker>
+                                    );
+                                }
+                            );
+                        }
+                    });
+                }
+            });
+        });
+
+        return markers;
+    };
+
+    private handleMarkerClick = (task: ITask) => {
+        this.props.onTaskOpen(task);
+    };
+
+    private handleTogglePopups = () => {
+        this.setState({
+            isPopupVisible: !this.state.isPopupVisible,
+        });
+    };
+
+    private handleZoom = () => {
+        if (this.mapRef) {
+            this.setState({
+                zoom: this.mapRef.leafletElement.getZoom(),
+            });
+        }
+    };
+
+    private handleFitBounds = () => {
+        const markers = this.coordinates.map((coords: [number, number]) => {
+            return L.marker(coords);
+        });
+        const markersGroup = L.featureGroup(markers);
+
+        if (this.mapRef && markers.length) {
+            const bounds = markersGroup.getBounds();
+
+            if (markers.length > 1) {
+                this.mapRef.leafletElement.fitBounds(bounds, {
+                    padding: [40, 40],
+                });
+            } else {
+                this.mapRef.leafletElement.setView(markers[0].getLatLng(), 10);
+            }
+        }
+    };
+}
