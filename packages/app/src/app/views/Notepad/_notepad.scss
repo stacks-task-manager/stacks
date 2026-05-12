@@ -1,0 +1,61 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+#notepad {
+    display: flex;
+    flex-direction: column;
+
+    > div:not(.tiptap-toolbar) {
+        flex-grow: 2;
+        display: flex;
+    }
+
+    .tiptap {
+        flex-grow: 2;
+        padding: 15px 30px;
+        margin: 0 auto;
+        max-width: 800px;
+        background-color: $white;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    &.wide {
+        .tiptap {
+            max-width: 100%;
+        }
+    }
+
+    .tiptap-toolbar {
+        position: sticky;
+        top: 0;
+        padding: 5px 15px;
+    }
+
+    .notepad-cover-image {
+        height: 30vh;
+        max-height: 280px;
+        flex-shrink: 0;
+        margin-bottom: 40px;
+
+        img {
+            height: 30vh;
+            max-height: 280px;
+            display: block;
+            object-fit: cover;
+            width: 100%;
+            object-position: center 40%;
+        }
+    }
+}
+
+.#{$ns}-dark {
+    #notepad {
+        .tiptap {
+            background-color: $dark-gray3;
+        }
+
+        .tiptap-toolbar {
+            background-color: $app-background-dark;
+            box-shadow: none;
+            border-bottom: 1px solid $sidebar-border-color-dark;
+        }
+    }
+}

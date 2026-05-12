@@ -1,0 +1,68 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.tags-picker {
+    width: 200px;
+
+    &.contained {
+        margin: -5px;
+    }
+
+    .tag-form {
+        padding: 5px;
+    }
+
+    &.contained {
+        .tag-form {
+            padding: 7px;
+        }
+    }
+
+    .#{$ns}-input-group {
+        input {
+            &:focus {
+                box-shadow: 0 0 0 0 rgba(19, 124, 189, 0), 0 0 0 0 rgba(19, 124, 189, 0),
+                    inset 0 0 0 1px rgba(16, 22, 26, 0.15), inset 0 1px 1px rgba(16, 22, 26, 0.2);
+            }
+        }
+    }
+
+    .circle-picker {
+        padding-top: 15px;
+        justify-content: space-between;
+        // max-width: 196px !important;
+        max-width: 100%;
+        margin-right: -3px !important;
+        margin-bottom: 0 !important;
+        gap: 5px;
+
+        span {
+            // padding-right: 3px;
+            // padding-bottom: 5px;
+
+            div {
+                // width: 22px !important;
+                // height: 22px !important;
+                margin-right: 0px !important;
+                margin-bottom: 0px !important;
+            }
+        }
+    }
+
+    .tag-form-preview {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        align-items: center;
+        margin-top: 10px;
+    }
+
+    .tag-form-footer {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0 2px 0;
+    }
+
+    .#{$ns}-menu {
+        padding-top: 0;
+        max-height: 300px;
+    }
+}

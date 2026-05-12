@@ -1,0 +1,24 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+$tlr: "timeline";
+
+.#{$tlr}__row--title-wrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
+.#{$tlr}__row--title,
+.#{$tlr}__row--accessory {
+    position: sticky;
+    display: inline-block;
+}
+
+.#{$tlr}__row--title {
+    font-size: 12px;
+    text-transform: uppercase;
+    color: $gray3;
+    left: 5px;
+}
+
+.#{$tlr}__row--accessory {
+    right: 5px;
+}

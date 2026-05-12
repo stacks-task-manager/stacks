@@ -1,0 +1,116 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+$level-size: 29px;
+$level-bullet-size: 5px;
+
+// Level indicator variables and mixins for reuse
+$indicator-color: $light-gray3;
+$indicator-gap: $level-size;
+$indicator-bullet-size: $level-bullet-size;
+
+@mixin indicator-line($top: 50%, $width: $indicator-gap, $left: null) {
+    content: "";
+    position: absolute;
+    height: 1px;
+    background-color: $indicator-color;
+    width: $width;
+    top: $top;
+    @if $left != null {
+        left: $left;
+    }
+}
+
+@mixin indicator-bullet(
+    $top: 50%,
+    $left: calc(#{$indicator-gap} - #{$indicator-bullet-size}),
+    $marginTop: -2px
+) {
+    content: "";
+    height: $indicator-bullet-size;
+    background-color: $indicator-color;
+    width: $indicator-bullet-size;
+    position: absolute;
+    top: $top;
+    @if $marginTop != null {
+        margin-top: $marginTop;
+    }
+    left: $left;
+    border-radius: 1px;
+}
+
+.table-level-indicator {
+    position: absolute;
+    display: flex;
+    gap: $indicator-gap;
+    top: 0;
+    bottom: 0;
+    left: 23px;
+    z-index: -1;
+
+    .table-level-indicator-item {
+        width: 1px;
+        position: relative;
+        background-color: $indicator-color;
+
+        &:last-child {
+            &::before {
+                @include indicator-line();
+            }
+
+            &::after {
+                @include indicator-bullet();
+            }
+        }
+    }
+
+    &.is-last {
+        .table-level-indicator-item {
+            &:last-child {
+                height: 50%;
+
+                &::before {
+                    @include indicator-line(100%);
+                }
+
+                &::after {
+                    @include indicator-bullet(100%);
+                }
+            }
+        }
+    }
+
+    &.is-parent:not(.is-children) {
+        width: 1px;
+        background-color: $indicator-color;
+        height: 50%;
+        top: 50%;
+        position: absolute;
+
+        &::after {
+            @include indicator-bullet(0, -2px, null);
+        }
+    }
+
+    &.is-parent.is-children {
+        .table-level-indicator-item {
+            &:last-child {
+                height: 50%;
+                top: 50%;
+
+                &::after {
+                    top: 0;
+                    left: -2px;
+                }
+
+                &::before {
+                    display: none;
+                }
+            }
+        }
+    }
+}
+
+tr.is-draggable {
+    .table-level-indicator {
+        left: 28px;
+    }
+}

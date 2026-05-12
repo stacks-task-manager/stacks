@@ -1,0 +1,215 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.filters-sidebar {
+    display: flex;
+    flex-direction: column;
+    min-width: 250px;
+    max-width: 250px;
+    // border: 1px solid $light-gray3;
+    border-left: 1px solid $light-gray3;
+    background-color: $sidebar-background-light;
+    // margin: 15px;
+    margin-left: 0;
+    // border-radius: 4px;
+
+    * {
+        user-select: none;
+    }
+
+    .#{$ns}-label {
+        font-weight: 600;
+    }
+}
+
+.filters-sidebar-header {
+    border-bottom: 1px solid $light-gray3;
+    padding: 10px;
+    gap: 5px;
+    font-weight: 500;
+
+    > div {
+        flex-grow: 0;
+        min-width: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+.filters-sidebar-footer {
+    border-top: 1px solid $light-gray3;
+    padding: 10px 5px;
+}
+
+.filters-sidebar-footer,
+.filters-sidebar-header {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.filters-sidebar-filters {
+    flex-grow: 2;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+
+    .#{$ns}-popover-target {
+        width: 100%;
+    }
+}
+
+.filters-sidebar-section {
+    // border-top: 1px solid $light-gray3;
+    padding: 10px 5px;
+    padding-top: 0;
+
+    &:first-child {
+        border-top: none;
+    }
+
+    .filters-sidebar-section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px 10px;
+        padding-top: 15px;
+        font-weight: 600;
+        // cursor: pointer;
+        font-size: 15px;
+        color: $gray1;
+
+        .title-icon {
+            margin-right: 8px;
+        }
+
+        .filters-sidebar-section-title {
+            display: flex;
+            align-items: center;
+        }
+    }
+
+    &.open:not(.main) {
+        // background-color: $sidebar-background-light;
+        // border-top-color: #eaeaea;
+    }
+
+    &.open,
+    &.opened {
+        .filters-sidebar-section-header {
+            color: $dark-gray4;
+        }
+    }
+
+    .filters-sidebar-section-content {
+        margin-top: 5px;
+
+        &.padded {
+            padding: 0 10px;
+            padding-bottom: 5px;
+        }
+    }
+
+    .filters-sidebar-section-content-inner {
+        display: flex;
+        align-items: center;
+    }
+
+    .#{$ns}-menu {
+        box-shadow: 0 0 0 1px #eaeaea;
+    }
+
+    .#{$ns}-form-group {
+        margin-bottom: 0;
+    }
+
+    .#{$ns}-form-helper-text {
+        line-height: 14px;
+    }
+
+    &.active {
+        .title-icon {
+            position: relative;
+
+            &::after {
+                content: "";
+                position: absolute;
+                bottom: -3px;
+                right: -3px;
+                width: 8px;
+                height: 8px;
+                background-color: #ff4d4f;
+                border-radius: 4px;
+            }
+        }
+    }
+}
+
+.filters-sidebar-button {
+    position: absolute;
+    bottom: 15px;
+    right: 20px;
+    z-index: 10;
+
+    button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        width: 36px;
+        height: 36px;
+        border-radius: 18px;
+        box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.4) !important;
+        cursor: pointer;
+        position: relative;
+
+        &:hover {
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.9);
+        }
+    }
+
+    .has-filter {
+        .#{$ns}-icon {
+            fill: $white;
+        }
+    }
+
+    .filters-sidebar-button-count {
+        position: absolute;
+        background-color: #ff4d4f;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 16px;
+        height: 16px;
+        border-radius: 8px;
+        bottom: -2px;
+        right: -2px;
+        font-size: 10px;
+        line-height: 10px;
+        color: $white;
+    }
+}
+
+.filters-sidebar-date-picker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    .#{$ns}-icon {
+        margin: 0 10px;
+    }
+}
+
+.#{$ns}-dark {
+    .filters-sidebar {
+        background-color: $dark-gray3;
+        border-color: $dark-gray5;
+
+        .filters-sidebar-header,
+        .filters-sidebar-footer {
+            border-color: $dark-gray5;
+        }
+    }
+}

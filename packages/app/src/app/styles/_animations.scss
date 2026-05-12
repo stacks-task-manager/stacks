@@ -1,0 +1,12 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.spin {
+    svg {
+        animation: spin 2s linear infinite;
+    }
+}

@@ -1,0 +1,101 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.todo-list {
+    &__container {
+        width: 100%;
+    }
+
+    &__blank {
+        padding: 30px 0;
+    }
+
+    &__header {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    &__item {
+        display: flex;
+        position: relative;
+        gap: 10px;
+        align-items: flex-start;
+        padding-top: 10px;
+        outline: none;
+        padding-bottom: 10px;
+
+        &.dragging {
+            position: relative;
+            z-index: 1;
+            &::after {
+                display: none;
+            }
+            &::before {
+                background-color: $white;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                content: "";
+                position: absolute;
+                left: -10px;
+                right: -10px;
+                top: -2px;
+                bottom: -2px;
+                border-radius: 4px;
+                z-index: -1;
+            }
+        }
+
+        &:not(:last-child) {
+            &::after {
+                content: "";
+                height: 1px;
+                background-color: $light-gray3;
+                position: absolute;
+                bottom: 0;
+                right: 0;
+                left: 30px;
+            }
+        }
+
+        &.draggable {
+            cursor: grab;
+
+            .#{$ns}-ui-text {
+                cursor: grab;
+            }
+        }
+
+        &.completed {
+            .#{$ns}-ui-text {
+                text-decoration: line-through;
+                opacity: 0.8;
+            }
+        }
+
+        .#{$ns}-button {
+            visibility: hidden;
+            min-width: 18px;
+            min-height: 18px;
+        }
+
+        &:hover {
+            .#{$ns}-button {
+                // display: inline-flex;
+                visibility: visible;
+            }
+        }
+    }
+
+    .#{$ns}-input-group {
+        &.#{$ns}-fill {
+            flex: initial !important;
+        }
+    }
+}
+
+.#{$ns}-dark {
+    .todo-list__item {
+        &:not(:last-child) {
+            &::after {
+                background-color: $dark-gray5;
+            }
+        }
+    }
+}

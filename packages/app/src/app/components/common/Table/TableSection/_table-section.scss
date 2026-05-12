@@ -1,0 +1,149 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.table-section {
+    position: sticky;
+    z-index: 12;
+
+    &::before {
+        content: "";
+        display: block;
+        height: 30px;
+    }
+
+    &__cell {
+        // padding: 10px 15px;
+        padding: 10px 0;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        // box-shadow: 0 1px 0 $light-gray3 inset;
+        height: 100%;
+
+        &.has-checkbox {
+            padding-left: 15px;
+        }
+
+        &::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            box-shadow: 0 1px 0 $light-gray3 inset, 0 -1px 0 $light-gray3 inset;
+        }
+    }
+
+    td {
+        position: relative;
+        background-color: $light-gray5 !important;
+
+        &:first-child {
+            .table-section__cell {
+                &::before {
+                    border-top-left-radius: 3px;
+                    box-shadow: 1px 0 0 $light-gray3 inset, 0 1px 0 $light-gray3 inset,
+                        0 -1px 0 $light-gray3 inset;
+                }
+            }
+        }
+
+        // &:last-child {
+        //     position: sticky;
+        //     right: 0;
+
+        //     .table-section__cell {
+        //         &::before {
+        //             border-top-right-radius: 3px;
+        //             box-shadow: -1px 0 0 $light-gray3 inset, 0 1px 0 $light-gray3 inset,
+        //                 0 -1px 0 $light-gray3 inset;
+        //         }
+        //     }
+        // }
+    }
+
+    .#{$ns}-heading {
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        &.interractive {
+            cursor: pointer;
+        }
+    }
+
+    &.closed {
+        td {
+            &:first-child {
+                .table-section__cell {
+                    &::before {
+                        box-shadow: 1px 0 0 $light-gray3 inset, 0 1px 0 $light-gray3 inset,
+                            0 -1px 0 $light-gray3 inset;
+                        border-bottom-left-radius: 3px;
+                    }
+                }
+            }
+
+            &:last-child {
+                .table-section__cell {
+                    &::before {
+                        box-shadow: -1px 0 0 $light-gray3 inset, 0 1px 0 $light-gray3 inset,
+                            0 -1px 0 $light-gray3 inset;
+                        border-bottom-right-radius: 3px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.#{$ns}-dark {
+    .custom-html-table {
+        .table-section {
+            &__cell {
+                background-color: $dark-gray4;
+                &::before {
+                    box-shadow: 0 1px 0 $gray1 inset, 0 -1px 0 $gray1 inset;
+                }
+            }
+
+            td {
+                background-color: transparent !important;
+                &:first-child {
+                    .table-section__cell {
+                        &::before {
+                            box-shadow: 1px 0 0 $gray1 inset, 0 1px 0 $gray1 inset, 0 -1px 0 $gray1 inset;
+                        }
+                    }
+                }
+
+                &:last-child {
+                    .table-section__cell {
+                        &::before {
+                            box-shadow: -1px 0 0 $gray1 inset, 0 1px 0 $gray1 inset, 0 -1px 0 $gray1 inset;
+                        }
+                    }
+                }
+            }
+
+            &.closed {
+                td {
+                    &:first-child {
+                        .table-section__cell {
+                            &::before {
+                                box-shadow: 1px 0 0 $gray1 inset, 0 1px 0 $gray1 inset, 0 -1px 0 $gray1 inset;
+                            }
+                        }
+                    }
+
+                    &:last-child {
+                        .table-section__cell {
+                            &::before {
+                                box-shadow: -1px 0 0 $gray1 inset, 0 1px 0 $gray1 inset, 0 -1px 0 $gray1 inset;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,115 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+$button-size: 24px;
+$button-gap: 0px;
+
+.task-context-wrapper {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 15;
+    justify-items: center;
+    height: $button-size;
+    justify-content: flex-end;
+    overflow: hidden;
+    border-radius: calc($button-size / 2);
+    display: none;
+    background-color: $white;
+    box-shadow: 0 0 0 1px $light-gray2;
+
+    button {
+        width: $button-size;
+        height: $button-size;
+        border: none;
+        padding: 0;
+        margin: 0;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background-color: transparent;
+        cursor: pointer;
+        outline: none;
+        color: $gray1;
+
+        &:hover {
+            background-color: $light-gray5;
+        }
+
+        &.#{$ns}-active {
+            display: inline-flex;
+        }
+
+        svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        &.small {
+            svg {
+                width: 12px;
+                height: 12px;
+            }
+        }
+    }
+
+    .task-context-button {
+        z-index: 2;
+        color: initial;
+    }
+
+    &.open {
+        display: inline-flex;
+        box-shadow: 0 0 0 1px $light-gray2, 0px 0px 2px rgba(0, 0, 0, 0.05);
+
+        .task-context-button {
+            background-color: $light-gray3;
+        }
+    }
+
+    .quick-button-wrapper {
+        opacity: 0;
+        transition: 0.1s all;
+        display: flex;
+        height: $button-size;
+        padding-right: $button-gap;
+        justify-content: flex-start;
+        align-items: center;
+        gap: $button-gap;
+        overflow: hidden;
+        margin-right: -($button-size * 4);
+        z-index: -1;
+    }
+
+    &:hover:not(.open) {
+        box-shadow: 0 0 0 1px $light-gray2, 0px 0px 2px rgba(0, 0, 0, 0.05);
+        .quick-button-wrapper {
+            opacity: 1;
+            margin-right: 0;
+        }
+    }
+}
+
+.#{$ns}-dark {
+    .task-context-wrapper {
+        background-color: $dark-gray2;
+        box-shadow: 0 0 0 1px $dark-gray1;
+
+        button {
+            &:hover {
+                background-color: $dark-gray3;
+            }
+        }
+
+        &.open {
+            box-shadow: 0 0 0 1px $dark-gray1, 0px 0px 2px rgba(0, 0, 0, 0.05);
+
+            .task-context-button {
+                background-color: $dark-gray5;
+            }
+        }
+
+        &:hover:not(.open) {
+            box-shadow: 0 0 0 1px $dark-gray1, 0px 0px 2px rgba(0, 0, 0, 0.05);
+        }
+    }
+}

@@ -1,0 +1,78 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.assignees-container {
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.#{$ns}-tag {
+    &.assignee {
+        font-size: 10px;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        font-weight: bold;
+        text-shadow: 0 0 0 rgba(0, 0, 0, 1);
+        padding: 2px !important;
+
+        &.#{$ns}-large {
+            font-size: 14px;
+            // padding: 5px !important;
+            // width: 30px;
+            // height: 30px;
+        }
+    }
+}
+
+.assignees {
+    display: inline-flex;
+    align-items: flex-start;
+
+    &.interractive {
+        cursor: pointer;
+    }
+
+    .#{$ns}-tag {
+        box-shadow: 0 0 0 1px $white;
+        color: $white !important;
+
+        &:not(:first-child) {
+            margin-left: -3px;
+        }
+
+        &.#{$ns}-large {
+            &:not(:first-child) {
+                margin-left: -6px;
+            }
+        }
+    }
+
+    .avatar {
+        &:not(:first-child) {
+            margin-left: -3px;
+
+            &.narrow {
+                margin-left: -6px;
+            }
+        }
+
+        &.large {
+            &:not(:first-child) {
+                margin-left: -6px;
+
+                &.narrow {
+                    margin-left: -12px;
+                }
+            }
+        }
+    }
+}
+
+.#{$ns}-dark {
+    .assignees {
+        .#{$ns}-tag {
+            box-shadow: 0 0 0 1px $dark-gray3;
+        }
+    }
+}

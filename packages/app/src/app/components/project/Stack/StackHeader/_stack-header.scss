@@ -1,0 +1,156 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.stack-header {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    cursor: default;
+    outline: none;
+    gap: 5px;
+    flex-shrink: 0;
+    z-index: 10;
+    background-color: $white;
+    margin-bottom: 10px;
+    padding: 0 8px;
+    height: 35px;
+    border-radius: 2px;
+    border: 1px solid $light-gray3;
+
+    .stack-max-tasks {
+        margin-left: 5px;
+    }
+
+    .stack-options {
+        flex-shrink: 0;
+
+        .#{$ns}-icon-more {
+            transform: rotate(90deg);
+        }
+    }
+}
+
+/* TITLE */
+.stack-header-title-wrapper {
+    flex-grow: 2;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    height: 100%;
+    position: relative;
+    z-index: 2;
+
+    &.isEditing {
+        &:after {
+            content: "";
+            position: absolute;
+            top: 3px;
+            bottom: 3px;
+            left: -5px;
+            right: -5px;
+            background-color: $white;
+            border-radius: 1px;
+            z-index: -1;
+            box-shadow: 0 0 0 1px $blue;
+        }
+    }
+
+    .stack-header-title {
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+    }
+
+    // &.isEditing {
+    //     overflow: visible;
+    // }
+
+    input {
+        display: block;
+        width: 100%;
+        border: none;
+        height: 22px;
+        background-color: transparent;
+        // color: $white;
+        outline: none;
+        font-weight: 600;
+        padding: 0;
+    }
+}
+
+.stack-header-progress,
+.stack-max-tasks {
+    flex-shrink: 0;
+    font-size: 10px;
+    // color: $dark-gray5;
+    font-weight: 700;
+}
+
+/* TASK COUNTER */
+.stack-header-counter {
+    font-size: 11px;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+    padding: 2px 3px;
+    font-weight: 500;
+    min-width: 18px;
+    text-align: center;
+}
+
+/* Toggle button */
+.#{$ns}-popover-target {
+    &.stack-header-toggle,
+    &.stack-header-menu {
+        display: none;
+    }
+}
+
+.stack-header {
+    &:hover {
+        .stack-header-toggle,
+        .stack-header-menu {
+            display: inline-block;
+        }
+    }
+}
+
+.#{$ns}-active {
+    &.stack-header-menu {
+        display: inline-block;
+    }
+}
+
+.stack.collapsed {
+    .stack-header-toggle {
+        display: inline-block;
+    }
+}
+
+/* LARGE TINT STACK */
+.stack-header.large {
+    color: $white;
+
+    .stack-header-counter {
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .#{$ns}-icon {
+        color: $white;
+    }
+}
+
+.#{$ns}-dark {
+    .stack-header {
+        background-color: $dark-gray3;
+        border-color: $dark-gray1;
+    }
+
+    .stack-header-title-wrapper {
+        &.isEditing {
+            &:after {
+                background-color: transparent;
+            }
+        }
+    }
+}

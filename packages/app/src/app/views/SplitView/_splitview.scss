@@ -1,0 +1,76 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.divider-hitbox {
+    cursor: col-resize;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    // padding: 0 1rem;
+    position: relative;
+}
+
+.divider {
+    height: 100%;
+    width: 1px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 19;
+
+    &::after {
+        content: "";
+        // background-color: $dark-gray2;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0px;
+        width: 1px;
+    }
+
+    &:hover,
+    &.dragging {
+        background-color: #1d9bd1;
+
+        &::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: -1px;
+            right: -1px;
+            background-color: #1d9bd1;
+            z-index: 19;
+        }
+    }
+}
+
+.rightPane {
+    flex: 1;
+    position: relative;
+}
+
+.leftPane {
+    position: relative;
+    min-width: 180px;
+    // border-right: 1px solid $dark-gray2;
+    border-right: 1px solid $sidebar-border-color-light;
+
+    &.closed {
+        min-width: 0;
+        width: 0 !important;
+        border-right: none;
+    }
+}
+
+.splitView {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    flex-grow: 2;
+}
+
+.#{$ns}-dark {
+    .leftPane {
+        border-right-color: $sidebar-border-color-dark;
+    }
+}

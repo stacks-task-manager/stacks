@@ -1,0 +1,36 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.table-column-manager {
+    width: 300px;
+
+    .draggable-column {
+        opacity: 0.3;
+        cursor: grab;
+    }
+
+    .#{$ns}-menu-item {
+        &:hover {
+            .draggable-column {
+                opacity: 0.8;
+            }
+        }
+
+        &:active {
+            .draggable-column {
+                cursor: grabbing;
+                opacity: 1;
+            }
+        }
+
+        .#{$ns}-control {
+            margin-bottom: 0;
+        }
+
+        .#{$ns}-control {
+            padding-left: 28px;
+            .#{$ns}-control-indicator {
+                margin-left: -28px;
+                margin-right: 0;
+            }
+        }
+    }
+}

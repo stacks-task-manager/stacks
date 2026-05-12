@@ -1,0 +1,26 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.tags-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 3px 5px;
+
+    &.nowrap {
+        flex-wrap: nowrap;
+    }
+
+    &.vertical {
+        flex-direction: column;
+    }
+
+    .custom-tag {
+        cursor: default;
+
+        .task-card & {
+            max-width: 200px !important;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+}

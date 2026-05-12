@@ -1,0 +1,78 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.#{$ns}-popover-target {
+    &.task-state-tooltip {
+        display: inline-flex;
+        align-items: center;
+    }
+}
+
+.task-state {
+    background: none;
+    border-radius: 50%;
+    border: 1.5px solid $light-gray1;
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 26px;
+    width: 26px;
+    padding: 0;
+    margin: 0;
+
+    svg {
+        // opacity: 0.1;
+        width: 14px;
+        height: 14px;
+        color: $light-gray1;
+    }
+
+    &.darkMode {
+        svg {
+            color: $white;
+            opacity: 0.3;
+        }
+    }
+
+    &.changable {
+        cursor: pointer;
+        &:hover:not(.completed) {
+            border-color: $blue;
+            svg {
+                color: $blue;
+            }
+        }
+    }
+
+    &.blocked {
+        outline: none;
+        background-color: $light-gray1;
+        color: $gray1;
+    }
+
+    &.small {
+        border-width: 1px;
+        margin-top: 0;
+        height: 18px;
+        width: 18px;
+        font-size: 11px;
+
+        svg {
+            width: 12px;
+            height: 12px;
+        }
+    }
+
+    &.disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
+    }
+
+    &.completed {
+        background: $blue;
+        border-color: $blue;
+
+        svg {
+            color: $white;
+        }
+    }
+}

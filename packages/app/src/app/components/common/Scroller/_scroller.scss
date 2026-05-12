@@ -1,0 +1,166 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+@mixin largeScroller($color) {
+    &::-webkit-scrollbar-track {
+        background-color: transparent;
+        border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar {
+        width: 8px;
+        background-color: transparent;
+        border-radius: 0;
+    }
+
+    &::-webkit-scrollbar:horizontal {
+        height: 8px;
+        background-color: transparent;
+        border-radius: 0;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-clip: content-box;
+        background-color: transparent;
+        border-radius: 10px;
+        transition: all 0.5s ease-in;
+    }
+
+    &:hover {
+        &::-webkit-scrollbar-thumb {
+            background-color: $color;
+        }
+    }
+}
+
+@mixin miniScroller($color) {
+    &::-webkit-scrollbar-track {
+        background-color: transparent;
+        border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar {
+        width: 4px;
+        background-color: transparent;
+        border-radius: 0;
+    }
+
+    &::-webkit-scrollbar:horizontal {
+        height: 4px;
+        background-color: transparent;
+        border-radius: 0;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: transparent;
+        border-radius: 10px;
+        transition: all 0.5s ease-in;
+    }
+
+    &:hover {
+        &::-webkit-scrollbar-thumb {
+            background-color: $color;
+        }
+    }
+}
+
+.scroller-parent {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 2;
+    min-height: 0;
+    min-width: 0;
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 10;
+        pointer-events: none;
+    }
+
+    &.has-top-shadow {
+        &::before {
+            box-shadow: inset 0 4px 4px -2px rgba(109, 110, 111, 0.2);
+        }
+    }
+
+    &.has-bottom-shadow {
+        &::before {
+            box-shadow: inset 0 -4px 4px -2px rgba(109, 110, 111, 0.2);
+        }
+    }
+
+    &.has-top-shadow.has-bottom-shadow {
+        &::before {
+            box-shadow: inset 0 4px 4px -2px rgba(109, 110, 111, 0.2),
+                inset 0 -4px 4px -2px rgba(109, 110, 111, 0.2);
+        }
+    }
+}
+
+.scroller {
+    flex-grow: 2;
+    flex-basis: fit-content;
+    max-height: 100%;
+    max-width: 100%;
+    overflow: auto;
+
+    @include largeScroller($light-gray1);
+
+    &.auto {
+        flex-grow: initial;
+    }
+
+    &.thin {
+        @include miniScroller($light-gray1);
+    }
+
+    &.horizontal {
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+
+    &.vertical {
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+}
+
+::-webkit-scrollbar {
+    .no-scrollbars & {
+        display: none;
+    }
+}
+
+.#{$ns}-dark {
+    .scroller {
+        @include largeScroller($dark-gray5);
+
+        &.thin {
+            @include miniScroller($dark-gray3);
+        }
+    }
+
+    .scroller-parent {
+        &.has-top-shadow {
+            &::before {
+                box-shadow: inset 0 4px 4px -2px rgba(0, 0, 0, 0.2);
+            }
+        }
+
+        &.has-bottom-shadow {
+            &::before {
+                box-shadow: inset 0 -4px 4px -2px rgba(0, 0, 0, 0.2);
+            }
+        }
+
+        &.has-top-shadow.has-bottom-shadow {
+            &::before {
+                box-shadow: inset 0 4px 4px -2px rgba(0, 0, 0, 0.2), inset 0 -4px 4px -2px rgba(0, 0, 0, 0.2);
+            }
+        }
+    }
+}

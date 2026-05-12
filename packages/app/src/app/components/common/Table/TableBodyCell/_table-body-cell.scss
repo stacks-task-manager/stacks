@@ -1,0 +1,151 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.custom-html-table {
+    tbody {
+        td {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            background-color: $white;
+            padding: 0;
+            padding-left: 15px;
+            padding-right: 15px;
+            position: relative;
+
+            &.interactive {
+                cursor: pointer;
+            }
+
+            &.secondary {
+                background-color: #fad9992b;
+            }
+        }
+
+        tr {
+            height: 1px;
+            background-color: $white;
+
+            &:hover {
+                td {
+                    background-color: lighten($light-gray5, 2%);
+
+                    &.secondary {
+                        background-color: lighten($light-gray5, 1%);
+                    }
+                }
+            }
+
+            &.is-dragging {
+                td {
+                    box-shadow: 0 -1px 0 $light-gray3 inset, 0 1px 0 $light-gray3 inset,
+                        1px 0 0 $light-gray3 inset, -1px 0 0 $light-gray3 inset;
+                    display: none;
+
+                    &:first-child {
+                        display: table-cell;
+                        width: 100vw;
+                    }
+                }
+            }
+        }
+    }
+
+    .table-body-cell {
+        // padding: 10px 15px;
+        padding: 10px 0;
+        // padding-right: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        min-width: 0;
+
+        &::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        input[type="checkbox"] {
+            outline: none;
+        }
+
+        &.center {
+            justify-content: center;
+        }
+
+        &.right {
+            justify-content: flex-end;
+        }
+    }
+
+    .#{$ns}-checkbox {
+        padding-left: 17px;
+
+        .#{$ns}-control-indicator {
+            margin-left: -17px;
+            margin-right: 0;
+        }
+    }
+}
+
+/* MULTILEVEL */
+.table-row {
+    .table-row-drag-handle {
+        position: absolute;
+        opacity: 0.5;
+        left: 5px;
+        top: 50%;
+        transform: translateY(-50%);
+        display: none;
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+
+    &:hover {
+        .table-row-drag-handle {
+            display: block;
+        }
+    }
+
+    &.is-draggable {
+        td {
+            &:first-child {
+                padding-left: 20px;
+            }
+        }
+    }
+}
+
+.#{$ns}-dark {
+    .custom-html-table {
+        tbody {
+            td {
+                background-color: $dark-gray3;
+                box-shadow: 0 -1px 0 $dark-gray2 inset;
+
+                &.secondary {
+                    background-color: $dark-gray2;
+                }
+            }
+        }
+
+        tr {
+            background-color: $dark-gray4;
+            &:hover {
+                td {
+                    background-color: lighten($dark-gray5, 2%);
+
+                    &.secondary {
+                        background-color: lighten($dark-gray5, 1%);
+                    }
+                }
+            }
+        }
+    }
+}

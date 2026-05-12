@@ -1,0 +1,30 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+/* TOOLBAR */
+$toolbar-height: 50px;
+
+/* SIDEBAR */
+$workspaces-width: $toolbar-height;
+$worspace-size: 28px;
+
+/* COLORS */
+$blue: #3b82f5;
+$blue-select: #137cbd;
+
+// App
+$app-background-light: #fafbfc;
+$app-background-dark: $dark-gray3;
+
+// Sidebar
+// $sidebar-background-light: $dark-gray4;
+$sidebar-background-light: #f4f5f7;
+$sidebar-background-dark: $dark-gray3;
+
+// $sidebar-border-color-light: $dark-gray2;
+$sidebar-border-color-light: #e6e6e6;
+$sidebar-border-color-dark: $dark-gray1;
+
+$sidebar-button-hover-background: rgba(255, 255, 255, 0.05);
+// $sidebar-button-active-background: rgba(255, 255, 255, 0.2);
+$sidebar-button-active-background: $blue;
+// $sidebar-button-color: #ccc;
+$sidebar-button-color: $dark-gray5;

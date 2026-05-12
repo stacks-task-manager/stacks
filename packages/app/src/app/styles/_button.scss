@@ -1,0 +1,36 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.#{$ns}-button {
+    &.has-badge {
+        position: relative;
+
+        .#{$ns}-icon {
+            margin: 0;
+        }
+    }
+
+    .button-badge {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        background: $pt-intent-danger;
+        color: #fff;
+        padding: 1px 2px;
+        border-radius: 20px;
+        font-size: 8px;
+        height: 10px;
+        min-width: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 500;
+
+        &.primary {
+            background-color: $pt-intent-primary;
+        }
+    }
+
+    &.tiny {
+        min-width: 18px;
+        min-height: 18px;
+    }
+}

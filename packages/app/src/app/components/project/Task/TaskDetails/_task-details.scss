@@ -1,0 +1,301 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+$task-details-padding: 30px;
+$task-details-idle-color: $gray1;
+
+.#{$ns}-drawer {
+    &.#{$ns}-drawer.#{$ns}-position-right {
+        &.task-details-drawer {
+            min-width: 500px;
+            max-width: 80%;
+            width: 600px;
+
+            &.has-tint {
+                border-left: 3px solid transparent;
+            }
+        }
+    }
+
+    .task-details-header-wrapper {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        outline: none;
+    }
+
+    &.fullscreen {
+        position: fixed !important;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 20;
+        max-width: 100% !important;
+        width: 100% !important;
+        background-color: $app-background-light;
+
+        .task-details-header-wrapper {
+            background-color: $white;
+            width: 764px;
+            max-width: 80%;
+            margin: 0 auto;
+            box-shadow: 0 0 4px 1px rgba(109, 110, 111, 0.1);
+        }
+    }
+
+    &.task-details-drawer {
+        &.embedded {
+            box-shadow: none;
+            border-left: 1px solid $light-gray4;
+            min-width: 600px !important;
+            position: relative;
+            // box-shadow: -2px 0 4px -2px rgba(109, 110, 111, 0.1);
+
+            .#{$ns}-drawer-header {
+            }
+        }
+
+        .#{$ns}-drawer-header {
+            box-shadow: none;
+            padding: 20px $task-details-padding;
+
+            * {
+                user-select: none;
+            }
+
+            .#{$ns}-control,
+            .#{$ns}-button {
+            }
+
+            .#{$ns}-control {
+                margin-bottom: 0;
+            }
+
+            .#{$ns}-icon {
+                &.icon-check {
+                    margin-right: 0;
+                }
+            }
+
+            > div {
+                width: 100%;
+                display: flex;
+                align-items: center;
+
+                &:last-child {
+                    justify-content: flex-end;
+                    gap: 3px;
+                }
+            }
+        }
+
+        .#{$ns}-drawer-body {
+            overflow-y: auto;
+        }
+
+        .task-details-main {
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .task-details-sidebar {
+            flex-shrink: 0;
+        }
+    }
+}
+
+.#{$ns}-portal {
+    &.task-details-portal {
+        .#{$ns}-overlay {
+            overflow: hidden;
+        }
+    }
+}
+
+.#{$ns}-dialog {
+    .task-details-header-wrapper {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        outline: none;
+    }
+
+    &.task-details-dialog {
+        width: 95%;
+        max-height: 95vh;
+
+        &.has-tint {
+            border-top: 3px solid transparent;
+        }
+
+        &.fullscreen {
+            position: fixed !important;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 20;
+            margin: 0;
+            max-width: 100% !important;
+            max-height: 100% !important;
+            width: 100% !important;
+            height: 100% !important;
+            background-color: $app-background-light;
+        }
+
+        .#{$ns}-drawer-header {
+            box-shadow: none;
+            padding: 20px $task-details-padding;
+            padding-right: 15px;
+
+            * {
+                user-select: none;
+            }
+
+            .#{$ns}-control,
+            .#{$ns}-button {
+            }
+
+            .#{$ns}-control {
+                margin-bottom: 0;
+            }
+        }
+
+        .task-details-main {
+            border-top: 1px solid $light-gray3;
+            display: flex;
+            min-height: 0;
+        }
+
+        .task-details-sidebar {
+            border-left: 1px solid $light-gray3;
+            width: 40%;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+
+            .task-details-comments-wrapper {
+                flex-grow: 2;
+            }
+        }
+
+        .task-details-title {
+            margin-top: 15px;
+        }
+
+        .#{$ns}-tab-list {
+            margin-top: 10px;
+        }
+    }
+}
+
+.task-details-drawer,
+.task-details-dialog {
+    .#{$ns}-tabs {
+        margin-bottom: 30px;
+    }
+
+    .#{$ns}-tab-list {
+        padding: 0 $task-details-padding;
+        box-shadow: 0 -2px 0 0px #e5eaef inset;
+    }
+
+    .#{$ns}-tab {
+        outline: none;
+        font-size: 14px;
+        font-weight: 600;
+        color: $task-details-idle-color;
+        padding-bottom: 10px;
+    }
+
+    .#{$ns}-tab-indicator {
+        height: 2px;
+    }
+
+    .#{$ns}-tab[aria-selected="true"] {
+        color: #202027;
+    }
+}
+
+.task-details-parent-link {
+    display: inline-block;
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.task-details-divider {
+    height: 1px;
+    width: "100%";
+    background-color: $light-gray5;
+    position: relative;
+
+    &__content {
+        position: absolute;
+        top: 10px;
+        right: 30px;
+        cursor: pointer;
+        opacity: 0.5;
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+}
+
+.#{$ns}-dark {
+    .#{$ns}-drawer {
+        &.task-details-drawer {
+            border-left-color: $dark-gray1 !important;
+            box-shadow: none !important;
+        }
+
+        &.fullscreen {
+            background-color: $dark-gray2;
+
+            .task-details-header-wrapper {
+                background-color: $dark-gray4;
+            }
+        }
+    }
+
+    .task-details-drawer,
+    .task-details-dialog {
+        border-left: none;
+
+        &.embedded {
+            border-color: $sidebar-border-color-dark;
+        }
+
+        .#{$ns}-tab-list {
+            box-shadow: 0 -2px 0 0px $dark-gray5 inset;
+        }
+
+        .#{$ns}-tab-indicator {
+            background-color: $light-gray1;
+        }
+
+        .#{$ns}-tab {
+            color: $gray3;
+        }
+        .#{$ns}-tab[aria-selected="true"] {
+            color: $light-gray1;
+        }
+
+        .task-details-sidebar,
+        .task-details-main {
+            border-color: $dark-gray4;
+        }
+    }
+
+    .task-details-dialog {
+        &.fullscreen {
+            background-color: $dark-gray2;
+        }
+    }
+
+    .task-details-divider {
+        background-color: $dark-gray3;
+    }
+}

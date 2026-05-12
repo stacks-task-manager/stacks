@@ -1,0 +1,25 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.icon-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    flex-shrink: 0;
+
+    &--small {
+        width: 16px;
+        height: 16px;
+    }
+
+    &--medium {
+        width: 24px;
+        height: 24px;
+    }
+
+    &--large {
+        width: 32px;
+        height: 32px;
+    }
+}

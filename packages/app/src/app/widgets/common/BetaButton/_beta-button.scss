@@ -1,0 +1,16 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.beta-button {
+    border: 1px solid $rose3;
+    color: $rose3;
+    border-radius: 3px;
+    padding: 2px 4px;
+    font-size: 12px;
+
+    &.ml {
+        margin-left: 5px;
+    }
+
+    &.mr {
+        margin-right: 5px;
+    }
+}

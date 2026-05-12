@@ -1,0 +1,22 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.automation-event {
+    gap: 0;
+}
+
+.automation-actions {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    flex-grow: 2;
+}
+
+.automation-new-action-button {
+    align-items: center;
+    justify-content: center;
+    background-color: $white;
+    padding: 0;
+    margin: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+}

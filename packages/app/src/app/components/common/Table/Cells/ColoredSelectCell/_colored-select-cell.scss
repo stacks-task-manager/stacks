@@ -1,0 +1,13 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.colored-select-cell {
+    width: 100%;
+
+    .#{$ns}-button {
+        border-radius: 6px;
+        .#{$ns}-icon {
+            &:last-child {
+                margin-left: auto;
+            }
+        }
+    }
+}

@@ -1,0 +1,128 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+$toggle-subtasks-size: 20px;
+$side-padding: 0px;
+
+.subtask {
+    width: 100%;
+    overflow: visible !important;
+
+    .subtask-wrapper {
+        padding: 10px $side-padding;
+        display: flex;
+        align-items: flex-start;
+        gap: 5px;
+        position: relative;
+
+        &.complete {
+            .subtask-content {
+                text-decoration: line-through;
+                opacity: 0.5;
+            }
+        }
+
+        .hiddable:not(.#{$ns}-active) {
+            visibility: hidden;
+        }
+
+        &:hover {
+            .subtask-drag-handle {
+                display: flex;
+            }
+
+            .hiddable {
+                visibility: visible;
+            }
+        }
+
+        &::after {
+            content: "";
+            height: 1px;
+            background-color: $light-gray5;
+            left: $side-padding;
+            bottom: 0;
+            right: $side-padding;
+            position: absolute;
+        }
+    }
+
+    .subtask-content {
+        display: inline-block;
+    }
+
+    .subtask {
+        padding-right: 0;
+    }
+    .subtasks {
+        margin-bottom: 0;
+    }
+
+    &.dragging {
+        background-color: $white;
+        box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+
+        .subtask-wrapper {
+            padding: 10px $side-padding;
+            padding-left: 0;
+        }
+    }
+
+    &:last-child {
+        .subtask-wrapper {
+            &::after {
+                display: none;
+            }
+        }
+    }
+
+    .subtask-title {
+        flex-grow: 2;
+        display: flex;
+        gap: 5px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .subtask-content {
+        cursor: pointer;
+    }
+
+    textarea:not(.#{$ns}-text-area) {
+        border: none;
+        outline: none;
+        width: 100%;
+        padding: 0;
+        overflow: hidden;
+        line-height: 18px;
+        resize: none;
+    }
+
+    .subtask-drag-handle {
+        position: absolute;
+        left: -25px;
+        opacity: 0.3;
+        cursor: move;
+        width: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        display: none;
+
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+}
+
+.#{$ns}-dark {
+    .subtask {
+        .subtask-wrapper {
+            &:after {
+                background-color: $dark-gray3;
+            }
+        }
+
+        &.dragging {
+            background-color: $dark-gray3;
+        }
+    }
+}

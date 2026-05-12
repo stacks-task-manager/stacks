@@ -1,0 +1,128 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+#file {
+    background-color: $light-gray5;
+
+    .file-info {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: $white;
+        border: 1px solid #eaeaea;
+        border-radius: 6px;
+        padding: 40px 20px 0 20px;
+        width: 300px;
+
+        .file-options {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+
+            svg {
+                opacity: 0.5;
+            }
+        }
+
+        .file-icon {
+            position: relative;
+            margin-bottom: 10px;
+
+            svg {
+                width: 120px;
+                height: 120px;
+                fill: $light-gray3;
+            }
+
+            span {
+                position: absolute;
+                font-size: 16px;
+                font-weight: 600;
+                text-transform: uppercase;
+                color: $light-gray3;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                text-align: center;
+            }
+        }
+
+        .file-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: $dark-gray5;
+            margin-bottom: 50px;
+            padding: 0 20px;
+            word-break: break-all;
+            text-align: center;
+        }
+
+        .file-footer {
+            width: 100%;
+            border-top: 1px solid $light-gray5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .file-size {
+            font-size: 14px;
+            display: flex;
+            flex-direction: column;
+
+            span {
+                display: block;
+
+                &:first-child {
+                    color: $dark-gray5;
+                    font-weight: bold;
+                    margin-bottom: 2px;
+                }
+
+                &:last-child {
+                    color: $gray1;
+                }
+            }
+        }
+    }
+}
+
+.#{$ns}-dark {
+    #file {
+        background-color: $dark-gray2;
+
+        .file-info {
+            background-color: $dark-gray3;
+            border-color: $dark-gray4;
+        }
+
+        .file-icon {
+            svg {
+                fill: $gray1;
+            }
+        }
+
+        .file-name {
+            color: $light-gray1;
+        }
+
+        .file-footer {
+            border-top-color: $dark-gray5;
+        }
+
+        .file-size {
+            span {
+                &:first-child {
+                    color: $light-gray1;
+                }
+
+                &:last-child {
+                    color: $gray3;
+                }
+            }
+        }
+    }
+}

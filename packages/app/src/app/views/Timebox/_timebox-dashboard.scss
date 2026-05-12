@@ -1,0 +1,72 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+@keyframes highlight-fade {
+    0% {
+        background-color: $orange5;
+    }
+}
+
+.timebox-board {
+    .stack-header {
+        .day-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: $gray3;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .day-date {
+            font-size: 18px;
+            font-weight: 700;
+            color: $dark-gray5;
+        }
+    }
+
+    .is-weekend {
+        .stack-header {
+            background-color: #fdf7f1;
+        }
+
+        .day-date {
+            color: $orange2;
+        }
+
+        .day-name {
+            color: $orange3;
+        }
+    }
+
+    .is-today {
+        .day-date {
+            color: $blue1;
+        }
+
+        .day-name {
+            color: $blue3;
+        }
+
+        &::before {
+            content: "";
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            bottom: -5px;
+            right: -5px;
+            background-color: #e8f5fe;
+        }
+    }
+
+    .is-past {
+        opacity: .5;
+    }
+
+    .task-card-outer {
+        &.done {
+            opacity: .7;
+        }
+
+        &.highlight .task-card {
+            animation: highlight-fade 2s ease-out;
+        }
+    }
+}

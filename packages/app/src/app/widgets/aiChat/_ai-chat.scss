@@ -1,0 +1,109 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.ai-chat-md {
+    font-size: 14px;
+    line-height: 1.45;
+
+    &:first-child {
+        margin-top: 0;
+    }
+
+    p {
+        margin: 0.4em 0;
+
+        &:first-child {
+            margin-top: 0;
+        }
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    ul,
+    ol {
+        margin: 0.35em 0;
+        padding-left: 1.35em;
+    }
+
+    li {
+        margin: 0.15em 0;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        margin: 0.5em 0 0.25em;
+        font-weight: 600;
+        line-height: 1.25;
+
+        &:first-child {
+            margin-top: 0;
+        }
+    }
+
+    h1 {
+        font-size: 1.15em;
+    }
+    h2 {
+        font-size: 1.08em;
+    }
+    h3 {
+        font-size: 1.02em;
+    }
+
+    code {
+        font-family: monospace;
+        font-size: 0.92em;
+        padding: 0.1em 0.35em;
+        border-radius: 3px;
+        background: rgba(17, 20, 24, 0.06);
+    }
+
+    .bp6-dark & code {
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    pre {
+        margin: 0.4em 0;
+        padding: 8px 10px;
+        overflow-x: auto;
+        border-radius: 4px;
+        background: rgba(17, 20, 24, 0.06);
+        font-size: 0.88em;
+
+        code {
+            padding: 0;
+            background: none;
+        }
+    }
+
+    .bp6-dark & pre {
+        background: rgba(255, 255, 255, 0.06);
+    }
+
+    blockquote {
+        margin: 0.4em 0;
+        padding-left: 0.75em;
+        border-left: 3px solid rgba(17, 20, 24, 0.15);
+    }
+
+    table {
+        border-collapse: collapse;
+        margin: 0.4em 0;
+        font-size: 0.95em;
+    }
+
+    th,
+    td {
+        border: 1px solid rgba(17, 20, 24, 0.12);
+        padding: 4px 8px;
+        text-align: left;
+    }
+
+    a {
+        word-break: break-word;
+    }
+}

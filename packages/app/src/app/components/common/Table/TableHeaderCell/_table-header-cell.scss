@@ -1,0 +1,163 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.custom-html-table {
+    thead {
+        &:hover {
+            .table-header-cell__resize-handle {
+                display: block;
+                z-index: 10;
+            }
+        }
+    }
+
+    th {
+        z-index: 9;
+        text-transform: uppercase;
+        font-size: 11px;
+        color: $gray1;
+        position: relative;
+        padding: 0;
+
+        &:first-child {
+            .table-header-cell {
+                border-top-left-radius: 3px;
+                border-bottom-left-radius: 0;
+                box-shadow: 0 -1px 0 $light-gray3 inset, 0 1px 0 $light-gray3 inset,
+                    1px 0 0 $light-gray3 inset;
+            }
+        }
+
+        &:last-child {
+            .table-header-cell {
+                border-top-right-radius: 3px;
+                border-bottom-right-radius: 0;
+                box-shadow: 0 -1px 0 $light-gray3 inset, 0 1px 0 $light-gray3 inset,
+                    -1px 0 0 $light-gray3 inset;
+            }
+        }
+
+        .table-header-cell {
+            display: flex;
+            align-items: center;
+            // padding: 10px 15px;
+            padding: 0 15px;
+            min-height: 44px;
+            box-shadow: 0 -1px 0 $light-gray3 inset, 0 1px 0 $light-gray3 inset;
+            background-color: $light-gray5;
+
+            &__align-right {
+                justify-content: flex-end;
+            }
+
+            &__align-center {
+                justify-content: center;
+            }
+
+            &__title {
+                display: flex;
+                align-items: center;
+                min-width: 0;
+
+                &--box {
+                    display: block;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    overflow: hidden;
+                }
+
+                .#{$ns}-icon {
+                    margin-right: 5px;
+                    opacity: 0.5;
+                }
+
+                input[type="checkbox"] {
+                    margin-right: 5px;
+                    outline: none;
+                }
+            }
+
+            &__resize-handle {
+                position: absolute;
+                right: 0;
+                top: 0;
+                bottom: 0;
+                width: 1px;
+                background-color: $light-gray3;
+                cursor: col-resize;
+                display: none;
+
+                &:hover {
+                    background-color: $blue;
+                    width: 6px;
+                }
+            }
+
+            &__secondary {
+                background-color: $light-gray4;
+            }
+        }
+
+        .sort-menu {
+            position: relative;
+            flex-shrink: 0;
+
+            .#{$ns}-button {
+                opacity: 0.5;
+
+                &.#{$ns}-active {
+                    opacity: 1;
+                }
+            }
+        }
+
+        &:hover {
+            .sort-menu {
+                .#{$ns}-button {
+                    opacity: 1;
+                }
+            }
+        }
+
+        div {
+            display: flex;
+            justify-content: space-between;
+        }
+    }
+}
+
+.#{$ns}-dark {
+    .custom-html-table {
+        thead {
+            .table-header-cell {
+                background-color: $dark-gray4;
+                box-shadow: 0 -1px 0 $gray1 inset, 0 1px 0 $gray1 inset;
+            }
+        }
+
+        th {
+            box-shadow: 0 -1px 0 $dark-gray3 inset;
+            color: $light-gray4;
+
+            &:first-child {
+                .table-header-cell {
+                    box-shadow: 0 -1px 0 $gray1 inset, 0 1px 0 $gray1 inset, 1px 0 0 $gray1 inset;
+                }
+            }
+
+            &:last-child {
+                .table-header-cell {
+                    box-shadow: 0 -1px 0 $gray1 inset, 0 1px 0 $gray1 inset, -1px 0 0 $gray1 inset;
+                }
+            }
+
+            .table-header-cell {
+                &__resize-handle {
+                    background-color: $gray1;
+                }
+
+                &__secondary {
+                    background-color: $dark-gray3;
+                }
+            }
+        }
+    }
+}

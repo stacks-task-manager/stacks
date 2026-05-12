@@ -1,0 +1,238 @@
+import React, { useState, useRef, useEffect, useCallback, forwardRef, useImperativeHandle } from 'react';
+import { addDays, startOfDay, differenceInDays, format, isSameDay } from 'date-fns';
+import { Button } from '@blueprintjs/core';
+import { ITask } from '@stacks/types';
+import { TaskCard } from 'app/components/project';
+import Container from 'app/components/Dnd/Container';
+import { Icon } from 'app/components/common';
+import { TimeboxStore } from 'app/store/timebox';
+import { shallowEqual } from 'app/hooks/store';
+
+export interface TimeboxBoardHandle {
+    today: () => void;
+    next: () => void;
+    prev: () => void;
+}
+
+interface TimeboxBoardProps {
+    onDatesLoaded?: (start: Date, end: Date) => void;
+    onShowPicker: (date: Date) => void;
+}
+
+const COLUMN_WIDTH = 300;
+const COLUMN_GAP = 15;
+const THRESHOLD_DAYS = 2;
+const BUFFER_DAYS = 7;
+const INITIAL_X_OFFSET = 85;
+
+export const TimeboxBoard = forwardRef<TimeboxBoardHandle, TimeboxBoardProps>(({
+    onDatesLoaded,
+    onShowPicker
+}, ref) => {
+    const [initialDateRange] = TimeboxStore.use((state) => state.range, shallowEqual);
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const isScrollingRef = useRef<boolean>(false);
+    const lastScrollLeft = useRef<number>(0);
+    const anchorDateRef = useRef<Date | null>(null);
+    const anchorOffsetRef = useRef<number>(0);
+
+    // STRICT INITIALIZATION LOCKS
+    const initializedRef = useRef(false);
+    const bootLockRef = useRef(true); // Locked until fully settled
+    const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+    const stepWidth = COLUMN_WIDTH + COLUMN_GAP;
+    const startDate = useRef(startOfDay(initialDateRange)).current;
+
+    const [days, setDays] = useState<Date[]>([]);
+
+    // --- Core: Notification Logic ---
+    const notifyParent = useCallback((currentDays: Date[]) => {
+        if (!scrollContainerRef.current || !onDatesLoaded || currentDays.length === 0) return;
+
+        // If we are booting or jumping, block this specific call
+        if (bootLockRef.current) return;
+
+        const { scrollLeft, clientWidth } = scrollContainerRef.current;
+        const startCol = Math.floor((scrollLeft + (COLUMN_GAP / 2)) / stepWidth);
+        const visibleCount = Math.ceil(clientWidth / stepWidth);
+        const endCol = Math.min(startCol + visibleCount, currentDays.length);
+
+        const visibleDays = currentDays.slice(Math.max(0, startCol), endCol);
+        if (visibleDays.length > 0) {
+            onDatesLoaded(visibleDays[0], visibleDays[visibleDays.length - 1]);
+        }
+    }, [stepWidth, onDatesLoaded]);
+
+    // --- 1. THE BOOT SEQUENCE ---
+    useEffect(() => {
+        if (initializedRef.current || !scrollContainerRef.current) return;
+
+        const container = scrollContainerRef.current;
+        const visibleCols = Math.ceil(container.clientWidth / stepWidth) || 7;
+
+        // Start BUFFER_DAYS behind the start date
+        const initialDays = Array.from({ length: visibleCols + (BUFFER_DAYS * 2) }, (_, i) =>
+            addDays(startDate, i - BUFFER_DAYS)
+        );
+
+        setDays(initialDays);
+        initializedRef.current = true;
+
+
+        requestAnimationFrame(() => {
+            if (container) {
+                // 1. Calculate and apply the physical scroll
+                const targetScroll = (BUFFER_DAYS * stepWidth) - INITIAL_X_OFFSET;
+                container.scrollLeft = targetScroll;
+                lastScrollLeft.current = targetScroll;
+
+                // 2. Temporarily bypass the Lock to fire the ONLY initial notification
+                bootLockRef.current = false;
+                notifyParent(initialDays);
+                bootLockRef.current = true; // Re-lock immediately to swallow the noise from the scroll event
+
+                // 3. Finally unlock for user interaction after a short delay
+                setTimeout(() => {
+                    bootLockRef.current = false;
+                }, 300);
+            }
+        });
+    }, [startDate, stepWidth, notifyParent]);
+
+    // --- 2. INFINITE SCROLL RESTORATION ---
+    useEffect(() => {
+        if (anchorDateRef.current && initializedRef.current) {
+            const anchorDate = anchorDateRef.current;
+            const anchorOffset = anchorOffsetRef.current;
+            anchorDateRef.current = null;
+
+            const index = days.findIndex(d => isSameDay(d, anchorDate));
+            if (index !== -1 && scrollContainerRef.current) {
+                const newScroll = index * stepWidth + anchorOffset;
+
+                // Mute the onScroll handler during this jump
+                isScrollingRef.current = true;
+                scrollContainerRef.current.scrollLeft = newScroll;
+                lastScrollLeft.current = newScroll;
+
+                requestAnimationFrame(() => {
+                    isScrollingRef.current = false;
+                    notifyParent(days);
+                });
+            }
+        }
+    }, [days, stepWidth, notifyParent]);
+
+    // --- 3. SCROLL HANDLER ---
+    const handleScroll = useCallback(() => {
+        // Drop all scroll events if we are booting or programmatically scrolling
+        if (!scrollContainerRef.current || isScrollingRef.current || bootLockRef.current) return;
+
+        const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
+        lastScrollLeft.current = scrollLeft;
+
+        const scrollPosInDays = scrollLeft / stepWidth;
+        const maxScrollDays = (scrollWidth - clientWidth) / stepWidth;
+
+        if (scrollPosInDays < THRESHOLD_DAYS) {
+            const idx = Math.round(scrollLeft / stepWidth);
+            anchorDateRef.current = days[idx];
+            anchorOffsetRef.current = scrollLeft - (idx * stepWidth);
+
+            setDays(prev => {
+                const first = prev[0];
+                return [...Array.from({ length: BUFFER_DAYS }, (_, i) => addDays(first, -(BUFFER_DAYS - i))), ...prev];
+            });
+            return;
+        } else if (maxScrollDays - scrollPosInDays < THRESHOLD_DAYS) {
+            const idx = Math.round(scrollLeft / stepWidth);
+            anchorDateRef.current = days[idx];
+            anchorOffsetRef.current = scrollLeft - (idx * stepWidth);
+
+            setDays(prev => {
+                const last = prev[prev.length - 1];
+                return [...prev, ...Array.from({ length: BUFFER_DAYS }, (_, i) => addDays(last, i + 1))];
+            });
+            return;
+        }
+
+        if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+        scrollTimeoutRef.current = setTimeout(() => {
+            notifyParent(days);
+        }, 150);
+    }, [days, stepWidth, notifyParent]);
+
+    useImperativeHandle(ref, () => ({
+        today: () => {
+            const index = days.findIndex(d => isSameDay(d, new Date()));
+            if (index !== -1 && scrollContainerRef.current) {
+                scrollContainerRef.current.scrollTo({
+                    left: (index * stepWidth) - INITIAL_X_OFFSET,
+                    behavior: 'smooth'
+                });
+            }
+        },
+        next: () => scrollContainerRef.current?.scrollBy({ left: stepWidth, behavior: 'smooth' }),
+        prev: () => scrollContainerRef.current?.scrollBy({ left: -stepWidth, behavior: 'smooth' })
+    }), [days, stepWidth]);
+
+    return (
+        <div className="timebox-board" style={{ width: '100%', height: '100%', overflow: 'hidden' }}>
+            <div
+                className="scroll-container"
+                ref={scrollContainerRef}
+                onScroll={handleScroll}
+                style={{ overflowX: 'auto', overflowY: 'hidden', width: '100%' }}
+            >
+                <div
+                    className="columns-wrapper"
+                    style={{
+                        display: 'flex',
+                        gap: COLUMN_GAP,
+                        width: 'max-content',
+                        paddingLeft: COLUMN_GAP
+                    }}
+                >
+                    {days.map((day, index) => (
+                        <div
+                            key={`${day.getTime()}-${index}`}
+                            className="board-column"
+                            style={{ width: COLUMN_WIDTH, minWidth: COLUMN_WIDTH }}
+                        >
+                            <div className="stack-header">
+                                <div className="stack-header-title-wrapper">
+                                    <div className="day-date">{format(day, 'MMM d')}</div>
+                                    <div className="day-name">{format(day, 'EEEE')}</div>
+                                </div>
+                                <Button
+                                    icon={<Icon icon="plus" />}
+                                    variant="minimal"
+                                    size="small"
+                                    onClick={() => onShowPicker(day)}
+                                />
+                            </div>
+                            <Container groupName="tasks" className="column-content scroller thin auto">
+                                <DayTasks day={day} />
+                            </Container>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+});
+
+TimeboxBoard.displayName = 'TimeboxBoard';
+
+const DayTasks = ({ day }: { day: Date }) => {
+    const tasks: ITask[] = [];
+    return (
+        <>
+            {tasks
+                .filter(t => t.startdate && isSameDay(t.startdate, day))
+                .sort((a, b) => a.startdate!.getTime() - b.startdate!.getTime())
+                .map(t => <TaskCard key={t.id} taskId={t.id} initialVisible />)}
+        </>
+    );
+};

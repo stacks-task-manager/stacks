@@ -1,0 +1,12 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.layout-col {
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+    flex-grow: 1;
+    min-width: 0;
+
+    // > * {
+    //     flex-grow: 1;
+    // }
+}

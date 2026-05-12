@@ -1,0 +1,98 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.task-items {
+    min-width: 200px;
+    max-height: 95vh;
+    overflow-y: auto;
+
+    &-title {
+        flex-grow: 2;
+        min-width: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    &-checklist-item {
+        display: flex;
+        align-items: flex-start;
+        cursor: pointer;
+        gap: 5px;
+        padding: 10px;
+        position: relative;
+
+        &::after {
+            content: "";
+            height: 1px;
+            background-color: $light-gray4;
+            position: absolute;
+            bottom: 0;
+            right: 10px;
+            left: 10px;
+            display: none;
+        }
+
+        .hiddable:not(.#{$ns}-active) {
+            visibility: hidden;
+        }
+
+        &:hover {
+            background-color: $light-gray5;
+
+            .hiddable {
+                visibility: visible;
+            }
+        }
+
+        &:not(:last-child) {
+            &::after {
+                display: block;
+            }
+        }
+
+        &-content {
+            flex-grow: 2;
+            display: flex;
+            align-items: flex-start;
+            gap: 5px;
+            min-width: 0;
+
+            &.complete {
+                opacity: 0.5;
+
+                .task-items-title {
+                    div {
+                        text-decoration: line-through;
+                    }
+                }
+            }
+        }
+    }
+
+    &-checklist-link {
+        padding: 10px;
+    }
+
+    .#{$ns}-checkbox {
+        margin-bottom: 0;
+    }
+}
+
+.#{$ns}-collapse-body {
+    .task-items {
+        margin: 0 1px 1px 1px;
+    }
+}
+
+.#{$ns}-dark {
+    .task-items-wrapper {
+        &-checklist-item {
+            &::after {
+                background-color: $dark-gray5;
+            }
+
+            &:hover {
+                background-color: $dark-gray4;
+            }
+        }
+    }
+}

@@ -1,0 +1,248 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+/* GLOBAL STYLES */
+.table-wrapper {
+    width: 100%;
+    overflow: auto;
+    margin-bottom: 0;
+    position: relative;
+    z-index: 1;
+
+    &.sticky {
+        max-height: 100%;
+        height: 100%;
+
+        thead {
+            position: sticky;
+            top: 0;
+            z-index: 11;
+
+            th:first-child {
+                position: sticky;
+                left: 0;
+                top: 0;
+                z-index: 10;
+
+                .table-header-cell {
+                    box-shadow: 0 -1px 0 $light-gray3 inset, 0 1px 0 $light-gray3 inset,
+                        1px 0 0 $light-gray3 inset;
+                }
+            }
+        }
+
+        tbody,
+        tfoot {
+            td:first-child {
+                position: sticky;
+                left: 0;
+                z-index: 10;
+            }
+        }
+    }
+
+    &.scrolled {
+        .custom-html-table {
+            thead th,
+            // tbody td,
+            tfoot td {
+                &:first-child {
+                    .table-body-cell {
+                        box-shadow: -1px 0 0 $light-gray3 inset, 0 -1px 0 $light-gray3 inset,
+                            1px 0 0 $light-gray3 inset;
+                    }
+                }
+            }
+        }
+
+        thead {
+            th:first-child {
+                overflow: visible;
+
+                &::after {
+                    content: "";
+                    width: 5px;
+                    position: absolute;
+                    right: -5px;
+                    z-index: 1000;
+                    top: 0;
+                    bottom: 0;
+                    pointer-events: none;
+                    background: linear-gradient(90deg, rgba(2, 0, 36, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+                }
+
+                .table-header-cell {
+                    box-shadow: 0 -1px 0 $light-gray3 inset, 0 1px 0 $light-gray3 inset,
+                        1px 0 0 $light-gray3 inset, -1px 0 0 $light-gray3 inset;
+                }
+            }
+        }
+
+        // creates a drop shadown when scrolled and the first column is pinned
+        tbody.table-rows,
+        tfoot {
+            td:first-child {
+                overflow: visible;
+
+                &::after {
+                    content: "";
+                    width: 5px;
+                    position: absolute;
+                    right: -5px;
+                    z-index: 1000;
+                    top: 0;
+                    bottom: 0;
+                    pointer-events: none;
+                    background: linear-gradient(90deg, rgba(2, 0, 36, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+                }
+            }
+        }
+    }
+}
+
+.custom-html-table {
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: fixed;
+    position: relative;
+
+    thead {
+        * {
+            user-select: none;
+        }
+    }
+
+    tfoot {
+        td {
+            position: sticky;
+            bottom: 0;
+            z-index: 9;
+            box-shadow: 0 -1px 0 $dark-gray2;
+            background-color: $dark-gray3;
+        }
+    }
+
+    td,
+    th {
+        &.with-menu {
+            position: sticky;
+            width: 40px;
+            right: 0;
+            background-color: transparent;
+            text-align: right;
+
+            .table-header-cell {
+                padding: 0;
+                justify-content: center;
+            }
+        }
+    }
+
+    .#{$ns}-checkbox {
+        margin-bottom: 0;
+    }
+
+    .#{$ns}-button {
+        &.table-menu-button {
+            border-radius: 999px;
+            min-width: 20px;
+            min-height: 20px;
+            padding: 0;
+            box-shadow: 0 0 0 1px $light-gray3;
+            background-color: $white;
+            // margin-right: 10px;
+
+            &.#{$ns}-active {
+                box-shadow: 0 0 0 1px $blue3;
+
+                svg {
+                    color: $blue3;
+                }
+            }
+        }
+    }
+}
+
+.#{$ns}-dark {
+    .table-wrapper {
+        box-shadow: 0 0 0 1px $dark-gray2;
+        background-color: $dark-gray2;
+
+        &.scrolled {
+            .custom-html-table {
+                thead th,
+                tbody td {
+                    &:first-child {
+                        .table-body-cell {
+                            box-shadow: -1px 0 0 $gray1 inset, 0 -1px 0 $gray1 inset, 1px 0 0 $gray1 inset;
+                        }
+                    }
+                }
+            }
+
+            thead {
+                th:first-child {
+                    .table-header-cell {
+                        box-shadow: 0 -1px 0 $gray1 inset, 0 1px 0 $gray1 inset, 1px 0 0 $gray1 inset,
+                            -1px 0 0 $gray1 inset;
+                    }
+                }
+            }
+
+            &.sticky {
+                thead {
+                    th:first-child {
+                        .table-header-cell {
+                            box-shadow: 0 -1px 0 $gray1 inset, 0 1px 0 $gray1 inset, 1px 0 0 $gray1 inset,
+                                -1px 0 0 $gray1 inset;
+                        }
+
+                        &::after {
+                            background: linear-gradient(
+                                90deg,
+                                rgba(2, 0, 36, 0.3) 0%,
+                                rgba(255, 255, 255, 0) 100%
+                            );
+                        }
+                    }
+                }
+
+                tbody {
+                    &.table-rows {
+                        td:first-child {
+                            &::after {
+                                background: linear-gradient(
+                                    90deg,
+                                    rgba(2, 0, 36, 0.3) 0%,
+                                    rgba(255, 255, 255, 0) 100%
+                                );
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        &.sticky {
+            thead {
+                th:first-child {
+                    background-color: $dark-gray4;
+
+                    .table-header-cell {
+                        box-shadow: 0 -1px 0 $gray1 inset, 0 1px 0 $gray1 inset, 1px 0 0 $gray1 inset;
+                    }
+                }
+            }
+        }
+    }
+
+    .#{$ns}-button {
+        &.table-menu-button {
+            background-color: $dark-gray2;
+            box-shadow: 0 0 0 1px $gray1;
+
+            &:hover,
+            &.#{$ns}-active {
+                background-color: $dark-gray1;
+            }
+        }
+    }
+}
