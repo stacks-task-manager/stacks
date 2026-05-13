@@ -1,6 +1,6 @@
 # Installation Guide
 
-This guide provides comprehensive instructions for installing Stacks dependencies for development.
+This guide provides comprehensive instructions for installing Stacks dependencies for local development.
 
 ## Prerequisites
 
@@ -8,6 +8,7 @@ This guide provides comprehensive instructions for installing Stacks dependencie
 -   At least 2GB of available RAM
 -   5GB of free disk space
 -   Internet connection for downloading dependencies
+-   Postgres database server
 
 ## Installing dependencies
 
@@ -34,6 +35,12 @@ cp packages/email-service/env.example packages/email-service/.env
 cp packages/server/env.example packages/server/.env
 ```
 
+Go to each of the following files and customize the environment variables:
+
+-   `packages/db/.env`
+-   `packages/email-service/.env`
+-   `packages/server/.env`
+
 ## Development license key
 
 ### 1. Request a development license key
@@ -57,19 +64,16 @@ The recommended way would be opening multi terminals and running the following c
 yarn dev:server
 yarn dev:app
 yarn dev:mobile # only for mobile development
+yarn dev:email # use for sending emails
 ```
 
 ### 2. Opening the app
 
-Open your web browser and visit [http://localhost:3000](http://localhost:3000)
+Open your web browser and visit [http://localhost:3000/login](http://localhost:3000/login)
 
 ### 3. Opening the mobile app
 
-Open your mobile device and scan the QR code displayed in the terminal to open the mobile app.
-
-### 4. Opening the desktop app
-
-Open your desktop device and scan the QR code displayed in the terminal to open the desktop app.
+Open your mobile device and scan the QR code displayed in the terminal to open the mobile app using the Expo Go app.
 
 ## Scripts
 
