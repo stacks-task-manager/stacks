@@ -1,10 +1,8 @@
 # Server
 
-**Purpose**
-
 The Stacks backend server. It exposes HTTP APIs, serves static pages/assets, connects to Postgres via Sequelize, and provides real-time features (WebSockets).
 
-**Environment**
+## Environment
 
 Create `packages/server/.env` from [packages/server/env.example](../../packages/server/env.example):
 
@@ -26,6 +24,6 @@ Optional variables used by the server:
 -   `REQUIRE_SECRETS=1`: enforce strong secrets even outside production
 -   AI (optional): `AI_OPENAI_BASE_URL`, `AI_API_KEY`, `AI_MODEL`, `AI_CHAT_ENABLED`, `AI_CHAT_AUTO_REDIRECT`
 
-**License files (runtime)**
+## License files (runtime)
 
-The licensing package looks for `public.pem` and `license.key` in the process working directory (`process.cwd()`), which matters for production/bundled runs.
+The licensing package looks for `public.pem` and `license.key` in the process working directory (`process.cwd()`), which matters for production/bundled runs. If you haven't requested your developer license, you can do it by clicking on this [link](https://getstacksapp.com/dev-program/).

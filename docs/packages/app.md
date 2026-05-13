@@ -1,7 +1,5 @@
 # App
 
-## Purpose
-
 The web client for Stacks. It renders the UI, manages local client state, and talks to the API server.
 
 ## File structure

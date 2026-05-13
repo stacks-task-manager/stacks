@@ -1,10 +1,8 @@
 # Email Service
 
-**Purpose**
-
 A background worker that compiles email templates and sends queued emails via SMTP on an interval.
 
-**Environment**
+## Environment
 
 Create `packages/email-service/.env` from [packages/email-service/env.example](../../packages/email-service/env.example):
 
