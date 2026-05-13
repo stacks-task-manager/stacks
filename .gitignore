@@ -55,7 +55,6 @@ packages/server/previews/
 packages/server/license
 packages/license.key
 packages/server/license.key
-packages/server/public.pem
 /releases/
 scripts/license_keys/*.json
 stacks-teams.zip
