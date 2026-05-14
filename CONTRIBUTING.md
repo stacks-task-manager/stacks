@@ -27,9 +27,9 @@ the process smooth for everyone.
 
 ## Code of Conduct
 
-Be respectful, constructive, and welcoming. We are all here to build something
-useful together. Harassment, personal attacks, or discriminatory language of
-any kind will not be tolerated and will result in removal from the project.
+This project follows the [Contributor Covenant](CODE_OF_CONDUCT.md). By
+participating you agree to abide by its terms. Concerns can be reported
+confidentially to `customers@getstacksapp.com`.
 
 ---
 
@@ -130,7 +130,7 @@ branches. Never push directly to `main`.
 1. **Fork the repository** and clone your fork locally:
    ```bash
    git clone https://github.com/YOUR-USERNAME/stacks.git
-   cd stacks-app
+   cd stacks
    ```
 
 2. **Set the upstream remote** so you can stay up to date:
@@ -219,15 +219,22 @@ This ensures `dev` never diverges from what is live in `main`.
 git clone https://github.com/stacks-task-manager/stacks.git
 cd stacks
 
-# Install dependencies
-npm install
+# Activate Yarn 3 (ships with Node via corepack)
+corepack enable
 
-# Start the development server
-npm run dev
+# Install dependencies and build internal packages
+yarn install
+yarn setup
+
+# Start the full dev environment (app on 3001, server on 3000)
+yarn dev
 ```
 
-> **Note:** Add environment variables, database setup, and any other
-> prerequisites here as the project grows.
+You will also need a PostgreSQL 15 instance, an SMTP host, and a development
+license key in `packages/server/license.key`. Full prerequisites and the
+list of `.env` files to copy live in
+**[docs/INSTALLATION.md](docs/INSTALLATION.md)** — please use that as the
+canonical setup reference.
 
 ---
 
@@ -273,7 +280,8 @@ hotfix: resolve data loss on concurrent task updates
   [Issue](https://github.com/stacks-task-manager/stacks/issues)
 - **Commercial licensing** → customers@getstacksapp.com
 - **Security vulnerabilities** → please do **not** open a public issue.
-  Email info@getstacksapp.com directly with details.
+  Follow the process in [SECURITY.md](SECURITY.md) and email
+  `customers@getstacksapp.com` with `SECURITY:` as the subject prefix.
 
 ---
 

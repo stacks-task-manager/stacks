@@ -166,7 +166,7 @@ ports:
 
 This Docker setup is configured for production use. For development:
 
--   Use the existing development setup with `npm run dev`
+-   Use the existing development setup with `yarn dev` (see [INSTALLATION.md](INSTALLATION.md))
 -   The Docker setup uses the bundled server.js from the releases folder
 -   Environment is set to `production` mode
 

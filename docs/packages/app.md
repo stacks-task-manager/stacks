@@ -1,42 +1,58 @@
-# App
+# `@stacks/app`
 
-The web client for Stacks. It renders the UI, manages local client state, and talks to the API server.
-
-## File structure
-
--   `src/app`: contains the main application code.
--   `src/app/api`: contains the API client code.
--   `src/app/store`: contains the state slices and action creators.
--   `src/app/hooks`: contains the hooks and selectors to query the state.
--   `src/app/components`: contains the atomic-like components.
--   `src/app/views`: contains the main views of the application.
--   `src/app/utils`: contains the utility functions.
--   `src/app/widgets`: contains the widgets.
--   `src/app/locales`: contains the dynamic translations.
--   `src/app/styles`: contains global styles overrides.
-
-## State management
-
-The state management is handled by [Simpler state](https://simpler-state.js.org/), a light-weight state management library for React.
-
-### 1. Structure
-
-Stacks' store is split into multiple states rather than having just a big one. The state management is structured as follows:
-
--   `src/app/store`: contains all the state slices.
--   `src/app/store/actions`: contains all the action creators to update the state.
--   `src/app/hooks`: contains all the hooks and selectors to query the state.
-
-### 2. State lifecycle
-
-1. every change come in through an action
-2. every action uses `produce` to update the state
-3. every component that uses a state hook will automatically re-render when the state changes.
+The Stacks web client. A React 18 app built with Webpack that renders the UI, manages local state, and talks to `@stacks/server` over HTTP and WebSockets.
 
 ## Environment
 
-This package uses a `.env` file at [packages/app/.env](../../packages/app/.env).
+`packages/app/.env` (no `env.example` is checked in — create it manually if you need to override defaults):
 
--   `PORT`: dev server port (default in this repo: `3001`)
--   `BROWSER`: set to `none` to prevent auto-opening a browser
--   `GENERATE_SOURCEMAP`: enable/disable sourcemaps
+- `PORT` — dev server port (default `3001` in this repo)
+- `BROWSER` — set to `none` to prevent auto-opening a browser
+- `GENERATE_SOURCEMAP` — enable / disable source maps
+
+## Development
+
+```bash
+yarn dev:app          # webpack dev server on http://localhost:3001
+yarn dev:app:watch    # same but skips the upfront translations build
+```
+
+The dev server proxies API calls to the Hono server on `http://localhost:3000`. Run `yarn dev:server` (or `yarn dev` at the root for both) before exercising any feature that touches the backend.
+
+## Overview
+
+- `src/app` — main application code
+- `src/app/api` — typed API client (axios)
+- `src/app/store` — state slices and action creators
+- `src/app/store/actions` — action creators that update state
+- `src/app/hooks` — hooks and selectors that query state
+- `src/app/components` — small reusable components
+- `src/app/views` — top-level views (boards, dashboards, etc.)
+- `src/app/widgets` — composed widgets used across views
+- `src/app/utils` — utility functions
+- `src/app/locales` — runtime translation tables (English baseline plus per-locale overrides)
+- `src/app/styles` — global SCSS / overrides
+
+## State management
+
+State is managed by [Simpler State](https://simpler-state.js.org/) — a lightweight React state library. The store is split into many small slices rather than one large one.
+
+The lifecycle is straightforward:
+
+1. Every change comes through an action in `src/app/store/actions`.
+2. Each action uses `immer`'s `produce` to update the slice immutably.
+3. Components that subscribe via a hook from `src/app/hooks` re-render automatically.
+
+## Build
+
+```bash
+yarn workspace @stacks/app build   # or `yarn build:app` from the root
+```
+
+Output lands in `packages/app/build/`. `yarn release` copies it into the runnable server bundle.
+
+## Related
+
+- [`@stacks/server`](server.md) — API the app talks to
+- [`@stacks/types`](types.md) — shared data shapes
+- [`@stacks/translations`](translations.md) — runtime i18n
