@@ -7333,7 +7333,7 @@ __metadata:
     lodash: ^4.17.21
     lodash-es: ^4.17.21
     lowlight: ^3.1.0
-    markdown-to-jsx: ^7.4.0
+    markdown-to-jsx: ^9.8.0
     mini-css-extract-plugin: ^2.9.2
     mousetrap: ^1.6.5
     nanoid: ^4.0.1
@@ -19410,15 +19410,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"markdown-to-jsx@npm:^7.4.0":
-  version: 7.7.17
-  resolution: "markdown-to-jsx@npm:7.7.17"
+"markdown-to-jsx@npm:^9.8.0":
+  version: 9.8.0
+  resolution: "markdown-to-jsx@npm:9.8.0"
   peerDependencies:
-    react: ">= 0.14.0"
+    react: ">= 16.0.0"
+    solid-js: ">=1.0.0"
+    vue: ">=3.0.0"
   peerDependenciesMeta:
     react:
       optional: true
-  checksum: fd0c50f7ed11d036dd607b48e7d8283f86aea23028e4a0be0051e2717aa9da15967bd219a24b84480c5efb825d33b855f2f972de269720377a63bae810de5df9
+    react-native:
+      optional: true
+    solid-js:
+      optional: true
+    vue:
+      optional: true
+  checksum: a8732fd615dd0d0f81ef436d61b4b047a4634b062612283a7b93aaec5bbc4713aa2791723095acf628462b8769218e377c2ad19b1a2c3c08ba40449491fe9ee1
   languageName: node
   linkType: hard
 
