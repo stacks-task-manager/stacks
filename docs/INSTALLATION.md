@@ -57,6 +57,43 @@ Customize each file with your local Postgres credentials, an SMTP host, and secr
 - `packages/server/.env` — `APP_PORT`, `COOKIE_SECRET`, `JWT_SECRET`, CORS origins, optional `AI_OPENAI_BASE_URL` / `AI_OPENAI_API_KEY` / `AI_MODEL`
 - `packages/email-service/.env` — `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_FROM_EMAIL`, `EMAIL_PROCESS_INTERVAL`
 
+Keep the `POSTGRES_*` values consistent across all three `.env` files — the server, the email service, and the migration tooling all read independently and must agree.
+
+## Setting up the database
+
+The server expects a Postgres 15 instance reachable with the credentials in `packages/db/.env`, and a database (default name `stacks`) that already exists.
+
+The fastest path is Docker:
+
+```bash
+docker run -d --name stacks-postgres \
+    -e POSTGRES_PASSWORD=postgres \
+    -e POSTGRES_DB=stacks \
+    -p 5432:5432 postgres:15
+```
+
+If you already run Postgres locally (Homebrew, Postgres.app, etc.), just create the database manually:
+
+```bash
+createdb stacks   # or: psql -c 'CREATE DATABASE stacks;'
+```
+
+Either way, then apply the schema migrations:
+
+```bash
+yarn workspace @stacks/db migrate
+```
+
+See [docs/packages/db.md](packages/db.md) for the full set of migration / seed / reset commands.
+
+**Local SMTP capture (optional).** If you want to receive password reset / verification emails locally without sending real mail, run Mailpit and point `packages/email-service/.env` at it:
+
+```bash
+docker run -d --name stacks-mailpit -p 1025:1025 -p 8025:8025 axllent/mailpit
+# SMTP_HOST=localhost  SMTP_PORT=1025  SMTP_SECURE=false  (no auth)
+# View captured mail at http://localhost:8025
+```
+
 ## Running the application
 
 ### 1. Start the dev environment
@@ -79,7 +116,7 @@ yarn dev:locales  # Locale management TUI (optional)
 
 ### 2. Open the app
 
-Visit **<http://localhost:3000/login>**.
+Visit **<http://localhost:3000/login>** — this is the API server (port `3000`), which serves the login HTML directly and reverse-proxies `/app/*` and `/static/*` to the Webpack dev server at `3001`. Don't visit `3001` directly; the auth and API routes only exist on the server.
 
 ### 3. Mobile (optional)
 
@@ -117,4 +154,6 @@ All commands run from the repo root with `yarn <script>`:
 - **Server exits immediately with `❌ No license file found`** — place a valid `license.key` at `packages/server/license.key`. See the [license callout](#%EF%B8%8F-development-license-required) above.
 - **`yarn` is not found / wrong version** — run `corepack enable`. Confirm `yarn -v` reports `3.6.4`.
 - **`yarn dev` fails with missing types from `@stacks/db` or `@stacks/types`** — you skipped `yarn setup`. Run it once.
-- **Postgres connection refused** — verify the credentials in `packages/db/.env` and that the server is running on the configured port.
+- **Postgres connection refused** — verify the credentials in `packages/db/.env` and that Postgres is running on the configured host/port. If another Postgres is already bound to `5432`, change `POSTGRES_PORT` in all three `.env` files (db, server, email-service) and re-run `yarn workspace @stacks/db migrate`.
+- **`EADDRINUSE` on port 3000 or 3001** — another process owns the port. Either stop it, or change the port: set `APP_PORT` in `packages/server/.env` for the API server, or `PORT` in `packages/app/.env` for the Webpack dev server. If you change `APP_PORT`, the app you visit moves too (e.g. `http://localhost:3010/login`). The server → app proxy target (`localhost:3001`) is currently hardcoded in `packages/server/src/api.ts`, so prefer changing `APP_PORT` over `PORT` if you only have one conflict.
+- **Tables missing / `relation "users" does not exist`** — run `yarn workspace @stacks/db migrate`. The first time after creating the database is the most common moment to forget.

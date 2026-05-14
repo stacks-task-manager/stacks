@@ -54,10 +54,17 @@ cp packages/email-service/env.example packages/email-service/.env
 # (request one at https://getstacksapp.com/dev-program/)
 cp /path/to/license.key packages/server/license.key
 
+# Make sure Postgres is running and reachable with the credentials in
+# packages/db/.env, then create the schema:
+docker run -d --name stacks-postgres \
+    -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=stacks \
+    -p 5432:5432 postgres:15        # or use an existing Postgres 15
+yarn workspace @stacks/db migrate  # applies schema migrations
+
 yarn dev                           # starts app (3001), server (3000), libs in watch mode
 ```
 
-Open <http://localhost:3000/login>. For full setup details — environment variables, Docker, troubleshooting — see [docs/INSTALLATION.md](docs/INSTALLATION.md).
+Open <http://localhost:3000/login> (this is the API server, which serves and proxies the dev app for you — don't visit 3001 directly). For full setup details — environment variables, Docker, troubleshooting — see [docs/INSTALLATION.md](docs/INSTALLATION.md).
 
 ## Structure
 
