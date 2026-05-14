@@ -1,6 +1,6 @@
 # `@stacks/app`
 
-The Stacks web client. A React 18 app built with Webpack that renders the UI, manages local state, and talks to `@stacks/server` over HTTP and WebSockets.
+The Stacks web client. A React 18 + TypeScript app, bundled with Webpack, that renders the UI, manages local state, and talks to `@stacks/server` over HTTP and WebSockets.
 
 ## Environment
 
@@ -17,31 +17,7 @@ yarn dev:app          # webpack dev server on http://localhost:3001
 yarn dev:app:watch    # same but skips the upfront translations build
 ```
 
-The dev server proxies API calls to the Hono server on `http://localhost:3000`. Run `yarn dev:server` (or `yarn dev` at the root for both) before exercising any feature that touches the backend.
-
-## Overview
-
-- `src/app` — main application code
-- `src/app/api` — typed API client (axios)
-- `src/app/store` — state slices and action creators
-- `src/app/store/actions` — action creators that update state
-- `src/app/hooks` — hooks and selectors that query state
-- `src/app/components` — small reusable components
-- `src/app/views` — top-level views (boards, dashboards, etc.)
-- `src/app/widgets` — composed widgets used across views
-- `src/app/utils` — utility functions
-- `src/app/locales` — runtime translation tables (English baseline plus per-locale overrides)
-- `src/app/styles` — global SCSS / overrides
-
-## State management
-
-State is managed by [Simpler State](https://simpler-state.js.org/) — a lightweight React state library. The store is split into many small slices rather than one large one.
-
-The lifecycle is straightforward:
-
-1. Every change comes through an action in `src/app/store/actions`.
-2. Each action uses `immer`'s `produce` to update the slice immutably.
-3. Components that subscribe via a hook from `src/app/hooks` re-render automatically.
+The dev server proxies API calls to the Hono server on `http://localhost:3000`. Run `yarn dev:server` (or `yarn dev` at the root for both) before exercising any feature that touches the backend. The UI you visit is **the server URL** (`http://localhost:3000/#/…`) — the server proxies `/app/*` and `/static/*` back to the webpack dev server. Visiting `:3001` directly bypasses auth and the API.
 
 ## Build
 
@@ -51,8 +27,17 @@ yarn workspace @stacks/app build   # or `yarn build:app` from the root
 
 Output lands in `packages/app/build/`. `yarn release` copies it into the runnable server bundle.
 
+## Deep dives
+
+These live next to the source under [`packages/app/docs/`](../../packages/app/docs/):
+
+- [Web app onboarding](../../packages/app/docs/ONBOARDING.md) — stack overview, boot sequence, code layout, **"add a feature" walkthrough**, conventions, FAQ
+- [Web app architecture](../../packages/app/docs/ARCHITECTURE.md) — routing model (HashRouter, background-route panels), state pattern, real-time updates, drag-and-drop, theming, the global user-feedback surface
+- [API client](../../packages/app/docs/API_CLIENT.md) — the shared Axios instance, date round-tripping, `X-Instance-ID`, error handling, per-domain modules
+
 ## Related
 
 - [`@stacks/server`](server.md) — API the app talks to
 - [`@stacks/types`](types.md) — shared data shapes
 - [`@stacks/translations`](translations.md) — runtime i18n
+- [`docs/E2E.md`](../E2E.md) — Playwright conventions for testing the app
