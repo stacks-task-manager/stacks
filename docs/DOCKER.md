@@ -1,181 +1,103 @@
-# Docker Setup for Stacks
+# Docker / production deployment
 
-This document explains how to run the Stacks application using Docker.
+Stacks ships a `docker-compose` setup that runs the API server, the email worker, a Postgres database, and a one-shot migration job out of a self-contained `releases/` bundle. This is the recommended path for self-hosted deployments. For local **development**, use `yarn dev` instead (see [INSTALLATION.md](INSTALLATION.md)).
 
 ## Prerequisites
 
--   Docker and Docker Compose installed on your system
--   The `releases` folder must be present with the built application
+- Docker and Docker Compose
+- A valid `license.key` (see [`packages/license.md`](packages/license.md))
 
-## Building the Releases Folder
-
-Before running Docker, you need to build the server and create the releases folder:
+## 1. Build the `releases/` bundle
 
 ```bash
 yarn release
 ```
 
-## Running with Docker Compose
+`yarn release` (defined in [`package.json`](../package.json)) cleans, installs, builds every package, copies the server + app + email-service bundles into `releases/`, and drops the Docker assets (`docker-compose.yml`, the three Dockerfiles, `.env.example`) next to them.
 
-1. **Start the services:**
+## 2. Configure the runtime
+
+From the `releases/` directory, copy the example env file and fill it in:
 
 ```bash
-cd release
-docker-compose up -d
+cd releases
+cp .env.example .env
 ```
 
-2. **View logs:**
+At minimum, set:
+
+| Variable | Notes |
+| --- | --- |
+| `POSTGRES_PASSWORD` | Use a strong value, not the default |
+| `COOKIE_SECRET` | `openssl rand -hex 32` |
+| `JWT_SECRET` | `openssl rand -hex 32` |
+| `SMTP_*` | Real SMTP host/credentials, or a local capture server for staging |
+| `PUBLIC_URL` | The public HTTPS URL users will hit |
+
+Also drop your license file next to the compose file:
 
 ```bash
-# All services
-docker-compose logs -f
-
-# Specific service
-docker-compose logs -f app
-docker-compose logs -f postgres
+cp /path/to/license.key license.key
 ```
 
-3. **Stop the services:**
+The `stacks` service mounts it read-only into the container at `/server/license.key`.
+
+## 3. Start the stack
 
 ```bash
-docker-compose down
+docker-compose up -d --build      # or `yarn run:docker` from the repo root
 ```
 
-4. **Stop and remove volumes (⚠️ This will delete all data):**
-5. 
+What runs (see [`docker/docker-compose.yml`](../docker/docker-compose.yml)):
+
+| Service | Image / Dockerfile | Ports | Purpose |
+| --- | --- | --- | --- |
+| `postgres` | `postgres:15-alpine` | internal | Database; data persisted in `./data/db` |
+| `migration` | `Dockerfile.migration` | — | One-shot job; runs migrations then exits |
+| `stacks` | `Dockerfile.server` | `3000:3000` | The API server (serves the web app from the same port) |
+| `email` | `Dockerfile.email` | internal | Email queue worker |
+
+Volumes (created automatically under `releases/`):
+
+- `./data/db` — Postgres data
+- `./data/uploads` — file uploads
+- `./data/previews` — generated previews
+- `./logs` — service logs
+
+Boot order is enforced by health checks: `postgres` becomes healthy → `migration` runs to completion → `stacks` and `email` start.
+
+## Common operations
+
 ```bash
-docker-compose down -v
+docker-compose logs -f stacks       # tail the API server logs
+docker-compose logs -f email        # tail the email worker logs
+docker-compose ps                   # service health and status
+docker-compose down                 # stop everything (data preserved)
+docker-compose down -v              # ⚠️ stop and delete all volumes
 ```
 
-## Services
-
-### Application (app)
-
--   **Port:** 3001
--   **Image:** Built from local Dockerfile
--   **Volumes:**
-    -   `uploads_data:/app/uploads` - File uploads storage
-    -   `previews_data:/app/previews` - Preview files storage
-
-### PostgreSQL (postgres)
-
--   **Port:** 5432
--   **Image:** postgres:15-alpine
--   **Volume:** `postgres_data:/var/lib/postgresql/data`
--   **Default credentials:**
-    -   Database: `stacks_hono`
-    -   User: `postgres`
-    -   Password: `postgres`
-
-## Environment Variables
-
-The application uses the following environment variables (configured in docker-compose.yml):
-
-### Database Configuration
-
--   `POSTGRES_HOST=postgres`
--   `POSTGRES_PORT=5432`
--   `POSTGRES_USER=postgres`
--   `POSTGRES_PASSWORD=postgres`
--   `POSTGRES_DB=stacks_hono`
-
-### Application Configuration
-
--   `NODE_ENV=production`
--   `COOKIE_SECRET=s3cr3t`
--   `JWT_SECRET=your-very-secret-key`
--   `DELETE_FILES=false`
-
-### Google OAuth (Update with your values)
-
--   `GOOGLE_CLIENT_ID`
--   `GOOGLE_CLIENT_SECRET`
--   `GOOGLE_REDIRECT_URI`
-
-## Customizing Environment Variables
-
-To customize environment variables:
-
-1. **Option 1: Edit docker-compose.yml**
-   Modify the `environment` section in the `app` service.
-
-2. **Option 2: Use .env file**
-   Create a `.env` file in the project root:
-
-    ```bash
-    # Database
-    POSTGRES_PASSWORD=your_secure_password
-
-    # Application
-    JWT_SECRET=your-very-secure-jwt-secret
-    COOKIE_SECRET=your-secure-cookie-secret
-
-    # Google OAuth
-    GOOGLE_CLIENT_ID=your-google-client-id
-    GOOGLE_CLIENT_SECRET=your-google-client-secret
-    ```
-
-## Volumes
-
-The setup creates three persistent volumes:
-
-1. **postgres_data** - PostgreSQL database files
-2. **uploads_data** - Application file uploads
-3. **previews_data** - Generated preview files
-
-### Managing Volumes
+Backup / restore the database (run from `releases/`):
 
 ```bash
-# List volumes
-docker volume ls
-
-# Inspect a volume
-docker volume inspect stacks-hono_postgres_data
-
-# Backup database
-docker-compose exec postgres pg_dump -U postgres stacks_hono > backup.sql
-
-# Restore database
-docker-compose exec -T postgres psql -U postgres stacks_hono < backup.sql
+docker-compose exec postgres pg_dump -U postgres "$POSTGRES_DB" > backup.sql
+docker-compose exec -T postgres psql -U postgres "$POSTGRES_DB" < backup.sql
 ```
 
 ## Troubleshooting
 
-### Application won't start
+| Symptom | First thing to check |
+| --- | --- |
+| `stacks` container restarts in a loop | `docker-compose logs stacks` — almost always a missing/invalid `license.key` or bad Postgres credentials |
+| Port `3000` already in use on the host | Change the left side of the port mapping in `docker-compose.yml` (e.g. `"3010:3000"`) and `PUBLIC_URL` to match |
+| Migration container exits non-zero | `docker-compose logs migration` — schema is out of sync or Postgres unreachable |
+| Email worker silent | Confirm `SMTP_*` is correctly set in `.env`; the worker idles silently when SMTP is unconfigured |
+| Email actually doesn't ship | Check `email_queue` rows in Postgres for stuck `pending` entries; see [`packages/email-service.md`](packages/email-service.md) |
 
-1. Check if the `releases` folder exists and contains `server.js`
-2. Verify PostgreSQL is healthy: `docker-compose ps`
-3. Check application logs: `docker-compose logs app`
+## Security checklist before going live
 
-### Database connection issues
-
-1. Ensure PostgreSQL container is running: `docker-compose ps postgres`
-2. Check PostgreSQL logs: `docker-compose logs postgres`
-3. Verify database credentials in docker-compose.yml
-
-### Port conflicts
-
-If ports 3001 or 5432 are already in use, modify the port mappings in docker-compose.yml:
-
-```yaml
-ports:
-    - "3002:3001" # Use port 3002 instead of 3001
-```
-
-## Development vs Production
-
-This Docker setup is configured for production use. For development:
-
--   Use the existing development setup with `yarn dev` (see [INSTALLATION.md](INSTALLATION.md))
--   The Docker setup uses the bundled server.js from the releases folder
--   Environment is set to `production` mode
-
-## Security Notes
-
-⚠️ **Important for Production:**
-
-1. Change default passwords in docker-compose.yml
-2. Use strong, unique values for JWT_SECRET and COOKIE_SECRET
-3. Configure proper Google OAuth credentials
-4. Consider using Docker secrets for sensitive data
-5. Run behind a reverse proxy (nginx, traefik) with SSL/TLS
+- Regenerate `COOKIE_SECRET` and `JWT_SECRET` (`openssl rand -hex 32` each)
+- Set a strong `POSTGRES_PASSWORD`
+- Run the stack behind a reverse proxy (nginx / Caddy / Traefik) that terminates TLS
+- Configure `CORS_ORIGINS` to only your domain(s)
+- Set `STACKS_SOURCE_URL` to your fork's repo (AGPL §13 source disclosure)
+- Consider Docker secrets or a secrets manager rather than a plain `.env`

@@ -36,7 +36,7 @@ translate("notifications.unread", { count: 1 });   // "1 notification"
 translate("notifications.unread", { count: 5 });   // "5 notifications"
 ```
 
-Locale tables live under [`packages/app/src/app/locales/`](../../packages/app/src/app/locales/) for the web app and [`packages/server/src/locales/`](../../packages/server/src/locales/) for the server. To edit them interactively, use [`@stacks/locales-tui`](locales-tui.md).
+Locale tables live under [`packages/app/src/app/locale/`](../../packages/app/src/app/locale/) for the web app and [`packages/server/locales/`](../../packages/server/locales/) for the server. To edit them interactively, use [`@stacks/locales-tui`](locales-tui.md).
 
 ## Overview
 

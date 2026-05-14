@@ -4,22 +4,13 @@ End-to-end tests live at `playwright/` (repo root) and are driven by [Playwright
 
 ## Setup
 
-E2E tests need everything a normal dev environment needs, plus the test browser binaries:
+E2E tests need everything a normal dev environment needs (Node, Yarn, Postgres, the `.env` files, the dev license at `packages/server/license.key`) — see [INSTALLATION.md](INSTALLATION.md) once and come back here.
+
+On top of that, install the Playwright browser binaries once:
 
 ```bash
-corepack enable
-yarn install
-yarn setup
-
-# Install Playwright browsers (first run only)
 yarn playwright install chromium
 ```
-
-You also need:
-
-- A running PostgreSQL instance (per [INSTALLATION](INSTALLATION.md))
-- A valid `packages/server/license.key` — the API server the tests exercise still requires it
-- The relevant `.env` files in place
 
 ## Running the suite
 
@@ -170,4 +161,4 @@ This repository does not yet ship a GitHub Actions workflow. When one is added, 
 
 ## License caveat
 
-The E2E specs themselves don't read `license.key`, but the API server they hit does. If you see the dev server crash on startup during a test run with `❌ No license file found`, drop a valid key into `packages/server/license.key` and re-run.
+The specs don't read `license.key`, but the API server they hit does — so the dev license requirement still applies. See [`docs/packages/license.md`](packages/license.md) for details.

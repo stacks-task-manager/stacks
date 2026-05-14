@@ -146,6 +146,14 @@ yarn release         # produces the runnable releases/server bundle
 
 `yarn release:server` also copies `public.pem` next to the bundle so the production license check can find it.
 
+## Deep dives
+
+These live next to the server source under [`packages/server/docs/`](../../packages/server/docs/):
+
+- [Server onboarding](../../packages/server/docs/ONBOARDING.md) — bootstrap order, request lifecycle, how to add a new route or loader
+- [Caching system](../../packages/server/docs/CACHING.md) — the multi-tenant response cache, invalidation, and configuration
+- [Embedded bundle integrity](../../packages/server/docs/EMBEDDED_INTEGRITY.md) — production bundle signing and the boot-time verification
+
 ## Related
 
 - [`@stacks/db`](db.md) — models, migrations, seeds

@@ -1,6 +1,8 @@
-# Caching System Documentation
+# Caching system
 
-This document provides comprehensive information about the caching system implementation in the Stacks Hono application.
+The response cache used by `@stacks/server`. Implementation lives in [`packages/server/src/utils/cache.ts`](../src/utils/cache.ts); this page documents the architecture, configuration, and operational concerns.
+
+> See also: [server onboarding](ONBOARDING.md) for how the cache fits into the request lifecycle, and [`docs/packages/server.md`](../../../docs/packages/server.md) for the server package overview.
 
 ## Table of Contents
 

@@ -82,12 +82,13 @@ This repository is a Yarn workspaces monorepo that ships Stacks as a set of serv
 
 ## Documentation
 
--   [Installation & local development](docs/INSTALLATION.md)
--   [Packages index](docs/PACKAGES.md)
--   [Docker / production deployment](docs/DOCKER.md)
--   [Caching system](docs/CACHING.md)
--   [E2E testing with Playwright](docs/E2E.md)
--   [Adding Tiptap Pro extensions (optional)](docs/TIPTAP_PRO.md)
+The full documentation index lives at **[docs/README.md](docs/README.md)** — start there for everything beyond the quick start above (per-package docs, server internals, Docker deployment, E2E testing, Tiptap Pro setup).
+
+Most-reached-for pages:
+
+- [Installation & local development](docs/INSTALLATION.md)
+- [Contributing](CONTRIBUTING.md)
+- [Docker / production deployment](docs/DOCKER.md)
 
 ## License
 

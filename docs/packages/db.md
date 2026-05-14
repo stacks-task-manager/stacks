@@ -40,7 +40,7 @@ The schema models a multi-tenant kanban / project-management workspace. Top-leve
 | `timelogs` | Time tracking |
 | `email_queue` | Outbound email queue consumed by `@stacks/email-service` |
 
-Model files live under [`packages/db/src/models/`](../../packages/db/src/models/); associations are wired in the package entry.
+Model files live under [`packages/db/src/entities/`](../../packages/db/src/entities/); associations are wired in the package entry.
 
 ## Migrations
 
