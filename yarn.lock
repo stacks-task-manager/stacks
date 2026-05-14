@@ -7440,7 +7440,7 @@ __metadata:
     "@types/node": ^22.10.0
     "@types/react": ^18.3.12
     ink: ^4.4.1
-    ink-select-input: ^5.0.0
+    ink-select-input: ^6.2.0
     ink-text-input: ^5.0.0
     react: ^18.3.1
     tsx: ^4.19.2
@@ -10803,13 +10803,6 @@ __metadata:
   version: 5.3.2
   resolution: "aria-query@npm:5.3.2"
   checksum: d971175c85c10df0f6d14adfe6f1292409196114ab3c62f238e208b53103686f46cc70695a4f775b73bc65f6a09b6a092fd963c4f3a5a7d690c8fc5094925717
-  languageName: node
-  linkType: hard
-
-"arr-rotate@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "arr-rotate@npm:1.0.0"
-  checksum: f996e94a7b8325c23fe3d7bf95f4f1a5fd1baba34c6bcebb5a8bd0f9b955569293f4cc61f02b0a242380923fca235948e95f6dbf544a6f183207d80e8f2d442d
   languageName: node
   linkType: hard
 
@@ -14637,13 +14630,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"escape-string-regexp@npm:^5.0.0":
-  version: 5.0.0
-  resolution: "escape-string-regexp@npm:5.0.0"
-  checksum: 20daabe197f3cb198ec28546deebcf24b3dbb1a5a269184381b3116d12f0532e06007f4bc8da25669d6a7f8efb68db0758df4cd981f57bc5b57f521a3e12c59e
-  languageName: node
-  linkType: hard
-
 "escodegen@npm:^2.0.0, escodegen@npm:^2.1.0":
   version: 2.1.0
   resolution: "escodegen@npm:2.1.0"
@@ -15576,13 +15562,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"figures@npm:^5.0.0":
-  version: 5.0.0
-  resolution: "figures@npm:5.0.0"
+"figures@npm:^6.1.0":
+  version: 6.1.0
+  resolution: "figures@npm:6.1.0"
   dependencies:
-    escape-string-regexp: ^5.0.0
-    is-unicode-supported: ^1.2.0
-  checksum: e6e8b6d1df2f554d4effae4a5ceff5d796f9449f6d4e912d74dab7d5f25916ecda6c305b9084833157d56485a0c78b37164430ddc5675bcee1330e346710669e
+    is-unicode-supported: ^2.0.0
+  checksum: 35c81239d4fa40b75c2c7c010833b0bc8861c27187e4c9388fca1d9731103ec9989b70ee3b664ef426ddd9abe02ec5f4fd973424aa8c6fd3ea5d3bf57a2d01b4
   languageName: node
   linkType: hard
 
@@ -17094,17 +17079,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ink-select-input@npm:^5.0.0":
-  version: 5.0.0
-  resolution: "ink-select-input@npm:5.0.0"
+"ink-select-input@npm:^6.2.0":
+  version: 6.2.0
+  resolution: "ink-select-input@npm:6.2.0"
   dependencies:
-    arr-rotate: ^1.0.0
-    figures: ^5.0.0
-    lodash.isequal: ^4.5.0
+    figures: ^6.1.0
+    to-rotated: ^1.0.0
   peerDependencies:
-    ink: ^4.0.0
-    react: ^18.0.0
-  checksum: 9e21351f7ae1ad1721eca04038e25afd4b6f85ea0abd51235db2ed6894e209198687924a2ae8aca972571cb0601d735810c462676b7ebfd68ae3cafd0d67613c
+    ink: ">=5.0.0"
+    react: ">=18.0.0"
+  checksum: b02c3deddd9f580513db6ff69a628c42ef623765d70a2246eb0b8c0e6317d72e2c5690cb9dfa44c4858d8c118ca90a8bd0614e7bcff5c566e5b3d1181fcba5f4
   languageName: node
   linkType: hard
 
@@ -17593,7 +17577,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-unicode-supported@npm:^1.2.0, is-unicode-supported@npm:^1.3.0":
+"is-unicode-supported@npm:^1.3.0":
   version: 1.3.0
   resolution: "is-unicode-supported@npm:1.3.0"
   checksum: 20a1fc161afafaf49243551a5ac33b6c4cf0bbcce369fcd8f2951fbdd000c30698ce320de3ee6830497310a8f41880f8066d440aa3eb0a853e2aa4836dd89abc
@@ -26253,6 +26237,13 @@ __metadata:
   dependencies:
     is-number: ^7.0.0
   checksum: f76fa01b3d5be85db6a2a143e24df9f60dd047d151062d0ba3df62953f2f697b16fe5dad9b0ac6191c7efc7b1d9dcaa4b768174b7b29da89d4428e64bc0a20ed
+  languageName: node
+  linkType: hard
+
+"to-rotated@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "to-rotated@npm:1.0.0"
+  checksum: 235d08e8b61b7ec648652ca8ca4f3a35975adf1826255ceb99493331b9e76e93bbd9a11db856e7ad773daf16f1a3f21f372190de60bad9ed3227de4734a61f63
   languageName: node
   linkType: hard
 
