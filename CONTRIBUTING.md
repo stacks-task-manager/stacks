@@ -219,27 +219,7 @@ This ensures `dev` never diverges from what is live in `main`.
 
 ## Development Setup
 
-```bash
-# Clone the repo
-git clone https://github.com/stacks-task-manager/stacks.git
-cd stacks
-
-# Activate Yarn 3 (ships with Node via corepack)
-corepack enable
-
-# Install dependencies and build internal packages
-yarn install
-yarn setup
-
-# Start the full dev environment (app on 3001, server on 3000)
-yarn dev
-```
-
-You will also need a PostgreSQL 15 instance, an SMTP host, and a development
-license key in `packages/server/license.key`. Full prerequisites and the
-list of `.env` files to copy live in
-**[docs/INSTALLATION.md](docs/INSTALLATION.md)** — please use that as the
-canonical setup reference.
+Local environment setup — Node / Yarn versions, the `.env` files to copy, Postgres + SMTP, the development license, and `yarn dev` — is documented end-to-end in **[docs/INSTALLATION.md](docs/INSTALLATION.md)**. Follow it once, then come back here for the contribution workflow.
 
 ---
 
