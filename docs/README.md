@@ -44,6 +44,16 @@ Living under `packages/server/docs/` so they sit next to the code they describe:
 | [Caching system](../packages/server/docs/CACHING.md) | Multi-tenant response cache, invalidation, configuration |
 | [Embedded bundle integrity](../packages/server/docs/EMBEDDED_INTEGRITY.md) | Build-time signing + boot-time verification |
 
+## Web app internals (deep dives)
+
+Living under `packages/app/docs/`, same pattern:
+
+| Doc | What you'll find |
+| --- | --- |
+| [Web app onboarding](../packages/app/docs/ONBOARDING.md) | Stack overview, boot sequence, code layout, worked "add a feature" walkthrough |
+| [Web app architecture](../packages/app/docs/ARCHITECTURE.md) | Routing (HashRouter + background panels), state model, real-time updates, drag-and-drop, theming |
+| [API client](../packages/app/docs/API_CLIENT.md) | The shared Axios instance, date round-tripping, `X-Instance-ID`, error handling |
+
 ## Operations & deployment
 
 | Doc | What you'll find |
