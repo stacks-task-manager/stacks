@@ -80,15 +80,18 @@ This repository is a Yarn workspaces monorepo that ships Stacks as a set of serv
 -   [Docker / production deployment](docs/DOCKER.md)
 -   [Caching system](docs/CACHING.md)
 -   [E2E testing with Playwright](docs/E2E.md)
+-   [Adding Tiptap Pro extensions (optional)](docs/TIPTAP_PRO.md)
 
 ## License
 
-Stacks is dual-licensed:
+Stacks code is dual-licensed:
 
 -   **Personal & open-source use**: [GNU AGPL v3](LICENSE)
 -   **Commercial use**: contact [customers@getstacksapp.com](mailto:customers@getstacksapp.com)
 
-See [NOTICE](NOTICE) for third-party attributions.
+Stacks documentation (this README, `docs/`, and other Markdown in the repo) is licensed under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
+
+See [NOTICE](NOTICE) for the full licensing breakdown and third-party attributions.
 
 ## Contributing
 

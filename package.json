@@ -51,6 +51,10 @@
         "build:db": "yarn workspace @stacks/db run build",
         "build:license": "yarn workspace @stacks/license run build",
         "build:translations": "yarn workspace @stacks/translations run build",
+        "---- LINT / FORMAT ----": "",
+        "format": "prettier --write \"**/*.{ts,tsx,js,jsx,cjs,mjs,json,md,yml,yaml,scss}\"",
+        "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,cjs,mjs,json,md,yml,yaml,scss}\"",
+        "lint": "yarn workspace @stacks/app run lint",
         "---- TEST ----": "",
         "test:server": "yarn workspace @stacks/server run test",
         "test:server:unit": "yarn workspace @stacks/server run test:unit",
@@ -58,13 +62,14 @@
         "test:e2e:ui": "playwright test --ui",
         "test:e2e:headed": "playwright test --headed",
         "---- RELEASE ----": "",
-        "release": "yarn clean && yarn install && yarn build:internal && yarn build:app && yarn build:server && yarn build:email-service && yarn release:structure && yarn release:server && yarn release:app && yarn release:email-service && yarn release:db && yarn release:docker",
+        "release": "yarn clean && yarn install && yarn build:internal && yarn build:app && yarn build:server && yarn build:email-service && yarn release:structure && yarn release:server && yarn release:app && yarn release:email-service && yarn release:db && yarn release:legal && yarn release:docker",
         "release:structure": "mkdir -p releases && mkdir -p releases/server && mkdir -p releases/server/app && mkdir -p releases/email-service && mkdir -p releases/db",
         "release:docker": "cp docker/* releases/ && cp docker/.env.example releases/",
         "release:app": "cp -r packages/app/build/* releases/server/app/",
         "release:server": "cp -R packages/server/dist/* releases/server/ && cp scripts/license_keys/public.pem releases/server/",
         "release:email-service": "cp -R packages/email-service/dist/* releases/email-service/",
         "release:db": "cp -R packages/db/build/. releases/db/",
+        "release:legal": "cp LICENSE NOTICE releases/server/ && cp LICENSE NOTICE releases/email-service/ && cp LICENSE NOTICE releases/db/ && cp LICENSE NOTICE releases/",
         "release:zip": "cd releases && zip -r ../stacks-teams.zip . && cd ..",
         "----- PUBLISH -----": "",
         "publish": "node scripts/publish-release.mjs",
@@ -82,5 +87,8 @@
         "prettier": "^2.5.1",
         "prompts": "^2.4.2"
     },
-    "packageManager": "yarn@3.6.4"
+    "packageManager": "yarn@3.6.4",
+    "engines": {
+        "node": ">=18.0.0"
+    }
 }

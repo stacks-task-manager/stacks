@@ -68,3 +68,30 @@ packages/license/dist/*
 /blob-report/
 /playwright/.cache/
 /playwright.json
+coverage/
+.nyc_output/
+
+# build output (catch-all in addition to per-package paths above)
+**/dist/
+**/build/
+*.tsbuildinfo
+*.tgz
+
+# editor scratch / swap files
+*.bak
+*.swp
+*.swo
+*.tmp
+*~
+
+# direnv / dotenv extras
+.envrc
+.env.local
+.env.*.local
+
+# secrets / keys (defense in depth — no real key should ever sit in the tree)
+license.key
+**/license.key
+*.pem
+!packages/server/public.pem
+!third-party/**/*.pem

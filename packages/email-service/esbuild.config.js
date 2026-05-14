@@ -32,6 +32,16 @@ function loadEnvVars() {
     };
 }
 
+// AGPL preamble injected into the bundle so the license notice survives minification.
+const AGPL_BANNER = `/*!
+ * Stacks email service
+ * Copyright (C) 2024-2026 Cristian Barlutiu
+ *
+ * Licensed under the GNU Affero General Public License v3.0.
+ * See LICENSE or https://www.gnu.org/licenses/agpl-3.0.html
+ * Source: https://github.com/stacks-task-manager/stacks
+ */`;
+
 const buildConfig = {
     entryPoints: ["src/index.ts"],
     bundle: true,
@@ -44,6 +54,8 @@ const buildConfig = {
     sourcemap: false,
     minify: true,
     keepNames: true,
+    legalComments: "inline",
+    banner: { js: AGPL_BANNER },
     logLevel: "info",
     plugins: [],
 };

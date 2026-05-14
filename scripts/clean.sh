@@ -1,4 +1,5 @@
 #!/bin/bash
+# Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 
 # Clean script to remove specified directories and files
 # To add new cleanup targets, simply add them to the arrays below

@@ -42,11 +42,16 @@ This is a one-time step. It ensures that the project maintains clean IP
 ownership, which protects both you and the project — especially important
 if Stacks is ever acquired or relicensed.
 
-When you open your first PR, a bot will automatically ask you to sign.
-You can also sign in advance by posting the following comment on any PR:
+When you open your first PR, the [CLA Assistant](https://github.com/contributor-assistant/github-action)
+bot will leave a comment asking you to sign. To sign, reply with the **exact phrase**:
 
-> I have read the Contributor License Agreement in `.github/CLA.md` and I
-> hereby agree to its terms. My GitHub username is @[YOUR USERNAME].
+> I have read the CLA Document and I hereby sign the CLA
+
+The bot records your signature in `.github/cla-signatures/signatures.json`. If you
+contribute again later, the bot will recognise you and not block the PR. You can
+read the CLA itself at [.github/CLA.md](.github/CLA.md) before signing.
+
+If you ever want the bot to re-check signature status on a PR, comment `recheck`.
 
 ---
 
