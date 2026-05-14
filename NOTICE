@@ -1,0 +1,24 @@
+Stacks
+Copyright (C) 2024-2026 Cristian Barlutiu
+
+This product is dual-licensed:
+
+  - GNU Affero General Public License v3.0 (see LICENSE) for personal and
+    open-source use.
+  - A separate Commercial License is available for use that does not
+    comply with the terms of the AGPL. Contact customers@getstacksapp.com.
+
+----------------------------------------------------------------------
+Third-party components
+----------------------------------------------------------------------
+
+Stacks depends on third-party libraries listed in the various package
+manifests (yarn.lock and each packages/*/package.json). Each is licensed
+under its own terms — generate an SBOM with:
+
+    yarn licenses list
+
+Vendored sources live under third-party/ and retain their upstream
+licenses unchanged. Notable vendored components:
+
+  - third-party/rc-gantt/  —  MIT License (see third-party/rc-gantt/LICENSE)
