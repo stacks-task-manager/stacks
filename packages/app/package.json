@@ -3,7 +3,7 @@
     "version": "1.0.67",
     "homepage": "./",
     "description": "The kanban task manager for everyone",
-    "license": "MIT",
+    "license": "AGPL-3.0-only",
     "sideEffects": true,
     "scripts": {
         "start": "webpack serve --config webpack.config.cjs --mode development",

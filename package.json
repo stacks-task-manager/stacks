@@ -21,8 +21,8 @@
     },
     "description": "",
     "keywords": [],
-    "license": "ISC",
-    "author": "",
+    "license": "AGPL-3.0-only",
+    "author": "Cristian Barlutiu",
     "scripts": {
         "prune:workspaces": "node scripts/prune-nested-workspace-stacks.cjs",
         "postinstall": "yarn prune:workspaces",
