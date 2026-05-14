@@ -48,7 +48,7 @@ export function deepCheck(a: unknown, b: unknown, verbose?: boolean) {
         return false;
     }
 }
-function compFNSelection(compType: ComparaisonTypes) {
+function compFNSelection(compType: ComparaisonTypes, verbose = false) {
     switch (compType) {
         case "SIMPLE":
             return (a: unknown, b: unknown, _verbose?: boolean) =>
@@ -60,9 +60,10 @@ function compFNSelection(compType: ComparaisonTypes) {
             return (a: unknown, b: unknown, verbose?: boolean) =>
                 deepCheck(a, b, verbose);
         default:
-            console.log(
-                "Comparaison type unvailable. Test will always return false"
-            );
+            // dev-only diagnostic — propschecker is a debugging aid, not production code
+            verbose &&
+                // eslint-disable-next-line no-console
+                console.log("Comparison type unavailable. Test will always return false");
             return () => false;
     }
 }
@@ -79,6 +80,12 @@ export function ReactFnCompPropsChecker<T extends Props>(
     const { children, childrenProps, compType = "SIMPLE", verbose } = props;
     const oldPropsRef = React.useRef<T>();
     React.useEffect(() => {
+        // propschecker is a development-only debugging aid; logging is gated on `verbose`.
+        if (!verbose) {
+            oldPropsRef.current = childrenProps;
+            return;
+        }
+        /* eslint-disable no-console */
         const oldProps = oldPropsRef.current;
         if (oldProps === undefined) {
             console.log("First render : ");
@@ -88,7 +95,7 @@ export function ReactFnCompPropsChecker<T extends Props>(
         } else {
             const changedProps: string[] = Object.keys(childrenProps)
                 .filter(k =>
-                    compFNSelection(compType)(
+                    compFNSelection(compType, verbose)(
                         oldProps[k],
                         childrenProps[k],
                         verbose
@@ -104,6 +111,7 @@ export function ReactFnCompPropsChecker<T extends Props>(
                 console.log("No props changed");
             }
         }
+        /* eslint-enable no-console */
         oldPropsRef.current = childrenProps;
     }, [childrenProps, compType, verbose]);
     return children(childrenProps);

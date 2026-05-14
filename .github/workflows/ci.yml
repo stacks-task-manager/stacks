@@ -1,0 +1,133 @@
+name: CI
+
+on:
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main, dev]
+
+concurrency:
+    group: ci-${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    install-and-build:
+        name: Install + build internal packages
+        runs-on: ubuntu-latest
+        timeout-minutes: 20
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Set up Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version-file: .nvmrc
+                  cache: yarn
+
+            - name: Enable corepack (Yarn 3)
+              run: corepack enable
+
+            - name: Install dependencies
+              run: yarn install --immutable
+
+            - name: Build internal packages
+              run: yarn build:internal
+
+            - name: Upload built workspace
+              uses: actions/upload-artifact@v4
+              with:
+                  name: built-workspace
+                  path: |
+                      packages/types/dist/
+                      packages/db/dist/
+                      packages/license/dist/
+                      packages/translations/dist/
+                      yarn.lock
+                  retention-days: 1
+
+    type-check:
+        name: Type-check (${{ matrix.package }})
+        runs-on: ubuntu-latest
+        needs: install-and-build
+        timeout-minutes: 15
+        strategy:
+            fail-fast: false
+            matrix:
+                package:
+                    - "@stacks/types"
+                    - "@stacks/translations"
+                    - "@stacks/license"
+                    - "@stacks/db"
+                    - "@stacks/server"
+                    - "@stacks/email-service"
+                    - "@stacks/app"
+                    - "@stacks/locales-tui"
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Set up Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version-file: .nvmrc
+                  cache: yarn
+
+            - name: Enable corepack
+              run: corepack enable
+
+            - name: Install dependencies
+              run: yarn install --immutable
+
+            - name: Build internal packages
+              run: yarn build:internal
+
+            - name: Type-check ${{ matrix.package }}
+              run: yarn workspace ${{ matrix.package }} run tsc --noEmit
+
+    server-unit-tests:
+        name: Server unit tests
+        runs-on: ubuntu-latest
+        needs: install-and-build
+        timeout-minutes: 15
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Set up Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version-file: .nvmrc
+                  cache: yarn
+
+            - name: Enable corepack
+              run: corepack enable
+
+            - name: Install dependencies
+              run: yarn install --immutable
+
+            - name: Build internal packages
+              run: yarn build:internal
+
+            - name: Run server unit tests
+              run: yarn test:server:unit
+
+    translations-tests:
+        name: Translations tests
+        runs-on: ubuntu-latest
+        needs: install-and-build
+        timeout-minutes: 10
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Set up Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version-file: .nvmrc
+                  cache: yarn
+
+            - name: Enable corepack
+              run: corepack enable
+
+            - name: Install dependencies
+              run: yarn install --immutable
+
+            - name: Run translations tests
+              run: yarn workspace @stacks/translations run test

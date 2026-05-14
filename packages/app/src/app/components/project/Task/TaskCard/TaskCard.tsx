@@ -138,11 +138,9 @@ export const TaskCardComponent: FunctionComponent<TaskCardComponentProps> = prop
         setIsSubtasksVisible(visible);
     }, [taskId]);
 
-    const onDrop = useCallback(async (acceptedFiles: FileWithPath[]) => {
-        console.log("On drop TASK CARD", acceptedFiles);
-
-        // const paths = acceptedFiles.filter(f => f.path != null).map(f => f.path!);
-        // await TasksActions.uploadAttachments(taskId, paths);
+    const onDrop = useCallback(async (_acceptedFiles: FileWithPath[]) => {
+        // Drop-to-attach is wired up in TaskDetails. The card-level drop handler is
+        // a no-op until file-on-card uploads are implemented.
     }, []);
 
     const getFilesFromEvent = async (event: DropEvent) => {

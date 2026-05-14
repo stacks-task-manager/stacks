@@ -33,6 +33,11 @@ COPY server .
 # Remove any existing node_modules and reinstall to ensure compatibility
 RUN rm -rf node_modules && yarn install --production
 
+# AGPL-3.0 — ship LICENSE + NOTICE alongside the binary so operators and end users
+# running this container have on-disk access to the terms and source pointer.
+COPY server/LICENSE /server/LICENSE
+COPY server/NOTICE /server/NOTICE
+
 # Create necessary directories
 RUN mkdir -p /server/uploads /server/previews
 

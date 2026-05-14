@@ -12,6 +12,10 @@ RUN apk add --no-cache postgresql-client
 # Full db/ artifact (package.json, vendor/stacks-types, migrations, …) from `yarn release:db`
 COPY db ./
 
+# AGPL-3.0 — ship LICENSE + NOTICE alongside the binary.
+COPY db/LICENSE /db/LICENSE
+COPY db/NOTICE /db/NOTICE
+
 RUN yarn install --production
 
 # Wait for database to be ready and run migrations
