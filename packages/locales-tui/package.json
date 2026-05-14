@@ -2,6 +2,7 @@
     "name": "@stacks/locales-tui",
     "version": "0.1.0",
     "private": true,
+    "license": "AGPL-3.0-only",
     "type": "module",
     "description": "Terminal UI for managing server/app locale JSON files",
     "scripts": {

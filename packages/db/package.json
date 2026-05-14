@@ -35,8 +35,8 @@
     "postgresql",
     "schemas"
   ],
-  "author": "Stacks Hono Team",
-  "license": "MIT",
+  "author": "Cristian Barlutiu",
+  "license": "AGPL-3.0-only",
   "dependencies": {
     "@stacks/types": "workspace:*",
     "pg": "^8.11.3",

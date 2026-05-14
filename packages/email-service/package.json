@@ -2,7 +2,7 @@
   "name": "@stacks/email-service",
   "version": "1.0.93",
   "type": "commonjs",
-  "license": "ISC",
+  "license": "AGPL-3.0-only",
   "scripts": {
     "build": "tsc --project tsconfig.json",
     "bundle": "yarn pre-bundle && node esbuild.config.js && yarn post-bundle",

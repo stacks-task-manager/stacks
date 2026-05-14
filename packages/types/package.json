@@ -19,8 +19,8 @@
     "build": "tsc && yarn dist",
     "dist": "yarn pack --out stacks-types-v%v.tgz"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Cristian Barlutiu",
+  "license": "AGPL-3.0-only",
   "devDependencies": {
     "@types/react": "^19",
     "typescript": "^5.9.2"

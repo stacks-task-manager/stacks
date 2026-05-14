@@ -2,7 +2,7 @@
     "name": "@stacks/server",
     "version": "1.0.117",
     "type": "commonjs",
-    "license": "ISC",
+    "license": "AGPL-3.0-only",
     "scripts": {
         "build": "tsc --project tsconfig.json && node -e \"const fs=require('fs'),p=require('path');const s=p.join('src','ai','prompts'),d=p.join('dist','ai','prompts');if(fs.existsSync(s)){fs.mkdirSync(p.dirname(d),{recursive:true});fs.cpSync(s,d,{recursive:true});}\"",
         "build:translations": "cd ../translations && yarn install && yarn build",
