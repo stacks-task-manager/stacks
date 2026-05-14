@@ -7352,7 +7352,7 @@ __metadata:
     react-dnd-html5-backend: ^16.0.1
     react-dom: ^18.3.1
     react-dropzone: ^14.3.8
-    react-intersection-observer: ^9.13.1
+    react-intersection-observer: ^10.0.3
     react-leaflet: ^4.2.1
     react-refresh: ^0.14.2
     react-router-dom: ^6.28.0
@@ -23046,16 +23046,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-intersection-observer@npm:^9.13.1":
-  version: 9.16.0
-  resolution: "react-intersection-observer@npm:9.16.0"
+"react-intersection-observer@npm:^10.0.3":
+  version: 10.0.3
+  resolution: "react-intersection-observer@npm:10.0.3"
   peerDependencies:
     react: ^17.0.0 || ^18.0.0 || ^19.0.0
     react-dom: ^17.0.0 || ^18.0.0 || ^19.0.0
   peerDependenciesMeta:
     react-dom:
       optional: true
-  checksum: 2b6357376e5ef48913e47fe2276d5e93cc1c3d3063266fd0361fbcac46f527b50a963206e1647e178236d9384dcae2d2967ce2e99b303f1bb2a95c9f49888ad2
+  checksum: e6186dcb277d827bb890e1ba3abd75202ad9c1eb0baccd22155b1da0dad8493c1a60566cd4b9e6c99a247ca6856e816957d8df24c454247cf01eae00695e1b6f
   languageName: node
   linkType: hard
 
