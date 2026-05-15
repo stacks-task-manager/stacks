@@ -17,7 +17,7 @@ yarn dev:app          # webpack dev server on http://localhost:3001
 yarn dev:app:watch    # same but skips the upfront translations build
 ```
 
-The dev server proxies API calls to the Hono server on `http://localhost:3000`. Run `yarn dev:server` (or `yarn dev` at the root for both) before exercising any feature that touches the backend. The UI you visit is **the server URL** (`http://localhost:3000/#/…`) — the server proxies `/app/*` and `/static/*` back to the webpack dev server. Visiting `:3001` directly bypasses auth and the API.
+The Hono server (port `3000`) is the entrypoint for the UI in dev. It serves the login/auth HTML directly and reverse-proxies `/app/*` and `/static/*` to the webpack dev server on `3001`. Run `yarn dev:server` (or `yarn dev` at the root for both) — visiting `:3001` directly returns the SPA shell without auth, cookies, or the API. The proxy target (`localhost:3001`) is hardcoded in [`packages/server/src/api.ts`](../../packages/server/src/api.ts), so the webpack dev server must run on `3001`.
 
 ## Build
 

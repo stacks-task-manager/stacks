@@ -9,7 +9,7 @@ This guide provides comprehensive instructions for installing Stacks and running
 | **Node.js** | 18.0.0 or higher (20 recommended) |
 | **Yarn** | 3.6.4 — activated via `corepack enable` (ships with Node) |
 | **PostgreSQL** | 15 — running locally or reachable from your machine |
-| **SMTP server** | for outbound email; [MailHog](https://github.com/mailhog/MailHog) or [Mailpit](https://github.com/axllent/mailpit) work great for local testing |
+| **SMTP server** | *(optional)* only needed for outbound email features (password reset, verification). `yarn dev` does **not** start the email worker, so you can run Stacks without configuring SMTP first. [MailHog](https://github.com/mailhog/MailHog) or [Mailpit](https://github.com/axllent/mailpit) work great when you do want it |
 | **OpenAI-compatible API** | *(optional)* for the chat assistant — e.g., [LM Studio](https://lmstudio.ai/) or [llama.cpp](https://github.com/ggerganov/llama.cpp) exposing an OpenAI-compatible endpoint |
 | **Disk / RAM** | 5 GB free disk, 2 GB free RAM minimum |
 
@@ -118,6 +118,8 @@ yarn dev:locales  # Locale management TUI (optional)
 
 Visit **<http://localhost:3000/login>** — this is the API server (port `3000`), which serves the login HTML directly and reverse-proxies `/app/*` and `/static/*` to the Webpack dev server at `3001`. Don't visit `3001` directly; the auth and API routes only exist on the server.
 
+> **Port `3001` is hardcoded.** The server's proxy target is `localhost:3001` (see [`packages/server/src/api.ts`](../packages/server/src/api.ts)). You can change the *server* port via `APP_PORT` in `packages/server/.env` (then visit `http://localhost:<APP_PORT>/login`), but the Webpack dev server must still run on `3001` or the app shell won't load. Free up `3001` rather than reassigning it.
+
 ### 3. Mobile (optional)
 
 `yarn dev:mobile` starts Expo. Scan the QR code with [Expo Go](https://expo.dev/client) on your phone, or press `i` / `a` in the Expo CLI to launch an iOS simulator or Android emulator.
@@ -126,8 +128,8 @@ Visit **<http://localhost:3000/login>** — this is the API server (port `3000`)
 
 | Service | Default port |
 | --- | --- |
-| Web app (Webpack dev server) | `3001` |
-| API server (Hono) | `3000` — also serves the built app in production |
+| Web app (Webpack dev server) | `3001` (hardcoded — the server proxy target in `packages/server/src/api.ts`) |
+| API server (Hono) | `3000` — configurable via `APP_PORT`; also serves the built app in production |
 | Email service preview | `3005` (only when running `yarn workspace @stacks/email-service dev:email`) |
 | PostgreSQL | `5432` (or whatever you configure) |
 

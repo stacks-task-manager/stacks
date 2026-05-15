@@ -30,7 +30,7 @@ At its core, Stacks organizes work into **projects**, and each project contains 
 -   **Node.js** 18+ (20 recommended)
 -   **Yarn** 3.6.4 — enable via `corepack enable` (ships with Node)
 -   **PostgreSQL** 15
--   **SMTP server** for outbound email (MailHog / Mailpit works locally)
+-   *(Optional)* an **SMTP server** for outbound email features like password reset (MailHog / Mailpit works locally — `yarn dev` does not start the email worker, so this isn't needed for first run)
 -   *(Optional)* an OpenAI-compatible API endpoint for the chat assistant (e.g., LM Studio or llama.cpp)
 
 > **Development license required.** The server will `process.exit(1)` on startup unless `packages/server/license.key` exists. Request a free development key at [getstacksapp.com/dev-program](https://getstacksapp.com/dev-program/). The key gates startup only; see [docs/packages/license.md](docs/packages/license.md) for details.
@@ -42,33 +42,38 @@ git clone <repo-url> stacks
 cd stacks
 ```
 
-Activating Yarn 3.6.4
-``` bash
-corepack enable                    
+### Activate Yarn 3.6.4
+
+```bash
+corepack enable
 ```
 
-Building internal packages
+### Install and build internal packages
+
 ```bash
 yarn install
 yarn setup
 ```
 
-Activing env vars
-``` bash
+### Set up env vars
+
+```bash
 cp packages/db/env.example packages/db/.env
 cp packages/server/env.example packages/server/.env
 cp packages/email-service/env.example packages/email-service/.env
 # Edit each .env with your Postgres credentials and secrets.
 ```
 
-Adding your dev license key
+### Add your dev license key
+
 ```bash
 # Drop your development license key into packages/server/
 # (request one at https://getstacksapp.com/dev-program/)
 cp /path/to/license.key packages/server/license.key
 ```
 
-Running Postgres database
+### Run Postgres
+
 ```bash
 # Make sure Postgres is running and reachable with the credentials in
 # packages/db/.env, then create the schema:
@@ -77,18 +82,20 @@ docker run -d --name stacks-postgres \
     -p 5432:5432 postgres:15        # or use an existing Postgres 15
 ```
 
-Applying schema migrations
+### Apply schema migrations
+
 ```bash
 yarn workspace @stacks/db migrate
 ```
 
-Running your servers
+### Run the dev servers
+
 ```bash
 # starts app (3001), server (3000), libs in watch mode
-yarn dev                           
+yarn dev
 ```
 
-Open <http://localhost:3000/login> (this is the API server, which serves and proxies the dev app for you — don't visit 3001 directly). For full setup details — environment variables, Docker, troubleshooting — see [docs/INSTALLATION.md](docs/INSTALLATION.md).
+Open <http://localhost:3000/login> — this is the API server, which serves the login HTML directly and reverse-proxies `/app/*` and `/static/*` to the Webpack dev server on `3001` (don't visit `3001` directly). If you change `APP_PORT`, visit `http://localhost:<APP_PORT>/login`; the `3001` proxy target is hardcoded, so the Webpack dev server must still run on `3001`. For full setup details — environment variables, Docker, troubleshooting — see [docs/INSTALLATION.md](docs/INSTALLATION.md).
 
 ## Structure
 

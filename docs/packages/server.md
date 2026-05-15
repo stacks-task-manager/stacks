@@ -24,7 +24,7 @@ Optional:
 
 - `CORS_ORIGINS` — comma-separated list of allowed origins; if unset, CORS is permissive
 - `REQUIRE_SECRETS=1` — enforce strong secrets outside production
-- AI assistant: `AI_OPENAI_BASE_URL`, `AI_API_KEY`, `AI_MODEL`, `AI_CHAT_ENABLED`, `AI_CHAT_AUTO_REDIRECT`
+- AI assistant: `AI_OPENAI_BASE_URL`, `AI_OPENAI_API_KEY`, `AI_MODEL`, `AI_CHAT_ENABLED`, `AI_CHAT_AUTO_REDIRECT`
 
 ## Development
 
@@ -32,7 +32,7 @@ Optional:
 yarn dev:server   # rebuilds internal libs, then `tsx watch` with --inspect
 ```
 
-The server listens on `APP_PORT` (`3000` by default). The web app's dev server (`yarn dev:app`, port `3001`) proxies API requests to it.
+The server listens on `APP_PORT` (`3000` by default) and is the URL you visit in dev — it serves auth/login HTML directly and reverse-proxies `/app/*` and `/static/*` to the webpack dev server on `3001`. The proxy target is hardcoded to `localhost:3001`, so the app's dev server must run on that port.
 
 ## Importing a workspace from the Desktop Stacks app
 
