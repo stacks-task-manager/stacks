@@ -48,10 +48,11 @@ cd stacks
 corepack enable
 ```
 
-### Install and build internal packages
+### Install dependencies and build internal packages
 
 ```bash
-yarn install
+# `yarn setup` does a clean install and builds the internal packages
+# (types, db, license, translations) that the server and app import.
 yarn setup
 ```
 
@@ -70,7 +71,7 @@ cp packages/server/env.example packages/server/.env
 ### Add your dev license key
 
 ```bash
-# Drop your development license key into packages/server/
+# Save the key you received via email as packages/server/license.key
 # (request one at https://getstacksapp.com/dev-program/)
 cp /path/to/license.key packages/server/license.key
 ```
@@ -83,6 +84,9 @@ cp /path/to/license.key packages/server/license.key
 docker run -d --name stacks-postgres \
     -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=stacks \
     -p 5432:5432 postgres:15        # or use an existing Postgres 15
+# If host port 5432 is already taken (another Postgres, etc.), bind to a
+# free port — e.g. `-p 5433:5432` — and set POSTGRES_PORT=5433 in both
+# packages/db/.env and packages/server/.env so they agree.
 ```
 
 ### Apply schema migrations

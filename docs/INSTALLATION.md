@@ -21,7 +21,7 @@ To obtain a key:
 
 1. Request a free development key at **[getstacksapp.com/dev-program](https://getstacksapp.com/dev-program/)**.
 2. You will receive the key via email.
-3. Paste the contents into `packages/server/license.key` (the file is read from `process.cwd()` at server start — see [docs/packages/license.md](packages/license.md) for the exact lookup logic, payload schema, and failure modes).
+3. Save the key as `packages/server/license.key` — e.g. `cp /path/to/license.key packages/server/license.key` (the file is read from `process.cwd()` at server start — see [docs/packages/license.md](packages/license.md) for the exact lookup logic, payload schema, and failure modes).
 
 The license check gates *server startup only*; it does not phone home at runtime.
 
@@ -31,14 +31,11 @@ The license check gates *server startup only*; it does not phone home at runtime
 # Activate Yarn 3 (ships with Node via corepack)
 corepack enable
 
-# Install workspace dependencies
-yarn install
-
-# Build internal packages (types, db, license, translations)
+# Clean install + build internal packages (types, db, license, translations)
 yarn setup
 ```
 
-`yarn setup` is required before the first `yarn dev` — it compiles the internal packages that the server and app import.
+`yarn setup` is the first-time bootstrap: it cleans any existing build artifacts, installs workspace dependencies, and compiles the internal packages the server and app import. You don't need a separate `yarn install` first — `yarn setup` runs it internally (and a leading `yarn install` would be discarded by the `yarn clean` step inside setup).
 
 ## Setting up environment variables
 
@@ -82,6 +79,8 @@ docker run -d --name stacks-postgres \
     -e POSTGRES_DB=stacks \
     -p 5432:5432 postgres:15
 ```
+
+> If host port 5432 is already in use (another Postgres on your machine, etc.), bind to a free port instead — e.g. `-p 5433:5432` — and set `POSTGRES_PORT=5433` in **both** `packages/db/.env` and `packages/server/.env` so the server and migration tooling agree. The same applies to `packages/email-service/.env` if you set that up.
 
 If you already run Postgres locally (Homebrew, Postgres.app, etc.), just create the database manually:
 
