@@ -1,11 +1,12 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+import type { ReactNode } from "react";
 import { ITask } from "./task.js";
 import { IPerson } from "./people.js";
 import { ITimeLog } from "./timelogs.js";
 
 export interface Event {
     allDay?: boolean | undefined;
-    title?: React.ReactNode | undefined;
+    title?: ReactNode | undefined;
     start?: Date | undefined;
     end?: Date | undefined;
     resource?: any;

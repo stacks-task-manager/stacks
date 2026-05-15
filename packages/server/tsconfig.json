@@ -20,6 +20,7 @@
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "allowSyntheticDefaultImports": true,
+        "resolveJsonModule": true,
         "declaration": false,
         "sourceMap": false
     },

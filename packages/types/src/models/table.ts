@@ -1,4 +1,6 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+import type { ReactNode } from "react";
+
 export enum GROUPING_TYPE {
     UNGROUPED = "ungrouped",
     STACK = "stack",
@@ -38,7 +40,7 @@ export interface ITableColumnBase<T> {
     resizable?: boolean;
     clickable?: boolean;
     help?: string;
-    render?: (row: T) => React.ReactNode | string;
+    render?: (row: T) => ReactNode | string;
 }
 
 export interface ITableColumn extends ITableColumnBase<object> {
