@@ -28,8 +28,18 @@ function replaceAll(haystack, needle, replacement) {
  * "canonical" form (sentinels rewritten back to the runtime normalizer's
  * canonical placeholders) so the runtime can recompute the same hash by
  * normalizing the on-disk bundle.
+ *
+ * Options (all optional; production callers should pass none):
+ *   - privateKeyPath: override the path to the release-signing private key.
+ *   - publicKeyPath: override the path to the matching public key.
+ * Tests use these to point at an ephemeral keypair instead of the production one.
  */
-function integrityPlugin() {
+function integrityPlugin(options = {}) {
+  const privateKeyPath =
+    options.privateKeyPath || path.join(__dirname, '../../scripts/release-signing/private.pem');
+  const publicKeyPath =
+    options.publicKeyPath || path.join(__dirname, '../../scripts/release-signing/public.pem');
+
   return {
     name: 'integrity-plugin',
     setup(build) {
@@ -65,9 +75,6 @@ function integrityPlugin() {
               );
             }
           }
-
-          const privateKeyPath = path.join(__dirname, '../../scripts/release-signing/private.pem');
-          const publicKeyPath = path.join(__dirname, '../../scripts/release-signing/public.pem');
 
           if (!fs.existsSync(privateKeyPath)) {
             console.error('🚨 Release-signing private key not found:', privateKeyPath);

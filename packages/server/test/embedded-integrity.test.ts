@@ -162,13 +162,16 @@ describe("verifyEmbeddedIntegrity", () => {
  *    one byte causes that check to fail.
  */
 describe("integrity build plugin (end-to-end)", () => {
-    const projectRoot = resolve(__dirname, "..", "..", "..");
-    const publicKeyPath = join(projectRoot, "scripts", "license_keys", "public.pem");
     const entryPath = resolve(__dirname, "..", "src", "embedded-integrity.ts");
 
     /**
      * Run esbuild + the integrity plugin against the real `src/embedded-integrity.ts` source
      * with the same settings the production `bundle` script uses, into an isolated tmp dir.
+     *
+     * The plugin's default key path points at `scripts/release-signing/private.pem`, which is
+     * (a) absent in CI checkouts and (b) passphrase-encrypted in maintainer checkouts. To keep
+     * these tests hermetic, we generate an ephemeral unencrypted keypair per fixture and pass
+     * its paths to the plugin instead of using the production keys.
      */
     async function buildIntegrityFixture(): Promise<{
         bundlePath: string;
@@ -179,6 +182,16 @@ describe("integrity build plugin (end-to-end)", () => {
     }> {
         const outDir = mkdtempSync(join(tmpdir(), "stacks-integ-build-"));
         const bundlePath = join(outDir, "server.js");
+
+        const { publicKey, privateKey } = crypto.generateKeyPairSync("rsa", {
+            modulusLength: 2048,
+            publicKeyEncoding: { type: "spki", format: "pem" },
+            privateKeyEncoding: { type: "pkcs8", format: "pem" },
+        });
+        const privateKeyPath = join(outDir, "private.pem");
+        const publicKeyPath = join(outDir, "public.pem");
+        writeFileSync(privateKeyPath, privateKey as string, "utf8");
+        writeFileSync(publicKeyPath, publicKey as string, "utf8");
 
         await esbuild.build({
             entryPoints: [entryPath],
@@ -192,7 +205,7 @@ describe("integrity build plugin (end-to-end)", () => {
             minify: true,
             keepNames: true,
             logLevel: "silent",
-            plugins: [integrityPlugin()],
+            plugins: [integrityPlugin({ privateKeyPath, publicKeyPath })],
         });
 
         return {
