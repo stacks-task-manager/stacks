@@ -1,12 +1,36 @@
 Stacks
 Copyright (C) 2024-2026 Cristian Barlutiu
 
-This product is dual-licensed:
+----------------------------------------------------------------------
+Code
+----------------------------------------------------------------------
+
+All source code in this repository — including TypeScript / JavaScript /
+shell scripts, the contents of all packages/ directories, scripts/,
+configuration, build tooling, and HTML / CSS / SCSS / template assets
+authored as part of Stacks — is dual-licensed:
 
   - GNU Affero General Public License v3.0 (see LICENSE) for personal and
     open-source use.
   - A separate Commercial License is available for use that does not
     comply with the terms of the AGPL. Contact customers@getstacksapp.com.
+
+----------------------------------------------------------------------
+Documentation
+----------------------------------------------------------------------
+
+Documentation in this repository — README.md, CONTRIBUTING.md,
+SECURITY.md, CODE_OF_CONDUCT.md, the contents of docs/, and any other
+top-level Markdown / image / diagram authored by the maintainer for
+explanatory purposes — is licensed under the
+Creative Commons Attribution-ShareAlike 4.0 International License
+(CC BY-SA 4.0):
+
+    https://creativecommons.org/licenses/by-sa/4.0/
+
+You may share and adapt the documentation, including commercially,
+provided you give appropriate credit and license your derivative
+documentation under the same terms.
 
 ----------------------------------------------------------------------
 Third-party components

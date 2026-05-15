@@ -19,6 +19,10 @@ COPY email-service/ .
 # Remove any existing node_modules and reinstall to ensure compatibility
 RUN rm -rf node_modules && yarn install --production
 
+# AGPL-3.0 — ship LICENSE + NOTICE alongside the binary.
+COPY email-service/LICENSE /email-service/LICENSE
+COPY email-service/NOTICE /email-service/NOTICE
+
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
     CMD node -e "process.exit(0)"

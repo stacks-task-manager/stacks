@@ -34,24 +34,23 @@ export interface IMessageDialog extends IDialogOptionsBase {
     checkboxLabel?: string;
 }
 
-const showSaveDialog = async (options: ISaveDialog, attach?: boolean): Promise<IElectronSaveDialog> => {
-    console.log("showSaveDialog MISSING");
+// Electron-style native dialogs are only available in the desktop build. In the
+// browser these are stubs that resolve to "canceled" so callers don't hang.
+const showSaveDialog = async (_options: ISaveDialog, _attach?: boolean): Promise<IElectronSaveDialog> => {
     return Promise.resolve({
         filePath: "",
         canceled: true,
     });
 };
 
-const showOpenDialog = async (options: IOpenDialog, attach?: boolean) => {
-    console.log("showOpenDialog MISSING");
+const showOpenDialog = async (_options: IOpenDialog, _attach?: boolean) => {
     return Promise.resolve({
         filePaths: [],
         canceled: true,
     });
 };
 
-const showMessageBox = async (options: IMessageDialog, attach?: boolean): Promise<IElectronMessageBox> => {
-    console.log("showMessageBox MISSING");
+const showMessageBox = async (_options: IMessageDialog, _attach?: boolean): Promise<IElectronMessageBox> => {
     return Promise.resolve({
         response: 0,
         checkboxChecked: false,

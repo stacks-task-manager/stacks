@@ -33,6 +33,7 @@ import boot from "./routes/boot";
 import reminders from "./routes/reminders";
 import roles from "./routes/roles";
 import exportRoute from "./routes/export";
+import info from "./routes/info";
 
 /**
  * Register API routes with conditional static file serving
@@ -96,6 +97,10 @@ export const registerApiRoutes = (app: Hono) => {
 
     // Google OAuth routes (no auth required for some endpoints)
     app.route("/api/google", googleAuth);
+
+    // Public license / source disclosure (AGPL §13). Mounted before requireAuth so
+    // remote users — including unauthenticated ones — can discover the source URL.
+    app.route("/api/info", info);
 
     app.use("/api/*", requireAuth); // all routes below this will require authentication
     app.use("/api/*", withRequestContext); // set up request context for authenticated routes
