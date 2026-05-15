@@ -16,17 +16,11 @@ attachment: /a/attachmentId
 person:     /e/personId
 company:    /c/companyId
 */
-export const share = (route: string) => {
-    console.log("MISSING SHARING SYSTEM");
-    // if (currentWorkspace) {
-    //     const start = currentWorkspace.id.slice(0, 2);
-    //     const end = currentWorkspace.id.slice(-2);
-
-    //     navigator.clipboard.writeText(`stacks://${start + end}/${route}`);
-    //     Toast.show("Link copied to your clipboard", "map-marker");
-    // } else {
-    //     Toast.show("ERROR", "map-marker");
-    // }
+// Sharing-by-deep-link is not implemented yet. See [follow-up needed].
+// When implemented, this should resolve the current workspace, build a
+// `stacks://...` URL, copy to clipboard, and surface a toast.
+export const share = (_route: string): void => {
+    // intentionally no-op
 };
 
 export const urlDecoder = async (url: string) => {

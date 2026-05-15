@@ -34,6 +34,23 @@ function loadEnvVars() {
     };
 }
 
+// AGPL preamble injected into the bundle so the license notice survives minification
+// (esbuild's default minifier strips comments, including per-file headers). The banner
+// is a comment block at the very top of the output file.
+const AGPL_BANNER = `/*!
+ * Stacks — local-first project management
+ * Copyright (C) 2024-2026 Cristian Barlutiu
+ *
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Affero General Public License v3.0 as published by the
+ * Free Software Foundation. See LICENSE in the repository root or
+ * https://www.gnu.org/licenses/agpl-3.0.html
+ *
+ * Source: https://github.com/stacks-task-manager/stacks
+ *
+ * A separate commercial license is available — contact customers@getstacksapp.com.
+ */`;
+
 const buildConfig = {
     entryPoints: ["src/index.ts"],
     bundle: true,
@@ -46,6 +63,10 @@ const buildConfig = {
     sourcemap: false,
     minify: true,
     keepNames: true,
+    // Preserve "legal" comments (anything matching @license, @preserve, /*! ...) from
+    // bundled source files so per-file copyright headers don't disappear in the output.
+    legalComments: "inline",
+    banner: { js: AGPL_BANNER },
     logLevel: "info",
     plugins: [],
 };

@@ -65,13 +65,9 @@ const TasksPure: FunctionComponent<ITasksProps> = ({ tasks, stackId, hasBackgrou
         }
     });
 
-    useSubscribe("task:created", ({ newTaskId }) => {
-        console.log("TASKL CREATED EVENT TRIGGERED: task:created");
-
-        // const stack = getStack(stackId);
-        // if (stack && stack.tasks.includes(newTaskId)) {
-        //     StacksActions.orderTasks(stackId, stack.sorting);
-        // }
+    useSubscribe("task:created", ({ newTaskId: _newTaskId }) => {
+        // Auto-re-ordering on remote task creation is intentionally a no-op for now;
+        // tasks are added via the normal action flow which already handles sorting.
     });
 
     const memoizedTasks = useMemo(() => {

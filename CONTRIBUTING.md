@@ -42,11 +42,16 @@ This is a one-time step. It ensures that the project maintains clean IP
 ownership, which protects both you and the project — especially important
 if Stacks is ever acquired or relicensed.
 
-When you open your first PR, a bot will automatically ask you to sign.
-You can also sign in advance by posting the following comment on any PR:
+When you open your first PR, the [CLA Assistant](https://github.com/contributor-assistant/github-action)
+bot will leave a comment asking you to sign. To sign, reply with the **exact phrase**:
 
-> I have read the Contributor License Agreement in `.github/CLA.md` and I
-> hereby agree to its terms. My GitHub username is @[YOUR USERNAME].
+> I have read the CLA Document and I hereby sign the CLA
+
+The bot records your signature in `.github/cla-signatures/signatures.json`. If you
+contribute again later, the bot will recognise you and not block the PR. You can
+read the CLA itself at [.github/CLA.md](.github/CLA.md) before signing.
+
+If you ever want the bot to re-check signature status on a PR, comment `recheck`.
 
 ---
 
@@ -214,27 +219,7 @@ This ensures `dev` never diverges from what is live in `main`.
 
 ## Development Setup
 
-```bash
-# Clone the repo
-git clone https://github.com/stacks-task-manager/stacks.git
-cd stacks
-
-# Activate Yarn 3 (ships with Node via corepack)
-corepack enable
-
-# Install dependencies and build internal packages
-yarn install
-yarn setup
-
-# Start the full dev environment (app on 3001, server on 3000)
-yarn dev
-```
-
-You will also need a PostgreSQL 15 instance, an SMTP host, and a development
-license key in `packages/server/license.key`. Full prerequisites and the
-list of `.env` files to copy live in
-**[docs/INSTALLATION.md](docs/INSTALLATION.md)** — please use that as the
-canonical setup reference.
+Local environment setup — Node / Yarn versions, the `.env` files to copy, Postgres + SMTP, the development license, and `yarn dev` — is documented end-to-end in **[docs/INSTALLATION.md](docs/INSTALLATION.md)**. Follow it once, then come back here for the contribution workflow.
 
 ---
 

@@ -375,9 +375,9 @@ const Task: FunctionComponent<ITaskProps> = React.memo(
             onOpenParent(task.parent);
         };
 
-        const handleFilesDrop = (files: string[]) => {
-            // TasksActions.uploadAttachments(task.id, files);
-            console.log("THIS IS NOT YET IMPLEMENTED handleFilesDrop in TaskDetails");
+        const handleFilesDrop = (_files: string[]) => {
+            // TasksActions.uploadAttachments(task.id, _files);
+            // File-drop wiring on the details panel is still pending.
         };
 
         const handleSelectParentTask = (parentTaskId: string) => {

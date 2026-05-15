@@ -150,13 +150,11 @@ const SidebarBody = () => {
 
 const SidebarFooter = () => {
     const timers = RecordsStore.use(state => state.timers, shallowEqual);
-    if (Object.keys(timers).length === 0) return null;
     return (
         <Footer>
             {Object.keys(timers).map(taskId => (
                 <TimeTracker key={taskId} taskId={taskId} detailed />
             ))}
-            {/* {timer != null && timer !== "undefined" ? <TimeTracker taskId={timer} detailed /> : null} */}
         </Footer>
     );
 };

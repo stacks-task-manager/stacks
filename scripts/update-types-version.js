@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 
 /**
  * Bump the patch version of @stacks/types.
