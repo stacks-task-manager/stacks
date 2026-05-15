@@ -40,31 +40,49 @@ At its core, Stacks organizes work into **projects**, and each project contains 
 ```bash
 git clone <repo-url> stacks
 cd stacks
+```
 
-# activates Yarn 3.6.4
+Activating Yarn 3.6.4
+``` bash
 corepack enable                    
-yarn install
-# builds internal packages
-yarn setup
+```
 
+Building internal packages
+```bash
+yarn install
+yarn setup
+```
+
+Activing env vars
+``` bash
 cp packages/db/env.example packages/db/.env
 cp packages/server/env.example packages/server/.env
 cp packages/email-service/env.example packages/email-service/.env
 # Edit each .env with your Postgres credentials and secrets.
+```
 
+Adding your dev license key
+```bash
 # Drop your development license key into packages/server/
 # (request one at https://getstacksapp.com/dev-program/)
 cp /path/to/license.key packages/server/license.key
 
+Running Postgres database
+```bash
 # Make sure Postgres is running and reachable with the credentials in
 # packages/db/.env, then create the schema:
 docker run -d --name stacks-postgres \
     -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=stacks \
     -p 5432:5432 postgres:15        # or use an existing Postgres 15
+```
 
-# applies schema migrations
+Applying schema migrations
+```bash
 yarn workspace @stacks/db migrate
+```
 
+Running your servers
+```bash
 # starts app (3001), server (3000), libs in watch mode
 yarn dev                           
 ```
