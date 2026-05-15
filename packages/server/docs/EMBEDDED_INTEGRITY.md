@@ -2,6 +2,34 @@
 
 The production Node bundle can include an embedded SHA-256 hash and RSA signature (see `esbuild-integrity-plugin.js` and `src/embedded-integrity.ts`).
 
+## Two keypairs, two jobs — don't conflate them
+
+Stacks uses **two independent RSA keypairs**:
+
+| Keypair | Used for | Public key location | Private key holder |
+| --- | --- | --- | --- |
+| **License-verify** | Decrypting + verifying `license.key` at server boot ([`@stacks/license`](../../license/src/index.ts)) | [`packages/server/public.pem`](../public.pem) — committed to the repo and copied into `releases/server/public.pem` by `yarn release:server` | The maintainer (only). Used to sign each `license.key` distributed via [getstacksapp.com/dev-program](https://getstacksapp.com/dev-program/). |
+| **Release-signing** | Signing the built `releases/server.js` bundle so the server can verify it hasn't been tampered with at boot | Embedded **into the bundle** at build time by the esbuild integrity plugin (no shipped file) | Whoever cuts a release (you, CI, a fork maintainer). See [`scripts/release-signing/`](../../../scripts/release-signing/). |
+
+These keys are deliberately separate:
+
+- The license-verify public key is part of the AGPL-distributed source so anyone can verify a maintainer-issued license file. The matching private key never leaves the maintainer's environment.
+- The release-signing keypair is **per-release-engineer**, never centralized. Each build embeds its own public key. Compromise of one release-signing key has zero effect on license issuance, and vice versa.
+
+> **Historical note:** before May 2026 the folder was called `scripts/license_keys/`, the `release:server` step copied the bundle-signing public key into `releases/server/public.pem`, and `scripts/sign-and-verify.js` hardcoded the passphrase. All three were tidied up so the two jobs no longer share material.
+
+## Generating a release-signing keypair
+
+Only needed if you build production bundles (`yarn build:server` / `yarn release`). Contributors running `yarn dev` skip the integrity check entirely.
+
+```bash
+./scripts/release-signing/generate-keys.sh
+export RELEASE_SIGNING_PASSPHRASE='<the passphrase you just set>'
+yarn release    # or yarn build:server
+```
+
+See [`scripts/release-signing/README.md`](../../../scripts/release-signing/README.md) for the full lifecycle (generation, rotation, what each consumer of the key does).
+
 ## Behavior
 
 | Condition | Verification |

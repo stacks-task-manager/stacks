@@ -66,23 +66,30 @@ function integrityPlugin() {
             }
           }
 
-          const privateKeyPath = path.join(__dirname, '../../scripts/license_keys/private.pem');
-          const publicKeyPath = path.join(__dirname, '../../scripts/license_keys/public.pem');
+          const privateKeyPath = path.join(__dirname, '../../scripts/release-signing/private.pem');
+          const publicKeyPath = path.join(__dirname, '../../scripts/release-signing/public.pem');
 
           if (!fs.existsSync(privateKeyPath)) {
-            console.error('🚨 Private key not found:', privateKeyPath);
-            console.error('🚨 Run the key generation script first');
+            console.error('🚨 Release-signing private key not found:', privateKeyPath);
+            console.error('🚨 Run scripts/release-signing/generate-keys.sh to create one.');
             return;
           }
 
           if (!fs.existsSync(publicKeyPath)) {
-            console.error('🚨 Public key not found:', publicKeyPath);
-            console.error('🚨 Run the key generation script first');
+            console.error('🚨 Release-signing public key not found:', publicKeyPath);
+            console.error('🚨 Run scripts/release-signing/generate-keys.sh to create one.');
             return;
           }
 
           const privateKey = fs.readFileSync(privateKeyPath, 'utf8');
           const publicKey = fs.readFileSync(publicKeyPath, 'utf8');
+
+          // Honour RELEASE_SIGNING_PASSPHRASE for encrypted keys. If unset, the key
+          // is assumed to be unencrypted and `sign.sign(privateKey, ...)` runs as before.
+          const signingPassphrase = process.env.RELEASE_SIGNING_PASSPHRASE;
+          const signingKey = signingPassphrase
+            ? { key: privateKey, passphrase: signingPassphrase }
+            : privateKey;
 
           // The PEM has real newlines. The sentinel sits inside a JS string literal
           // (`var xa="__INTEGRITY_EMBED_PUB__"`), so the substitution must be valid JS.
@@ -113,7 +120,7 @@ function integrityPlugin() {
 
           const sign = crypto.createSign('RSA-SHA256');
           sign.update(bundleHash);
-          const signature = sign.sign(privateKey, 'hex');
+          const signature = sign.sign(signingKey, 'hex');
 
           // Embed actual hash/signature into the bundle (replace-all is defensive against
           // esbuild ever emitting more than one occurrence of a sentinel).

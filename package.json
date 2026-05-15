@@ -66,7 +66,7 @@
         "release:structure": "mkdir -p releases && mkdir -p releases/server && mkdir -p releases/server/app && mkdir -p releases/email-service && mkdir -p releases/db",
         "release:docker": "cp docker/* releases/ && cp docker/.env.example releases/",
         "release:app": "cp -r packages/app/build/* releases/server/app/",
-        "release:server": "cp -R packages/server/dist/* releases/server/ && cp scripts/license_keys/public.pem releases/server/",
+        "release:server": "cp -R packages/server/dist/* releases/server/ && cp packages/server/public.pem releases/server/",
         "release:email-service": "cp -R packages/email-service/dist/* releases/email-service/",
         "release:db": "cp -R packages/db/build/. releases/db/",
         "release:legal": "cp LICENSE NOTICE releases/server/ && cp LICENSE NOTICE releases/email-service/ && cp LICENSE NOTICE releases/db/ && cp LICENSE NOTICE releases/",

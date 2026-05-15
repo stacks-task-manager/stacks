@@ -7,8 +7,19 @@ const path = require("path");
 const BUNDLE_PATH = path.join(__dirname, "../releases/server.js");
 const HASH_FILE = path.join(__dirname, "../releases/server.hash");
 const SIGNATURE_FILE = path.join(__dirname, "../releases/server.sig");
-const PRIVATE_KEY_PATH = path.join(__dirname, "license_keys/private.pem");
-const PUBLIC_KEY_PATH = path.join(__dirname, "license_keys/public.pem");
+const PRIVATE_KEY_PATH = path.join(__dirname, "release-signing/private.pem");
+const PUBLIC_KEY_PATH = path.join(__dirname, "release-signing/public.pem");
+
+// The passphrase that unlocks PRIVATE_KEY_PATH. Must be provided by the release
+// engineer — never commit a value here. See scripts/release-signing/README.md.
+const SIGNING_PASSPHRASE = process.env.RELEASE_SIGNING_PASSPHRASE;
+if (!SIGNING_PASSPHRASE) {
+    console.error(
+        "❌ RELEASE_SIGNING_PASSPHRASE is not set. Export the passphrase that " +
+            "unlocks scripts/release-signing/private.pem before running this script."
+    );
+    process.exit(1);
+}
 
 /**
  * Generate SHA-256 hash of the bundle
@@ -28,8 +39,7 @@ function signHash(hash, privateKeyPath) {
     return sign.sign(
         {
             key: privateKey,
-            passphrase:
-                "***REDACTED-LEAKED-PASSPHRASE***",
+            passphrase: SIGNING_PASSPHRASE,
         },
         "hex"
     );
