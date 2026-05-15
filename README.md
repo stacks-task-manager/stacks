@@ -58,10 +58,13 @@ yarn setup
 ### Set up env vars
 
 ```bash
-cp packages/db/env.example packages/db/.env
+# Required for first run
+cp packages/db/env.example     packages/db/.env
 cp packages/server/env.example packages/server/.env
-cp packages/email-service/env.example packages/email-service/.env
 # Edit each .env with your Postgres credentials and secrets.
+
+# Optional — only if you want outbound email features (password reset, etc.)
+# cp packages/email-service/env.example packages/email-service/.env
 ```
 
 ### Add your dev license key

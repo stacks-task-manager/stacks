@@ -2,7 +2,7 @@
 
 A getting-started guide for new contributors landing in `packages/app`. The goal is to get you from a fresh clone to a productive first PR without having to read the whole codebase first.
 
-> Local environment setup (Node, Yarn, Postgres, license, the `.env` files) is in [`docs/INSTALLATION.md`](../../../docs/INSTALLATION.md). This page assumes you can already run `yarn dev` from the repo root and reach `http://localhost:3000/login`.
+> Local environment setup (Node, Yarn, Postgres, license, the `.env` files) is in [`docs/INSTALLATION.md`](../../../docs/INSTALLATION.md). This page assumes you can already run `yarn dev` from the repo root and reach `http://localhost:3000/login`. URLs below use the default `APP_PORT=3000`; if you set a different `APP_PORT` in `packages/server/.env`, substitute that port everywhere — see [INSTALLATION.md](../../../docs/INSTALLATION.md#2-open-the-app).
 
 ## 1. Stack in one paragraph
 

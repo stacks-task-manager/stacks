@@ -1,6 +1,6 @@
 # E2E testing with Playwright
 
-End-to-end tests live at `playwright/` (repo root) and are driven by [Playwright](https://playwright.dev/). They exercise the running web app at `http://localhost:3000` through Chrome.
+End-to-end tests live at `playwright/` (repo root) and are driven by [Playwright](https://playwright.dev/). They exercise the running web app at `http://localhost:3000` through Chrome. The base URL assumes the default `APP_PORT=3000`; if you've changed it in `packages/server/.env` you'll need to override `webServer.url` and the test baseURL to match (see [INSTALLATION.md](INSTALLATION.md#2-open-the-app)).
 
 ## Setup
 

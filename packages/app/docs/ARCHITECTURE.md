@@ -26,7 +26,7 @@ A reference for *how* `@stacks/app` is wired together. Read [ONBOARDING.md](ONBO
 
 ## Routing
 
-The route table is `MainAppRoutes` inside [`App.tsx`](../src/app/App.tsx). The router uses `HashRouter` so the live URL is `http://localhost:3000/#/<path>`.
+The route table is `MainAppRoutes` inside [`App.tsx`](../src/app/App.tsx). The router uses `HashRouter` so the live URL is `http://localhost:3000/#/<path>` (substitute your `APP_PORT` if you changed it — see [INSTALLATION.md](../../../docs/INSTALLATION.md#2-open-the-app)).
 
 Top-level routes (paraphrased — see `App.tsx` for the truth):
 

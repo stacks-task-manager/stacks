@@ -42,22 +42,33 @@ yarn setup
 
 ## Setting up environment variables
 
-Most packages have their own `.env` file. Copy the examples and edit:
+Most packages have their own `.env` file. For first run you only need the db and server envs — copy the examples and edit:
 
 ```bash
-# From the root of the project
-cp packages/db/env.example          packages/db/.env
-cp packages/server/env.example      packages/server/.env
-cp packages/email-service/env.example packages/email-service/.env
+# From the root of the project — required for first run
+cp packages/db/env.example     packages/db/.env
+cp packages/server/env.example packages/server/.env
 ```
 
-Customize each file with your local Postgres credentials, an SMTP host, and secrets:
+Customize each with your local Postgres credentials and secrets:
 
 - `packages/db/.env` — `POSTGRES_HOST`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`, `POSTGRES_PORT`
 - `packages/server/.env` — `APP_PORT`, `COOKIE_SECRET`, `JWT_SECRET`, CORS origins, optional `AI_OPENAI_BASE_URL` / `AI_OPENAI_API_KEY` / `AI_MODEL`
-- `packages/email-service/.env` — `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_FROM_EMAIL`, `EMAIL_PROCESS_INTERVAL`
 
-Keep the `POSTGRES_*` values consistent across all three `.env` files — the server, the email service, and the migration tooling all read independently and must agree.
+Keep the `POSTGRES_*` values consistent across every `.env` that has them — the server, the migration tooling, and (if you set it up) the email service all read independently and must agree.
+
+### Optional `.env` files
+
+- **`packages/email-service/.env`** — only needed if you want outbound email features (password reset, verification). `yarn dev` does **not** start the email worker, so you can skip this for first run. When you do want it:
+
+    ```bash
+    cp packages/email-service/env.example packages/email-service/.env
+    # SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD, SMTP_FROM_EMAIL, EMAIL_PROCESS_INTERVAL
+    ```
+
+    The defaults in `env.example` point at `smtp.example.com:587` — the worker will idle until you replace them. See the [local SMTP capture](#setting-up-the-database) section below for a Mailpit recipe.
+
+- **`packages/app/.env`** — there is no checked-in `env.example`; create it manually only if you need to override the Webpack dev server defaults (e.g. `BROWSER=none`, `GENERATE_SOURCEMAP=false`). Do **not** change `PORT` — the server's proxy target is hardcoded to `3001`. Full key list in [`docs/packages/app.md`](packages/app.md#environment).
 
 ## Setting up the database
 
@@ -157,5 +168,6 @@ All commands run from the repo root with `yarn <script>`:
 - **`yarn` is not found / wrong version** — run `corepack enable`. Confirm `yarn -v` reports `3.6.4`.
 - **`yarn dev` fails with missing types from `@stacks/db` or `@stacks/types`** — you skipped `yarn setup`. Run it once.
 - **Postgres connection refused** — verify the credentials in `packages/db/.env` and that Postgres is running on the configured host/port. If another Postgres is already bound to `5432`, change `POSTGRES_PORT` in all three `.env` files (db, server, email-service) and re-run `yarn workspace @stacks/db migrate`.
-- **`EADDRINUSE` on port 3000 or 3001** — another process owns the port. Either stop it, or change the port: set `APP_PORT` in `packages/server/.env` for the API server, or `PORT` in `packages/app/.env` for the Webpack dev server. If you change `APP_PORT`, the app you visit moves too (e.g. `http://localhost:3010/login`). The server → app proxy target (`localhost:3001`) is currently hardcoded in `packages/server/src/api.ts`, so prefer changing `APP_PORT` over `PORT` if you only have one conflict.
+- **`EADDRINUSE` on port 3001** — the Webpack dev server port is **hardcoded** as the server's proxy target (`packages/server/src/api.ts`). Reassigning `PORT` in `packages/app/.env` will break the proxy. Find and stop whatever else is on `3001` (`lsof -i :3001` on macOS/Linux) rather than changing the app's port.
+- **`EADDRINUSE` on port 3000** — another process owns the API server port. Either stop it, or set `APP_PORT` in `packages/server/.env` (e.g. `APP_PORT=3010`); then visit `http://localhost:3010/login`. Port `3001` must still be free for the Webpack dev server.
 - **Tables missing / `relation "users" does not exist`** — run `yarn workspace @stacks/db migrate`. The first time after creating the database is the most common moment to forget.
