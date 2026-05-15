@@ -41,12 +41,14 @@ At its core, Stacks organizes work into **projects**, and each project contains 
 git clone <repo-url> stacks
 cd stacks
 
-corepack enable                    # activates Yarn 3.6.4
+# activates Yarn 3.6.4
+corepack enable                    
 yarn install
-yarn setup                         # builds internal packages
+# builds internal packages
+yarn setup
 
-cp packages/db/env.example          packages/db/.env
-cp packages/server/env.example      packages/server/.env
+cp packages/db/env.example packages/db/.env
+cp packages/server/env.example packages/server/.env
 cp packages/email-service/env.example packages/email-service/.env
 # Edit each .env with your Postgres credentials and secrets.
 
@@ -59,9 +61,12 @@ cp /path/to/license.key packages/server/license.key
 docker run -d --name stacks-postgres \
     -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=stacks \
     -p 5432:5432 postgres:15        # or use an existing Postgres 15
-yarn workspace @stacks/db migrate  # applies schema migrations
 
-yarn dev                           # starts app (3001), server (3000), libs in watch mode
+# applies schema migrations
+yarn workspace @stacks/db migrate
+
+# starts app (3001), server (3000), libs in watch mode
+yarn dev                           
 ```
 
 Open <http://localhost:3000/login> (this is the API server, which serves and proxies the dev app for you — don't visit 3001 directly). For full setup details — environment variables, Docker, troubleshooting — see [docs/INSTALLATION.md](docs/INSTALLATION.md).
