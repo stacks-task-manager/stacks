@@ -66,6 +66,7 @@ Adding your dev license key
 # Drop your development license key into packages/server/
 # (request one at https://getstacksapp.com/dev-program/)
 cp /path/to/license.key packages/server/license.key
+```
 
 Running Postgres database
 ```bash
