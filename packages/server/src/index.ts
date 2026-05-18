@@ -58,7 +58,10 @@ import register from "./routes/register";
 import { registerAiChatWebSocketHandlers } from "./ai/wsBridge";
 import { registerSocket } from "./routes/socket";
 import { seedDatabase } from "./seed/index.js";
+import { seedTenants } from "./seed/tenants.js";
 import { initializeLicense as initLicense } from "@stacks/license";
+
+const LICENSE_EXPIRY_CHECK_INTERVAL_MS = 24 * 60 * 60 * 1000;
 import { translations } from "./middleware/translations";
 import { appPackageVersion, serverPackageVersion } from "./packageVersions";
 
@@ -130,6 +133,15 @@ async function bootstrap() {
         // call getLicense() synchronously, which hard-exits if the cache is empty.
         await initLicense();
         await seedDatabase();
+
+        // Long-running processes would otherwise never re-check the cached
+        // expiry; sweep tenants every 24h so naturally-expired licenses get
+        // disabled without a restart.
+        setInterval(() => {
+            seedTenants().catch(error => {
+                console.error("❌ Scheduled license expiry sweep failed:", error);
+            });
+        }, LICENSE_EXPIRY_CHECK_INTERVAL_MS).unref();
     }
 
     console.log(`🚀 Stacks server is running on port: ${port}`);
