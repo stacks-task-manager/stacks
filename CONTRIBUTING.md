@@ -163,7 +163,11 @@ branches. Never push directly to `main`.
    per PR. Large, unfocused PRs are hard to review and slow to merge.
 
 6. **Test your changes** before submitting. Make sure existing tests pass and
-   add new tests where appropriate.
+   add new tests where appropriate. **Update the relevant documentation in the
+   same PR** — if you change behavior described in `README.md`, `docs/`, a
+   package README, or any `docs/`/`*.md` next to the code you touched, keep
+   those files in sync. Docs-only PRs are welcome; behavior-only PRs that leave
+   docs stale are not.
 
 7. **Commit your changes** following the
    [commit message guidelines](#commit-message-guidelines) below.
