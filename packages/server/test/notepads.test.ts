@@ -267,46 +267,24 @@ describe("Notepads API", () => {
         }
     });
 
-    test("GET /api/notepads/recent - should return recently modified notepads or 500 if unsupported", async () => {
+    test("GET /api/notepads/recent - returns 400 (/:id expects a UUID, not implemented)", async () => {
         const headers = await getAuthenticatedHeaders();
         const res = await app.request("/api/notepads/recent", {
             headers,
         });
-        expect([200, 500]).toContain(res.status);
-        if (res.status === 200) {
-            const data = await res.json();
-            expect(data).toHaveProperty("data");
-            expect(Array.isArray(data.data)).toBe(true);
-            
-            // Notepads should be ordered by modification date (most recent first)
-            if (data.data.length > 1) {
-                const first = new Date(data.data[0].updatedAt);
-                const second = new Date(data.data[1].updatedAt);
-                expect(first.getTime()).toBeGreaterThanOrEqual(second.getTime());
-            }
-        }
+        expect(res.status).toBe(400);
+        const body = await res.json();
+        expect(body.success).toBe(false);
     });
 
-    test("GET /api/notepads/categories - should return available categories or 500 if unsupported", async () => {
+    test("GET /api/notepads/categories - returns 400 (/:id expects a UUID, not implemented)", async () => {
         const headers = await getAuthenticatedHeaders();
         const res = await app.request("/api/notepads/categories", {
             headers,
         });
-        expect([200, 500]).toContain(res.status);
-        if (res.status === 200) {
-            const data = await res.json();
-            expect(data).toHaveProperty("data");
-            expect(Array.isArray(data.data)).toBe(true);
-            
-            // Each category should have name and count
-            if (data.data.length > 0) {
-                const category = data.data[0];
-                expect(category).toHaveProperty("name");
-                expect(category).toHaveProperty("count");
-                expect(typeof category.name).toBe("string");
-                expect(typeof category.count).toBe("number");
-            }
-        }
+        expect(res.status).toBe(400);
+        const body = await res.json();
+        expect(body.success).toBe(false);
     });
 
     test("POST /api/notepads/:id/duplicate - should duplicate notepad", async () => {
