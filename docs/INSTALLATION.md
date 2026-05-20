@@ -19,9 +19,11 @@ This guide provides comprehensive instructions for installing Stacks and running
 
 To obtain a key:
 
-1. Request a free development key at **[getstacksapp.com/dev-program](https://getstacksapp.com/dev-program/)**.
-2. You will receive the key via email.
+1. Register at **[getstacksapp.com/dev-program](https://getstacksapp.com/dev-program/)** with the email address you want to use for development.
+2. You will receive `license.key` via email. The license is issued for that same registration email — on first server start it seeds an admin account whose login email matches it.
 3. Save the key as `packages/server/license.key` — e.g. `cp /path/to/license.key packages/server/license.key` (the file is read from `process.cwd()` at server start — see [docs/packages/license.md](packages/license.md) for the exact lookup logic, payload schema, and failure modes).
+
+**First login:** after the server starts and seeds the database, sign in at `/login` with your registration email and the default password `$Pa$$w0rd`. Change the password after your first login.
 
 The license check gates *server startup only*; it does not phone home at runtime.
 
@@ -127,6 +129,8 @@ yarn dev:locales  # Locale management TUI (optional)
 ### 2. Open the app
 
 Visit **<http://localhost:3000/login>** — this is the API server (port `3000`), which serves the login HTML directly and reverse-proxies `/app/*` and `/static/*` to the Webpack dev server at `3001`. Don't visit `3001` directly; the auth and API routes only exist on the server.
+
+Sign in with the email you used to register for the dev program and the default password `$Pa$$w0rd` (see [Development license required](#%EF%B8%8F-development-license-required)).
 
 > **Port `3001` is hardcoded.** The server's proxy target is `localhost:3001` (see [`packages/server/src/api.ts`](../packages/server/src/api.ts)). You can change the *server* port via `APP_PORT` in `packages/server/.env` (then visit `http://localhost:<APP_PORT>/login`), but the Webpack dev server must still run on `3001` or the app shell won't load. Free up `3001` rather than reassigning it.
 

@@ -72,7 +72,8 @@ cp packages/server/env.example packages/server/.env
 
 ```bash
 # Save the key you received via email as packages/server/license.key
-# (request one at https://getstacksapp.com/dev-program/)
+# (register at https://getstacksapp.com/dev-program/ — the license is issued
+# for that same email; first login uses that email + default password $Pa$$w0rd)
 cp /path/to/license.key packages/server/license.key
 ```
 
