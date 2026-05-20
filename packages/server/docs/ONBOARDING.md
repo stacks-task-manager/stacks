@@ -49,11 +49,13 @@ flowchart LR
     B --> C{Route prefix}
     C -->|/auth, /login, /register, /ping| D[Public routes]
     C -->|/api/*| E[compress + registerApiRoutes]
-    E --> F[requireAuth or requireAuthSession]
-    F --> G[withRequestContext AsyncLocalStorage]
-    G --> H[Route handler -> loaders -> Sequelize]
-    H --> I[replySuccess / replyError]
-    I --> J[HTTP response]
+    E --> F{Sub-router?}
+    F -->|/api/info| G[Public API routes]
+    F -->|mountAuthenticated| H[requireAuth + withRequestContext]
+    F -->|unmatched| K[404 Not Found]
+    H --> I[Route handler -> loaders -> Sequelize]
+    I --> J[replySuccess / replyError]
+    J --> L[HTTP response]
 ```
 
 Key points:
@@ -62,6 +64,12 @@ Key points:
 - `withRequestContext` copies those into an `AsyncLocalStorage`. From there
   loaders can call `getCurrentUser()` / `getCurrentRole()` /
   `getInstanceId()` without the caller threading the user through.
+- Authenticated `/api/*` sub-routers are mounted via the `mountAuthenticated`
+  helper in `src/api.ts`, which wraps each sub-router with `requireAuth` +
+  `withRequestContext`. **Auth is not a broad `app.use("/api/*", ...)` prefix
+  middleware** — that pattern would shadow real 404s with a misleading
+  "Authentication token missing" 401 on unmounted paths. Unknown `/api/*`
+  requests now fall through to Hono's default 404.
 - Errors thrown from handlers bubble to `app.onError(errorHandler)`, which
   serialises them via `replyError`.
 
@@ -88,18 +96,18 @@ why they exist; the doc-comments inside each file repeat the contract.
 ## 5. How to add a route
 
 1. Pick (or create) a domain file under `src/routes/`, e.g. `widgets.ts`.
-2. Build the sub-app:
+2. Build the sub-app. Don't apply `requireAuth` inside the router — auth is
+   attached at mount time by `mountAuthenticated` (see step 3). Public routes
+   omit `mountAuthenticated` and skip auth entirely.
 
    ```ts
    import { Hono } from "hono";
-   import { requireAuth } from "../middleware/auth";
    import { validator } from "../middleware/validator";
    import { WidgetsLoader } from "../loaders";
    import { asyncHandler } from "../utils/errorHandler";
    import { WidgetCreateSchema } from "./schema/widget";
 
    const widgets = new Hono();
-   widgets.use("*", requireAuth);
 
    widgets.get("/", asyncHandler(async c => {
        const rows = await WidgetsLoader.getAll();
@@ -119,8 +127,23 @@ why they exist; the doc-comments inside each file repeat the contract.
    export default widgets;
    ```
 
-3. Mount it in `src/api.ts` (protected) or `src/index.ts` (public) with a
-   prefix: `api.route("/widgets", widgets)`.
+3. Mount it in `src/api.ts`. Use the right helper for the auth posture:
+
+   ```ts
+   // Authenticated: wraps the router in requireAuth + withRequestContext and
+   // mounts at /api/widgets. This is the default for resource routes.
+   mountAuthenticated("widgets", widgets);
+
+   // Public (no auth): direct mount. Reserve this for routes that must be
+   // reachable unauthenticated — e.g. /api/info (AGPL source disclosure).
+   app.route("/api/widgets", widgets);
+   ```
+
+   Picking `app.route("/api/...", router)` for a route that *should* be
+   authenticated will silently mount it unauthenticated — there is no longer
+   a global `app.use("/api/*", requireAuth)` to catch the omission. When in
+   doubt, default to `mountAuthenticated`.
+
 4. If the route needs a loader, add `src/loaders/widgets.ts`, export it from
    `src/loaders/index.ts`, and use `sanitizeWhere` / `sanitizeWherePermissions`
    from `src/loaders/utils.ts` so tenant/permission scoping is consistent.

@@ -118,7 +118,6 @@ Routes are registered in [`src/api.ts`](../../packages/server/src/api.ts) and gr
 | `/api/timelogs` | Time tracking |
 | `/api/permissions`, `/api/roles` | RBAC |
 | `/api/export` | Data export |
-| `/api/google` | Google OAuth callbacks |
 
 Legacy / public routes outside `/api`: `/auth`, `/login`, `/register`, `/ping`.
 
