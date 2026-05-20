@@ -21,6 +21,7 @@
     "demo:install": "sequelize-cli db:seed:all --",
     "demo:undo": "sequelize-cli db:seed:undo:all",
     "seed:create": "sequelize-cli seed:generate --name",
+    "reset-password:dev": "node scripts/reset-dev-password.cjs",
     "compile": "tsc",
     "build": "tsc && yarn pre-bundle && yarn compile:migration && yarn post-bundle",
     "dist": "yarn pack --out stacks-db-v%v.tgz",
@@ -46,6 +47,8 @@
   },
   "devDependencies": {
     "@types/react": "^19",
+    "bcryptjs": "^3.0.2",
+    "dotenv": "^17.2.2",
     "esbuild": "^0.25.9",
     "typescript": "^5.9.2"
   },

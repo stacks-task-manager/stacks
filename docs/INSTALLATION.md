@@ -25,6 +25,16 @@ To obtain a key:
 
 **First login:** after the server starts and seeds the database, sign in at `/login` with your registration email and the default password `$Pa$$w0rd`. Change the password after your first login.
 
+> If you ever forget the password you set, run the dev-only reset:
+>
+> ```bash
+> yarn workspace @stacks/db reset-password:dev -- --email=you@example.com
+> # or with a custom password:
+> yarn workspace @stacks/db reset-password:dev -- --email=you@example.com --password='MyNewPass1'
+> ```
+>
+> The script writes directly to the `users` table using `packages/db/.env` and is excluded from release bundles. See [`docs/packages/db.md`](packages/db.md#migrations).
+
 The license check gates *server startup only*; it does not phone home at runtime.
 
 ## Installing dependencies

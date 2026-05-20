@@ -55,6 +55,7 @@ Sequelize-CLI is the migration runner. From the package directory (or with `yarn
 | `yarn migrate:status` | Show applied / pending |
 | `yarn migrate:create --name=<slug>` | Generate a new migration file |
 | `yarn db:create` / `yarn db:drop` | Create / drop the database |
+| `yarn reset-password:dev -- --email=<addr> [--password=<value>] [--tenant-id=<uuid>]` | **Dev-only.** Reset a user's password directly in the DB (default `$Pa$$w0rd`) and clear any pending activation token. Refuses to run with `NODE_ENV=production`; the script file lives under [`packages/db/scripts/`](../../packages/db/scripts/), which is not copied into release bundles, and the npm entry is stripped from the production `package.json` by [`post-build.cjs`](../../packages/db/post-build.cjs). |
 
 Migration files live under [`packages/db/migrations/`](../../packages/db/migrations/) (the runtime location; sources for the initial schema live under `src/`). The server runs them on boot in production releases (see `docker/Dockerfile.migration`).
 

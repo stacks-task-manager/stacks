@@ -39,6 +39,7 @@
         "dev:email:templates": "yarn workspace @stacks/types run compile && yarn workspace @stacks/email-service run dev:email",
         "dev:locales": "yarn workspace @stacks/locales-tui start",
         "dev:mobile": "yarn workspace @stacks/mobile start",
+        "reset-dev-password": "yarn workspace @stacks/db reset-password:dev",
         "build:internal": "yarn build:types && yarn install --mode=skip-build && yarn build:db && yarn build:license && yarn build:translations",
         "update:types:build": "yarn build:internal",
         "update:types": "yarn build:internal && yarn install",

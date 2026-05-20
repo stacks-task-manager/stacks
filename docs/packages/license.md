@@ -21,6 +21,14 @@ That admin account is tied to your registration:
 
 Sign in at `/login` with those credentials after `yarn dev` (or `yarn dev:server`) has started and finished seeding. Change the password once you are in.
 
+Forgot the password you set? Run the dev-only reset from `@stacks/db`:
+
+```bash
+yarn workspace @stacks/db reset-password:dev -- --email=you@example.com
+```
+
+This rewrites the bcrypt hash directly in the `users` table and clears any pending activation token. It is excluded from release bundles — see [`docs/packages/db.md`](db.md#migrations).
+
 ## Environment
 
 No `.env` file. The package reads two artifacts from `process.cwd()` at the moment `initializeLicense()` runs:

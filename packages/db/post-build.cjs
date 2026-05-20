@@ -29,7 +29,7 @@ async function postBuild() {
             devDependencies: undefined, // Remove devDependencies
         };
 
-        ["build", "dist", "post-bundle", "compile:migration"].forEach(script => {
+        ["build", "dist", "post-bundle", "compile:migration", "reset-password:dev"].forEach(script => {
             delete productionPackageJson.scripts[script];
         });
 
