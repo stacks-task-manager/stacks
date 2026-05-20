@@ -1,5 +1,7 @@
 # Stacks
 
+![Stacks logo](./images/stacks-dark-mode.png)
+
 Stacks is a local-first, privacy-focused project management app with a kanban-style workflow. It's designed to keep your work organized without forcing you into a cloud-first model: you can run Stacks on your own machine (or self-host it), keep control of your data, and stay productive even when you're offline.
 
 At its core, Stacks organizes work into **projects**, and each project contains **stacks** (columns) that hold **tasks**.
@@ -30,8 +32,8 @@ At its core, Stacks organizes work into **projects**, and each project contains 
 -   **Node.js** 18+ (20 recommended)
 -   **Yarn** 3.6.4 — enable via `corepack enable` (ships with Node)
 -   **PostgreSQL** 15
--   *(Optional)* an **SMTP server** for outbound email features like password reset (MailHog / Mailpit works locally — `yarn dev` does not start the email worker, so this isn't needed for first run)
--   *(Optional)* an OpenAI-compatible API endpoint for the chat assistant (e.g., LM Studio or llama.cpp)
+-   _(Optional)_ an **SMTP server** for outbound email features like password reset (MailHog / Mailpit works locally — `yarn dev` does not start the email worker, so this isn't needed for first run)
+-   _(Optional)_ an OpenAI-compatible API endpoint for the chat assistant (e.g., LM Studio or llama.cpp)
 
 > **Development license required.** The server will `process.exit(1)` on startup unless `packages/server/license.key` exists. Request a free development key at [getstacksapp.com/dev-program](https://getstacksapp.com/dev-program/). The key gates startup only; see [docs/packages/license.md](docs/packages/license.md) for details.
 
@@ -125,9 +127,9 @@ The full documentation index lives at **[docs/README.md](docs/README.md)** — s
 
 Most-reached-for pages:
 
-- [Installation & local development](docs/INSTALLATION.md)
-- [Contributing](CONTRIBUTING.md)
-- [Docker / production deployment](docs/DOCKER.md)
+-   [Installation & local development](docs/INSTALLATION.md)
+-   [Contributing](CONTRIBUTING.md)
+-   [Docker / production deployment](docs/DOCKER.md)
 
 ## License
 
