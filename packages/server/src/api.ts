@@ -2,7 +2,7 @@
 /**
  * Mounts versioned JSON API, static assets, and authenticated route modules on a Hono app.
  */
-import type { Hono } from "hono";
+import { Hono } from "hono";
 import { proxy } from "hono/proxy";
 import { serveStatic } from "@hono/node-server/serve-static";
 
@@ -102,29 +102,43 @@ export const registerApiRoutes = (app: Hono) => {
     // remote users — including unauthenticated ones — can discover the source URL.
     app.route("/api/info", info);
 
-    app.use("/api/*", requireAuth); // all routes below this will require authentication
-    app.use("/api/*", withRequestContext); // set up request context for authenticated routes
-    app.route("/api/people", people);
-    app.route("/api/projects", projects);
-    app.route("/api/companies", companies);
-    app.route("/api/tasks", tasks);
-    app.route("/api/documents", documents);
-    app.route("/api/stacks", stacks);
-    app.route("/api/events", events);
-    app.route("/api/bookmarks", bookmarks);
-    app.route("/api/notifications", notifications);
-    app.route("/api/reminders", reminders);
-    app.route("/api/home", home);
-    app.route("/api/activities", activities);
-    app.route("/api/tags", tags);
-    app.route("/api/notepads", notepads);
-    app.route("/api/preferences", preferences);
-    app.route("/api/permissions", permissions);
-    app.route("/api/files", files);
-    app.route("/api/reports", reports);
-    app.route("/api/timelogs", timelogs);
-    app.route("/api/search", search);
-    app.route("/api/boot", boot);
-    app.route("/api/roles", roles);
-    app.route("/api/export", exportRoute);
+    /**
+     * Authenticated /api/* routes.
+     *
+     * Auth is applied per-router (not as a broad `app.use("/api/*", ...)` prefix
+     * middleware) so that requests to unmounted /api/* paths fall through to
+     * Hono's default 404 instead of being short-circuited with a misleading
+     * "Authentication token missing" 401 from `requireAuth`. Public routes
+     * (e.g.`/api/info`) remain mounted above this block.
+     */
+    const mountAuthenticated = (path: string, router: Hono) => {
+        const guarded = new Hono();
+        guarded.use("*", requireAuth, withRequestContext);
+        guarded.route("/", router);
+        app.route(`/api/${path}`, guarded);
+    };
+
+    mountAuthenticated("people", people);
+    mountAuthenticated("projects", projects);
+    mountAuthenticated("companies", companies);
+    mountAuthenticated("tasks", tasks);
+    mountAuthenticated("documents", documents);
+    mountAuthenticated("stacks", stacks);
+    mountAuthenticated("events", events);
+    mountAuthenticated("bookmarks", bookmarks);
+    mountAuthenticated("notifications", notifications);
+    mountAuthenticated("reminders", reminders);
+    mountAuthenticated("home", home);
+    mountAuthenticated("activities", activities);
+    mountAuthenticated("tags", tags);
+    mountAuthenticated("notepads", notepads);
+    mountAuthenticated("preferences", preferences);
+    mountAuthenticated("permissions", permissions);
+    mountAuthenticated("files", files);
+    mountAuthenticated("reports", reports);
+    mountAuthenticated("timelogs", timelogs);
+    mountAuthenticated("search", search);
+    mountAuthenticated("boot", boot);
+    mountAuthenticated("roles", roles);
+    mountAuthenticated("export", exportRoute);
 };
