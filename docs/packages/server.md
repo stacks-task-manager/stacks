@@ -136,6 +136,81 @@ Sessions are signed JWTs (HS256). Two transports are accepted, in order:
 
 Token extraction lives in [`src/middleware/utils.ts`](../../packages/server/src/middleware/utils.ts) (`getAuthTokenWithSource`); verification in [`src/middleware/auth.ts`](../../packages/server/src/middleware/auth.ts). Payload fields: `uid`, `email`, `role`, `tenant`, `iat`, `exp`.
 
+## Sending email
+
+The server never opens an SMTP connection itself — it writes rows into the `email_queue` Postgres table and the [`@stacks/email-service`](email-service.md) worker drains them on its own interval. There are two entry points depending on whether you have a request context:
+
+### From a route handler — `c.sendEmail(...)`
+
+`c.sendEmail` is attached to every Hono `Context` by the response middleware ([`src/services/response.ts`](../../packages/server/src/services/response.ts)). It's strongly typed: the `data` argument must match the payload type declared for `template` in [`packages/types/src/models/email.ts`](../../packages/types/src/models/email.ts).
+
+```ts
+import { EMAIL_TEMPLATES } from "@stacks/types";
+
+// inside a Hono handler
+await c.sendEmail(newUser.id, EMAIL_TEMPLATES.WELCOME, {
+    firstName: newUser.firstName,
+    lastName: newUser.lastName,
+    activationLink: `/auth/activate/${newUser.token}`,
+});
+```
+
+Signature ([`SendEmailFunction`](../../packages/types/src/models/email.ts)):
+
+```ts
+<T extends EMAIL_TEMPLATES>(
+    recipientId: string,                 // users.id of the destination user
+    template: T,                         // EMAIL_TEMPLATES enum value
+    data: EmailTemplateData<T>,          // typed per template
+    scheduleAt?: Date,                   // optional; defaults to "now"
+): Promise<boolean>;                     // false if the user wasn't found
+```
+
+What happens under the hood:
+
+1. The recipient's email is **not** resolved here — the worker joins `users` on `userId` when draining. Pass the user's id, not their address.
+2. The current user (from `requireAuth`) becomes the row's `createdBy` and `tenant`.
+3. The locale is read from the `Locale` request header (default `"en"`). This is a **distinct** header from the i18n `Accept-Language` flow used by `c.get("locale")` — pick whichever locale the user prefers to receive emails in and send it as `Locale`.
+4. A row is inserted into `email_queue` with `status='pending'` and `scheduledAt = scheduleAt ?? now()`.
+
+### Outside a request — `EmailsLoader.queueEmail(...)`
+
+For seed scripts, background jobs, or anywhere there is no Hono `Context`, call the loader directly ([`src/loaders/emails.ts`](../../packages/server/src/loaders/emails.ts)):
+
+```ts
+import { EmailsLoader } from "../loaders";
+import { EMAIL_TEMPLATES } from "@stacks/types";
+
+await EmailsLoader.queueEmail(
+    adminUser.id,
+    { firstName: adminUser.firstName, lastName: adminUser.lastName, activationLink: `/auth/activate/${token}` },
+    EMAIL_TEMPLATES.WELCOME,
+    "en",          // locale must be supplied explicitly
+    systemUser,    // a User-shaped object — provides tenant + createdBy
+    undefined,     // optional scheduleAt
+    transaction,   // optional Sequelize transaction
+);
+```
+
+This is the lower-level primitive `c.sendEmail` delegates to. Use it whenever you need an explicit transaction (e.g. so a queued email rolls back with the surrounding write) — the seeder does this when creating admin users ([`src/seed/users.ts`](../../packages/server/src/seed/users.ts)).
+
+### Template payloads
+
+The template enum and its typed payloads live in [`@stacks/types`](types.md):
+
+| Template | Required `data` fields |
+| --- | --- |
+| `EMAIL_TEMPLATES.WELCOME` | `firstName`, optional `lastName`, `activationLink` |
+| `EMAIL_TEMPLATES.PASSWORD_RESET` | `userName`, `resetLink`, `expirationTime`, optional `ipAddress`, `userAgent` |
+| `EMAIL_TEMPLATES.REGISTRATION` | `userName`, `verificationLink`, optional `companyName`, `expirationTime` |
+| `EMAIL_TEMPLATES.NOTIFICATION` | `title`, `message`, optional `actionUrl`, `actionText`, `priority`, `category` |
+
+Anything in `data` is JSON-serialised into the queue row and substituted into the rendered template at send time as `%key%` (e.g. `%firstName%`, `%resetLink%`). The worker also injects `%publicUrl%` from its own `PUBLIC_URL` env var, so route handlers should pass **relative** paths (e.g. `/auth/activate/<token>`) and let the worker prepend the base URL.
+
+### Adding a new template
+
+The end-to-end recipe (server types, React component, subject string, restart the worker) is documented in [`@stacks/email-service` → How to add a new template](email-service.md#how-to-add-a-new-template). On the server side you only need to extend the enum and union in `packages/types/src/models/email.ts`; `c.sendEmail` will then type-check the new template automatically.
+
 ## Build
 
 ```bash
