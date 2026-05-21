@@ -1,6 +1,6 @@
 # `@stacks/email-service`
 
-A background worker that compiles React Email templates and drains an outbound email queue over SMTP on a configurable interval.
+A background worker that compiles [React Email](https://react.email/) templates and drains an outbound email queue over SMTP on a configurable interval. Templates are authored as TSX React components under `emails/` and previewed in the browser with React Email's hot-reloading dev server — see [Previewing templates in the browser](#previewing-templates-in-the-browser).
 
 ## Table of Contents
 
@@ -16,7 +16,7 @@ A background worker that compiles React Email templates and drains an outbound e
     - [Placeholder substitution (`%key%`)](#placeholder-substitution-key)
 - [How to add a new template](#how-to-add-a-new-template)
 - [How to add a new language](#how-to-add-a-new-language)
-- [Editing templates with the React Email preview server](#editing-templates-with-the-react-email-preview-server)
+- [Previewing templates in the browser](#previewing-templates-in-the-browser)
 - [Related](#related)
 
 ## Environment
@@ -42,12 +42,22 @@ If SMTP isn't configured, the service starts in **idle mode** (no processing) un
 
 ## Development
 
-```bash
-yarn dev:email           # full service in watch mode
-yarn workspace @stacks/email-service dev:email  # template preview server on :3005
-```
+> **⚠ Heads-up: `dev:email` means two different things depending on which `package.json` you're looking at.**
+>
+> The script name `dev:email` is defined in **both** the repo-root `package.json` and in this workspace's [`packages/email-service/package.json`](../../packages/email-service/package.json), but they point at opposite commands. Always be explicit about the directory you're running yarn from.
 
-`yarn dev:email` runs the actual worker against your local Postgres and SMTP host. The `dev:email` workspace script (different name, same package) is React Email's preview server for editing templates in the browser.
+| Where you run it | Command | What runs |
+| --- | --- | --- |
+| **Repo root** (`/`) | `yarn dev:email` | The **worker** — compiles templates into the DB and starts draining `email_queue`. Defined in [`package.json:38`](../../package.json). It delegates to the workspace's `dev` script (`tsx watch ... src/index.ts`). |
+| **Repo root** (`/`) | `yarn dev:email:templates` | The **React Email preview server** on <http://localhost:3005>. Defined in [`package.json:39`](../../package.json). It delegates to the workspace's `dev:email` script. |
+| **Workspace** (`packages/email-service/`) | `yarn dev:email` | The **same preview server** — invoked directly. Defined in [`packages/email-service/package.json:13`](../../packages/email-service/package.json) as `email dev --port 3005`. |
+
+In short:
+
+- If you're at the **repo root** (the normal entry point used everywhere else in these docs), `yarn dev:email` is the worker and `yarn dev:email:templates` is the preview server.
+- If you `cd packages/email-service/` first, `yarn dev:email` becomes the preview server because there's no `dev:email:templates` alias at the workspace level.
+
+For the rest of this document, every command is shown **from the repo root** unless explicitly stated otherwise. Use `yarn dev:email` for the worker (see [Local SMTP testing](#local-smtp-testing) for a typical setup) and `yarn dev:email:templates` for the preview UI (see [Previewing templates in the browser](#previewing-templates-in-the-browser)).
 
 ## Local SMTP testing
 
@@ -248,13 +258,42 @@ The same substitution is applied to the **subject** loaded from `emails.json` �
 
 A locale doesn't have to be present in every template — when a row is missing, the fallback chain above will use English. The compiler logs `Subject not found for <type>_<locale>` for missing subjects and emits a synthetic fallback so the send still succeeds.
 
-## Editing templates with the React Email preview server
+## Previewing templates in the browser
+
+Templates are written as React components using [React Email](https://react.email/) (`@react-email/components`, `@react-email/render`). React Email ships a dev server that renders the components in a browser side-by-side with the desktop / mobile / plain-text variants, so you can iterate on the design with hot reload without ever sending a real email.
+
+Start it with one of:
 
 ```bash
-yarn workspace @stacks/email-service dev:email   # http://localhost:3005
+# From the repo root (recommended — the rest of this doc uses root-level commands):
+yarn dev:email:templates
+
+# Or from inside the workspace directly:
+cd packages/email-service
+yarn dev:email
 ```
 
-This runs React Email's hot-reloading preview UI against the files in `emails/`. It does **not** touch the queue or the database — it's purely a visual editor for the components. Once you're happy with the design, restart the worker (`yarn dev:email`, different script) so the new HTML is re-compiled and persisted.
+Both invocations end up running the same `email dev --port 3005` CLI. See the [naming-clash note in the Development section](#development) for why the script is called `dev:email:templates` at the root but plain `dev:email` inside the workspace.
+
+Then open <http://localhost:3005>. The page lists every file in `packages/email-service/emails/` and lets you:
+
+- Switch between **Desktop**, **Mobile**, and **Plain text** previews for the same template.
+- Inspect the rendered **HTML** and **source** for each variant.
+- Send a one-off test to a real address (handy when paired with [Mailpit](#local-smtp-testing)).
+- See changes apply instantly — save a `.tsx` file in `emails/` and the preview re-renders.
+
+What this script does **not** do:
+
+- It does **not** touch Postgres or the `email_templates` cache. The HTML you see in the browser is rendered on the fly from the TSX file; it never reaches the DB and it ignores `emails.json` (subjects + per-tenant overrides come from the production compile step).
+- It does **not** substitute the `%publicUrl%` / `%firstName%` / etc. placeholders — the preview shows the literal `%key%` strings. Substitution only happens at send time inside `EmailService`.
+- It does **not** start the queue worker, so editing templates here will not produce outbound mail.
+
+When you're happy with the design, restart the worker (`yarn dev:email` **from the repo root** — not the workspace, where the same name means the preview server) so `compileAllTemplates()` runs and the new HTML is persisted into `email_templates` for every tenant × locale.
+
+Implementation notes if you need to dig deeper:
+
+- The dev server is provided by `react-email` / `@react-email/preview-server` (declared as devDependencies in `packages/email-service/package.json`).
+- The underlying CLI invocation is `email dev --port 3005`, declared as the **workspace-level** `dev:email` script in [`packages/email-service/package.json`](../../packages/email-service/package.json). The repo-root `yarn dev:email:templates` ([`package.json`](../../package.json)) wraps that script with a `@stacks/types` compile step so the workspace sees an up-to-date types build before the preview server starts watching the files.
 
 ## Related
 
