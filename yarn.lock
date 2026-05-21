@@ -7263,7 +7263,7 @@ __metadata:
     "@tiptap/extension-color": ^3.20.4
     "@tiptap/extension-document": ^3.20.4
     "@tiptap/extension-emoji": ^3.20.4
-    "@tiptap/extension-font-family": ^3.20.4
+    "@tiptap/extension-font-family": ^3.23.6
     "@tiptap/extension-heading": ^3.20.4
     "@tiptap/extension-highlight": ^3.20.4
     "@tiptap/extension-image": ^3.20.4
@@ -8077,12 +8077,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tiptap/extension-font-family@npm:^3.20.4":
-  version: 3.23.1
-  resolution: "@tiptap/extension-font-family@npm:3.23.1"
+"@tiptap/extension-font-family@npm:^3.23.6":
+  version: 3.23.6
+  resolution: "@tiptap/extension-font-family@npm:3.23.6"
   peerDependencies:
-    "@tiptap/extension-text-style": 3.23.1
-  checksum: fd376b6ba588d118633b2959a1de1c4c8a606fa067eca304d012e136405d21676a213534c6913e5d879c86b8c5a84a84980e86c7933ed8c6fee167ba8eb443a7
+    "@tiptap/extension-text-style": 3.23.6
+  checksum: b1c97e4bbfc7dbe8641dab82a63796e7717cef949809b8649ee4d4e18888a4af971839882d573cdc79ff720676bab638013cc5b7463439d3b4288c56c2ea1d9b
   languageName: node
   linkType: hard
 
