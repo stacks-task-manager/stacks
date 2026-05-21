@@ -4,6 +4,16 @@ License verification used by the server at startup. Reads a public key and a lic
 
 > **⚠ The server will exit (`process.exit(1)`) at startup if the license check fails.** This applies to AGPL / open-source use as well as commercial use. Request a free development key at **[getstacksapp.com/dev-program](https://getstacksapp.com/dev-program/)**.
 
+## Table of Contents
+
+- [Developer program](#developer-program)
+- [Environment](#environment)
+- [How it's wired](#how-its-wired)
+- [License payload](#license-payload)
+- [Failure modes](#failure-modes)
+- [Overview](#overview)
+- [Related](#related)
+
 ## Developer program
 
 When you receive a development license from [getstacksapp.com/dev-program](https://getstacksapp.com/dev-program/):

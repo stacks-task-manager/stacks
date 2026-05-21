@@ -2,6 +2,19 @@
 
 The database layer for Stacks. Sequelize models and associations, migration definitions, and demo seeds — consumed by `@stacks/server` and `@stacks/email-service`.
 
+## Table of Contents
+
+- [Environment](#environment)
+- [Development](#development)
+- [Schema overview](#schema-overview)
+- [Migrations](#migrations)
+    - [Order of execution](#order-of-execution)
+    - [Writing a new migration](#writing-a-new-migration)
+- [Seeds (demo data)](#seeds-demo-data)
+    - [Loading demo data into an existing tenant](#loading-demo-data-into-an-existing-tenant)
+    - [Reverting the demo data](#reverting-the-demo-data)
+- [Related](#related)
+
 ## Environment
 
 `packages/db/.env` from [`packages/db/env.example`](../../packages/db/env.example) — only needed when invoking DB tooling directly (`yarn workspace @stacks/db migrate`, etc.); the server reads its own `.env`:

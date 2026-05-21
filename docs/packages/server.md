@@ -4,6 +4,36 @@ The Stacks backend. A [Hono](https://hono.dev/) HTTP server on Node that exposes
 
 > **⚠ Development license required.** The server calls `initializeLicense()` early in `bootstrap()` ([`src/index.ts:131`](../../packages/server/src/index.ts)) and exits with code `1` if `license.key` is missing or invalid. Place a key at `packages/server/license.key` before starting. See [`license.md`](license.md).
 
+## Table of Contents
+
+- [Environment](#environment)
+- [Development](#development)
+- [Importing a workspace from the Desktop Stacks app](#importing-a-workspace-from-the-desktop-stacks-app)
+    - [What to export and where to put it](#what-to-export-and-where-to-put-it)
+    - [How the import runs](#how-the-import-runs)
+    - [Skip conditions (look for these in the server log on boot)](#skip-conditions-look-for-these-in-the-server-log-on-boot)
+    - [Caveats](#caveats)
+- [API overview](#api-overview)
+    - [WebSocket](#websocket)
+    - [Auth model](#auth-model)
+- [Sending email](#sending-email)
+    - [From a route handler — `c.sendEmail(...)`](#from-a-route-handler--csendemail)
+    - [Outside a request — `EmailsLoader.queueEmail(...)`](#outside-a-request--emailsloaderqueueemail)
+    - [Template payloads](#template-payloads)
+    - [Adding a new template](#adding-a-new-template)
+- [In-app notifications](#in-app-notifications)
+    - [Model](#model)
+    - [Loader API](#loader-api)
+    - [REST endpoints](#rest-endpoints)
+    - [Where the recipient sees them](#where-the-recipient-sees-them)
+    - [Realtime delivery](#realtime-delivery)
+    - [Where notifications are triggered](#where-notifications-are-triggered)
+    - [Sending a notification from new code](#sending-a-notification-from-new-code)
+    - [Related: reminders](#related-reminders)
+- [Build](#build)
+- [Deep dives](#deep-dives)
+- [Related](#related)
+
 ## Environment
 
 `packages/server/.env` from [`packages/server/env.example`](../../packages/server/env.example):

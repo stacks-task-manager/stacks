@@ -2,6 +2,14 @@
 
 The Stacks web client. A React 18 + TypeScript app, bundled with Webpack, that renders the UI, manages local state, and talks to `@stacks/server` over HTTP and WebSockets.
 
+## Table of Contents
+
+- [Environment](#environment)
+- [Development](#development)
+- [Build](#build)
+- [Deep dives](#deep-dives)
+- [Related](#related)
+
 ## Environment
 
 `packages/app/.env` (no `env.example` is checked in — create it manually if you need to override defaults):

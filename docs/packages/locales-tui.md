@@ -2,6 +2,14 @@
 
 A terminal UI for managing the locale JSON files used by `@stacks/server` and `@stacks/app`. Built with [Ink](https://github.com/vadimdemedes/ink) (React for the terminal).
 
+## Table of Contents
+
+- [Environment](#environment)
+- [Development](#development)
+- [Usage](#usage)
+- [Overview](#overview)
+- [Related](#related)
+
 ## Environment
 
 None.

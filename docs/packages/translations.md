@@ -2,6 +2,14 @@
 
 A lightweight runtime i18n library — translation registration plus a `translate()` helper with interpolation and pluralization. Used by `@stacks/server` and `@stacks/app`.
 
+## Table of Contents
+
+- [Environment](#environment)
+- [Development](#development)
+- [Usage](#usage)
+- [Overview](#overview)
+- [Related](#related)
+
 ## Environment
 
 None.
