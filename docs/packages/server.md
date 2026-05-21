@@ -211,6 +211,137 @@ Anything in `data` is JSON-serialised into the queue row and substituted into th
 
 The end-to-end recipe (server types, React component, subject string, restart the worker) is documented in [`@stacks/email-service` → How to add a new template](email-service.md#how-to-add-a-new-template). On the server side you only need to extend the enum and union in `packages/types/src/models/email.ts`; `c.sendEmail` will then type-check the new template automatically.
 
+## In-app notifications
+
+Distinct from outbound email. An **in-app notification** is a row in the `notifications` table that the recipient sees inside the app, plus a one-shot realtime push over the WebSocket so the UI updates without polling. Despite the shared name, `EMAIL_TEMPLATES.NOTIFICATION` is unrelated — nothing in the codebase currently bridges the two.
+
+### Model
+
+[`NotificationEntity`](../../packages/db/src/entities/Notification.ts) — table `notifications`. Per-recipient row, soft-deletable.
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `recipient` | UUID | User the notification is for. Always populated by the loader from the caller's arguments. |
+| `subject` | string | Short headline (already translated by the caller via [`translate()`](../../packages/translations/)). |
+| `message` | text | Longer body. May be omitted. |
+| `recordType` | enum [`NOTIFICATION_RECORD_TYPE`](../../packages/types/src/models/notification.ts) | `task`, `notepad`, `timelog`, `project`, `comment`, `person` — drives the deep-link target. |
+| `recordId` | UUID | The id of the linked record (e.g. the task / comment). |
+| `data` | JSON | Free-form payload the UI can hydrate with extra context. Callers pass either a single object (task, activity) or an array (timelogs). |
+| `read`, `readOn` | bool / date | Toggled by the `PATCH /:id` endpoint. |
+
+Tenant + audit columns (`tenant`, `createdBy`, `updatedBy`) are set from `getCurrentUser()` inside the loader.
+
+### Loader API
+
+[`NotificationsLoader`](../../packages/server/src/loaders/notifications.ts) exposes four operations:
+
+```ts
+NotificationsLoader.add({
+    recipient: assignee,
+    subject: translate("You have been assigned to a task"),
+    message: task.title,
+    recordType: NOTIFICATION_RECORD_TYPE.TASK,
+    recordId: task.id,
+    data: task,
+});
+
+await NotificationsLoader.getAll();         // unread notifications for current user, newest first
+await NotificationsLoader.read(id);         // recipient-only — 403 otherwise
+await NotificationsLoader.remove(id);       // recipient-only — soft-delete via Base entity
+```
+
+`add` runs inside its own `withTransaction` so callers don't have to manage a Sequelize transaction. It accepts an optional outer transaction as a second argument if you do want to chain it.
+
+> **⚠ Fire-and-forget by convention.** Every internal trigger site calls `NotificationsLoader.add(...)` **without `await`** and **without passing the surrounding transaction** (see [tasks.ts](../../packages/server/src/loaders/tasks.ts), [activities.ts](../../packages/server/src/loaders/activities.ts), [timelogs.ts](../../packages/server/src/loaders/timelogs.ts)). Consequences:
+>
+> - The HTTP handler can return before the notification row is committed — clients should never assume the notification exists by the time the originating mutation responds.
+> - The notification commits in its own transaction, so it survives a rollback of the surrounding write. If the surrounding mutation fails after the notification is queued, the recipient sees a notification about a record that no longer exists.
+>
+> This is the established pattern. If you change it (e.g. by passing the outer transaction in), do so deliberately and consistently across all triggers.
+
+### REST endpoints
+
+Mounted authenticated at `/api/notifications` ([`api.ts`](../../packages/server/src/api.ts)).
+
+| Method | Path | Purpose | Scope |
+| --- | --- | --- | --- |
+| `GET` | `/api/notifications` | List **unread** notifications for the authenticated user, newest first. | `recipient = current user`, `read = false`, current tenant. |
+| `PATCH` | `/api/notifications/:id` | Mark as read (`read=true`, `readOn=now`). | Recipient only — 403 if `recipient !== current user`. |
+| `DELETE` | `/api/notifications/:id` | Soft-delete the notification. | Same recipient check. |
+
+There is **no `POST` endpoint** — notifications are only ever created internally via `NotificationsLoader.add(...)`. The `NewNotificationSchema` Zod object in `routes/schema/notifications.ts` is defined but unused; treat it as reserved for a future public endpoint.
+
+### Where the recipient sees them
+
+Inside [`@stacks/app`](app.md), the recipient's notifications live in the **Inbox** view ([`packages/app/src/app/views/Inbox/Inbox.tsx`](../../packages/app/src/app/views/Inbox/Inbox.tsx)), reachable at `/inbox` from the **sidebar's Inbox button** ([`packages/app/src/app/widgets/sidebar/InboxButton/InboxButton.tsx`](../../packages/app/src/app/widgets/sidebar/InboxButton/InboxButton.tsx)). The sidebar button shows a red unread counter that ticks down as the user reads notifications, and selecting a notification in the Inbox issues `PATCH /api/notifications/:id` to mark it read.
+
+### Realtime delivery
+
+After persisting the row, `add()` calls [`sendRealtimeUpdateToUser`](../../packages/server/src/events.ts):
+
+```ts
+sendRealtimeUpdateToUser(data.recipient, {
+    type: POLLINGTYPE.NOTIFICATION,
+    record: newNotification.id,
+    action: POLLINGACTIONS.CREATE,
+});
+```
+
+That helper appends `targetUserId: recipient` to the standard `IUpdate` payload and emits it through the app event bus. The WebSocket handler in [`routes/socket.ts`](../../packages/server/src/routes/socket.ts) (`globalUpdateHandler`) sees the `targetUserId`, looks the user up in its `userConnections` map, and calls `sendMessageToUser(...)` to push **only to that user's active connections** (one user can have several open tabs / devices — all receive the push).
+
+Important behaviours:
+
+- **Recipient-targeted, not broadcast.** Other users on the same tenant do not receive the notification push, even though they share the global `update` channel.
+- **No offline replay.** If the recipient has no active WebSocket connection at the time of the push, the realtime message is dropped on the server side. The notification row is still in the DB, so the next time the user opens the app, `GET /api/notifications` returns it. Per-user message queuing isn't wired up for notification pushes today.
+- **Client contract.** The client receives `{ type: "update", payload: { type: "notification", record: "<id>", action: "create", ... } }`. The UI typically reacts by re-fetching `/api/notifications` (or appending the record locally if `data` is populated) and incrementing the unread badge.
+
+### Where notifications are triggered
+
+Today the server creates notifications automatically from three loaders:
+
+| Trigger | Recipient | `recordType` | Subject (English) |
+| --- | --- | --- | --- |
+| Task created with assignees ([`tasks.ts`](../../packages/server/src/loaders/tasks.ts)) | each assignee (≠ current user) | `task` | "You have been assigned to a new task" |
+| Task updated with new assignees | each new assignee | `task` | "You have been assigned to a task" |
+| Task reopened (`done: true → false`) | each existing assignee | `task` | "A task you are assigned to was reopened" |
+| Task completed (`done: true`) | each existing assignee | `task` | "A task where you are assigned to was completed" |
+| Task deleted | each existing assignee | `task` | "A task you were assigned to was deleted" |
+| Comment on a task ([`activities.ts`](../../packages/server/src/loaders/activities.ts)) | each task assignee | `comment` | "New comment on a task" |
+| Timelog submitted ([`timelogs.ts`](../../packages/server/src/loaders/timelogs.ts)) | each project approver | `timelog` | "Timelog review pending" |
+| Timelog approved / rejected | the timelog's `person` | `timelog` | "A timelog where you are assigned to was evaluated" |
+
+All triggers skip the current user (so you never get notified about your own action).
+
+### Sending a notification from new code
+
+From any loader running inside `requireAuth + withRequestContext`:
+
+```ts
+import { NotificationsLoader } from "./notifications";
+import { NOTIFICATION_RECORD_TYPE } from "@stacks/types";
+import { translate } from "@stacks/translations";
+
+NotificationsLoader.add({
+    recipient: targetUserId,
+    subject: translate("Your subject string"),
+    message: translate("Optional body"),
+    recordType: NOTIFICATION_RECORD_TYPE.PROJECT,
+    recordId: project.id,
+    data: project,
+});
+```
+
+Conventions worth following:
+
+1. **Translate the subject and message** with [`translate(...)`](../../packages/translations/) so different recipients see the strings in their own locale.
+2. **Skip the current user** (`if (recipient === user.id) continue;`) so initiators don't notify themselves.
+3. **Pass a `recordType` + `recordId`** matching a UI route the client can deep-link to. If you need a new category, extend `NOTIFICATION_RECORD_TYPE` in [`packages/types/src/models/notification.ts`](../../packages/types/src/models/notification.ts) and update any client-side router that handles deep-links.
+4. **Don't `await`** unless you have a specific reason to block the surrounding handler on it — see the fire-and-forget note above.
+
+### Related: reminders
+
+`/api/reminders` ([`routes/reminders.ts`](../../packages/server/src/routes/reminders.ts) + [`loaders/reminders.ts`](../../packages/server/src/loaders/reminders.ts)) is a separate, simpler concept: scheduled alerts attached to a record (CRUD only, no realtime push, no recipient scoping). It does **not** produce `notifications` rows automatically; if you need a reminder to turn into a notification at fire time, that wiring isn't in place yet.
+
 ## Build
 
 ```bash
