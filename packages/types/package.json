@@ -23,6 +23,6 @@
   "license": "AGPL-3.0-only",
   "devDependencies": {
     "@types/react": "^19",
-    "typescript": "^5.9.2"
+    "typescript": "^6.0.3"
   }
 }
