@@ -2,6 +2,17 @@
 
 The production Node bundle can include an embedded SHA-256 hash and RSA signature (see `esbuild-integrity-plugin.js` and `src/embedded-integrity.ts`).
 
+## Table of Contents
+
+- [Two keypairs, two jobs — don't conflate them](#two-keypairs-two-jobs--dont-conflate-them)
+- [Generating a release-signing keypair](#generating-a-release-signing-keypair)
+- [Behavior](#behavior)
+- [Threat model](#threat-model)
+- [Operations](#operations)
+- [Sentinels vs. canonical placeholders](#sentinels-vs-canonical-placeholders)
+- [Testing helpers](#testing-helpers)
+- [CI](#ci)
+
 ## Two keypairs, two jobs — don't conflate them
 
 Stacks uses **two independent RSA keypairs**:

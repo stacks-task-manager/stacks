@@ -4,6 +4,25 @@ How `@stacks/app` talks to the API server. Everything HTTP-related funnels throu
 
 The actual implementation is [`src/app/api/request.ts`](../src/app/api/request.ts) (~150 lines). This page documents *why* it's shaped the way it is, plus the conventions for the per-domain modules that wrap it.
 
+## Table of Contents
+
+- [At a glance](#at-a-glance)
+- [The per-domain module pattern](#the-per-domain-module-pattern)
+- [The shared Axios instance](#the-shared-axios-instance)
+- [Request interceptor](#request-interceptor)
+    - [`X-Instance-ID`](#x-instance-id)
+    - [Date round-tripping](#date-round-tripping)
+- [Response interceptor](#response-interceptor)
+    - [Envelope unwrapping](#envelope-unwrapping)
+    - [Date round-tripping (response side)](#date-round-tripping-response-side)
+    - [Blob responses](#blob-responses)
+- [Error handling](#error-handling)
+    - [Opting out of the auto-toast](#opting-out-of-the-auto-toast)
+    - [When *not* to use `silent`](#when-not-to-use-silent)
+- [Adding a new endpoint](#adding-a-new-endpoint)
+- [Gotchas](#gotchas)
+- [Related](#related)
+
 ## At a glance
 
 ```

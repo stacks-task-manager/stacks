@@ -2,6 +2,27 @@
 
 A reference for *how* `@stacks/app` is wired together. Read [ONBOARDING.md](ONBOARDING.md) first if you haven't — this page assumes you know the directory layout and the boot sequence.
 
+## Table of Contents
+
+- [App shell](#app-shell)
+- [Routing](#routing)
+    - [Background-route panels](#background-route-panels)
+- [State management](#state-management)
+    - [Slice shape](#slice-shape)
+    - [Actions shape](#actions-shape)
+    - [Hooks shape](#hooks-shape)
+- [API layer](#api-layer)
+- [Real-time updates](#real-time-updates)
+    - [`UpdatePoller`](#updatepoller)
+    - [`useUpdates()`](#useupdates)
+    - [Connection status](#connection-status)
+- [Drag-and-drop](#drag-and-drop)
+- [Theming](#theming)
+- [User feedback surface](#user-feedback-surface)
+- [Error handling](#error-handling)
+- [Build](#build)
+- [Where to go next](#where-to-go-next)
+
 ## App shell
 
 [`src/index.tsx`](../src/index.tsx) is the entry. It mounts `<App />` inside a `<HashRouter>` after `BootAPI.load()` resolves. [`src/app/App.tsx`](../src/app/App.tsx) is the shell component — it wraps the page in `<DragDropProvider>`, syncs dark-mode and scrollbar preferences onto the body element, registers the global `useUpdates()` realtime subscriptions, and renders the route table.

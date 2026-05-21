@@ -2,6 +2,18 @@
 
 This guide provides comprehensive instructions for installing Stacks and running it locally for development. For an overview and a 5-minute summary, see the root [README](../README.md#quick-start).
 
+## Table of Contents
+
+- [Prerequisites](#prerequisites)
+- [⚠️ Development license required](#%EF%B8%8F-development-license-required)
+- [Installing dependencies](#installing-dependencies)
+- [Setting up environment variables](#setting-up-environment-variables)
+- [Setting up the database](#setting-up-the-database)
+- [Running the application](#running-the-application)
+- [Ports](#ports)
+- [Scripts](#scripts)
+- [Troubleshooting](#troubleshooting)
+
 ## Prerequisites
 
 | Requirement | Version / Notes |

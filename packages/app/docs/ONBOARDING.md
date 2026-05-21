@@ -4,6 +4,16 @@ A getting-started guide for new contributors landing in `packages/app`. The goal
 
 > Local environment setup (Node, Yarn, Postgres, license, the `.env` files) is in [`docs/INSTALLATION.md`](../../../docs/INSTALLATION.md). This page assumes you can already run `yarn dev` from the repo root and reach `http://localhost:3000/login`. URLs below use the default `APP_PORT=3000`; if you set a different `APP_PORT` in `packages/server/.env`, substitute that port everywhere — see [INSTALLATION.md](../../../docs/INSTALLATION.md#2-open-the-app).
 
+## Table of Contents
+
+- [1. Stack in one paragraph](#1-stack-in-one-paragraph)
+- [2. Boot sequence](#2-boot-sequence)
+- [3. Code layout](#3-code-layout)
+- [4. How to add a feature (worked example)](#4-how-to-add-a-feature-worked-example)
+- [5. Useful commands](#5-useful-commands)
+- [6. Conventions & gotchas](#6-conventions--gotchas)
+- [7. FAQ](#7-faq)
+
 ## 1. Stack in one paragraph
 
 - **Framework**: React 18 + TypeScript, bundled with Webpack 5 (no CRA, no Vite).
