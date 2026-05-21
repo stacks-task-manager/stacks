@@ -67,7 +67,7 @@
         "lodash": "^4.17.21",
         "lodash-es": "^4.17.21",
         "lowlight": "^3.1.0",
-        "markdown-to-jsx": "^7.4.0",
+        "markdown-to-jsx": "^9.8.1",
         "mousetrap": "^1.6.5",
         "nanoid": "^4.0.1",
         "node-emoji": "^1.11.0",
