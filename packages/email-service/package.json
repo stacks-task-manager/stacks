@@ -33,7 +33,7 @@
     "@types/react-dom": "^19.1.7",
     "@types/sequelize": "^4.28.20",
     "esbuild": "^0.25.8",
-    "react-email": "^4.2.8",
+    "react-email": "^6.3.0",
     "tsx": "^4.7.1",
     "typescript": "^5.8.3"
   }
