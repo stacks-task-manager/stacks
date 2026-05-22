@@ -1,0 +1,58 @@
+[
+    {
+        "id": "13bc7041-894b-442a-9dfe-296ad8982fc0",
+        "title": "Module 1",
+        "color": "#06B6D4",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "19cac2e3-575e-4928-b30f-b7878545db49",
+        "title": "Module 2",
+        "color": "#F97316",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "0ff4f8ba-5c25-491c-b1ae-37ba6533cb45",
+        "title": "Bonus",
+        "color": "#06B6D4",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "987d6c96-ed52-4a0f-b9e3-a131ea4d5212",
+        "title": "Marketing",
+        "color": "#64748B",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "06d6b246-112d-49b2-be88-317063a42661",
+        "title": "Support",
+        "color": "#3B82F6",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "e6d28746-b2ab-4081-9d12-5336d2880e2c",
+        "title": "Recorded",
+        "color": "#6366F1",
+        "type": "status",
+        "section": "projects"
+    },
+    {
+        "id": "5fd95ae4-6582-4ee9-9af8-9bb383f1283b",
+        "title": "Edited",
+        "color": "#EC4899",
+        "type": "status",
+        "section": "projects"
+    },
+    {
+        "id": "6ba327fa-efa6-436c-b34d-b56c631aca58",
+        "title": "Uploaded",
+        "color": "#F97316",
+        "type": "status",
+        "section": "projects"
+    }
+]

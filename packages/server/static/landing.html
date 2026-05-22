@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stacks — Secure Local Project Management</title>
+  <meta name="description" content="Stacks is a beautifully designed, privacy-focused project management app that runs entirely on your machine.">
+  <link rel="stylesheet" href="/static/assets/css/stacks.min.css" as="style" />
+  <style>
+    /*
+     * Layout grids for this page only. Older stacks.min.css builds may not ship
+     * d-grid / grid__* utilities; without these rules everything stacks as one column.
+     */
+    .landing-hero-grid {
+      display: grid;
+      gap: 3rem;
+      align-items: center;
+      grid-template-columns: 1fr;
+    }
+    .landing-two-col {
+      display: grid;
+      gap: 3rem;
+      align-items: center;
+      grid-template-columns: 1fr;
+    }
+    .landing-cols-3 {
+      display: grid;
+      gap: 2rem;
+      grid-template-columns: 1fr;
+    }
+    .landing-cols-prod {
+      display: grid;
+      gap: 1.25rem;
+      grid-template-columns: 1fr;
+    }
+    .landing-cols-highlights {
+      display: grid;
+      gap: 1.25rem;
+      grid-template-columns: 1fr;
+    }
+    .landing-cols-testimonials {
+      display: grid;
+      gap: 1.5rem;
+      grid-template-columns: 1fr;
+    }
+    .landing-pricing-grid {
+      display: grid;
+      gap: 2rem;
+      align-items: start;
+      grid-template-columns: 1fr;
+    }
+    .landing-footer-grid {
+      display: grid;
+      gap: 2rem;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 40rem) {
+      .landing-cols-prod { grid-template-columns: repeat(2, 1fr); }
+      .landing-cols-highlights { grid-template-columns: repeat(2, 1fr); }
+      .landing-footer-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (min-width: 48rem) {
+      .landing-cols-3 { grid-template-columns: repeat(3, 1fr); }
+      .landing-cols-testimonials { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (min-width: 64rem) {
+      .landing-hero-grid,
+      .landing-two-col { grid-template-columns: 1fr 1fr; }
+      .landing-cols-prod { grid-template-columns: repeat(4, 1fr); }
+      .landing-cols-highlights { grid-template-columns: repeat(3, 1fr); }
+      .landing-cols-testimonials { grid-template-columns: repeat(3, 1fr); }
+      .landing-pricing-grid { grid-template-columns: repeat(3, 1fr); }
+      .landing-footer-grid { grid-template-columns: 2fr repeat(5, 1fr); }
+    }
+  </style>
+</head>
+<body class="m0">
+
+<nav class="ps-sticky t0 w100 bb bc-black-150 bg-white">
+  <div class="wmx12 mx-auto px24">
+    <div class="d-flex ai-center jc-space-between h64 g12 fw-wrap">
+      <a href="/" class="d-flex ai-center g12 fw-bold fs-headline1 fc-black-900">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true"><rect width="28" height="28" rx="6" fill="#0C0D0E"/><rect x="5" y="5" width="8" height="8" rx="1.5" fill="#F48024"/><rect x="15" y="5" width="8" height="8" rx="1.5" fill="#F48024" opacity=".7"/><rect x="5" y="15" width="8" height="8" rx="1.5" fill="#F48024" opacity=".5"/><rect x="15" y="15" width="8" height="8" rx="1.5" fill="#F48024" opacity=".3"/></svg>
+        Stacks
+      </a>
+      <ul class="d-none md:d-flex list-ls-none m0 p0 fw-wrap ai-center g16" role="list">
+        <li><a href="#why-stacks" class="s-link fs-body2 fc-black-500">Why Stacks</a></li>
+        <li><a href="#product" class="s-link fs-body2 fc-black-500">Product</a></li>
+        <li><a href="#pricing" class="s-link fs-body2 fc-black-500">Pricing</a></li>
+        <li><a href="#reviews" class="s-link fs-body2 fc-black-500">Reviews</a></li>
+        <li><a href="#support" class="s-link fs-body2 fc-black-500">Support</a></li>
+        <li><a href="/login" class="s-link fs-body2 fc-black-500">Login</a></li>
+        <li><a href="/register" class="s-link fs-body2 fc-black-500">Register</a></li>
+      </ul>
+      <a href="https://getstacksapp.com" class="s-btn s-btn__filled s-btn__primary s-btn__md d-none md:d-inline-flex">Try for Free</a>
+      <button type="button" class="d-block md:d-none s-btn s-btn__unset p8" aria-expanded="false" aria-controls="mobileMenu" id="mobileMenuBtn">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+    <div id="mobileMenu" class="d-none fd-column g8 pb16 md:d-none" hidden>
+      <a href="#why-stacks" class="s-link fs-body2 fc-black-500 d-block py8">Why Stacks</a>
+      <a href="#product" class="s-link fs-body2 fc-black-500 d-block py8">Product</a>
+      <a href="#pricing" class="s-link fs-body2 fc-black-500 d-block py8">Pricing</a>
+      <a href="#reviews" class="s-link fs-body2 fc-black-500 d-block py8">Reviews</a>
+      <a href="#support" class="s-link fs-body2 fc-black-500 d-block py8">Support</a>
+      <a href="/login" class="s-link fs-body2 fc-black-500 d-block py8">Login</a>
+      <a href="/register" class="s-link fs-body2 fc-black-500 d-block py8">Register</a>
+      <a href="https://getstacksapp.com" class="s-btn s-btn__filled s-btn__primary s-btn__md w100 mt8">Try for Free</a>
+    </div>
+  </div>
+</nav>
+
+<section class="bg-black fc-white overflow-x-hidden pt96 pb128">
+  <div class="wmx12 mx-auto px24">
+    <div class="landing-hero-grid">
+      <div>
+        <span class="d-block fs-caption fw-bold tt-uppercase fc-orange-400 mb16">Local-first project management</span>
+        <h1 class="fs-display1 fw-bold lh-xs mb24">The secure solution for <span class="fc-orange-400">your business</span></h1>
+        <p class="fs-body2 fc-black-350 mb32 wmx5">Stacks is a beautifully designed, privacy-focused project management app that runs entirely on your machine. No cloud. No tracking. Just productivity.</p>
+        <ul class="list-ls-none m0 p0 mb32">
+          <li class="d-flex ai-start g12 fs-body2 fc-black-350 mb12"><svg class="flex--item fl-shrink0 fc-green-500 mtn2" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4 10l4 4L16 5"/></svg><span>100% Local &amp; Private — your data never leaves your device</span></li>
+          <li class="d-flex ai-start g12 fs-body2 fc-black-350 mb12"><svg class="flex--item fl-shrink0 fc-green-500 mtn2" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4 10l4 4L16 5"/></svg><span>Offline-first — works without internet</span></li>
+          <li class="d-flex ai-start g12 fs-body2 fc-black-350 mb12"><svg class="flex--item fl-shrink0 fc-green-500 mtn2" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4 10l4 4L16 5"/></svg><span>Projects, tasks, contacts, docs — all in one place</span></li>
+          <li class="d-flex ai-start g12 fs-body2 fc-black-350 mb12"><svg class="flex--item fl-shrink0 fc-green-500 mtn2" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4 10l4 4L16 5"/></svg><span>One-time purchase, no subscriptions</span></li>
+        </ul>
+        <div class="d-flex g16 fw-wrap">
+          <a href="https://getstacksapp.com" class="s-btn s-btn__filled s-btn__primary s-btn__lg">Download for Free</a>
+          <a href="#product" class="s-btn s-btn__filled s-btn__muted s-btn__lg">See Features</a>
+        </div>
+        <p class="mt24 fs-caption fc-black-350 m0">
+          <a href="/app" class="s-link fc-orange-400 fw-bold">Go to app</a>
+          <span class="fc-black-500 mx8">·</span>
+          <a href="/login" class="s-link fc-black-350">Login</a>
+          <span class="fc-black-500 mx8">·</span>
+          <a href="/register" class="s-link fc-black-350">Register</a>
+        </p>
+      </div>
+      <div class="ps-relative">
+        <img class="bar-lg bs-xl ba bc-black-500 w100" src="https://placehold.co/800x500/1a1a2e/f48024?text=Stacks" alt="Stacks">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pt96 pb96 px24" id="why-stacks">
+  <div class="wmx12 mx-auto">
+    <div class="ta-center mb48">
+      <h2 class="fs-headline1 mb12 fc-black-900">Why choose Stacks?</h2>
+      <p class="fs-body2 fc-black-500 m0 mx-auto wmx6">Built for professionals and teams who value privacy, speed, and beautiful design.</p>
+    </div>
+    <div class="landing-cols-3">
+      <div class="s-card s-card__muted ta-center p32 bar-lg">
+        <div class="fs-display1 mb16" aria-hidden="true">🔒</div>
+        <h3 class="fs-title mb8 fc-black-900">Secure &amp; Privacy-Focused</h3>
+        <p class="fs-body2 fc-black-500 m0 lh-lg">All data is stored locally on your device. No cloud sync, no telemetry, no third-party access. Your projects stay yours.</p>
+      </div>
+      <div class="s-card s-card__muted ta-center p32 bar-lg">
+        <div class="fs-display1 mb16" aria-hidden="true">📋</div>
+        <h3 class="fs-title mb8 fc-black-900">Advanced Project Management</h3>
+        <p class="fs-body2 fc-black-500 m0 lh-lg">Manage projects, tasks, people, documents and files — all from a single, beautifully designed interface.</p>
+      </div>
+      <div class="s-card s-card__muted ta-center p32 bar-lg">
+        <div class="fs-display1 mb16" aria-hidden="true">📡</div>
+        <h3 class="fs-title mb8 fc-black-900">Offline &amp; Online Capabilities</h3>
+        <p class="fs-body2 fc-black-500 m0 lh-lg">Works 100% offline. No internet? No problem. Optional sync when you need team collaboration.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pt96 pb96 px24 bg-black-050" id="product">
+  <div class="wmx12 mx-auto">
+    <div class="ta-center mb48">
+      <h2 class="fs-headline1 mb12 fc-black-900">What makes Stacks great</h2>
+      <p class="fs-body2 fc-black-500 m0 mx-auto wmx6">Everything you need to manage your work, bundled into one secure app.</p>
+    </div>
+    <div class="landing-cols-prod">
+      <div class="s-card p28 bar-lg"><div class="fs-headline1 mb12" aria-hidden="true">📁</div><h3 class="fs-body1 fw-bold mb8 fc-black-900">Projects &amp; Tasks</h3><p class="fs-caption fc-black-500 m0 lh-lg">Organize work into projects with tasks, subtasks, priorities, and deadlines.</p></div>
+      <div class="s-card p28 bar-lg"><div class="fs-headline1 mb12" aria-hidden="true">👥</div><h3 class="fs-body1 fw-bold mb8 fc-black-900">People &amp; Contacts</h3><p class="fs-caption fc-black-500 m0 lh-lg">Keep your contacts and team members organized within your projects.</p></div>
+      <div class="s-card p28 bar-lg"><div class="fs-headline1 mb12" aria-hidden="true">📄</div><h3 class="fs-body1 fw-bold mb8 fc-black-900">Docs &amp; Files</h3><p class="fs-caption fc-black-500 m0 lh-lg">Attach documents, notes, and files directly to your projects and tasks.</p></div>
+      <div class="s-card p28 bar-lg"><div class="fs-headline1 mb12" aria-hidden="true">📊</div><h3 class="fs-body1 fw-bold mb8 fc-black-900">Reports</h3><p class="fs-caption fc-black-500 m0 lh-lg">Generate insights and progress reports to track your productivity.</p></div>
+      <div class="s-card p28 bar-lg"><div class="fs-headline1 mb12" aria-hidden="true">🛡️</div><h3 class="fs-body1 fw-bold mb8 fc-black-900">Secure &amp; Private</h3><p class="fs-caption fc-black-500 m0 lh-lg">Zero data collection. Everything is encrypted and stored locally.</p></div>
+      <div class="s-card p28 bar-lg"><div class="fs-headline1 mb12" aria-hidden="true">🎨</div><h3 class="fs-body1 fw-bold mb8 fc-black-900">Customizable</h3><p class="fs-caption fc-black-500 m0 lh-lg">Themes, layouts, and workflows that adapt to how you work.</p></div>
+      <div class="s-card p28 bar-lg"><div class="fs-headline1 mb12" aria-hidden="true">🔄</div><h3 class="fs-body1 fw-bold mb8 fc-black-900">Free Updates</h3><p class="fs-caption fc-black-500 m0 lh-lg">Continuous improvements and new features at no extra cost.</p></div>
+      <div class="s-card p28 bar-lg"><div class="fs-headline1 mb12" aria-hidden="true">⚡</div><h3 class="fs-body1 fw-bold mb8 fc-black-900">High Performance</h3><p class="fs-caption fc-black-500 m0 lh-lg">Native-level speed. No Electron bloat. Instant startup.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="pt96 pb96 px24">
+  <div class="wmx12 mx-auto">
+    <div class="landing-two-col mb64">
+      <div>
+        <div class="fs-body2 fw-bold tt-uppercase fc-orange-400 mb8">Everything in its place</div>
+        <h3 class="fs-headline1 fc-black-900 mb16">Stay Organized</h3>
+        <p class="fs-body2 fc-black-500 m0 lh-lg">Create projects, break them into tasks, assign priorities, set deadlines, and track progress — all within a clean, distraction-free interface that keeps you focused.</p>
+      </div>
+      <div><img src="https://placehold.co/600x400/f6f7f8/0C0D0E?text=Stay+Organized" alt="Stay Organized" class="bar-lg bs-xl w100"></div>
+    </div>
+    <div class="landing-two-col mb64">
+      <div>
+        <img src="https://placehold.co/600x400/f6f7f8/0C0D0E?text=Stress+Free" alt="Stress Free Productivity" class="bar-lg bs-xl w100">
+      </div>
+      <div>
+        <div class="fs-body2 fw-bold tt-uppercase fc-orange-400 mb8">Work without worry</div>
+        <h3 class="fs-headline1 fc-black-900 mb16">Stress Free Productivity</h3>
+        <p class="fs-body2 fc-black-500 m0 lh-lg">No cloud means no outages, no data breaches, and no subscription fatigue. Stacks runs on your machine with zero dependencies on external services.</p>
+      </div>
+    </div>
+    <div class="landing-two-col">
+      <div>
+        <div class="fs-body2 fw-bold tt-uppercase fc-orange-400 mb8">Let Stacks do the heavy lifting</div>
+        <h3 class="fs-headline1 fc-black-900 mb16">Task Automation</h3>
+        <p class="fs-body2 fc-black-500 m0 lh-lg">Automate recurring tasks, set up templates for common workflows, and use smart filters to surface exactly what needs your attention right now.</p>
+      </div>
+      <div><img src="https://placehold.co/600x400/f6f7f8/0C0D0E?text=Task+Automation" alt="Task Automation" class="bar-lg bs-xl w100"></div>
+    </div>
+  </div>
+</section>
+
+<section class="pt96 pb96 px24 bg-black-050">
+  <div class="wmx12 mx-auto">
+    <div class="ta-center mb48">
+      <h2 class="fs-headline1 mb12 fc-black-900">Great features, built in</h2>
+      <p class="fs-body2 fc-black-500 m0 mx-auto wmx6">Every detail crafted to give you the best local project management experience.</p>
+    </div>
+    <div class="landing-cols-highlights">
+      <div class="s-card p24 bar-md"><h4 class="fs-body2 fw-bold fc-black-900 mb6">🔐 Secure</h4><p class="fs-caption fc-black-500 m0 lh-md">Local encryption, no cloud exposure, full data ownership.</p></div>
+      <div class="s-card p24 bar-md"><h4 class="fs-body2 fw-bold fc-black-900 mb6">📴 Offline First</h4><p class="fs-caption fc-black-500 m0 lh-md">No internet required. Your work is always accessible.</p></div>
+      <div class="s-card p24 bar-md"><h4 class="fs-body2 fw-bold fc-black-900 mb6">✨ Beautiful Design</h4><p class="fs-caption fc-black-500 m0 lh-md">Crafted with attention to every pixel and interaction.</p></div>
+      <div class="s-card p24 bar-md"><h4 class="fs-body2 fw-bold fc-black-900 mb6">🌙 Dark Mode</h4><p class="fs-caption fc-black-500 m0 lh-md">Easy on the eyes, day and night.</p></div>
+      <div class="s-card p24 bar-md"><h4 class="fs-body2 fw-bold fc-black-900 mb6">💻 Cross-Platform</h4><p class="fs-caption fc-black-500 m0 lh-md">Available on macOS, Windows, and Linux.</p></div>
+      <div class="s-card p24 bar-md"><h4 class="fs-body2 fw-bold fc-black-900 mb6">🔓 No Vendor Lock-In</h4><p class="fs-caption fc-black-500 m0 lh-md">Export your data anytime in open formats.</p></div>
+      <div class="s-card p24 bar-md"><h4 class="fs-body2 fw-bold fc-black-900 mb6">🌐 Multilanguage</h4><p class="fs-caption fc-black-500 m0 lh-md">Interface available in multiple languages.</p></div>
+      <div class="s-card p24 bar-md"><h4 class="fs-body2 fw-bold fc-black-900 mb6">🔍 Super Search</h4><p class="fs-caption fc-black-500 m0 lh-md">Find anything instantly across all your projects.</p></div>
+      <div class="s-card p24 bar-md"><h4 class="fs-body2 fw-bold fc-black-900 mb6">⚙️ Highly Customizable</h4><p class="fs-caption fc-black-500 m0 lh-md">Tailor workflows, views, and themes to your needs.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="pt96 pb96 px24" id="reviews">
+  <div class="wmx12 mx-auto">
+    <div class="ta-center mb48">
+      <h2 class="fs-headline1 mb12 fc-black-900">Loved by professionals</h2>
+      <p class="fs-body2 fc-black-500 m0 mx-auto wmx6">See what our users say about Stacks.</p>
+    </div>
+    <div class="landing-cols-testimonials">
+      <div class="s-card p28 bar-lg">
+        <div class="fc-orange-400 fs-body2 mb12" aria-hidden="true">★★★★★</div>
+        <blockquote class="fs-body2 fc-black-700 m0 mb16 lh-lg">"Stacks replaced three different tools for me. Everything I need is in one place, and it's blazing fast."</blockquote>
+        <div class="fs-body2 fw-bold fc-black-900">Prashant M.</div>
+      </div>
+      <div class="s-card p28 bar-lg">
+        <div class="fc-orange-400 fs-body2 mb12" aria-hidden="true">★★★★★</div>
+        <blockquote class="fs-body2 fc-black-700 m0 mb16 lh-lg">"Finally a project management app that respects my privacy. No account needed, no cloud — just works."</blockquote>
+        <div class="fs-body2 fw-bold fc-black-900">David S.</div>
+      </div>
+      <div class="s-card p28 bar-lg">
+        <div class="fc-orange-400 fs-body2 mb12" aria-hidden="true">★★★★★</div>
+        <blockquote class="fs-body2 fc-black-700 m0 mb16 lh-lg">"The one-time purchase model is refreshing. No subscriptions, no upsells. Just a great app."</blockquote>
+        <div class="fs-body2 fw-bold fc-black-900">Rohan</div>
+      </div>
+      <div class="s-card p28 bar-lg">
+        <div class="fc-orange-400 fs-body2 mb12" aria-hidden="true">★★★★★</div>
+        <blockquote class="fs-body2 fc-black-700 m0 mb16 lh-lg">"Beautiful design, incredible performance. It feels like a native app because it is one."</blockquote>
+        <div class="fs-body2 fw-bold fc-black-900">Gabriel Catalin T.</div>
+      </div>
+      <div class="s-card p28 bar-lg">
+        <div class="fc-orange-400 fs-body2 mb12" aria-hidden="true">★★★★★</div>
+        <blockquote class="fs-body2 fc-black-700 m0 mb16 lh-lg">"I work offline 50% of the time. Stacks is the only PM tool that actually handles that gracefully."</blockquote>
+        <div class="fs-body2 fw-bold fc-black-900">Nicola D.</div>
+      </div>
+      <div class="s-card p28 bar-lg">
+        <div class="fc-orange-400 fs-body2 mb12" aria-hidden="true">★★★★★</div>
+        <blockquote class="fs-body2 fc-black-700 m0 mb16 lh-lg">"My team switched from Notion and never looked back. The local-first approach changed everything."</blockquote>
+        <div class="fs-body2 fw-bold fc-black-900">JB Marceau</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pt96 pb96 px24 bg-black-050" id="pricing">
+  <div class="wmx12 mx-auto">
+    <div class="ta-center mb48">
+      <h2 class="fs-headline1 mb12 fc-black-900">Simple, honest pricing</h2>
+      <p class="fs-body2 fc-black-500 m0 mx-auto wmx6">No hidden fees. No subscriptions (unless you want one for teams).</p>
+    </div>
+    <div class="landing-pricing-grid wmx10 mx-auto lg:wmx12">
+      <div class="s-card p36 bar-lg ta-center">
+        <div class="fs-title fw-bold fc-black-900 mb8">Basic</div>
+        <div class="fs-display1 fw-bold fc-black-900 mb4">Free</div>
+        <div class="fs-body2 fc-black-500 mb24">Forever</div>
+        <ul class="list-ls-none m0 p0 mb24 ta-left">
+          <li class="d-flex ai-center g10 fs-body2 fc-black-700 py8 bb bc-black-100"><svg class="fc-green-500 fl-shrink0" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9l3 3L13 5"/></svg>Up to 3 projects</li>
+          <li class="d-flex ai-center g10 fs-body2 fc-black-700 py8 bb bc-black-100"><svg class="fc-green-500 fl-shrink0" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9l3 3L13 5"/></svg>Tasks &amp; subtasks</li>
+          <li class="d-flex ai-center g10 fs-body2 fc-black-700 py8 bb bc-black-100"><svg class="fc-green-500 fl-shrink0" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9l3 3L13 5"/></svg>Contacts management</li>
+          <li class="d-flex ai-center g10 fs-body2 fc-black-700 py8"><svg class="fc-green-500 fl-shrink0" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9l3 3L13 5"/></svg>Dark mode</li>
+        </ul>
+        <a href="https://getstacksapp.com" class="s-btn s-btn__outlined s-btn__md w100">Download Free</a>
+      </div>
+      <div class="s-card p36 bar-lg ta-center ba bc-orange-400 bs-lg">
+        <div class="d-flex jc-center mb8"><span class="s-badge s-badge__bounty s-badge__sm">Most Popular</span></div>
+        <div class="fs-title fw-bold fc-black-900 mb8">Unlimited Forever</div>
+        <div class="fs-display1 fw-bold fc-black-900 mb4">$49</div>
+        <div class="fs-body2 fc-black-500 mb24">One-time payment</div>
+        <ul class="list-ls-none m0 p0 mb24 ta-left">
+          <li class="d-flex ai-center g10 fs-body2 fc-black-700 py8 bb bc-black-100"><svg class="fc-green-500 fl-shrink0" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9l3 3L13 5"/></svg>Unlimited projects</li>
+          <li class="d-flex ai-center g10 fs-body2 fc-black-700 py8 bb bc-black-100"><svg class="fc-green-500 fl-shrink0" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9l3 3L13 5"/></svg>All features included</li>
+          <li class="d-flex ai-center g10 fs-body2 fc-black-700 py8 bb bc-black-100"><svg class="fc-green-500 fl-shrink0" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9l3 3L13 5"/></svg>Free lifetime updates</li>
+          <li class="d-flex ai-center g10 fs-body2 fc-black-700 py8 bb bc-black-100"><svg class="fc-green-500 fl-shrink0" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9l3 3L13 5"/></svg>Priority support</li>
+          <li class="d-flex ai-center g10 fs-body2 fc-black-700 py8"><svg class="fc-green-500 fl-shrink0" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9l3 3L13 5"/></svg>Export &amp; backup</li>
+        </ul>
+        <a href="https://getstacksapp.com" class="s-btn s-btn__filled s-btn__primary s-btn__md w100">Buy Now — $49</a>
+      </div>
+      <div class="s-card p36 bar-lg ta-center">
+        <div class="fs-title fw-bold fc-black-900 mb8">Teams</div>
+        <div class="fs-display1 fw-bold fc-black-900 mb4">$5</div>
+        <div class="fs-body2 fc-black-500 mb24">per user / month</div>
+        <ul class="list-ls-none m0 p0 mb24 ta-left">
+          <li class="d-flex ai-center g10 fs-body2 fc-black-700 py8 bb bc-black-100"><svg class="fc-green-500 fl-shrink0" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9l3 3L13 5"/></svg>Everything in Unlimited</li>
+          <li class="d-flex ai-center g10 fs-body2 fc-black-700 py8 bb bc-black-100"><svg class="fc-green-500 fl-shrink0" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9l3 3L13 5"/></svg>Team collaboration</li>
+          <li class="d-flex ai-center g10 fs-body2 fc-black-700 py8 bb bc-black-100"><svg class="fc-green-500 fl-shrink0" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9l3 3L13 5"/></svg>Shared projects</li>
+          <li class="d-flex ai-center g10 fs-body2 fc-black-700 py8"><svg class="fc-green-500 fl-shrink0" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9l3 3L13 5"/></svg>Admin controls</li>
+        </ul>
+        <a href="https://getstacksapp.com" class="s-btn s-btn__outlined s-btn__md w100">Contact Sales</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="bg-black fc-black-300 pt64 pb32 px24" id="support">
+  <div class="wmx12 mx-auto">
+    <div class="landing-footer-grid mb48">
+      <div class="ta-left">
+        <a href="/" class="d-flex ai-center g12 fw-bold fs-headline1 fc-white">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true"><rect width="28" height="28" rx="6" fill="#F48024"/><rect x="5" y="5" width="8" height="8" rx="1.5" fill="#fff"/><rect x="15" y="5" width="8" height="8" rx="1.5" fill="#fff" opacity=".7"/><rect x="5" y="15" width="8" height="8" rx="1.5" fill="#fff" opacity=".5"/><rect x="15" y="15" width="8" height="8" rx="1.5" fill="#fff" opacity=".3"/></svg>
+          Stacks
+        </a>
+        <p class="fs-body2 fc-black-350 mt12 m0 lh-lg wmx4">The secure, local-first project management app for professionals who value privacy and performance.</p>
+        <p class="fs-caption fc-black-500 mt12 m0">Server {{versionServer}} · App {{versionApp}}</p>
+      </div>
+      <div class="ta-left">
+        <h4 class="fs-caption fw-bold tt-uppercase fc-white mb16">Stacks</h4>
+        <ul class="list-ls-none m0 p0 pl0 pr0 w100 d-flex fd-column gs8 gsy" role="list">
+          <li class="flex--item m0 p0 list-ls-none"><a href="#why-stacks" class="s-link d-block fs-body2 fc-black-350 p0">Why Stacks</a></li>
+          <li class="flex--item m0 p0 list-ls-none"><a href="#product" class="s-link d-block fs-body2 fc-black-350 p0">Features</a></li>
+          <li class="flex--item m0 p0 list-ls-none"><a href="#pricing" class="s-link d-block fs-body2 fc-black-350 p0">Pricing</a></li>
+          <li class="flex--item m0 p0 list-ls-none"><a href="#reviews" class="s-link d-block fs-body2 fc-black-350 p0">Reviews</a></li>
+        </ul>
+      </div>
+      <div class="ta-left">
+        <h4 class="fs-caption fw-bold tt-uppercase fc-white mb16">Resources</h4>
+        <ul class="list-ls-none m0 p0 pl0 pr0 w100 d-flex fd-column gs8 gsy" role="list">
+          <li class="flex--item m0 p0 list-ls-none"><a href="#" class="s-link d-block fs-body2 fc-black-350 p0">Documentation</a></li>
+          <li class="flex--item m0 p0 list-ls-none"><a href="#" class="s-link d-block fs-body2 fc-black-350 p0">Blog</a></li>
+          <li class="flex--item m0 p0 list-ls-none"><a href="#" class="s-link d-block fs-body2 fc-black-350 p0">Changelog</a></li>
+          <li class="flex--item m0 p0 list-ls-none"><a href="#" class="s-link d-block fs-body2 fc-black-350 p0">Roadmap</a></li>
+        </ul>
+      </div>
+      <div class="ta-left">
+        <h4 class="fs-caption fw-bold tt-uppercase fc-white mb16">Product</h4>
+        <ul class="list-ls-none m0 p0 pl0 pr0 w100 d-flex fd-column gs8 gsy" role="list">
+          <li class="flex--item m0 p0 list-ls-none"><a href="#" class="s-link d-block fs-body2 fc-black-350 p0">macOS</a></li>
+          <li class="flex--item m0 p0 list-ls-none"><a href="#" class="s-link d-block fs-body2 fc-black-350 p0">Windows</a></li>
+          <li class="flex--item m0 p0 list-ls-none"><a href="#" class="s-link d-block fs-body2 fc-black-350 p0">Linux</a></li>
+        </ul>
+      </div>
+      <div class="ta-left">
+        <h4 class="fs-caption fw-bold tt-uppercase fc-white mb16">Legal</h4>
+        <ul class="list-ls-none m0 p0 pl0 pr0 w100 d-flex fd-column gs8 gsy" role="list">
+          <li class="flex--item m0 p0 list-ls-none"><a href="#" class="s-link d-block fs-body2 fc-black-350 p0">Privacy Policy</a></li>
+          <li class="flex--item m0 p0 list-ls-none"><a href="#" class="s-link d-block fs-body2 fc-black-350 p0">Terms of Service</a></li>
+          <li class="flex--item m0 p0 list-ls-none"><a href="#" class="s-link d-block fs-body2 fc-black-350 p0">License</a></li>
+        </ul>
+      </div>
+      <div class="ta-left">
+        <h4 class="fs-caption fw-bold tt-uppercase fc-white mb16">This instance</h4>
+        <ul class="list-ls-none m0 p0 pl0 pr0 w100 d-flex fd-column gs8 gsy" role="list">
+          <li class="flex--item m0 p0 list-ls-none"><a href="/health" class="s-link d-block fs-body2 fc-black-350 p0">Health</a></li>
+          <li class="flex--item m0 p0 list-ls-none"><a href="/ping" class="s-link d-block fs-body2 fc-black-350 p0">Ping</a></li>
+          <li class="flex--item m0 p0 list-ls-none"><a href="/login" class="s-link d-block fs-body2 fc-black-350 p0">Login</a></li>
+          <li class="flex--item m0 p0 list-ls-none"><a href="/register" class="s-link d-block fs-body2 fc-black-350 p0">Register</a></li>
+          <li class="flex--item m0 p0 list-ls-none"><a href="/app" class="s-link d-block fs-body2 fc-black-350 p0">App</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="bt bc-black-400 pt24 fs-caption ta-center fc-black-500">
+      <span class="d-block">&copy; 2026 Stacks. All rights reserved. Built with privacy in mind.</span>
+      <span class="d-block mt8">
+        <a href="/health" class="s-link fc-black-350">Health</a>
+        <span class="fc-black-500 mx8">·</span>
+        <a href="/ping" class="s-link fc-black-350">Ping</a>
+        <span class="fc-black-500 mx8">·</span>
+        <a href="/login" class="s-link fc-black-350">Login</a>
+        <span class="fc-black-500 mx8">·</span>
+        <a href="/register" class="s-link fc-black-350">Register</a>
+        <span class="fc-black-500 mx8">·</span>
+        <a href="/app" class="s-link fc-black-350">App</a>
+      </span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var btn = document.getElementById('mobileMenuBtn');
+    var menu = document.getElementById('mobileMenu');
+    if (!btn || !menu) return;
+    btn.addEventListener('click', function () {
+      var open = menu.classList.toggle('d-flex');
+      menu.classList.toggle('d-none', !open);
+      menu.toggleAttribute('hidden', !open);
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  })();
+  document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      var id = a.getAttribute('href');
+      if (id && id !== '#') {
+        var el = document.querySelector(id);
+        if (el) {
+          e.preventDefault();
+          el.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+      var mEl = document.getElementById('mobileMenu');
+      var bEl = document.getElementById('mobileMenuBtn');
+      if (mEl && mEl.classList.contains('d-flex')) {
+        mEl.classList.remove('d-flex');
+        mEl.classList.add('d-none');
+        mEl.setAttribute('hidden', '');
+        if (bEl) bEl.setAttribute('aria-expanded', 'false');
+      }
+    });
+  });
+</script>
+</body>
+</html>

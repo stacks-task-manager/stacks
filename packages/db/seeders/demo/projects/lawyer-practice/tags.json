@@ -1,0 +1,30 @@
+[
+    {
+        "id": "dfdbb370-2e23-4af1-a018-812ca23ea4c0",
+        "title": "Civil",
+        "color": "#3B82F6",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "014a03ca-c18a-4a0c-8c85-44ce915e02b6",
+        "title": "Criminal",
+        "color": "#DC2626",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "e6b55772-8254-477b-87d1-a8fff24fb2b8",
+        "title": "Corporate",
+        "color": "#059669",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "b8ea1793-e6ae-4ba3-bfbb-6a2b174f6ac0",
+        "title": "Billing",
+        "color": "#F59E0B",
+        "type": "tag",
+        "section": "projects"
+    }
+]

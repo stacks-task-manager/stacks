@@ -1,0 +1,58 @@
+[
+    {
+        "id": "d62d14c2-ea87-4f06-b6d3-09b1be8e3ad0",
+        "title": "Flights",
+        "color": "#EC4899",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "80c44cde-840d-4797-8f2d-d410e74bcacb",
+        "title": "Hotels",
+        "color": "#F97316",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "1178395a-fe53-413a-a649-e9efb5608e5e",
+        "title": "Activities",
+        "color": "#8B5CF6",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "1409f13e-68f0-4c35-8d0d-7acd33d39190",
+        "title": "Food",
+        "color": "#8B5CF6",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "680cd9d5-9557-4105-8598-0b5cab8d35ae",
+        "title": "Transport",
+        "color": "#F59E0B",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "da41bf52-1cdd-4411-9b55-3492b3785e79",
+        "title": "Booked",
+        "color": "#F97316",
+        "type": "status",
+        "section": "projects"
+    },
+    {
+        "id": "a852093a-cbf3-482d-9e93-008b43022ad5",
+        "title": "Reserved",
+        "color": "#EF4444",
+        "type": "status",
+        "section": "projects"
+    },
+    {
+        "id": "c9eb0d75-fc7d-48e5-982d-0387c34eb912",
+        "title": "Waitlisted",
+        "color": "#6366F1",
+        "type": "status",
+        "section": "projects"
+    }
+]

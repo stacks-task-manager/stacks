@@ -1,0 +1,149 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.#{$ns}-drawer {
+    &.#{$ns}-drawer.#{$ns}-position-right {
+        &.person-drawer {
+            width: 380px;
+        }
+    }
+
+    &.person-drawer {
+        &.embedded {
+            box-shadow: none;
+            border-left: 1px solid $light-gray4;
+            min-width: 380px !important;
+            box-shadow: -2px 0 4px -2px rgba(109, 110, 111, 0.1);
+        }
+
+        .#{$ns}-drawer-header {
+            box-shadow: none;
+            padding: 10px;
+            padding-bottom: 0;
+            background-color: $light-gray5;
+
+            > div {
+                width: 100%;
+                display: flex;
+                align-items: center;
+
+                &:last-child {
+                    justify-content: flex-end;
+                }
+            }
+        }
+    }
+}
+
+.person-details {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+
+    .#{$ns}-form-group {
+        width: 100%;
+    }
+
+    h4 {
+        padding: 0 20px;
+        color: $dark-gray5;
+        margin: 25px 0;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+
+        &.interactive {
+            cursor: pointer;
+            margin-bottom: 0;
+        }
+    }
+
+    &__content {
+        overflow-y: auto;
+
+        &.editing {
+            padding: 15px 0;
+        }
+    }
+
+    &__header {
+        display: flex;
+        flex-direction: column;
+        padding: 0 20px;
+        text-align: center;
+        gap: 15px;
+        padding-bottom: 20px;
+        background-color: $light-gray5;
+
+        h3 {
+            margin: 0;
+            font-size: 20px;
+            margin-bottom: 5px;
+            color: $dark-gray3;
+        }
+    }
+
+    &__avatar {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        padding: 2px 0;
+
+        &.editable {
+            cursor: pointer;
+        }
+    }
+
+    &__section {
+        border-top: 1px solid $light-gray4;
+        border-bottom: 1px solid $light-gray4;
+        padding: 15px 20px;
+        margin-top: -1px;
+    }
+
+    &__footer {
+        background-color: $white;
+        padding: 10px 20px;
+    }
+
+    .#{$ns}-collapse-body {
+        margin-top: 25px;
+    }
+}
+
+.#{$ns}-dark {
+    .#{$ns}-drawer {
+        &.person-drawer {
+            box-shadow: none;
+
+            &.embedded {
+                border-color: $sidebar-border-color-dark;
+            }
+
+            .#{$ns}-drawer-header {
+                background-color: $dark-gray3;
+            }
+        }
+    }
+
+    .person-details {
+        h4 {
+            color: $gray5;
+        }
+        h3 {
+            color: $light-gray5;
+        }
+
+        &__header {
+            background-color: $dark-gray3;
+        }
+
+        &__section {
+            border-top-color: $dark-gray2;
+            border-bottom-color: $dark-gray2;
+        }
+        &__footer {
+            background-color: $dark-gray3;
+        }
+    }
+}

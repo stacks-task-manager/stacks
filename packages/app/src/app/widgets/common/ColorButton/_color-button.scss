@@ -1,0 +1,23 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.color-button {
+    width: 30px;
+    height: 30px;
+    border-radius: 100%;
+    border: none;
+    margin: 0;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    color: $white;
+
+    &.selected {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    &:hover {
+        transform: scale(1.1);
+    }
+}

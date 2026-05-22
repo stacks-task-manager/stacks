@@ -1,0 +1,49 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.avatar-chip {
+    display: flex;
+    align-items: center;
+    background-color: $light-gray3;
+    box-shadow: 0 0 0 1px $light-gray2;
+    border-radius: 999px;
+    gap: 6px;
+    height: 24px;
+
+    &:hover {
+        background-color: $light-gray2;
+    }
+
+    &__name {
+        flex-grow: 2;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-weight: 500;
+    }
+
+    .#{$ns}-button {
+        border-radius: 999px;
+        min-width: 20px;
+        min-height: 20px;
+    }
+
+    &.small {
+        .avatar-chip__name {
+            font-size: 12px;
+        }
+    }
+
+    &.large {
+        gap: 10px;
+
+        .avatar-chip__name {
+            font-size: 16px;
+        }
+    }
+}
+
+.#{$ns}-dark {
+    .avatar-chip {
+        background-color: $dark-gray3;
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    }
+}

@@ -1,0 +1,104 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.people-list {
+    // .#{$ns}-checkbox {
+    //     margin-bottom: 0;
+    //     white-space: nowrap;
+    //     overflow: hidden;
+    //     text-overflow: ellipsis;
+    // }
+
+    .cell-name {
+        .avatar {
+            flex-shrink: 0;
+        }
+
+        .person-name {
+            min-width: 0;
+
+            > div {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+
+        .copy-person {
+            display: none;
+            flex-shrink: 0;
+        }
+
+        &:hover {
+            .copy-person {
+                display: flex;
+            }
+        }
+    }
+}
+
+.people-grid {
+    display: flex;
+    flex-wrap: wrap;
+
+    .person-card-wrapper {
+        width: 20%;
+        padding: 0 10px;
+    }
+
+    .#{$ns}-card {
+        margin-bottom: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    // .person-card-avatar {
+    //     overflow: hidden;
+    //     border-radius: 50%;
+    //     width: 100px;
+    //     height: 100px;
+    //     margin-bottom: 20px;
+    //     display: flex;
+    //     align-items: center;
+    //     justify-content: center;
+    //     font-size: 40px;
+    //     font-weight: 600;
+    //     color: $white;
+    // }
+
+    .person-card-name {
+        margin-top: 20px;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+    }
+
+    .person-card-info {
+        margin-bottom: 2px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+    }
+}
+
+.people-timesheet,
+.people-approvals {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    height: 100%;
+}
+
+.timelogs-approve-buttons {
+    visibility: hidden;
+}
+
+tr {
+    &:hover {
+        .timelogs-approve-buttons {
+            visibility: visible;
+        }
+    }
+}

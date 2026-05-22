@@ -1,0 +1,193 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.rbc-calendar {
+    background-color: $white;
+}
+
+.calendar-event {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    max-width: 100%;
+
+    .calendar-event-title {
+        min-width: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 100%;
+    }
+}
+
+.rbc-time-view {
+    .rbc-row.rbc-time-header-cell {
+        min-height: 50px;
+    }
+}
+
+/* WEEK */
+.rbc-day-slot {
+    .rbc-event {
+        border: none;
+        box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+    }
+
+    .event__title {
+        margin-top: 2px;
+    }
+}
+
+.rbc-timeslot-group {
+    border-bottom: none;
+
+    .rbc-time-slot {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: $gray3;
+        text-transform: uppercase;
+
+        &:last-child {
+            display: none;
+        }
+    }
+}
+
+/* MONTH */
+.rbc-month-row {
+    .rbc-event {
+        font-size: 11px;
+        font-weight: 500;
+        // border-left: 3px solid;
+    }
+
+    .event__date {
+        margin-top: 0;
+    }
+
+    .rbc-event-content {
+        display: flex;
+        align-items: center;
+    }
+}
+
+/* DAY */
+.rbc-time-content {
+    border-top-width: 1px;
+}
+.rbc-time-content > * + * > * {
+    // border-left: none;
+}
+
+/* HEADER */
+.rbc-header {
+    font-size: initial;
+    padding: 5px;
+    text-align: left;
+    .rbc-button-link {
+        display: block;
+    }
+}
+
+.rbc-addons-dnd-resize-ns-anchor {
+    z-index: 10;
+}
+
+.rbc-today:not(.rbc-selected-cell) {
+    background-color: transparent;
+}
+
+.rbc-off-range-bg {
+    background-color: $light-gray4;
+}
+
+/* EVENT */
+.rbc-event {
+    padding: 0;
+    font-size: 12px;
+
+    &.rbc-event-allday {
+        // border-left: 3px solid;
+    }
+}
+.rbc-event-label {
+    display: none;
+}
+.rbc-event-content {
+    padding: 2px;
+    position: relative;
+    // padding-left: 11px;
+    padding-left: 8px;
+
+    .#{$ns}-popover-target {
+        height: 100%;
+    }
+}
+
+.event {
+    &__bubble {
+        position: absolute;
+        // border-radius: 5px;
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+        width: 4px;
+        // top: 3px;
+        top: 0;
+        // bottom: 3px;
+        bottom: 0;
+        // left: 4px;
+        left: 0;
+    }
+
+    &__date {
+        line-height: 14px;
+        font-size: 11px;
+        margin-top: 2px;
+        font-weight: 500;
+        font-size: 9px;
+        opacity: 0.8;
+    }
+
+    &__title {
+        display: flex;
+        align-items: center;
+        gap: 3px;
+        font-weight: 600;
+        font-size: 11px;
+    }
+}
+
+.#{$ns}-dark {
+    .rbc-calendar {
+        background-color: $dark-gray2;
+    }
+
+    .rbc-day-bg + .rbc-day-bg,
+    .rbc-month-row + .rbc-month-row,
+    .rbc-month-view,
+    .rbc-header + .rbc-header,
+    .rbc-header,
+    .rbc-time-header.rbc-overflowing,
+    .rbc-time-view,
+    .rbc-time-content,
+    .rbc-day-slot .rbc-time-slot {
+        border-color: $dark-gray5;
+    }
+
+    .rbc-time-content > * + * > *,
+    .rbc-timeslot-group,
+    .rbc-time-header-content {
+        border-color: $gray1;
+    }
+
+    .rbc-off-range-bg {
+        background-color: $dark-gray1;
+    }
+
+    // .rbc-today {
+    //     background-color: $dark-gray3;
+    // }
+
+    .rbc-show-more {
+        background-color: transparent;
+    }
+}

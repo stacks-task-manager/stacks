@@ -1,0 +1,56 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.hotkey-chip {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 4px;
+    overflow: hidden;
+    background-color: $light-gray2;
+    padding: 2px 3px;
+    font-size: 10px;
+    font-weight: 600;
+    color: $gray1;
+    height: 16.5px;
+    min-width: 16px;
+    justify-content: center;
+
+    &.light {
+        background-color: $light-gray5;
+        color: $gray3;
+    }
+
+    &.transparent {
+        background-color: transparent;
+    }
+
+    span {
+        display: inline-flex;
+        min-width: 7px;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &.small {
+        padding: 1px 2px;
+        font-size: 8px;
+        height: 14.5px;
+        min-width: 14px;
+    }
+
+    &.round {
+        border-radius: 50%;
+    }
+}
+
+.#{$ns}-input-action {
+    .hotkey-chip {
+        margin-top: 6px;
+        margin-right: 5px;
+    }
+}
+
+.#{$ns}-dark {
+    .hotkey-chip {
+        background-color: lighten($dark-gray2, 2%);
+        color: $light-gray1;
+    }
+}

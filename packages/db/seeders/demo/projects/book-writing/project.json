@@ -1,0 +1,37 @@
+[
+    {
+        "id": "796ef91d-b4d0-44e3-a801-d19cc10151a3",
+        "title": "Novel Writing",
+        "estimate": 360000,
+        "stacks": [
+            {
+                "title": "Outline",
+                "tint": "#3B82F6",
+                "id": "ac1c7775-c6d2-4b84-ad90-c966a099b4a5"
+            },
+            {
+                "title": "Drafting",
+                "tint": "#06B6D4",
+                "id": "97bbb97b-5a16-41ca-b558-44d655060110"
+            },
+            {
+                "title": "Editing",
+                "tint": "#F59E0B",
+                "id": "83abd741-fb04-4ea7-81b5-8025701f4d38"
+            },
+            {
+                "title": "Beta Readers",
+                "tint": "#3B82F6",
+                "id": "e59312ae-ab25-4970-a69e-2ca1e0a82e46"
+            },
+            {
+                "title": "Publishing",
+                "tint": "#8B5CF6",
+                "id": "cd9fc3fd-0f37-45c4-b592-e67b0a9fb3c0"
+            }
+        ],
+        "hourlyRate": 54,
+        "currency": "USD",
+        "health": "good"
+    }
+]

@@ -1,0 +1,37 @@
+[
+    {
+        "id": "84066b96-3736-4e04-a6af-3833452c6c91",
+        "title": "Album Recording",
+        "estimate": 360000,
+        "stacks": [
+            {
+                "title": "Composition",
+                "tint": "#64748B",
+                "id": "2b639d5c-a2d3-4f11-b347-7f15324cff7e"
+            },
+            {
+                "title": "Recording",
+                "tint": "#F59E0B",
+                "id": "f6ec240b-8c16-47ec-95d1-c77287116274"
+            },
+            {
+                "title": "Mixing",
+                "tint": "#3B82F6",
+                "id": "e0bbfed8-73b6-4a41-977b-f0cc1a658581"
+            },
+            {
+                "title": "Mastering",
+                "tint": "#8B5CF6",
+                "id": "a231f801-4358-47da-99c9-32c79c82ed13"
+            },
+            {
+                "title": "Distribution",
+                "tint": "#3B82F6",
+                "id": "e22a078f-eea5-44e3-bb82-b8c96f6c95eb"
+            }
+        ],
+        "hourlyRate": 80,
+        "currency": "USD",
+        "health": "good"
+    }
+]

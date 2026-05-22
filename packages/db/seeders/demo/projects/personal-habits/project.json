@@ -1,0 +1,32 @@
+[
+    {
+        "id": "0f0e6e67-2420-4963-8667-60d9d5981f87",
+        "title": "Personal Habits & Training",
+        "estimate": 576000,
+        "stacks": [
+            {
+                "title": "Planned",
+                "tint": "#94A3B8",
+                "id": "2de37c35-b841-422d-9018-85582971b678"
+            },
+            {
+                "title": "Active",
+                "tint": "#3B82F6",
+                "id": "23afea0b-2e17-46a2-bed8-f43968c5ad42"
+            },
+            {
+                "title": "Completed",
+                "tint": "#10B981",
+                "id": "1d5fad03-6495-4fd5-a775-36e34c89c621"
+            },
+            {
+                "title": "Skipped",
+                "tint": "#EF4444",
+                "id": "791b7b6e-bd25-493b-a0aa-ce269049dd9b"
+            }
+        ],
+        "hourlyRate": 100,
+        "currency": "USD",
+        "health": "good"
+    }
+]

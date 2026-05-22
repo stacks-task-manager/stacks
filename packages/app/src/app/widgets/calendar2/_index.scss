@@ -1,0 +1,56 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+@import "vars";
+@import "now-indicator";
+@import "week";
+@import "event";
+
+.#{$cns} {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .fc {
+        flex-grow: 2;
+        max-height: 100%;
+    }
+
+    // Time slots
+    .fc-timegrid-slot-label-cushion {
+        position: relative;
+        padding: 0;
+        width: 60px;
+        display: block;
+    }
+
+    .slot-time-label {
+        font-size: 12px;
+        color: $gray1;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: -15px;
+        padding-right: 5px;
+    }
+
+    .fc-timegrid-slot-label {
+        background-color: $light-gray5;
+
+        &.fc-timegrid-slot-minor {
+            border-bottom: 1px solid transparent;
+        }
+    }
+
+    .fc-timegrid-slot,
+    .fc-timegrid-slots tr {
+        height: 15px !important;
+        line-height: 15px !important;
+    }
+
+    .fc-timegrid-slots tr {
+        &:first-of-type {
+            .slot-time-label {
+                top: -5px;
+            }
+        }
+    }
+}

@@ -1,0 +1,26 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.subtasks {
+    display: flex;
+    gap: 5px;
+    flex-direction: column;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.subtasks-new-input {
+    resize: none !important;
+}
+
+.subtasks-progress {
+    width: 100px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-left: 5px;
+
+    .#{$ns}-progress-bar {
+        width: 50px;
+        cursor: help;
+        height: 6px;
+    }
+}

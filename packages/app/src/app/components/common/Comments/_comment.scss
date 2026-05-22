@@ -1,0 +1,102 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.comment {
+    display: flex;
+    gap: 10px;
+    border-top: 1px solid $light-gray4;
+    padding: 10px 0;
+
+    &:first-child {
+        border: none;
+    }
+
+    .comment-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+    }
+
+    .comment-person {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 600;
+        color: $dark-gray5;
+    }
+
+    .comment-content {
+        flex-grow: 2;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        min-width: 0;
+
+        .comment-message {
+            word-wrap: break-word;
+        }
+
+        .tiptap-wrapper {
+            margin-top: 15px;
+        }
+
+        &:hover {
+            .comment-context-button {
+                visibility: visible;
+            }
+        }
+    }
+
+    &.log {
+        padding: 5px 0;
+        align-items: center;
+        justify-content: space-between;
+        align-items: flex-start;
+
+        > div {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px 5px;
+        }
+
+        .comment-content {
+            gap: 0;
+        }
+
+        .comment-message {
+            color: $gray1;
+            font-weight: 12px;
+        }
+    }
+}
+
+.comment-context-button:not(.#{$ns}-active) {
+    visibility: hidden;
+}
+
+.comment-timestamp {
+    color: $gray3;
+    bottom: -17px;
+    font-size: 11px;
+    left: 10px;
+    right: 10px;
+    font-weight: 500;
+    flex-shrink: 0;
+}
+
+.messages {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 2;
+    min-width: 0;
+    // gap: 20px;
+}
+
+.#{$ns}-dark {
+    .comment {
+        border-top-color: $dark-gray5;
+    }
+
+    .comment-person {
+        color: $light-gray5;
+    }
+}

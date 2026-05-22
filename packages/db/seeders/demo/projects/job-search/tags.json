@@ -1,0 +1,58 @@
+[
+    {
+        "id": "6a83ea67-5798-4aa5-8381-06b5dba99664",
+        "title": "Remote",
+        "color": "#6366F1",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "3bc01082-e2c3-4953-801f-b61e3abbbb25",
+        "title": "Local",
+        "color": "#EC4899",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "188d9b64-55fd-4073-9d49-791820837af6",
+        "title": "Tech",
+        "color": "#EC4899",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "38ca3927-6b8a-4877-92ba-26f261bf4c9e",
+        "title": "Management",
+        "color": "#64748B",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "1eb6eb0f-5ec9-4bbf-a481-0008b55da80a",
+        "title": "Contract",
+        "color": "#3B82F6",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "26ac8a8f-f577-4fa5-85a1-dc48da3cb2e7",
+        "title": "Follow-up Needed",
+        "color": "#6366F1",
+        "type": "status",
+        "section": "projects"
+    },
+    {
+        "id": "49257b8c-40d6-4557-9b46-542feae3955f",
+        "title": "Ghosted",
+        "color": "#EC4899",
+        "type": "status",
+        "section": "projects"
+    },
+    {
+        "id": "b23f8ef6-53a8-4bf1-ad8a-48a04de73734",
+        "title": "Negotiating",
+        "color": "#06B6D4",
+        "type": "status",
+        "section": "projects"
+    }
+]

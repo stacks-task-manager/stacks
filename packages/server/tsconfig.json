@@ -1,0 +1,29 @@
+{
+    "compilerOptions": {
+        "outDir": "dist",
+        "baseUrl": ".",
+        "paths": {
+            "@stacks/types": ["../types/src/index.ts"],
+            "@stacks/translations": ["../translations/src/index.ts"],
+            "@stacks/db": ["../db/src/index.ts"],
+            "@stacks/license": ["../license/src/index.ts"]
+        },
+        "target": "ESNext",
+        "module": "es2022",
+        "moduleResolution": "node",
+        "strict": true,
+        "skipLibCheck": true,
+        "noEmit": false,
+        "types": ["node"],
+        "jsx": "react-jsx",
+        "jsxImportSource": "hono/jsx",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "allowSyntheticDefaultImports": true,
+        "resolveJsonModule": true,
+        "declaration": false,
+        "sourceMap": false
+    },
+    "include": ["src/**/*"],
+    "exclude": ["test/**/*", "dist/**/*", "node_modules/**/*"]
+}

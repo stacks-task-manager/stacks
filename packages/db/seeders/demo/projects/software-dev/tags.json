@@ -1,0 +1,72 @@
+[
+    {
+        "id": "e1a02ab6-d78e-47b4-bce1-635eef85849e",
+        "title": "Frontend",
+        "color": "#3B82F6",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "d9695178-720f-4f11-9113-9d4decc6e52a",
+        "title": "Backend",
+        "color": "#F59E0B",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "9e812d41-f9cc-4440-b553-2df8bc752511",
+        "title": "Database",
+        "color": "#10B981",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "84456f19-c67a-4e17-8fb0-4e5a9d701bea",
+        "title": "API",
+        "color": "#8B5CF6",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "dc2baefb-c692-465a-a502-3d14e5f6493d",
+        "title": "Testing",
+        "color": "#EF4444",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "173dff3f-56a9-40b8-8c40-de757b85fb97",
+        "title": "DevOps",
+        "color": "#06B6D4",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "17a75810-2b34-4d6d-82ac-df802fec8409",
+        "title": "Bug Fix",
+        "color": "#DC2626",
+        "type": "status",
+        "section": "projects"
+    },
+    {
+        "id": "3aee8ba1-397c-408a-b9e6-7ad606135e33",
+        "title": "Feature",
+        "color": "#059669",
+        "type": "status",
+        "section": "projects"
+    },
+    {
+        "id": "01e7e7f5-4ce0-45c4-a10f-dd3c16cd7484",
+        "title": "Documentation",
+        "color": "#7C3AED",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "c82b0034-2747-4775-bfc7-fd7b6c54055f",
+        "title": "Security",
+        "color": "#B91C1C",
+        "type": "status",
+        "section": "projects"
+    }
+]

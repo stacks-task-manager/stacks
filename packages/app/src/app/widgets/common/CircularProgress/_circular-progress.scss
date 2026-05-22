@@ -1,0 +1,18 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.circular-progress {
+    height: 20px;
+    padding-left: 22px;
+    display: inline-flex;
+    position: relative;
+
+    svg {
+        position: absolute;
+        left: 0;
+        top: 1px;
+        transform: rotate(-90deg);
+
+        .outer-progress {
+            stroke: $light-gray1;
+        }
+    }
+}

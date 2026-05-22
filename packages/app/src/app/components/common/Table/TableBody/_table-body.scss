@@ -1,0 +1,112 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.table-rows {
+    td {
+        // box-shadow: 0 1px 0 $light-gray3 inset;
+        .table-body-cell {
+            &::before {
+                box-shadow: 0 -1px 0 $light-gray3 inset;
+            }
+        }
+
+        &:first-child {
+            .table-body-cell {
+                &::before {
+                    box-shadow: 1px 0 0 $light-gray3 inset, 0 -1px 0 $light-gray3 inset;
+                }
+            }
+        }
+
+        &:last-child {
+            .table-body-cell {
+                &::before {
+                    box-shadow: -1px 0 0 $light-gray3 inset, 0 -1px 0 $light-gray3 inset;
+                }
+            }
+        }
+
+        &.menu-cell {
+            position: sticky;
+            right: 0;
+            background-color: transparent;
+
+            .table-body-cell {
+                &::before {
+                    box-shadow: -1px 0 0 $light-gray3 inset, 0 -1px 0 $light-gray3 inset;
+                }
+            }
+        }
+    }
+
+    tr {
+        &:last-child {
+            td {
+                &:first-child {
+                    .table-body-cell {
+                        &::before {
+                            border-bottom-left-radius: 3px;
+                        }
+                    }
+                }
+                &:last-child {
+                    .table-body-cell {
+                        &::before {
+                            border-bottom-right-radius: 3px;
+                            box-shadow: -1px 0 0 $light-gray3 inset, 0 -1px 0 $light-gray3 inset;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.#{$ns}-dark {
+    .table-rows {
+        td {
+            .table-body-cell {
+                &::before {
+                    box-shadow: 0 -1px 0 $gray1 inset;
+                }
+            }
+
+            &:first-child {
+                .table-body-cell {
+                    &::before {
+                        box-shadow: 1px 0 0 $gray1 inset, 0 -1px 0 $gray1 inset;
+                    }
+                }
+            }
+
+            &:last-child {
+                .table-body-cell {
+                    &::before {
+                        box-shadow: -1px 0 0 $gray1 inset, 0 -1px 0 $gray1 inset;
+                    }
+                }
+            }
+
+            &.menu-cell {
+                background-color: transparent;
+                .table-body-cell {
+                    &::before {
+                        box-shadow: -1px 0 0 $gray1 inset, 0 -1px 0 $gray1 inset;
+                    }
+                }
+            }
+        }
+
+        tr {
+            &:last-child {
+                td {
+                    &:last-child {
+                        .table-body-cell {
+                            &::before {
+                                box-shadow: -1px 0 0 $gray1 inset, 0 -1px 0 $gray1 inset;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

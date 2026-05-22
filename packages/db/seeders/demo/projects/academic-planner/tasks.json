@@ -1,0 +1,881 @@
+[
+    {
+        "title": "Prepare Calculus Lecture",
+        "description": "Detailed description for \"Prepare Calculus Lecture\". This task involves several steps and requires attention to detail.",
+        "id": "aed4fd3f-b2b9-4176-a704-835e65240b37",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [],
+        "tint": "#94A3B8",
+        "stack": "fdfb9407-169e-48c5-80ad-ca49326135b2",
+        "estimate": 10800,
+        "priority": "medium",
+        "duedate": "2026-02-22 19:26:06",
+        "position": 0
+    },
+    {
+        "title": "Grade Midterms",
+        "description": "Detailed description for \"Grade Midterms\". This task involves several steps and requires attention to detail.",
+        "id": "d99651ee-9dbb-4599-b59a-e3816145c4a3",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "ebfc69e4-9212-4832-be42-44938c9ec577"
+        ],
+        "tint": "#94A3B8",
+        "stack": "fdfb9407-169e-48c5-80ad-ca49326135b2",
+        "estimate": 43200,
+        "priority": "low",
+        "duedate": "2026-02-27 19:26:06",
+        "position": 1
+    },
+    {
+        "title": "Submit Research Grant",
+        "description": "Detailed description for \"Submit Research Grant\". This task involves several steps and requires attention to detail.",
+        "id": "7775f765-9716-4908-b557-19de32049968",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "b26104c3-d51b-4924-a6a1-1566269fb02c"
+        ],
+        "tint": "#94A3B8",
+        "stack": "fdfb9407-169e-48c5-80ad-ca49326135b2",
+        "estimate": 54000,
+        "priority": "high",
+        "duedate": "2026-02-14 19:26:06",
+        "position": 2
+    },
+    {
+        "title": "Student Consultation Hours",
+        "description": "Detailed description for \"Student Consultation Hours\". This task involves several steps and requires attention to detail.",
+        "id": "74539e06-a715-4b92-9c8f-e9023d11391e",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "8927f7fd-0eac-4c36-9178-5ae5a4428aba",
+            "b26104c3-d51b-4924-a6a1-1566269fb02c"
+        ],
+        "tint": "#94A3B8",
+        "stack": "fdfb9407-169e-48c5-80ad-ca49326135b2",
+        "estimate": 7200,
+        "priority": "high",
+        "duedate": "2026-02-12 19:26:06",
+        "position": 3
+    },
+    {
+        "title": "Physics Lab Setup",
+        "description": "Detailed description for \"Physics Lab Setup\". This task involves several steps and requires attention to detail.",
+        "id": "e165e8f9-059b-4c40-b6bf-1e996539cadc",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "ebfc69e4-9212-4832-be42-44938c9ec577"
+        ],
+        "tint": "#94A3B8",
+        "stack": "fdfb9407-169e-48c5-80ad-ca49326135b2",
+        "estimate": 21600,
+        "priority": "medium",
+        "duedate": "2026-02-14 19:26:06",
+        "position": 4
+    },
+    {
+        "title": "History Essay Grading",
+        "description": "Detailed description for \"History Essay Grading\". This task involves several steps and requires attention to detail.",
+        "id": "bfb48cd2-e4fc-467f-9141-0cf8e8ba8c15",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "b26104c3-d51b-4924-a6a1-1566269fb02c"
+        ],
+        "tint": "#94A3B8",
+        "stack": "fdfb9407-169e-48c5-80ad-ca49326135b2",
+        "estimate": 10800,
+        "priority": "low",
+        "duedate": "2026-02-20 19:26:06",
+        "position": 5
+    },
+    {
+        "title": "Department Meeting",
+        "description": "Detailed description for \"Department Meeting\". This task involves several steps and requires attention to detail.",
+        "id": "eecae160-5246-4d40-aa89-34805392363f",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "8927f7fd-0eac-4c36-9178-5ae5a4428aba"
+        ],
+        "tint": "#94A3B8",
+        "stack": "fdfb9407-169e-48c5-80ad-ca49326135b2",
+        "estimate": 28800,
+        "priority": "low",
+        "duedate": "2026-02-25 19:26:06",
+        "position": 6
+    },
+    {
+        "title": "Publish Paper",
+        "description": "Detailed description for \"Publish Paper\". This task involves several steps and requires attention to detail.",
+        "id": "c9b23506-bf26-4734-9502-e6de80454bf5",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "8927f7fd-0eac-4c36-9178-5ae5a4428aba"
+        ],
+        "tint": "#94A3B8",
+        "stack": "fdfb9407-169e-48c5-80ad-ca49326135b2",
+        "estimate": 36000,
+        "priority": "high",
+        "duedate": "2026-02-07 19:26:06",
+        "position": 7
+    },
+    {
+        "title": "Update Syllabus",
+        "description": "Detailed description for \"Update Syllabus\". This task involves several steps and requires attention to detail.",
+        "id": "94684b8a-aa8d-48f8-a541-ee71579c11fd",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [],
+        "tint": "#94A3B8",
+        "stack": "fdfb9407-169e-48c5-80ad-ca49326135b2",
+        "estimate": 39600,
+        "priority": "medium",
+        "duedate": "2026-03-04 19:26:06",
+        "position": 8
+    },
+    {
+        "title": "Create Lesson Plan",
+        "description": "Detailed description for \"Create Lesson Plan\". This task involves several steps and requires attention to detail.",
+        "id": "6177e424-9021-40f6-b824-ce73c0d28c3d",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [],
+        "tint": "#94A3B8",
+        "stack": "fdfb9407-169e-48c5-80ad-ca49326135b2",
+        "estimate": 10800,
+        "priority": "high",
+        "duedate": "2026-02-05 19:26:06",
+        "position": 9
+    },
+    {
+        "title": "Design Exam Questions",
+        "description": "Detailed description for \"Design Exam Questions\". This task involves several steps and requires attention to detail.",
+        "id": "601155c2-0894-4ad0-b014-f44a91807de4",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "8af93d43-7042-4967-b410-2c7e487a6f19"
+        ],
+        "tint": "#94A3B8",
+        "stack": "fdfb9407-169e-48c5-80ad-ca49326135b2",
+        "estimate": 10800,
+        "priority": "low",
+        "duedate": "2026-02-18 19:26:06",
+        "position": 10
+    },
+    {
+        "title": "Review Textbook Options",
+        "description": "Detailed description for \"Review Textbook Options\". This task involves several steps and requires attention to detail.",
+        "id": "5d53a9c2-8b5f-4d1d-ae01-c5b2cafddf78",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "ebfc69e4-9212-4832-be42-44938c9ec577"
+        ],
+        "tint": "#3B82F6",
+        "stack": "37d392ae-88c7-47c4-a352-1b8c874de38a",
+        "estimate": 43200,
+        "priority": "medium",
+        "duedate": "2026-03-03 19:26:06",
+        "position": 0
+    },
+    {
+        "title": "Order Lab Supplies",
+        "description": "Detailed description for \"Order Lab Supplies\". This task involves several steps and requires attention to detail.",
+        "id": "a5d8d2bb-7b05-403f-b30e-ae67234d626e",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "8af93d43-7042-4967-b410-2c7e487a6f19"
+        ],
+        "tint": "#3B82F6",
+        "stack": "37d392ae-88c7-47c4-a352-1b8c874de38a",
+        "estimate": 10800,
+        "priority": "low",
+        "duedate": "2026-02-14 19:26:06",
+        "position": 1
+    },
+    {
+        "title": "Supervise Exam",
+        "description": "Detailed description for \"Supervise Exam\". This task involves several steps and requires attention to detail.",
+        "id": "a4e729be-079a-442a-8357-45473f150736",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "b26104c3-d51b-4924-a6a1-1566269fb02c"
+        ],
+        "tint": "#3B82F6",
+        "stack": "37d392ae-88c7-47c4-a352-1b8c874de38a",
+        "estimate": 3600,
+        "priority": "medium",
+        "duedate": "2026-02-20 19:26:06",
+        "position": 2
+    },
+    {
+        "title": "Proctoring Schedule",
+        "description": "Detailed description for \"Proctoring Schedule\". This task involves several steps and requires attention to detail.",
+        "id": "8325d19f-ad39-489e-8be4-69f20c0f9daa",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "8927f7fd-0eac-4c36-9178-5ae5a4428aba",
+            "ebfc69e4-9212-4832-be42-44938c9ec577"
+        ],
+        "tint": "#3B82F6",
+        "stack": "37d392ae-88c7-47c4-a352-1b8c874de38a",
+        "estimate": 50400,
+        "priority": "low",
+        "duedate": "2026-03-03 19:26:06",
+        "position": 3
+    },
+    {
+        "title": "Enter Final Grades",
+        "description": "Detailed description for \"Enter Final Grades\". This task involves several steps and requires attention to detail.",
+        "id": "af0e0534-6fa4-468b-acbe-9844336e25ea",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [],
+        "tint": "#3B82F6",
+        "stack": "37d392ae-88c7-47c4-a352-1b8c874de38a",
+        "estimate": 46800,
+        "priority": "low",
+        "duedate": "2026-02-12 19:26:06",
+        "position": 4
+    },
+    {
+        "title": "Academic Advising",
+        "description": "Detailed description for \"Academic Advising\". This task involves several steps and requires attention to detail.",
+        "id": "04b2ab1f-8edd-4644-b4c4-ea2cce874947",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "8af93d43-7042-4967-b410-2c7e487a6f19",
+            "b26104c3-d51b-4924-a6a1-1566269fb02c"
+        ],
+        "tint": "#3B82F6",
+        "stack": "37d392ae-88c7-47c4-a352-1b8c874de38a",
+        "estimate": 57600,
+        "priority": "high",
+        "duedate": "2026-03-03 19:26:06",
+        "position": 5
+    },
+    {
+        "title": "Thesis Supervision",
+        "description": "Detailed description for \"Thesis Supervision\". This task involves several steps and requires attention to detail.",
+        "id": "67c689a8-803f-4b31-8a30-d938b5b01473",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [],
+        "tint": "#3B82F6",
+        "stack": "37d392ae-88c7-47c4-a352-1b8c874de38a",
+        "estimate": 25200,
+        "priority": "low",
+        "duedate": "2026-02-05 19:26:06",
+        "position": 6
+    },
+    {
+        "title": "Dissertation Defense",
+        "description": "Detailed description for \"Dissertation Defense\". This task involves several steps and requires attention to detail.",
+        "id": "86620fb2-a6ec-4086-aaf2-a53c31a8e8be",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [],
+        "tint": "#3B82F6",
+        "stack": "37d392ae-88c7-47c4-a352-1b8c874de38a",
+        "estimate": 57600,
+        "priority": "high",
+        "duedate": "2026-02-24 19:26:06",
+        "position": 7
+    },
+    {
+        "title": "Committee Meeting",
+        "description": "Detailed description for \"Committee Meeting\". This task involves several steps and requires attention to detail.",
+        "id": "6fdc3389-7e28-49e6-a630-07f99319a96d",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "b26104c3-d51b-4924-a6a1-1566269fb02c"
+        ],
+        "tint": "#3B82F6",
+        "stack": "37d392ae-88c7-47c4-a352-1b8c874de38a",
+        "estimate": 32400,
+        "priority": "high",
+        "duedate": "2026-02-28 19:26:06",
+        "position": 8
+    },
+    {
+        "title": "Faculty Senate",
+        "description": "Detailed description for \"Faculty Senate\". This task involves several steps and requires attention to detail.",
+        "id": "3470d661-cdab-41b9-b67b-2eb51dec2397",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "8927f7fd-0eac-4c36-9178-5ae5a4428aba",
+            "b26104c3-d51b-4924-a6a1-1566269fb02c"
+        ],
+        "tint": "#3B82F6",
+        "stack": "37d392ae-88c7-47c4-a352-1b8c874de38a",
+        "estimate": 39600,
+        "priority": "medium",
+        "duedate": "2026-02-12 19:26:06",
+        "position": 9
+    },
+    {
+        "title": "Curriculum Development",
+        "description": "Detailed description for \"Curriculum Development\". This task involves several steps and requires attention to detail.",
+        "id": "dbf3c739-1cbf-4f6b-8c96-329c6b111f36",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "8927f7fd-0eac-4c36-9178-5ae5a4428aba"
+        ],
+        "tint": "#3B82F6",
+        "stack": "37d392ae-88c7-47c4-a352-1b8c874de38a",
+        "estimate": 36000,
+        "priority": "low",
+        "duedate": "2026-02-19 19:26:06",
+        "position": 10
+    },
+    {
+        "title": "Accreditation Review",
+        "description": "Detailed description for \"Accreditation Review\". This task involves several steps and requires attention to detail.",
+        "id": "d0d76cce-f17a-4076-9499-94ad27bb825b",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "8af93d43-7042-4967-b410-2c7e487a6f19"
+        ],
+        "tint": "#3B82F6",
+        "stack": "37d392ae-88c7-47c4-a352-1b8c874de38a",
+        "estimate": 57600,
+        "priority": "low",
+        "duedate": "2026-03-06 19:26:06",
+        "position": 11
+    },
+    {
+        "title": "Grant Proposal Writing",
+        "description": "Detailed description for \"Grant Proposal Writing\". This task involves several steps and requires attention to detail.",
+        "id": "d6595037-9da0-4eab-97c7-f3921a4078ec",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "8927f7fd-0eac-4c36-9178-5ae5a4428aba"
+        ],
+        "tint": "#3B82F6",
+        "stack": "37d392ae-88c7-47c4-a352-1b8c874de38a",
+        "estimate": 25200,
+        "priority": "medium",
+        "duedate": "2026-02-12 19:26:06",
+        "position": 12
+    },
+    {
+        "title": "Literature Review",
+        "description": "Detailed description for \"Literature Review\". This task involves several steps and requires attention to detail.",
+        "id": "42129813-693b-42f1-9969-1ceb1b4fd129",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "ebfc69e4-9212-4832-be42-44938c9ec577"
+        ],
+        "tint": "#3B82F6",
+        "stack": "37d392ae-88c7-47c4-a352-1b8c874de38a",
+        "estimate": 18000,
+        "priority": "high",
+        "duedate": "2026-02-24 19:26:06",
+        "position": 13
+    },
+    {
+        "title": "Data Analysis",
+        "description": "Detailed description for \"Data Analysis\". This task involves several steps and requires attention to detail.",
+        "id": "80e9014f-e100-4696-9b03-90d3ce85c478",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [],
+        "tint": "#3B82F6",
+        "stack": "37d392ae-88c7-47c4-a352-1b8c874de38a",
+        "estimate": 28800,
+        "priority": "medium",
+        "duedate": "2026-02-28 19:26:06",
+        "position": 14
+    },
+    {
+        "title": "Write Abstract",
+        "description": "Detailed description for \"Write Abstract\". This task involves several steps and requires attention to detail.",
+        "id": "aaa27c60-7675-4cb4-948d-fc7cdccb018a",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "ebfc69e4-9212-4832-be42-44938c9ec577"
+        ],
+        "tint": "#F59E0B",
+        "stack": "c621b557-2d08-40f8-b878-05cb7bde5eee",
+        "estimate": 7200,
+        "priority": "high",
+        "duedate": "2026-02-06 19:26:06",
+        "position": 0
+    },
+    {
+        "title": "Submit to Journal",
+        "description": "Detailed description for \"Submit to Journal\". This task involves several steps and requires attention to detail.",
+        "id": "10a77b2e-9848-4823-a5b2-8920cc9e66bc",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [],
+        "tint": "#F59E0B",
+        "stack": "c621b557-2d08-40f8-b878-05cb7bde5eee",
+        "estimate": 10800,
+        "priority": "medium",
+        "duedate": "2026-02-13 19:26:06",
+        "position": 1
+    },
+    {
+        "title": "Peer Review Article",
+        "description": "Detailed description for \"Peer Review Article\". This task involves several steps and requires attention to detail.",
+        "id": "26b53572-d4e8-4ea7-a916-cff704b79409",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "b26104c3-d51b-4924-a6a1-1566269fb02c",
+            "8927f7fd-0eac-4c36-9178-5ae5a4428aba"
+        ],
+        "tint": "#F59E0B",
+        "stack": "c621b557-2d08-40f8-b878-05cb7bde5eee",
+        "estimate": 14400,
+        "priority": "low",
+        "duedate": "2026-02-11 19:26:06",
+        "position": 2
+    },
+    {
+        "title": "Conference Presentation",
+        "description": "Detailed description for \"Conference Presentation\". This task involves several steps and requires attention to detail.",
+        "id": "4d7e6802-539e-45b9-b864-f3a55ae5b0b0",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "ebfc69e4-9212-4832-be42-44938c9ec577",
+            "8927f7fd-0eac-4c36-9178-5ae5a4428aba"
+        ],
+        "tint": "#F59E0B",
+        "stack": "c621b557-2d08-40f8-b878-05cb7bde5eee",
+        "estimate": 3600,
+        "priority": "low",
+        "duedate": "2026-02-08 19:26:06",
+        "position": 3
+    },
+    {
+        "title": "Poster Session Prep",
+        "description": "Detailed description for \"Poster Session Prep\". This task involves several steps and requires attention to detail.",
+        "id": "6d5b1741-764d-4cec-9f4f-15d76e29009a",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "8927f7fd-0eac-4c36-9178-5ae5a4428aba",
+            "8af93d43-7042-4967-b410-2c7e487a6f19"
+        ],
+        "tint": "#F59E0B",
+        "stack": "c621b557-2d08-40f8-b878-05cb7bde5eee",
+        "estimate": 28800,
+        "priority": "low",
+        "duedate": "2026-02-18 19:26:06",
+        "position": 4
+    },
+    {
+        "title": "Travel Grant Application",
+        "description": "Detailed description for \"Travel Grant Application\". This task involves several steps and requires attention to detail.",
+        "id": "b9d7300f-b43f-4554-b845-40b9501118c0",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "8927f7fd-0eac-4c36-9178-5ae5a4428aba",
+            "ebfc69e4-9212-4832-be42-44938c9ec577"
+        ],
+        "tint": "#F59E0B",
+        "stack": "c621b557-2d08-40f8-b878-05cb7bde5eee",
+        "estimate": 10800,
+        "priority": "low",
+        "duedate": "2026-02-13 19:26:06",
+        "position": 5
+    },
+    {
+        "title": "Guest Lecturer Invite",
+        "description": "Detailed description for \"Guest Lecturer Invite\". This task involves several steps and requires attention to detail.",
+        "id": "77aa990c-fa1d-4b80-8662-5fac74846aed",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "8927f7fd-0eac-4c36-9178-5ae5a4428aba"
+        ],
+        "tint": "#F59E0B",
+        "stack": "c621b557-2d08-40f8-b878-05cb7bde5eee",
+        "estimate": 57600,
+        "priority": "low",
+        "duedate": "2026-02-24 19:26:06",
+        "position": 6
+    },
+    {
+        "title": "Student Club Advisor",
+        "description": "Detailed description for \"Student Club Advisor\". This task involves several steps and requires attention to detail.",
+        "id": "d50d6905-a9c2-4f1c-84c3-f5009fa58ecd",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "ebfc69e4-9212-4832-be42-44938c9ec577",
+            "8927f7fd-0eac-4c36-9178-5ae5a4428aba"
+        ],
+        "tint": "#F59E0B",
+        "stack": "c621b557-2d08-40f8-b878-05cb7bde5eee",
+        "estimate": 32400,
+        "priority": "medium",
+        "duedate": "2026-03-04 19:26:06",
+        "position": 7
+    },
+    {
+        "title": "Library Research",
+        "description": "Detailed description for \"Library Research\". This task involves several steps and requires attention to detail.",
+        "id": "0f400d8a-ad14-4000-8f2f-a58636e22dd2",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "b26104c3-d51b-4924-a6a1-1566269fb02c"
+        ],
+        "tint": "#F59E0B",
+        "stack": "c621b557-2d08-40f8-b878-05cb7bde5eee",
+        "estimate": 68400,
+        "priority": "low",
+        "duedate": "2026-02-18 19:26:06",
+        "position": 8
+    },
+    {
+        "title": "Archive Visit",
+        "description": "Detailed description for \"Archive Visit\". This task involves several steps and requires attention to detail.",
+        "id": "d35d0061-d930-4d33-ac4b-af6cfba40c55",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "ebfc69e4-9212-4832-be42-44938c9ec577",
+            "8af93d43-7042-4967-b410-2c7e487a6f19"
+        ],
+        "tint": "#F59E0B",
+        "stack": "c621b557-2d08-40f8-b878-05cb7bde5eee",
+        "estimate": 32400,
+        "priority": "high",
+        "duedate": "2026-02-23 19:26:06",
+        "position": 9
+    },
+    {
+        "title": "Field Trip Planning",
+        "description": "Detailed description for \"Field Trip Planning\". This task involves several steps and requires attention to detail.",
+        "id": "682fde5e-8a0c-48dd-8edf-5bf4a2ebd56e",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [],
+        "tint": "#EF4444",
+        "stack": "e6ce91ca-afd4-4823-a7a8-1f5776a2b96e",
+        "estimate": 10800,
+        "priority": "high",
+        "duedate": "2026-02-12 19:26:06",
+        "position": 0
+    },
+    {
+        "title": "Safety Training",
+        "description": "Detailed description for \"Safety Training\". This task involves several steps and requires attention to detail.",
+        "id": "6e0b3489-fbd1-4126-86ba-c64f5e362d15",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [],
+        "tint": "#EF4444",
+        "stack": "e6ce91ca-afd4-4823-a7a8-1f5776a2b96e",
+        "estimate": 10800,
+        "priority": "low",
+        "duedate": "2026-02-24 19:26:06",
+        "position": 1
+    },
+    {
+        "title": "Equipment Maintenance",
+        "description": "Detailed description for \"Equipment Maintenance\". This task involves several steps and requires attention to detail.",
+        "id": "e201fbab-7a8a-4d27-a6e6-5fc2551abc2a",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [],
+        "tint": "#EF4444",
+        "stack": "e6ce91ca-afd4-4823-a7a8-1f5776a2b96e",
+        "estimate": 68400,
+        "priority": "high",
+        "duedate": "2026-02-21 19:26:06",
+        "position": 2
+    },
+    {
+        "title": "Software License Renewal",
+        "description": "Detailed description for \"Software License Renewal\". This task involves several steps and requires attention to detail.",
+        "id": "403750e6-88ea-4d53-8a8b-2dcc4d3cf67f",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [],
+        "tint": "#EF4444",
+        "stack": "e6ce91ca-afd4-4823-a7a8-1f5776a2b96e",
+        "estimate": 28800,
+        "priority": "high",
+        "duedate": "2026-02-11 19:26:06",
+        "position": 3
+    },
+    {
+        "title": "Budget Reconciliation",
+        "description": "Detailed description for \"Budget Reconciliation\". This task involves several steps and requires attention to detail.",
+        "id": "494e39b3-b05f-460f-8c69-60160c487a9f",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "ebfc69e4-9212-4832-be42-44938c9ec577"
+        ],
+        "tint": "#EF4444",
+        "stack": "e6ce91ca-afd4-4823-a7a8-1f5776a2b96e",
+        "estimate": 28800,
+        "priority": "high",
+        "duedate": "2026-02-10 19:26:06",
+        "position": 4
+    },
+    {
+        "title": "Hire Teaching Assistant",
+        "description": "Detailed description for \"Hire Teaching Assistant\". This task involves several steps and requires attention to detail.",
+        "id": "64bfa1c3-d067-4957-8559-04636fd898e9",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "b26104c3-d51b-4924-a6a1-1566269fb02c",
+            "ebfc69e4-9212-4832-be42-44938c9ec577"
+        ],
+        "tint": "#EF4444",
+        "stack": "e6ce91ca-afd4-4823-a7a8-1f5776a2b96e",
+        "estimate": 64800,
+        "priority": "high",
+        "duedate": "2026-02-19 19:26:06",
+        "position": 5
+    },
+    {
+        "title": "Train Lab Assistant",
+        "description": "Detailed description for \"Train Lab Assistant\". This task involves several steps and requires attention to detail.",
+        "id": "5ae4acff-5f27-4a7d-bea7-c0240ec7ac94",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "ebfc69e4-9212-4832-be42-44938c9ec577"
+        ],
+        "tint": "#EF4444",
+        "stack": "e6ce91ca-afd4-4823-a7a8-1f5776a2b96e",
+        "estimate": 39600,
+        "priority": "low",
+        "duedate": "2026-02-07 19:26:06",
+        "position": 6
+    },
+    {
+        "title": "Mentorship Meeting",
+        "description": "Detailed description for \"Mentorship Meeting\". This task involves several steps and requires attention to detail.",
+        "id": "2c99c1ff-988d-424b-9f9a-1c6a497a0c74",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [],
+        "tint": "#EF4444",
+        "stack": "e6ce91ca-afd4-4823-a7a8-1f5776a2b96e",
+        "estimate": 61200,
+        "priority": "high",
+        "duedate": "2026-03-02 19:26:06",
+        "position": 7
+    },
+    {
+        "title": "Recommendation Letter",
+        "description": "Detailed description for \"Recommendation Letter\". This task involves several steps and requires attention to detail.",
+        "id": "e584f6c7-de3f-4454-a103-81852fcdc997",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "8927f7fd-0eac-4c36-9178-5ae5a4428aba",
+            "b26104c3-d51b-4924-a6a1-1566269fb02c"
+        ],
+        "tint": "#EF4444",
+        "stack": "e6ce91ca-afd4-4823-a7a8-1f5776a2b96e",
+        "estimate": 43200,
+        "priority": "medium",
+        "duedate": "2026-02-06 19:26:06",
+        "position": 8
+    },
+    {
+        "title": "Alumni Networking",
+        "description": "Detailed description for \"Alumni Networking\". This task involves several steps and requires attention to detail.",
+        "id": "c95b75d3-a0c5-452b-af97-4be87c0565e9",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "8af93d43-7042-4967-b410-2c7e487a6f19",
+            "b26104c3-d51b-4924-a6a1-1566269fb02c"
+        ],
+        "tint": "#EF4444",
+        "stack": "e6ce91ca-afd4-4823-a7a8-1f5776a2b96e",
+        "estimate": 14400,
+        "priority": "high",
+        "duedate": "2026-02-11 19:26:06",
+        "position": 9
+    },
+    {
+        "title": "Outreach Program",
+        "description": "Detailed description for \"Outreach Program\". This task involves several steps and requires attention to detail.",
+        "id": "87347f3e-cd3c-45cb-b5c9-fcc0abe394df",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "8927f7fd-0eac-4c36-9178-5ae5a4428aba",
+            "ebfc69e4-9212-4832-be42-44938c9ec577"
+        ],
+        "tint": "#EF4444",
+        "stack": "e6ce91ca-afd4-4823-a7a8-1f5776a2b96e",
+        "estimate": 36000,
+        "priority": "low",
+        "duedate": "2026-03-01 19:26:06",
+        "position": 10
+    },
+    {
+        "title": "Open House Event",
+        "description": "Detailed description for \"Open House Event\". This task involves several steps and requires attention to detail.",
+        "id": "6c0e5c7c-92d3-4abb-b0ff-7ce5d4d505ed",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "8927f7fd-0eac-4c36-9178-5ae5a4428aba",
+            "ebfc69e4-9212-4832-be42-44938c9ec577"
+        ],
+        "tint": "#10B981",
+        "stack": "d0ed7848-3abd-42ff-b15c-9428683f5315",
+        "estimate": 61200,
+        "priority": "medium",
+        "duedate": "2026-03-04 19:26:06",
+        "position": 0
+    },
+    {
+        "title": "Website Update",
+        "description": "Detailed description for \"Website Update\". This task involves several steps and requires attention to detail.",
+        "id": "142dc943-829b-4e6f-8418-538aa2a185bb",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "b26104c3-d51b-4924-a6a1-1566269fb02c",
+            "8af93d43-7042-4967-b410-2c7e487a6f19"
+        ],
+        "tint": "#10B981",
+        "stack": "d0ed7848-3abd-42ff-b15c-9428683f5315",
+        "estimate": 3600,
+        "priority": "low",
+        "duedate": "2026-02-22 19:26:06",
+        "position": 1
+    },
+    {
+        "title": "Upload Lecture Notes",
+        "description": "Detailed description for \"Upload Lecture Notes\". This task involves several steps and requires attention to detail.",
+        "id": "de2b31a3-cd37-4994-aea8-6936d25e082c",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "b26104c3-d51b-4924-a6a1-1566269fb02c"
+        ],
+        "tint": "#10B981",
+        "stack": "d0ed7848-3abd-42ff-b15c-9428683f5315",
+        "estimate": 57600,
+        "priority": "high",
+        "duedate": "2026-02-19 19:26:06",
+        "position": 2
+    },
+    {
+        "title": "Record Online Lecture",
+        "description": "Detailed description for \"Record Online Lecture\". This task involves several steps and requires attention to detail.",
+        "id": "ac661c38-4a1d-4ca8-9a3f-d5a0927ee5be",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "b26104c3-d51b-4924-a6a1-1566269fb02c"
+        ],
+        "tint": "#10B981",
+        "stack": "d0ed7848-3abd-42ff-b15c-9428683f5315",
+        "estimate": 28800,
+        "priority": "low",
+        "duedate": "2026-03-01 19:26:06",
+        "position": 3
+    },
+    {
+        "title": "Answer Student Emails",
+        "description": "Detailed description for \"Answer Student Emails\". This task involves several steps and requires attention to detail.",
+        "id": "d82f12e8-ada7-4f4a-bcfc-b77e10862a1f",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "8927f7fd-0eac-4c36-9178-5ae5a4428aba",
+            "8af93d43-7042-4967-b410-2c7e487a6f19"
+        ],
+        "tint": "#10B981",
+        "stack": "d0ed7848-3abd-42ff-b15c-9428683f5315",
+        "estimate": 43200,
+        "priority": "high",
+        "duedate": "2026-02-22 19:26:06",
+        "position": 4
+    },
+    {
+        "title": "Create Moodle Quiz",
+        "description": "Detailed description for \"Create Moodle Quiz\". This task involves several steps and requires attention to detail.",
+        "id": "ff6d785b-291b-4adc-8601-907a0868177a",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "8927f7fd-0eac-4c36-9178-5ae5a4428aba",
+            "b26104c3-d51b-4924-a6a1-1566269fb02c"
+        ],
+        "tint": "#10B981",
+        "stack": "d0ed7848-3abd-42ff-b15c-9428683f5315",
+        "estimate": 36000,
+        "priority": "low",
+        "duedate": "2026-02-18 19:26:06",
+        "position": 5
+    },
+    {
+        "title": "Canvas Course Setup",
+        "description": "Detailed description for \"Canvas Course Setup\". This task involves several steps and requires attention to detail.",
+        "id": "0e798144-082f-4386-99bd-9361efc105e4",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "ebfc69e4-9212-4832-be42-44938c9ec577",
+            "8927f7fd-0eac-4c36-9178-5ae5a4428aba"
+        ],
+        "tint": "#10B981",
+        "stack": "d0ed7848-3abd-42ff-b15c-9428683f5315",
+        "estimate": 46800,
+        "priority": "high",
+        "duedate": "2026-03-03 19:26:06",
+        "position": 6
+    },
+    {
+        "title": "Blackboard Announcement",
+        "description": "Detailed description for \"Blackboard Announcement\". This task involves several steps and requires attention to detail.",
+        "id": "7fa03bd0-f874-4987-ac34-cc53e0f0b2ee",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "b26104c3-d51b-4924-a6a1-1566269fb02c",
+            "8af93d43-7042-4967-b410-2c7e487a6f19"
+        ],
+        "tint": "#10B981",
+        "stack": "d0ed7848-3abd-42ff-b15c-9428683f5315",
+        "estimate": 18000,
+        "priority": "high",
+        "duedate": "2026-03-05 19:26:06",
+        "position": 7
+    },
+    {
+        "title": "Prepare Calculus Lecture (2)",
+        "description": "Detailed description for \"Prepare Calculus Lecture (2)\". This task involves several steps and requires attention to detail.",
+        "id": "f86057b9-659d-48e9-a215-8b02e2994fdd",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "8927f7fd-0eac-4c36-9178-5ae5a4428aba",
+            "b26104c3-d51b-4924-a6a1-1566269fb02c"
+        ],
+        "tint": "#10B981",
+        "stack": "d0ed7848-3abd-42ff-b15c-9428683f5315",
+        "estimate": 14400,
+        "priority": "high",
+        "duedate": "2026-02-21 19:26:06",
+        "position": 8
+    },
+    {
+        "title": "Grade Midterms (2)",
+        "description": "Detailed description for \"Grade Midterms (2)\". This task involves several steps and requires attention to detail.",
+        "id": "8281df06-2b42-4ac7-aebf-8e434456bc25",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "8927f7fd-0eac-4c36-9178-5ae5a4428aba"
+        ],
+        "tint": "#10B981",
+        "stack": "d0ed7848-3abd-42ff-b15c-9428683f5315",
+        "estimate": 39600,
+        "priority": "medium",
+        "duedate": "2026-02-26 19:26:06",
+        "position": 9
+    },
+    {
+        "title": "Submit Research Grant (2)",
+        "description": "Detailed description for \"Submit Research Grant (2)\". This task involves several steps and requires attention to detail.",
+        "id": "b17b2bc4-b99d-4045-8b79-c0a8abd42769",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [
+            "ebfc69e4-9212-4832-be42-44938c9ec577",
+            "8af93d43-7042-4967-b410-2c7e487a6f19"
+        ],
+        "tint": "#10B981",
+        "stack": "d0ed7848-3abd-42ff-b15c-9428683f5315",
+        "estimate": 32400,
+        "priority": "medium",
+        "duedate": "2026-03-05 19:26:06",
+        "position": 10
+    },
+    {
+        "title": "Student Consultation Hours (2)",
+        "description": "Detailed description for \"Student Consultation Hours (2)\". This task involves several steps and requires attention to detail.",
+        "id": "2e564212-c176-4bfa-bd74-4bd0aaa27434",
+        "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
+        "tags": [],
+        "tint": "#10B981",
+        "stack": "d0ed7848-3abd-42ff-b15c-9428683f5315",
+        "estimate": 36000,
+        "priority": "low",
+        "duedate": "2026-02-09 19:26:06",
+        "position": 11
+    }
+]

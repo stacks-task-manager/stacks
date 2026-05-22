@@ -1,0 +1,13 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.task-details-progress {
+    width: 100%;
+    .#{$ns}-popover-target {
+        display: block;
+    }
+
+    &:not(.disabled) {
+        .#{$ns}-popover-target {
+            cursor: pointer;
+        }
+    }
+}

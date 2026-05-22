@@ -1,0 +1,16 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.#{$ns}-button {
+    &.satisfaction {
+        padding: 0;
+
+        img {
+            width: 28px;
+            height: 28px;
+        }
+    }
+}
+
+.feedback-item-tooltip {
+    position: fixed;
+    z-index: 42;
+}

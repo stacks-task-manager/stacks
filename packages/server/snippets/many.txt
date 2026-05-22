@@ -1,0 +1,15 @@
+
+
+TaskEntity.hasMany(TimelogEntity, { foreignKey: 'task', as: 'timelogs' });
+TimelogEntity.belongsTo(TaskEntity, { foreignKey: 'task' });
+
+const tasks = await TaskEntity.findAll({
+        ...sanitizeWhere(user, whereCondition),
+        include: [
+            {
+                model: TimelogEntity,
+                as: 'timelogs',
+                separate: true
+            }
+        ]
+    });

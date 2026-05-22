@@ -1,0 +1,37 @@
+[
+    {
+        "id": "37073459-9733-48b1-80a6-f875119e8703",
+        "title": "Home Renovation Project",
+        "estimate": 360000,
+        "stacks": [
+            {
+                "title": "Planning",
+                "tint": "#8B5CF6",
+                "id": "9fd414b7-f79d-4cf6-9397-c0009d819f95"
+            },
+            {
+                "title": "Demolition",
+                "tint": "#3B82F6",
+                "id": "f9b94f3e-9610-43b6-86eb-c3723a09a08b"
+            },
+            {
+                "title": "Construction",
+                "tint": "#F97316",
+                "id": "f04c1541-2404-424d-9cab-804468d0267b"
+            },
+            {
+                "title": "Finishing",
+                "tint": "#8B5CF6",
+                "id": "069b713e-9105-46ad-8d7b-ad8d498911e2"
+            },
+            {
+                "title": "Decor",
+                "tint": "#EF4444",
+                "id": "602df10d-1862-406b-b6f9-97c1e624f94e"
+            }
+        ],
+        "hourlyRate": 99,
+        "currency": "USD",
+        "health": "good"
+    }
+]

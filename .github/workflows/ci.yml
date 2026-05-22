@@ -1,0 +1,198 @@
+name: CI
+
+on:
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main, dev]
+
+concurrency:
+    group: ci-${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    install-and-build:
+        name: Install + build internal packages
+        runs-on: ubuntu-latest
+        timeout-minutes: 20
+        steps:
+            - uses: actions/checkout@v6
+
+            - name: Set up Node
+              uses: actions/setup-node@v6
+              with:
+                  node-version-file: .nvmrc
+                  cache: yarn
+
+            - name: Enable corepack (Yarn 3)
+              run: corepack enable
+
+            - name: Install dependencies
+              run: yarn install --immutable
+
+            - name: Build internal packages
+              run: yarn build:internal
+
+            - name: Upload built workspace
+              uses: actions/upload-artifact@v7
+              with:
+                  name: built-workspace
+                  path: |
+                      packages/types/dist/
+                      packages/db/dist/
+                      packages/license/dist/
+                      packages/translations/dist/
+                      yarn.lock
+                  retention-days: 1
+
+    type-check:
+        name: Type-check (${{ matrix.package }})
+        runs-on: ubuntu-latest
+        needs: install-and-build
+        timeout-minutes: 15
+        strategy:
+            fail-fast: false
+            matrix:
+                package:
+                    - "@stacks/types"
+                    - "@stacks/translations"
+                    - "@stacks/license"
+                    - "@stacks/db"
+                    - "@stacks/server"
+                    - "@stacks/email-service"
+                    - "@stacks/app"
+                    - "@stacks/locales-tui"
+        steps:
+            - uses: actions/checkout@v6
+
+            - name: Set up Node
+              uses: actions/setup-node@v6
+              with:
+                  node-version-file: .nvmrc
+                  cache: yarn
+
+            - name: Enable corepack
+              run: corepack enable
+
+            - name: Install dependencies
+              run: yarn install --immutable
+
+            - name: Build internal packages
+              run: yarn build:internal
+
+            - name: Type-check ${{ matrix.package }}
+              run: yarn workspace ${{ matrix.package }} run tsc --noEmit
+
+    server-unit-tests:
+        name: Server unit tests
+        runs-on: ubuntu-latest
+        needs: install-and-build
+        timeout-minutes: 15
+        steps:
+            - uses: actions/checkout@v6
+
+            - name: Set up Node
+              uses: actions/setup-node@v6
+              with:
+                  node-version-file: .nvmrc
+                  cache: yarn
+
+            - name: Enable corepack
+              run: corepack enable
+
+            - name: Install dependencies
+              run: yarn install --immutable
+
+            - name: Build internal packages
+              run: yarn build:internal
+
+            - name: Run server unit tests
+              run: yarn test:server:unit
+
+    server-integration-tests:
+        name: Server integration tests (Postgres)
+        runs-on: ubuntu-latest
+        needs: install-and-build
+        timeout-minutes: 30
+        # The full vitest suite (`yarn test:server`) boots the Hono app, runs
+        # `connectDb(true)` + `sequelize.sync({ force: true })`, and seeds the
+        # database via `test/globalSetup.ts`. NODE_ENV=test skips the license /
+        # integrity / strict-secret bootstrap (see `vitestSetup.ts` and
+        # `config/secrets.ts`), so the only external dependency is Postgres.
+        services:
+            postgres:
+                image: postgres:16-alpine
+                env:
+                    POSTGRES_USER: postgres
+                    POSTGRES_PASSWORD: postgres
+                    POSTGRES_DB: stacks_test
+                ports:
+                    - 5432:5432
+                options: >-
+                    --health-cmd "pg_isready -U postgres -d stacks_test"
+                    --health-interval 5s
+                    --health-timeout 5s
+                    --health-retries 10
+        env:
+            NODE_ENV: test
+            POSTGRES_HOST: localhost
+            POSTGRES_PORT: "5432"
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+            POSTGRES_DB: stacks_test
+        steps:
+            - uses: actions/checkout@v6
+
+            - name: Set up Node
+              uses: actions/setup-node@v6
+              with:
+                  node-version-file: .nvmrc
+                  cache: yarn
+
+            - name: Enable corepack
+              run: corepack enable
+
+            - name: Install dependencies
+              run: yarn install --immutable
+
+            - name: Build internal packages
+              run: yarn build:internal
+
+            - name: Wait for Postgres
+              run: |
+                  for i in {1..30}; do
+                      if pg_isready -h localhost -p 5432 -U postgres -d stacks_test; then
+                          echo "Postgres is ready"
+                          exit 0
+                      fi
+                      echo "Waiting for Postgres... ($i/30)"
+                      sleep 2
+                  done
+                  echo "Postgres did not become ready in time"
+                  exit 1
+
+            - name: Run server integration tests
+              run: yarn test:server
+
+    translations-tests:
+        name: Translations tests
+        runs-on: ubuntu-latest
+        needs: install-and-build
+        timeout-minutes: 10
+        steps:
+            - uses: actions/checkout@v6
+
+            - name: Set up Node
+              uses: actions/setup-node@v6
+              with:
+                  node-version-file: .nvmrc
+                  cache: yarn
+
+            - name: Enable corepack
+              run: corepack enable
+
+            - name: Install dependencies
+              run: yarn install --immutable
+
+            - name: Run translations tests
+              run: yarn workspace @stacks/translations run test

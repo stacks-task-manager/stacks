@@ -1,0 +1,213 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.toolbar {
+    background: linear-gradient(to bottom, #f3f3f3 0%, #ededed 100%);
+    box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.2), inset 0px 1px 0px rgba(255, 255, 255, 1);
+    transition: 0.15s all ease;
+    position: relative;
+
+    display: flex;
+    justify-content: space-between;
+
+    .darwin & {
+        padding-left: 75px;
+    }
+
+    &.fullscreen {
+        padding-left: 15px;
+    }
+
+    .#{$ns}-navbar-heading {
+        font-size: 16px;
+        color: #737373;
+        font-weight: 400;
+        text-shadow: 0px 1px 0px #fff;
+        cursor: default;
+        margin-left: 5px;
+    }
+
+    .#{$ns}-divider {
+        height: 50%;
+    }
+
+    .#{$ns}-button {
+    }
+
+    .toolbar-search {
+        // min-width: 320px;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        position: absolute;
+        left: 50%;
+        top: 0;
+        transform: translateX(-50%);
+    }
+
+    .logo {
+        width: 65px;
+        height: 25px;
+
+        g {
+            fill: #5f7283;
+        }
+    }
+
+    &.#{$ns}-dark {
+        background: linear-gradient(to bottom, $dark-gray5 0%, $dark-gray4 100%);
+        box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.2), inset 0px 1px 0px $dark-gray1;
+
+        .board-title {
+            color: #fff;
+            text-shadow: none;
+        }
+
+        .logo {
+            g {
+                fill: $gray4;
+            }
+        }
+    }
+
+    .window-controls {
+        margin-left: 15px;
+    }
+
+    .menu-button {
+        margin-right: 15px;
+    }
+}
+
+#toolbar {
+    height: $toolbar-height;
+    display: block;
+    flex-shrink: 0;
+    padding: 0 15px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    padding-right: 5px;
+
+    -webkit-user-select: none;
+    box-shadow: 0px 1px 0px $sidebar-border-color-light;
+
+    &.default {
+        background: linear-gradient(to bottom, #f3f3f3 0%, #ededed 100%);
+        box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.2), inset 0px 1px 0px rgba(255, 255, 255, 1);
+    }
+
+    &.main {
+        padding-left: 75px;
+    }
+
+    .#{$ns}-button {
+    }
+
+    .toolbar-item,
+    .toolbar-separator {
+        height: 100%;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+        // flex: 0 0 auto;
+        min-width: 0;
+    }
+
+    .#{$ns}-popover-target {
+        flex-shrink: 0;
+    }
+
+    .toolbar-separator {
+        border-left: 1px solid #c0c3c6;
+        border-right: 1px solid #ffffff;
+        height: 40%;
+        margin: 0 10px;
+    }
+
+    .toolbar-spacer {
+        margin: 0 5px;
+    }
+
+    .toolbar-spring {
+        flex-grow: 2;
+        height: 100%;
+    }
+
+    .toolbar-title {
+        cursor: default;
+        display: flex;
+        flex-shrink: 1;
+        overflow: hidden;
+        flex-grow: 2;
+        flex-direction: column;
+        // padding: 0 20px;
+
+        div {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+            &.title {
+                font-size: 13px;
+                font-weight: 500;
+                // margin-bottom: 3px;
+                display: flex;
+                align-items: center;
+
+                .#{$ns}-icon {
+                    margin-right: 5px;
+                }
+            }
+
+            &.subtitle {
+                font-size: 10px;
+                font-weight: 300;
+                opacity: 0.7;
+            }
+        }
+
+        &.dark {
+            color: #fff;
+            // text-shadow: none;
+        }
+
+        // div {
+        // width: 100%;
+
+        // flex-shrink: 2;
+        // }
+
+        &.inverse {
+            color: #737373;
+            text-shadow: 0px 1px 0px #000;
+        }
+    }
+
+    .#{$ns}-dark & {
+        box-shadow: 0px 1px 0px $sidebar-border-color-dark;
+
+        .toolbar-title {
+            text-shadow: none;
+            color: #fff;
+        }
+    }
+}
+
+.toolbar-spacer {
+    margin: 0 5px;
+}
+
+.toolbar-spring {
+    flex-grow: 2;
+    height: 100%;
+}
+
+@media screen and (max-width: 1100px) {
+    .toolbar {
+        .toolbar-search {
+            min-width: auto;
+            position: relative;
+        }
+    }
+}

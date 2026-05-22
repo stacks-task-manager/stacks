@@ -1,0 +1,206 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.round-button {
+    display: inline-flex;
+    border: none;
+    margin: 0;
+    padding: 0;
+    background-color: transparent;
+    gap: 5px;
+    font-size: 12px;
+    align-items: center;
+    color: $gray1;
+    min-height: 20px;
+
+    &.interactive {
+        cursor: pointer;
+    }
+
+    span {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid $gray5;
+        color: $gray4;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: $white;
+    }
+
+    &.small {
+        min-height: 18px;
+
+        span {
+            width: 18px;
+            height: 18px;
+        }
+    }
+
+    &.large {
+        min-height: 24px;
+
+        span {
+            width: 24px;
+            height: 24px;
+        }
+    }
+
+    &.dashed {
+        span {
+            border-style: dashed;
+        }
+    }
+
+    &.minimal {
+        gap: 0;
+        span {
+            border: none;
+        }
+    }
+
+    &:hover:not(:disabled) {
+        color: $dark-gray3;
+        span {
+            border-color: $gray1;
+            color: $gray1;
+        }
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    &.success {
+        color: $pt-intent-success;
+        span {
+            border-color: $pt-intent-success;
+            color: $pt-intent-success;
+        }
+
+        &.active {
+            span {
+                background-color: $pt-intent-success;
+            }
+        }
+    }
+
+    &.primary {
+        color: $pt-intent-primary;
+        span {
+            border-color: $pt-intent-primary;
+            color: $pt-intent-primary;
+        }
+
+        &.active {
+            span {
+                background-color: $pt-intent-primary;
+            }
+        }
+    }
+
+    &.none {
+        color: $gray1;
+        span {
+            border-color: $gray1;
+            color: $gray1;
+        }
+
+        &.active {
+            span {
+                background-color: $gray1;
+            }
+        }
+    }
+
+    &.danger {
+        color: $pt-intent-danger;
+        span {
+            border-color: $pt-intent-danger;
+            color: $pt-intent-danger;
+        }
+
+        &.active {
+            span {
+                background-color: $pt-intent-danger;
+            }
+        }
+    }
+
+    &.warning {
+        color: $pt-intent-warning;
+        span {
+            border-color: $pt-intent-warning;
+            color: $pt-intent-warning;
+        }
+
+        &.active {
+            span {
+                background-color: $pt-intent-warning;
+            }
+        }
+    }
+
+    &.active {
+        span {
+            border-color: transparent !important;
+            color: $white !important;
+        }
+    }
+}
+
+.round-button-tooltip {
+    outline: none;
+}
+
+.#{$ns}-popover-open:not(.round-button-tooltip) {
+    .round-button {
+        color: $blue;
+        span {
+            border-color: $blue;
+            color: $blue;
+        }
+    }
+}
+
+.#{$ns}-dark {
+    .round-button {
+        color: $white;
+
+        span {
+            background-color: transparent;
+        }
+
+        &.none {
+            span {
+                border-color: $gray2;
+            }
+
+            &.active {
+                span {
+                    background-color: $gray2;
+                }
+            }
+        }
+
+        &:hover:not(:disabled) {
+            opacity: 1;
+            color: $gray3;
+            span {
+                border-color: $gray5;
+                color: $gray5;
+            }
+        }
+    }
+
+    .#{$ns}-popover-open:not(.round-button-tooltip) {
+        .round-button {
+            color: $blue5;
+            opacity: 1;
+            span {
+                border-color: $blue5;
+                color: $blue5;
+            }
+        }
+    }
+}

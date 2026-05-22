@@ -1,0 +1,56 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+$watermark-height: 60px;
+$watermark-width: 30px;
+$watermark-color: $black;
+$watermark-space: $watermark-width * 2;
+$watermark-border-radius: 20px;
+
+#watermark {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    .watermark-logo {
+        position: absolute;
+        opacity: 0.1;
+        top: 50%;
+        left: 50%;
+        margin-left: -56px;
+        margin-top: -70px;
+        width: $watermark-width;
+        height: $watermark-height;
+        background-color: $watermark-color;
+        border-radius: $watermark-border-radius;
+
+        &::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: calc($watermark-space * -1);            
+            background-color: $watermark-color;
+            width: $watermark-width;
+            height: calc($watermark-height + $watermark-space);
+            border-radius: $watermark-border-radius;
+        }
+
+        &::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: calc($watermark-space * -1);            
+            background-color: $watermark-color;
+            width: $watermark-width;
+            height: calc($watermark-height + 2 * $watermark-space);
+            border-radius: $watermark-border-radius;
+        }
+
+    }
+}
+
+.#{$ns}-dark {
+    #watermark {
+        background-color: $dark-gray4;
+    }
+}

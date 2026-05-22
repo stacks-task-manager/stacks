@@ -1,0 +1,37 @@
+[
+    {
+        "id": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
+        "title": "Tech Conference 2027",
+        "estimate": 360000,
+        "stacks": [
+            {
+                "title": "Speakers",
+                "tint": "#EC4899",
+                "id": "5f6a8b31-edf4-4f2e-8be9-fc9ad9d0acc5"
+            },
+            {
+                "title": "Venue",
+                "tint": "#64748B",
+                "id": "09bf7ac7-096a-4d40-8d12-c8b460ca205e"
+            },
+            {
+                "title": "Sponsors",
+                "tint": "#F59E0B",
+                "id": "a689153b-9beb-48a4-8e43-1e48888bc8c8"
+            },
+            {
+                "title": "Attendees",
+                "tint": "#F97316",
+                "id": "506b4657-acc2-4767-9564-7600abb406f7"
+            },
+            {
+                "title": "Logistics",
+                "tint": "#06B6D4",
+                "id": "2e0c947e-dee6-4ec3-90b2-21753cc702e8"
+            }
+        ],
+        "hourlyRate": 96,
+        "currency": "USD",
+        "health": "good"
+    }
+]

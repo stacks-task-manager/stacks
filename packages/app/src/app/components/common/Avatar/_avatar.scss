@@ -1,0 +1,145 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.avatar {
+    // overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: $white;
+    border-radius: 50%;
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    min-height: 30px;
+    font-size: 12px;
+    box-shadow: 0 0 0 2px $white;
+    position: relative;
+
+    .#{$ns}-popover-target {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        outline: none;
+
+        > span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+    }
+
+    &.clickable {
+        cursor: pointer;
+
+        &:hover {
+            opacity: 0.8;
+        }
+        &:active {
+            opacity: 1;
+        }
+    }
+
+    &__profile-pic {
+        overflow: hidden;
+        border-radius: 999px;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+
+        img {
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+        }
+    }
+
+    &__badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        bottom: -1px;
+        right: -1px;
+        background-color: $blue;
+        border-radius: 999px;
+        color: $white;
+        padding: 1px;
+        width: 10px;
+        height: 10px;
+        box-shadow: 0 0 0 1px $white;
+
+        &.online {
+            background-color: $green3;
+        }
+        &.idle {
+            background-color: $orange3;
+        }
+        &.offline {
+            background-color: $red3;
+        }
+    }
+
+    &.small {
+        width: 20px;
+        height: 20px;
+        min-width: 20px;
+        min-height: 20px;
+        font-size: 9px;
+        box-shadow: 0 0 0 1px $white;
+
+        .avatar__badge {
+            width: 8px;
+            height: 8px;
+        }
+    }
+
+    $large: 50px;
+
+    &.large {
+        width: $large;
+        height: $large;
+        min-width: $large;
+        min-height: $large;
+        font-size: 28px;
+        box-shadow: 0 0 0 2px $white;
+    }
+
+    $huge: 100px;
+    &.huge {
+        width: $huge;
+        height: $huge;
+        min-width: $huge;
+        min-height: $huge;
+        font-size: 36px;
+        box-shadow: 0 0 0 2px $white;
+
+        .avatar__badge {
+            width: 20px;
+            height: 20px;
+            right: 6px;
+        }
+    }
+
+    &.more {
+        background-color: $light-gray3;
+        color: $dark-gray3;
+        text-shadow: none;
+        font-weight: 600;
+    }
+}
+
+.#{$ns}-dark {
+    .avatar {
+        &.more {
+            background-color: $dark-gray3;
+            color: $white;
+        }
+    }
+}

@@ -1,0 +1,732 @@
+[
+    {
+        "title": "Vacuum living room",
+        "description": "Detailed description for \"Vacuum living room\". This task involves several steps and requires attention to detail.",
+        "id": "05b2eb32-df88-4782-a7ef-e32ab8839803",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [],
+        "tint": "#94A3B8",
+        "stack": "ae7bea91-bede-4a1f-a55e-49421022a9f9",
+        "estimate": 25200,
+        "priority": "low",
+        "duedate": "2026-03-05 19:26:06",
+        "position": 0
+    },
+    {
+        "title": "Buy groceries",
+        "description": "Detailed description for \"Buy groceries\". This task involves several steps and requires attention to detail.",
+        "id": "49757d59-99f2-43cb-aeb1-41d49fa1eeb5",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [
+            "488e29b7-add0-4492-b8ff-6cfa8922a892",
+            "981f5764-66c7-4a33-977b-de8af1ae46e2"
+        ],
+        "tint": "#94A3B8",
+        "stack": "ae7bea91-bede-4a1f-a55e-49421022a9f9",
+        "estimate": 32400,
+        "priority": "medium",
+        "duedate": "2026-02-19 19:26:06",
+        "position": 1
+    },
+    {
+        "title": "Fix leaky faucet",
+        "description": "Detailed description for \"Fix leaky faucet\". This task involves several steps and requires attention to detail.",
+        "id": "11f5b571-1575-4204-8192-9c288cd3d5e5",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [],
+        "tint": "#94A3B8",
+        "stack": "ae7bea91-bede-4a1f-a55e-49421022a9f9",
+        "estimate": 18000,
+        "priority": "low",
+        "duedate": "2026-02-20 19:26:06",
+        "position": 2
+    },
+    {
+        "title": "Pay electricity bill",
+        "description": "Detailed description for \"Pay electricity bill\". This task involves several steps and requires attention to detail.",
+        "id": "b44a0480-ce59-4be8-9c29-ce92969d4d1e",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [],
+        "tint": "#94A3B8",
+        "stack": "ae7bea91-bede-4a1f-a55e-49421022a9f9",
+        "estimate": 50400,
+        "priority": "high",
+        "duedate": "2026-03-01 19:26:06",
+        "position": 3
+    },
+    {
+        "title": "Clean windows",
+        "description": "Detailed description for \"Clean windows\". This task involves several steps and requires attention to detail.",
+        "id": "8bf29957-e9a6-46aa-99f2-daad9b63cfb3",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [],
+        "tint": "#94A3B8",
+        "stack": "ae7bea91-bede-4a1f-a55e-49421022a9f9",
+        "estimate": 72000,
+        "priority": "low",
+        "duedate": "2026-02-24 19:26:06",
+        "position": 4
+    },
+    {
+        "title": "Mow the lawn",
+        "description": "Detailed description for \"Mow the lawn\". This task involves several steps and requires attention to detail.",
+        "id": "b24bb7f9-6c21-49c6-8f7a-57a68414a021",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [],
+        "tint": "#94A3B8",
+        "stack": "ae7bea91-bede-4a1f-a55e-49421022a9f9",
+        "estimate": 43200,
+        "priority": "low",
+        "duedate": "2026-02-26 19:26:06",
+        "position": 5
+    },
+    {
+        "title": "Organize pantry",
+        "description": "Detailed description for \"Organize pantry\". This task involves several steps and requires attention to detail.",
+        "id": "bb209062-a641-4969-81a4-129517406e96",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [],
+        "tint": "#94A3B8",
+        "stack": "ae7bea91-bede-4a1f-a55e-49421022a9f9",
+        "estimate": 36000,
+        "priority": "low",
+        "duedate": "2026-02-08 19:26:06",
+        "position": 6
+    },
+    {
+        "title": "Change air filters",
+        "description": "Detailed description for \"Change air filters\". This task involves several steps and requires attention to detail.",
+        "id": "e12bf0c3-c9cc-4f3f-b7b3-72b41b9be137",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [
+            "488e29b7-add0-4492-b8ff-6cfa8922a892"
+        ],
+        "tint": "#94A3B8",
+        "stack": "ae7bea91-bede-4a1f-a55e-49421022a9f9",
+        "estimate": 21600,
+        "priority": "medium",
+        "duedate": "2026-03-01 19:26:06",
+        "position": 7
+    },
+    {
+        "title": "Deep clean kitchen",
+        "description": "Detailed description for \"Deep clean kitchen\". This task involves several steps and requires attention to detail.",
+        "id": "4190ca8c-d087-4a2a-9986-acaae0122d67",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [
+            "981f5764-66c7-4a33-977b-de8af1ae46e2"
+        ],
+        "tint": "#94A3B8",
+        "stack": "ae7bea91-bede-4a1f-a55e-49421022a9f9",
+        "estimate": 54000,
+        "priority": "high",
+        "duedate": "2026-02-16 19:26:06",
+        "position": 8
+    },
+    {
+        "title": "Scrub bathroom tiles",
+        "description": "Detailed description for \"Scrub bathroom tiles\". This task involves several steps and requires attention to detail.",
+        "id": "8c1c9fee-28c5-40cd-8d63-f820c5a45865",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [],
+        "tint": "#94A3B8",
+        "stack": "ae7bea91-bede-4a1f-a55e-49421022a9f9",
+        "estimate": 39600,
+        "priority": "low",
+        "duedate": "2026-02-14 19:26:06",
+        "position": 9
+    },
+    {
+        "title": "Wash duvet covers",
+        "description": "Detailed description for \"Wash duvet covers\". This task involves several steps and requires attention to detail.",
+        "id": "ab018c2e-be15-4048-9acd-39daa3880bed",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [
+            "488e29b7-add0-4492-b8ff-6cfa8922a892",
+            "cc14c1cb-2b09-4dc7-86b6-dbdec8c3ec71"
+        ],
+        "tint": "#94A3B8",
+        "stack": "ae7bea91-bede-4a1f-a55e-49421022a9f9",
+        "estimate": 61200,
+        "priority": "low",
+        "duedate": "2026-02-11 19:26:06",
+        "position": 10
+    },
+    {
+        "title": "Clean out garage",
+        "description": "Detailed description for \"Clean out garage\". This task involves several steps and requires attention to detail.",
+        "id": "a77e77da-0fc0-4926-8a65-e8b9f8e09832",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [],
+        "tint": "#F59E0B",
+        "stack": "0716a9eb-fef6-431b-96d5-1748fcb3ed34",
+        "estimate": 64800,
+        "priority": "medium",
+        "duedate": "2026-03-03 19:26:06",
+        "position": 0
+    },
+    {
+        "title": "Sort recycling",
+        "description": "Detailed description for \"Sort recycling\". This task involves several steps and requires attention to detail.",
+        "id": "4c37896a-53a1-4179-9c68-d90dbfc25bc0",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [],
+        "tint": "#F59E0B",
+        "stack": "0716a9eb-fef6-431b-96d5-1748fcb3ed34",
+        "estimate": 36000,
+        "priority": "high",
+        "duedate": "2026-02-19 19:26:06",
+        "position": 1
+    },
+    {
+        "title": "Water indoor plants",
+        "description": "Detailed description for \"Water indoor plants\". This task involves several steps and requires attention to detail.",
+        "id": "b29fc3b2-a6ce-4062-9f61-5561b1800582",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [
+            "b8687dbe-5aa2-4958-a2a1-31d99c141ef3",
+            "981f5764-66c7-4a33-977b-de8af1ae46e2"
+        ],
+        "tint": "#F59E0B",
+        "stack": "0716a9eb-fef6-431b-96d5-1748fcb3ed34",
+        "estimate": 72000,
+        "priority": "medium",
+        "duedate": "2026-02-27 19:26:06",
+        "position": 2
+    },
+    {
+        "title": "Dust ceiling fans",
+        "description": "Detailed description for \"Dust ceiling fans\". This task involves several steps and requires attention to detail.",
+        "id": "5786f494-b40c-400f-a0c9-f1fa57c514a6",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [
+            "cc14c1cb-2b09-4dc7-86b6-dbdec8c3ec71"
+        ],
+        "tint": "#F59E0B",
+        "stack": "0716a9eb-fef6-431b-96d5-1748fcb3ed34",
+        "estimate": 10800,
+        "priority": "high",
+        "duedate": "2026-02-10 19:26:06",
+        "position": 3
+    },
+    {
+        "title": "Polish silverware",
+        "description": "Detailed description for \"Polish silverware\". This task involves several steps and requires attention to detail.",
+        "id": "8a3ec81a-63e7-4a7f-8bea-b6669fe4a188",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [],
+        "tint": "#F59E0B",
+        "stack": "0716a9eb-fef6-431b-96d5-1748fcb3ed34",
+        "estimate": 36000,
+        "priority": "low",
+        "duedate": "2026-02-27 19:26:06",
+        "position": 4
+    },
+    {
+        "title": "Clean oven",
+        "description": "Detailed description for \"Clean oven\". This task involves several steps and requires attention to detail.",
+        "id": "00c1e7c5-b259-456a-8c45-36532b03fd48",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [
+            "cc14c1cb-2b09-4dc7-86b6-dbdec8c3ec71"
+        ],
+        "tint": "#F59E0B",
+        "stack": "0716a9eb-fef6-431b-96d5-1748fcb3ed34",
+        "estimate": 57600,
+        "priority": "low",
+        "duedate": "2026-03-03 19:26:06",
+        "position": 5
+    },
+    {
+        "title": "Defrost freezer",
+        "description": "Detailed description for \"Defrost freezer\". This task involves several steps and requires attention to detail.",
+        "id": "60d5b7f9-6f3e-4bef-9ba2-5d886039bf06",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [],
+        "tint": "#F59E0B",
+        "stack": "0716a9eb-fef6-431b-96d5-1748fcb3ed34",
+        "estimate": 43200,
+        "priority": "high",
+        "duedate": "2026-02-07 19:26:06",
+        "position": 6
+    },
+    {
+        "title": "Organize closet",
+        "description": "Detailed description for \"Organize closet\". This task involves several steps and requires attention to detail.",
+        "id": "9f2a4fcc-3edb-464f-97ef-a07c68f43071",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [
+            "cc14c1cb-2b09-4dc7-86b6-dbdec8c3ec71",
+            "488e29b7-add0-4492-b8ff-6cfa8922a892"
+        ],
+        "tint": "#F59E0B",
+        "stack": "0716a9eb-fef6-431b-96d5-1748fcb3ed34",
+        "estimate": 46800,
+        "priority": "medium",
+        "duedate": "2026-03-01 19:26:06",
+        "position": 7
+    },
+    {
+        "title": "Donate old clothes",
+        "description": "Detailed description for \"Donate old clothes\". This task involves several steps and requires attention to detail.",
+        "id": "8c2261c6-78ad-45d4-8248-d312f6212174",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [
+            "981f5764-66c7-4a33-977b-de8af1ae46e2"
+        ],
+        "tint": "#F59E0B",
+        "stack": "0716a9eb-fef6-431b-96d5-1748fcb3ed34",
+        "estimate": 57600,
+        "priority": "medium",
+        "duedate": "2026-02-06 19:26:06",
+        "position": 8
+    },
+    {
+        "title": "Sweep porch",
+        "description": "Detailed description for \"Sweep porch\". This task involves several steps and requires attention to detail.",
+        "id": "b66464d4-d44f-493b-b012-13e0569d7e37",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [
+            "cc14c1cb-2b09-4dc7-86b6-dbdec8c3ec71",
+            "488e29b7-add0-4492-b8ff-6cfa8922a892"
+        ],
+        "tint": "#F59E0B",
+        "stack": "0716a9eb-fef6-431b-96d5-1748fcb3ed34",
+        "estimate": 7200,
+        "priority": "medium",
+        "duedate": "2026-02-13 19:26:06",
+        "position": 9
+    },
+    {
+        "title": "Clean gutters",
+        "description": "Detailed description for \"Clean gutters\". This task involves several steps and requires attention to detail.",
+        "id": "22db677e-8eeb-4649-adb4-d2d62a244823",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [],
+        "tint": "#3B82F6",
+        "stack": "26c740ae-9d25-48a9-ae15-e2b076f1ff83",
+        "estimate": 50400,
+        "priority": "low",
+        "duedate": "2026-02-22 19:26:06",
+        "position": 0
+    },
+    {
+        "title": "Check smoke detectors",
+        "description": "Detailed description for \"Check smoke detectors\". This task involves several steps and requires attention to detail.",
+        "id": "69534db3-e911-442b-9448-a1215ab6d6fd",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [],
+        "tint": "#3B82F6",
+        "stack": "26c740ae-9d25-48a9-ae15-e2b076f1ff83",
+        "estimate": 32400,
+        "priority": "medium",
+        "duedate": "2026-02-07 19:26:06",
+        "position": 1
+    },
+    {
+        "title": "Replace lightbulbs",
+        "description": "Detailed description for \"Replace lightbulbs\". This task involves several steps and requires attention to detail.",
+        "id": "f431805d-d231-445c-9060-cbc6c573eea2",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [
+            "b8687dbe-5aa2-4958-a2a1-31d99c141ef3",
+            "488e29b7-add0-4492-b8ff-6cfa8922a892"
+        ],
+        "tint": "#3B82F6",
+        "stack": "26c740ae-9d25-48a9-ae15-e2b076f1ff83",
+        "estimate": 54000,
+        "priority": "low",
+        "duedate": "2026-02-22 19:26:06",
+        "position": 2
+    },
+    {
+        "title": "Wash car",
+        "description": "Detailed description for \"Wash car\". This task involves several steps and requires attention to detail.",
+        "id": "fc6086f6-56dc-416c-a798-c03f54f3cda5",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [],
+        "tint": "#3B82F6",
+        "stack": "26c740ae-9d25-48a9-ae15-e2b076f1ff83",
+        "estimate": 3600,
+        "priority": "low",
+        "duedate": "2026-02-09 19:26:06",
+        "position": 3
+    },
+    {
+        "title": "Vacuum car interior",
+        "description": "Detailed description for \"Vacuum car interior\". This task involves several steps and requires attention to detail.",
+        "id": "d149102b-fa5e-418e-93b4-b5b383209b04",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [],
+        "tint": "#3B82F6",
+        "stack": "26c740ae-9d25-48a9-ae15-e2b076f1ff83",
+        "estimate": 72000,
+        "priority": "low",
+        "duedate": "2026-02-14 19:26:06",
+        "position": 4
+    },
+    {
+        "title": "Mop hardwood floors",
+        "description": "Detailed description for \"Mop hardwood floors\". This task involves several steps and requires attention to detail.",
+        "id": "33935e25-bb5f-4b64-8e8f-ed169618db4d",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [
+            "cc14c1cb-2b09-4dc7-86b6-dbdec8c3ec71"
+        ],
+        "tint": "#3B82F6",
+        "stack": "26c740ae-9d25-48a9-ae15-e2b076f1ff83",
+        "estimate": 28800,
+        "priority": "medium",
+        "duedate": "2026-02-08 19:26:06",
+        "position": 5
+    },
+    {
+        "title": "Clean baseboards",
+        "description": "Detailed description for \"Clean baseboards\". This task involves several steps and requires attention to detail.",
+        "id": "cb6bd850-f90f-4946-9f99-3cc38064b52c",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [
+            "cc14c1cb-2b09-4dc7-86b6-dbdec8c3ec71"
+        ],
+        "tint": "#3B82F6",
+        "stack": "26c740ae-9d25-48a9-ae15-e2b076f1ff83",
+        "estimate": 7200,
+        "priority": "high",
+        "duedate": "2026-02-24 19:26:06",
+        "position": 6
+    },
+    {
+        "title": "Wipe down cabinets",
+        "description": "Detailed description for \"Wipe down cabinets\". This task involves several steps and requires attention to detail.",
+        "id": "3733de59-f0a6-465b-b9c0-c8aecc9a4488",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [
+            "488e29b7-add0-4492-b8ff-6cfa8922a892"
+        ],
+        "tint": "#3B82F6",
+        "stack": "26c740ae-9d25-48a9-ae15-e2b076f1ff83",
+        "estimate": 61200,
+        "priority": "high",
+        "duedate": "2026-02-17 19:26:06",
+        "position": 7
+    },
+    {
+        "title": "Organize spice rack",
+        "description": "Detailed description for \"Organize spice rack\". This task involves several steps and requires attention to detail.",
+        "id": "460ed914-af2b-4bee-b18b-843d2180b0ca",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [],
+        "tint": "#3B82F6",
+        "stack": "26c740ae-9d25-48a9-ae15-e2b076f1ff83",
+        "estimate": 36000,
+        "priority": "medium",
+        "duedate": "2026-02-08 19:26:06",
+        "position": 8
+    },
+    {
+        "title": "Clean refrigerator coils",
+        "description": "Detailed description for \"Clean refrigerator coils\". This task involves several steps and requires attention to detail.",
+        "id": "3d966c92-d660-4742-a137-0aec3eb4b7b1",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [
+            "b8687dbe-5aa2-4958-a2a1-31d99c141ef3",
+            "cc14c1cb-2b09-4dc7-86b6-dbdec8c3ec71"
+        ],
+        "tint": "#3B82F6",
+        "stack": "26c740ae-9d25-48a9-ae15-e2b076f1ff83",
+        "estimate": 32400,
+        "priority": "high",
+        "duedate": "2026-02-18 19:26:06",
+        "position": 9
+    },
+    {
+        "title": "Descale coffee maker",
+        "description": "Detailed description for \"Descale coffee maker\". This task involves several steps and requires attention to detail.",
+        "id": "8640dd75-a266-4ffd-8eea-f39f401b9714",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [
+            "981f5764-66c7-4a33-977b-de8af1ae46e2",
+            "488e29b7-add0-4492-b8ff-6cfa8922a892"
+        ],
+        "tint": "#3B82F6",
+        "stack": "26c740ae-9d25-48a9-ae15-e2b076f1ff83",
+        "estimate": 39600,
+        "priority": "high",
+        "duedate": "2026-02-23 19:26:06",
+        "position": 10
+    },
+    {
+        "title": "Wash throw pillows",
+        "description": "Detailed description for \"Wash throw pillows\". This task involves several steps and requires attention to detail.",
+        "id": "6aa4b808-50f7-462a-8687-e15bb23c87c5",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [],
+        "tint": "#3B82F6",
+        "stack": "26c740ae-9d25-48a9-ae15-e2b076f1ff83",
+        "estimate": 61200,
+        "priority": "low",
+        "duedate": "2026-02-09 19:26:06",
+        "position": 11
+    },
+    {
+        "title": "Clean blinds",
+        "description": "Detailed description for \"Clean blinds\". This task involves several steps and requires attention to detail.",
+        "id": "22604402-376d-4ff2-9e21-42416fe40b35",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [
+            "981f5764-66c7-4a33-977b-de8af1ae46e2"
+        ],
+        "tint": "#3B82F6",
+        "stack": "26c740ae-9d25-48a9-ae15-e2b076f1ff83",
+        "estimate": 3600,
+        "priority": "low",
+        "duedate": "2026-02-14 19:26:06",
+        "position": 12
+    },
+    {
+        "title": "Wash curtains",
+        "description": "Detailed description for \"Wash curtains\". This task involves several steps and requires attention to detail.",
+        "id": "7ea87386-3691-4dcb-ad0b-8d4c678bab5a",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [
+            "981f5764-66c7-4a33-977b-de8af1ae46e2"
+        ],
+        "tint": "#3B82F6",
+        "stack": "26c740ae-9d25-48a9-ae15-e2b076f1ff83",
+        "estimate": 68400,
+        "priority": "medium",
+        "duedate": "2026-03-02 19:26:06",
+        "position": 13
+    },
+    {
+        "title": "Flip mattress",
+        "description": "Detailed description for \"Flip mattress\". This task involves several steps and requires attention to detail.",
+        "id": "c671ce61-2e9f-4e64-9766-5bc932004233",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [
+            "cc14c1cb-2b09-4dc7-86b6-dbdec8c3ec71",
+            "488e29b7-add0-4492-b8ff-6cfa8922a892"
+        ],
+        "tint": "#3B82F6",
+        "stack": "26c740ae-9d25-48a9-ae15-e2b076f1ff83",
+        "estimate": 68400,
+        "priority": "high",
+        "duedate": "2026-02-20 19:26:06",
+        "position": 14
+    },
+    {
+        "title": "Clean dryer vent",
+        "description": "Detailed description for \"Clean dryer vent\". This task involves several steps and requires attention to detail.",
+        "id": "bd476e4e-da8c-4190-96b1-ffc99c5df4db",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [],
+        "tint": "#10B981",
+        "stack": "a3798ce7-285b-4708-a19d-7b75dbc6124f",
+        "estimate": 14400,
+        "priority": "low",
+        "duedate": "2026-02-24 19:26:06",
+        "position": 0
+    },
+    {
+        "title": "Organize tool shed",
+        "description": "Detailed description for \"Organize tool shed\". This task involves several steps and requires attention to detail.",
+        "id": "244cd49e-ec1c-42ae-9af8-537eaf0a4057",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [
+            "b8687dbe-5aa2-4958-a2a1-31d99c141ef3"
+        ],
+        "tint": "#10B981",
+        "stack": "a3798ce7-285b-4708-a19d-7b75dbc6124f",
+        "estimate": 61200,
+        "priority": "low",
+        "duedate": "2026-02-07 19:26:06",
+        "position": 1
+    },
+    {
+        "title": "Pressure wash driveway",
+        "description": "Detailed description for \"Pressure wash driveway\". This task involves several steps and requires attention to detail.",
+        "id": "ce01d929-b094-4521-9d6f-23c6b8e7c7e2",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [
+            "981f5764-66c7-4a33-977b-de8af1ae46e2",
+            "488e29b7-add0-4492-b8ff-6cfa8922a892"
+        ],
+        "tint": "#10B981",
+        "stack": "a3798ce7-285b-4708-a19d-7b75dbc6124f",
+        "estimate": 18000,
+        "priority": "high",
+        "duedate": "2026-02-23 19:26:06",
+        "position": 2
+    },
+    {
+        "title": "Paint touch-ups",
+        "description": "Detailed description for \"Paint touch-ups\". This task involves several steps and requires attention to detail.",
+        "id": "77fabe82-0298-44b8-8b6d-934b913c2821",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [
+            "981f5764-66c7-4a33-977b-de8af1ae46e2"
+        ],
+        "tint": "#10B981",
+        "stack": "a3798ce7-285b-4708-a19d-7b75dbc6124f",
+        "estimate": 32400,
+        "priority": "high",
+        "duedate": "2026-02-25 19:26:06",
+        "position": 3
+    },
+    {
+        "title": "Tighten loose handles",
+        "description": "Detailed description for \"Tighten loose handles\". This task involves several steps and requires attention to detail.",
+        "id": "1ca6abdd-7119-438c-a472-29f68fa682c3",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [],
+        "tint": "#10B981",
+        "stack": "a3798ce7-285b-4708-a19d-7b75dbc6124f",
+        "estimate": 36000,
+        "priority": "medium",
+        "duedate": "2026-02-11 19:26:06",
+        "position": 4
+    },
+    {
+        "title": "Oil door hinges",
+        "description": "Detailed description for \"Oil door hinges\". This task involves several steps and requires attention to detail.",
+        "id": "76a4cef4-a616-4d77-b6c8-1d06edc20037",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [],
+        "tint": "#10B981",
+        "stack": "a3798ce7-285b-4708-a19d-7b75dbc6124f",
+        "estimate": 25200,
+        "priority": "high",
+        "duedate": "2026-02-05 19:26:06",
+        "position": 5
+    },
+    {
+        "title": "Clean microwave",
+        "description": "Detailed description for \"Clean microwave\". This task involves several steps and requires attention to detail.",
+        "id": "fe63bb0d-2dfb-40d1-9681-62698de9faa7",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [],
+        "tint": "#10B981",
+        "stack": "a3798ce7-285b-4708-a19d-7b75dbc6124f",
+        "estimate": 10800,
+        "priority": "high",
+        "duedate": "2026-02-10 19:26:06",
+        "position": 6
+    },
+    {
+        "title": "Sanitize trash cans",
+        "description": "Detailed description for \"Sanitize trash cans\". This task involves several steps and requires attention to detail.",
+        "id": "5bc3254e-7917-4816-b578-a1418e815f6b",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [
+            "981f5764-66c7-4a33-977b-de8af1ae46e2"
+        ],
+        "tint": "#10B981",
+        "stack": "a3798ce7-285b-4708-a19d-7b75dbc6124f",
+        "estimate": 18000,
+        "priority": "medium",
+        "duedate": "2026-02-18 19:26:06",
+        "position": 7
+    },
+    {
+        "title": "Clean makeup brushes",
+        "description": "Detailed description for \"Clean makeup brushes\". This task involves several steps and requires attention to detail.",
+        "id": "a0bf4f26-4def-4fab-8695-2cbdb9bd9116",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [
+            "488e29b7-add0-4492-b8ff-6cfa8922a892"
+        ],
+        "tint": "#10B981",
+        "stack": "a3798ce7-285b-4708-a19d-7b75dbc6124f",
+        "estimate": 54000,
+        "priority": "low",
+        "duedate": "2026-02-06 19:26:06",
+        "position": 8
+    },
+    {
+        "title": "Organize digital photos",
+        "description": "Detailed description for \"Organize digital photos\". This task involves several steps and requires attention to detail.",
+        "id": "d562687e-0dc4-4bca-82b2-dc9eb0cb14d9",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [
+            "488e29b7-add0-4492-b8ff-6cfa8922a892"
+        ],
+        "tint": "#10B981",
+        "stack": "a3798ce7-285b-4708-a19d-7b75dbc6124f",
+        "estimate": 46800,
+        "priority": "medium",
+        "duedate": "2026-02-07 19:26:06",
+        "position": 9
+    },
+    {
+        "title": "Back up computer",
+        "description": "Detailed description for \"Back up computer\". This task involves several steps and requires attention to detail.",
+        "id": "54b1add7-71c2-4d82-924f-dcbeab98e08e",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [
+            "cc14c1cb-2b09-4dc7-86b6-dbdec8c3ec71"
+        ],
+        "tint": "#10B981",
+        "stack": "a3798ce7-285b-4708-a19d-7b75dbc6124f",
+        "estimate": 57600,
+        "priority": "high",
+        "duedate": "2026-02-11 19:26:06",
+        "position": 10
+    },
+    {
+        "title": "Update budget",
+        "description": "Detailed description for \"Update budget\". This task involves several steps and requires attention to detail.",
+        "id": "03baec82-ead1-4669-aaaa-c9de81bf97fd",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [],
+        "tint": "#10B981",
+        "stack": "a3798ce7-285b-4708-a19d-7b75dbc6124f",
+        "estimate": 43200,
+        "priority": "low",
+        "duedate": "2026-02-24 19:26:06",
+        "position": 11
+    },
+    {
+        "title": "Meal prep for week",
+        "description": "Detailed description for \"Meal prep for week\". This task involves several steps and requires attention to detail.",
+        "id": "0d7cf368-e3b9-4487-8b1a-f6ee0524f132",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [],
+        "tint": "#10B981",
+        "stack": "a3798ce7-285b-4708-a19d-7b75dbc6124f",
+        "estimate": 54000,
+        "priority": "high",
+        "duedate": "2026-02-21 19:26:06",
+        "position": 12
+    },
+    {
+        "title": "Plan dinner menu",
+        "description": "Detailed description for \"Plan dinner menu\". This task involves several steps and requires attention to detail.",
+        "id": "60736040-f3c7-43b1-9038-3e1fe1c747e2",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [
+            "cc14c1cb-2b09-4dc7-86b6-dbdec8c3ec71",
+            "b8687dbe-5aa2-4958-a2a1-31d99c141ef3"
+        ],
+        "tint": "#10B981",
+        "stack": "a3798ce7-285b-4708-a19d-7b75dbc6124f",
+        "estimate": 3600,
+        "priority": "high",
+        "duedate": "2026-02-18 19:26:06",
+        "position": 13
+    },
+    {
+        "title": "Clean dishwasher filter",
+        "description": "Detailed description for \"Clean dishwasher filter\". This task involves several steps and requires attention to detail.",
+        "id": "8683c8e2-cef2-4097-9a94-a08ebc9be460",
+        "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
+        "tags": [
+            "981f5764-66c7-4a33-977b-de8af1ae46e2"
+        ],
+        "tint": "#10B981",
+        "stack": "a3798ce7-285b-4708-a19d-7b75dbc6124f",
+        "estimate": 46800,
+        "priority": "high",
+        "duedate": "2026-02-16 19:26:06",
+        "position": 14
+    }
+]

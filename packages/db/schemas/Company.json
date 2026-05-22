@@ -1,0 +1,186 @@
+{
+  "entityName": "Company",
+  "tableName": "companies",
+  "attributes": {
+    "id": {
+      "type": "UUID",
+      "defaultValue": "UUIDV4",
+      "primaryKey": true
+    },
+    "tenant": {
+      "type": "UUID",
+      "allowNull": false
+    },
+    "createdBy": {
+      "type": "UUID",
+      "allowNull": false
+    },
+    "updatedBy": {
+      "type": "UUID",
+      "allowNull": false
+    },
+    "deletedBy": {
+      "type": "UUID",
+      "allowNull": true
+    },
+    "created": {
+      "type": "DATE",
+      "defaultValue": "NOW",
+      "allowNull": false
+    },
+    "updated": {
+      "type": "DATE",
+      "defaultValue": "NOW",
+      "allowNull": false
+    },
+    "deleted": {
+      "type": "DATE",
+      "allowNull": true
+    },
+    "title": {
+      "type": "STRING",
+      "allowNull": false
+    },
+    "industry": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "notes": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "altCode": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "logo": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "website": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "email": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "phone": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "cell": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "fax": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "address": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "county": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "zip": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "city": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "country": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "address2": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "registeredOfficeAddress": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "registeredOfficeCounty": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "registeredOfficeZip": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "registeredOfficeCity": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "registeredOfficeCountry": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "registeredOfficeAddress2": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "billingAddress": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "billingCounty": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "billingZip": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "billingCity": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "billingCountry": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "billingAddress2": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "shippingAddress": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "shippingCounty": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "shippingZip": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "shippingCity": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "shippingCountry": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "shippingAddress2": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "payment": {
+      "type": "STRING",
+      "allowNull": true
+    },
+    "vat": {
+      "type": "STRING",
+      "allowNull": true
+    }
+  },
+  "options": {}
+}

@@ -1,0 +1,37 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.task-details-title {
+    margin-top: 3px;
+
+    .task-edit-title {
+        position: relative;
+    }
+
+    .#{$ns}-editable-text {
+        width: 100%;
+    }
+
+    .#{$ns}-text-area {
+        line-height: 24px !important;
+        font-weight: 600;
+        padding: 0;
+        font-size: 20px;
+        resize: none;
+        box-shadow: none;
+
+        &:disabled {
+            background: transparent;
+        }
+    }
+}
+
+.#{$ns}-dark {
+    .task-details-title {
+        .#{$ns}-input {
+            background: transparent;
+
+            &:focus {
+                box-shadow: none;
+            }
+        }
+    }
+}

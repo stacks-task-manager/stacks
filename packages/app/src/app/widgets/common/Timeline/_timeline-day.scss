@@ -1,0 +1,158 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.timeline .time-tag {
+    background-color: $light-gray4;
+    border-radius: 3px;
+    padding: 2px 3px;
+    display: flex;
+    font-size: 14px;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin: 0 5px;
+    cursor: pointer;
+    z-index: 10;
+    border: 1px solid;
+
+    &.unclickable {
+        cursor: default;
+    }
+
+    &.open {
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    }
+
+    small {
+        font-size: 9px;
+    }
+}
+
+.timeline__day {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 10px 0 5px 0;
+    border-radius: 3px;
+    position: relative;
+    min-width: 50px;
+
+    &.has-action {
+        // margin-bottom: 0;
+    }
+
+    &--date {
+        font-size: 14px;
+        z-index: 10;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        gap: 1px;
+
+        span {
+            &:first-of-type {
+                font-weight: 600;
+                color: $dark-gray1;
+            }
+            &:last-of-type {
+                font-size: 12px;
+                color: $gray1;
+            }
+        }
+    }
+
+    &--time {
+        position: relative;
+        height: 20px;
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        z-index: 10;
+
+        .time-line {
+            position: absolute;
+            height: 2px;
+            left: -10px;
+            right: -10px;
+            top: 50%;
+        }
+    }
+
+    &--dot {
+        position: relative;
+        height: 8px;
+        width: 8px;
+        z-index: 10;
+        border-radius: 50%;
+        margin-top: 7px;
+    }
+
+    &--action {
+        position: relative;
+        z-index: 10;
+        visibility: hidden;
+    }
+
+    &:hover:not(.off) {
+        background-color: $light-gray4;
+
+        .timeline__day--action {
+            visibility: visible;
+        }
+
+        .timeline__today-progress {
+            background-color: $dark-gray2;
+            span {
+                display: inline;
+            }
+        }
+    }
+
+    &.off {
+        .timeline__day--date {
+            span {
+                visibility: hidden;
+            }
+        }
+
+        .timeline__today-progress,
+        .timeline__today {
+            display: none;
+        }
+    }
+
+    &.is-today:not(.off) {
+        background-color: rgba(0, 153, 230, 0.18);
+    }
+}
+
+.#{$ns}-dark {
+    .timeline .time-tag {
+        // background-color: red;
+    }
+
+    .timeline__day {
+        &--date {
+            span {
+                &:first-of-type {
+                    color: $gray5;
+                }
+                &:last-of-type {
+                    color: $gray3;
+                }
+            }
+        }
+
+        &:hover:not(.off) {
+            background-color: $dark-gray2;
+
+            .timeline__today-progress {
+                background-color: $dark-gray3;
+            }
+        }
+
+        &.is-today:not(.off) {
+            background-color: $dark-gray5;
+        }
+    }
+}

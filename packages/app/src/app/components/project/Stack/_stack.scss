@@ -1,0 +1,436 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.stack {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    position: relative;
+    cursor: default;
+    scroll-margin: 15px;
+    max-width: 300px;
+    min-width: 300px;
+    flex-grow: 1;
+    border-radius: 2px;
+    max-height: 100%;
+
+    // placeholder for the lazy loading
+    &.unloaded {
+        overflow: hidden;
+    }
+
+    &.limit {
+        background-color: #fcf1ad;
+    }
+
+    $stack-limit-bubble-size: 16px;
+
+    .stack-limit {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        width: $stack-limit-bubble-size;
+        height: $stack-limit-bubble-size;
+        border-radius: 50%;
+        background-color: #d90429;
+        top: -($stack-limit-bubble-size/3);
+        right: -($stack-limit-bubble-size/3);
+        box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+        font-weight: bold;
+        font-size: 12px;
+        color: $white;
+    }
+
+    .sorted-stack {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        top: 44px;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: $white;
+        border: 1px solid #eaeaea;
+        border-radius: 3px;
+        z-index: 100;
+
+        .sorted-stack-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+            text-align: center;
+
+            h4 {
+                margin-top: 15px;
+            }
+        }
+    }
+
+    .stack-empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 50px;
+        padding-bottom: 20px;
+
+        &.interractive {
+            cursor: pointer;
+        }
+
+        img {
+            height: 70px;
+            opacity: 0.2;
+
+            &.drop-task {
+                display: none;
+            }
+        }
+
+        p {
+            margin: 20px 0;
+            text-align: center;
+            color: $gray2;
+            font-size: 12px;
+            min-height: 30px;
+        }
+    }
+
+    &.collapsed {
+
+        .stack-content,
+        .new-task {
+            display: none;
+        }
+
+        .stack-limit {
+            transform: rotate(-90deg);
+        }
+    }
+
+    &.larger {
+        max-width: 380px;
+        min-width: 380px;
+    }
+
+    &.collapsed {
+        height: calc(100% - 29px);
+        flex-direction: row;
+        min-width: 35px;
+        width: 35px;
+        padding: 0;
+        flex-grow: 0;
+
+        .stack-tag {
+            height: 5px !important;
+        }
+
+        .stack-header {
+            writing-mode: vertical-lr;
+            padding: 10px 0 5px 0;
+            height: auto;
+            margin: 0;
+            width: 35px;
+
+            .stack-progress {
+                margin-right: 0;
+                margin-bottom: 5px;
+            }
+
+            .stack-header-counter {
+                padding: 6px 3px;
+            }
+        }
+
+        .#{$ns}-editable-text-content {
+            height: auto !important;
+            line-height: 34px !important;
+            min-width: 0 !important;
+        }
+    }
+
+    &:not(.collapsed) {
+        .stack-header {
+            // height: 25px;
+            // margin: 0px 0 5px 0;
+            // z-index: 1;
+
+            &.bigger-tags {
+                margin-bottom: 18px;
+
+                .stack-title,
+                .stack-progress {
+                    color: #fff;
+                    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+                }
+            }
+
+            &.large-header {
+                margin-bottom: 18px;
+            }
+        }
+    }
+
+    &.as-sidebar {
+        margin-right: 0;
+        border-radius: 0;
+        max-height: 100%;
+        overflow-y: auto;
+
+        .task {
+            cursor: grab;
+        }
+    }
+}
+
+.stack-selected {
+    position: absolute;
+    left: -5px;
+    right: -5px;
+    top: -5px;
+    bottom: -5px;
+    border: 1px solid $blue-select;
+    border-radius: 2px;
+    pointer-events: none;
+    z-index: 20;
+}
+
+.stack-tint {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.stack .container.container--vertical {
+    display: flex;
+    flex-direction: column;
+    min-height: 10px;
+    overflow-y: auto;
+    gap: 10px;
+    flex-grow: 2;
+
+    > .draggable {
+        overflow: visible;
+    }
+
+    &.new-task-top {
+        margin-top: 10px;
+    }
+
+    &.empty {
+        margin-top: 0;
+
+        &.empty-ui {
+            &.draging-over {
+                position: relative;
+
+                [data-rbd-placeholder-context-id] {
+                    position: absolute;
+                    top: 0;
+                    bottom: 0;
+                    left: 0;
+                    right: 0;
+                }
+            }
+        }
+    }
+
+    &.is-sorted {
+        &.draging-over {
+            min-height: 220px;
+            position: relative;
+            overflow: hidden;
+            max-height: 85vh;
+        }
+    }
+}
+
+.stack .scroller-parent {
+    margin-bottom: 5px;
+
+    // Ensures empty columns still have a real hit target / drop preview area for DnD
+    > .container.container--vertical {
+        min-height: 10px;
+    }
+
+    &.has-background {
+        background-color: $light-gray4;
+        padding: 6px;
+        border-radius: 4px;
+        box-shadow: 0 0 4px rgba(0, 0, 0, 0.05) inset;
+    }
+}
+
+.stack-add-here {
+    opacity: 0;
+    transition: opacity 0.1s ease-in;
+    position: relative;
+    top: -15px;
+    align-self: center;
+    z-index: 1;
+    color: $gray1;
+    font-size: 12px;
+    cursor: pointer;
+    width: 500px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+
+    &:hover {
+        opacity: 1;
+    }
+
+    >div {
+        background-color: $light-gray4;
+        padding: 0 20px;
+    }
+
+    &::after {
+        content: "";
+        height: 1px;
+        background-color: $light-gray1;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 50%;
+        z-index: -2;
+    }
+}
+
+.stack-title {
+    header {
+        height: 15px;
+        line-height: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    header,
+    input[type="text"] {
+        display: block;
+        //padding: 5px 0 15px 0;
+        //padding: 5px 10px 0px 10px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #3c3c3c;
+        text-shadow: 0px 1px 0 #fff;
+        white-space: nowrap;
+        overflow: hidden;
+        flex-grow: 2;
+
+        // &:not([contenteditable="true"]) {
+        //     text-overflow: ellipsis;
+        //     @include noselect;
+        // }
+
+        &[contenteditable="true"] {
+            background-color: #fff;
+            color: #333;
+            padding: 5px;
+            border: 1px solid #ddd;
+            cursor: auto;
+        }
+    }
+
+    .stack-percent {
+        font-weight: bold;
+        margin-right: 5px;
+        font-size: 10px;
+        line-height: 15px;
+        height: 15px;
+        color: #555;
+    }
+
+    input {
+        background-color: #fff;
+        color: #333;
+        padding: 5px;
+        border: 1px solid #ddd;
+        cursor: auto;
+    }
+
+    .stack-context {
+        background: none;
+        border: none;
+        font-size: 16px;
+        color: #5d5d5d;
+        opacity: 0.5;
+        margin-right: -5px;
+        text-shadow: 0px 1px 0px #fff;
+
+        &:hover {
+            opacity: 1;
+        }
+
+        &:active {
+            color: #3c3c3c;
+        }
+    }
+
+    .stack-color {
+        margin-right: 2px;
+    }
+}
+
+.#{$ns}-dark {
+    .stack {
+        .stack-title {
+            .#{$ns}-editable-text {
+                color: #fff;
+            }
+        }
+
+        .stack-progress,
+        .stack-max-tasks {
+            color: $light-gray3;
+        }
+
+        &.column {
+            &.limit {
+                background-color: #164a6b;
+            }
+        }
+
+        &.list {
+            .stack-header:not(.has-tag) {
+                background-color: $gray1;
+                border-bottom: 1px solid $gray1;
+                box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1) inset;
+            }
+
+            .stack-empty {
+                background-color: $dark-gray5;
+            }
+
+            .stack-max-tasks {
+                background-color: #164a6b;
+            }
+        }
+    }
+
+    .stack-add-here {
+        &::after {
+            background-color: $gray2;
+        }
+
+        >div {
+            background-color: $dark-gray5;
+            color: $gray2;
+        }
+    }
+
+    // #stack-backdrop {
+    //     &::after {
+    //         background-color: $dark-gray4;
+    //         border-color: $dark-gray1;
+    //     }
+    // }
+
+    .stack .scroller-parent.has-background {
+        background-color: $dark-gray1;
+    }
+}

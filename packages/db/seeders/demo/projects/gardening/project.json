@@ -1,0 +1,37 @@
+[
+    {
+        "id": "313cf341-95e6-4938-865c-940c666e5be6",
+        "title": "Community Garden",
+        "estimate": 360000,
+        "stacks": [
+            {
+                "title": "Seeding",
+                "tint": "#8B5CF6",
+                "id": "31aa1fee-1290-41da-af6d-f832c998b33c"
+            },
+            {
+                "title": "Planting",
+                "tint": "#64748B",
+                "id": "f25e1b26-690b-4310-9cc2-8223b330e5a4"
+            },
+            {
+                "title": "Maintenance",
+                "tint": "#64748B",
+                "id": "5b4305e0-9718-45f9-a932-870029186a52"
+            },
+            {
+                "title": "Harvest",
+                "tint": "#6366F1",
+                "id": "5bc4a14c-6893-4890-9228-2e6e0441b38d"
+            },
+            {
+                "title": "Composting",
+                "tint": "#64748B",
+                "id": "fa45e583-1ce7-432c-b370-14687cdb9c17"
+            }
+        ],
+        "hourlyRate": 83,
+        "currency": "USD",
+        "health": "good"
+    }
+]

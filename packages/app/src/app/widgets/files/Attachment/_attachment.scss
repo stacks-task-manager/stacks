@@ -1,0 +1,138 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.attachment {
+    border-radius: 3px;
+    border: 1px solid $light-gray3;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    position: relative;
+
+    &__toolbar {
+        position: absolute;
+        top: 5px;
+        left: 8px;
+        right: 8px;
+        display: flex;
+        justify-content: space-between;
+
+        .#{$ns}-button {
+            opacity: 0.3;
+            min-height: 16px;
+            min-width: 16px;
+        }
+    }
+
+    &__content {
+        min-width: 0;
+        flex-grow: 2;
+    }
+
+    &__icon {
+        flex-shrink: 0;
+        border-radius: 3px;
+        background-color: $light-gray3;
+        height: 80px;
+        width: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: $gray1;
+        position: relative;
+        overflow: hidden;
+        overflow: hidden;
+        border-radius: 3px;
+        box-shadow: 0 0 0 1px $light-gray1;
+
+        small {
+            font-size: 9px;
+            font-weight: 600;
+            text-transform: uppercase;
+            position: absolute;
+            letter-spacing: -0.5px;
+            bottom: 0;
+            right: 0;
+            color: $gray1;
+            background-color: $white;
+            padding: 0 3px;
+            border-top-left-radius: 3px;
+            display: inline-flex;
+            align-items: center;
+            height: 14px;
+            box-shadow: -1px -1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        img {
+            object-fit: cover;
+            height: 100%;
+            width: 100%;
+        }
+    }
+
+    &__title {
+        font-weight: 600;
+        color: $gray1;
+        width: 100%;
+        min-width: 0;
+        cursor: pointer;
+        word-break: break-all;
+        text-align: center;
+
+        &:hover {
+            color: $blue;
+        }
+    }
+
+    &__footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        border-top: 1px solid $light-gray4;
+        padding-top: 10px;
+    }
+
+    &__size {
+        font-size: 12px;
+        color: $gray1;
+    }
+
+    &__actions {
+        display: flex;
+        align-items: center;
+        gap: 1px;
+    }
+
+    &:hover,
+    .#{$ns}-active {
+        .#{$ns}-button {
+            opacity: 1;
+        }
+    }
+}
+
+.#{$ns}-dark {
+    .attachment {
+        border-color: $gray1;
+
+        &__icon {
+            background-color: $dark-gray5;
+            box-shadow: 0 0 0 1px $gray1;
+
+            small {
+                background-color: $dark-gray3;
+                color: $white;
+            }
+        }
+
+        &__footer {
+            border-color: $gray1;
+        }
+
+        &__title {
+            color: $white;
+        }
+    }
+}

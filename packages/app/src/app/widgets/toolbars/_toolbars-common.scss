@@ -1,0 +1,180 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.main-toolbar {
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid #eaeaea;
+    gap: 5px;
+    justify-content: center;
+    padding: 5px 20px;
+    z-index: 0;
+
+    * {
+        user-select: none;
+    }
+
+    &.single {
+        padding: 15px 20px;
+    }
+
+    .#{$ns}-button {
+        &.badge {
+            position: relative;
+
+            &:after {
+                content: "";
+                display: inline-block;
+                width: 8px;
+                height: 8px;
+                border-radius: 8px;
+                background-color: $vermilion3;
+                box-shadow: 0 0 0 1px $white;
+                position: absolute;
+                bottom: 2px;
+                right: 2px;
+            }
+        }
+    }
+}
+
+.section-toolbar {
+    display: flex;
+    justify-content: space-between;
+
+    .section-toolbar-side {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        flex-grow: 2;
+        min-width: 0;
+
+        &:last-child {
+            justify-content: flex-end;
+        }
+
+        &.fixed {
+            flex-shrink: 0;
+        }
+
+        &.padded {
+            padding: 0 20px;
+        }
+
+        &.centered {
+            justify-content: center;
+        }
+
+        &.side {
+            max-width: 50%;
+            min-width: 250px;
+        }
+    }
+
+    .section-toolbar-options {
+        display: flex;
+        flex-shrink: 0;
+    }
+
+    .section-toolbar-title {
+        min-width: 0;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0;
+            color: $dark-gray3;
+            min-width: 0;
+            max-width: 400px;
+        }
+    }
+
+    .section-toolbar-gap {
+        width: 10px;
+    }
+
+    .section-toolbar-gap-small {
+        width: 5px;
+    }
+
+    .section-toolbar-divider {
+        margin: 0 5px;
+        width: 1px;
+        background-color: #eaeaea;
+        height: 20px;
+    }
+}
+
+.view-type-button {
+    background-color: transparent;
+    border: none;
+    padding: 8px;
+    margin: 0;
+    margin-bottom: -1px;
+    outline: none;
+    color: $gray1;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 500;
+    cursor: pointer;
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    &.active {
+        // border-bottom: 2px solid $blue;
+        color: $blue;
+        position: relative;
+
+        &:after {
+            content: "";
+            background-color: $blue;
+            bottom: -5px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            position: absolute;
+        }
+    }
+
+    &.views {
+        opacity: 0.5;
+        &.#{$ns}-active,
+        &:hover {
+            opacity: 1;
+        }
+    }
+}
+
+.#{$ns}-dark {
+    .main-toolbar {
+        background-color: $app-background-dark;
+        border-bottom-color: $sidebar-border-color-dark;
+    }
+
+    .section-toolbar-title {
+        h1 {
+            color: $light-gray3;
+        }
+    }
+
+    .view-type-button {
+        color: $gray3;
+
+        &.active {
+            color: $light-gray1;
+
+            &:after {
+                background-color: $light-gray1;
+            }
+        }
+    }
+
+    .section-toolbar-divider {
+        background-color: $dark-gray5;
+    }
+}

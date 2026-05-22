@@ -1,0 +1,225 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+$search-padding: 20px;
+
+.search-dialog-portal {
+    .#{$ns}-dialog-container {
+        align-items: flex-start;
+    }
+}
+
+.#{$ns}-dialog {
+    &.search-dialog {
+        background-color: transparent;
+        box-shadow: none;
+        width: 600px;
+    }
+}
+
+#search {
+    background-color: $white;
+    border-radius: 10px;
+    color: $dark-gray1;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+
+    .input-wrapper {
+        display: flex;
+        align-items: center;
+        padding: $search-padding;
+
+        svg {
+            opacity: 0.5;
+        }
+
+        input {
+            flex-grow: 2;
+            font-size: 24px;
+            font-weight: 600;
+            border: none;
+            padding: 0 10px;
+            outline: none;
+            background-color: transparent;
+
+            &::placeholder {
+                font-weight: 400;
+                opacity: 0.5;
+            }
+        }
+
+        .input-clear {
+            background-color: transparent;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            border-bottom: 1px solid currentColor;
+        }
+    }
+
+    .search-types {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        padding: 10px 20px 15px 20px;
+        border-top: 1px solid $light-gray3;
+    }
+
+    .search-results {
+        padding: 10px 0;
+        overflow-y: auto;
+        max-height: 900px;
+    }
+
+    .search-results-item {
+        padding: 10px 0;
+        display: flex;
+        align-items: stretch;
+        gap: 10px;
+        padding: 12px $search-padding;
+        position: relative;
+        cursor: pointer;
+
+        &.active {
+            background-color: $light-gray3 !important;
+        }
+
+        &:not(:last-child) {
+            &::after {
+                content: "";
+                position: absolute;
+                left: $search-padding;
+                right: $search-padding;
+                bottom: 0;
+                height: 1px;
+                background-color: $light-gray4;
+            }
+        }
+
+        .search-result-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            background-color: $light-gray4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
+
+            img {
+                max-width: 100%;
+            }
+        }
+
+        .search-result-content {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 2;
+            gap: 2px;
+            justify-content: center;
+            min-width: 0;
+        }
+
+        .search-result-children {
+            display: flex;
+            gap: 3px 5px;
+            flex-wrap: wrap;
+        }
+
+        .search-result-title {
+            font-size: 14px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .search-result-subtitle {
+            color: $gray3;
+            font-size: 12px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .search-result-parent {
+            color: $gray4;
+            font-size: 11px;
+            max-width: 300px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+
+            b {
+                color: $gray1;
+                font-weight: 500;
+            }
+        }
+
+        .search-result-open {
+            background-color: transparent;
+            border: none;
+            padding: 0;
+            padding: 2px 0;
+            border-bottom: 1px solid;
+            font-size: 12px;
+            display: none;
+        }
+
+        &:hover {
+            background-color: $light-gray5;
+
+            .search-result-open {
+                display: block;
+            }
+        }
+    }
+
+    .search-footer {
+        display: flex;
+        padding: 10px 20px;
+        gap: 15px;
+        border-top: 1px solid $light-gray3;
+
+        > div {
+            display: inline-flex;
+            gap: 5px;
+            align-items: center;
+
+            &:last-child {
+                margin-left: auto;
+            }
+
+            span {
+                font-size: 12px;
+            }
+        }
+    }
+}
+
+.#{$ns}-dark {
+    #search {
+        background-color: $dark-gray3;
+        color: $light-gray1;
+
+        .search-results-item {
+            &.active {
+                background-color: $dark-gray5 !important;
+            }
+
+            &:hover {
+                background-color: $dark-gray4;
+            }
+
+            &:not(:last-child) {
+                &::after {
+                    background-color: $dark-gray2;
+                }
+            }
+        }
+
+        .search-result-icon {
+            background-color: $dark-gray2;
+        }
+    }
+}

@@ -1,0 +1,37 @@
+[
+    {
+        "id": "07057501-674f-46cc-b770-a09161c8f296",
+        "title": "Online Course Creator",
+        "estimate": 360000,
+        "stacks": [
+            {
+                "title": "Syllabus",
+                "tint": "#F59E0B",
+                "id": "03e5af38-1eb2-4e4f-91aa-dd0d6b3d4b39"
+            },
+            {
+                "title": "Content Dev",
+                "tint": "#64748B",
+                "id": "d064150b-3658-42f3-850d-e8d2b356f5db"
+            },
+            {
+                "title": "Recording",
+                "tint": "#F97316",
+                "id": "67e6d466-5c1f-45f3-a3a9-b359461090d7"
+            },
+            {
+                "title": "Quizzes",
+                "tint": "#64748B",
+                "id": "cc826ef9-a66d-4215-8b56-11bd28ce8f59"
+            },
+            {
+                "title": "Launch",
+                "tint": "#F59E0B",
+                "id": "e21d696a-d4b3-40a7-ad7a-28d209f931d1"
+            }
+        ],
+        "hourlyRate": 106,
+        "currency": "USD",
+        "health": "good"
+    }
+]

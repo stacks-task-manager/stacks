@@ -1,0 +1,37 @@
+[
+    {
+        "id": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
+        "title": "Store Inventory",
+        "estimate": 360000,
+        "stacks": [
+            {
+                "title": "Ordered",
+                "tint": "#06B6D4",
+                "id": "e70f806d-6fe2-47c9-a5e4-c4752af9821f"
+            },
+            {
+                "title": "Received",
+                "tint": "#F59E0B",
+                "id": "f87221b0-7888-46b2-911c-80febbff2350"
+            },
+            {
+                "title": "Stocked",
+                "tint": "#F97316",
+                "id": "95be6366-cb34-4992-b7a0-15168d291af6"
+            },
+            {
+                "title": "Low Stock",
+                "tint": "#F59E0B",
+                "id": "aa1c27a2-248b-44e6-bc64-c55d3b769d30"
+            },
+            {
+                "title": "Discontinued",
+                "tint": "#3B82F6",
+                "id": "b72684f9-ddc4-47d1-9dd0-1f8869576e50"
+            }
+        ],
+        "hourlyRate": 102,
+        "currency": "USD",
+        "health": "good"
+    }
+]

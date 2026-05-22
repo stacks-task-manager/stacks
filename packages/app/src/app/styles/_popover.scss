@@ -1,0 +1,60 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+/* POPOVER */
+.popover-small {
+    .#{$ns}-popover-content {
+        max-width: 300px;
+    }
+}
+
+.popover-medium {
+    .#{$ns}-popover-content {
+        max-width: 500px;
+    }
+}
+
+.popover-padded {
+    .#{$ns}-popover-content {
+        padding: 15px;
+    }
+}
+
+.popover-padded-medium {
+    .#{$ns}-popover-content {
+        padding: 10px;
+    }
+}
+
+.popover-padded-medium-sides {
+    .#{$ns}-popover-content {
+        padding: 0 10px;
+    }
+}
+
+.popover-padded-small {
+    .#{$ns}-popover-content {
+        padding: 5px;
+    }
+}
+
+.popover-padded-tiny {
+    .#{$ns}-popover-content {
+        padding: 3px;
+    }
+}
+
+/* POPOVER 2 */
+.#{$ns}-popover {
+    .#{$ns}-popover-content {
+        &:focus {
+            outline: none;
+        }
+    }
+}
+
+.#{$ns}-popover-target {
+}
+
+.#{$ns}-portal,
+.#{$ns}-overlay-start-focus-trap {
+    outline: none;
+}

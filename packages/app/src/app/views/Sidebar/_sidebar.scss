@@ -1,0 +1,131 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.sidebar {
+    background-color: $sidebar-background-light;
+    position: absolute;
+    bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    * {
+        user-select: none;
+    }
+
+    .toggle-sidebar {
+        border: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 10px;
+        position: absolute;
+        // top: 40px;
+        bottom: 10px;
+        right: -10px;
+        z-index: 20;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: $sidebar-background-light;
+        // border: 1px solid $sidebar-border-color-light;
+        border: 1px solid $gray5;
+        cursor: pointer;
+        color: $gray3;
+
+        &:hover {
+            color: $gray1;
+        }
+
+        svg {
+            fill: $white;
+        }
+    }
+
+    &.closed {
+        .toggle-sidebar {
+            background-color: $blue3;
+            border: none;
+            color: $white;
+        }
+
+        .content-component {
+            display: none;
+        }
+    }
+
+    .toggle-sidebar {
+        &:hover {
+            opacity: 1;
+        }
+    }
+
+    &.#{$ns}-dark {
+        background-color: $dark-gray3;
+
+        .toggle-sidebar {
+            background-color: $dark-gray2;
+            border-color: $dark-gray2;
+
+            svg {
+                fill: $light-gray1;
+            }
+        }
+    }
+
+    .no-documents {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-grow: 2;
+        height: 200px;
+    }
+}
+
+.app-content {
+    position: absolute;
+    bottom: 0;
+    // top: $toolbar-height;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: stretch;
+}
+
+.tree,
+.tree ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.tree {
+    margin-bottom: 10px;
+}
+
+.tree-placeholder {
+    margin-right: 10px;
+    position: relative;
+    height: 10px;
+
+    &::after {
+        content: "";
+        height: 2px;
+        position: absolute;
+        right: 0;
+        left: 0;
+        top: 50%;
+        margin-top: -1px;
+        background-color: #1967d2;
+    }
+}
+
+.#{$ns}-dark {
+    .sidebar {
+        background-color: $sidebar-background-dark;
+    }
+
+    .toggle-sidebar {
+        background-color: $sidebar-background-dark;
+        border-color: $sidebar-border-color-dark;
+    }
+}

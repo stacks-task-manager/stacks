@@ -1,0 +1,125 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.folder {
+    color: #858b94;
+    text-shadow: rgba(0, 0, 0, 0.498039) 0px 1px 2px;
+    cursor: default;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+
+    .folder-outer-wrapper {
+        flex-grow: 2;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        height: 30px;
+        min-width: 0;
+        padding-right: 5px;
+        cursor: pointer;
+    }
+
+    .folder-inner-wrapper {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        flex-grow: 2;
+        min-width: 0;
+    }
+
+    .folder-title {
+        padding-left: 10px;
+        flex-grow: 2;
+        cursor: pointer;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .#{$ns}-button {
+        .#{$ns}-icon {
+            svg {
+                transform: rotate(90deg);
+            }
+        }
+    }
+
+    &.selected {
+        .folder-outer-wrapper {
+            color: #fff;
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .folder-inner-wrapper {
+            > .#{$ns}-button svg {
+                fill: #fff;
+            }
+        }
+    }
+
+    &.editing {
+        > .folder-outer-wrapper {
+            background-color: #fff;
+
+            input {
+                display: block;
+                width: 100%;
+                height: 100%;
+                font-size: 14px;
+                background-color: transparent;
+                border: none;
+                outline: none;
+                color: #000;
+                padding: 0;
+                line-height: 14;
+            }
+
+            svg {
+                fill: #000;
+            }
+        }
+    }
+
+    .folder-children {
+        &.dragging {
+            background-color: red;
+            min-height: 50px;
+        }
+    }
+
+    .is-closed {
+        height: 0;
+    }
+
+    .folder-options {
+        display: none;
+
+        button {
+            background: none;
+            border: none;
+            color: #fff;
+
+            svg {
+                fill: #fff;
+            }
+
+            i {
+                font-size: 16px;
+            }
+        }
+    }
+
+    &:hover {
+        color: #fff;
+        background: rgba(4, 137, 247, 0.1);
+
+        .folder-options {
+            display: inline-flex;
+        }
+    }
+
+    .#{$ns}-popover-open {
+        &.folder-options {
+            display: inline-flex;
+        }
+    }
+}

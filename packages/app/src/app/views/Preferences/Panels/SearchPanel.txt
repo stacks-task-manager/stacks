@@ -1,0 +1,85 @@
+import React from "react";
+import { Translate } from "react-i18nify";
+
+import Log from "app/utils/log";
+import { IPanelInterface } from ".";
+import { SettingRow } from "app/components/common";
+import { Switch } from "@blueprintjs/core";
+
+export class SearchPanel extends React.Component<IPanelInterface> {
+    render() {
+        Log.info("[Component][ThemesPanel]", "render");
+        const { preferences, onChange } = this.props;
+
+        return (
+            <div className="preference-panel">
+                <SettingRow
+                    sectionTitle={<Translate value="preferences.section-search" />}
+                    title={<Translate value="preferences.search-active-tasks" />}
+                    description="Enable searching in `Active` tasks."
+                    marginTop
+                    rightElement={
+                        <Switch
+                            checked={preferences.searchActiveTasks}
+                            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                                onChange("searchActiveTasks", event.currentTarget.checked)
+                            }
+                        />
+                    }
+                />
+                <SettingRow
+                    title={<Translate value="preferences.search-archived-tasks" />}
+                    description="Enable searching in `Archived` tasks."
+                    rightElement={
+                        <Switch
+                            checked={preferences.searchArchivedTasks}
+                            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                                onChange("searchArchivedTasks", event.currentTarget.checked)
+                            }
+                        />
+                    }
+                />
+
+                <SettingRow
+                    title={<Translate value="preferences.notepads" />}
+                    description="Enable searching in `Notepad` documents."
+                    rightElement={
+                        <Switch
+                            checked={preferences.searchNotepads}
+                            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                                onChange("searchNotepads", event.currentTarget.checked)
+                            }
+                        />
+                    }
+                />
+
+                <SettingRow
+                    title={<Translate value="preferences.people" />}
+                    description="Enable searching in your contacts."
+                    rightElement={
+                        <Switch
+                            checked={preferences.searchPeople}
+                            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                                onChange("searchPeople", event.currentTarget.checked)
+                            }
+                        />
+                    }
+                />
+
+                <SettingRow
+                    title={<Translate value="preferences.files" />}
+                    description="Enable searching in `Files` documents."
+                    last
+                    rightElement={
+                        <Switch
+                            checked={preferences.searchFiles}
+                            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                                onChange("searchFiles", event.currentTarget.checked)
+                            }
+                        />
+                    }
+                />
+            </div>
+        );
+    }
+}

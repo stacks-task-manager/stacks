@@ -1,0 +1,9 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.project-settings {
+    .#{$ns}-tab-panel {
+        width: 100%;
+        min-height: 400px;
+        max-height: 60vh;
+        overflow-y: auto;
+    }
+}

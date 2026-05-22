@@ -1,0 +1,42 @@
+[
+    {
+        "id": "15b633d8-98c3-46ba-b17d-d143cc0aeeea",
+        "title": "E-commerce Platform Development",
+        "estimate": 475200,
+        "stacks": [
+            {
+                "title": "Product Research",
+                "tint": "#8B5CF6",
+                "id": "b51e9da6-d68e-4a12-b86f-fd1aa3f14638"
+            },
+            {
+                "title": "Design & Planning",
+                "tint": "#3B82F6",
+                "id": "86e6e1e8-7c45-47ab-9f01-75d08d498508"
+            },
+            {
+                "title": "Development",
+                "tint": "#F59E0B",
+                "id": "7fcdebae-43ad-42b6-8993-727ba7f89159"
+            },
+            {
+                "title": "Testing",
+                "tint": "#EF4444",
+                "id": "29d63cbb-69a0-480a-9c91-15808768ee26"
+            },
+            {
+                "title": "Launch Ready",
+                "tint": "#10B981",
+                "id": "64d2203e-a58e-420e-aecb-42e6b670bb3f"
+            },
+            {
+                "title": "Live & Monitoring",
+                "tint": "#06B6D4",
+                "id": "fc34e196-bc26-4851-a872-025b8ff7491d"
+            }
+        ],
+        "hourlyRate": 95,
+        "currency": "USD",
+        "health": "good"
+    }
+]

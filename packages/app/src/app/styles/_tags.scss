@@ -1,0 +1,25 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.#{$ns}-tag {
+    &.btn {
+        &.#{$ns}-intent-success,
+        &.#{$ns}-intent-warning,
+        &.#{$ns}-intent-danger,
+        &.#{$ns}-intent-primary,
+        &.#{$ns}-minimal {
+            background-color: transparent;
+            // font-size: 14px !important;
+
+            .#{$ns}-tag-remove {
+                visibility: hidden;
+            }
+
+            &:hover {
+                background-color: initial;
+
+                .#{$ns}-tag-remove {
+                    visibility: visible;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,72 @@
+[
+    {
+        "id": "a2140be6-f47d-461e-8a4b-fc6ef499f11c",
+        "title": "Social Media",
+        "color": "#3B82F6",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "13b9064e-7372-4e2f-8529-ba26270b88dd",
+        "title": "Email Marketing",
+        "color": "#F59E0B",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "5f927a32-75aa-4f57-a627-a88c585949ec",
+        "title": "Content Marketing",
+        "color": "#10B981",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "d9047d67-299c-4db6-8ffa-e3252ae32d50",
+        "title": "Paid Advertising",
+        "color": "#EF4444",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "4117ff76-2fbb-4e90-88ac-f1f374fd7111",
+        "title": "SEO",
+        "color": "#8B5CF6",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "88d8932d-fd9e-46a9-ad92-24aa5b9f2115",
+        "title": "Analytics",
+        "color": "#06B6D4",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "618aae66-f235-49e2-91c8-86c952d5def6",
+        "title": "Creative",
+        "color": "#EC4899",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "29f4dbe5-ce94-4769-b133-1479544db4b3",
+        "title": "Strategy",
+        "color": "#7C3AED",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "6bb118a8-ad88-494e-89ea-876b122f85ce",
+        "title": "Urgent",
+        "color": "#DC2626",
+        "type": "status",
+        "section": "projects"
+    },
+    {
+        "id": "db12178b-f9f0-4088-ab3b-66e515015644",
+        "title": "Campaign Launch",
+        "color": "#059669",
+        "type": "status",
+        "section": "projects"
+    }
+]

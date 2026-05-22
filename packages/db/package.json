@@ -1,0 +1,58 @@
+{
+  "name": "@stacks/db",
+  "version": "1.0.175",
+  "description": "Database schemas and migrations for Stacks Hono",
+  "main": "dist/index.js",
+  "type": "module",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "migrate": "sequelize-cli db:migrate",
+    "migrate:undo": "sequelize-cli db:migrate:undo",
+    "migrate:undo:all": "sequelize-cli db:migrate:undo:all",
+    "migrate:status": "sequelize-cli db:migrate:status",
+    "migrate:create": "sequelize-cli migration:generate --name",
+    "migrate:reset": "npm run migrate:undo:all && npm run migrate",
+    "db:create": "sequelize-cli db:create",
+    "db:drop": "sequelize-cli db:drop",
+    "demo:install": "sequelize-cli db:seed:all --",
+    "demo:undo": "sequelize-cli db:seed:undo:all",
+    "seed:create": "sequelize-cli seed:generate --name",
+    "reset-password:dev": "node scripts/reset-dev-password.cjs",
+    "compile": "tsc",
+    "build": "tsc && yarn pre-bundle && yarn compile:migration && yarn post-bundle",
+    "dist": "yarn pack --out stacks-db-v%v.tgz",
+    "pre-bundle": "node pre-build.cjs",
+    "post-bundle": "node post-build.cjs",
+    "compile:migration": "node compile-migration.js"
+  },
+  "keywords": [
+    "database",
+    "migrations",
+    "sequelize",
+    "postgresql",
+    "schemas"
+  ],
+  "author": "Cristian Barlutiu",
+  "license": "AGPL-3.0-only",
+  "dependencies": {
+    "@stacks/types": "workspace:*",
+    "pg": "^8.11.3",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.37.7",
+    "sequelize-cli": "^6.6.3"
+  },
+  "devDependencies": {
+    "@types/react": "^19",
+    "bcryptjs": "^3.0.2",
+    "dotenv": "^17.2.2",
+    "esbuild": "^0.25.9",
+    "typescript": "^5.9.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

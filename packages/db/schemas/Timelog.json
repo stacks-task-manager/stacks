@@ -1,0 +1,101 @@
+{
+  "entityName": "Timelog",
+  "tableName": "timelogs",
+  "attributes": {
+    "id": {
+      "type": "UUID",
+      "defaultValue": "UUIDV4",
+      "primaryKey": true
+    },
+    "tenant": {
+      "type": "UUID",
+      "allowNull": false
+    },
+    "createdBy": {
+      "type": "UUID",
+      "allowNull": false
+    },
+    "updatedBy": {
+      "type": "UUID",
+      "allowNull": false
+    },
+    "deletedBy": {
+      "type": "UUID",
+      "allowNull": true
+    },
+    "created": {
+      "type": "DATE",
+      "defaultValue": "NOW",
+      "allowNull": false
+    },
+    "updated": {
+      "type": "DATE",
+      "defaultValue": "NOW",
+      "allowNull": false
+    },
+    "deleted": {
+      "type": "DATE",
+      "allowNull": true
+    },
+    "description": {
+      "type": "STRING",
+      "allowNull": false
+    },
+    "date": {
+      "type": "DATE",
+      "allowNull": false
+    },
+    "duration": {
+      "type": "INTEGER",
+      "allowNull": false
+    },
+    "billable": {
+      "type": "BOOLEAN",
+      "allowNull": true,
+      "defaultValue": false
+    },
+    "billed": {
+      "type": "BOOLEAN",
+      "allowNull": true,
+      "defaultValue": false
+    },
+    "person": {
+      "type": "UUID",
+      "allowNull": false
+    },
+    "project": {
+      "type": "UUID",
+      "allowNull": false
+    },
+    "task": {
+      "type": "UUID",
+      "allowNull": false
+    },
+    "status": {
+      "type": {
+        "type": "ENUM",
+        "values": [
+          "...Object.values(TIMELOG_STATUS"
+        ]
+      },
+      "allowNull": true,
+      "defaultValue": "TIMELOG_STATUS.PENDING"
+    },
+    "approvedBy": {
+      "type": "UUID",
+      "allowNull": true,
+      "defaultValue": null
+    },
+    "approvedOn": {
+      "type": "DATE",
+      "allowNull": true,
+      "defaultValue": null
+    },
+    "rejectReason": {
+      "type": "STRING",
+      "allowNull": true,
+      "defaultValue": null
+    }
+  },
+  "options": {}
+}

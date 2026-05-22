@@ -1,0 +1,159 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.sidebar-button-wrapper {
+    height: 30px;
+    display: flex;
+    flex-shrink: 0;
+    padding: 0 10px;
+    cursor: pointer;
+
+    .sidebar-button {
+        border-radius: 4px;
+        display: flex;
+        align-items: stretch;
+        flex-grow: 2;
+        color: $sidebar-button-color;
+        padding-right: 5px;
+        min-width: 0;
+    }
+
+    .sidebar-button-title-wrapper {
+        display: flex;
+        align-items: center;
+        min-width: 0;
+        flex-grow: 2;
+        gap: 10px;
+    }
+
+    .sidebar-button-title {
+        // padding: 0 10px;
+        flex-grow: 2;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        cursor: pointer;
+    }
+
+    .sidebar-button-toolbar,
+    .sidebar-button-accessory {
+        display: inline-flex;
+        align-items: center;
+        flex-shrink: 0;
+        justify-content: flex-end;
+    }
+
+    .sidebar-button-accessory {
+        gap: 5px;
+    }
+
+    .sidebar-button-menu {
+        display: none;
+
+        .#{$ns}-button {
+            min-height: 18px;
+            min-width: 18px;
+            padding: 0 4px;
+            // background-color: $light-gray1;
+            .#{$ns}-icon {
+                color: $gray1;
+            }
+
+            &.#{$ns}-active {
+                background-color: $gray5;
+            }
+        }
+    }
+
+    input {
+        background-color: transparent;
+        border: none;
+        outline: none;
+        width: 100%;
+        padding: 0 10px;
+    }
+
+    &.editing {
+        .sidebar-button {
+            padding-right: 0;
+            .sidebar-button-title-wrapper {
+                border-radius: 4px;
+                background-color: $sidebar-button-hover-background;
+                box-shadow: 0 0 0 1px $sidebar-button-active-background inset;
+            }
+        }
+    }
+
+    &.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    &:hover,
+    &.menuOpen {
+        .sidebar-button {
+            background-color: $sidebar-button-hover-background;
+        }
+
+        &.hasMenu {
+            // .sidebar-button-accessory {
+            //     display: none;
+            // }
+
+            .sidebar-button-menu {
+                display: inline-flex;
+            }
+        }
+    }
+
+    &.active,
+    .#{$ns}-active & {
+        .sidebar-button {
+            background-color: $white;
+            color: $sidebar-button-active-background;
+            font-weight: 500;
+            box-shadow: 0 0 0 1px $sidebar-border-color-light;
+        }
+    }
+
+    &.selected {
+        .sidebar-button {
+            box-shadow: 0 0 0 1px $sidebar-border-color-light;
+        }
+    }
+}
+
+.#{$ns}-dark {
+    .sidebar-button-wrapper {
+        .sidebar-button {
+            color: $light-gray1;
+        }
+
+        &.active {
+            .sidebar-button {
+                background-color: $dark-gray2;
+                box-shadow: 0 0 0 1px $dark-gray2;
+            }
+        }
+
+        &.selected {
+            .sidebar-button {
+                box-shadow: 0 0 0 1px $dark-gray2;
+            }
+        }
+    }
+
+    .#{$ns}-active {
+        .sidebar-button {
+            background-color: $dark-gray3;
+            box-shadow: 0 0 0 1px $dark-gray2;
+        }
+    }
+
+    .sidebar-button-menu {
+        .#{$ns}-button {
+            background-color: $dark-gray4;
+            &.#{$ns}-active {
+                background-color: $gray1;
+            }
+        }
+    }
+}

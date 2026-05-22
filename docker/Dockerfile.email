@@ -1,0 +1,31 @@
+# Email Service Dockerfile
+FROM node:20-bullseye
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /email-service
+
+# Copy package files and install dependencies
+COPY email-service/package.json ./
+RUN yarn install --production
+
+# Copy the bundled email service
+COPY email-service/ .
+
+# Remove any existing node_modules and reinstall to ensure compatibility
+RUN rm -rf node_modules && yarn install --production
+
+# AGPL-3.0 — ship LICENSE + NOTICE alongside the binary.
+COPY email-service/LICENSE /email-service/LICENSE
+COPY email-service/NOTICE /email-service/NOTICE
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+    CMD node -e "process.exit(0)"
+
+# Start the email service
+CMD ["node", "email-service.js"]

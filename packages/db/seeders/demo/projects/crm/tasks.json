@@ -1,0 +1,270 @@
+[
+    {
+        "title": "Research TechCorp Inc. - Enterprise Software Opportunity",
+        "description": "Conduct comprehensive research on TechCorp Inc., their current software stack, pain points, and decision-making process. Identify key stakeholders and budget allocation for Q1.",
+        "id": "941a1221-41e2-447a-829b-b80928ce632d",
+        "project": "2e2ae9f8-150b-484e-b41b-cb06d5a8d376",
+        "tags": [
+            "44d4e5f6-a7b8-c9d0-e1f2-a3b4c5d6e7f8",
+            "77a7b8c9-d0e1-f2a3-b4c5-d6e7f8a9b0c1",
+            "ccf2a3b4-c5d6-e7f8-a9b0-c1d2e3f4a5b6",
+            "11e7f8a9-b0c1-d2e3-f4a5-b6c7d8e9fa0b"
+        ],
+        "tint": "#3B82F6",
+        "stack": "c6b5754e-8462-4ce6-8236-f9ee2c6af146",
+        "estimate": 14400,
+        "priority": "high",
+        "duedate": "2024-03-15 17:00:00",
+        "position": 0
+    },
+    {
+        "title": "Cold outreach to HealthPlus Medical Group",
+        "description": "Initial outreach to HealthPlus Medical Group regarding their patient management system needs. Prepare personalized email sequence and LinkedIn connection requests.",
+        "id": "89f7242f-914a-493d-bf3d-fce804404a2f",
+        "project": "2e2ae9f8-150b-484e-b41b-cb06d5a8d376",
+        "tags": [
+            "88b8c9d0-e1f2-a3b4-c5d6-e7f8a9b0c1d2",
+            "dda3b4c5-d6e7-f8a9-b0c1-d2e3f4a5b6c7",
+            "22f8a9b0-c1d2-e3f4-a5b6-c7d8e9fa0b1c"
+        ],
+        "tint": "#F59E0B",
+        "stack": "c6b5754e-8462-4ce6-8236-f9ee2c6af146",
+        "estimate": 7200,
+        "priority": "medium",
+        "position": 1
+    },
+    {
+        "title": "Follow up with RetailMax referral from John Smith",
+        "description": "John Smith from our existing client referred RetailMax. Schedule initial discovery call to understand their inventory management challenges.",
+        "id": "5b873b9b-81fe-4889-8788-6bd7be0f43c6",
+        "project": "2e2ae9f8-150b-484e-b41b-cb06d5a8d376",
+        "tags": [
+            "bbe1f2a3-b4c5-d6e7-f8a9-b0c1d2e3f4a5",
+            "eeb4c5d6-e7f8-a9b0-c1d2-e3f4a5b6c7d8",
+            "55e5f6a7-b8c9-d0e1-f2a3-b4c5d6e7f8a9",
+            "22b2c3d4-e5f6-a7b8-c9d0-e1f2a3b4c5d6"
+        ],
+        "tint": "#10B981",
+        "stack": "35ec8088-945e-47c3-aa59-671af8598c02",
+        "estimate": 3600,
+        "priority": "high",
+        "duedate": "2024-03-12 14:00:00",
+        "position": 0
+    },
+    {
+        "title": "Qualify StartupXYZ funding and timeline",
+        "description": "StartupXYZ showed interest in our platform. Need to qualify their funding status, implementation timeline, and technical requirements before proceeding.",
+        "id": "236ba819-9f44-4938-bccd-4631cb8a646d",
+        "project": "2e2ae9f8-150b-484e-b41b-cb06d5a8d376",
+        "tags": [
+            "66f6a7b8-c9d0-e1f2-a3b4-c5d6e7f8a9b0",
+            "77a7b8c9-d0e1-f2a3-b4c5-d6e7f8a9b0c1",
+            "ccf2a3b4-c5d6-e7f8-a9b0-c1d2e3f4a5b6"
+        ],
+        "tint": "#8B5CF6",
+        "stack": "35ec8088-945e-47c3-aa59-671af8598c02",
+        "estimate": 5400,
+        "priority": "medium",
+        "progress": 25,
+        "position": 1
+    },
+    {
+        "title": "Discovery call with ManufacturingPro leadership team",
+        "description": "Scheduled discovery call with ManufacturingPro's CTO and Operations Director to understand their production tracking and quality control needs.",
+        "id": "555cb9b1-c923-4b1e-8bd5-20b1275f9bdc",
+        "project": "2e2ae9f8-150b-484e-b41b-cb06d5a8d376",
+        "tags": [
+            "aad0e1f2-a3b4-c5d6-e7f8-a9b0c1d2e3f4",
+            "44d4e5f6-a7b8-c9d0-e1f2-a3b4c5d6e7f8",
+            "44b0c1d2-e3f4-a5b6-c7d8-e9fa0b1c2d3e",
+            "11e7f8a9-b0c1-d2e3-f4a5-b6c7d8e9fa0b"
+        ],
+        "tint": "#EF4444",
+        "stack": "35ec8088-945e-47c3-aa59-671af8598c02",
+        "estimate": 7200,
+        "priority": "critical",
+        "duedate": "2024-03-14 10:00:00",
+        "position": 2
+    },
+    {
+        "title": "Technical demo for FinanceFirst Bank",
+        "description": "Prepare and deliver technical demonstration of our compliance and reporting features for FinanceFirst Bank's risk management team.",
+        "id": "3877985e-7702-43bf-982d-6b1b00205ca9",
+        "project": "2e2ae9f8-150b-484e-b41b-cb06d5a8d376",
+        "tags": [
+            "99c9d0e1-f2a3-b4c5-d6e7-f8a9b0c1d2e3",
+            "44d4e5f6-a7b8-c9d0-e1f2-a3b4c5d6e7f8",
+            "11a1b2c3-d4e5-f6a7-b8c9-d0e1f2a3b4c5",
+            "11e7f8a9-b0c1-d2e3-f4a5-b6c7d8e9fa0b"
+        ],
+        "tint": "#7C3AED",
+        "stack": "74e98a34-4714-4143-a642-8fbfe134b5a2",
+        "estimate": 10800,
+        "priority": "critical",
+        "progress": 60,
+        "duedate": "2024-03-13 15:00:00",
+        "position": 0
+    },
+    {
+        "title": "Create custom proposal for TechCorp Inc.",
+        "description": "Develop comprehensive proposal including technical specifications, implementation timeline, pricing structure, and ROI analysis for TechCorp's enterprise deployment.",
+        "id": "5760410f-4b8f-4843-8630-5e1b4e696a81",
+        "project": "2e2ae9f8-150b-484e-b41b-cb06d5a8d376",
+        "tags": [
+            "44d4e5f6-a7b8-c9d0-e1f2-a3b4c5d6e7f8",
+            "77a7b8c9-d0e1-f2a3-b4c5-d6e7f8a9b0c1",
+            "11e7f8a9-b0c1-d2e3-f4a5-b6c7d8e9fa0b",
+            "44b0c1d2-e3f4-a5b6-c7d8-e9fa0b1c2d3e"
+        ],
+        "tint": "#059669",
+        "stack": "74e98a34-4714-4143-a642-8fbfe134b5a2",
+        "estimate": 21600,
+        "priority": "high",
+        "progress": 40,
+        "position": 1
+    },
+    {
+        "title": "Prepare pricing proposal for HealthPlus Medical",
+        "description": "Create tiered pricing proposal for HealthPlus Medical Group including implementation costs, training, and ongoing support options.",
+        "id": "8a3d1071-16cb-4a02-a785-323cbb268259",
+        "project": "2e2ae9f8-150b-484e-b41b-cb06d5a8d376",
+        "tags": [
+            "88b8c9d0-e1f2-a3b4-c5d6-e7f8a9b0c1d2",
+            "22f8a9b0-c1d2-e3f4-a5b6-c7d8e9fa0b1c",
+            "55c1d2e3-f4a5-b6c7-d8e9-fa0b1c2d3e4f"
+        ],
+        "tint": "#EC4899",
+        "stack": "74e98a34-4714-4143-a642-8fbfe134b5a2",
+        "estimate": 14400,
+        "priority": "medium",
+        "progress": 75,
+        "position": 2
+    },
+    {
+        "title": "Contract negotiation with FinanceFirst Bank",
+        "description": "Negotiate contract terms including data security requirements, SLA commitments, and payment terms with FinanceFirst Bank's legal and procurement teams.",
+        "id": "c1d9ee6a-2da0-46d3-9fbb-2fe0fae5a251",
+        "project": "2e2ae9f8-150b-484e-b41b-cb06d5a8d376",
+        "tags": [
+            "99c9d0e1-f2a3-b4c5-d6e7-f8a9b0c1d2e3",
+            "44d4e5f6-a7b8-c9d0-e1f2-a3b4c5d6e7f8",
+            "11a1b2c3-d4e5-f6a7-b8c9-d0e1f2a3b4c5",
+            "44b0c1d2-e3f4-a5b6-c7d8-e9fa0b1c2d3e"
+        ],
+        "tint": "#DC2626",
+        "stack": "ec1a3493-810a-4bee-88f6-417cda129056",
+        "estimate": 18000,
+        "priority": "critical",
+        "progress": 80,
+        "duedate": "2024-03-20 16:00:00",
+        "position": 0
+    },
+    {
+        "title": "Address security concerns for ManufacturingPro",
+        "description": "Work with technical team to address ManufacturingPro's specific security and compliance requirements for industrial IoT integration.",
+        "id": "10668e42-04cd-4299-b5d0-06c0a3e783fb",
+        "project": "2e2ae9f8-150b-484e-b41b-cb06d5a8d376",
+        "tags": [
+            "aad0e1f2-a3b4-c5d6-e7f8-a9b0c1d2e3f4",
+            "44d4e5f6-a7b8-c9d0-e1f2-a3b4c5d6e7f8",
+            "66d2e3f4-a5b6-c7d8-e9fa-0b1c2d3e4f50"
+        ],
+        "tint": "#F59E0B",
+        "stack": "ec1a3493-810a-4bee-88f6-417cda129056",
+        "estimate": 12600,
+        "priority": "high",
+        "progress": 50,
+        "position": 1
+    },
+    {
+        "title": "Finalize RetailMax implementation plan",
+        "description": "Complete implementation planning with RetailMax including data migration strategy, staff training schedule, and go-live timeline.",
+        "id": "dd9a4bc5-3e6e-45c6-b07c-7bd54d45de2c",
+        "project": "2e2ae9f8-150b-484e-b41b-cb06d5a8d376",
+        "tags": [
+            "bbe1f2a3-b4c5-d6e7-f8a9-b0c1d2e3f4a5",
+            "55e5f6a7-b8c9-d0e1-f2a3-b4c5d6e7f8a9",
+            "66d2e3f4-a5b6-c7d8-e9fa-0b1c2d3e4f50"
+        ],
+        "tint": "#10B981",
+        "stack": "ec1a3493-810a-4bee-88f6-417cda129056",
+        "estimate": 9000,
+        "priority": "medium",
+        "progress": 100,
+        "done": true,
+        "completed": "2024-03-08 14:30:00",
+        "position": 2
+    },
+    {
+        "title": "Close TechCorp Inc. enterprise deal",
+        "description": "Finalize contract signing with TechCorp Inc. for their enterprise software deployment. Coordinate with legal and finance teams for contract execution.",
+        "id": "1b16e489-d32c-4ce9-8582-a725829dc5fc",
+        "project": "2e2ae9f8-150b-484e-b41b-cb06d5a8d376",
+        "tags": [
+            "44d4e5f6-a7b8-c9d0-e1f2-a3b4c5d6e7f8",
+            "77a7b8c9-d0e1-f2a3-b4c5-d6e7f8a9b0c1",
+            "11e7f8a9-b0c1-d2e3-f4a5-b6c7d8e9fa0b",
+            "44b0c1d2-e3f4-a5b6-c7d8-e9fa0b1c2d3e"
+        ],
+        "tint": "#059669",
+        "stack": "dcb90743-febb-4760-b43c-295cc2ed5b4f",
+        "estimate": 7200,
+        "priority": "critical",
+        "progress": 95,
+        "duedate": "2024-03-22 17:00:00",
+        "position": 0
+    },
+    {
+        "title": "StartupXYZ - Lost due to budget constraints",
+        "description": "StartupXYZ decided not to proceed due to budget limitations. Document lessons learned and maintain relationship for future opportunities.",
+        "id": "a29f4ac9-12fc-48c2-90d3-13de944ef70d",
+        "project": "2e2ae9f8-150b-484e-b41b-cb06d5a8d376",
+        "tags": [
+            "66f6a7b8-c9d0-e1f2-a3b4-c5d6e7f8a9b0",
+            "33a9b0c1-d2e3-f4a5-b6c7-d8e9fa0b1c2d"
+        ],
+        "tint": "#6B7280",
+        "stack": "1857477c-419a-412e-b8e1-53f836ab2f6a",
+        "estimate": 1800,
+        "priority": "low",
+        "progress": 100,
+        "done": true,
+        "completed": "2024-03-05 11:00:00",
+        "position": 0
+    },
+    {
+        "title": "SmallBiz Corp - Lost to competitor",
+        "description": "SmallBiz Corp chose a competitor's solution. Conduct post-mortem analysis to understand decision factors and improve future proposals.",
+        "id": "95e18410-866b-423a-a1fa-afa33d2e77b2",
+        "project": "2e2ae9f8-150b-484e-b41b-cb06d5a8d376",
+        "tags": [
+            "55e5f6a7-b8c9-d0e1-f2a3-b4c5d6e7f8a9",
+            "22f8a9b0-c1d2-e3f4-a5b6-c7d8e9fa0b1c"
+        ],
+        "tint": "#6B7280",
+        "stack": "1857477c-419a-412e-b8e1-53f836ab2f6a",
+        "estimate": 3600,
+        "priority": "low",
+        "progress": 100,
+        "done": true,
+        "completed": "2024-03-07 16:45:00",
+        "position": 1
+    },
+    {
+        "title": "Trade show lead follow-up - MedTech Solutions",
+        "description": "Follow up with MedTech Solutions contact from last week's healthcare technology trade show. They expressed interest in our patient data analytics platform.",
+        "id": "f5a2bb85-8728-4920-be60-654d580dea52",
+        "project": "2e2ae9f8-150b-484e-b41b-cb06d5a8d376",
+        "tags": [
+            "88b8c9d0-e1f2-a3b4-c5d6-e7f8a9b0c1d2",
+            "ffc5d6e7-f8a9-b0c1-d2e3-f4a5b6c7d8e9",
+            "22b2c3d4-e5f6-a7b8-c9d0-e1f2a3b4c5d6"
+        ],
+        "tint": "#EC4899",
+        "stack": "c6b5754e-8462-4ce6-8236-f9ee2c6af146",
+        "estimate": 5400,
+        "priority": "medium",
+        "duedate": "2024-03-16 12:00:00",
+        "position": 2
+    }
+]

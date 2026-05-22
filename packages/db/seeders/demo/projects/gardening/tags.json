@@ -1,0 +1,58 @@
+[
+    {
+        "id": "f692f19e-8cf4-4428-abca-c82df40a9bab",
+        "title": "Vegetables",
+        "color": "#06B6D4",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "060cd1e0-c3a4-4a14-be07-e6ffc57a1a77",
+        "title": "Flowers",
+        "color": "#10B981",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "9312570c-1826-4664-ac9a-2642b206de02",
+        "title": "Herbs",
+        "color": "#64748B",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "04dc3431-94ce-45c7-8e8f-0774efa6dc78",
+        "title": "Tools",
+        "color": "#10B981",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "49b6504f-b182-49f8-8f91-2f937d1279d6",
+        "title": "Soil",
+        "color": "#64748B",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "ccd41568-f85e-4f38-8664-72812879d969",
+        "title": "Watered",
+        "color": "#F59E0B",
+        "type": "status",
+        "section": "projects"
+    },
+    {
+        "id": "d466edeb-d1aa-4d68-ba02-0c1c7ff25c63",
+        "title": "Fertilized",
+        "color": "#6366F1",
+        "type": "status",
+        "section": "projects"
+    },
+    {
+        "id": "72779dfc-8321-49ec-82e4-49ce8cf77dcf",
+        "title": "Pruned",
+        "color": "#3B82F6",
+        "type": "status",
+        "section": "projects"
+    }
+]

@@ -1,0 +1,20 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.person-timesheet {
+    &__date {
+        span {
+            padding: 0 5px;
+        }
+
+        div {
+            padding: 1px 5px;
+        }
+    }
+
+    &__today {
+        div {
+            background-color: #ff3b2f;
+            color: $white;
+            border-radius: 30px;
+        }
+    }
+}

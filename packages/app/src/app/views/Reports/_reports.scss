@@ -1,0 +1,39 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+#reports {
+    .table-progress-cell {
+        border-radius: 6px;
+        span,
+        small {
+            left: 12px;
+        }
+    }
+}
+
+.report-grid {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.report-column {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+
+    &.size-25 {
+        grid-column: span 1;
+    }
+
+    &.size-50 {
+        grid-column: span 2;
+    }
+
+    &.size-75 {
+        grid-column: span 3;
+    }
+
+    &.size-100 {
+        grid-column: span 4;
+    }
+}

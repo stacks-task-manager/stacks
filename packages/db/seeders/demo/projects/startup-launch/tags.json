@@ -1,0 +1,58 @@
+[
+    {
+        "id": "7011f0ca-8dc9-4aee-b2d0-f2feec29ed6c",
+        "title": "MVP",
+        "color": "#06B6D4",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "b636094f-d30d-4b8c-b18a-5ae6ac606f33",
+        "title": "Pitch Deck",
+        "color": "#8B5CF6",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "0c488792-9b50-4657-974a-f59bac428a4e",
+        "title": "Incorporation",
+        "color": "#F59E0B",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "25d51af1-f16b-4c52-a57e-62b2e9344d15",
+        "title": "Hiring",
+        "color": "#8B5CF6",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "577c17d7-1e1b-4cdb-9b88-6ac16788f2e7",
+        "title": "Finance",
+        "color": "#3B82F6",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "33eab67d-1275-45f6-b88f-386d24aaf9b2",
+        "title": "High Priority",
+        "color": "#EC4899",
+        "type": "status",
+        "section": "projects"
+    },
+    {
+        "id": "f5f4525c-85cf-436d-9279-cc7a4043c299",
+        "title": "Delayed",
+        "color": "#6366F1",
+        "type": "status",
+        "section": "projects"
+    },
+    {
+        "id": "5ee25305-f2d1-4db6-b964-e0034d2953f3",
+        "title": "Waiting for Approval",
+        "color": "#64748B",
+        "type": "status",
+        "section": "projects"
+    }
+]

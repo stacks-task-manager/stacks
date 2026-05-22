@@ -1,0 +1,17 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.#{$ns}-tag {
+    &.status-chip {
+        font-weight: 500;
+        .#{$ns}-tag-remove {
+            color: currentColor !important;
+        }
+    }
+}
+
+.#{$ns}-dark {
+    .#{$ns}-tag {
+        &.status-chip {
+            color: $white !important;
+        }
+    }
+}

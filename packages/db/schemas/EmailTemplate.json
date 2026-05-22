@@ -1,0 +1,38 @@
+{
+    "entityName": "EmailTemplate",
+    "tableName": "email_templates",
+    "attributes": {
+        "id": { "type": "INTEGER", "primaryKey": true },
+        "templateType": { "type": "STRING", "allowNull": false },
+        "subject": {
+            "type": "STRING",
+            "allowNull": false
+        },
+        "body": {
+            "type": "TEXT",
+            "allowNull": false
+        },
+        "isActive": {
+            "type": "BOOLEAN",
+            "defaultValue": true,
+            "allowNull": false
+        },
+        "description": {
+            "type": "TEXT",
+            "allowNull": true
+        },
+        "locale": {
+            "type": "STRING",
+            "allowNull": false,
+            "defaultValue": "en"
+        },
+        "tenant": { "type": "STRING", "allowNull": false },
+        "createdBy": { "type": "UUID", "allowNull": false },
+        "updatedBy": { "type": "UUID", "allowNull": false },
+        "deletedBy": { "type": "UUID", "allowNull": true },
+        "created": { "type": "DATE", "allowNull": false, "defaultValue": "NOW" },
+        "updated": { "type": "DATE", "allowNull": false, "defaultValue": "NOW" },
+        "deleted": { "type": "DATE", "allowNull": false, "defaultValue": "NOW" }
+    },
+    "options": {}
+}

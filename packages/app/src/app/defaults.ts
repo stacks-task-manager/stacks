@@ -1,0 +1,58 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+import { translate } from "@stacks/translations";
+import { ITableColumn } from "@stacks/types";
+export const TABLE_COLUMNS: ITableColumn[] = [
+    {
+        name: "title",
+        title: translate("Title"),
+        width: 400,
+        minWidth: 150,
+        isSortable: true,
+        unhideable: true,
+        resizable: true,
+    },
+    {
+        name: "content",
+        title: translate("Description"),
+        width: 200,
+        minWidth: 100,
+        isSortable: false,
+        resizable: true,
+    },
+    { name: "assignees", title: translate("Assignees"), width: 150, minWidth: 100, isSortable: false },
+    { name: "startdate", title: translate("Start date"), width: 200, minWidth: 100, isSortable: true },
+    { name: "dodate", title: translate("Do date"), width: 200, minWidth: 100, isSortable: true },
+    { name: "duedate", title: translate("Due Date"), width: 200, minWidth: 100, isSortable: true },
+    { name: "progress", title: translate("Progress"), width: 200, minWidth: 100, isSortable: true },
+    { name: "priority", title: translate("Priority"), width: 120, minWidth: 100, isSortable: true },
+    { name: "status", title: translate("Status"), width: 150, minWidth: 100, isSortable: false },
+    {
+        name: "tags",
+        title: translate("Tags"),
+        width: 200,
+        minWidth: 100,
+        maxWidth: 350,
+        isSortable: false,
+        resizable: true,
+    },
+    { name: "subtasks", title: translate("Subtasks"), width: 200, minWidth: 100, isSortable: false },
+    { name: "stack", title: translate("Stack"), width: 200, minWidth: 100, isSortable: false },
+    { name: "attachments", title: translate("Attachments"), width: 200, minWidth: 100, isSortable: false },
+    {
+        name: "spentprogress",
+        title: translate("Spent Progress"),
+        width: 200,
+        minWidth: 100,
+        isSortable: false,
+    },
+    {
+        name: "estimatedtime",
+        title: translate("Estimated time"),
+        width: 200,
+        minWidth: 100,
+        isSortable: true,
+    },
+    { name: "spenttime", title: translate("Spent Time"), width: 200, minWidth: 100, isSortable: true },
+    { name: "created", title: translate("Date created"), width: 200, minWidth: 100, isSortable: true },
+    { name: "updated", title: translate("Updated Date"), width: 200, minWidth: 100, isSortable: true },
+];

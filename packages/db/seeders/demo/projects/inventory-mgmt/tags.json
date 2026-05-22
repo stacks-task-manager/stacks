@@ -1,0 +1,58 @@
+[
+    {
+        "id": "caa6e214-f167-4dbc-802a-0e1a1ea5a8fc",
+        "title": "Electronics",
+        "color": "#EF4444",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "79ccb757-eb22-45b1-911b-a2ef4703ab6f",
+        "title": "Clothing",
+        "color": "#6366F1",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "21edea1f-33db-4831-a7f1-10811d9289bd",
+        "title": "Home",
+        "color": "#8B5CF6",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "ba252c19-a0c9-40d0-b03e-8c55e88aab56",
+        "title": "Accessories",
+        "color": "#10B981",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "61d62921-9a0b-40ef-8e47-11340a42251f",
+        "title": "Toys",
+        "color": "#F59E0B",
+        "type": "tag",
+        "section": "projects"
+    },
+    {
+        "id": "deaa3e38-fe03-42c8-b445-8d953e876d7d",
+        "title": "Backordered",
+        "color": "#64748B",
+        "type": "status",
+        "section": "projects"
+    },
+    {
+        "id": "2278cf06-13bc-465b-a64b-a27740fa0bfc",
+        "title": "Damaged",
+        "color": "#6366F1",
+        "type": "status",
+        "section": "projects"
+    },
+    {
+        "id": "da1267f6-b317-4ce8-858a-65e5ea962806",
+        "title": "Return",
+        "color": "#EF4444",
+        "type": "status",
+        "section": "projects"
+    }
+]
