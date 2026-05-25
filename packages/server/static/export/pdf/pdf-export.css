@@ -1,75 +1,137 @@
-/* Shared PDF export layout (used with stacks.min.css; loaded via <base href=".../static/">). */
+/* ============================================================================
+   PDF Export Styles — Stack Overflow Design System
+   Used with stacks.min.css; loaded via <base href=".../static/">.
+   Print-optimized: no JS, no external fonts, all CSS must be self-contained.
+   ============================================================================ */
 
 @page {
     margin: 14mm;
 }
 
+/* ---------------------------------------------------------------------------
+   Page-level container
+   --------------------------------------------------------------------------- */
 .pdf-export {
     max-width: 100%;
 }
 
-.pdf-export .pdf-meta {
-    border-bottom: 1px solid #d6d9dc;
-    padding-bottom: 12px;
-    margin-bottom: 16px;
-}
-
-.pdf-export .pdf-footer {
-    margin-top: 24px;
-    padding-top: 12px;
-    border-top: 1px solid #d6d9dc;
-    font-size: 11px;
-    color: #6a737c;
-}
-
-/* Definition lists (person, project, task) */
-.pdf-export .pdf-section-title {
-    font-size: 15px;
+/* ---------------------------------------------------------------------------
+   Export label (the "EXPORT" pill at the top)
+   --------------------------------------------------------------------------- */
+.pdf-export .pdf-export-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px 2px 8px;
+    font-size: 10px;
     font-weight: 600;
-    margin: 20px 0 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #6a737c;
+    background: #f1f2f3;
+    border-radius: 3px;
+    margin-bottom: 6px;
 }
 
+/* ---------------------------------------------------------------------------
+   Card wrapper
+   --------------------------------------------------------------------------- */
+.pdf-export .pdf-card {
+    background: #ffffff;
+    border: 1px solid #d6d9dc;
+    border-radius: 6px;
+    padding: 20px 24px;
+    margin-top: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+/* ---------------------------------------------------------------------------
+   Section headers
+   --------------------------------------------------------------------------- */
+.pdf-export .pdf-section {
+    margin-top: 20px;
+    padding-top: 12px;
+    border-top: 1px solid #e3e6e8;
+}
+
+.pdf-export .pdf-section:first-child {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+}
+
+.pdf-export .pdf-section-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #0c0d0e;
+    margin: 0 0 14px;
+    line-height: 1.3;
+}
+
+/* ---------------------------------------------------------------------------
+   Definition list grid — clean label/value pairs
+   --------------------------------------------------------------------------- */
 .pdf-export .pdf-dl {
     display: grid;
-    grid-template-columns: minmax(140px, 32%) 1fr;
-    gap: 8px 16px;
+    grid-template-columns: minmax(120px, 28%) 1fr;
+    gap: 6px 16px;
     align-items: start;
-    font-size: 13px;
+    font-size: 12px;
+    line-height: 1.5;
 }
 
 .pdf-export .pdf-dt {
     color: #6a737c;
     font-size: 11px;
-    padding-top: 2px;
+    font-weight: 500;
+    padding-top: 1px;
+    white-space: nowrap;
 }
 
 .pdf-export .pdf-dd {
     margin: 0;
-    word-break: break-word;
-}
-
-.pdf-export .pdf-notes,
-.pdf-export .pdf-prose,
-.pdf-export .pdf-desc {
-    white-space: pre-wrap;
+    color: #0c0d0e;
     word-break: break-word;
     line-height: 1.5;
 }
 
-.pdf-export .pdf-health {
-    text-transform: capitalize;
+/* ---------------------------------------------------------------------------
+   Two-column info grid (used in person/contact, project/schedule)
+   --------------------------------------------------------------------------- */
+.pdf-export .pdf-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px 24px;
 }
 
-.pdf-export .pdf-task-block + .pdf-task-block {
-    margin-top: 28px;
-    padding-top: 20px;
-    border-top: 1px dashed #e3e6e8;
+.pdf-export .pdf-info-grid .pdf-info-group {
+    margin-bottom: 0;
 }
 
-/* Rich HTML body (notepad) */
+.pdf-export .pdf-info-group + .pdf-info-group {
+    border-left: 1px solid #e3e6e8;
+    padding-left: 24px;
+}
+
+/* ---------------------------------------------------------------------------
+   Prose / description text
+   --------------------------------------------------------------------------- */
+.pdf-export .pdf-prose,
+.pdf-export .pdf-desc,
+.pdf-export .pdf-notes {
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: #0c0d0e;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+/* ---------------------------------------------------------------------------
+   Rich HTML body (notepad)
+   --------------------------------------------------------------------------- */
 .pdf-export .pdf-body {
-    font-size: 13px;
-    line-height: 1.55;
+    font-size: 12.5px;
+    line-height: 1.6;
     color: #0c0d0e;
 }
 
@@ -77,7 +139,13 @@
     margin: 1em 0 0.5em;
     font-weight: 600;
     line-height: 1.25;
+    color: #0c0d0e;
 }
+
+.pdf-export .pdf-body :where(h1) { font-size: 18px; }
+.pdf-export .pdf-body :where(h2) { font-size: 16px; }
+.pdf-export .pdf-body :where(h3) { font-size: 14px; }
+.pdf-export .pdf-body :where(h4) { font-size: 13px; }
 
 .pdf-export .pdf-body :where(p, ul, ol) {
     margin: 0 0 0.75em;
@@ -87,27 +155,414 @@
     padding-left: 1.25em;
 }
 
-.pdf-export .pdf-body img {
-    max-width: 100%;
-    height: auto;
+.pdf-export .pdf-body :where(blockquote) {
+    border-left: 3px solid #f48024;
+    padding: 6px 12px;
+    margin: 0.75em 0;
+    color: #6a737c;
+    background: #f8f9fa;
+    border-radius: 0 4px 4px 0;
 }
 
-.pdf-export .pdf-body pre,
-.pdf-export .pdf-body code {
+.pdf-export .pdf-body :where(img) {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+}
+
+.pdf-export .pdf-body :where(a) {
+    color: #0a95ff;
+    text-decoration: none;
+}
+
+.pdf-export .pdf-body :where(a):hover {
+    text-decoration: underline;
+}
+
+.pdf-export .pdf-body :where(pre) {
+    overflow: auto;
+    padding: 12px;
+    margin: 0.75em 0;
+    background: #f6f8fa;
+    border: 1px solid #d6d9dc;
+    border-radius: 4px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.pdf-export .pdf-body :where(code) {
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     font-size: 0.9em;
 }
 
-.pdf-export .pdf-body pre {
-    overflow: auto;
-    padding: 12px;
-    background: #f6f8fa;
-    border-radius: 4px;
+.pdf-export .pdf-body :where(table) {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 0.75em 0;
 }
 
+.pdf-export .pdf-body :where(th, td) {
+    border: 1px solid #d6d9dc;
+    padding: 6px 10px;
+    text-align: left;
+    font-size: 12px;
+}
+
+.pdf-export .pdf-body :where(th) {
+    background: #f8f9fa;
+    font-weight: 600;
+}
+
+/* ---------------------------------------------------------------------------
+   Progress bar (task progress)
+   --------------------------------------------------------------------------- */
+.pdf-export .pdf-progress-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 2px;
+}
+
+.pdf-export .pdf-progress-track {
+    flex: 1;
+    height: 6px;
+    background: #e3e6e8;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.pdf-export .pdf-progress-fill {
+    height: 100%;
+    background: #0a95ff;
+    border-radius: 3px;
+}
+
+/* ---------------------------------------------------------------------------
+   Avatar circle (person / assignee)
+   --------------------------------------------------------------------------- */
+.pdf-export .pdf-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 600;
+    color: #ffffff;
+    flex-shrink: 0;
+}
+
+.pdf-export .pdf-avatar--sm {
+    width: 22px;
+    height: 22px;
+    font-size: 9px;
+}
+
+.pdf-export .pdf-avatar--blue { background: #0a95ff; }
+.pdf-export .pdf-avatar--green { background: #008751; }
+.pdf-export .pdf-avatar--purple { background: #7c4dff; }
+.pdf-export .pdf-avatar--orange { background: #f48024; }
+.pdf-export .pdf-avatar--red { background: #e34c26; }
+.pdf-export .pdf-avatar--teal { background: #00b48c; }
+.pdf-export .pdf-avatar--pink { background: #e21790; }
+
+/* ---------------------------------------------------------------------------
+   Status pill
+   --------------------------------------------------------------------------- */
+.pdf-export .pdf-status-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: capitalize;
+}
+
+.pdf-export .pdf-status-pill--done {
+    background: #e5f5e9;
+    color: #008751;
+}
+
+.pdf-export .pdf-status-pill--active {
+    background: #fff4e5;
+    color: #a86800;
+}
+
+.pdf-export .pdf-status-pill--overdue {
+    background: #fce8e6;
+    color: #c9342c;
+}
+
+.pdf-export .pdf-status-pill--pending {
+    background: #e3f0fc;
+    color: #0a95ff;
+}
+
+.pdf-export .pdf-status-pill--neutral {
+    background: #f1f2f3;
+    color: #6a737c;
+}
+
+/* ---------------------------------------------------------------------------
+   Tag pills
+   --------------------------------------------------------------------------- */
+.pdf-export .pdf-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 500;
+    color: #0a95ff;
+    background: #e3f0fc;
+    white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------------------
+   Meta header (top of each template)
+   --------------------------------------------------------------------------- */
+.pdf-export .pdf-meta {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-bottom: 16px;
+    margin-bottom: 0;
+    border-bottom: none;
+}
+
+.pdf-export .pdf-meta .pdf-meta-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #0c0d0e;
+    margin: 4px 0 0;
+    line-height: 1.25;
+}
+
+.pdf-export .pdf-meta .pdf-meta-subtitle {
+    font-size: 12px;
+    color: #6a737c;
+    margin: 4px 0 0;
+}
+
+.pdf-export .pdf-meta .pdf-meta-id {
+    font-size: 10px;
+    color: #6a737c;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.pdf-export .pdf-meta .pdf-meta-id-value {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    color: #0c0d0e;
+}
+
+.pdf-export .pdf-meta .pdf-meta-actions {
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.pdf-export .pdf-meta .pdf-meta-entity-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #6a737c;
+    margin-bottom: 2px;
+}
+
+/* ---------------------------------------------------------------------------
+   Header accent bar (left stripe on headers)
+   --------------------------------------------------------------------------- */
+.pdf-export .pdf-header-accent {
+    position: relative;
+    padding-left: 16px;
+}
+
+.pdf-export .pdf-header-accent::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: #f48024;
+    border-radius: 2px;
+}
+
+/* ---------------------------------------------------------------------------
+   Footer
+   --------------------------------------------------------------------------- */
+.pdf-export .pdf-footer {
+    margin-top: 28px;
+    padding-top: 12px;
+    border-top: 1px solid #e3e6e8;
+    font-size: 10px;
+    color: #6a737c;
+    text-align: center;
+    letter-spacing: 0.02em;
+}
+
+.pdf-export .pdf-footer .pdf-footer-brand {
+    font-weight: 600;
+    color: #0c0d0e;
+}
+
+/* ---------------------------------------------------------------------------
+   Task blocks (task.html)
+   --------------------------------------------------------------------------- */
+.pdf-export .pdf-task-block + .pdf-task-block {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px dashed #e3e6e8;
+}
+
+/* ---------------------------------------------------------------------------
+   Person blocks (person.html)
+   --------------------------------------------------------------------------- */
+.pdf-export .pdf-person-block {
+    display: flex;
+    gap: 0;
+    align-items: stretch;
+}
+
+.pdf-export .pdf-person-block + .pdf-person-block {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px dashed #e3e6e8;
+}
+
+/* ---------------------------------------------------------------------------
+   Person sidebar column (colored accent panel)
+   --------------------------------------------------------------------------- */
+.pdf-export .pdf-sidebar {
+    width: 180px;
+    min-width: 180px;
+    margin-right: 20px;
+    border-radius: 6px;
+    padding: 24px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+/* ---------------------------------------------------------------------------
+   Code blocks (custom fields, automations)
+   --------------------------------------------------------------------------- */
+.pdf-export .pdf-code-block {
+    background: #f6f8fa;
+    border: 1px solid #d6d9dc;
+    border-radius: 4px;
+    padding: 12px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 10px;
+    line-height: 1.5;
+    overflow: auto;
+    white-space: pre;
+    margin: 0;
+}
+
+/* ---------------------------------------------------------------------------
+   Address block (person.html)
+   --------------------------------------------------------------------------- */
+.pdf-export .pdf-address {
+    font-size: 12px;
+    line-height: 1.5;
+    color: #0c0d0e;
+}
+
+/* ---------------------------------------------------------------------------
+   Links list (task.html)
+   --------------------------------------------------------------------------- */
+.pdf-export .pdf-links-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.pdf-export .pdf-links-list li {
+    padding: 6px 0;
+    border-bottom: 1px solid #f1f2f3;
+    font-size: 12px;
+}
+
+.pdf-export .pdf-links-list li:last-child {
+    border-bottom: none;
+}
+
+.pdf-export .pdf-links-list .pdf-link-title {
+    font-weight: 600;
+    color: #0a95ff;
+}
+
+.pdf-export .pdf-links-list .pdf-link-url {
+    color: #6a737c;
+    font-size: 11px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+/* ---------------------------------------------------------------------------
+   Assignees list
+   --------------------------------------------------------------------------- */
+.pdf-export .pdf-assignees {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+}
+
+.pdf-export .pdf-assignee {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #0c0d0e;
+}
+
+/* ---------------------------------------------------------------------------
+   Fallback (notepad.html raw data)
+   --------------------------------------------------------------------------- */
 .pdf-export .pdf-fallback {
     white-space: pre-wrap;
     word-break: break-word;
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 10px;
+    color: #6a737c;
+    background: #f6f8fa;
+    border: 1px solid #d6d9dc;
+    border-radius: 4px;
+    padding: 12px;
+    margin: 0;
+}
+
+.pdf-export .pdf-fallback-label {
     font-size: 11px;
+    color: #6a737c;
+    margin-bottom: 6px;
+}
+
+/* ---------------------------------------------------------------------------
+   Responsive: single-column on very narrow pages
+   --------------------------------------------------------------------------- */
+@media print {
+    .pdf-export .pdf-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .pdf-export .pdf-info-grid .pdf-info-group + .pdf-info-group {
+        border-left: none;
+        padding-left: 0;
+        border-top: 1px solid #e3e6e8;
+        padding-top: 12px;
+        margin-top: 12px;
+    }
+
+    .pdf-export .pdf-dl {
+        grid-template-columns: 120px 1fr;
+    }
 }

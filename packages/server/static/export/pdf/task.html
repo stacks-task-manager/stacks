@@ -7,149 +7,275 @@
   <link rel="stylesheet" href="export/pdf/pdf-export.css" />
 </head>
 <body class="bg-theme-secondary-100">
-  <div class="pdf-export p16 sm:p24">
+  <div class="pdf-export p16">
     {{#if (isArray data)}}
       {{#each data}}
       <div class="pdf-task-block">
-        <header class="pdf-meta d-flex ai-start jc-space-between fw-wrap gs8">
-          <div class="flex--item fl1 wmn0">
-            <div class="fs-fine fc-black-400 tt-uppercase ls05 mb4">Export</div>
-            <h1 class="fs-headline1 fw-normal lh-xs m0">{{coalesce title "Untitled task"}}</h1>
-            <div class="d-flex fw-wrap gs8 mt8">
-              {{#if done}}<span class="s-badge s-badge__sm s-badge__filled">Done</span>{{/if}}
-              {{#if priority}}<span class="s-badge s-badge__sm">{{priority}}</span>{{/if}}
-              {{#if status}}<span class="s-badge s-badge__sm s-badge__muted">{{status}}</span>{{/if}}
+        <!-- Header -->
+        <header class="pdf-header-accent">
+          <div class="pdf-export-label">Export</div>
+          <div class="pdf-meta d-flex ai-start jc-space-between fw-wrap gs8">
+            <div class="flex--item fl1 wmn0">
+              <h1 class="pdf-meta-title">{{coalesce title "Untitled task"}}</h1>
+              <div class="d-flex fw-wrap gs6 mt8">
+                {{#if done}}<span class="pdf-status-pill pdf-status-pill--done">Done</span>{{/if}}
+                {{#if priority}}
+                  {{#if (eq priority "high")}}
+                  <span class="pdf-status-pill pdf-status-pill--overdue">High Priority</span>
+                  {{else if (eq priority "medium")}}
+                  <span class="pdf-status-pill pdf-status-pill--active">Medium Priority</span>
+                  {{else if (eq priority "low")}}
+                  <span class="pdf-status-pill pdf-status-pill--neutral">Low Priority</span>
+                  {{else}}
+                  <span class="s-badge s-badge__sm">{{priority}}</span>
+                  {{/if}}
+                {{/if}}
+                {{#if status}}
+                  {{#if (eq status "in-progress")}}
+                  <span class="pdf-status-pill pdf-status-pill--active">In Progress</span>
+                  {{else if (eq status "completed")}}
+                  <span class="pdf-status-pill pdf-status-pill--done">Completed</span>
+                  {{else if (eq status "blocked")}}
+                  <span class="pdf-status-pill pdf-status-pill--overdue">Blocked</span>
+                  {{else}}
+                  <span class="pdf-status-pill pdf-status-pill--pending">{{status}}</span>
+                  {{/if}}
+                {{/if}}
+              </div>
             </div>
-          </div>
-          <div class="ta-right fs-caption fc-black-400">
-            <div class="fw-bold fc-black-800">Task</div>
-            <div class="mt4">ID <span class="ff-mono">{{id}}</span></div>
+            <div class="pdf-meta-actions fs-caption fc-black-400">
+              <div class="pdf-meta-entity-label">Task</div>
+              <div class="pdf-meta-id">ID <span class="pdf-meta-id-value">{{id}}</span></div>
+            </div>
           </div>
         </header>
 
-        <div class="s-card bs-sm p16 sm:p24">
-          <h2 class="pdf-section-title m0">Details</h2>
-          <dl class="pdf-dl">
-            <dt class="pdf-dt">Project</dt><dd class="pdf-dd">{{coalesce project "—"}}</dd>
-            <dt class="pdf-dt">Stack</dt><dd class="pdf-dd">{{coalesce stack "—"}}</dd>
-            <dt class="pdf-dt">Progress</dt><dd class="pdf-dd">{{#if progress}}{{progress}}%{{else}}—{{/if}}</dd>
-            <dt class="pdf-dt">Estimate</dt><dd class="pdf-dd">{{#if estimate}}{{estimate}} min{{else}}—{{/if}}</dd>
-            <dt class="pdf-dt">Time spent</dt><dd class="pdf-dd">{{#if timeSpent}}{{timeSpent}} min{{else}}—{{/if}}</dd>
-            <dt class="pdf-dt">Start</dt><dd class="pdf-dd">{{formatDate startdate}}</dd>
-            <dt class="pdf-dt">Due</dt><dd class="pdf-dd">{{formatDate duedate}}</dd>
-            <dt class="pdf-dt">Done date</dt><dd class="pdf-dd">{{formatDate dodate}}</dd>
-            <dt class="pdf-dt">Completed</dt><dd class="pdf-dd">{{formatDate completed}}</dd>
-          </dl>
+        <div class="pdf-card">
+          <!-- Details -->
+          <section class="pdf-section">
+            <h2 class="pdf-section-title">Details</h2>
+            <dl class="pdf-dl">
+              <dt class="pdf-dt">Project</dt><dd class="pdf-dd">{{coalesce project "—"}}</dd>
+              <dt class="pdf-dt">Stack</dt><dd class="pdf-dd">{{coalesce stack "—"}}</dd>
+              <dt class="pdf-dt">Progress</dt>
+              <dd class="pdf-dd">
+                {{#if progress}}
+                <div class="pdf-progress-bar">
+                  <span class="fs-fine" style="width: 36px; text-align: right;">{{progress}}%</span>
+                  <div class="pdf-progress-track">
+                    <div class="pdf-progress-fill" style="width: {{progress}}%;"></div>
+                  </div>
+                </div>
+                {{else}}
+                —
+                {{/if}}
+              </dd>
+              <dt class="pdf-dt">Estimate</dt><dd class="pdf-dd">{{#if estimate}}{{estimate}} min{{else}}—{{/if}}</dd>
+              <dt class="pdf-dt">Time spent</dt><dd class="pdf-dd">{{#if timeSpent}}{{timeSpent}} min{{else}}—{{/if}}</dd>
+              <dt class="pdf-dt">Start</dt><dd class="pdf-dd">{{formatDate startdate}}</dd>
+              <dt class="pdf-dt">Due</dt><dd class="pdf-dd">{{formatDate duedate}}</dd>
+              <dt class="pdf-dt">Done date</dt><dd class="pdf-dd">{{formatDate dodate}}</dd>
+              <dt class="pdf-dt">Completed</dt><dd class="pdf-dd">{{formatDate completed}}</dd>
+            </dl>
+          </section>
 
+          <!-- Description -->
           {{#if description}}
-          <h2 class="pdf-section-title">Description</h2>
-          <div class="pdf-desc fs-body2">{{description}}</div>
+          <section class="pdf-section">
+            <h2 class="pdf-section-title">Description</h2>
+            <div class="pdf-desc fs-body2">{{description}}</div>
+          </section>
           {{/if}}
 
+          <!-- Tags -->
           {{#if tags.length}}
-          <h2 class="pdf-section-title">Tags</h2>
-          <div class="d-flex fw-wrap gs6">
-            {{#each tags}}<span class="s-badge s-badge__sm s-badge__filled">{{this}}</span>{{/each}}
-          </div>
+          <section class="pdf-section">
+            <h2 class="pdf-section-title">Tags</h2>
+            <div class="d-flex fw-wrap gs6">
+              {{#each tags}}<span class="pdf-tag">{{this}}</span>{{/each}}
+            </div>
+          </section>
           {{/if}}
 
+          <!-- Assignees -->
           {{#if assignees.length}}
-          <h2 class="pdf-section-title">Assignees</h2>
-          <p class="m0 fs-body2 ff-mono">{{#each assignees}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}</p>
+          <section class="pdf-section">
+            <h2 class="pdf-section-title">Assignees</h2>
+            <div class="pdf-assignees">
+              {{#each assignees}}
+              <span class="pdf-assignee">
+                <span class="pdf-avatar pdf-avatar--sm pdf-avatar--blue">{{@index}}</span>
+                {{this}}
+              </span>
+              {{/each}}
+            </div>
+          </section>
           {{/if}}
 
+          <!-- Links -->
           {{#if links.length}}
-          <h2 class="pdf-section-title">Links</h2>
-          <ul class="m0 pl16 fs-body2">
-            {{#each links}}
-            <li class="mb4"><span class="fw-bold">{{title}}</span> — {{url}}</li>
-            {{/each}}
-          </ul>
+          <section class="pdf-section">
+            <h2 class="pdf-section-title">Links</h2>
+            <ul class="pdf-links-list">
+              {{#each links}}
+              <li>
+                <span class="pdf-link-title">{{title}}</span>
+                <br><span class="pdf-link-url">{{url}}</span>
+              </li>
+              {{/each}}
+            </ul>
+          </section>
           {{/if}}
 
-          <h2 class="pdf-section-title">Record</h2>
-          <dl class="pdf-dl">
-            <dt class="pdf-dt">Created</dt><dd class="pdf-dd">{{formatDate created}}</dd>
-            <dt class="pdf-dt">Updated</dt><dd class="pdf-dd">{{formatDate updated}}</dd>
-            <dt class="pdf-dt">Comments</dt><dd class="pdf-dd">{{coalesce comments "0"}}</dd>
-            <dt class="pdf-dt">Attachments</dt><dd class="pdf-dd">{{coalesce attachments "0"}}</dd>
-          </dl>
+          <!-- Record -->
+          <section class="pdf-section">
+            <h2 class="pdf-section-title">Record</h2>
+            <dl class="pdf-dl">
+              <dt class="pdf-dt">Created</dt><dd class="pdf-dd">{{formatDate created}}</dd>
+              <dt class="pdf-dt">Updated</dt><dd class="pdf-dd">{{formatDate updated}}</dd>
+              <dt class="pdf-dt">Comments</dt><dd class="pdf-dd">{{coalesce comments "0"}}</dd>
+              <dt class="pdf-dt">Attachments</dt><dd class="pdf-dd">{{coalesce attachments "0"}}</dd>
+            </dl>
+          </section>
         </div>
       </div>
       {{/each}}
     {{else}}
       {{#with data}}
       <div class="pdf-task-block">
-        <header class="pdf-meta d-flex ai-start jc-space-between fw-wrap gs8">
-          <div class="flex--item fl1 wmn0">
-            <div class="fs-fine fc-black-400 tt-uppercase ls05 mb4">Export</div>
-            <h1 class="fs-headline1 fw-normal lh-xs m0">{{coalesce title "Untitled task"}}</h1>
-            <div class="d-flex fw-wrap gs8 mt8">
-              {{#if done}}<span class="s-badge s-badge__sm s-badge__filled">Done</span>{{/if}}
-              {{#if priority}}<span class="s-badge s-badge__sm">{{priority}}</span>{{/if}}
-              {{#if status}}<span class="s-badge s-badge__sm s-badge__muted">{{status}}</span>{{/if}}
+        <!-- Header -->
+        <header class="pdf-header-accent">
+          <div class="pdf-export-label">Export</div>
+          <div class="pdf-meta d-flex ai-start jc-space-between fw-wrap gs8">
+            <div class="flex--item fl1 wmn0">
+              <h1 class="pdf-meta-title">{{coalesce title "Untitled task"}}</h1>
+              <div class="d-flex fw-wrap gs6 mt8">
+                {{#if done}}<span class="pdf-status-pill pdf-status-pill--done">Done</span>{{/if}}
+                {{#if priority}}
+                  {{#if (eq priority "high")}}
+                  <span class="pdf-status-pill pdf-status-pill--overdue">High Priority</span>
+                  {{else if (eq priority "medium")}}
+                  <span class="pdf-status-pill pdf-status-pill--active">Medium Priority</span>
+                  {{else if (eq priority "low")}}
+                  <span class="pdf-status-pill pdf-status-pill--neutral">Low Priority</span>
+                  {{else}}
+                  <span class="s-badge s-badge__sm">{{priority}}</span>
+                  {{/if}}
+                {{/if}}
+                {{#if status}}
+                  {{#if (eq status "in-progress")}}
+                  <span class="pdf-status-pill pdf-status-pill--active">In Progress</span>
+                  {{else if (eq status "completed")}}
+                  <span class="pdf-status-pill pdf-status-pill--done">Completed</span>
+                  {{else if (eq status "blocked")}}
+                  <span class="pdf-status-pill pdf-status-pill--overdue">Blocked</span>
+                  {{else}}
+                  <span class="pdf-status-pill pdf-status-pill--pending">{{status}}</span>
+                  {{/if}}
+                {{/if}}
+              </div>
             </div>
-          </div>
-          <div class="ta-right fs-caption fc-black-400">
-            <div class="fw-bold fc-black-800">Task</div>
-            <div class="mt4">ID <span class="ff-mono">{{id}}</span></div>
+            <div class="pdf-meta-actions fs-caption fc-black-400">
+              <div class="pdf-meta-entity-label">Task</div>
+              <div class="pdf-meta-id">ID <span class="pdf-meta-id-value">{{id}}</span></div>
+            </div>
           </div>
         </header>
 
-        <div class="s-card bs-sm p16 sm:p24">
-          <h2 class="pdf-section-title m0">Details</h2>
-          <dl class="pdf-dl">
-            <dt class="pdf-dt">Project</dt><dd class="pdf-dd">{{coalesce project "—"}}</dd>
-            <dt class="pdf-dt">Stack</dt><dd class="pdf-dd">{{coalesce stack "—"}}</dd>
-            <dt class="pdf-dt">Progress</dt><dd class="pdf-dd">{{#if progress}}{{progress}}%{{else}}—{{/if}}</dd>
-            <dt class="pdf-dt">Estimate</dt><dd class="pdf-dd">{{#if estimate}}{{estimate}} min{{else}}—{{/if}}</dd>
-            <dt class="pdf-dt">Time spent</dt><dd class="pdf-dd">{{#if timeSpent}}{{timeSpent}} min{{else}}—{{/if}}</dd>
-            <dt class="pdf-dt">Start</dt><dd class="pdf-dd">{{formatDate startdate}}</dd>
-            <dt class="pdf-dt">Due</dt><dd class="pdf-dd">{{formatDate duedate}}</dd>
-            <dt class="pdf-dt">Done date</dt><dd class="pdf-dd">{{formatDate dodate}}</dd>
-            <dt class="pdf-dt">Completed</dt><dd class="pdf-dd">{{formatDate completed}}</dd>
-          </dl>
+        <div class="pdf-card">
+          <!-- Details -->
+          <section class="pdf-section">
+            <h2 class="pdf-section-title">Details</h2>
+            <dl class="pdf-dl">
+              <dt class="pdf-dt">Project</dt><dd class="pdf-dd">{{coalesce project "—"}}</dd>
+              <dt class="pdf-dt">Stack</dt><dd class="pdf-dd">{{coalesce stack "—"}}</dd>
+              <dt class="pdf-dt">Progress</dt>
+              <dd class="pdf-dd">
+                {{#if progress}}
+                <div class="pdf-progress-bar">
+                  <span class="fs-fine" style="width: 36px; text-align: right;">{{progress}}%</span>
+                  <div class="pdf-progress-track">
+                    <div class="pdf-progress-fill" style="width: {{progress}}%;"></div>
+                  </div>
+                </div>
+                {{else}}
+                —
+                {{/if}}
+              </dd>
+              <dt class="pdf-dt">Estimate</dt><dd class="pdf-dd">{{#if estimate}}{{estimate}} min{{else}}—{{/if}}</dd>
+              <dt class="pdf-dt">Time spent</dt><dd class="pdf-dd">{{#if timeSpent}}{{timeSpent}} min{{else}}—{{/if}}</dd>
+              <dt class="pdf-dt">Start</dt><dd class="pdf-dd">{{formatDate startdate}}</dd>
+              <dt class="pdf-dt">Due</dt><dd class="pdf-dd">{{formatDate duedate}}</dd>
+              <dt class="pdf-dt">Done date</dt><dd class="pdf-dd">{{formatDate dodate}}</dd>
+              <dt class="pdf-dt">Completed</dt><dd class="pdf-dd">{{formatDate completed}}</dd>
+            </dl>
+          </section>
 
+          <!-- Description -->
           {{#if description}}
-          <h2 class="pdf-section-title">Description</h2>
-          <div class="pdf-desc fs-body2">{{description}}</div>
+          <section class="pdf-section">
+            <h2 class="pdf-section-title">Description</h2>
+            <div class="pdf-desc fs-body2">{{description}}</div>
+          </section>
           {{/if}}
 
+          <!-- Tags -->
           {{#if tags.length}}
-          <h2 class="pdf-section-title">Tags</h2>
-          <div class="d-flex fw-wrap gs6">
-            {{#each tags}}<span class="s-badge s-badge__sm s-badge__filled">{{this}}</span>{{/each}}
-          </div>
+          <section class="pdf-section">
+            <h2 class="pdf-section-title">Tags</h2>
+            <div class="d-flex fw-wrap gs6">
+              {{#each tags}}<span class="pdf-tag">{{this}}</span>{{/each}}
+            </div>
+          </section>
           {{/if}}
 
+          <!-- Assignees -->
           {{#if assignees.length}}
-          <h2 class="pdf-section-title">Assignees</h2>
-          <p class="m0 fs-body2 ff-mono">{{#each assignees}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}</p>
+          <section class="pdf-section">
+            <h2 class="pdf-section-title">Assignees</h2>
+            <div class="pdf-assignees">
+              {{#each assignees}}
+              <span class="pdf-assignee">
+                <span class="pdf-avatar pdf-avatar--sm pdf-avatar--blue">{{@index}}</span>
+                {{this}}
+              </span>
+              {{/each}}
+            </div>
+          </section>
           {{/if}}
 
+          <!-- Links -->
           {{#if links.length}}
-          <h2 class="pdf-section-title">Links</h2>
-          <ul class="m0 pl16 fs-body2">
-            {{#each links}}
-            <li class="mb4"><span class="fw-bold">{{title}}</span> — {{url}}</li>
-            {{/each}}
-          </ul>
+          <section class="pdf-section">
+            <h2 class="pdf-section-title">Links</h2>
+            <ul class="pdf-links-list">
+              {{#each links}}
+              <li>
+                <span class="pdf-link-title">{{title}}</span>
+                <br><span class="pdf-link-url">{{url}}</span>
+              </li>
+              {{/each}}
+            </ul>
+          </section>
           {{/if}}
 
-          <h2 class="pdf-section-title">Record</h2>
-          <dl class="pdf-dl">
-            <dt class="pdf-dt">Created</dt><dd class="pdf-dd">{{formatDate created}}</dd>
-            <dt class="pdf-dt">Updated</dt><dd class="pdf-dd">{{formatDate updated}}</dd>
-            <dt class="pdf-dt">Comments</dt><dd class="pdf-dd">{{coalesce comments "0"}}</dd>
-            <dt class="pdf-dt">Attachments</dt><dd class="pdf-dd">{{coalesce attachments "0"}}</dd>
-          </dl>
+          <!-- Record -->
+          <section class="pdf-section">
+            <h2 class="pdf-section-title">Record</h2>
+            <dl class="pdf-dl">
+              <dt class="pdf-dt">Created</dt><dd class="pdf-dd">{{formatDate created}}</dd>
+              <dt class="pdf-dt">Updated</dt><dd class="pdf-dd">{{formatDate updated}}</dd>
+              <dt class="pdf-dt">Comments</dt><dd class="pdf-dd">{{coalesce comments "0"}}</dd>
+              <dt class="pdf-dt">Attachments</dt><dd class="pdf-dd">{{coalesce attachments "0"}}</dd>
+            </dl>
+          </section>
         </div>
       </div>
       {{/with}}
     {{/if}}
 
     <footer class="pdf-footer">
-      Generated {{formatDate generatedAt}} · Stacks
+      Generated {{formatDate generatedAt}} · <span class="pdf-footer-brand">Stacks</span>
     </footer>
   </div>
 </body>

@@ -54,6 +54,8 @@ function createHandlebars(): typeof Handlebars {
         }
         return "Person";
     });
+    hb.registerHelper("eq", (a: unknown, b: unknown) => a === b);
+    hb.registerHelper("ne", (a: unknown, b: unknown) => a !== b);
     return hb;
 }
 

@@ -7,78 +7,112 @@
   <link rel="stylesheet" href="export/pdf/pdf-export.css" />
 </head>
 <body class="bg-theme-secondary-100">
-  <div class="pdf-export p16 sm:p24">
+  <div class="pdf-export p16">
     {{#with data}}
-    <header class="pdf-meta d-flex ai-start jc-space-between fw-wrap gs8">
-      <div class="flex--item fl1 wmn0">
-        <div class="fs-fine fc-black-400 tt-uppercase ls05 mb4">Export</div>
-        <h1 class="fs-headline1 fw-normal lh-xs m0">{{coalesce title id}}</h1>
-        {{#if health}}
-        <div class="mt8">
-          <span class="s-badge s-badge__sm s-badge__filled pdf-health">{{health}}</span>
+    <!-- Header -->
+    <header class="pdf-header-accent">
+      <div class="pdf-export-label">Export</div>
+      <div class="pdf-meta d-flex ai-start jc-space-between fw-wrap gs8">
+        <div class="flex--item fl1 wmn0">
+          <h1 class="pdf-meta-title">{{coalesce title id}}</h1>
+          {{#if health}}
+          <div class="mt8">
+            {{#if (eq health "healthy")}}
+            <span class="s-badge s-badge__sm s-badge__filled s-badge__answered">Healthy</span>
+            {{else if (eq health "warning")}}
+            <span class="s-badge s-badge__sm s-badge__filled s-badge__warning">Warning</span>
+            {{else if (eq health "danger")}}
+            <span class="s-badge s-badge__sm s-badge__filled s-badge__danger">Critical</span>
+            {{else}}
+            <span class="s-badge s-badge__sm s-badge__filled">{{health}}</span>
+            {{/if}}
+          </div>
+          {{/if}}
         </div>
-        {{/if}}
-      </div>
-      <div class="ta-right fs-caption fc-black-400">
-        <div class="fw-bold fc-black-800">Project</div>
-        <div class="mt4">ID <span class="ff-mono">{{id}}</span></div>
+        <div class="pdf-meta-actions fs-caption fc-black-400">
+          <div class="pdf-meta-entity-label">Project</div>
+          <div class="pdf-meta-id">ID <span class="pdf-meta-id-value">{{id}}</span></div>
+        </div>
       </div>
     </header>
 
-    <div class="s-card bs-sm p16 sm:p24">
-      <h2 class="pdf-section-title m0">Schedule &amp; budget</h2>
-      <dl class="pdf-dl">
-        <dt class="pdf-dt">Start</dt><dd class="pdf-dd">{{formatDate startDate}}</dd>
-        <dt class="pdf-dt">End</dt><dd class="pdf-dd">{{formatDate endDate}}</dd>
-        <dt class="pdf-dt">Hourly rate</dt><dd class="pdf-dd">{{#if hourlyRate}}{{hourlyRate}} {{coalesce currency "USD"}}{{else}}—{{/if}}</dd>
-        <dt class="pdf-dt">Estimate</dt><dd class="pdf-dd">{{#if estimate}}{{estimate}}{{else}}—{{/if}}</dd>
-        <dt class="pdf-dt">Inbox</dt><dd class="pdf-dd">{{#if inbox}}Yes{{else}}No{{/if}}</dd>
-      </dl>
+    <div class="pdf-card">
+      <!-- Schedule & Budget -->
+      <section class="pdf-section">
+        <h2 class="pdf-section-title">Schedule &amp; Budget</h2>
+        <dl class="pdf-dl">
+          <dt class="pdf-dt">Start date</dt><dd class="pdf-dd">{{formatDate startDate}}</dd>
+          <dt class="pdf-dt">End date</dt><dd class="pdf-dd">{{formatDate endDate}}</dd>
+          <dt class="pdf-dt">Hourly rate</dt><dd class="pdf-dd">{{#if hourlyRate}}{{hourlyRate}} {{coalesce currency "USD"}}{{else}}—{{/if}}</dd>
+          <dt class="pdf-dt">Estimate</dt><dd class="pdf-dd">{{#if estimate}}{{estimate}}{{else}}—{{/if}}</dd>
+          <dt class="pdf-dt">Inbox</dt><dd class="pdf-dd">{{#if inbox}}<span class="s-badge s-badge__sm s-badge__filled s-badge__answered">Enabled</span>{{else}}<span class="s-badge s-badge__sm s-badge__muted">Disabled</span>{{/if}}</dd>
+        </dl>
+      </section>
 
-      <h2 class="pdf-section-title">People &amp; company</h2>
-      <dl class="pdf-dl">
-        <dt class="pdf-dt">Company</dt><dd class="pdf-dd">{{coalesce company "—"}}</dd>
-        <dt class="pdf-dt">Owner</dt><dd class="pdf-dd">{{coalesce projectOwner "—"}}</dd>
-        <dt class="pdf-dt">Approvers</dt>
-        <dd class="pdf-dd">
-          {{#if approvers.length}}
-            {{#each approvers}}<span class="ff-mono">{{this}}</span>{{#unless @last}}, {{/unless}}{{/each}}
-          {{else}}
-            —
-          {{/if}}
-        </dd>
-      </dl>
+      <!-- People & Company -->
+      <section class="pdf-section">
+        <h2 class="pdf-section-title">People &amp; Company</h2>
+        <dl class="pdf-dl">
+          <dt class="pdf-dt">Company</dt><dd class="pdf-dd">{{coalesce company "—"}}</dd>
+          <dt class="pdf-dt">Owner</dt><dd class="pdf-dd">{{coalesce projectOwner "—"}}</dd>
+          <dt class="pdf-dt">Approvers</dt>
+          <dd class="pdf-dd">
+            {{#if approvers.length}}
+              <div class="d-flex fw-wrap gs6 ai-center">
+                {{#each approvers}}<span class="s-badge s-badge__sm">{{this}}</span>{{/each}}
+              </div>
+            {{else}}
+              —
+            {{/if}}
+          </dd>
+        </dl>
+      </section>
 
+      <!-- Description -->
       {{#if description}}
-      <h2 class="pdf-section-title">Description</h2>
-      <div class="pdf-prose fs-body2">{{description}}</div>
+      <section class="pdf-section">
+        <h2 class="pdf-section-title">Description</h2>
+        <div class="pdf-prose fs-body2">{{description}}</div>
+      </section>
       {{/if}}
 
+      <!-- Notes -->
       {{#if notes}}
-      <h2 class="pdf-section-title">Notes</h2>
-      <div class="pdf-prose fs-body2">{{notes}}</div>
+      <section class="pdf-section">
+        <h2 class="pdf-section-title">Notes</h2>
+        <div class="pdf-notes fs-body2">{{notes}}</div>
+      </section>
       {{/if}}
 
+      <!-- Custom Fields -->
       {{#if fields.length}}
-      <h2 class="pdf-section-title">Custom fields</h2>
-      <pre class="s-code-block m0 fs-caption">{{json fields}}</pre>
+      <section class="pdf-section">
+        <h2 class="pdf-section-title">Custom Fields</h2>
+        <pre class="pdf-code-block">{{json fields}}</pre>
+      </section>
       {{/if}}
 
+      <!-- Automations -->
       {{#if automations.length}}
-      <h2 class="pdf-section-title">Automations</h2>
-      <pre class="s-code-block m0 fs-caption">{{json automations}}</pre>
+      <section class="pdf-section">
+        <h2 class="pdf-section-title">Automations</h2>
+        <pre class="pdf-code-block">{{json automations}}</pre>
+      </section>
       {{/if}}
 
-      <h2 class="pdf-section-title">Record</h2>
-      <dl class="pdf-dl">
-        <dt class="pdf-dt">Created</dt><dd class="pdf-dd">{{formatDate created}}</dd>
-        <dt class="pdf-dt">Updated</dt><dd class="pdf-dd">{{formatDate updated}}</dd>
-      </dl>
+      <!-- Record Info -->
+      <section class="pdf-section">
+        <h2 class="pdf-section-title">Record</h2>
+        <dl class="pdf-dl">
+          <dt class="pdf-dt">Created</dt><dd class="pdf-dd">{{formatDate created}}</dd>
+          <dt class="pdf-dt">Updated</dt><dd class="pdf-dd">{{formatDate updated}}</dd>
+        </dl>
+      </section>
     </div>
     {{/with}}
 
     <footer class="pdf-footer">
-      Generated {{formatDate generatedAt}} · Stacks
+      Generated {{formatDate generatedAt}} · <span class="pdf-footer-brand">Stacks</span>
     </footer>
   </div>
 </body>
