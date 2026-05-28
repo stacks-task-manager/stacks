@@ -2,6 +2,14 @@
 
 The Stacks mobile client. An [Expo](https://expo.dev/) + React Native app using Expo Router for navigation and Gluestack UI for components. Talks to the same API as the web app.
 
+## Table of Contents
+
+-   [Environment](#environment)
+-   [Development](#development)
+-   [Overview](#overview)
+-   [Building](#building)
+-   [Related](#related)
+
 ## Environment
 
 This package does not check in a `.env.example`. The server URL the app connects to is stored on-device and managed at runtime — see [`src/config/server.ts`](../../packages/mobile/src/config/server.ts).

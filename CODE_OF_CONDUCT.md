@@ -5,6 +5,12 @@ This project adopts the **[Contributor Covenant, version 2.1](https://www.contri
 The full text is available at:
 https://www.contributor-covenant.org/version/2/1/code_of_conduct/
 
+## Table of Contents
+
+-   [Reporting](#reporting)
+-   [Scope](#scope)
+-   [Attribution](#attribution)
+
 ## Reporting
 
 Concerns about behavior in project spaces can be reported confidentially to **customers@getstacksapp.com**. Reports are reviewed by the project maintainer and handled per the "Enforcement Guidelines" section of the Contributor Covenant.

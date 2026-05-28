@@ -1,5 +1,12 @@
 # Security Policy
 
+## Table of Contents
+
+-   [Supported Versions](#supported-versions)
+-   [Reporting a Vulnerability](#reporting-a-vulnerability)
+-   [Scope](#scope)
+-   [Disclosure Policy](#disclosure-policy)
+
 ## Supported Versions
 
 Security fixes are applied to the `main` branch. There is no LTS branch at this time; once tagged releases begin, this section will list the supported tags and their fix windows.

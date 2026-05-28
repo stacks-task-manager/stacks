@@ -2,6 +2,18 @@
 
 A background worker that compiles React Email templates and drains an outbound email queue over SMTP on a configurable interval.
 
+## Table of Contents
+
+-   [Environment](#environment)
+-   [Development](#development)
+-   [Local SMTP testing](#local-smtp-testing)
+-   [Overview](#overview)
+-   [Multilanguage templates](#multilanguage-templates)
+-   [How to add a new template](#how-to-add-a-new-template)
+-   [How to add a new language](#how-to-add-a-new-language)
+-   [Editing templates with the React Email preview server](#editing-templates-with-the-react-email-preview-server)
+-   [Related](#related)
+
 ## Environment
 
 `packages/email-service/.env` from [`packages/email-service/env.example`](../../packages/email-service/env.example):

@@ -7,6 +7,13 @@ If you want to **add a Tiptap Pro extension** (for example `@tiptap-pro/extensio
 1. A Tiptap Pro account — sign up at <https://tiptap.dev/pro>.
 2. Your **registry auth token** from the [Tiptap Pro dashboard → Account → Settings](https://cloud.tiptap.dev/account/settings) (the "npm token" / "registry token" — it looks like a short opaque string).
 
+## Table of Contents
+
+-   [How to wire it up locally](#how-to-wire-it-up-locally)
+-   [CI / production](#ci-production)
+-   [If you accidentally commit the token](#if-you-accidentally-commit-the-token)
+-   [Why we don't ship the registry block by default](#why-we-dont-ship-the-registry-block-by-default)
+
 ## How to wire it up locally
 
 ### 1. Export the token in your shell

@@ -1,5 +1,23 @@
 # Stacks — Agent Instructions
 
+## Table of Contents
+
+-   [Project overview](#project-overview)
+-   [Prerequisites](#prerequisites)
+-   [Development commands](#development-commands)
+-   [Important constraints](#important-constraints)
+-   [Environment setup](#environment-setup)
+-   [Architecture overview](#architecture-overview)
+-   [E2E testing conventions (Playwright)](#e2e-testing-conventions-playwright)
+-   [Branching strategy](#branching-strategy)
+-   [Commit message format](#commit-message-format)
+-   [Code style](#code-style)
+-   [File and directory conventions](#file-and-directory-conventions)
+-   [What to avoid](#what-to-avoid)
+-   [Documentation](#documentation)
+-   [CI (future)](#ci-future)
+-   [Security](#security)
+
 ## Project overview
 
 Stacks is a local-first, privacy-focused project management app with a kanban-style workflow. It's a Yarn workspaces monorepo built with:

@@ -2,6 +2,15 @@
 
 This page is the navigation hub for everything under `docs/` and the per-package READMEs. Start from the section that matches what you're doing — each link points to the single source of truth for that topic.
 
+## Table of Contents
+
+-   [Getting started](#getting-started)
+-   [Per-package docs](#per-package-docs)
+-   [Testing](#testing)
+-   [Server internals (deep dives)](#server-internals-deep-dives)
+-   [Web app internals (deep dives)](#web-app-internals-deep-dives)
+-   [Operations & deployment](#operations-deployment)
+
 ## Getting started
 
 | Doc | What you'll find |

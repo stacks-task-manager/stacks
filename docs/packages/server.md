@@ -4,6 +4,17 @@ The Stacks backend. A [Hono](https://hono.dev/) HTTP server on Node that exposes
 
 > **⚠ Development license required.** The server calls `initializeLicense()` early in `bootstrap()` ([`src/index.ts:131`](../../packages/server/src/index.ts)) and exits with code `1` if `license.key` is missing or invalid. Place a key at `packages/server/license.key` before starting. See [`license.md`](license.md).
 
+## Table of Contents
+
+-   [Environment](#environment)
+-   [Development](#development)
+-   [Importing a workspace from the Desktop Stacks app](#importing-a-workspace-from-the-desktop-stacks-app)
+-   [API overview](#api-overview)
+-   [Sending email](#sending-email)
+-   [Build](#build)
+-   [Deep dives](#deep-dives)
+-   [Related](#related)
+
 ## Environment
 
 `packages/server/.env` from [`packages/server/env.example`](../../packages/server/env.example):
@@ -14,17 +25,17 @@ cp packages/server/env.example packages/server/.env
 
 Key variables:
 
-- `APP_PORT` — HTTP port (default `3000`)
-- `POSTGRES_HOST`, `POSTGRES_PORT`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB` — database connection
-- `COOKIE_SECRET`, `JWT_SECRET` — auth / session secrets (must be strong in production)
-- `DEBUG_DB` — set to `true` to log Sequelize SQL
-- `DELETE_FILES` — whether deletes via the API also remove files from disk
+-   `APP_PORT` — HTTP port (default `3000`)
+-   `POSTGRES_HOST`, `POSTGRES_PORT`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB` — database connection
+-   `COOKIE_SECRET`, `JWT_SECRET` — auth / session secrets (must be strong in production)
+-   `DEBUG_DB` — set to `true` to log Sequelize SQL
+-   `DELETE_FILES` — whether deletes via the API also remove files from disk
 
 Optional:
 
-- `CORS_ORIGINS` — comma-separated list of allowed origins; if unset, CORS is permissive
-- `REQUIRE_SECRETS=1` — enforce strong secrets outside production
-- AI assistant: `AI_OPENAI_BASE_URL`, `AI_OPENAI_API_KEY`, `AI_MODEL`, `AI_CHAT_ENABLED`, `AI_CHAT_AUTO_REDIRECT`
+-   `CORS_ORIGINS` — comma-separated list of allowed origins; if unset, CORS is permissive
+-   `REQUIRE_SECRETS=1` — enforce strong secrets outside production
+-   AI assistant: `AI_OPENAI_BASE_URL`, `AI_OPENAI_API_KEY`, `AI_MODEL`, `AI_CHAT_ENABLED`, `AI_CHAT_AUTO_REDIRECT`
 
 ## Development
 
@@ -86,38 +97,38 @@ What happens, in order:
 
 If something on the input side is missing, the importer logs a `⚠️ Skipping workspace import: …` line and exits gracefully without touching the database:
 
-| Log message | Cause |
-| --- | --- |
-| `missing workspace directory (…)` | `packages/server/import/workspace/` doesn't exist |
-| `Error parsing documents tree data` | `documents.tree` missing or not valid JSON |
-| `Admin user not found` / `is disabled` | No `admin=true` user on the license tenant, or the admin is disabled |
-| `User role not found` | The default `User` role hasn't been seeded for this tenant yet (run the server boot once with the license in place, then drop in the workspace and restart) |
-| `User with email <addr> already exists` | A single person from the export collides with an existing user; that person is skipped, the rest of the import continues |
-| `Error parsing people data` / `companies data` / `project data: <path>` | One of the JSON files in the bundle is malformed |
+| Log message                                                             | Cause                                                                                                                                                       |
+| ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `missing workspace directory (…)`                                       | `packages/server/import/workspace/` doesn't exist                                                                                                           |
+| `Error parsing documents tree data`                                     | `documents.tree` missing or not valid JSON                                                                                                                  |
+| `Admin user not found` / `is disabled`                                  | No `admin=true` user on the license tenant, or the admin is disabled                                                                                        |
+| `User role not found`                                                   | The default `User` role hasn't been seeded for this tenant yet (run the server boot once with the license in place, then drop in the workspace and restart) |
+| `User with email <addr> already exists`                                 | A single person from the export collides with an existing user; that person is skipped, the rest of the import continues                                    |
+| `Error parsing people data` / `companies data` / `project data: <path>` | One of the JSON files in the bundle is malformed                                                                                                            |
 
 ### Caveats
 
-- **One-shot, not idempotent.** The importer renames the folder on success, so re-running with the same bundle is a no-op unless you rename the `-imported_*` folder back. There is no built-in "undo" — to retry, drop or truncate the affected tables and start over.
-- **Always targets the license tenant.** The target tenant comes from your license file, not from a CLI flag. Swap licenses (or edit your dev tenant) to import elsewhere.
-- **Email collisions skip the person, not the import.** If an exported person's email already exists on the tenant, only that person is dropped. Their references inside the bundle (assignees, activity authors) will then resolve to `null`, which the database accepts because most assignee columns are nullable. Check the log for `Skipping workspace import: User with email …` lines after importing.
-- **Attachments are uploaded eagerly.** Every file under `files/tasks/<id>/` is read into memory and pushed through `FilesLoader.uploadFile` inside the same transaction. Very large bundles can spike memory and lengthen the boot.
+-   **One-shot, not idempotent.** The importer renames the folder on success, so re-running with the same bundle is a no-op unless you rename the `-imported_*` folder back. There is no built-in "undo" — to retry, drop or truncate the affected tables and start over.
+-   **Always targets the license tenant.** The target tenant comes from your license file, not from a CLI flag. Swap licenses (or edit your dev tenant) to import elsewhere.
+-   **Email collisions skip the person, not the import.** If an exported person's email already exists on the tenant, only that person is dropped. Their references inside the bundle (assignees, activity authors) will then resolve to `null`, which the database accepts because most assignee columns are nullable. Check the log for `Skipping workspace import: User with email …` lines after importing.
+-   **Attachments are uploaded eagerly.** Every file under `files/tasks/<id>/` is read into memory and pushed through `FilesLoader.uploadFile` inside the same transaction. Very large bundles can spike memory and lengthen the boot.
 
 ## API overview
 
 Routes are registered in [`src/api.ts`](../../packages/server/src/api.ts) and grouped under `/api/<resource>`. The current set:
 
-| Prefix | Purpose |
-| --- | --- |
-| `/api/boot` | Initial client bootstrap payload |
-| `/api/people`, `/api/companies` | Contacts directory |
-| `/api/projects`, `/api/stacks`, `/api/tasks` | Core kanban entities |
-| `/api/documents`, `/api/files`, `/api/notepads` | Files and notes |
-| `/api/bookmarks`, `/api/tags`, `/api/preferences` | Per-user metadata |
-| `/api/events`, `/api/activities`, `/api/notifications`, `/api/reminders` | Activity feed / scheduling |
-| `/api/home`, `/api/search`, `/api/reports` | Aggregations |
-| `/api/timelogs` | Time tracking |
-| `/api/permissions`, `/api/roles` | RBAC |
-| `/api/export` | Data export |
+| Prefix                                                                   | Purpose                          |
+| ------------------------------------------------------------------------ | -------------------------------- |
+| `/api/boot`                                                              | Initial client bootstrap payload |
+| `/api/people`, `/api/companies`                                          | Contacts directory               |
+| `/api/projects`, `/api/stacks`, `/api/tasks`                             | Core kanban entities             |
+| `/api/documents`, `/api/files`, `/api/notepads`                          | Files and notes                  |
+| `/api/bookmarks`, `/api/tags`, `/api/preferences`                        | Per-user metadata                |
+| `/api/events`, `/api/activities`, `/api/notifications`, `/api/reminders` | Activity feed / scheduling       |
+| `/api/home`, `/api/search`, `/api/reports`                               | Aggregations                     |
+| `/api/timelogs`                                                          | Time tracking                    |
+| `/api/permissions`, `/api/roles`                                         | RBAC                             |
+| `/api/export`                                                            | Data export                      |
 
 Legacy / public routes outside `/api`: `/auth`, `/login`, `/register`, `/ping`.
 
@@ -183,12 +194,16 @@ import { EMAIL_TEMPLATES } from "@stacks/types";
 
 await EmailsLoader.queueEmail(
     adminUser.id,
-    { firstName: adminUser.firstName, lastName: adminUser.lastName, activationLink: `/auth/activate/${token}` },
+    {
+        firstName: adminUser.firstName,
+        lastName: adminUser.lastName,
+        activationLink: `/auth/activate/${token}`,
+    },
     EMAIL_TEMPLATES.WELCOME,
-    "en",          // locale must be supplied explicitly
-    systemUser,    // a User-shaped object — provides tenant + createdBy
-    undefined,     // optional scheduleAt
-    transaction,   // optional Sequelize transaction
+    "en", // locale must be supplied explicitly
+    systemUser, // a User-shaped object — provides tenant + createdBy
+    undefined, // optional scheduleAt
+    transaction // optional Sequelize transaction
 );
 ```
 
@@ -198,12 +213,12 @@ This is the lower-level primitive `c.sendEmail` delegates to. Use it whenever yo
 
 The template enum and its typed payloads live in [`@stacks/types`](types.md):
 
-| Template | Required `data` fields |
-| --- | --- |
-| `EMAIL_TEMPLATES.WELCOME` | `firstName`, optional `lastName`, `activationLink` |
-| `EMAIL_TEMPLATES.PASSWORD_RESET` | `userName`, `resetLink`, `expirationTime`, optional `ipAddress`, `userAgent` |
-| `EMAIL_TEMPLATES.REGISTRATION` | `userName`, `verificationLink`, optional `companyName`, `expirationTime` |
-| `EMAIL_TEMPLATES.NOTIFICATION` | `title`, `message`, optional `actionUrl`, `actionText`, `priority`, `category` |
+| Template                         | Required `data` fields                                                         |
+| -------------------------------- | ------------------------------------------------------------------------------ |
+| `EMAIL_TEMPLATES.WELCOME`        | `firstName`, optional `lastName`, `activationLink`                             |
+| `EMAIL_TEMPLATES.PASSWORD_RESET` | `userName`, `resetLink`, `expirationTime`, optional `ipAddress`, `userAgent`   |
+| `EMAIL_TEMPLATES.REGISTRATION`   | `userName`, `verificationLink`, optional `companyName`, `expirationTime`       |
+| `EMAIL_TEMPLATES.NOTIFICATION`   | `title`, `message`, optional `actionUrl`, `actionText`, `priority`, `category` |
 
 Anything in `data` is JSON-serialised into the queue row and substituted into the rendered template at send time as `%key%` (e.g. `%firstName%`, `%resetLink%`). The worker also injects `%publicUrl%` from its own `PUBLIC_URL` env var, so route handlers should pass **relative** paths (e.g. `/auth/activate/<token>`) and let the worker prepend the base URL.
 
@@ -224,17 +239,17 @@ yarn release         # produces the runnable releases/server bundle
 
 These live next to the server source under [`packages/server/docs/`](../../packages/server/docs/):
 
-- [Server onboarding](../../packages/server/docs/ONBOARDING.md) — bootstrap order, request lifecycle, how to add a new route or loader
-- [AI assistant framework](../../packages/server/docs/AI.md) — chat WebSocket contract, prompt + tool selection, how to add new tools
-- [Caching system](../../packages/server/docs/CACHING.md) — the multi-tenant response cache, invalidation, and configuration
-- [Loaders](../../packages/server/docs/LOADERS.md) — the database access layer, request context, transactions, and shared query helpers
-- [Permissions and roles](../../packages/server/docs/PERMISSIONS.md) — RBAC vs per-record ACL, enforcement points, and realtime behavior
-- [Realtime updates](../../packages/server/docs/REALTIME_UPDATES.md) — server emission, WebSocket transport, instanceId suppression, and app-side consumption
-- [Embedded bundle integrity](../../packages/server/docs/EMBEDDED_INTEGRITY.md) — production bundle signing and the boot-time verification
+-   [Server onboarding](../../packages/server/docs/ONBOARDING.md) — bootstrap order, request lifecycle, how to add a new route or loader
+-   [AI assistant framework](../../packages/server/docs/AI.md) — chat WebSocket contract, prompt + tool selection, how to add new tools
+-   [Caching system](../../packages/server/docs/CACHING.md) — the multi-tenant response cache, invalidation, and configuration
+-   [Loaders](../../packages/server/docs/LOADERS.md) — the database access layer, request context, transactions, and shared query helpers
+-   [Permissions and roles](../../packages/server/docs/PERMISSIONS.md) — RBAC vs per-record ACL, enforcement points, and realtime behavior
+-   [Realtime updates](../../packages/server/docs/REALTIME_UPDATES.md) — server emission, WebSocket transport, instanceId suppression, and app-side consumption
+-   [Embedded bundle integrity](../../packages/server/docs/EMBEDDED_INTEGRITY.md) — production bundle signing and the boot-time verification
 
 ## Related
 
-- [`@stacks/db`](db.md) — models, migrations, seeds
-- [`@stacks/types`](types.md) — request/response shapes shared with the client
-- [`@stacks/license`](license.md) — startup license validation
-- [`@stacks/translations`](translations.md) — bundled i18n strings
+-   [`@stacks/db`](db.md) — models, migrations, seeds
+-   [`@stacks/types`](types.md) — request/response shapes shared with the client
+-   [`@stacks/license`](license.md) — startup license validation
+-   [`@stacks/translations`](translations.md) — bundled i18n strings

@@ -2,6 +2,17 @@
 
 End-to-end tests live at `playwright/` (repo root) and are driven by [Playwright](https://playwright.dev/). They exercise the running web app at `http://localhost:3000` through Chrome. The base URL assumes the default `APP_PORT=3000`; if you've changed it in `packages/server/.env` you'll need to override `webServer.url` and the test baseURL to match (see [INSTALLATION.md](INSTALLATION.md#2-open-the-app)).
 
+## Table of Contents
+
+-   [Setup](#setup)
+-   [Running the suite](#running-the-suite)
+-   [Test layout](#test-layout)
+-   [Conventions](#conventions)
+-   [Writing a new test](#writing-a-new-test)
+-   [Debugging](#debugging)
+-   [CI](#ci)
+-   [License caveat](#license-caveat)
+
 ## Setup
 
 E2E tests need everything a normal dev environment needs (Node, Yarn, Postgres, the `.env` files, the dev license at `packages/server/license.key`) — see [INSTALLATION.md](INSTALLATION.md) once and come back here.

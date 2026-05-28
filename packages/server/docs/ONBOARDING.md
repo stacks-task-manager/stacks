@@ -4,6 +4,16 @@ A short guide so a new developer can start shipping in `packages/server` the
 same day. Everything here is linked back to real files; prefer the code when
 something looks stale.
 
+## Table of Contents
+
+-   [1. Stack in one paragraph](#1-stack-in-one-paragraph)
+-   [2. Bootstrap order](#2-bootstrap-order)
+-   [3. Request lifecycle](#3-request-lifecycle)
+-   [4. Platform subsystems (read before touching)](#4-platform-subsystems-read-before-touching)
+-   [5. How to add a route](#5-how-to-add-a-route)
+-   [6. Useful commands](#6-useful-commands)
+-   [7. FAQ](#7-faq)
+
 ## 1. Stack in one paragraph
 
 - HTTP framework: [Hono](https://hono.dev/) + `@hono/node-server` (Node 20).

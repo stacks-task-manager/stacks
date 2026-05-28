@@ -2,6 +2,16 @@
 
 Stacks ships a `docker-compose` setup that runs the API server, the email worker, a Postgres database, and a one-shot migration job out of a self-contained `releases/` bundle. This is the recommended path for self-hosted deployments. For local **development**, use `yarn dev` instead (see [INSTALLATION.md](INSTALLATION.md)).
 
+## Table of Contents
+
+-   [Prerequisites](#prerequisites)
+-   [Build the releases bundle](#1-build-the-releases-bundle)
+-   [Configure the runtime](#2-configure-the-runtime)
+-   [Start the stack](#3-start-the-stack)
+-   [Common operations](#common-operations)
+-   [Troubleshooting](#troubleshooting)
+-   [Security checklist before going live](#security-checklist-before-going-live)
+
 ## Prerequisites
 
 - Docker and Docker Compose

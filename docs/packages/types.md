@@ -2,6 +2,14 @@
 
 Shared TypeScript types used across the server, db, web app, and mobile app. Keeping a single source of truth for entity shapes and DTOs avoids drift between the API and its clients.
 
+## Table of Contents
+
+-   [Environment](#environment)
+-   [Development](#development)
+-   [Usage](#usage)
+-   [Overview](#overview)
+-   [Related](#related)
+
 ## Environment
 
 None.
