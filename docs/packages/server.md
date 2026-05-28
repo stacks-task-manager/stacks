@@ -227,6 +227,9 @@ These live next to the server source under [`packages/server/docs/`](../../packa
 - [Server onboarding](../../packages/server/docs/ONBOARDING.md) — bootstrap order, request lifecycle, how to add a new route or loader
 - [AI assistant framework](../../packages/server/docs/AI.md) — chat WebSocket contract, prompt + tool selection, how to add new tools
 - [Caching system](../../packages/server/docs/CACHING.md) — the multi-tenant response cache, invalidation, and configuration
+- [Loaders](../../packages/server/docs/LOADERS.md) — the database access layer, request context, transactions, and shared query helpers
+- [Permissions and roles](../../packages/server/docs/PERMISSIONS.md) — RBAC vs per-record ACL, enforcement points, and realtime behavior
+- [Realtime updates](../../packages/server/docs/REALTIME_UPDATES.md) — server emission, WebSocket transport, instanceId suppression, and app-side consumption
 - [Embedded bundle integrity](../../packages/server/docs/EMBEDDED_INTEGRITY.md) — production bundle signing and the boot-time verification
 
 ## Related
