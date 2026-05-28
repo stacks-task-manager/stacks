@@ -174,7 +174,7 @@ export class MemoryCache<T = any> {
 
     private evictLRU(): void {
         let oldestKey: string | undefined;
-        let oldestTime = Date.now();
+        let oldestTime = Infinity;
 
         for (const [key, entry] of this.cache.entries()) {
             if (entry.lastAccessed < oldestTime) {
