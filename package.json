@@ -82,10 +82,10 @@
     },
     "devDependencies": {
         "@playwright/test": "^1.40.0",
-        "@types/node": "^25.2.3",
+        "@types/node": "^25.9.1",
         "concurrently": "^8.2.2",
         "date-fns": "^4.1.0",
-        "prettier": "^2.5.1",
+        "prettier": "^3.8.3",
         "prompts": "^2.4.2"
     },
     "packageManager": "yarn@3.6.4",
