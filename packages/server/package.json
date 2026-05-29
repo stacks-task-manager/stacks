@@ -40,7 +40,7 @@
         "puppeteer-core": "^24.0.0",
         "sequelize": "^6.37.7",
         "sharp": "^0.34.3",
-        "typescript": "^5.8.3",
+        "typescript": "^6.0.3",
         "uuid": "^9.0.1",
         "zod": "^3.25.32"
     },
@@ -48,16 +48,16 @@
         "@stacks/db": "workspace:*",
         "@stacks/license": "workspace:*",
         "@stacks/types": "workspace:*",
-        "@types/bcrypt": "^5.0.2",
+        "@types/bcrypt": "^6.0.0",
         "@types/mime-types": "^3.0.1",
         "@types/multer": "^2.0.0",
-        "@types/node": "^20.11.17",
+        "@types/node": "^25.9.1",
         "@types/pg": "^8.11.14",
-        "@types/sequelize": "^4.28.20",
+        "@types/sequelize": "^6.12.0",
         "@types/uuid": "^9.0.8",
         "esbuild": "^0.25.8",
         "sequelize-cli": "^6.6.3",
-        "tsx": "^4.7.1",
-        "vitest": "^1.6.1"
+        "tsx": "^4.22.3",
+        "vitest": "^4.1.7"
     }
 }
