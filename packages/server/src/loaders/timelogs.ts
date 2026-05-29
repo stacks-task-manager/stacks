@@ -2,7 +2,7 @@
 /**
  * Timelog persistence, approvals, aggregates on tasks, and realtime polling hooks.
  */
-import { DocumentEntity, ProjectEntity, TaskEntity, TimelogEntity } from "@stacks/db";
+import { DocumentEntity, PermissionEntity, ProjectEntity, TaskEntity, TimelogEntity } from "@stacks/db";
 import { Errors } from "../errors";
 import {
     IProject,
@@ -23,6 +23,9 @@ import { NotificationsLoader } from "./notifications";
 import { sendRealtimeUpdate } from "../events";
 import { invalidateApiCacheForCurrentRequest } from "../utils/cache";
 import { translate } from "@stacks/translations";
+
+TimelogEntity.hasOne(PermissionEntity, { foreignKey: "id", constraints: false });
+PermissionEntity.belongsTo(TimelogEntity, { foreignKey: "id", constraints: false });
 
 if (!TimelogEntity.associations.documentInfo) {
     TimelogEntity.hasOne(DocumentEntity, {
