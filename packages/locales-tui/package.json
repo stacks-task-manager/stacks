@@ -15,12 +15,12 @@
         "ink": "^4.4.1",
         "ink-select-input": "^5.0.0",
         "ink-text-input": "^5.0.0",
-        "react": "^18.3.1",
+        "react": "^19.2.6",
         "typescript": "^5.7.3"
     },
     "devDependencies": {
         "@types/node": "^22.10.0",
-        "@types/react": "^18.3.12",
+        "@types/react": "^19.2.15",
         "tsx": "^4.19.2",
         "vitest": "^3.0.5"
     }
