@@ -19,14 +19,12 @@ import {
     endOfMonth,
     format,
     getDay,
-    isBefore,
     setDate,
 } from "date-fns";
 import { ExtendedKeyboardEvent } from "mousetrap";
 import {
     ACTIVITYRESOURCETYPE,
     ACTIVITYTYPE,
-    AUTOMATION_EVENT,
     IElectronSaveDialog,
     ILink,
     ILocation,
@@ -54,7 +52,6 @@ import {
 import { ITasksStore, TasksStore } from "app/store/tasks";
 import { upsertById } from "../actionHelpers";
 import { reorderWithAfter } from "app/utils/array";
-import { isDo, isOverdue, isStarted } from "app/utils/date";
 import Dialog from "app/utils/dialog";
 import sound from "app/utils/sound";
 import { stripMd } from "app/utils/string";
@@ -66,7 +63,6 @@ import { ProjectFiltersStore } from "../projectFilters";
 import { RecordsStore } from "../records";
 import { IStacksStore, StacksStore } from "../stacks";
 import { ActivitiesActions } from "./activities";
-import { AutomationsActions } from "./automations";
 import { cleanupResourceNavigationRefs } from "./resourceNavigationCleanup";
 import { ProjectsActions } from "./projects";
 import { RecordActions } from "./record";
@@ -389,15 +385,6 @@ const upsertTasks = async (tasks: ITask[]) => {
         })
     );
 
-    for (const task of tasks) {
-        if (task.duedate && isOverdue(task.duedate)) {
-            await AutomationsActions.run(task.id, AUTOMATION_EVENT.OVERDUE, task.project);
-        } else if (task.startdate && isStarted(task.startdate)) {
-            await AutomationsActions.run(task.id, AUTOMATION_EVENT.STARTED, task.project);
-        } else if (task.dodate && isDo(task.dodate)) {
-            await AutomationsActions.run(task.id, AUTOMATION_EVENT.DO, task.project);
-        }
-    }
 
     publish("tasks:upserted", tasks);
 };
@@ -664,18 +651,16 @@ const setTitle = async (taskId: string, title: string) => {
 /**
  * Toggle the done state of a task
  * @param taskId
- * @param skipAutomations
  * @returns
  */
-const toggleDone = async (taskId: string, skipAutomations?: boolean) => {
+const toggleDone = async (taskId: string) => {
     const task = await getTask(taskId);
     if (!task) return;
-
     if (!task.done) {
-        await setDone(taskId, skipAutomations);
+        await setDone(taskId);
     } else {
         if (task.parent == null) {
-            await setTodo(taskId, skipAutomations);
+            await setTodo(taskId);
         } else {
             await setTodo(taskId);
         }
@@ -703,44 +688,25 @@ const debounceRemove: IDebounceRemoveTasks = {};
 
 /**
  * Sets a task as done
- * @param taskId
- * @param skipAutomations
  */
-const setDone = async (taskId: string, skipAutomations?: boolean) => {
+const setDone = async (taskId: string) => {
     const task = await getTask(taskId);
     if (!task) return;
-
     // update the task
     const updatedTask: ITask = await update(taskId, { done: true, progress: 100 });
-
     await runRepeatAutomation(updatedTask);
-
-    // run automations if not skipped or if the repeats is not set to reopen
-    if (!skipAutomations && (task.repeats == null || (task.repeats != null && !task.repeats.reopen))) {
-        await AutomationsActions.run(taskId, AUTOMATION_EVENT.DONE, updatedTask.project);
-    }
-
     sound.play("complete");
 };
-
 /**
  * Sets a task as todo
- * @param taskId
- * @param skipAutomations
  */
-const setTodo = async (taskId: string, skipAutomations?: boolean) => {
+const setTodo = async (taskId: string) => {
     const updatedTask = await update(taskId, { done: false, progress: 0 });
-
     // if the filter is set to show either all tasks or unfinished tasks
     // then we should put it back in the store
     if (!ProjectFiltersStore.get().filters.state) {
         upsertTasks([updatedTask]);
     }
-
-    if (!skipAutomations) {
-        await AutomationsActions.run(taskId, AUTOMATION_EVENT.TODO, updatedTask.project);
-    }
-
     if (debounceRemove[taskId]) {
         clearTimeout(debounceRemove[taskId]);
         debounceRemove[taskId] = undefined;
@@ -806,79 +772,21 @@ const unassignPerson = async (taskId: string, personId: string) => {
     await update(taskId, { assignees: (task.assignees || []).filter((id: string) => id !== personId) });
 };
 
-interface IDebounceDatesTasks {
-    [id: string]: NodeJS.Timeout | undefined;
-}
-const debounceStartDates: IDebounceDatesTasks = {};
-const debounceDueDates: IDebounceDatesTasks = {};
 
 const setDates = async (taskId: string, startdate: Date | null, duedate: Date | null) => {
-    const task = await update(taskId, { startdate, duedate });
-
-    if (debounceStartDates[taskId]) {
-        clearTimeout(debounceStartDates[taskId]);
-        delete debounceStartDates[taskId];
-    }
-    if (debounceDueDates[taskId]) {
-        clearTimeout(debounceDueDates[taskId]);
-        delete debounceDueDates[taskId];
-    }
-
-    if (duedate && isBefore(new Date(duedate), new Date())) {
-        debounceDueDates[taskId] = setTimeout(async () => {
-            await AutomationsActions.run(task.id, AUTOMATION_EVENT.OVERDUE, task.project);
-        }, 5000);
-    } else if (startdate && isBefore(new Date(startdate), new Date())) {
-        debounceStartDates[taskId] = setTimeout(async () => {
-            await AutomationsActions.run(task.id, AUTOMATION_EVENT.STARTED, task.project);
-        }, 5000);
-    }
+    await update(taskId, { startdate, duedate });
 };
 
 const setStartDate = async (taskId: string, startdate: Date | null) => {
-    const task = await update(taskId, { startdate });
-
-    if (debounceStartDates[taskId]) {
-        clearTimeout(debounceStartDates[taskId]);
-        delete debounceStartDates[taskId];
-    }
-
-    if (startdate && isBefore(new Date(startdate), new Date())) {
-        debounceStartDates[taskId] = setTimeout(async () => {
-            await AutomationsActions.run(task.id, AUTOMATION_EVENT.STARTED, task.project);
-        }, 2000);
-    }
+    await update(taskId, { startdate });
 };
 
 const setDueDate = async (taskId: string, duedate: Date | null) => {
-    const task = await update(taskId, { duedate });
-
-    if (debounceDueDates[taskId]) {
-        clearTimeout(debounceDueDates[taskId]);
-        delete debounceDueDates[taskId];
-    }
-
-    if (duedate && isBefore(new Date(duedate), new Date())) {
-        debounceDueDates[taskId] = setTimeout(async () => {
-            await AutomationsActions.run(task.id, AUTOMATION_EVENT.OVERDUE, task.project);
-        }, 2000);
-    }
+    await update(taskId, { duedate });
 };
 
-const debounceDoDates: IDebounceDatesTasks = {};
 const setDoDate = async (taskId: string, dodate: Date | null) => {
-    const task = await update(taskId, { dodate });
-
-    if (debounceDoDates[taskId]) {
-        clearTimeout(debounceDoDates[taskId]);
-        delete debounceDoDates[taskId];
-    }
-
-    if (dodate && isBefore(new Date(dodate), new Date())) {
-        debounceDoDates[taskId] = setTimeout(async () => {
-            await AutomationsActions.run(task.id, AUTOMATION_EVENT.DO, task.project);
-        }, 2000);
-    }
+    await update(taskId, { dodate });
 };
 
 const setCompletedDate = async (taskId: string, completed: Date) => {
@@ -980,16 +888,7 @@ const clearTags = async (taskId: string) => {
  * @returns
  */
 const setProgress = async (taskId: string, progress: number) => {
-    const task = await getTask(taskId);
-    if (!task) return;
-    if (task.progress === progress) return;
-
     await update(taskId, { progress, done: progress === 100 });
-    if (progress === 100) {
-        await AutomationsActions.run(taskId, AUTOMATION_EVENT.DONE, task.project);
-    } else if (task.done) {
-        await AutomationsActions.run(taskId, AUTOMATION_EVENT.TODO, task.project);
-    }
 };
 
 /**
@@ -1153,9 +1052,8 @@ const setHourlyRate = async (taskId: string, hourlyRate?: number) => {
 /**
  * Archive the current task
  * @param taskId
- * @param skipAutomations
  */
-const archive = async (taskId: string, skipAutomations?: boolean) => {
+const archive = async (taskId: string) => {
     const task = await getTask(taskId);
     if (!task) return;
     // skip archivation if the task is a subtask
@@ -1180,9 +1078,6 @@ const archive = async (taskId: string, skipAutomations?: boolean) => {
     // removes if any running timers
     RecordActions.removeTimer(taskId);
 
-    if (!skipAutomations) {
-        await AutomationsActions.run(taskId, AUTOMATION_EVENT.ARCHIVED, task.project);
-    }
 };
 
 /**
@@ -1411,16 +1306,12 @@ const updatePermissions = async (taskId: string, permissions: IPermissions) => {
 const _reopenTasks = async (taskId: string, partialData?: Partial<ITask>) => {
     const task = await getTask(taskId);
     if (!task) return;
-
     await update(task.id, {
         done: false,
         progress: 0,
         completed: undefined,
         ...partialData,
     });
-
-    await AutomationsActions.run(task.id, AUTOMATION_EVENT.TODO, task.project!);
-
     const subtasks = getSubtasks(taskId);
     if (subtasks && subtasks.length > 0) {
         for (const subtask of subtasks) {
@@ -1555,14 +1446,6 @@ const runRepeatAutomation = async (task: ITask): Promise<void> => {
                 //     appendSubtask(task.parent, newTaskId);
                 // }
 
-                if (stack) {
-                    await AutomationsActions.run(
-                        newTaskId,
-                        AUTOMATION_EVENT.CREATED,
-                        taskData.project!,
-                        stack.id
-                    );
-                }
 
                 publish("task:created", { taskId: newTaskId, task: updatedTask });
 

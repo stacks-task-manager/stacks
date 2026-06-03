@@ -27,14 +27,14 @@ type ConnectionStatusCallback = (status: ConnectionStatus) => void;
 export type AiChatWsPayload =
     | { kind: "delta"; clientRequestId: string; delta: string }
     | {
-          kind: "done";
-          clientRequestId: string;
-          text: string;
-          widgets: Array<
-              | { type: "button"; label: string; hashPath: string }
-              | { type: "redirect"; label: string; hashPath: string }
-          >;
-      }
+        kind: "done";
+        clientRequestId: string;
+        text: string;
+        widgets: Array<
+            | { type: "button"; label: string; hashPath: string }
+            | { type: "redirect"; label: string; hashPath: string }
+        >;
+    }
     | { kind: "error"; clientRequestId?: string; message: string };
 
 type AiChatWsCallback = (payload: AiChatWsPayload) => void;
@@ -288,7 +288,7 @@ export class UpdatePoller {
         if (sectionListeners) {
             sectionListeners.forEach(callback => {
                 // Skip callback if this update originated from this instance
-                if (update.instanceId && update.instanceId === this.instanceId) {
+                if (update.instanceId && update.instanceId === this.instanceId && !update.automation) {
                     return;
                 }
 

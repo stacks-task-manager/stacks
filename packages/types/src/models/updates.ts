@@ -37,5 +37,6 @@ export interface IUpdate {
     timestamp: number;
     instanceId?: string;
     permissions?: IPermissions;
+    automation?: boolean;
     data?: any;
 }

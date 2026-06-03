@@ -4,9 +4,10 @@ import uniq from "lodash/uniq";
 import { Op, Transaction } from "sequelize";
 
 import { AttachmentEntity, DocumentEntity, PermissionEntity, sequelize, TaskEntity } from "@stacks/db";
-import { NOTIFICATION_RECORD_TYPE, POLLINGACTIONS, POLLINGTYPE, type ITask } from "@stacks/types";
+import { AUTOMATION_EVENT, NOTIFICATION_RECORD_TYPE, POLLINGACTIONS, POLLINGTYPE, type ITask } from "@stacks/types";
 
 import { Errors } from "../errors";
+import { AutomationsService } from "../services/automations";
 import { sendRealtimeUpdate } from "../events";
 import { invalidateApiCacheForCurrentRequest } from "../utils/cache";
 import { getCurrentUser } from "./context";
@@ -91,6 +92,12 @@ async function create(data: Partial<ITask>, positionInStack?: "top" | "bottom") 
                 });
             }
         }
+        // Trigger CREATED automation event
+        await AutomationsService.triggerAutomation(newTask.id, AUTOMATION_EVENT.CREATED, {
+            projectId: newTask.project,
+            stackId: newTask.stack,
+            extTransaction: transaction,
+        });
 
         invalidateApiCacheForCurrentRequest();
         return task;
@@ -184,12 +191,12 @@ function buildTaskListFilter(filters: GetAllFilters): object {
                 [Op.contains]: [filters.assignees],
             };
         }
-    // Filter by assigned
+        // Filter by assigned
     } else if (filters.assignees == null && filters.assigned === "true") {
         filter.assignees = {
             [Op.ne]: [],
         };
-    // Filter by unassigned
+        // Filter by unassigned
     } else if (
         filters.assignees == null &&
         filters.assigned !== "true" &&
@@ -460,6 +467,15 @@ async function update(id: string, data: Partial<ITask>, extTransaction?: Transac
             await StacksLoader.getOne(data.stack, transaction);
         }
 
+        const prevTaskSnapshot = {
+            done: task.done,
+            duedate: task.duedate,
+            startdate: task.startdate,
+            dodate: task.dodate,
+            stack: task.stack,
+            archived: task.archived,
+        };
+
         if (data.done) {
             data.completed = new Date();
         }
@@ -469,15 +485,6 @@ async function update(id: string, data: Partial<ITask>, extTransaction?: Transac
             id,
             data,
             transaction,
-        });
-
-        const project = await ProjectsLoader.getOne(updatedTask.project, transaction);
-
-        await sendRealtimeUpdate({
-            type: POLLINGTYPE.TASK,
-            record: task.id,
-            action: POLLINGACTIONS.UPDATE,
-            permissions: mergePermissions(task.permissions, project.permissions),
         });
 
         /*
@@ -529,6 +536,93 @@ async function update(id: string, data: Partial<ITask>, extTransaction?: Transac
         /*
             Sending notifications - END
         */
+
+        let automationRan = false;
+        // Trigger automation events based on field changes
+        const updatedFields: Record<string, unknown> = {};
+        const toDateTime = (value: unknown): number | null => {
+            if (value == null) return null;
+            const date = value instanceof Date ? value : new Date(value as any);
+            const time = date.getTime();
+            return Number.isNaN(time) ? null : time;
+        };
+
+        if (data.duedate !== undefined && toDateTime(data.duedate) !== toDateTime(prevTaskSnapshot.duedate)) {
+            updatedFields.duedate = data.duedate;
+        }
+        if (
+            data.startdate !== undefined &&
+            toDateTime(data.startdate) !== toDateTime(prevTaskSnapshot.startdate)
+        ) {
+            updatedFields.startdate = data.startdate;
+        }
+        if (data.dodate !== undefined && toDateTime(data.dodate) !== toDateTime(prevTaskSnapshot.dodate)) {
+            updatedFields.dodate = data.dodate;
+        }
+        if (data.done === true && prevTaskSnapshot.done !== true) {
+            await AutomationsService.triggerAutomation(id, AUTOMATION_EVENT.DONE, {
+                projectId: updatedTask.project,
+                prevTask: prevTaskSnapshot,
+                updatedFields,
+                extTransaction: transaction,
+            });
+            automationRan = true;
+        } else if (data.done === false && prevTaskSnapshot.done !== false) {
+            await AutomationsService.triggerAutomation(id, AUTOMATION_EVENT.TODO, {
+                projectId: updatedTask.project,
+                prevTask: prevTaskSnapshot,
+                updatedFields,
+                extTransaction: transaction,
+            });
+            automationRan = true;
+        }
+        if (data.stack != null && data.stack !== prevTaskSnapshot.stack) {
+            updatedFields.stack = data.stack;
+            await AutomationsService.triggerAutomation(id, AUTOMATION_EVENT.MOVED, {
+                projectId: updatedTask.project,
+                stackId: data.stack,
+                prevTask: prevTaskSnapshot,
+                updatedFields,
+                extTransaction: transaction,
+            });
+            automationRan = true;
+        }
+        // Trigger ARCHIVED event if task was just archived
+        if (data.archived != null && prevTaskSnapshot.archived == null) {
+            updatedFields.archived = data.archived;
+            await AutomationsService.triggerAutomation(id, AUTOMATION_EVENT.ARCHIVED, {
+                projectId: updatedTask.project,
+                prevTask: prevTaskSnapshot,
+                extTransaction: transaction,
+            });
+            automationRan = true;
+        } else if (data.archived != null) {
+            updatedFields.archived = data.archived;
+        }
+
+        if (
+            updatedFields.duedate !== undefined ||
+            updatedFields.startdate !== undefined ||
+            updatedFields.dodate !== undefined
+        ) {
+            const dateAutomationRan = await AutomationsService.triggerDateAutomations(id, {
+                projectId: updatedTask.project,
+                prevTask: prevTaskSnapshot,
+                updatedFields,
+                extTransaction: transaction,
+            });
+            automationRan = automationRan || dateAutomationRan;
+        }
+
+        const project = await ProjectsLoader.getOne(updatedTask.project, transaction);
+
+        await sendRealtimeUpdate({
+            type: POLLINGTYPE.TASK,
+            record: task.id,
+            action: POLLINGACTIONS.UPDATE,
+            permissions: mergePermissions(task.permissions, project.permissions),
+            automation: automationRan,
+        });
 
         invalidateApiCacheForCurrentRequest();
         return updatedTask;
@@ -595,6 +689,14 @@ const move = async (
                 { tasksOrder: oldStack.tasksOrder.filter(id => id !== taskId) },
                 transaction
             );
+
+            // 3. Trigger MOVED automation event
+            await AutomationsService.triggerAutomation(taskId, AUTOMATION_EVENT.MOVED, {
+                projectId: task.project,
+                stackId,
+                prevTask: { stack: task.stack },
+                extTransaction: transaction,
+            });
         }
 
         invalidateApiCacheForCurrentRequest();
