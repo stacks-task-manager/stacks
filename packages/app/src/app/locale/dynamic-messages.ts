@@ -60,7 +60,6 @@ export const TASK_STACK_CHART_LABELS: Record<string, string> = translatedRecord(
 export const AUTOMATION_EVENT_LABELS: Record<string, string> = translatedRecord({
     archived: "archived",
     created: "created",
-    do: "do",
     done: "completed",
     move: "moved",
     moved: "moved",
