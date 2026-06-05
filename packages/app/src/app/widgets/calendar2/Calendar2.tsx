@@ -73,7 +73,6 @@ export const Calendar2 = forwardRef<FullCalendar, CalendarProps>((props, ref) =>
                 slotDuration={{ hours: 0, minutes: 15 }}
                 slotLabelInterval={{ hours: 1 }}
                 nowIndicator={props.showCurrentTime}
-
                 // eventOverlap={false}
                 events={props.events}
                 eventClick={props.onEventClick}

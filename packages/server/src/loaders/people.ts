@@ -31,8 +31,8 @@ import { translate } from "@stacks/translations";
  * calendar month (1-12).
  */
 interface PeopleFilters {
-    span?: "day" | "week" | "month";
-    date?: string;
+    from?: string;
+    to?: string;
     query?: string;
     jobTitle?: string;
     company?: string;
@@ -72,27 +72,23 @@ function presenceClause(column: string, flag: boolean): object {
 async function buildWhereClause(filters: PeopleFilters): Promise<WhereOptions | null> {
     const andClauses: unknown[] = [{ system: false }];
 
-    if (filters.span && filters.date) {
-        const date = parseISO(filters.date);
-        if (filters.span === "day") {
-            andClauses.push({
-                [Op.and]: [
-                    where(fn("EXTRACT", literal(`MONTH FROM "birthday"`)), date.getMonth() + 1),
-                    where(fn("EXTRACT", literal(`DAY FROM "birthday"`)), date.getDate()),
-                ],
-            });
-        } else if (filters.span === "week") {
-            andClauses.push({
-                [Op.and]: [
-                    literal(`EXTRACT(MONTH FROM "birthday") = ${date.getMonth() + 1}`),
-                    literal(
-                        `DATE_PART('week', "birthday") = DATE_PART('week', DATE('${formatISO9075(date)}'))`
-                    ),
-                ],
-            });
-        } else if (filters.span === "month") {
-            andClauses.push(literal(`EXTRACT(MONTH FROM "birthday") = ${date.getMonth() + 1}`));
-        }
+    if (filters.from && filters.to) {
+        const fromDate = parseISO(filters.from);
+        const toDate = parseISO(filters.to);
+
+        const fromMonth = fromDate.getMonth() + 1;
+        const toMonth = toDate.getMonth() + 1;
+        const fromDay = fromDate.getDate();
+        const toDay = toDate.getDate();
+
+        andClauses.push({
+            [Op.and]: [
+                where(fn("EXTRACT", literal(`MONTH FROM "birthday"`)), { [Op.gte]: fromMonth }),
+                where(fn("EXTRACT", literal(`DAY FROM "birthday"`)), { [Op.gte]: fromDay }),
+                where(fn("EXTRACT", literal(`MONTH FROM "birthday"`)), { [Op.lte]: toMonth }),
+                where(fn("EXTRACT", literal(`DAY FROM "birthday"`)), { [Op.lte]: toDay }),
+            ],
+        });
     }
 
     if (filters.query && filters.query.length) {

@@ -31,11 +31,11 @@ export const PeopleAPI = {
         return request.post("/api/companies", company);
     },
     /** Birthday list for a span and anchor date. */
-    async birthdays(span?: "day" | "week" | "month", date?: Date): Promise<IPerson[]> {
+    async birthdays(from: Date, to: Date): Promise<IPerson[]> {
         return request.get("/api/people/birthdays", {
             params: {
-                span,
-                date: date?.toISOString(),
+                from: from.toISOString(),
+                to: to.toISOString(),
             },
         });
     },

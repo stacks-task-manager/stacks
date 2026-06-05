@@ -28,6 +28,22 @@ people.get(
     })
 );
 
+/** GET `/birthdays/:count?` — Birthdays filtered by query; optional `count` returns length only. */
+people.get(
+    "/birthdays/:count?",
+    validator(BirthdaysFilteredSchema, "query"),
+    cacheMiddleware({ ttl: 300 }),
+    asyncHandler(async (c: Context) => {
+        const filters = c.req.valid("query");
+        const { count } = c.req.param();
+        console.log("Getting birthdays", filters);
+
+
+        const people: User[] = await PeopleLoader.getAll(filters);
+        return c.replySuccess(count === "count" ? people.length : people);
+    })
+);
+
 /** GET `/:id` — Returns one person by id. */
 people.get(
     "/:id",
@@ -37,27 +53,6 @@ people.get(
 
         const person = await PeopleLoader.getOne(id);
         return c.replySuccess(person);
-    })
-);
-
-/** GET `/birthdays/:count?` — Birthdays filtered by query; optional `count` returns length only. */
-people.get(
-    "/birthdays/:count?",
-    validator(BirthdaysFilteredSchema, "query"),
-    cacheMiddleware({ ttl: 300 }),
-    asyncHandler(async (c: Context) => {
-        const filters = c.req.valid("query");
-        const { count } = c.req.param();
-
-        if (filters.data == null) {
-            filters.data = new Date();
-        }
-        if (filters.span == null) {
-            filters.span = "day";
-        }
-
-        const people: User[] = await PeopleLoader.getAll(filters);
-        return c.replySuccess(count === "count" ? people.length : people);
     })
 );
 

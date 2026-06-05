@@ -16,21 +16,13 @@ interface LoadTasksParams {
     projects: string[];
 }
 
-/** Maps agenda view to backend `span` query. */
-function viewConverter(view: string) {
-    return view === "agenda" ? "month" : view;
-}
-
 export const EventsAPI = {
     /** Lists events for a calendar view and anchor date. */
-    async loadEvents(view: string, date: Date): Promise<ICalendarEvent[]> {
-        console.log("Loading events");
-
-        const span = viewConverter(view);
+    async loadEvents(from: Date, to: Date): Promise<ICalendarEvent[]> {
         return request.get("/api/events", {
             params: {
-                span,
-                date: date.toISOString(),
+                from: from.toISOString(),
+                to: to.toISOString(),
             },
         });
     },
@@ -60,12 +52,11 @@ export const EventsAPI = {
         });
     },
     /** Calendar workload: tasks (+ timelogs when enabled server-side). */
-    async loadTasks(view: string, date: Date, params: LoadTasksParams): Promise<LoadTasks> {
-        const span = viewConverter(view);
+    async loadTasks(from: Date, to: Date, params: LoadTasksParams): Promise<LoadTasks> {
         return request.get("/api/events/tasks", {
             params: {
-                span,
-                date: date.toISOString(),
+                from: from.toISOString(),
+                to: to.toISOString(),
             },
         });
     },

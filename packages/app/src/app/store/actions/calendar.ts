@@ -9,11 +9,15 @@ import {
     addMonths,
     addWeeks,
     endOfDay,
+    endOfMonth,
+    endOfWeek,
     format,
     isSameDay,
     setHours,
     setMinutes,
     startOfDay,
+    startOfMonth,
+    startOfWeek,
     subDays,
     subHours,
     subMonths,
@@ -29,6 +33,28 @@ import Toast from "app/utils/toast";
 import { patchFilterField } from "../actionHelpers";
 import { CalendarStore, ICalendarFilters, ICalendarStore } from "../calendar";
 import { TasksActions } from "./tasks";
+
+const getDatesSpan = () => {
+    const { date, view } = CalendarStore.get();
+
+    // get events
+    let from = new Date();
+    let to = new Date();
+    if (view === "agenda") {
+        from = startOfDay(date);
+        to = endOfDay(date);
+    } else if (view === "month") {
+        from = startOfMonth(date);
+        to = endOfMonth(date);
+    } else if (view === "week") {
+        from = startOfWeek(date);
+        to = endOfWeek(date);
+    } else {
+        from = startOfDay(date);
+        to = endOfDay(date);
+    }
+    return { from, to };
+}
 
 // transforms a task into an usable event to show in the calendar
 function getTaskEvent(event: IEvent, task: ITask) {
@@ -111,12 +137,9 @@ const loadGoogleEvents = async () => {
 };
 
 const loadEvents = async () => {
-    const { date, view } = CalendarStore.get();
-
     const localEvents: IEvent[] = [];
-
-    // get events
-    const calEvents = await EventsAPI.loadEvents(view, date);
+    const { from, to } = getDatesSpan();
+    const calEvents = await EventsAPI.loadEvents(from, to);
 
     for (const event of calEvents) {
         const startDate = event.start;
@@ -148,14 +171,14 @@ const loadEvents = async () => {
 };
 
 const loadBirthdays = async () => {
-    const { date, view, filters } = CalendarStore.get();
+    const { filters } = CalendarStore.get();
     const { showBirthdays } = filters;
 
     const peopleEvents: IEvent[] = [];
-    const span = view === "agenda" ? "month" : view;
 
     if (showBirthdays) {
-        const people = await PeopleAPI.birthdays(span, date);
+        const { from, to } = getDatesSpan();
+        const people = await PeopleAPI.birthdays(from, to);
         for (const person of people) {
             peopleEvents.push({
                 title: `${person.firstName} ${person.lastName}'s birthday`,
@@ -188,21 +211,24 @@ const loadBirthdays = async () => {
     );
 };
 
-const loadPrefs = async (reset = true) => {
-    // const { tokens, filters }: { tokens: ICalendarAuth; filters: ICalendarFilters } = await api(
-    //     "events/loadPrefs"
-    // );
-    // CalendarStore.set(
-    //     produce((state: ICalendarStore) => {
-    //         state.tokens = tokens;
-    //         state.filters = filters;
-    //         if (reset) {
-    //             state.isLoading = true;
-    //             state.events = [];
-    //         }
-    //     })
-    // );
-};
+const loadTasks = async () => {
+    const { filters } = CalendarStore.get();
+    const { showTasks } = filters;
+
+    const taskEvents: IEvent[] = [];
+
+    if (showTasks) {
+    }
+
+    CalendarStore.set(
+        produce((state: ICalendarStore) => {
+            state.events = [
+                ...state.events.filter(event => event.resource.type !== EVENTTYPE.TASK),
+                ...taskEvents,
+            ];
+        })
+    );
+}
 
 const savePrefs = async () => {
     const { filters } = CalendarStore.get();
@@ -222,11 +248,10 @@ const load = async (reset = true) => {
             })
         );
     }
-    // await loadPrefs(reset);
 
-    // await loadTasks();
+    await loadTasks();
     await loadEvents();
-    // await loadBirthdays();
+    await loadBirthdays();
     // await loadTimeboxes();
     // await loadGoogleEvents();
     // await loadCalendars();
@@ -632,9 +657,13 @@ const updateEvent = async (eventId: string, updatedEvent: Partial<ICalendarEvent
     }
 
     updateDebounce = setTimeout(async () => {
-        console.log("Update event");
+        const { start, end, ...rest } = updatedEvent;
 
-        await EventsAPI.update(eventId, updatedEvent);
+        await EventsAPI.update(eventId, {
+            ...rest,
+            start: start ? new Date(start) : new Date(),
+            end: end ? new Date(end) : new Date(),
+        });
     }, 500);
 };
 
@@ -798,6 +827,8 @@ const setFilter = async (key: keyof ICalendarFilters, value: ICalendarFilters[ke
 
     if (key === "showBirthdays") {
         await loadBirthdays();
+    } else if (key === "showTasks") {
+        await loadTasks();
     }
 
     await savePrefs();

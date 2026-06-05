@@ -2,14 +2,14 @@
 /**
  * Calendar event payloads and list filters.
  */
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /** Partial update for an existing event. */
 export const EventUpdateSchema = z.object({
     title: z.string().optional(),
     description: z.string().optional(),
-    start: z.string().datetime().optional(),
-    end: z.string().datetime().optional(),
+    start: z.string().datetime(),
+    end: z.string().datetime(),
     assignees: z.string().array().optional(),
 });
 
@@ -17,15 +17,15 @@ export const EventUpdateSchema = z.object({
 export const EventSchema = z.object({
     title: z.string(),
     description: z.string().optional(),
-    start: z.string().datetime(),
-    end: z.string().datetime(),
+    start: z.iso.datetime(),
+    end: z.iso.datetime(),
     assignees: z.string().array().optional(),
 });
 
 /** Query filters for listing events (span + anchor date). */
 export const EventsFilteredSchema = z
     .object({
-        span: z.enum(["day", "week", "month"]).optional(),
-        date: z.string().datetime().optional(),
+        from: z.iso.datetime(),
+        to: z.iso.datetime(),
     })
     .strict();

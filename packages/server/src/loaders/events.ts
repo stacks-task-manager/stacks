@@ -4,7 +4,7 @@
  */
 import { Op } from "sequelize";
 import { Errors } from "../errors";
-import { parseISO, startOfDay, endOfDay, startOfWeek, endOfWeek, startOfMonth, endOfMonth } from "date-fns";
+import { parseISO } from "date-fns";
 import { PermissionEntity, EventEntity } from "@stacks/db";
 import { findAll, findOne, sanitizeWhere } from "./utils";
 import googleOAuthService, { type GoogleCalendarEvent } from "../services/googleOAuthService";
@@ -16,8 +16,8 @@ EventEntity.hasOne(PermissionEntity, { foreignKey: "id", constraints: false });
 PermissionEntity.belongsTo(EventEntity, { foreignKey: "id", constraints: false });
 
 interface EventsFilter {
-    span?: "day" | "week" | "month";
-    date?: string;
+    from: string;
+    to: string;
 }
 
 interface Where {
@@ -99,35 +99,10 @@ async function getOne(id: string) {
 
 async function getAll(filters: EventsFilter) {
     try {
-        const where: Where = {};
-        let timeMin: string | undefined;
-        let timeMax: string | undefined;
-
-        if (filters.span) {
-            const date = filters.date != null ? parseISO(filters.date) : new Date();
-            if (filters.span === "day") {
-                const startDate = startOfDay(date);
-                const endDate = endOfDay(date);
-                where.start = { [Op.gte]: startDate };
-                where.end = { [Op.lte]: endDate };
-                timeMin = startDate.toISOString();
-                timeMax = endDate.toISOString();
-            } else if (filters.span === "week") {
-                const startDate = startOfWeek(date);
-                const endDate = endOfWeek(date);
-                where.start = { [Op.gte]: startDate };
-                where.end = { [Op.lte]: endDate };
-                timeMin = startDate.toISOString();
-                timeMax = endDate.toISOString();
-            } else if (filters.span === "month") {
-                const startDate = startOfMonth(date);
-                const endDate = endOfMonth(date);
-                where.start = { [Op.gte]: startDate };
-                where.end = { [Op.lte]: endDate };
-                timeMin = startDate.toISOString();
-                timeMax = endDate.toISOString();
-            }
-        }
+        const where: Where = {
+            start: { [Op.gte]: parseISO(filters.from) },
+            end: { [Op.lte]: parseISO(filters.to) }
+        };
 
         // Get local events
         const events = await findAll({

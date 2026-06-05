@@ -7,8 +7,8 @@ import { z } from "zod/v4";
 /** Query for birthday lists (day/week/month span). */
 export const BirthdaysFilteredSchema = z
     .object({
-        span: z.enum(["day", "week", "month"]).optional(),
-        date: z.string().optional(),
+        from: z.iso.datetime(),
+        to: z.iso.datetime(),
     })
     .strict();
 
