@@ -8,7 +8,8 @@
 -   [Important constraints](#important-constraints)
 -   [Environment setup](#environment-setup)
 -   [Architecture overview](#architecture-overview)
--   [E2E testing conventions (Playwright)](#e2e-testing-conventions-playwright)
+    -   [Server subsystems](#server-subsystems)
+-   [Testing overview](#testing-overview)
 -   [Branching strategy](#branching-strategy)
 -   [Commit message format](#commit-message-format)
 -   [Code style](#code-style)
@@ -17,6 +18,7 @@
 -   [Documentation](#documentation)
 -   [CI (future)](#ci-future)
 -   [Security](#security)
+-   [Docker](#docker)
 
 ## Project overview
 
@@ -45,6 +47,7 @@ From the repo root:
 | Command | Description |
 | --- | --- |
 | `yarn setup` | Clean install + build internal packages (types, db, license, translations). **Run this first.** |
+| `yarn build:internal` | Build all internal packages (types, db, license, translations). Run after editing `@stacks/types` or `@stacks/db`. |
 | `yarn dev` | Full local dev: internal libs + web app + server in watch mode |
 | `yarn dev:server` | API server only (rebuilds internal libs first) |
 | `yarn dev:app` | Web app dev server on port 3001 (webpack) |
@@ -121,6 +124,14 @@ packages/
 
 **Important**: Authenticated routes **must** use `mountAuthenticated()`. Using `app.route()` for a route that needs auth will silently mount it unauthenticated.
 
+**Server subsystems** (see `packages/server/docs/` for details):
+
+- **Caching** — In-process TTL + LRU cache (`src/utils/cache.ts`), tenant-scoped via request context. Swap for Redis when you outgrow a single node. Write paths call `invalidateApiCacheForCurrentRequest()` to evict stale entries. See [CACHING.md](packages/server/docs/CACHING.md).
+- **AI assistant** — Vercel AI SDK (`ai`, `@ai-sdk/openai`) with streaming over WebSocket. See [AI.md](packages/server/docs/AI.md).
+- **Embedded bundle integrity** — SHA-256 + RSA signature of the built server bundle. Verified at boot (`embedded-integrity.ts`), skipped in dev/test. See [EMBEDDED_INTEGRITY.md](packages/server/docs/EMBEDDED_INTEGRITY.md).
+- **Realtime updates** — WebSocket at `/ws` pushes lightweight "polling updates" (`IUpdate`) to clients after writes. See [REALTIME_UPDATES.md](packages/server/docs/REALTIME_UPDATES.md) and [LOADERS.md](packages/server/docs/LOADERS.md#side-effects-from-loaders).
+- **Permissions** — Two-layer auth: ACL (per-record visibility via `permissions` table) + RBAC (per-role section/action flags). See [PERMISSIONS.md](packages/server/docs/PERMISSIONS.md).
+
 ### Web app (`packages/app`)
 
 - HashRouter (`#/…` URLs) — server serves the app from the same origin
@@ -128,7 +139,7 @@ packages/
 - API client: single Axios instance, one file per domain under `src/app/api/`
 - Realtime: WebSocket client (`window.updatePoller`) → `useUpdates()` hook
 - UI kit: Blueprint v6 primitives + app-local components
-- i18n: `@stacks/translations` + JSON files under `src/app/locale/`
+- i18n: `@stacks/translations` + JSON files under `src/app/locale/`. Edit with the terminal UI: `yarn workspace @stacks/locales-tui start`. See [locales-tui docs](docs/packages/locales-tui.md).
 
 **Adding a new feature** (see `packages/app/docs/ONBOARDING.md` for full walkthrough):
 1. API client in `src/app/api/<domain>.ts`
@@ -168,7 +179,17 @@ yarn workspace @stacks/db reset-password:dev    # dev-only password reset
 
 Single source of truth for all entity shapes. Any change here ripples through every package. After editing types, run `yarn build:internal` before starting dependent dev processes.
 
-## E2E testing conventions (Playwright)
+## Testing overview
+
+### Server tests (vitest)
+
+Unit and integration tests live under `packages/server/src/` — `__tests__/` for route-level tests, `loaders/__tests__/` for loader-level tests (preferred for validating authorization and SQL scoping). Run with `yarn test:server` or `yarn test:server:unit`.
+
+### Web app tests (jest)
+
+Jest is configured but the test surface is thin. Existing `__tests__` folders live next to hooks and utils in `packages/app/src/app/`. New pure logic in `utils/` and `hooks/` should have a unit test. UI is covered by Playwright.
+
+### E2E testing conventions (Playwright)
 
 Tests at `playwright/`. Three non-negotiable rules:
 
@@ -213,7 +234,7 @@ Types: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`, `hotfix`
 - 4-space indentation (editorconfig)
 - Semicolons required
 - ES5 trailing commas
-- Single quotes for strings (Prettier default with `singleQuote: false` means double quotes — but Prettier will auto-format)
+- Double quotes for strings (Prettier default with `singleQuote: false`)
 - Print width: 110 characters
 
 ## File and directory conventions
@@ -238,17 +259,16 @@ Types: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`, `hotfix`
 - Don't call `c.get("user") as User` in authenticated routes — `requireAuth` guarantees it's present
 - Don't re-query `RoleEntity` in admin middleware — `requireAuth` already loaded it
 - Don't edit `000_init_schemas.cjs` — add new migrations instead
-- Don't visit port 3001 directly — the server at 3000 proxies to it
-- Don't change port 3001 — it's the hardcoded proxy target
+- Don't visit port 3001 directly (the server at 3000 proxies to it) or change port 3001 (it's the hardcoded proxy target)
 - Don't manually `.toISOString()` dates in API calls — the Axios layer handles round-tripping
 - Don't import from relative paths in the app — use `app/…` prefix
 
 ## Documentation
 
 Per-package deep dives live in:
-- `packages/server/docs/` — onboarding, caching, AI assistant, embedded bundle integrity
+- `packages/server/docs/` — onboarding, loaders, permissions, caching, AI assistant, embedded bundle integrity, realtime updates
 - `packages/app/docs/` — onboarding, architecture, API client
-- `docs/` — installation, E2E, Docker, contributing
+- `docs/` — installation, E2E, Docker, contributing, per-package guides (types, db, server, app, mobile, email-service, translations, locales-tui)
 
 Always check these docs before asking questions about package internals.
 
@@ -267,3 +287,7 @@ When CI is added, the recommended job shape:
 - Report vulnerabilities per [SECURITY.md](SECURITY.md) — email `customers@getstacksapp.com` with `SECURITY:` prefix
 - Never expose `COOKIE_SECRET` or `JWT_SECRET` in logs or commits
 - The `reset-password:dev` script refuses to run with `NODE_ENV=production`
+
+## Docker
+
+Docker Compose configuration for local development and production deployment lives in the `docker/` directory. See [DOCKER.md](docs/DOCKER.md) for full setup instructions.
