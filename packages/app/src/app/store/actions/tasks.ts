@@ -128,8 +128,8 @@ const loadSegment = async (taskIds: string[], forceReload?: boolean): Promise<IT
 
 const loadPeriod = async (from: Date, to: Date, options?: Omit<TaskLoadParams, "from" | "to">) => {
     const tasks = await TasksAPI.load({
-        from: format(from, "yyyy-MM-dd"),
-        to: format(to, "yyyy-MM-dd"),
+        from,
+        to,
         ...options,
     });
     await upsertTasks(tasks);

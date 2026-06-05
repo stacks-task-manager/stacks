@@ -2,7 +2,7 @@
 /**
  * Calendar data loading and mutations.
  */
-import api, { EventsAPI, PeopleAPI } from "app/api";
+import api, { EventsAPI, PeopleAPI, TasksAPI } from "app/api";
 import {
     addDays,
     addHours,
@@ -54,48 +54,6 @@ const getDatesSpan = () => {
         to = endOfDay(date);
     }
     return { from, to };
-}
-
-// transforms a task into an usable event to show in the calendar
-function getTaskEvent(event: IEvent, task: ITask) {
-    if (task.startdate && task.duedate) {
-        event.start = task.startdate;
-        event.end = task.duedate;
-        event.allDay = event.start?.allDay && event.end?.allDay;
-
-        if (event.start?.getTime() === event.end?.getTime() && event.allDay) {
-            // if (event.allDay) {
-            event.start?.setHours(12, 0, 0, 0);
-            event.end?.setHours(12, 30, 0, 0);
-        }
-    } else if (task.startdate && !task.duedate) {
-        event.start = task.startdate;
-        event.allDay = event.start?.allDay;
-
-        if (event.start?.allDay) {
-            event.start?.setHours(12, 0, 0, 0);
-            event.end = task.startdate;
-            event.end?.setHours(12, 30, 0, 0);
-        } else {
-            if (event.start) {
-                event.end = addHours(event.start, 1);
-            }
-        }
-    } else if (!task.startdate && task.duedate) {
-        event.end = task.duedate;
-        event.allDay = event.end?.allDay;
-
-        if (event.end?.allDay) {
-            event.start = task.duedate;
-            event.start?.setHours(12, 0, 0, 0);
-            event.end?.setHours(12, 30, 0, 0);
-        } else {
-            if (task.duedate) {
-                event.start = subHours(task.duedate, 1);
-            }
-        }
-    }
-    return event;
 }
 
 const loadGoogleEvents = async () => {
@@ -218,6 +176,31 @@ const loadTasks = async () => {
     const taskEvents: IEvent[] = [];
 
     if (showTasks) {
+        const { from, to } = getDatesSpan();
+        const tasks = await TasksAPI.load({ from, to });
+
+        for (const task of tasks) {
+            let start = new Date();
+            let end = new Date();
+
+            if (task.startdate) {
+                start = task.startdate;
+            }
+            if (task.duedate) {
+                end = task.duedate;
+            }
+
+            taskEvents.push({
+                title: task.title,
+                start,
+                end,
+                allDay: false,
+                resource: {
+                    data: task,
+                    type: EVENTTYPE.TASK
+                },
+            });
+        }
     }
 
     CalendarStore.set(
