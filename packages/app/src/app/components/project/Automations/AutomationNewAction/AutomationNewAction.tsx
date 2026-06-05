@@ -194,10 +194,7 @@ export const AutomationNewAction: FunctionComponent<IAutomationNewActionProps> =
                                                 AUTOMATION_DO[key] === AUTOMATION_DO.STARTDATE) ||
                                             // if the event is based on the due date
                                             (event === AUTOMATION_EVENT.OVERDUE &&
-                                                AUTOMATION_DO[key] === AUTOMATION_DO.DUEDATE) ||
-                                            // if the event is based on the do date
-                                            (event === AUTOMATION_EVENT.DO &&
-                                                AUTOMATION_DO[key] === AUTOMATION_DO.DODATE)
+                                                AUTOMATION_DO[key] === AUTOMATION_DO.DUEDATE)
                                         ) {
                                             disabled = true;
                                         }

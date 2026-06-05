@@ -6,7 +6,7 @@
  * MOVED, ARCHIVED, OVERDUE, STARTED, DO) and executes matching actions
  * directly via Sequelize — no HTTP round-trips.
  */
-import { addDays, isAfter, isBefore, isEqual } from "date-fns";
+import { addDays, isAfter, isBefore } from "date-fns";
 import { Transaction } from "sequelize";
 
 import { ProjectEntity, StackEntity, TaskEntity } from "@stacks/db";
@@ -345,18 +345,6 @@ export async function triggerDateAutomations(
         }
     }
 
-    if (updatedFields.dodate !== undefined) {
-        const prevDoDate = prevTask?.["dodate"] as Date | string | null | undefined;
-        const wasDo = prevDoDate ? isDo(prevDoDate, prevDone) : false;
-        if (!wasDo && isDo(updatedTask.dodate, done)) {
-            await triggerAutomation(taskId, AUTOMATION_EVENT.DO, {
-                projectId,
-                extTransaction,
-            });
-            triggered = true;
-        }
-    }
-
     return triggered;
 }
 
@@ -398,7 +386,7 @@ export async function triggerAutomation(
 
     // After actions execute, re-check date-based events that may have become true
     // as a result of the action. Only fire once to avoid infinite loops.
-    const isDateEvent = [AUTOMATION_EVENT.OVERDUE, AUTOMATION_EVENT.STARTED, AUTOMATION_EVENT.DO].includes(event);
+    const isDateEvent = [AUTOMATION_EVENT.OVERDUE, AUTOMATION_EVENT.STARTED].includes(event);
     if (!isDateEvent) {
         await triggerDateAutomations(taskId, {
             projectId,
