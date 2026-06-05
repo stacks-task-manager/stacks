@@ -37,7 +37,7 @@ interface CompiledTemplate {
 }
 
 /** Escape regex meta characters so user keys can't break the substitution regex. */
-function escapeRegExp(value: string): string {
+export function escapeRegExp(value: string): string {
     return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 

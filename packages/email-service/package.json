@@ -11,7 +11,9 @@
     "setup": "yarn install",
     "dev": "tsx watch --tsconfig tsconfig.dev.json --inspect --env-file=.env src/index.ts",
     "dev:email": "email dev --port 3005",
-    "start": "node dist/email-service.js"
+    "start": "node dist/email-service.js",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@react-email/components": "^0.5.0",
@@ -35,6 +37,7 @@
     "esbuild": "^0.25.8",
     "react-email": "^4.2.8",
     "tsx": "^4.7.1",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "vitest": "^3.0.5"
   }
 }

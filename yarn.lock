@@ -7420,6 +7420,7 @@ __metadata:
     sequelize: ^6.37.7
     tsx: ^4.7.1
     typescript: ^5.8.3
+    vitest: ^3.0.5
   languageName: unknown
   linkType: soft
 

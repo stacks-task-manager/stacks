@@ -1,14 +1,14 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 type Level = "debug" | "info" | "warn" | "error";
 
-const LEVELS: Record<Level, number> = {
+export const LEVELS: Record<Level, number> = {
     debug: 10,
     info: 20,
     warn: 30,
     error: 40,
 };
 
-function resolveLevel(): Level {
+export function resolveLevel(): Level {
     const raw = (process.env.LOG_LEVEL || "info").toLowerCase();
     if (raw === "debug" || raw === "info" || raw === "warn" || raw === "error") {
         return raw;
@@ -16,9 +16,9 @@ function resolveLevel(): Level {
     return "info";
 }
 
-const minLevel = LEVELS[resolveLevel()];
+export const minLevel = LEVELS[resolveLevel()];
 
-function shouldLog(level: Level): boolean {
+export function shouldLog(level: Level): boolean {
     return LEVELS[level] >= minLevel;
 }
 

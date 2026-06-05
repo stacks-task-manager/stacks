@@ -5,6 +5,7 @@ import { sequelize } from "@stacks/db";
 import { EMAIL_TEMPLATES } from "@stacks/types";
 import TemplateCompiler from "./TemplateCompiler";
 import logger from "../utils/logger";
+import { parseEmailData } from "../utils/emailData";
 
 interface SMTPConfig {
     host: string;
@@ -214,7 +215,7 @@ class EmailService {
     ): Promise<void> {
         const recipientEmail = queuedEmail.email;
         try {
-            const emailData = this.parseEmailData(queuedEmail.data);
+            const emailData = parseEmailData(queuedEmail.data);
             emailData.publicUrl = process.env.PUBLIC_URL ?? "";
 
             const tenantId = queuedEmail.tenant ?? "default";
@@ -309,20 +310,6 @@ class EmailService {
                 logger.error(`💀 Email ${queuedEmail.id} permanently failed after ${newRetryCount} attempts`);
             }
         }
-    }
-
-    /**
-     * Normalise the JSONB / string data column into a plain object.
-     */
-    private parseEmailData(data: QueuedEmailRow["data"]): Record<string, unknown> {
-        if (typeof data === "string") {
-            try {
-                return JSON.parse(data) as Record<string, unknown>;
-            } catch {
-                return {};
-            }
-        }
-        return data ?? {};
     }
 
     /**
