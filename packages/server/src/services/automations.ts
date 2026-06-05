@@ -11,7 +11,7 @@ import { Transaction } from "sequelize";
 
 import { ProjectEntity, StackEntity, TaskEntity } from "@stacks/db";
 import {
-    AUTOMATIOD_DO,
+    AUTOMATION_DO,
     AUTOMATION_EVENT,
     IAutomation,
     IAutomationAction,
@@ -123,7 +123,7 @@ async function executeAction(
     extTransaction?: Transaction
 ): Promise<void> {
     switch (action.do) {
-        case AUTOMATIOD_DO.ASSIGN:
+        case AUTOMATION_DO.ASSIGN:
             await updateOne({
                 entity: TaskEntity,
                 id: taskId,
@@ -132,7 +132,7 @@ async function executeAction(
             });
             break;
 
-        case AUTOMATIOD_DO.UNASSIGN:
+        case AUTOMATION_DO.UNASSIGN:
             await updateOne({
                 entity: TaskEntity,
                 id: taskId,
@@ -141,7 +141,7 @@ async function executeAction(
             });
             break;
 
-        case AUTOMATIOD_DO.UNASSIGNALL:
+        case AUTOMATION_DO.UNASSIGNALL:
             await updateOne({
                 entity: TaskEntity,
                 id: taskId,
@@ -150,12 +150,12 @@ async function executeAction(
             });
             break;
 
-        case AUTOMATIOD_DO.STARTDATE:
-        case AUTOMATIOD_DO.DUEDATE:
-        case AUTOMATIOD_DO.DODATE: {
+        case AUTOMATION_DO.STARTDATE:
+        case AUTOMATION_DO.DUEDATE:
+        case AUTOMATION_DO.DODATE: {
             const dateValue = action.value as number;
-            const newDate = calculateDate(dateValue, action.do === AUTOMATIOD_DO.STARTDATE ? "startdate" : action.do === AUTOMATIOD_DO.DUEDATE ? "duedate" : "dodate");
-            const field = action.do === AUTOMATIOD_DO.STARTDATE ? "startdate" : action.do === AUTOMATIOD_DO.DUEDATE ? "duedate" : "dodate";
+            const newDate = calculateDate(dateValue, action.do === AUTOMATION_DO.STARTDATE ? "startdate" : action.do === AUTOMATION_DO.DUEDATE ? "duedate" : "dodate");
+            const field = action.do === AUTOMATION_DO.STARTDATE ? "startdate" : action.do === AUTOMATION_DO.DUEDATE ? "duedate" : "dodate";
             await updateOne({
                 entity: TaskEntity,
                 id: taskId,
@@ -165,7 +165,7 @@ async function executeAction(
             break;
         }
 
-        case AUTOMATIOD_DO.ADDTAG:
+        case AUTOMATION_DO.ADDTAG:
             await updateOne({
                 entity: TaskEntity,
                 id: taskId,
@@ -174,7 +174,7 @@ async function executeAction(
             });
             break;
 
-        case AUTOMATIOD_DO.REMOVETAG: {
+        case AUTOMATION_DO.REMOVETAG: {
             const currentTags = (await findOne({
                 entity: TaskEntity,
                 id: taskId,
@@ -190,7 +190,7 @@ async function executeAction(
             break;
         }
 
-        case AUTOMATIOD_DO.REMOVEALLTAGS:
+        case AUTOMATION_DO.REMOVEALLTAGS:
             await updateOne({
                 entity: TaskEntity,
                 id: taskId,
@@ -199,7 +199,7 @@ async function executeAction(
             });
             break;
 
-        case AUTOMATIOD_DO.ADDSTATUS:
+        case AUTOMATION_DO.ADDSTATUS:
             await updateOne({
                 entity: TaskEntity,
                 id: taskId,
@@ -208,7 +208,7 @@ async function executeAction(
             });
             break;
 
-        case AUTOMATIOD_DO.REMOVESTATUS:
+        case AUTOMATION_DO.REMOVESTATUS:
             await updateOne({
                 entity: TaskEntity,
                 id: taskId,
@@ -217,7 +217,7 @@ async function executeAction(
             });
             break;
 
-        case AUTOMATIOD_DO.DONE:
+        case AUTOMATION_DO.DONE:
             await updateOne({
                 entity: TaskEntity,
                 id: taskId,
@@ -226,7 +226,7 @@ async function executeAction(
             });
             break;
 
-        case AUTOMATIOD_DO.TODO:
+        case AUTOMATION_DO.TODO:
             await updateOne({
                 entity: TaskEntity,
                 id: taskId,
@@ -235,7 +235,7 @@ async function executeAction(
             });
             break;
 
-        case AUTOMATIOD_DO.MOVE:
+        case AUTOMATION_DO.MOVE:
             await updateOne({
                 entity: TaskEntity,
                 id: taskId,
@@ -267,7 +267,7 @@ async function executeAction(
 
             break;
 
-        case AUTOMATIOD_DO.PROGRESS:
+        case AUTOMATION_DO.PROGRESS:
             await updateOne({
                 entity: TaskEntity,
                 id: taskId,
@@ -276,7 +276,7 @@ async function executeAction(
             });
             break;
 
-        case AUTOMATIOD_DO.ARCHIVE:
+        case AUTOMATION_DO.ARCHIVE:
             await updateOne({
                 entity: TaskEntity,
                 id: taskId,

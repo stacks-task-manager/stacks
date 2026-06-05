@@ -4,7 +4,7 @@ import { Classes, Colors } from "@blueprintjs/core";
 import React, { FunctionComponent } from "react";
 import { Col, Grid, Icon, Row } from "app/components/common";
 import { StacksPicker } from "app/components/project";
-import { AUTOMATIOD_DO, AUTOMATION_EVENT, IAutomation } from "@stacks/types";
+import { AUTOMATION_DO, AUTOMATION_EVENT, IAutomation } from "@stacks/types";
 import { uuidv4 } from "app/utils/uuid";
 
 interface IAutomationWizardProps {
@@ -20,7 +20,7 @@ export const AutomationWizard: FunctionComponent<IAutomationWizardProps> = ({ on
             actions: [
                 {
                     id: uuidv4(),
-                    do: AUTOMATIOD_DO.STARTDATE,
+                    do: AUTOMATION_DO.STARTDATE,
                     value: "",
                     editing: true,
                 },
@@ -37,7 +37,7 @@ export const AutomationWizard: FunctionComponent<IAutomationWizardProps> = ({ on
             actions: [
                 {
                     id: uuidv4(),
-                    do: AUTOMATIOD_DO.ADDTAG,
+                    do: AUTOMATION_DO.ADDTAG,
                     value: [],
                     editing: true,
                 },
@@ -55,7 +55,7 @@ export const AutomationWizard: FunctionComponent<IAutomationWizardProps> = ({ on
             actions: [
                 {
                     id: uuidv4(),
-                    do: AUTOMATIOD_DO.DUEDATE,
+                    do: AUTOMATION_DO.DUEDATE,
                     value: "",
                     editing: true,
                 },
@@ -72,7 +72,7 @@ export const AutomationWizard: FunctionComponent<IAutomationWizardProps> = ({ on
             actions: [
                 {
                     id: uuidv4(),
-                    do: AUTOMATIOD_DO.ARCHIVE,
+                    do: AUTOMATION_DO.ARCHIVE,
                     value: [],
                     editing: true,
                 },
@@ -89,7 +89,7 @@ export const AutomationWizard: FunctionComponent<IAutomationWizardProps> = ({ on
             actions: [
                 {
                     id: uuidv4(),
-                    do: AUTOMATIOD_DO.MOVE,
+                    do: AUTOMATION_DO.MOVE,
                     value: [],
                     editing: true,
                 },

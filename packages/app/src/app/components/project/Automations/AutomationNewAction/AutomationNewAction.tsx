@@ -13,7 +13,7 @@ import {
 import { SymbolSquare } from "@blueprintjs/icons";
 import { translate } from "@stacks/translations";
 import {
-    AUTOMATIOD_DO,
+    AUTOMATION_DO,
     AUTOMATION_ACTION_ICON,
     AUTOMATION_EVENT,
     IAutomationAction,
@@ -41,7 +41,7 @@ export const AutomationNewAction: FunctionComponent<IAutomationNewActionProps> =
     onSave,
     onCancel,
 }) => {
-    const [theAction, setTheAction] = useState<AUTOMATIOD_DO | undefined>(action ? action.do : undefined);
+    const [theAction, setTheAction] = useState<AUTOMATION_DO | undefined>(action ? action.do : undefined);
     const [personId, setPersonId] = useState<string | undefined>(undefined);
     const [days, setDays] = useState<number | undefined>(undefined);
     const [status, setStatus] = useState<ITag | undefined>(undefined);
@@ -52,18 +52,18 @@ export const AutomationNewAction: FunctionComponent<IAutomationNewActionProps> =
     useEffect(() => {
         if (!action) return;
 
-        if (action.do && [AUTOMATIOD_DO.ASSIGN, AUTOMATIOD_DO.UNASSIGN].includes(action.do) && action.value) {
+        if (action.do && [AUTOMATION_DO.ASSIGN, AUTOMATION_DO.UNASSIGN].includes(action.do) && action.value) {
             setPersonId(action.value as string);
         } else if (
             action.do &&
-            [AUTOMATIOD_DO.STARTDATE, AUTOMATIOD_DO.DUEDATE, AUTOMATIOD_DO.DODATE].includes(action.do) &&
+            [AUTOMATION_DO.STARTDATE, AUTOMATION_DO.DUEDATE, AUTOMATION_DO.DODATE].includes(action.do) &&
             action.value
         ) {
             setDays(action.value as number);
-        } else if (action.do && AUTOMATIOD_DO.ADDSTATUS === action.do && action.value) {
+        } else if (action.do && AUTOMATION_DO.ADDSTATUS === action.do && action.value) {
             const status = getTag(action.value as string);
             setStatus(status);
-        } else if (action.do && AUTOMATIOD_DO.ADDTAG === action.do && action.value) {
+        } else if (action.do && AUTOMATION_DO.ADDTAG === action.do && action.value) {
             setTags(action.value as string[]);
         }
     }, []);
@@ -79,27 +79,27 @@ export const AutomationNewAction: FunctionComponent<IAutomationNewActionProps> =
 
     const canSave = useMemo(() => {
         if (!theAction) return false;
-        if ((theAction === AUTOMATIOD_DO.ASSIGN || theAction === AUTOMATIOD_DO.UNASSIGN) && personId == null)
+        if ((theAction === AUTOMATION_DO.ASSIGN || theAction === AUTOMATION_DO.UNASSIGN) && personId == null)
             return false;
         if (
-            theAction === AUTOMATIOD_DO.STARTDATE ||
-            theAction === AUTOMATIOD_DO.DUEDATE ||
-            theAction === AUTOMATIOD_DO.DODATE
+            theAction === AUTOMATION_DO.STARTDATE ||
+            theAction === AUTOMATION_DO.DUEDATE ||
+            theAction === AUTOMATION_DO.DODATE
         ) {
             if (days == null) return false;
         }
-        if (theAction === AUTOMATIOD_DO.ADDSTATUS && !status) return false;
+        if (theAction === AUTOMATION_DO.ADDSTATUS && !status) return false;
         if (
-            (theAction === AUTOMATIOD_DO.ADDTAG || theAction === AUTOMATIOD_DO.REMOVETAG) &&
+            (theAction === AUTOMATION_DO.ADDTAG || theAction === AUTOMATION_DO.REMOVETAG) &&
             tags.length === 0
         )
             return false;
-        if (theAction === AUTOMATIOD_DO.MOVE && stack == null) return false;
-        if (theAction === AUTOMATIOD_DO.PROGRESS && progress == null) return false;
+        if (theAction === AUTOMATION_DO.MOVE && stack == null) return false;
+        if (theAction === AUTOMATION_DO.PROGRESS && progress == null) return false;
         return true;
     }, [theAction, personId, days, status, tags, stack, progress]);
 
-    const handleActionChange = (action?: AUTOMATIOD_DO) => {
+    const handleActionChange = (action?: AUTOMATION_DO) => {
         setTheAction(action);
     };
 
@@ -108,39 +108,39 @@ export const AutomationNewAction: FunctionComponent<IAutomationNewActionProps> =
         let value: string | number | string[] = "";
 
         // ASSIGN or UNASSIGN
-        if (theAction === AUTOMATIOD_DO.ASSIGN || theAction === AUTOMATIOD_DO.UNASSIGN) {
+        if (theAction === AUTOMATION_DO.ASSIGN || theAction === AUTOMATION_DO.UNASSIGN) {
             if (personId == null) return;
             value = personId;
         }
 
         // STAR or DUE DATE
         if (
-            theAction === AUTOMATIOD_DO.STARTDATE ||
-            theAction === AUTOMATIOD_DO.DUEDATE ||
-            theAction === AUTOMATIOD_DO.DODATE
+            theAction === AUTOMATION_DO.STARTDATE ||
+            theAction === AUTOMATION_DO.DUEDATE ||
+            theAction === AUTOMATION_DO.DODATE
         ) {
             if (days == null) return;
             value = days;
         }
 
         // ADD TAG
-        if (theAction === AUTOMATIOD_DO.ADDTAG || theAction === AUTOMATIOD_DO.REMOVETAG) {
+        if (theAction === AUTOMATION_DO.ADDTAG || theAction === AUTOMATION_DO.REMOVETAG) {
             value = tags;
         }
 
         // MOVE
-        if (theAction === AUTOMATIOD_DO.MOVE) {
+        if (theAction === AUTOMATION_DO.MOVE) {
             value = stack || "";
         }
 
         // ADD STATUS
-        if (theAction === AUTOMATIOD_DO.ADDSTATUS) {
+        if (theAction === AUTOMATION_DO.ADDSTATUS) {
             if (status == null) return;
             value = status.id;
         }
 
         // SET PROGRESS
-        if (theAction === AUTOMATIOD_DO.PROGRESS) {
+        if (theAction === AUTOMATION_DO.PROGRESS) {
             if (progress == null) return;
             value = progress;
         }
@@ -159,45 +159,45 @@ export const AutomationNewAction: FunctionComponent<IAutomationNewActionProps> =
                     content={
                         <Scroller thin vertical maxHeight={320}>
                             <Menu>
-                                {(Object.keys(AUTOMATIOD_DO) as Array<keyof typeof AUTOMATIOD_DO>).map(
+                                {(Object.keys(AUTOMATION_DO) as Array<keyof typeof AUTOMATION_DO>).map(
                                     key => {
                                         let disabled = false;
 
                                         if (
                                             // if the event is moved and the action is move
                                             (event === AUTOMATION_EVENT.MOVED &&
-                                                AUTOMATIOD_DO[key] === AUTOMATIOD_DO.MOVE) ||
+                                                AUTOMATION_DO[key] === AUTOMATION_DO.MOVE) ||
                                             // if the event is archive and action is either move or archive
                                             // if we archive a task there's no reason to do these actions
                                             (event === AUTOMATION_EVENT.ARCHIVED &&
-                                                (AUTOMATIOD_DO[key] === AUTOMATIOD_DO.ARCHIVE ||
-                                                    AUTOMATIOD_DO[key] === AUTOMATIOD_DO.MOVE)) ||
+                                                (AUTOMATION_DO[key] === AUTOMATION_DO.ARCHIVE ||
+                                                    AUTOMATION_DO[key] === AUTOMATION_DO.MOVE)) ||
                                             // if the event is created and the action is: archive, move, done, todo
                                             // if you create a task you cannot immediatelly do these actions
                                             (event === AUTOMATION_EVENT.CREATED &&
-                                                (AUTOMATIOD_DO[key] === AUTOMATIOD_DO.ARCHIVE ||
-                                                    AUTOMATIOD_DO[key] === AUTOMATIOD_DO.MOVE ||
-                                                    AUTOMATIOD_DO[key] === AUTOMATIOD_DO.DONE ||
-                                                    AUTOMATIOD_DO[key] === AUTOMATIOD_DO.TODO)) ||
+                                                (AUTOMATION_DO[key] === AUTOMATION_DO.ARCHIVE ||
+                                                    AUTOMATION_DO[key] === AUTOMATION_DO.MOVE ||
+                                                    AUTOMATION_DO[key] === AUTOMATION_DO.DONE ||
+                                                    AUTOMATION_DO[key] === AUTOMATION_DO.TODO)) ||
                                             // if the event is marked as to do and action is archive, done, todo
                                             // if you mark a task as todo you cannot immediatelly do these actions
                                             (event === AUTOMATION_EVENT.TODO &&
-                                                (AUTOMATIOD_DO[key] === AUTOMATIOD_DO.ARCHIVE ||
-                                                    AUTOMATIOD_DO[key] === AUTOMATIOD_DO.DONE ||
-                                                    AUTOMATIOD_DO[key] === AUTOMATIOD_DO.TODO)) ||
+                                                (AUTOMATION_DO[key] === AUTOMATION_DO.ARCHIVE ||
+                                                    AUTOMATION_DO[key] === AUTOMATION_DO.DONE ||
+                                                    AUTOMATION_DO[key] === AUTOMATION_DO.TODO)) ||
                                             // if the event is marked as done and action is done, todo
                                             (event === AUTOMATION_EVENT.DONE &&
-                                                (AUTOMATIOD_DO[key] === AUTOMATIOD_DO.DONE ||
-                                                    AUTOMATIOD_DO[key] === AUTOMATIOD_DO.TODO)) ||
+                                                (AUTOMATION_DO[key] === AUTOMATION_DO.DONE ||
+                                                    AUTOMATION_DO[key] === AUTOMATION_DO.TODO)) ||
                                             // if the event is based on the start date
                                             (event === AUTOMATION_EVENT.STARTED &&
-                                                AUTOMATIOD_DO[key] === AUTOMATIOD_DO.STARTDATE) ||
+                                                AUTOMATION_DO[key] === AUTOMATION_DO.STARTDATE) ||
                                             // if the event is based on the due date
                                             (event === AUTOMATION_EVENT.OVERDUE &&
-                                                AUTOMATIOD_DO[key] === AUTOMATIOD_DO.DUEDATE) ||
+                                                AUTOMATION_DO[key] === AUTOMATION_DO.DUEDATE) ||
                                             // if the event is based on the do date
                                             (event === AUTOMATION_EVENT.DO &&
-                                                AUTOMATIOD_DO[key] === AUTOMATIOD_DO.DODATE)
+                                                AUTOMATION_DO[key] === AUTOMATION_DO.DODATE)
                                         ) {
                                             disabled = true;
                                         }
@@ -205,12 +205,12 @@ export const AutomationNewAction: FunctionComponent<IAutomationNewActionProps> =
                                         return (
                                             <MenuItem
                                                 key={key}
-                                                text={AUTOMATIONS_DO_LABELS[AUTOMATIOD_DO[key]]}
+                                                text={AUTOMATIONS_DO_LABELS[AUTOMATION_DO[key]]}
                                                 icon={
-                                                    <Icon icon={AUTOMATION_ACTION_ICON[AUTOMATIOD_DO[key]]} />
+                                                    <Icon icon={AUTOMATION_ACTION_ICON[AUTOMATION_DO[key]]} />
                                                 }
                                                 disabled={disabled}
-                                                onClick={() => handleActionChange(AUTOMATIOD_DO[key])}
+                                                onClick={() => handleActionChange(AUTOMATION_DO[key])}
                                             />
                                         );
                                     }
@@ -226,7 +226,7 @@ export const AutomationNewAction: FunctionComponent<IAutomationNewActionProps> =
                 />
 
                 {/* ASSIGN or UNASSIGN */}
-                {(theAction === AUTOMATIOD_DO.ASSIGN || theAction === AUTOMATIOD_DO.UNASSIGN) && (
+                {(theAction === AUTOMATION_DO.ASSIGN || theAction === AUTOMATION_DO.UNASSIGN) && (
                     <AssigneesPicker
                         assignees={personId ? [personId] : []}
                         onToggle={setPersonId}
@@ -239,28 +239,28 @@ export const AutomationNewAction: FunctionComponent<IAutomationNewActionProps> =
                 )}
 
                 {/* START or DUE DATES */}
-                {(theAction === AUTOMATIOD_DO.STARTDATE ||
-                    theAction === AUTOMATIOD_DO.DUEDATE ||
-                    theAction === AUTOMATIOD_DO.DODATE) && (
-                    <>
-                        <span className={Classes.TEXT_DISABLED}>in&nbsp;</span>
+                {(theAction === AUTOMATION_DO.STARTDATE ||
+                    theAction === AUTOMATION_DO.DUEDATE ||
+                    theAction === AUTOMATION_DO.DODATE) && (
+                        <>
+                            <span className={Classes.TEXT_DISABLED}>in&nbsp;</span>
 
-                        <NumericInput
-                            placeholder="1"
-                            min={-1000}
-                            max={1000}
-                            style={{ width: 50 }}
-                            allowNumericCharactersOnly
-                            buttonPosition="none"
-                            onValueChange={(value: number) => setDays(value)}
-                        />
+                            <NumericInput
+                                placeholder="1"
+                                min={-1000}
+                                max={1000}
+                                style={{ width: 50 }}
+                                allowNumericCharactersOnly
+                                buttonPosition="none"
+                                onValueChange={(value: number) => setDays(value)}
+                            />
 
-                        <span className={Classes.TEXT_DISABLED}>&nbsp;days</span>
-                    </>
-                )}
+                            <span className={Classes.TEXT_DISABLED}>&nbsp;days</span>
+                        </>
+                    )}
 
                 {/* ADD A TAG */}
-                {(theAction === AUTOMATIOD_DO.ADDTAG || theAction === AUTOMATIOD_DO.REMOVETAG) && (
+                {(theAction === AUTOMATION_DO.ADDTAG || theAction === AUTOMATION_DO.REMOVETAG) && (
                     <TaskTags value={tags} max={1} onChange={setTags}>
                         <Button variant="minimal" size="small">
                             select tag
@@ -269,7 +269,7 @@ export const AutomationNewAction: FunctionComponent<IAutomationNewActionProps> =
                 )}
 
                 {/* ADD A STATUS */}
-                {theAction === AUTOMATIOD_DO.ADDSTATUS && (
+                {theAction === AUTOMATION_DO.ADDSTATUS && (
                     <StatusPicker onChange={setStatus}>
                         <Button variant="minimal" size="small">
                             {status ? status?.title : "select status"}
@@ -278,7 +278,7 @@ export const AutomationNewAction: FunctionComponent<IAutomationNewActionProps> =
                 )}
 
                 {/* MOVE TO */}
-                {theAction === AUTOMATIOD_DO.MOVE && (
+                {theAction === AUTOMATION_DO.MOVE && (
                     <>
                         <span className={Classes.TEXT_DISABLED}>to</span>
                         <StacksPicker
@@ -292,7 +292,7 @@ export const AutomationNewAction: FunctionComponent<IAutomationNewActionProps> =
                 )}
 
                 {/* PROGRESS TO */}
-                {theAction === AUTOMATIOD_DO.PROGRESS && (
+                {theAction === AUTOMATION_DO.PROGRESS && (
                     <>
                         <span className={Classes.TEXT_DISABLED}>to</span>
                         <ProgressPicker value={progress} onChange={setProgress}>
