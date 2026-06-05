@@ -5,7 +5,6 @@
 export * from "./aiChat";
 export * from "./activities";
 export * from "./attachments";
-export * from "./automations";
 export * from "./bookmarks";
 export * from "./calendar";
 export * from "./files";

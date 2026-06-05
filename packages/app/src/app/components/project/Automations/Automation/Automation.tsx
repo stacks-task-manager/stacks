@@ -21,7 +21,7 @@ import { AUTOMATION_EVENT_LABELS } from "app/locale/dynamic-messages";
 import { Col, Grid, Icon, Row } from "app/components/common";
 import { StacksPicker, TaskDetailsSection } from "app/components/project";
 import {
-    AUTOMATIOD_DO,
+    AUTOMATION_DO,
     AUTOMATION_EVENT,
     AUTOMATION_EVENT_ICON,
     IAutomation,
@@ -63,15 +63,15 @@ export const Automation: FunctionComponent<IAutomationsProps> = ({ automation, o
 
     useEffect(() => {
         if (event === AUTOMATION_EVENT.MOVED) {
-            if (actions.some((a: IAutomationAction) => a.do === AUTOMATIOD_DO.MOVE)) {
+            if (actions.some((a: IAutomationAction) => a.do === AUTOMATION_DO.MOVE)) {
                 window.toaster.show({
                     message: "Move action was remove because the event is triggered when moved",
                     icon: <Icon icon="trash" />,
                 });
             }
-            setActions(actions.filter((a: IAutomationAction) => a.do !== AUTOMATIOD_DO.MOVE));
+            setActions(actions.filter((a: IAutomationAction) => a.do !== AUTOMATION_DO.MOVE));
         }
-    }, [event]);
+    }, [actions, event]);
 
     const stacksButton = useMemo(() => {
         if (event !== AUTOMATION_EVENT.MOVED && event !== AUTOMATION_EVENT.CREATED) return null;
@@ -124,7 +124,7 @@ export const Automation: FunctionComponent<IAutomationsProps> = ({ automation, o
             event != null &&
             editingActions.length === 0
         );
-    }, [actions, title]);
+    }, [actions.length, editingActions.length, event, title]);
 
     const handleChangeTitle = (event: React.ChangeEvent<HTMLInputElement>) => {
         setTitle(event.target.value);
@@ -135,7 +135,7 @@ export const Automation: FunctionComponent<IAutomationsProps> = ({ automation, o
             ...actions,
             {
                 id: uuidv4(),
-                do: undefined as unknown as AUTOMATIOD_DO,
+                do: undefined as unknown as AUTOMATION_DO,
                 value: "",
                 editing: true,
             },

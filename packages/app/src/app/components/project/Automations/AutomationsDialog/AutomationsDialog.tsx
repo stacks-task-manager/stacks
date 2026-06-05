@@ -18,7 +18,7 @@ import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import React, { FunctionComponent, useEffect, useState } from "react";
 import { ProjectsAPI } from "app/api";
 import { BlankSlate, Grid, Icon } from "app/components/common";
-import { APPICONS, AUTOMATIOD_DO, IAutomation, IAutomationAction, IProject } from "@stacks/types";
+import { APPICONS, AUTOMATION_DO, IAutomation, IAutomationAction, IProject } from "@stacks/types";
 import { ProjectsActions, RecordActions } from "app/store/actions";
 import Toast from "app/utils/toast";
 import { uuidv4 } from "app/utils/uuid";
@@ -73,7 +73,7 @@ export const AutomationsDialog: FunctionComponent<IAutomationsDialogProps> = ({ 
 
         for (const action of copiedAutomation.actions as Partial<IAutomationAction>[]) {
             action.id = uuidv4();
-            if (action.do === AUTOMATIOD_DO.MOVE && project?.id !== sourceProjectId) {
+            if (action.do === AUTOMATION_DO.MOVE && project?.id !== sourceProjectId) {
                 action.value = undefined;
                 action.editing = true;
                 alert = true;

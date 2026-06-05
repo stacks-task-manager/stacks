@@ -6,7 +6,6 @@ export enum AUTOMATION_EVENT {
     TODO = "todo",
     OVERDUE = "overdue",
     STARTED = "started",
-    DO = "do",
     ARCHIVED = "archived",
 }
 
@@ -17,11 +16,10 @@ export enum AUTOMATION_EVENT_ICON {
     TODO = "placeholder",
     OVERDUE = "alarm-clock-minus",
     STARTED = "alarm-clock-plus",
-    DO = "alarm-clock-check",
     ARCHIVED = "archive",
 }
 
-export enum AUTOMATIOD_DO {
+export enum AUTOMATION_DO {
     ASSIGN = "assign",
     UNASSIGN = "unassign",
     UNASSIGNALL = "unassignall",
@@ -40,7 +38,7 @@ export enum AUTOMATIOD_DO {
     PROGRESS = "progress",
 }
 
-type IAutomationActionKeys = AUTOMATIOD_DO;
+type IAutomationActionKeys = AUTOMATION_DO;
 type IAutomationActionIcon = {
     [key in IAutomationActionKeys]: string;
 };
@@ -65,7 +63,7 @@ export const AUTOMATION_ACTION_ICON: IAutomationActionIcon = {
 
 export interface IAutomationAction {
     id: string;
-    do: AUTOMATIOD_DO;
+    do: AUTOMATION_DO;
     value: string | number | string[];
     editing?: boolean; // this is set to true when coming from the wizard
 }
