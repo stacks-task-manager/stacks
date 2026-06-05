@@ -6,7 +6,7 @@
  * MOVED, ARCHIVED, OVERDUE, STARTED, DO) and executes matching actions
  * directly via Sequelize — no HTTP round-trips.
  */
-import { addDays, isAfter, isBefore } from "date-fns";
+import { addDays, isBefore } from "date-fns";
 import { Transaction } from "sequelize";
 
 import { ProjectEntity, StackEntity, TaskEntity } from "@stacks/db";
