@@ -192,7 +192,7 @@ const LinkPicker: FunctionComponent<LinkPickerProps> = ({ disabled, onAdd }) => 
             disabled={disabled}
             content={
                 <Menu>
-                    <MenuItem text="Link from URL">
+                    <MenuItem text={translate("Link from URL")}>
                         <URLPickerMenuItem onAdd={handleSaveLink} />
                     </MenuItem>
                 </Menu>
@@ -238,19 +238,19 @@ const LinkUpdateButton: FunctionComponent<LinkUpdateButtonProps> = ({ link, task
             popoverClassName="popover-padded-medium"
             content={
                 <div style={{ minWidth: 250 }}>
-                    <FormGroup label="Title">
+                    <FormGroup label={translate("Title")}>
                         <InputGroup
                             value={title}
-                            placeholder="Placeholder text"
+                            placeholder={translate("Placeholder text")}
                             defaultValue={link.title}
                             onChange={handleSetTitle}
                         />
                     </FormGroup>
                     {link.url.startsWith("http") ? (
-                        <FormGroup label="URL">
+                        <FormGroup label={translate("URL")}>
                             <InputGroup
                                 value={url}
-                                placeholder="Placeholder text"
+                                placeholder={translate("Placeholder text")}
                                 type="url"
                                 defaultValue={link.url}
                                 onChange={handleSetUrl}
@@ -263,13 +263,13 @@ const LinkUpdateButton: FunctionComponent<LinkUpdateButtonProps> = ({ link, task
                         disabled={!canSave}
                         onClick={handleUpdateLink}
                     >
-                        Update link
+                        {translate("Update link")}
                     </Button>
                 </div>
             }
             renderTarget={({ isOpen, ref: popoverRef, ...popoverProps }) => (
                 <Tooltip
-                    content="Rename link"
+                    content={translate("Rename link")}
                     placement="top"
                     disabled={isOpen}
                     // eslint-disable-next-line @typescript-eslint/no-unused-vars

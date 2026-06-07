@@ -3,6 +3,7 @@ import { Classes } from "@blueprintjs/core";
 import React, { FunctionComponent } from "react";
 
 import { TaskDetailsSection } from "app/components/project";
+import { translate } from "@stacks/translations";
 
 interface TaskDetailsIdProps {
     id: string;
@@ -11,7 +12,7 @@ interface TaskDetailsIdProps {
 }
 export const TaskDetailsId: FunctionComponent<TaskDetailsIdProps> = ({ id, vertical, centered }) => {
     return (
-        <TaskDetailsSection title="Task Id" centered={centered} vertical={vertical}>
+        <TaskDetailsSection title={translate("Task Id")} centered={centered} vertical={vertical}>
             <span className={Classes.TEXT_MUTED}>{id}</span>
         </TaskDetailsSection>
     );

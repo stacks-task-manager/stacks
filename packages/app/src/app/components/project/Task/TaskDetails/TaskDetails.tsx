@@ -451,7 +451,7 @@ const Task: FunctionComponent<ITaskProps> = React.memo(
                                         />
                                     }
                                 >
-                                    <Tooltip content="Update task completed date" placement="bottom">
+                                    <Tooltip content={translate("Update task completed date")} placement="bottom">
                                         <AnchorButton
                                             size="small"
                                             variant="minimal"
@@ -540,7 +540,7 @@ const Task: FunctionComponent<ITaskProps> = React.memo(
                                                         &nbsp;
                                                         {parentTask
                                                             ? parentTask.title.substring(0, 50)
-                                                            : "Go to parent task"}
+                                                            : translate("Go to parent task")}
                                                     </a>
                                                 </Col>
                                             </Row>
@@ -986,7 +986,7 @@ const TaskDetailInfo: FunctionComponent<ITaskDetailInfoProps> = React.memo(
                         centered={centered}
                     >
                         <Tooltip
-                            content={`Time spent across all task time logs.`}
+                            content={translate("Time spent across all task time logs.")}
                             placement="top"
                             disabled={disabled}
                         >
@@ -1053,7 +1053,7 @@ const TaskDetailInfo: FunctionComponent<ITaskDetailInfoProps> = React.memo(
             case TASKDETAILMATRIX.HOURLY_RATE:
                 const project = getProject(task.project);
                 return (
-                    <TaskDetailsSection title="Task hourly rate" vertical={vertical} centered={centered}>
+                    <TaskDetailsSection title={translate("Task hourly rate")} vertical={vertical} centered={centered}>
                         <FeeInput
                             value={task.hourlyRate}
                             currency={project?.currency}
@@ -1256,7 +1256,7 @@ const EditTaskDetailsLayout = () => {
     return (
         <div className="task-details-divider">
             <div className="task-details-divider__content">
-                <Tooltip content="Edit task details layout" placement="top-end">
+                <Tooltip content={translate("Edit task details layout")} placement="top-end">
                     <small
                         className={classNames(Classes.TEXT_SMALL, Classes.TEXT_DISABLED)}
                         onClick={handleOpenPreferences}
@@ -1284,7 +1284,7 @@ const TaskDetailsLoading: FunctionComponent<ITaskDetailsLoadingProps> = ({ onClo
                     <Button className={Classes.SKELETON} /> &nbsp;
                     <Button className={Classes.SKELETON} /> &nbsp;
                     <Button className={Classes.SKELETON} /> &nbsp;
-                    <Tooltip content="Close task" placement="bottom-end">
+                    <Tooltip content={translate("Close task")} placement="bottom-end">
                         <Button
                             size="small"
                             variant="minimal"
