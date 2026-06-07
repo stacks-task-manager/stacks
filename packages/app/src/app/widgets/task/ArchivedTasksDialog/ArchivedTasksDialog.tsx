@@ -34,8 +34,8 @@ export const ArchivedTasksDialog = ({ onClose }: { onClose: () => void }) => {
         if (selected.length === 0) return;
 
         const result = await AppDialog.confirm(
-            "Unarchive tasks",
-            "Are you sure you want to unarchive the selected tasks?",
+            translate("Unarchive tasks"),
+            translate("Are you sure you want to unarchive the selected tasks?"),
             Intent.WARNING
         );
 
@@ -51,8 +51,8 @@ export const ArchivedTasksDialog = ({ onClose }: { onClose: () => void }) => {
         if (selected.length === 0) return;
 
         const result = await AppDialog.confirm(
-            "Delete tasks",
-            "Are you sure you want to delete the selected tasks?",
+            translate("Delete tasks"),
+            translate("Are you sure you want to delete the selected tasks?"),
             Intent.DANGER
         );
 
@@ -65,7 +65,7 @@ export const ArchivedTasksDialog = ({ onClose }: { onClose: () => void }) => {
     }, [selected]);
 
     return (
-        <Dialog title="Archived Tasks" isOpen={isOpen}
+        <Dialog title={translate("Archived Tasks")} isOpen={isOpen}
             onOpened={handleLoadArchived}
             onClose={() => setIsOpen(false)}
             onClosed={onClose}
@@ -92,8 +92,8 @@ export const ArchivedTasksDialog = ({ onClose }: { onClose: () => void }) => {
                     <Grid vertical>
                         <BlankSlate
                             icon={APPICONS.ARCHIVED}
-                            title="No archived tasks"
-                            description="There are no archived tasks in this project."
+                            title={translate("No archived tasks")}
+                            description={translate("There are no archived tasks in this project.")}
                         />
                     </Grid>
                 )}
@@ -109,7 +109,7 @@ export const ArchivedTasksDialog = ({ onClose }: { onClose: () => void }) => {
                                 icon={<Icon icon="trash" />}
                                 onClick={handleDelete}
                             >
-                                Delete selected ({selected.length})
+                                {translate("Delete selected", { count: selected.length })}
                             </Button>
                         )}
                     </div>

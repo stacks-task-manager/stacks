@@ -76,7 +76,7 @@ export const Subtasks: FunctionComponent<ISubtasksProps> = ({ parent, disabled }
                                 </Col>
                                 <Col justify="right" align="center">
                                     <Tooltip
-                                        content="When you click on a subtask, hold down the cmd/ctrl key to edit it inline."
+                                        content={translate("When you click on a subtask, hold down the cmd/ctrl key to edit it inline.")}
                                         placement="top-end"
                                     >
                                         <Icon
@@ -130,7 +130,7 @@ const SubtasksAccessory: FunctionComponent<SubtasksAccessoryProps> = ({
         if (subtasks.every(subtask => !subtask.done)) return null;
         return (
             <Tag interactive minimal intent={showComplete ? Intent.NONE : Intent.SUCCESS} onClick={onToggle}>
-                {showComplete ? "Hide completed" : "Show completed"}
+                {showComplete ? translate("Hide completed") : translate("Show completed")}
             </Tag>
         );
     }, [showComplete, subtasks]);
@@ -185,8 +185,8 @@ const SubtasksItems: FunctionComponent<SubtasksItemsProps> = ({ parent, disabled
         <div className="subtasks">
             {disabled && orderedSubtasks.length === 0 && (
                 <BlankSlate
-                    title="No subtasks"
-                    description="This task has no subtasks"
+                    title={translate("No subtasks")}
+                    description={translate("This task has no subtasks")}
                     icon={APPICONS.TASK}
                     small
                 />
@@ -255,7 +255,7 @@ export const NewSubtaskInput: FunctionComponent<NewSubtaskInputProps> = ({ small
             fill
             size={small ? "small" : undefined}
             autoResize
-            placeholder="What needs to be done?"
+            placeholder={translate("What needs to be done?")}
             className="subtasks-new-input"
             data-testid="subtasks-input"
         />
@@ -267,7 +267,7 @@ const SubtasksProgress = ({ percent }: { percent: number }) => {
         <span className="subtasks-progress">
             <HotkeyChip keys={[`${Math.round((percent || 0) * 100)}%`]} light />
 
-            <Tooltip content="The progress is based on the immediate children subtasks" placement="top">
+            <Tooltip content={translate("The progress is based on the immediate children subtasks")} placement="top">
                 <ProgressBar
                     value={percent}
                     stripes={false}

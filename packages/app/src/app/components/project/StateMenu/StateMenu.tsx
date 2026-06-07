@@ -3,6 +3,7 @@ import React, { FunctionComponent } from "react";
 import { Colors, Menu, MenuDivider, MenuItem } from "@blueprintjs/core";
 
 import { Icon } from "app/components/common";
+import { translate } from "@stacks/translations";
 
 interface IStateMenuProps {
     value: "all" | "done" | "todo";
@@ -25,7 +26,7 @@ export const StateMenu: FunctionComponent<IStateMenuProps> = ({ value, shouldDis
     return (
         <Menu>
             <MenuItem
-                text="Incomplete tasks"
+                text={translate("Incomplete tasks")}
                 icon={<Icon icon="circle" color={Colors.ORANGE2} />}
                 onClick={handleIncompleted}
                 labelElement={<Icon icon={value === "todo" ? "check" : undefined} />}
@@ -34,14 +35,14 @@ export const StateMenu: FunctionComponent<IStateMenuProps> = ({ value, shouldDis
 
             <MenuDivider />
             <MenuItem
-                text="Completed tasks"
+                text={translate("Completed tasks")}
                 icon={<Icon icon="check-circle" color={Colors.FOREST2} />}
                 onClick={handleCompleted}
                 labelElement={<Icon icon={value === "done" ? "check" : undefined} />}
                 shouldDismissPopover={shouldDismiss}
             />
             <MenuItem
-                text="All tasks"
+                text={translate("All tasks")}
                 icon={<Icon icon="minus-circle" color={Colors.BLUE3} />}
                 onClick={handleAll}
                 labelElement={<Icon icon={value === "all" ? "check" : undefined} />}
