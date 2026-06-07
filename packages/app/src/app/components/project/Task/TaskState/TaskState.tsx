@@ -6,6 +6,7 @@ import { RoundButton } from "app/components/common";
 import { TasksActions } from "app/store/actions";
 import { useDependants, useSubtasks, useTask } from "app/hooks";
 import { TaskItems } from "app/widgets";
+import { translate } from "@stacks/translations";
 
 interface ITaskStateProps {
     taskId: string;
@@ -35,7 +36,7 @@ export const TaskState: FunctionComponent<ITaskStateProps> = ({ taskId, id, larg
                 icon="minus"
                 id={id}
                 small={!large}
-                tooltip="Task is archived"
+                tooltip={translate("Task is archived")}
                 intent={Intent.DANGER}
                 disabled
                 testId={testId}
@@ -49,8 +50,8 @@ export const TaskState: FunctionComponent<ITaskStateProps> = ({ taskId, id, larg
             <Popover lazy content={
                 <>
                     <div style={{ padding: "10px 10px 0 10px" }}>
-                        <strong>Task can&apos;t be completed</strong>
-                        <p>Waiting on these tasks to be completed</p>
+                        <strong>{translate("Task can't be completed")}</strong>
+                        <p>{translate("Waiting on these tasks to be completed")}</p>
                     </div>
 
                     <TaskItems parentId={taskId} tasks={tasks} minWidth={300} />
@@ -60,7 +61,7 @@ export const TaskState: FunctionComponent<ITaskStateProps> = ({ taskId, id, larg
                     icon="minus"
                     id={id}
                     small={!large}
-                    tooltip={`${tasks.length} dependent tasks that are not done`}
+                    tooltip={translate("dependent tasks that are not done", { count: tasks.length })}
                     intent={Intent.DANGER}
                     disabled={disabled}
                     testId={testId}
@@ -75,7 +76,7 @@ export const TaskState: FunctionComponent<ITaskStateProps> = ({ taskId, id, larg
             <RoundButton
                 id={id}
                 small={!large}
-                tooltip={`${subtasks.length} incomplete subtasks`}
+                tooltip={translate("incomplete subtasks", { count: subtasks.length })}
                 intent={Intent.PRIMARY}
                 count={subtasks.length}
                 disabled={disabled}

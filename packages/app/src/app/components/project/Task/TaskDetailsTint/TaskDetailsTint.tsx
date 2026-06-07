@@ -35,7 +35,7 @@ export const TaskDetailsTint: FunctionComponent<TaskDetailsTintProps> = ({
                     icon={<Icon icon="stop-filled" color={tint ?? Colors.GRAY5} />}
                     disabled={disabled}
                 >
-                    Tint color
+                    {translate("Tint color")}
                 </Button>
             </TaskColorButton>
         </TaskDetailsSection>

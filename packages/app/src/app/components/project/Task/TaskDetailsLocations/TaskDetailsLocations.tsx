@@ -33,7 +33,7 @@ export const TaskDetailsLocations: FunctionComponent<ITaskDetailsLocationsProps>
         navigator.clipboard.writeText(
             `${location.title}\nLatitutde: ${location.coordinates[0]}\nLongitute: ${location.coordinates[1]}\nhttps://www.google.com/maps/place/${location.coordinates[0]},${location.coordinates[1]}`
         );
-        Toast.show("Location info copied to clipboard", "map-marker");
+        Toast.show(translate("Location info copied to clipboard"), "map-marker");
     };
 
     if (locations == null || (locations != null && locations.length === 0)) {
@@ -158,7 +158,7 @@ const LocationPicker: FunctionComponent<ILocationPickerProps> = ({ children, onS
             content={
                 <div className="search-list-popover">
                     <InputGroup
-                        placeholder="Search location"
+                        placeholder={translate("Search location")}
                         type="search"
                         leftElement={<Icon icon="search" />}
                         autoFocus
@@ -183,7 +183,7 @@ const LocationPicker: FunctionComponent<ILocationPickerProps> = ({ children, onS
                     )}
 
                     {locations.length === 0 && (
-                        <BlankSlate small title="Search a location" icon="marker-pin-04" />
+                        <BlankSlate small title={translate("Search a location")} icon="marker-pin-04" />
                     )}
                 </div>
             }

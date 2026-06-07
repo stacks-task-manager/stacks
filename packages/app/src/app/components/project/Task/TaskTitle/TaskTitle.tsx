@@ -138,7 +138,7 @@ export const TaskTitle: FunctionComponent<ITaskTitleProps> = ({
                             onBlur={handleBlur}
                             // disabled={disabled}
                             readOnly={disabled}
-                            placeholder="Edit task title"
+                            placeholder={translate("Edit task title")}
                         />
                     </div>
 
