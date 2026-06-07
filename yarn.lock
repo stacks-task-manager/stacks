@@ -1924,7 +1924,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@blueprintjs/icons@npm:^6.0.0, @blueprintjs/icons@npm:^6.9.1":
+"@blueprintjs/icons@npm:^6.10.0":
+  version: 6.10.0
+  resolution: "@blueprintjs/icons@npm:6.10.0"
+  dependencies:
+    change-case: ^4.1.2
+    classnames: ^2.3.1
+    tslib: ~2.6.2
+  peerDependencies:
+    "@types/react": 18
+    react: 18
+    react-dom: 18
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: b626e80407c9aa5564315f2560e17669105307e1bb8ef28ae6526903fd8ceb79eabe7f03adefb4810bc77e8cfef35e7bc032e488ba884b516643953705c0bace
+  languageName: node
+  linkType: hard
+
+"@blueprintjs/icons@npm:^6.9.1":
   version: 6.9.1
   resolution: "@blueprintjs/icons@npm:6.9.1"
   dependencies:
@@ -7240,7 +7258,7 @@ __metadata:
     "@babel/core": ^7.26.0
     "@blueprintjs/core": ^6.1.0
     "@blueprintjs/datetime": ^6.0.1
-    "@blueprintjs/icons": ^6.0.0
+    "@blueprintjs/icons": ^6.10.0
     "@blueprintjs/select": ^6.0.1
     "@floating-ui/dom": ^1.6.0
     "@fullcalendar/core": ^6.1.20
