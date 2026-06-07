@@ -23130,7 +23130,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-css-interop@npm:0.2.3, react-native-css-interop@npm:latest":
+"react-native-css-interop@npm:0.2.3":
   version: 0.2.3
   resolution: "react-native-css-interop@npm:0.2.3"
   dependencies:
@@ -23151,6 +23151,30 @@ __metadata:
     react-native-svg:
       optional: true
   checksum: 29c5cac15348e73819ba7f18439ebb111ef686754d9b49c595955d275334de6a1241501a232d6a14c74f00d188b4fa065777432be9f946fbfc3b70b7cd1f83e5
+  languageName: node
+  linkType: hard
+
+"react-native-css-interop@npm:latest":
+  version: 0.2.4
+  resolution: "react-native-css-interop@npm:0.2.4"
+  dependencies:
+    "@babel/helper-module-imports": ^7.22.15
+    "@babel/traverse": ^7.23.0
+    "@babel/types": ^7.23.0
+    debug: ^4.3.7
+    lightningcss: ~1.27.0
+    semver: ^7.6.3
+  peerDependencies:
+    react: ">=18"
+    react-native: "*"
+    react-native-reanimated: ">=3.6.2"
+    tailwindcss: ~3
+  peerDependenciesMeta:
+    react-native-safe-area-context:
+      optional: true
+    react-native-svg:
+      optional: true
+  checksum: ed78308501fc7b407e8341a4b8ba9427c89d2dc51e9de5e01a4f08aa2d30664f115614ad9f16d831e9833a4e74b24b3e46d0a689e26a6291bb01566ab939e2be
   languageName: node
   linkType: hard
 
