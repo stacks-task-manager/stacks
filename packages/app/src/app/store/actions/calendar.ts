@@ -582,66 +582,66 @@ const toggleCalendar = async (calendarId: string) => {
     await savePrefs();
 };
 
-const restoreCachedCalendars = () => {
-    const calendars = Storage.get("cached-calendars", true, []);
-    CalendarStore.set(
-        produce((state: ICalendarStore) => {
-            state.calendars = calendars;
-        })
-    );
-};
+// const restoreCachedCalendars = () => {
+//     const calendars = Storage.get("cached-calendars", true, []);
+//     CalendarStore.set(
+//         produce((state: ICalendarStore) => {
+//             state.calendars = calendars;
+//         })
+//     );
+// };
 
 const loadCalendars = async () => {
-    if (CalendarStore.get().tokens.google != null) {
-        CalendarStore.set(
-            produce((state: ICalendarStore) => {
-                state.loadingCalendars = true;
-            })
-        );
+    // if (CalendarStore.get().tokens.google != null) {
+    //     CalendarStore.set(
+    //         produce((state: ICalendarStore) => {
+    //             state.loadingCalendars = true;
+    //         })
+    //     );
 
-        try {
-            const response = await fetch("/api/google/calendars", {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${Storage.get("token")}`,
-                },
-            });
+    //     try {
+    //         const response = await fetch("/api/google/calendars", {
+    //             method: "GET",
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //                 Authorization: `Bearer ${Storage.get("token")}`,
+    //             },
+    //         });
 
-            if (response.ok) {
-                const data = await response.json();
-                const calendars = data.map((calendar: any) => ({
-                    id: calendar.id,
-                    name: calendar.summary,
-                    color: calendar.backgroundColor || "#1976d2",
-                    source: "google" as const,
-                    primary: calendar.primary || false,
-                }));
+    //         if (response.ok) {
+    //             const data = await response.json();
+    //             const calendars = data.map((calendar: any) => ({
+    //                 id: calendar.id,
+    //                 name: calendar.summary,
+    //                 color: calendar.backgroundColor || "#1976d2",
+    //                 source: "google" as const,
+    //                 primary: calendar.primary || false,
+    //             }));
 
-                CalendarStore.set(
-                    produce((state: ICalendarStore) => {
-                        // Filter out existing Google calendars and add new ones
-                        state.calendars = [
-                            ...state.calendars.filter(cal => cal.source !== "google"),
-                            ...calendars,
-                        ];
-                        state.loadingCalendars = false;
-                    })
-                );
-            } else {
-                throw new Error("Failed to load calendars");
-            }
-        } catch (error) {
-            // eslint-disable-next-line no-console
-            console.error("Error loading Google calendars:", error);
-            CalendarStore.set(
-                produce((state: ICalendarStore) => {
-                    state.loadingCalendars = false;
-                })
-            );
-            Toast.warn("Failed to load Google calendars.");
-        }
-    }
+    //             CalendarStore.set(
+    //                 produce((state: ICalendarStore) => {
+    //                     // Filter out existing Google calendars and add new ones
+    //                     state.calendars = [
+    //                         ...state.calendars.filter(cal => cal.source !== "google"),
+    //                         ...calendars,
+    //                     ];
+    //                     state.loadingCalendars = false;
+    //                 })
+    //             );
+    //         } else {
+    //             throw new Error("Failed to load calendars");
+    //         }
+    //     } catch (error) {
+    //         // eslint-disable-next-line no-console
+    //         console.error("Error loading Google calendars:", error);
+    //         CalendarStore.set(
+    //             produce((state: ICalendarStore) => {
+    //                 state.loadingCalendars = false;
+    //             })
+    //         );
+    //         Toast.warn("Failed to load Google calendars.");
+    //     }
+    // }
 };
 
 const moveEvent = async (event: ICalendarEvent, calendar: string, source: ICalendarSource) => {
@@ -661,6 +661,7 @@ const moveEvent = async (event: ICalendarEvent, calendar: string, source: ICalen
 
         updateEvent(event.id, updatedEvent, true); // skips the saving
         // saveEvent(updatedEvent, { sourceCalendar: event.calendar });
+        // eslint-disable-next-line no-console
         console.log("THIS IS MISSING moveEvent from a calendar to another");
     }
 };
