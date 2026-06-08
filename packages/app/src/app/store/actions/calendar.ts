@@ -228,42 +228,6 @@ const reload = async () => {
     await load(false);
 };
 
-const loadTodaysEventsCount = async () => {
-    const events = await EventsAPI.getTodaysEvents();
-
-    CalendarStore.set(
-        produce((state: ICalendarStore) => {
-            state.todaysCount = { ...state.todaysCount, events };
-        })
-    );
-};
-
-const loadTodaysBirthdaysCount = async () => {
-    const birthdays = await PeopleAPI.countBirthdays();
-
-    CalendarStore.set(
-        produce((state: ICalendarStore) => {
-            state.todaysCount = { ...state.todaysCount, birthdays };
-        })
-    );
-};
-
-const loadTodaysDueTasksCount = async () => {
-    const tasks = await EventsAPI.getTodaysDueDate();
-
-    CalendarStore.set(
-        produce((state: ICalendarStore) => {
-            state.todaysCount = { ...state.todaysCount, tasks };
-        })
-    );
-};
-
-const loadTodaysCount = async () => {
-    await loadTodaysEventsCount();
-    await loadTodaysBirthdaysCount();
-    await loadTodaysDueTasksCount();
-};
-
 const setView = (view: "month" | "week" | "day" | "agenda") => {
     CalendarStore.set(
         produce((state: ICalendarStore) => {
@@ -1040,7 +1004,6 @@ const logoutGoogle = async () => {
 export const CalendarActions = {
     load,
     reload,
-    loadTodaysCount,
     setView,
     setDate,
     setToday,

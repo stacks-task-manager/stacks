@@ -10,7 +10,7 @@ import mousetrap from "mousetrap";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Icon } from "app/components/common";
-import { getDocument, useEvents, usePreferences, useRealtimeUpdates, useSubscribe } from "app/hooks";
+import { getDocument, useEvents, usePreferences, useRealtimeUpdates } from "app/hooks";
 import { shallowEqual } from "app/hooks/store";
 import { CalendarActions } from "app/store/actions";
 import { CalendarStore, ICalendarRemote } from "app/store/calendar";
@@ -112,14 +112,7 @@ export const Calendar = () => {
     const previousView = useRef<string | null>(null);
     const calendarRef = useRef<FullCalendar>(null);
 
-    useRealtimeUpdates("task", CalendarActions.reload);
     useRealtimeUpdates("events", CalendarActions.reload);
-    useRealtimeUpdates("people", CalendarActions.reload);
-
-    useSubscribe("task:updated", () => {
-        void CalendarActions.reload();
-        void CalendarActions.loadTodaysCount();
-    });
 
     useEffect(() => {
         if (previousDate.current === date && previousView.current === view) {

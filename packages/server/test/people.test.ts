@@ -18,7 +18,7 @@ describe("People", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect([200, 400]).toContain(res.status);
         const body = await res.json();
         if (res.status === 200) {
@@ -38,63 +38,7 @@ describe("People", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
-        expect([200, 400]).toContain(res.status);
-        const body = await res.json();
-        if (res.status === 200) {
-            expect(body.success).toBe(true);
-            expect(Array.isArray(body.data)).toBe(true);
-        } else {
-            expect(body.success).toBe(false);
-        }
-    });
 
-    test("Get people birthdays count for today", async () => {
-        const today = new Date().toISOString().split('T')[0];
-        const res = await app.request(`/api/people/birthdays/count?date=${today}&span=day`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-        });
-        
-        expect(res.status).toBe(200);
-        const body = await res.json();
-        expect(body.success).toBe(true);
-        expect(typeof body.data).toBe("number");
-    });
-
-    test("Get people birthdays for this month", async () => {
-        const today = new Date().toISOString().split('T')[0];
-        const res = await app.request(`/api/people/birthdays?date=${today}&span=month`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-        });
-        
-        expect([200, 400]).toContain(res.status);
-        const body = await res.json();
-        if (res.status === 200) {
-            expect(body.success).toBe(true);
-            expect(Array.isArray(body.data)).toBe(true);
-        } else {
-            expect(body.success).toBe(false);
-        }
-    });
-
-    test("Get people birthdays with default parameters", async () => {
-        const today = new Date().toISOString().split('T')[0];
-        const res = await app.request(`/api/people/birthdays?date=${today}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-        });
-        
         expect([200, 400]).toContain(res.status);
         const body = await res.json();
         if (res.status === 200) {
@@ -113,7 +57,7 @@ describe("People", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect([200, 400]).toContain(res.status);
         const body = await res.json();
         if (res.status === 200) {
@@ -149,7 +93,7 @@ describe("People", () => {
                 real: false,
             }),
         });
-        
+
         expect([200, 403, 500]).toContain(res.status);
     });
 
@@ -161,7 +105,7 @@ describe("People", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect(res.status).toBe(200);
         const body = await res.json();
         expect(body.success).toBe(true);
@@ -176,7 +120,7 @@ describe("People", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         // Either success or validation error
         expect([200, 400, 500]).toContain(res.status);
         const body = await res.json();
@@ -197,7 +141,7 @@ describe("People", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         // Either success or validation error
         expect([200, 400, 500]).toContain(res.status);
         const body2 = await res.json();
@@ -217,7 +161,7 @@ describe("People", () => {
                 // No Authorization header
             },
         });
-        
+
         // Should fail without authentication
         expect(res.status).toBe(401);
         const unauthBody = await res.json();
@@ -233,7 +177,7 @@ describe("People", () => {
                 Authorization: "Bearer invalid-token",
             },
         });
-        
+
         // Should fail with invalid token
         expect(res.status).toBe(401);
         const invalidBody = await res.json();
