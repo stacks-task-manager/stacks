@@ -8,6 +8,7 @@ import { BlankSlate, Grid } from "app/components/common";
 import { TaskLoadParams, TasksAPI } from "app/api/tasks";
 import { TasksActions } from "app/store/actions";
 import { AppView, AppViewContent, TaskRowSkeleton, TasksTable } from "app/widgets";
+import { parseISO } from "date-fns";
 
 /** Build GET `/api/tasks` params from URL search (same filter keys as {@link TasksFilteredSchema}). */
 export function searchParamsToTaskLoadParams(searchParams: URLSearchParams): TaskLoadParams | null {
@@ -47,8 +48,8 @@ export function searchParamsToTaskLoadParams(searchParams: URLSearchParams): Tas
     if (assignees?.length) params.assignees = assignees;
     if (parent) params.parent = parent;
     if (query) params.query = query;
-    if (from) params.from = from;
-    if (to) params.to = to;
+    if (from) params.from = parseISO(from);
+    if (to) params.to = parseISO(to);
 
     const archived = readTrueFlag("archived");
     const completed = readTrueFlag("completed");

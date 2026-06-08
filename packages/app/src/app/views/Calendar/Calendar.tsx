@@ -1,21 +1,22 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
-import { translate } from "@stacks/translations";
 import { Classes, Intent, Menu, MenuDivider, MenuItem, Portal } from "@blueprintjs/core";
 import { DateSelectArg, EventClickArg, EventDropArg } from "@fullcalendar/core";
 import { EventResizeDoneArg } from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
+import { translate } from "@stacks/translations";
+import { APPICONS, EVENTTYPE, ICalendarEvent, IEvent, IPerson, ITask } from "@stacks/types";
 import classNames from "classnames";
 import mousetrap from "mousetrap";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { APPICONS, EVENTTYPE, ICalendarEvent, IEvent, IPerson, ITask } from "@stacks/types";
+
 import { Icon } from "app/components/common";
-import { getDocument, usePreferences, useRealtimeUpdates, useSubscribe } from "app/hooks";
+import { getDocument, useEvents, usePreferences, useRealtimeUpdates } from "app/hooks";
 import { shallowEqual } from "app/hooks/store";
 import { CalendarActions } from "app/store/actions";
 import { CalendarStore, ICalendarRemote } from "app/store/calendar";
 import { toggleSidebar } from "app/store/global";
-import { dateSelectArgToSlotInfo, CalendarSlotInfo } from "app/utils/calendarSlot";
 import { mapCalendarStoreViewToFc } from "app/utils/calendarFullCalendar";
+import { CalendarSlotInfo, dateSelectArgToSlotInfo } from "app/utils/calendarSlot";
 import {
     AppView,
     AppViewContent,
@@ -93,15 +94,15 @@ function toChangePayload(arg: EventDropArg | EventResizeDoneArg) {
 
 export const Calendar = () => {
     const { calendarShowAllEvents } = usePreferences(["calendarShowAllEvents"]);
-    const { view, date, events, calendars } = CalendarStore.use(
+    const { view, date, calendars } = CalendarStore.use(
         state => ({
             view: state.view,
             date: state.date,
-            events: state.events,
             calendars: state.calendars,
         }),
         shallowEqual
     );
+    const events = useEvents();
 
     const [bounds, setBounds] = useState<null | [number, number]>(null);
     const [selectedSlot, setSelectedSlot] = useState<CalendarSlotInfo | null>(null);
@@ -111,14 +112,7 @@ export const Calendar = () => {
     const previousView = useRef<string | null>(null);
     const calendarRef = useRef<FullCalendar>(null);
 
-    useRealtimeUpdates("task", CalendarActions.reload);
     useRealtimeUpdates("events", CalendarActions.reload);
-    useRealtimeUpdates("people", CalendarActions.reload);
-
-    useSubscribe("task:updated", () => {
-        void CalendarActions.reload();
-        void CalendarActions.loadTodaysCount();
-    });
 
     useEffect(() => {
         if (previousDate.current === date && previousView.current === view) {
@@ -200,9 +194,10 @@ export const Calendar = () => {
 
     const handleEventClick = useCallback((arg: EventClickArg) => {
         const iEvent = arg.event.extendedProps?.iEvent as IEvent | undefined;
+        const type = iEvent?.resource?.type;
         const id = iEvent?.resource?.data?.id;
-        if (id != null) {
-            CalendarActions.selectEvent(String(id));
+        if (id && type != null) {
+            CalendarActions.selectEvent(String(id), type as EVENTTYPE);
         }
     }, []);
 

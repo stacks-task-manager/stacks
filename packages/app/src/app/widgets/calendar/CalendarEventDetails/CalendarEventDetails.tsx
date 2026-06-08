@@ -59,7 +59,7 @@ import { TaskDetailsStatus } from "app/widgets/status";
 import { DateInput } from "@blueprintjs/datetime";
 
 export const CalendarEventDetails = () => {
-    const { selected, isNew } = useSelectedEvent();
+    const selected = useSelectedEvent();
 
     useMousetrap("escape", () => {
         CalendarActions.unselectEvent();
@@ -69,71 +69,60 @@ export const CalendarEventDetails = () => {
         CalendarActions.deleteSelectedEvent();
     });
 
-    // const ctaTitle = useMemo(() => {
-    //     if (event?.resource.type === EVENTTYPE.BIRTHDAY) {
-    //         return "Open person details";
-    //     } else if (event?.resource.type === EVENTTYPE.TASK || event?.resource.type === EVENTTYPE.TIMELOG) {
-    //         return "Open task details";
-    //     } else if (event?.resource.type === EVENTTYPE.TIMEBOX) {
-    //         return "Open todo day";
-    //     }
 
-    //     return "Open";
-    // }, [event?.resource.type]);
 
-    // const handleOpenEvent = useCallback(() => {
-    //     if (event == null) return;
+    if (selected == null) return null;
 
-    //     if (type === EVENTTYPE.TASK || type === EVENTTYPE.TIMELOG) {
-    //         navigate(`/task/${data.id}`, {
-    //             state: { backgroundLocation: location },
-    //         });
-    //     } else if (type === EVENTTYPE.BIRTHDAY) {
-    //         navigate(`/person/${data.id}`, {
-    //             state: { backgroundLocation: location },
-    //         });
-    //     } else if (type === EVENTTYPE.TIMEBOX) {
-    //         navigate(`/timebox/${moment(event.start).format("YYYY-MM-DD")}`);
-    //     }
-    // }, []);
-
-    const data = selected?.resource.data;
-    const type = selected?.resource.type;
-
+    const [id, type] = selected;
     const isEvent = type === EVENTTYPE.EVENT;
     const isTask = type === EVENTTYPE.TASK;
     const isBirthday = type === EVENTTYPE.BIRTHDAY;
-    const isTimelog = type === EVENTTYPE.TIMELOG;
-
-    if (data == null) return null;
+    // const isTimelog = type === EVENTTYPE.TIMELOG;
 
     if (isEvent) {
-        return <EventDetails event={data as ICalendarEvent} isNew={isNew} />;
+        return <EventDetailsGate id={id} />;
     } else if (isTask) {
-        return <TaskDetails taskId={(data as ITask).id} />;
+        return <TaskDetails taskId={id} />;
     } else if (isBirthday) {
-        return <BirthdayDetails personId={(data as IPerson).id} />;
-    } else if (isTimelog) {
-        return <TimelogDetails timelog={data as ITimeLogExtended} />;
+        return <BirthdayDetails personId={id} />;
     }
+
+    // else if (isTimelog) {
+    //     return <TimelogDetails timelog={data as ITimeLogExtended} />;
+    // }
 
     return null;
 };
 
+const EventDetailsGate = ({ id }: { id: string }) => {
+    const isNew = id.includes("-new");
+    const event = CalendarStore.use(state => state.events.find(
+        event => event.resource.data.id === id
+    ), shallowEqual);
+
+    if (!event) return null;
+
+    return <EventDetails event={event.resource.data as ICalendarEvent} isNew={isNew} isAllDay={event.allDay ?? false} />;
+}
+
 interface EventDetailsProps {
     event: ICalendarEvent;
-    isNew?: boolean;
+    isNew: boolean;
+    isAllDay: boolean;
 }
-const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew }) => {
-    const calendars = CalendarStore.use(state => state.calendars, shallowEqual);
+const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew, isAllDay }) => {
+    // const calendars = CalendarStore.use(state => state.calendars, shallowEqual);
     const { dateLocale } = usePreferences(["dateLocale"]);
     const is24Hours = use24Hours();
     const titleRef = useRef<HTMLDivElement | null>(null);
+    const isDisabled = false;
 
-    const startTime = event.start ? format(event.start, "p") : "";
-    const endTime = event.end ? format(event.end, "p") : "";
+    const { id, title, description, location, start, end } = event;
 
-    const isSameDayValue = event.start && event.end ? isSameDay(event.start, event.end) : false;
+    const startTime = start ? format(start, "p") : "";
+    const endTime = end ? format(end, "p") : "";
+
+    const isSameDayValue = start && end ? isSameDay(start, end) : false;
 
     useEffect(() => {
         if (isNew) {
@@ -146,37 +135,35 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew }) =>
         }
     }, [isNew]);
 
-    const calendar = useMemo(() => {
-        return calendars.find(calendar => calendar.id === event.calendar);
-    }, [event, calendars]);
+    // const eventCalendar = useMemo(() => {
+    //     return calendars.find(calendar => calendar.id === calendar);
+    // }, [calendar, calendars]);
 
-    const isDisabled = useMemo(() => calendar?.readOnly ?? false, [calendar]);
+    // const isDisabled = useMemo(() => eventCalendar?.readOnly ?? false, [eventCalendar]);
 
     const handleUpdateTitle = (title: string) => {
-        CalendarActions.updateEvent(event.id, {
+        CalendarActions.updateEvent(id, {
             title,
         });
     };
 
     const handleUpdateDescription = (description: string) => {
-        CalendarActions.updateEvent(event.id, {
+        CalendarActions.updateEvent(id, {
             description,
         });
     };
 
     const handleUpdateLocation = (location: string) => {
-        CalendarActions.updateEvent(event.id, {
+        CalendarActions.updateEvent(id, {
             location,
         });
     };
 
     const handleUpdateAllDay = () => {
-        const allDay = !event.allDay;
-        const startDate = event.start ? new Date(event.start) : new Date();
-        const endDate = event.end ? new Date(event.end) : new Date();
+        const allDay = !isAllDay;
 
-        let newStartDate = startDate;
-        let newEndDate = endDate;
+        let newStartDate = start;
+        let newEndDate = end;
 
         if (!isAfter(newEndDate, newStartDate) || isSameMinute(newEndDate, newStartDate)) {
             newEndDate = addHours(newStartDate, 1);
@@ -191,7 +178,7 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew }) =>
             newEndDate = setMinutes(setHours(subDays(newEndDate, 1), 13), 0);
         }
 
-        CalendarActions.updateEvent(event.id, {
+        CalendarActions.updateEvent(id, {
             allDay,
             start: newStartDate,
             end: newEndDate,
@@ -200,17 +187,16 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew }) =>
 
     const handleUpdateStartTime = (time: string) => {
         const timeObj = parse(time, "p", new Date());
-        const startDate = event.start
-            ? setMinutes(setHours(new Date(event.start), getHours(timeObj)), getMinutes(timeObj))
+        const startDate = start
+            ? setMinutes(setHours(start, getHours(timeObj)), getMinutes(timeObj))
             : new Date();
-        const endDate = event.end ? new Date(event.end) : new Date();
 
-        let newEndDate = endDate;
+        let newEndDate = end;
         if (!isAfter(newEndDate, startDate) || isSameMinute(newEndDate, startDate)) {
             newEndDate = addHours(startDate, 1);
         }
 
-        CalendarActions.updateEvent(event.id, {
+        CalendarActions.updateEvent(id, {
             allDay: false,
             start: startDate,
             end: newEndDate,
@@ -219,78 +205,78 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew }) =>
 
     const handleUpdateEndTime = (time: string) => {
         const timeObj = parse(time, "p", new Date());
-        const endDate = event.end
-            ? setMinutes(setHours(new Date(event.end), getHours(timeObj)), getMinutes(timeObj))
+        const endDate = end
+            ? setMinutes(setHours(end, getHours(timeObj)), getMinutes(timeObj))
             : new Date();
 
-        const startDate = event.start ? new Date(event.start) : new Date();
-        let newStartDate = startDate;
+        let newStartDate = start;
         if (!isAfter(endDate, newStartDate) || isSameMinute(endDate, newStartDate)) {
             newStartDate = addHours(endDate, -1);
         }
 
-        CalendarActions.updateEvent(event.id, {
+        CalendarActions.updateEvent(id, {
             allDay: false,
             start: newStartDate,
             end: endDate,
         });
     };
 
-    const handleUpdateStartDate = (start: string | null, isUserChange: boolean) => {
-        if (!isUserChange || !start) return;
+    const handleUpdateStartDate = (st: string | null, isUserChange: boolean) => {
+        if (!isUserChange || !st) return;
 
-        let startDate = parse(start, "P", new Date());
-        if (!event.end) return;
-        let endDate = event.end;
-        if (event.allDay) {
+        let startDate = parse(st, "P", new Date());
+        if (!end) return;
+
+        let endDate = end;
+        if (isAllDay) {
             if (isSameDay(startDate, endDate)) {
                 startDate = setHours(setMinutes(startDate, 0), 0);
                 endDate = setHours(setMinutes(endDate, 0), 23);
             }
         } else {
-            const hours = event.start ? format(event.start, "HH") : "00";
-            const minutes = event.start ? format(event.start, "mm") : "00";
+            const hours = start ? format(start, "HH") : "00";
+            const minutes = start ? format(start, "mm") : "00";
             startDate = setHours(setMinutes(startDate, Number(minutes)), Number(hours));
         }
 
-        CalendarActions.updateEvent(event.id, {
-            allDay: event.allDay,
+        CalendarActions.updateEvent(id, {
+            allDay: isAllDay,
             start: startDate,
         });
     };
 
-    const handleUpdateEndDate = (end: string | null, isUserChange: boolean) => {
-        if (!isUserChange || !end) return;
-        if (!event.start) return;
+    const handleUpdateEndDate = (en: string | null, isUserChange: boolean) => {
+        if (!isUserChange || !en) return;
+        if (!start) return;
 
-        let startDate = event.start;
-        let endDate = parse(end, "P", new Date());
-        if (event.allDay) {
+        let startDate = start;
+        let endDate = parse(en, "P", new Date());
+        if (isAllDay) {
             if (isSameDay(endDate, startDate)) {
                 startDate = setHours(setMinutes(startDate, 0), 0);
                 endDate = setHours(setMinutes(endDate, 0), 23);
             }
         } else {
-            const hours = event.end ? format(event.end, "HH") : "00";
-            const minutes = event.end ? format(event.end, "mm") : "00";
+            const hours = end ? format(end, "HH") : "00";
+            const minutes = end ? format(end, "mm") : "00";
             endDate = setHours(setMinutes(endDate, Number(minutes)), Number(hours));
         }
 
-        CalendarActions.updateEvent(event.id, {
-            allDay: event.allDay,
+        CalendarActions.updateEvent(id, {
+            allDay: isAllDay,
             end: endDate,
         });
     };
 
     const handleDeleteEvent = async () => {
-        await CalendarActions.deleteEventAlert(event);
+        await CalendarActions.deleteEventAlert(id);
     };
 
-    const handleChangeCalendar = (calendarId: string, source: ICalendarSource) => {
-        if (calendarId === event.calendar) return;
+    // const handleChangeCalendar = (calendarId: string, source: ICalendarSource) => {
+    //     if (calendarId === calendar) return;
 
-        CalendarActions.moveEvent(event, calendarId, source);
-    };
+    //     CalendarActions.moveEvent(id, calendarId, source);
+    // };
 
     const handleOpenEventLink = () => {
         if (event.original && event.original.htmlLink) {
@@ -345,7 +331,7 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew }) =>
                                 <Col>
                                     <FormGroup label="Starts">
                                         <Grid gap={10}>
-                                            {!event.allDay && (
+                                            {!isAllDay && (
                                                 <DateTimePicker
                                                     value={startTime}
                                                     is24Hour={is24Hours}
@@ -354,9 +340,9 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew }) =>
                                                 />
                                             )}
                                             <DateInput
-                                                value={format(event.start, "P")}
+                                                value={format(start, "P")}
                                                 locale={dateLocale}
-                                                maxDate={event.end ? new Date(event.end) : undefined}
+                                                maxDate={end ? new Date(end) : undefined}
                                                 disabled={isDisabled}
                                                 onChange={handleUpdateStartDate}
                                             />
@@ -369,7 +355,7 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew }) =>
                                 <Col>
                                     <FormGroup label="Ends">
                                         <Grid gap={10}>
-                                            {!event.allDay && (
+                                            {!isAllDay && (
                                                 <DateTimePicker
                                                     value={endTime}
                                                     is24Hour={is24Hours}
@@ -379,7 +365,7 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew }) =>
                                                 />
                                             )}
                                             <DateInput
-                                                value={format(event.end, "P")}
+                                                value={format(end, "P")}
                                                 locale={dateLocale}
                                                 disabled={isDisabled}
                                                 onChange={handleUpdateEndDate}
@@ -390,12 +376,10 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew }) =>
                             </Row>
                         )}
 
-                        {/* {moment(event.start).diff(event.end).humanize()} */}
-
                         <EventDivider />
                         <FormGroup label="Description and notes">
                             <EditableText
-                                value={event.description ?? ""}
+                                value={description ?? ""}
                                 placeholder="Add notes"
                                 multiline
                                 disabled={isDisabled}
@@ -407,22 +391,22 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew }) =>
                             <EditableText
                                 placeholder="Enter location"
                                 multiline
-                                value={event.location}
+                                value={location}
                                 disabled={isDisabled}
                                 onChange={handleUpdateLocation}
                             />
                         </FormGroup>
                         <EventDivider />
-                        <FormGroup label="Calendar">
+                        {/* <FormGroup label="Calendar">
                             <CalendarPicker
-                                value={event.calendar}
+                                value={calendar}
                                 disabled={isDisabled}
                                 onChange={handleChangeCalendar}
                             />
-                        </FormGroup>
+                        </FormGroup> */}
                     </div>
 
-                    {event.source === "google" ? (
+                    {/* {source === "google" ? (
                         <>
                             <EventDivider />
 
@@ -438,10 +422,8 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew }) =>
                                 </Col>
                             </Row>
                         </>
-                    ) : null}
+                    ) : null} */}
                 </Grid>
-
-                {/* <textarea rows={20} value={JSON.stringify(event, undefined, 4)} /> */}
             </Scroller>
         </div>
     );
@@ -459,19 +441,20 @@ const TaskDetails: FunctionComponent<TaskDetailsProps> = ({ taskId }) => {
         navigate(`/task/${taskId}`, {
             state: { backgroundLocation: location },
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [taskId]);
 
     const startAllDay = useMemo(() => {
         if (!task) return true;
         const startDate = task?.startdate;
         return startDate?.allDay;
-    }, [task?.startdate]);
+    }, [task]);
 
     const dueAllDay = useMemo(() => {
         if (!task) return true;
         const dueDate = task?.duedate;
         return dueDate?.allDay;
-    }, [task?.duedate]);
+    }, [task]);
 
     if (!task) return null;
 

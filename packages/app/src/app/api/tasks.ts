@@ -18,8 +18,8 @@ export interface TaskLoadParams {
     assignees?: string[];
     parent?: string;
     query?: string;
-    from?: string;
-    to?: string;
+    from?: Date;
+    to?: Date;
 }
 
 export const TasksAPI = {

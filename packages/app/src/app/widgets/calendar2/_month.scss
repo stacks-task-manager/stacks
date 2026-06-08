@@ -1,0 +1,30 @@
+.#{$cns} {
+    .fc-month-view {
+        .fc-col-header {
+            display: none;
+        }
+    }
+
+    .fc-daygrid-day-number {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        padding: 0;
+        margin-top: 2px;
+        margin-right: 2px;
+
+        &:hover {
+            text-decoration: none;
+        }
+    }
+
+    .fc-day-today {
+        .fc-daygrid-day-number {
+            background-color: $vermilion3;
+            color: $white;
+        }
+    }
+}
