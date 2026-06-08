@@ -29,3 +29,10 @@ export const EventsFilteredSchema = z
         to: z.iso.datetime(),
     })
     .strict();
+
+export const EventsCountSchema = z
+    .object({
+        from: z.iso.datetime().optional(),
+        to: z.iso.datetime().optional(),
+    })
+    .strict();

@@ -7,8 +7,9 @@ import type { Context } from "hono";
 import { translate } from "@stacks/translations";
 
 import { EventsLoader } from "../loaders";
-import { EventSchema, EventsFilteredSchema, EventUpdateSchema } from "./schema/event";
+import { EventSchema, EventsCountSchema, EventsFilteredSchema, EventUpdateSchema } from "./schema/event";
 import { validator } from "../middleware/validator";
+import { cacheMiddleware } from "../utils/cache";
 import { Errors } from "../errors";
 import { asyncHandler } from "../utils/errorHandler";
 
@@ -22,6 +23,18 @@ events.get(
         const filters = c.req.valid("query");
         const loadedEvents = await EventsLoader.getAll(filters);
         return c.replySuccess(loadedEvents);
+    })
+);
+
+/** GET `/count` — Count of events matching validated query filters. */
+events.get(
+    "/count",
+    validator(EventsCountSchema, "query"),
+    cacheMiddleware({ ttl: 60 }),
+    asyncHandler(async (c: Context) => {
+        const filters = c.req.valid("query");
+        const count = await EventsLoader.countAll(filters);
+        return c.replySuccess(count);
     })
 );
 

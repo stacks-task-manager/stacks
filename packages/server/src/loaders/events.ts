@@ -3,6 +3,7 @@
  * Calendar events: local DB rows plus optional Google Calendar sync helpers.
  */
 import { Op } from "sequelize";
+import { endOfDay, startOfDay } from "date-fns";
 import { Errors } from "../errors";
 import { parseISO } from "date-fns";
 import { PermissionEntity, EventEntity } from "@stacks/db";
@@ -129,6 +130,26 @@ async function getAll(filters: EventsFilter) {
     }
 }
 
+/**
+ * Count events for a date range; defaults to today when no filters provided.
+ */
+async function countAll(filters?: { from?: string; to?: string }): Promise<number> {
+    try {
+        const fromDate = filters?.from ? parseISO(filters.from) : startOfDay(new Date());
+        const toDate = filters?.to ? parseISO(filters.to) : endOfDay(new Date());
+
+        const where = sanitizeWhere({
+            start: { [Op.gte]: fromDate },
+            end: { [Op.lte]: toDate },
+        });
+
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        return EventEntity.count({ where } as any) as unknown as Promise<number>;
+    } catch (error) {
+        throw error;
+    }
+}
+
 async function create(data: Partial<Event>) {
     const user = getCurrentUser();
     try {
@@ -180,6 +201,7 @@ async function remove(id: string) {
 export const EventsLoader = {
     getOne,
     getAll,
+    countAll,
     create,
     update,
     remove,
