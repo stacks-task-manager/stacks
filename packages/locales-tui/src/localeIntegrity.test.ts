@@ -12,7 +12,7 @@ import {
     checkLocaleIntegrity,
     type DuplicateValueEntry,
 } from "./localeIntegrity.js";
-import { readLocaleJson, enJsonPath, stringifyLocaleFile } from "./localeOps.js";
+import { listLocaleJsonFiles, readLocaleJson, enJsonPath, stringifyLocaleFile } from "./localeOps.js";
 import { sectionLocalesAbsPath, TRANSLATION_SECTIONS } from "./sections.js";
 import { repoRootFromModuleUrl } from "./repoRoot.js";
 
@@ -237,6 +237,24 @@ describe("findNearDuplicates", () => {
 
 const repoRoot = repoRootFromModuleUrl(import.meta.url);
 
+function isValidTranslationValue(v: unknown): boolean {
+    if (typeof v === "string") return true;
+    if (!v || typeof v !== "object" || Array.isArray(v)) return false;
+    return Object.values(v as Record<string, unknown>).every(x => typeof x === "string");
+}
+
+function assertLocaleFileValid(path: string): void {
+    const data = readLocaleJson(path) as unknown;
+    expect(data).not.toBeNull();
+    expect(typeof data).toBe("object");
+    expect(Array.isArray(data)).toBe(false);
+
+    for (const [k, v] of Object.entries(data as Record<string, unknown>)) {
+        expect(typeof k).toBe("string");
+        expect(isValidTranslationValue(v)).toBe(true);
+    }
+}
+
 function readSectionLocales(sectionId: string): {
     section: typeof TRANSLATION_SECTIONS[number];
     locales: { id: string; path: string; data: Record<string, unknown> }[];
@@ -263,6 +281,13 @@ function readSectionLocales(sectionId: string): {
 
 describe("server section — integration", () => {
     const { section, locales } = readSectionLocales("server");
+
+    it("parses all locale JSON files and validates translation value shapes", () => {
+        const localesDir = sectionLocalesAbsPath(repoRoot, section);
+        const files = listLocaleJsonFiles(localesDir);
+        expect(files.length).toBeGreaterThan(0);
+        for (const p of files) assertLocaleFileValid(p);
+    });
 
     it("finds key mismatches with correct shape", () => {
         const mismatches = findKeyMismatches(sectionLocalesAbsPath(repoRoot, section));
@@ -298,6 +323,13 @@ describe("server section — integration", () => {
 
 describe("app section — integration", () => {
     const { section, locales } = readSectionLocales("app");
+
+    it("parses all locale JSON files and validates translation value shapes", () => {
+        const localesDir = sectionLocalesAbsPath(repoRoot, section);
+        const files = listLocaleJsonFiles(localesDir);
+        expect(files.length).toBeGreaterThan(0);
+        for (const p of files) assertLocaleFileValid(p);
+    });
 
     it("finds key mismatches with correct shape", () => {
         const mismatches = findKeyMismatches(sectionLocalesAbsPath(repoRoot, section));
