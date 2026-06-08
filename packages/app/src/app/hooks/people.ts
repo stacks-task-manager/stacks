@@ -6,6 +6,7 @@ import { ICompany, IPerson, IRole, IRoleActions, ROLE_ACTIONS, ROLE_SECTIONS } f
 import { PeopleActions } from "app/store/actions";
 import { PeopleStore } from "app/store/people";
 import { useMemo } from "react";
+import { isAfter, isBefore } from "date-fns";
 import { shallowEqual } from "./store";
 
 export const usePerson = (personId?: string) => {
@@ -183,4 +184,36 @@ export const useCanAccess = (section: ROLE_SECTIONS) => {
     const read = me.admin ? true : role?.access[section]?.read ?? false;
     const write = me.admin ? true : role?.access[section]?.write ?? false;
     return { read, write };
+};
+
+const isBirthdayInRange = (birthday: Date, from: Date, to: Date): boolean => {
+    const bMonth = birthday.getMonth();
+    const bDay = birthday.getDate();
+    const fMonth = from.getMonth();
+    const fDay = from.getDate();
+    const tMonth = to.getMonth();
+    const tDay = to.getDate();
+
+    // Compare only month and day, ignoring year
+    const birthdayDate = new Date(2000, bMonth, bDay);
+    const fromDate = new Date(2000, fMonth, fDay);
+    const toDate = new Date(2000, tMonth, tDay);
+
+    return !isBefore(birthdayDate, fromDate) && !isAfter(birthdayDate, toDate);
+};
+
+export const usePeopleWithBirthdayInRange = (from: Date, to: Date): IPerson[] => {
+    const people = PeopleStore.use(state => state.people, shallowEqual);
+
+    return useMemo(() => {
+        return people.filter(
+            (person: IPerson) => person.birthday && isBirthdayInRange(person.birthday, from, to)
+        );
+    }, [people, from, to]);
+};
+
+export const getPeopleWithBirthdayInRange = (people: IPerson[], from: Date, to: Date): IPerson[] => {
+    return people.filter(
+        (person: IPerson) => person.birthday && isBirthdayInRange(person.birthday, from, to)
+    );
 };

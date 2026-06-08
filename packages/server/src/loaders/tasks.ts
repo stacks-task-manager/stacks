@@ -248,17 +248,21 @@ function buildTaskListFilter(filters: GetAllFilters): object {
         const fromDate: Date = startOfDay(new Date(filters.from || new Date().toISOString()));
         const toDate: Date = endOfDay(new Date(filters.to || addDays(new Date(), 10)));
 
+        // Task overlaps the range if it starts before the range ends and ends after the range begins
+        // Null dates are treated as unconstrained (task could start/end at any point)
         andClauses.push({
-            [Op.or]: [
+            [Op.and]: [
                 {
-                    startdate: {
-                        [Op.gte]: fromDate,
-                        [Op.lte]: toDate,
-                    },
-                    duedate: {
-                        [Op.gte]: fromDate,
-                        [Op.lte]: toDate,
-                    },
+                    [Op.or]: [
+                        { startdate: { [Op.lte]: toDate } },
+                        { startdate: null },
+                    ],
+                },
+                {
+                    [Op.or]: [
+                        { duedate: { [Op.gte]: fromDate } },
+                        { duedate: null },
+                    ],
                 },
             ],
         });

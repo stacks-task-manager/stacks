@@ -33,28 +33,7 @@ import Toast from "app/utils/toast";
 import { patchFilterField } from "../actionHelpers";
 import { CalendarStore, ICalendarFilters, ICalendarStore } from "../calendar";
 import { TasksActions } from "./tasks";
-
-const getDatesSpan = () => {
-    const { date, view } = CalendarStore.get();
-
-    // get events
-    let from = new Date();
-    let to = new Date();
-    if (view === "agenda") {
-        from = startOfDay(date);
-        to = endOfDay(date);
-    } else if (view === "month") {
-        from = startOfMonth(date);
-        to = endOfMonth(date);
-    } else if (view === "week") {
-        from = startOfWeek(date);
-        to = endOfWeek(date);
-    } else {
-        from = startOfDay(date);
-        to = endOfDay(date);
-    }
-    return { from, to };
-}
+import { getDatesSpan } from "app/hooks";
 
 const loadGoogleEvents = async () => {
     // const { date, view, filters, tokens } = CalendarStore.get();
@@ -94,7 +73,121 @@ const loadGoogleEvents = async () => {
     // );
 };
 
-const loadEvents = async () => {
+
+// const loadBirthdays = async () => {
+//     const { filters } = CalendarStore.get();
+//     const { showBirthdays } = filters;
+
+//     const peopleEvents: IEvent[] = [];
+
+//     if (showBirthdays) {
+//         const { from, to } = getDatesSpan();
+//         const people = await PeopleAPI.birthdays(from, to);
+//         for (const person of people) {
+//             peopleEvents.push({
+//                 title: `${person.firstName} ${person.lastName}'s birthday`,
+//                 start: (() => {
+//                     if (!person.birthday) return new Date();
+//                     const currentYear = new Date().getFullYear();
+//                     return new Date(currentYear, person.birthday.getMonth(), person.birthday.getDate());
+//                 })(),
+//                 end: (() => {
+//                     if (!person.birthday) return new Date();
+//                     const currentYear = new Date().getFullYear();
+//                     return new Date(currentYear, person.birthday.getMonth(), person.birthday.getDate());
+//                 })(),
+//                 allDay: true,
+//                 resource: {
+//                     data: person,
+//                     type: EVENTTYPE.BIRTHDAY,
+//                 },
+//             });
+//         }
+//     }
+
+//     CalendarStore.set(
+//         produce((state: ICalendarStore) => {
+//             state.events = [
+//                 ...state.events.filter(event => event.resource.type !== EVENTTYPE.BIRTHDAY),
+//                 ...peopleEvents,
+//             ];
+//         })
+//     );
+// };
+
+// const loadTasks = async () => {
+//     const { filters } = CalendarStore.get();
+//     const { showTasks } = filters;
+
+//     const taskEvents: IEvent[] = [];
+
+//     if (showTasks) {
+//         const { from, to } = getDatesSpan();
+//         const tasks = await TasksAPI.load({ from, to });
+
+//         for (const task of tasks) {
+//             let start = new Date();
+//             let end = new Date();
+
+//             if (task.startdate && task.duedate) {
+//                 start = task.startdate;
+//                 end = task.duedate;
+//             } else if (task.startdate && !task.duedate) {
+//                 start = task.startdate;
+//                 end = new Date(task.startdate.getTime() + 3600_000);
+//             } else if (task.duedate && !task.startdate) {
+//                 end = task.duedate;
+//                 start = new Date(task.duedate.getTime() - 3600_000);
+//             }
+
+//             taskEvents.push({
+//                 title: task.title,
+//                 start,
+//                 end,
+//                 allDay: false,
+//                 resource: {
+//                     data: task,
+//                     type: EVENTTYPE.TASK
+//                 },
+//             });
+//         }
+//     }
+
+//     CalendarStore.set(
+//         produce((state: ICalendarStore) => {
+//             state.events = [
+//                 ...state.events.filter(event => event.resource.type !== EVENTTYPE.TASK),
+//                 ...taskEvents,
+//             ];
+//         })
+//     );
+// }
+
+const savePrefs = async () => {
+    const { filters } = CalendarStore.get();
+    await api("events/savePrefs", { filters });
+};
+
+let loadingCalendar = false;
+const load = async (reset = true) => {
+    if (loadingCalendar) return;
+    loadingCalendar = true;
+
+    if (reset) {
+        CalendarStore.set(
+            produce((state: ICalendarStore) => {
+                state.isLoading = false;
+                state.events = [];
+            })
+        );
+    }
+
+    // await loadTasks();
+    // await loadEvents();
+    // await loadBirthdays();
+    // await loadGoogleEvents();
+    // await loadCalendars();
+
     const localEvents: IEvent[] = [];
     const { from, to } = getDatesSpan();
     const calEvents = await EventsAPI.loadEvents(from, to);
@@ -124,123 +217,6 @@ const loadEvents = async () => {
                 ...state.events.filter(event => (event.resource.data as ICalendarEvent).calendar !== "local"),
                 ...localEvents,
             ];
-        })
-    );
-};
-
-const loadBirthdays = async () => {
-    const { filters } = CalendarStore.get();
-    const { showBirthdays } = filters;
-
-    const peopleEvents: IEvent[] = [];
-
-    if (showBirthdays) {
-        const { from, to } = getDatesSpan();
-        const people = await PeopleAPI.birthdays(from, to);
-        for (const person of people) {
-            peopleEvents.push({
-                title: `${person.firstName} ${person.lastName}'s birthday`,
-                start: (() => {
-                    if (!person.birthday) return new Date();
-                    const currentYear = new Date().getFullYear();
-                    return new Date(currentYear, person.birthday.getMonth(), person.birthday.getDate());
-                })(),
-                end: (() => {
-                    if (!person.birthday) return new Date();
-                    const currentYear = new Date().getFullYear();
-                    return new Date(currentYear, person.birthday.getMonth(), person.birthday.getDate());
-                })(),
-                allDay: true,
-                resource: {
-                    data: person,
-                    type: EVENTTYPE.BIRTHDAY,
-                },
-            });
-        }
-    }
-
-    CalendarStore.set(
-        produce((state: ICalendarStore) => {
-            state.events = [
-                ...state.events.filter(event => event.resource.type !== EVENTTYPE.BIRTHDAY),
-                ...peopleEvents,
-            ];
-        })
-    );
-};
-
-const loadTasks = async () => {
-    const { filters } = CalendarStore.get();
-    const { showTasks } = filters;
-
-    const taskEvents: IEvent[] = [];
-
-    if (showTasks) {
-        const { from, to } = getDatesSpan();
-        const tasks = await TasksAPI.load({ from, to });
-
-        for (const task of tasks) {
-            let start = new Date();
-            let end = new Date();
-
-            if (task.startdate) {
-                start = task.startdate;
-            }
-            if (task.duedate) {
-                end = task.duedate;
-            }
-
-            taskEvents.push({
-                title: task.title,
-                start,
-                end,
-                allDay: false,
-                resource: {
-                    data: task,
-                    type: EVENTTYPE.TASK
-                },
-            });
-        }
-    }
-
-    CalendarStore.set(
-        produce((state: ICalendarStore) => {
-            state.events = [
-                ...state.events.filter(event => event.resource.type !== EVENTTYPE.TASK),
-                ...taskEvents,
-            ];
-        })
-    );
-}
-
-const savePrefs = async () => {
-    const { filters } = CalendarStore.get();
-    await api("events/savePrefs", { filters });
-};
-
-let loadingCalendar = false;
-const load = async (reset = true) => {
-    if (loadingCalendar) return;
-    loadingCalendar = true;
-
-    if (reset) {
-        CalendarStore.set(
-            produce((state: ICalendarStore) => {
-                state.isLoading = false;
-                state.events = [];
-            })
-        );
-    }
-
-    await loadTasks();
-    await loadEvents();
-    await loadBirthdays();
-    // await loadTimeboxes();
-    // await loadGoogleEvents();
-    // await loadCalendars();
-
-    CalendarStore.set(
-        produce((state: ICalendarStore) => {
             state.isLoading = false;
         })
     );
@@ -625,10 +601,6 @@ const updateEvent = async (eventId: string, updatedEvent: Partial<ICalendarEvent
                 }
                 return ev;
             });
-
-            if (state.selected != null && state.selected.startsWith(eventId)) {
-                state.selected = eventId;
-            }
         })
     );
 
@@ -708,15 +680,15 @@ const addTempEvent = async (startDate: Date, endDate: Date) => {
     if (newEvent) {
         CalendarStore.set(
             produce((state: ICalendarStore) => {
-                state.selected = `${newEvent.id}-new`;
+                state.selected = [`${newEvent.id}-new`, EVENTTYPE.EVENT];
                 state.showFilters = false;
             })
         );
     }
 };
 
-const deleteEvent = async (event: ICalendarEvent) => {
-    const deleted: boolean = await EventsAPI.remove(event.id);
+const deleteEvent = async (eventId: string) => {
+    const deleted: boolean = await EventsAPI.remove(eventId);
 
     // const deleted: boolean = await EventsAPI.deleteEvent("events/delete", {
     //     eventId: event.id,
@@ -727,8 +699,8 @@ const deleteEvent = async (event: ICalendarEvent) => {
     if (deleted) {
         CalendarStore.set(
             produce((state: ICalendarStore) => {
-                state.events = state.events.filter(ev => ev.resource.data.id !== event.id);
-                if (state.selected && state.selected === event.id) {
+                state.events = state.events.filter(ev => ev.resource.data.id !== eventId);
+                if (state.selected && state.selected[0] === eventId) {
                     state.selected = undefined;
                 }
             })
@@ -738,14 +710,14 @@ const deleteEvent = async (event: ICalendarEvent) => {
     }
 };
 
-const deleteEventAlert = async (event: ICalendarEvent) => {
+const deleteEventAlert = async (eventId: string) => {
     const response = await Dialog.confirm(
         "Delete event",
         "Are you sure you want to remove this event? This action cannot be undone!"
     );
 
     if (response) {
-        await deleteEvent(event);
+        await deleteEvent(eventId);
     }
 
     return response;
@@ -756,11 +728,13 @@ const deleteSelectedEvent = async () => {
     if (selectedEventId == null) return;
 
     const selectedEvent = CalendarStore.get().events.find(
-        event => event.resource.data.id === selectedEventId
+        event => event.resource.data.id === selectedEventId[0]
     );
 
+
+
     if (selectedEvent && selectedEvent.resource.type === EVENTTYPE.EVENT) {
-        deleteEventAlert(selectedEvent.resource.data as ICalendarEvent);
+        await deleteEventAlert(selectedEventId[0]);
     }
 };
 
@@ -772,12 +746,12 @@ const setNewEvent = (event?: IEvent) => {
     );
 };
 
-const selectEvent = (eventId: string) => {
-    if (CalendarStore.get().selected === eventId) return;
+const selectEvent = (eventId: string, type: EVENTTYPE) => {
+    if (CalendarStore.get().selected?.[1] === type && CalendarStore.get().selected?.[0] === eventId) return;
 
     CalendarStore.set(
         produce((state: ICalendarStore) => {
-            state.selected = eventId;
+            state.selected = [eventId, type];
             state.showFilters = false;
         })
     );
@@ -808,11 +782,11 @@ const setFilter = async (key: keyof ICalendarFilters, value: ICalendarFilters[ke
         })
     );
 
-    if (key === "showBirthdays") {
-        await loadBirthdays();
-    } else if (key === "showTasks") {
-        await loadTasks();
-    }
+    // if (key === "showBirthdays") {
+    //     await loadBirthdays();
+    // } else if (key === "showTasks") {
+    //     await loadTasks();
+    // }
 
     await savePrefs();
 };
@@ -823,11 +797,11 @@ const toggleCalendar = async (calendarId: string) => {
             state.filters.showCalendars = xor(state.filters.showCalendars, [calendarId]);
         })
     );
-    if (calendarId.startsWith("google-")) {
-        await loadGoogleEvents();
-    } else {
-        await loadEvents();
-    }
+    // if (calendarId.startsWith("google-")) {
+    //     await loadGoogleEvents();
+    // } else {
+    //     await loadEvents();
+    // }
 
     await savePrefs();
 };
@@ -906,7 +880,7 @@ const moveEvent = async (event: ICalendarEvent, calendar: string, source: ICalen
 
     if (event.source !== source) {
         addEvent({ ...evnt, source, calendar });
-        deleteEvent(event);
+        await deleteEvent(event.id);
     } else {
         const updatedEvent = {
             ...event,

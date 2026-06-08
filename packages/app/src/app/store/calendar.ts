@@ -2,7 +2,7 @@
 /**
  * Calendar view state (date, view mode).
  */
-import { IEvent } from "@stacks/types";
+import { EVENTTYPE, IEvent } from "@stacks/types";
 import { PreferencesStore } from "./preferences";
 import { entity } from "app/hooks/store";
 
@@ -43,7 +43,7 @@ export interface ICalendarStore {
     showFilters: boolean;
     newEvent?: IEvent;
     todaysCount: ICalendarCount;
-    selected?: string;
+    selected?: [string, EVENTTYPE];
     tokens: ICalendarAuth;
     filters: ICalendarFilters;
     loadingCalendars: boolean;

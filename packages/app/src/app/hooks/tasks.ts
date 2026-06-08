@@ -39,15 +39,24 @@ import { useStack, useStacks } from "./stacks";
 import { shallowEqual } from "./store";
 import { useLoadWhen } from "./useLoadWhen";
 
-/** Non-archived task whose start/duedate falls in `[dateFrom, dateTo]` (inclusive days). */
-export function taskInDateRange(task: ITask, dateFrom: Date, dateTo: Date): boolean {
+/**
+ * Non-archived task whose start/duedate falls in `[dateFrom, dateTo]` (inclusive days).
+ * When `loose` is true, returns true if the task's date range overlaps with the query range at all.
+ */
+export function taskInDateRange(task: ITask, dateFrom: Date, dateTo: Date, loose = false): boolean {
     if (task.archived) return false;
-    const taskDate = task.startdate || task.duedate;
-    if (!taskDate) return false;
+    if (!task.startdate && !task.duedate) return false;
+
+    if (loose && task.startdate && task.duedate) {
+        // Task overlaps if it starts before the range ends and ends after the range begins
+        return task.startdate <= endOfDay(dateTo) && task.duedate >= startOfDay(dateFrom);
+    }
+
+    const taskDate = task.startdate || task.duedate!;
     return isWithinInterval(taskDate, { start: startOfDay(dateFrom), end: endOfDay(dateTo) });
 }
 
-function filterByDate(filterDate: string, date?: Date | null) {
+function filterByDate(filterDate: string, date?: Date | null, loose = false) {
     if (!date) return true;
 
     if (filterDate === "today") {
@@ -82,6 +91,10 @@ function filterByDate(filterDate: string, date?: Date | null) {
 
     if (!isValid(start) || !isValid(finish)) return true;
 
+    if (loose) {
+        // Task overlaps if its date is within or touches the range boundaries
+        return !(new Date(date) >= start && new Date(date) <= finish);
+    }
     return !isWithinInterval(new Date(date), { start, end: finish });
 }
 
@@ -158,15 +171,15 @@ export function buildTaskPredicates(
 
     if (filters.startDate) {
         const sd = filters.startDate;
-        preds.push(t => !filterByDate(sd, t.startdate));
+        preds.push(t => !filterByDate(sd, t.startdate, Boolean(t.startdate && t.duedate)));
     }
     if (filters.doDate) {
         const dd = filters.doDate;
-        preds.push(t => !filterByDate(dd, t.dodate));
+        preds.push(t => !filterByDate(dd, t.dodate, Boolean(t.dodate && t.startdate)));
     }
     if (filters.dueDate) {
         const dd = filters.dueDate;
-        preds.push(t => !filterByDate(dd, t.duedate));
+        preds.push(t => !filterByDate(dd, t.duedate, Boolean(t.duedate && t.startdate)));
     }
 
     if (filters.overdue) {
@@ -240,19 +253,23 @@ export const useFilteredProjectTasksIds = (taskIds: string[]) => {
 
 export const useSortTaskIds = (tasks: string[], stackId: string) => {
     const stack = useStack(stackId);
-    const tasksOrder = stack?.tasksOrder || [];
     return useMemo(
-        () => [...tasks].sort((a, b) => tasksOrder.indexOf(a) - tasksOrder.indexOf(b)),
-        [tasks, tasksOrder]
+        () => {
+            const tasksOrder = stack?.tasksOrder || [];
+            return [...tasks].sort((a, b) => tasksOrder.indexOf(a) - tasksOrder.indexOf(b));
+        },
+        [tasks, stack?.tasksOrder]
     );
 };
 
 export const useSortTask = (tasks: ITask[], stackId: string) => {
     const stack = useStack(stackId);
-    const tasksOrder = stack?.tasksOrder || [];
     return useMemo(
-        () => [...tasks].sort((a, b) => tasksOrder.indexOf(a.id) - tasksOrder.indexOf(b.id)),
-        [tasks, tasksOrder]
+        () => {
+            const tasksOrder = stack?.tasksOrder || [];
+            return [...tasks].sort((a, b) => tasksOrder.indexOf(a.id) - tasksOrder.indexOf(b.id));
+        },
+        [tasks, stack?.tasksOrder]
     );
 };
 
@@ -532,12 +549,12 @@ const PRIORITY_GROUP_SPEC: Array<{
     icon: PRIORITYICON | APPICONS | ICONS;
     defaultExpanded?: boolean;
 }> = [
-    { groupId: "critical", title: "Critical", priority: PRIORITY.CRITICAL, emptyDescription: "There are no critical priority tasks", icon: PRIORITYICON.CRITICAL, defaultExpanded: true },
-    { groupId: "high", title: "High", priority: PRIORITY.HIGH, emptyDescription: "There are no high priority tasks", icon: PRIORITYICON.HIGH, defaultExpanded: true },
-    { groupId: "medium", title: "Medium", priority: PRIORITY.MEDIUM, emptyDescription: "There are no medium priority tasks", icon: PRIORITYICON.MEDIUM },
-    { groupId: "low", title: "Low", priority: PRIORITY.LOW, emptyDescription: "There are no low priority tasks", icon: PRIORITYICON.LOW },
-    { groupId: "none", title: "None", priority: PRIORITY.NONE, emptyDescription: "There are no unprioritized tasks", icon: ICONS.FLAG },
-];
+        { groupId: "critical", title: "Critical", priority: PRIORITY.CRITICAL, emptyDescription: "There are no critical priority tasks", icon: PRIORITYICON.CRITICAL, defaultExpanded: true },
+        { groupId: "high", title: "High", priority: PRIORITY.HIGH, emptyDescription: "There are no high priority tasks", icon: PRIORITYICON.HIGH, defaultExpanded: true },
+        { groupId: "medium", title: "Medium", priority: PRIORITY.MEDIUM, emptyDescription: "There are no medium priority tasks", icon: PRIORITYICON.MEDIUM },
+        { groupId: "low", title: "Low", priority: PRIORITY.LOW, emptyDescription: "There are no low priority tasks", icon: PRIORITYICON.LOW },
+        { groupId: "none", title: "None", priority: PRIORITY.NONE, emptyDescription: "There are no unprioritized tasks", icon: ICONS.FLAG },
+    ];
 
 /**
  * Returns the grouped tasks for the Projects Table View
@@ -572,10 +589,10 @@ export const useGrouppedProjectTasks = () => {
                     defaultExpanded: !index,
                     blankSlate: !stackTasks.length
                         ? {
-                              title: `${stack.title} stack empty`,
-                              description: "There are no tasks in this stack",
-                              icon: APPICONS.TASK,
-                          }
+                            title: `${stack.title} stack empty`,
+                            description: "There are no tasks in this stack",
+                            icon: APPICONS.TASK,
+                        }
                         : undefined,
                 });
                 index++;
@@ -714,7 +731,7 @@ export const useDependants = (taskId: string, done?: boolean): { tasks: ITask[];
                 await TasksActions.loadSegment([taskId]);
             })();
         }
-    }, [task?.id, isLoading, taskId]);
+    }, [task?.id, isLoading, task, taskId]);
 
     const depsKey = useMemo(() => (task?.dependencies ?? []).join("|"), [task?.dependencies]);
 
@@ -726,7 +743,7 @@ export const useDependants = (taskId: string, done?: boolean): { tasks: ITask[];
                 await TasksActions.loadSegment(dependenciesToLoad);
             })();
         }
-    }, [depsKey, isLoading]);
+    }, [depsKey, isLoading, task]);
 
     return {
         isLoading,
@@ -753,10 +770,10 @@ export const useStackTasks = (stackId?: string): ITask[] => {
     );
 };
 
-export const useTasksByPeriod = (dateFrom: Date, dateTo: Date) => {
+export const useTasksByPeriod = (from: Date, to: Date, loose = false) => {
     return TasksStore.use(state => {
         return {
-            tasks: state.tasks.filter(task => taskInDateRange(task, dateFrom, dateTo)),
+            tasks: state.tasks.filter(task => taskInDateRange(task, from, to, loose)),
             isLoading: state.isLoading,
         };
     }, shallowEqual);
