@@ -20,6 +20,7 @@ const typesSrcEntry = path.resolve(appDir, "../types/src/index.ts");
 const translationsSrcEntry = path.resolve(appDir, "../translations/src/index.ts");
 const typesSrcDir = path.resolve(appDir, "../types/src");
 const translationsSrcDir = path.resolve(appDir, "../translations/src");
+const dateFnsDir = path.dirname(require.resolve("date-fns/package.json", { paths: [appDir] }));
 
 const isEmojiSupportedSourceMapExclude = /[\\/]node_modules[\\/]is-emoji-supported[\\/]/;
 
@@ -89,7 +90,9 @@ module.exports = (env, argv) => {
     const isProd = mode === "production";
     const publicUrl = (process.env.PUBLIC_URL || "").replace(/\/$/, "");
 
-    const htmlTemplate = fs.readFileSync(path.join(publicDir, "index.html"), "utf8").replace(/%PUBLIC_URL%/g, publicUrl);
+    const htmlTemplate = fs
+        .readFileSync(path.join(publicDir, "index.html"), "utf8")
+        .replace(/%PUBLIC_URL%/g, publicUrl);
 
     return {
         mode,
@@ -116,6 +119,7 @@ module.exports = (env, argv) => {
             alias: {
                 "@stacks/types": typesSrcEntry,
                 "@stacks/translations": translationsSrcEntry,
+                "date-fns/locale": path.join(dateFnsDir, "locale"),
                 lodash: "lodash-es",
             },
         },
@@ -184,7 +188,12 @@ module.exports = (env, argv) => {
                                 compact: false,
                                 cacheDirectory: true,
                                 cacheCompression: false,
-                                presets: [[require.resolve("babel-preset-react-app/dependencies"), { helpers: true }]],
+                                presets: [
+                                    [
+                                        require.resolve("babel-preset-react-app/dependencies"),
+                                        { helpers: true },
+                                    ],
+                                ],
                                 sourceMaps: isProd,
                                 inputSourceMap: isProd,
                             },
@@ -208,7 +217,10 @@ module.exports = (env, argv) => {
                                           loader: require.resolve("style-loader"),
                                           options: { injectType: "styleTag" },
                                       },
-                                { loader: require.resolve("css-loader"), options: { importLoaders: 1, sourceMap: true } },
+                                {
+                                    loader: require.resolve("css-loader"),
+                                    options: { importLoaders: 1, sourceMap: true },
+                                },
                                 {
                                     loader: require.resolve("postcss-loader"),
                                     options: {
@@ -234,7 +246,9 @@ module.exports = (env, argv) => {
                                         sourceMap: true,
                                         modules: {
                                             namedExport: false,
-                                            localIdentName: isProd ? "[hash:base64:8]" : "[path][name]__[local]--[hash:base64:5]",
+                                            localIdentName: isProd
+                                                ? "[hash:base64:8]"
+                                                : "[path][name]__[local]--[hash:base64:5]",
                                         },
                                     },
                                 },
