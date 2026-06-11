@@ -7372,7 +7372,7 @@ __metadata:
     react-dropzone: ^14.3.8
     react-intersection-observer: ^9.13.1
     react-leaflet: ^4.2.1
-    react-refresh: ^0.14.2
+    react-refresh: ^0.18.0
     react-router-dom: ^6.28.0
     recharts: ^2.15.0
     resolve-url-loader: ^5.0.0
@@ -23420,6 +23420,13 @@ __metadata:
   version: 0.14.2
   resolution: "react-refresh@npm:0.14.2"
   checksum: d80db4bd40a36dab79010dc8aa317a5b931f960c0d83c4f3b81f0552cbcf7f29e115b84bb7908ec6a1eb67720fff7023084eff73ece8a7ddc694882478464382
+  languageName: node
+  linkType: hard
+
+"react-refresh@npm:^0.18.0":
+  version: 0.18.0
+  resolution: "react-refresh@npm:0.18.0"
+  checksum: c27d236e7b38f4a09c2b0134e6227fa62e2b71edad5f22bab40962fc0deba9e0f16930609a82b6a021ef4b4f0a4d405cf0fbb2b51a0f478809619a8226f20379
   languageName: node
   linkType: hard
 
