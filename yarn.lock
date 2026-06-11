@@ -7344,7 +7344,7 @@ __metadata:
     html-react-parser: ^5.1.18
     html-webpack-plugin: ^5.6.3
     identity-obj-proxy: ^3.0.0
-    immer: ^10.0.3
+    immer: ^11.1.8
     jest: ^29.7.0
     jest-environment-jsdom: ^29.7.0
     leaflet: ^1.8.0
@@ -17036,10 +17036,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"immer@npm:^10.0.3":
-  version: 10.2.0
-  resolution: "immer@npm:10.2.0"
-  checksum: 1c6e389ba6a4ac814c246d3b6d0c7c42f851d120ace1defdce0d6efe835d22415790481b5443708167992f80b453cfe97bc9669382928eabc435f9618ce4a636
+"immer@npm:^11.1.8":
+  version: 11.1.8
+  resolution: "immer@npm:11.1.8"
+  checksum: 4bd514314facc63b0dded754ab16e51e742784ce3e9e27cca63e05c38a59b454fffea5ed3a4fbedae44bf2d9d4d6441feca2209ec291a088ab6f9e7cb6c37620
   languageName: node
   linkType: hard
 
