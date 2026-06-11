@@ -3354,9 +3354,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gluestack-ui/core@npm:^3.0.10":
-  version: 3.0.19
-  resolution: "@gluestack-ui/core@npm:3.0.19"
+"@gluestack-ui/core@npm:^3.0.24":
+  version: 3.0.24
+  resolution: "@gluestack-ui/core@npm:3.0.24"
   dependencies:
     "@react-aria/checkbox": ^3.16.3
     "@react-aria/focus": ^3.21.3
@@ -3394,7 +3394,7 @@ __metadata:
     react-native-safe-area-context: ">=4.0.0"
     react-native-svg: ">=12.0.0"
     react-native-web: ">=0.19.0"
-  checksum: c1b6e24fb1d277c014a5093867d21221da1995f10bc4c3c52ca228b38d50d8adefc0b797f3227cddaae9c999223ab78aec899ba7ad1335a702fd6447acd25a95
+  checksum: 4e549ca5a699d4cd2d12068b82029d151d4c5a8c349f571ef0e4c490932cdf3ad0600c291f988576cb51d806c55afdfe8cd2ef07a9a6b820af87c3f8bc2f78e7
   languageName: node
   linkType: hard
 
@@ -7476,7 +7476,7 @@ __metadata:
   dependencies:
     "@10play/tentap-editor": ^0.5.19
     "@expo/html-elements": ^0.10.1
-    "@gluestack-ui/core": ^3.0.10
+    "@gluestack-ui/core": ^3.0.24
     "@gluestack-ui/utils": ^3.0.11
     "@legendapp/motion": ^2.4.0
     "@react-native-community/datetimepicker": 8.4.4
