@@ -7285,7 +7285,7 @@ __metadata:
     "@tiptap/extension-heading": ^3.20.4
     "@tiptap/extension-highlight": ^3.20.4
     "@tiptap/extension-image": ^3.20.4
-    "@tiptap/extension-link": ^3.20.4
+    "@tiptap/extension-link": ^3.26.1
     "@tiptap/extension-list": ^3.20.4
     "@tiptap/extension-mention": ^3.20.4
     "@tiptap/extension-subscript": ^3.23.4
@@ -8265,7 +8265,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tiptap/extension-link@npm:^3.20.4, @tiptap/extension-link@npm:^3.23.1":
+"@tiptap/extension-link@npm:^3.23.1":
   version: 3.23.1
   resolution: "@tiptap/extension-link@npm:3.23.1"
   dependencies:
@@ -8274,6 +8274,18 @@ __metadata:
     "@tiptap/core": 3.23.1
     "@tiptap/pm": 3.23.1
   checksum: 194319acff21259e7b59c2bf61817b0fa67b30fa6a731b8ad195a1ec719c208b3cc6b89782b7aecd698020ea82899301153f6d641bd369c2f6df55e4cdbea719
+  languageName: node
+  linkType: hard
+
+"@tiptap/extension-link@npm:^3.26.1":
+  version: 3.26.1
+  resolution: "@tiptap/extension-link@npm:3.26.1"
+  dependencies:
+    linkifyjs: ^4.3.3
+  peerDependencies:
+    "@tiptap/core": 3.26.1
+    "@tiptap/pm": 3.26.1
+  checksum: 0586a34a68b9245aa08b12e3c00e3d376aad9bfafc3dc63f3f5ddc26fb838a97681f0d3607d35f3611380eed3c7f68046dffd9dc70a5e3129b8bff17c1dac939
   languageName: node
   linkType: hard
 
@@ -19046,6 +19058,13 @@ __metadata:
   version: 4.3.2
   resolution: "linkifyjs@npm:4.3.2"
   checksum: 9fb57de4b6758f24f399a42a29e0c0e90285105f1f6860cb1bb0be05fc2bf291251d0dfefb08ee4e1e89154d39230aed54b5e91358f040ffa46c31a804413952
+  languageName: node
+  linkType: hard
+
+"linkifyjs@npm:^4.3.3":
+  version: 4.3.3
+  resolution: "linkifyjs@npm:4.3.3"
+  checksum: 39273d681c928570cf7411a2d8a35a15fff689dda780e815845ec0ea25eacd7eb8607c364628e2732851ba5084815a57cbeb02de21310781ec879c3ffb62c965
   languageName: node
   linkType: hard
 
