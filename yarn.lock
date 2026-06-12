@@ -7278,7 +7278,7 @@ __metadata:
     "@testing-library/user-event": ^13.5.0
     "@tiptap/core": ^3.20.4
     "@tiptap/extension-code-block-lowlight": ^3.20.4
-    "@tiptap/extension-color": ^3.20.4
+    "@tiptap/extension-color": ^3.26.1
     "@tiptap/extension-document": ^3.23.6
     "@tiptap/extension-emoji": ^3.20.4
     "@tiptap/extension-font-family": ^3.20.4
@@ -8012,12 +8012,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tiptap/extension-color@npm:^3.20.4":
-  version: 3.23.1
-  resolution: "@tiptap/extension-color@npm:3.23.1"
+"@tiptap/extension-color@npm:^3.26.1":
+  version: 3.26.1
+  resolution: "@tiptap/extension-color@npm:3.26.1"
   peerDependencies:
-    "@tiptap/extension-text-style": 3.23.1
-  checksum: 0bbe579024812713bdb9736bdd4597984cd36bdd277a7f5d8a1d66394e3f9877e4df24b6c425348adeb9e6e5f6bb8d5e040e7f3e804a8d42519d4401c8f29007
+    "@tiptap/extension-text-style": 3.26.1
+  checksum: c27fbee91a8703ab47382853d964a923f82b139d9331861489c91e029cab018ea61f9234e0fcc66f231405aebc419092dc10d9d3e93ceaa5525f531509f7e1fa
   languageName: node
   linkType: hard
 
