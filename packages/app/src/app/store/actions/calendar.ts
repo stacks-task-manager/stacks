@@ -673,24 +673,33 @@ const loadCalendars = async () => {
 };
 
 const moveEvent = async (event: ICalendarEvent, calendar: string, source: ICalendarSource) => {
-    if (event.calendar === calendar) return;
+    if (event.source === source && event.calendar === calendar) return;
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { id, ...evnt } = event;
-
-    if (event.source !== source) {
-        addEvent({ ...evnt, source, calendar });
-        await deleteEvent(event.id);
-    } else {
-        const updatedEvent = {
-            ...event,
+    try {
+        const savedEvent = await addEvent({
+            title: event.title,
+            description: event.description,
+            start: event.start,
+            end: event.end,
+            allDay: event.allDay,
+            assignees: event.assignees,
+            ...(event.location ? { location: event.location } : {}),
+            source,
             calendar,
-        };
+        });
 
-        updateEvent(event.id, updatedEvent, true); // skips the saving
-        // saveEvent(updatedEvent, { sourceCalendar: event.calendar });
+        if (!savedEvent) {
+            Toast.warn("Failed to move event.");
+            return;
+        }
+
+        await deleteEvent(event.id);
+        selectEvent(savedEvent.id, EVENTTYPE.EVENT);
+        await reload();
+    } catch (error) {
         // eslint-disable-next-line no-console
-        console.log("THIS IS MISSING moveEvent from a calendar to another");
+        console.error("moveEvent error:", error);
+        Toast.warn("Failed to move event.");
     }
 };
 

@@ -47,7 +47,11 @@ export const EventSchema = z
         description: z.string().optional(),
         start: z.iso.datetime(),
         end: z.iso.datetime(),
+        allDay: z.boolean().optional(),
         assignees: z.string().array().optional(),
+        source: z.enum(["local", "google", "microsoft"]).optional(),
+        calendar: z.string().optional(),
+        location: z.string().optional(),
     })
     .check(payload => {
         const value = payload.value;
@@ -56,6 +60,15 @@ export const EventSchema = z
                 code: "custom",
                 message: "End must be after start",
                 path: ["end"],
+                input: value,
+            });
+        }
+
+        if (value.source === "google" && !value.calendar) {
+            payload.issues.push({
+                code: "custom",
+                message: "Calendar is required for Google events",
+                path: ["calendar"],
                 input: value,
             });
         }

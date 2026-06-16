@@ -3,7 +3,7 @@
  * Calendar events: local DB rows plus optional Google Calendar sync helpers.
  */
 import { Op } from "sequelize";
-import { endOfDay, startOfDay } from "date-fns";
+import { addDays, endOfDay, format as formatDate, startOfDay } from "date-fns";
 import { Errors } from "../errors";
 import { parseISO } from "date-fns";
 import { PermissionEntity, EventEntity } from "@stacks/db";
@@ -76,6 +76,9 @@ function convertGoogleEventsToLocalFormat(googleEvents: GoogleCalendarEvent[], c
             source: "google" as const,
             calendar: calendarId,
             location: googleEvent.location || "",
+            original: {
+                htmlLink: googleEvent.htmlLink,
+            },
             // externalId: googleEvent.id,
             // htmlLink: googleEvent.htmlLink,
             // status: googleEvent.status || 'confirmed',
@@ -97,6 +100,49 @@ function convertGoogleEventsToLocalFormat(googleEvents: GoogleCalendarEvent[], c
                 : new Date().toISOString(),
         };
     });
+}
+
+function convertGoogleEventToLocalFormat(googleEvent: GoogleCalendarEvent, calendarId: string): ICalendarEvent {
+    return convertGoogleEventsToLocalFormat([googleEvent], calendarId)[0];
+}
+
+function buildGoogleCalendarEventPayload(data: Partial<ICalendarEvent>) {
+    const start = data.start instanceof Date ? data.start : data.start ? parseISO(String(data.start)) : null;
+    const end = data.end instanceof Date ? data.end : data.end ? parseISO(String(data.end)) : null;
+
+    if (!start || !end) {
+        throw Errors.invalidInput("Start and end are required");
+    }
+
+    if (!data.title) {
+        throw Errors.invalidInput("Title is required");
+    }
+
+    if (data.allDay) {
+        return {
+            summary: data.title,
+            description: data.description || undefined,
+            location: data.location || undefined,
+            start: {
+                date: formatDate(start, "yyyy-MM-dd"),
+            },
+            end: {
+                date: formatDate(addDays(end, 1), "yyyy-MM-dd"),
+            },
+        };
+    }
+
+    return {
+        summary: data.title,
+        description: data.description || undefined,
+        location: data.location || undefined,
+        start: {
+            dateTime: start.toISOString(),
+        },
+        end: {
+            dateTime: end.toISOString(),
+        },
+    };
 }
 
 async function getOne(id: string) {
@@ -198,11 +244,53 @@ async function countAll(filters?: { from?: string; to?: string }): Promise<numbe
     }
 }
 
-async function create(data: Partial<Event>) {
+async function create(data: Partial<ICalendarEvent>) {
     const user = getCurrentUser();
     try {
+        const source = data.source ?? "local";
+        const calendar = data.calendar ?? (source === "local" ? "local" : undefined);
+
+        if (source === "google") {
+            if (!calendar) {
+                throw Errors.invalidInput("Calendar is required for Google events");
+            }
+
+            try {
+                const googleEvent = await googleOAuthService.createCalendarEvent(
+                    user.id,
+                    calendar,
+                    buildGoogleCalendarEventPayload(data)
+                );
+                return convertGoogleEventToLocalFormat(googleEvent, calendar);
+            } catch (error: any) {
+                const status = error?.response?.status ?? error?.code;
+                const message = typeof error?.message === "string" ? error.message : "";
+
+                if (message.includes("No valid Google tokens found")) {
+                    throw Errors.badRequest("Google account not connected");
+                }
+                if (status === 401) {
+                    throw Errors.unauthorized("Google authorization expired");
+                }
+                if (status === 403) {
+                    throw Errors.forbidden("Google Calendar access denied");
+                }
+                if (status === 400) {
+                    throw Errors.badRequest("Invalid Google event");
+                }
+
+                throw Errors.internal("Failed to create Google event");
+            }
+        }
+
+        if (source !== "local") {
+            throw Errors.invalidInput("Unsupported calendar source");
+        }
+
         const newEvent = await EventEntity.create({
             ...data,
+            source,
+            calendar: calendar ?? "local",
             tenant: user.tenant,
             createdBy: user.id,
             updatedBy: user.id,
@@ -295,6 +383,36 @@ async function update(id: string, data: Partial<ICalendarEvent>) {
 async function remove(id: string) {
     try {
         const user = getCurrentUser();
+        if (id.startsWith("google_")) {
+            const parsed = parseGoogleCompositeEventId(id);
+            if (!parsed) {
+                throw Errors.invalidInput("Invalid Google event id");
+            }
+
+            try {
+                await googleOAuthService.deleteCalendarEvent(user.id, parsed.calendarId, parsed.googleEventId);
+                return true;
+            } catch (error: any) {
+                const status = error?.response?.status ?? error?.code;
+                const message = typeof error?.message === "string" ? error.message : "";
+
+                if (message.includes("No valid Google tokens found")) {
+                    throw Errors.badRequest("Google account not connected");
+                }
+                if (status === 401) {
+                    throw Errors.unauthorized("Google authorization expired");
+                }
+                if (status === 403) {
+                    throw Errors.forbidden("Google Calendar access denied");
+                }
+                if (status === 404) {
+                    return false;
+                }
+
+                throw Errors.internal("Failed to delete Google event");
+            }
+        }
+
         const event = await getOne(id);
 
         await EventEntity.update(

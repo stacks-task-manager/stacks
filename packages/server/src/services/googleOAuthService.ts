@@ -331,6 +331,64 @@ class GoogleOAuthService {
         }
     }
 
+    async createCalendarEvent(
+        userId: string,
+        calendarId: string,
+        payload: {
+            summary: string;
+            description?: string;
+            start?: { dateTime?: string; date?: string; timeZone?: string };
+            end?: { dateTime?: string; date?: string; timeZone?: string };
+            location?: string;
+        }
+    ): Promise<GoogleCalendarEvent> {
+        try {
+            const tokens = await this.refreshTokenIfNeeded(userId);
+            if (!tokens) {
+                throw new Error("No valid Google tokens found");
+            }
+
+            this.oauth2Client.setCredentials({
+                access_token: tokens.access_token,
+                refresh_token: tokens.refresh_token,
+            });
+
+            const calendar = google.calendar({ version: "v3", auth: this.oauth2Client });
+            const response = await calendar.events.insert({
+                calendarId,
+                requestBody: payload as any,
+            });
+
+            return this.mapGoogleEvent(response.data);
+        } catch (error) {
+            console.error("Error creating calendar event:", error);
+            throw error;
+        }
+    }
+
+    async deleteCalendarEvent(userId: string, calendarId: string, eventId: string): Promise<void> {
+        try {
+            const tokens = await this.refreshTokenIfNeeded(userId);
+            if (!tokens) {
+                throw new Error("No valid Google tokens found");
+            }
+
+            this.oauth2Client.setCredentials({
+                access_token: tokens.access_token,
+                refresh_token: tokens.refresh_token,
+            });
+
+            const calendar = google.calendar({ version: "v3", auth: this.oauth2Client });
+            await calendar.events.delete({
+                calendarId,
+                eventId,
+            });
+        } catch (error) {
+            console.error("Error deleting calendar event:", error);
+            throw error;
+        }
+    }
+
     /**
      * Remove Google tokens for a user
      */
