@@ -25,13 +25,18 @@ import { EVENTTYPE, ICalendarEvent, ICalendarSource, IEvent, ITask } from "@stac
 import { getDatesSpan } from "app/hooks";
 import Dialog from "app/utils/dialog";
 import Toast from "app/utils/toast";
+import Storage from "app/utils/storage";
 import { patchFilterField } from "../actionHelpers";
-import { CalendarStore, ICalendarFilters, ICalendarStore } from "../calendar";
+import { CALENDAR_FILTERS_STORAGE_KEY, CalendarStore, ICalendarFilters, ICalendarStore } from "../calendar";
 import { TasksActions } from "./tasks";
 
 const savePrefs = async () => {
     const { filters } = CalendarStore.get();
     await api("events/savePrefs", { filters });
+};
+
+const persistFilters = () => {
+    Storage.set(CALENDAR_FILTERS_STORAGE_KEY, CalendarStore.get().filters);
 };
 
 let loadingCalendar = false;
@@ -580,6 +585,7 @@ const setFilter = async (key: keyof ICalendarFilters, value: ICalendarFilters[ke
         })
     );
 
+    persistFilters();
     await savePrefs();
 };
 
@@ -590,6 +596,7 @@ const toggleCalendar = async (calendarId: string) => {
         })
     );
 
+    persistFilters();
     await savePrefs();
 };
 
@@ -765,6 +772,7 @@ const handleGoogleAuthSuccess = async () => {
                         state.filters.showCalendars.push(`google-${primaryCalendar.id}`);
                     })
                 );
+                persistFilters();
             }
         }
 
