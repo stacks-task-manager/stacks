@@ -7424,13 +7424,13 @@ __metadata:
     "@stacks/db": "workspace:*"
     "@stacks/types": "workspace:*"
     "@types/node": ^20.11.17
-    "@types/nodemailer": ^6.4.14
+    "@types/nodemailer": ^8.0.1
     "@types/pg": ^8.11.14
     "@types/react": ^19.1.10
     "@types/react-dom": ^19.1.7
     "@types/sequelize": ^4.28.20
     esbuild: ^0.25.8
-    nodemailer: ^6.9.8
+    nodemailer: ^8.0.11
     pg: ^8.15.6
     react: ^19.1.1
     react-dom: ^19.1.1
@@ -9301,12 +9301,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/nodemailer@npm:^6.4.14":
-  version: 6.4.23
-  resolution: "@types/nodemailer@npm:6.4.23"
+"@types/nodemailer@npm:^8.0.1":
+  version: 8.0.1
+  resolution: "@types/nodemailer@npm:8.0.1"
   dependencies:
     "@types/node": "*"
-  checksum: 4ec510436647cedc3cc5fbb3625f6f3b2ffd4279ca364c5e6427d41178170f97f1eed634ef3c657b81d260cca0b12afe8c99295b74ed75350e6dfb9ca1925b29
+  checksum: d06cfd8dd9437a1b788d5954ec2a364f30974954af462a7f399330112716b2515f08d8fc2f5ec362190fc7fe01e1c68348b0b18ffbdafd1adba7034403626153
   languageName: node
   linkType: hard
 
@@ -20635,10 +20635,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nodemailer@npm:^6.9.8":
-  version: 6.10.1
-  resolution: "nodemailer@npm:6.10.1"
-  checksum: 39e9208e13c40b58c59242205bce855e74def25d953070ab6a5b1c23b0bf37df0725b3c6dea52d4220e2e60dd1fffcd486a697dece79afdf98842aae6395d393
+"nodemailer@npm:^8.0.11":
+  version: 8.0.11
+  resolution: "nodemailer@npm:8.0.11"
+  checksum: 526b750a2a506f8f1aedf91296545d914b4bd420a7f4a2f4505ba5c4d62eafb7568c07b18adb48dca2e8fb03ffad66ca534c8fde3f5585054de7371984b2721f
   languageName: node
   linkType: hard
 
