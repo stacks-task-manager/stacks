@@ -73,7 +73,7 @@ const GoogleCalendars = () => {
     }
 
     return (
-        <FormGroup label="Google calendar">
+        <FormGroup label="Google calendar" style={{ marginTop: 20 }}>
             {calendars.map(calendar => (
                 <ColoredCheckbox
                     text={calendar.title}
