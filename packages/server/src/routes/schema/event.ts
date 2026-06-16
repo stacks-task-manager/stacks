@@ -5,22 +5,61 @@
 import { z } from "zod/v4";
 
 /** Partial update for an existing event. */
-export const EventUpdateSchema = z.object({
-    title: z.string().optional(),
-    description: z.string().optional(),
-    start: z.string().datetime(),
-    end: z.string().datetime(),
-    assignees: z.string().array().optional(),
-});
+export const EventUpdateSchema = z
+    .object({
+        title: z.string().optional(),
+        description: z.string().optional(),
+        start: z.iso.datetime().optional(),
+        end: z.iso.datetime().optional(),
+        assignees: z.string().array().optional(),
+    })
+    .check(payload => {
+        const value = payload.value;
+        const hasStart = value.start != null;
+        const hasEnd = value.end != null;
+
+        if (hasStart !== hasEnd) {
+            payload.issues.push({
+                code: "custom",
+                message: "Start and end must be provided together",
+                path: hasStart ? ["end"] : ["start"],
+                input: value,
+            });
+            return;
+        }
+
+        if (value.start != null && value.end != null) {
+            if (Date.parse(value.end) <= Date.parse(value.start)) {
+                payload.issues.push({
+                    code: "custom",
+                    message: "End must be after start",
+                    path: ["end"],
+                    input: value,
+                });
+            }
+        }
+    });
 
 /** Full event body for creation. */
-export const EventSchema = z.object({
-    title: z.string(),
-    description: z.string().optional(),
-    start: z.iso.datetime(),
-    end: z.iso.datetime(),
-    assignees: z.string().array().optional(),
-});
+export const EventSchema = z
+    .object({
+        title: z.string(),
+        description: z.string().optional(),
+        start: z.iso.datetime(),
+        end: z.iso.datetime(),
+        assignees: z.string().array().optional(),
+    })
+    .check(payload => {
+        const value = payload.value;
+        if (Date.parse(value.end) <= Date.parse(value.start)) {
+            payload.issues.push({
+                code: "custom",
+                message: "End must be after start",
+                path: ["end"],
+                input: value,
+            });
+        }
+    });
 
 /** Query filters for listing events (span + anchor date). */
 export const EventsFilteredSchema = z

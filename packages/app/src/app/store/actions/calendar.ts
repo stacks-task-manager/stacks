@@ -436,12 +436,28 @@ const updateEvent = async (eventId: string, updatedEvent: Partial<ICalendarEvent
 
     updateDebounce = setTimeout(async () => {
         const { start, end, ...rest } = updatedEvent;
+        const startChanged = start != null;
+        const endChanged = end != null;
 
-        await EventsAPI.update(eventId, {
-            ...rest,
-            start: start ? new Date(start) : new Date(),
-            end: end ? new Date(end) : new Date(),
-        });
+        const payload: Partial<ICalendarEvent> = { ...rest };
+
+        if (startChanged || endChanged) {
+            const current = CalendarStore.get().events.find(e => e.resource.data.id === eventId);
+            const currentStart = current?.start;
+            const currentEnd = current?.end;
+
+            const startToSend = startChanged ? new Date(start as any) : currentStart ? new Date(currentStart) : undefined;
+            let endToSend = endChanged ? new Date(end as any) : currentEnd ? new Date(currentEnd) : undefined;
+
+            if (startToSend && endToSend && endToSend <= startToSend) {
+                endToSend = addHours(startToSend, 1);
+            }
+
+            if (startToSend) payload.start = startToSend;
+            if (endToSend) payload.end = endToSend;
+        }
+
+        await EventsAPI.update(eventId, payload);
     }, 500);
 };
 

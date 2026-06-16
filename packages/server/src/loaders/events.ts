@@ -31,6 +31,23 @@ interface Where {
     };
 }
 
+function parseGoogleCompositeEventId(id: string): { calendarId: string; googleEventId: string } | null {
+    if (!id.startsWith("google_")) return null;
+    const rest = id.slice("google_".length);
+    const lastUnderscore = rest.lastIndexOf("_");
+    if (lastUnderscore <= 0) return null;
+    const calendarId = rest.slice(0, lastUnderscore);
+    const googleEventId = rest.slice(lastUnderscore + 1);
+    if (!calendarId || !googleEventId) return null;
+    return { calendarId, googleEventId };
+}
+
+function normalizeIsoDateTime(value: unknown): string | undefined {
+    if (typeof value === "string") return value;
+    if (value instanceof Date) return value.toISOString();
+    return undefined;
+}
+
 /**
  * Convert Google Calendar events to local event format
  */
@@ -199,6 +216,70 @@ async function create(data: Partial<Event>) {
 
 async function update(id: string, data: Partial<ICalendarEvent>) {
     try {
+        if (id.startsWith("google_")) {
+            const user = getCurrentUser();
+            const parsed = parseGoogleCompositeEventId(id);
+            if (!parsed) {
+                throw Errors.invalidInput("Invalid Google event id");
+            }
+
+            const patch: {
+                summary?: string;
+                description?: string;
+                start?: { dateTime?: string };
+                end?: { dateTime?: string };
+            } = {};
+
+            if (data.title != null) patch.summary = data.title;
+            if (data.description != null) patch.description = data.description;
+
+            const start = normalizeIsoDateTime((data as any).start);
+            const end = normalizeIsoDateTime((data as any).end);
+            if (start) patch.start = { dateTime: start };
+            if (end) patch.end = { dateTime: end };
+
+            try {
+                await googleOAuthService.updateCalendarEvent(
+                    user.id,
+                    parsed.calendarId,
+                    parsed.googleEventId,
+                    patch
+                );
+                return true;
+            } catch (error: any) {
+                const status = error?.response?.status ?? error?.code;
+                const message = typeof error?.message === "string" ? error.message : "";
+                const googleMessage =
+                    error?.response?.data?.error?.message ??
+                    error?.errors?.[0]?.message ??
+                    (typeof error?.response?.data === "string" ? error.response.data : undefined);
+                if (status === 404) {
+                    return false;
+                }
+                if (message.includes("No valid Google tokens found")) {
+                    throw Errors.badRequest("Google account not connected");
+                }
+                if (status === 401) {
+                    throw Errors.unauthorized("Google authorization expired");
+                }
+                if (status === 403) {
+                    throw Errors.forbidden("Google Calendar access denied");
+                }
+                if (status === 400) {
+                    throw Errors.badRequest("Invalid Google event update", {
+                        calendarId: parsed.calendarId,
+                        eventId: parsed.googleEventId,
+                        googleMessage,
+                    });
+                }
+                throw Errors.internal("Failed to update Google event", {
+                    calendarId: parsed.calendarId,
+                    eventId: parsed.googleEventId,
+                    status,
+                });
+            }
+        }
+
         await getOne(id);
 
         const [affectedCount] = await EventEntity.update(data, {
