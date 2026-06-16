@@ -222,7 +222,7 @@ const AuthButtons = () => {
                     text="Log out from Google"
                     icon={<Icon icon="google" />}
                     intent={Intent.WARNING}
-                    onClick={CalendarActions.logoutGoogle}
+                    onClick={() => CalendarActions.disconnectCalendarProvider("google")}
                 />
             ) : (
                 <MenuItem text="Log in with Google" icon={<Icon icon="google" />} onClick={handleLogin} />

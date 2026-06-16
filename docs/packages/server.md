@@ -26,6 +26,7 @@ cp packages/server/env.example packages/server/.env
 Key variables:
 
 -   `APP_PORT` — HTTP port (default `3000`)
+-   `APP_ORIGIN` — public origin used for OAuth redirect URIs and popup postMessage target origin (e.g. `http://localhost:3000` in dev)
 -   `POSTGRES_HOST`, `POSTGRES_PORT`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB` — database connection
 -   `COOKIE_SECRET`, `JWT_SECRET` — auth / session secrets (must be strong in production)
 -   `DEBUG_DB` — set to `true` to log Sequelize SQL
@@ -35,6 +36,7 @@ Optional:
 
 -   `CORS_ORIGINS` — comma-separated list of allowed origins; if unset, CORS is permissive
 -   `REQUIRE_SECRETS=1` — enforce strong secrets outside production
+-   Google Calendar OAuth: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, optional `GOOGLE_REDIRECT_URI`
 -   AI assistant: `AI_OPENAI_BASE_URL`, `AI_OPENAI_API_KEY`, `AI_MODEL`, `AI_CHAT_ENABLED`, `AI_CHAT_AUTO_REDIRECT`
 
 ## Development

@@ -28,6 +28,7 @@ export const ColoredCheckbox: FunctionComponent<ColoredCheckboxProps> = ({
                 defaultChecked={defaultChecked}
                 disabled={disabled}
                 onChange={onChange}
+                className={Classes.CONTROL_INPUT}
             />
             <span
                 className={Classes.CONTROL_INDICATOR}

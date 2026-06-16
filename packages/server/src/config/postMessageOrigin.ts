@@ -14,5 +14,9 @@ export function postMessageTargetOrigin(c: Context): string {
     if (fromRequest) {
         return fromRequest;
     }
-    return "*";
+    try {
+        return new URL(c.req.url).origin;
+    } catch {
+        return "*";
+    }
 }

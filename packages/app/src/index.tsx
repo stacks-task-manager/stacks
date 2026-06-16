@@ -11,6 +11,7 @@ import { UpdatePoller } from "app/utils/polling";
 import { PreferencesActions } from "app/store/actions/preferences";
 import { BootAPI } from "app/api";
 import { AiChatActions } from "app/store/actions/aiChat";
+import { CalendarActions } from "app/store/actions/calendar";
 import { LicenseActions, ProjectFiltersActions } from "app/store/actions";
 import { getBrowserLocale } from "app/utils/browser";
 
@@ -40,12 +41,13 @@ window.addEventListener("beforeunload", () => {
 });
 
 void (async () => {
-    const { translations, license, preferences, aiChat } = await BootAPI.load();
+    const { translations, license, preferences, aiChat, integrations } = await BootAPI.load();
     setTranslations(translations, { locale: getBrowserLocale() });
     LicenseActions.setLicense(license);
     PreferencesActions.set(preferences);
     ProjectFiltersActions.loadSaved();
     AiChatActions.setServerEnabled(Boolean(aiChat?.enabled));
+    await CalendarActions.hydrateFromBoot(integrations);
 
     if (preferences.forceWeekMonday) {
         // moment.updateLocale(savedDateLocale, { week: { dow: 1 } });

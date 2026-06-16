@@ -54,11 +54,52 @@ class GoogleOAuthService {
     private oauth2Client: any;
     private config: GoogleOAuthConfig;
 
+    private mapGoogleEvent(event: any): GoogleCalendarEvent {
+        return {
+            id: event.id!,
+            summary: event.summary || "",
+            description: event.description,
+            start: {
+                dateTime: event.start?.dateTime,
+                date: event.start?.date,
+                timeZone: event.start?.timeZone,
+            },
+            end: {
+                dateTime: event.end?.dateTime,
+                date: event.end?.date,
+                timeZone: event.end?.timeZone,
+            },
+            location: event.location,
+            attendees: event.attendees?.map((attendee: any) => ({
+                email: attendee.email || "",
+                displayName: attendee.displayName,
+                responseStatus: attendee.responseStatus,
+            })),
+            creator: event.creator
+                ? {
+                    email: event.creator.email || "",
+                    displayName: event.creator.displayName,
+                }
+                : undefined,
+            organizer: event.organizer
+                ? {
+                    email: event.organizer.email || "",
+                    displayName: event.organizer.displayName,
+                }
+                : undefined,
+            status: event.status,
+            htmlLink: event.htmlLink,
+            created: event.created,
+            updated: event.updated,
+        };
+    }
+
     constructor() {
+        const appOrigin = process.env.APP_ORIGIN?.trim() || "http://localhost:3000";
         this.config = {
             clientId: process.env.GOOGLE_CLIENT_ID || "",
             clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
-            redirectUri: process.env.GOOGLE_REDIRECT_URI || "http://localhost:3000/auth/google/callback",
+            redirectUri: process.env.GOOGLE_REDIRECT_URI || `${appOrigin}/api/google/callback`,
         };
 
         this.oauth2Client = new google.auth.OAuth2(
@@ -74,6 +115,7 @@ class GoogleOAuthService {
     getAuthUrl(): string {
         const scopes = [
             "https://www.googleapis.com/auth/calendar.readonly",
+            "https://www.googleapis.com/auth/calendar.events",
             "https://www.googleapis.com/auth/userinfo.email",
             "https://www.googleapis.com/auth/userinfo.profile",
         ];
@@ -191,6 +233,7 @@ class GoogleOAuthService {
      */
     async getCalendarEvents(
         userId: string,
+        calendarId: string = "primary",
         timeMin?: string,
         timeMax?: string
     ): Promise<GoogleCalendarEvent[]> {
@@ -208,7 +251,7 @@ class GoogleOAuthService {
             const calendar = google.calendar({ version: "v3", auth: this.oauth2Client });
 
             const response = await calendar.events.list({
-                calendarId: "primary",
+                calendarId,
                 timeMin: timeMin || new Date().toISOString(),
                 timeMax: timeMax,
                 maxResults: 250,
@@ -219,43 +262,7 @@ class GoogleOAuthService {
             const events = response.data.items || [];
             return events
                 .filter(event => event.id) // Filter out events without id
-                .map(event => ({
-                    id: event.id!,
-                    summary: event.summary || "",
-                    description: event.description,
-                    start: {
-                        dateTime: event.start?.dateTime,
-                        date: event.start?.date,
-                        timeZone: event.start?.timeZone,
-                    },
-                    end: {
-                        dateTime: event.end?.dateTime,
-                        date: event.end?.date,
-                        timeZone: event.end?.timeZone,
-                    },
-                    location: event.location,
-                    attendees: event.attendees?.map(attendee => ({
-                        email: attendee.email || "",
-                        displayName: attendee.displayName,
-                        responseStatus: attendee.responseStatus,
-                    })),
-                    creator: event.creator
-                        ? {
-                              email: event.creator.email || "",
-                              displayName: event.creator.displayName,
-                          }
-                        : undefined,
-                    organizer: event.organizer
-                        ? {
-                              email: event.organizer.email || "",
-                              displayName: event.organizer.displayName,
-                          }
-                        : undefined,
-                    status: event.status,
-                    htmlLink: event.htmlLink,
-                    created: event.created,
-                    updated: event.updated,
-                })) as GoogleCalendarEvent[];
+                .map(event => this.mapGoogleEvent(event)) as GoogleCalendarEvent[];
         } catch (error) {
             console.error("Error fetching calendar events:", error);
             throw new Error("Failed to fetch Google Calendar events");
@@ -284,6 +291,101 @@ class GoogleOAuthService {
         } catch (error) {
             console.error("Error fetching calendars:", error);
             throw new Error("Failed to fetch Google Calendars");
+        }
+    }
+
+    async updateCalendarEvent(
+        userId: string,
+        calendarId: string,
+        eventId: string,
+        patch: {
+            summary?: string;
+            description?: string;
+            start?: { dateTime?: string; date?: string; timeZone?: string };
+            end?: { dateTime?: string; date?: string; timeZone?: string };
+            location?: string;
+        }
+    ): Promise<GoogleCalendarEvent> {
+        try {
+            const tokens = await this.refreshTokenIfNeeded(userId);
+            if (!tokens) {
+                throw new Error("No valid Google tokens found");
+            }
+
+            this.oauth2Client.setCredentials({
+                access_token: tokens.access_token,
+                refresh_token: tokens.refresh_token,
+            });
+
+            const calendar = google.calendar({ version: "v3", auth: this.oauth2Client });
+            const response = await calendar.events.patch({
+                calendarId,
+                eventId,
+                requestBody: patch as any,
+            });
+
+            return this.mapGoogleEvent(response.data);
+        } catch (error) {
+            console.error("Error updating calendar event:", error);
+            throw error;
+        }
+    }
+
+    async createCalendarEvent(
+        userId: string,
+        calendarId: string,
+        payload: {
+            summary: string;
+            description?: string;
+            start?: { dateTime?: string; date?: string; timeZone?: string };
+            end?: { dateTime?: string; date?: string; timeZone?: string };
+            location?: string;
+        }
+    ): Promise<GoogleCalendarEvent> {
+        try {
+            const tokens = await this.refreshTokenIfNeeded(userId);
+            if (!tokens) {
+                throw new Error("No valid Google tokens found");
+            }
+
+            this.oauth2Client.setCredentials({
+                access_token: tokens.access_token,
+                refresh_token: tokens.refresh_token,
+            });
+
+            const calendar = google.calendar({ version: "v3", auth: this.oauth2Client });
+            const response = await calendar.events.insert({
+                calendarId,
+                requestBody: payload as any,
+            });
+
+            return this.mapGoogleEvent(response.data);
+        } catch (error) {
+            console.error("Error creating calendar event:", error);
+            throw error;
+        }
+    }
+
+    async deleteCalendarEvent(userId: string, calendarId: string, eventId: string): Promise<void> {
+        try {
+            const tokens = await this.refreshTokenIfNeeded(userId);
+            if (!tokens) {
+                throw new Error("No valid Google tokens found");
+            }
+
+            this.oauth2Client.setCredentials({
+                access_token: tokens.access_token,
+                refresh_token: tokens.refresh_token,
+            });
+
+            const calendar = google.calendar({ version: "v3", auth: this.oauth2Client });
+            await calendar.events.delete({
+                calendarId,
+                eventId,
+            });
+        } catch (error) {
+            console.error("Error deleting calendar event:", error);
+            throw error;
         }
     }
 

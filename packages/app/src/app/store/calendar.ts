@@ -5,6 +5,8 @@
 import { EVENTTYPE, IEvent } from "@stacks/types";
 import { PreferencesStore } from "./preferences";
 import { entity } from "app/hooks/store";
+import { getStorage } from "app/utils/storage";
+import { produce } from "immer";
 
 export interface ICalendarCount {
     events: number;
@@ -60,6 +62,8 @@ const DEFAULT_FILTERS: ICalendarFilters = {
     showProjects: [],
 };
 
+export const CALENDAR_FILTERS_STORAGE_KEY = "calendar-filters";
+
 export const CalendarStore = entity<ICalendarStore>({
     view: (PreferencesStore.get().calendarDefaultView as ICalendarStore["view"]) || "month",
     date: new Date(),
@@ -77,4 +81,28 @@ export const CalendarStore = entity<ICalendarStore>({
     filters: { ...DEFAULT_FILTERS },
     loadingCalendars: false,
     calendars: [],
-});
+}, [
+    {
+        init: (origInit, entityInstance) => () => {
+            origInit();
+
+            const storedFilters = getStorage<ICalendarFilters | null>(CALENDAR_FILTERS_STORAGE_KEY, true, null);
+            if (storedFilters == null) return;
+
+            entityInstance.set(
+                produce((state: ICalendarStore) => {
+                    state.filters = {
+                        ...DEFAULT_FILTERS,
+                        ...storedFilters,
+                        showCalendars: Array.isArray(storedFilters.showCalendars)
+                            ? storedFilters.showCalendars
+                            : DEFAULT_FILTERS.showCalendars,
+                        showProjects: Array.isArray(storedFilters.showProjects)
+                            ? storedFilters.showProjects
+                            : DEFAULT_FILTERS.showProjects,
+                    };
+                })
+            );
+        },
+    },
+]);
