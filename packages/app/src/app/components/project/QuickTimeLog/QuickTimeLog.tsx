@@ -16,10 +16,10 @@ import { DateInput } from "@blueprintjs/datetime";
 import { translate } from "@stacks/translations";
 import { ITimeLog } from "@stacks/types";
 import { addYears, format, parse } from "date-fns";
-import React, { FunctionComponent, useEffect, useMemo, useState } from "react";
+import React, { FunctionComponent, useCallback, useEffect, useMemo, useState } from "react";
 
 import { Col, Icon, Row } from "app/components/common";
-import { useMe } from "app/hooks";
+import { getHashPathname, useMe } from "app/hooks";
 import { TimelogsActions } from "app/store/actions";
 import { formatDuration } from "app/utils/date";
 import Toast from "app/utils/toast";
@@ -64,22 +64,22 @@ export const QuickTimeLog: FunctionComponent<IQuickTimeLogProps> = ({
         if (!person || (person !== me.id)) {
             setPerson(me.id);
         }
-    }, [me]);
+    }, [me, person]);
 
     useEffect(() => {
         if (projectId && projectId !== project) {
             setProject(projectId);
         }
-    }, [projectId])
+    }, [project, projectId, setProject])
 
     const canSave = useMemo(() => {
         return Boolean(duration) && Boolean(date) && Boolean(task) && Boolean(person) && Number(duration) > 0;
     }, [duration, date, task, person]);
 
-    const handleSetProject = (projectId: string) => {
+    const handleSetProject = useCallback((projectId: string) => {
         setProject(projectId);
         setTask(undefined);
-    };
+    }, [setProject]);
 
     const projectPicker = useMemo(() => {
         if (!changeProject) return null;
@@ -89,7 +89,7 @@ export const QuickTimeLog: FunctionComponent<IQuickTimeLogProps> = ({
                 <ProjectPickerPopup value={project} matchTargetWidth onChange={handleSetProject} />
             </FormGroup>
         );
-    }, [project, changeProject]);
+    }, [changeProject, project, handleSetProject]);
 
     const taskPicker = useMemo(() => {
         if (!changeTask || !project) return null;
@@ -304,7 +304,7 @@ export const QuickTimeLog: FunctionComponent<IQuickTimeLogProps> = ({
 };
 
 const useProject = (projectId?: string) => {
-    const slugs = window.location.hash.split("/");
+    const slugs = getHashPathname().split("/");
     const currentProject = slugs.at(1) === "project" ? slugs.at(2) : undefined;
     return useState<string | undefined>(projectId ?? currentProject);
 };

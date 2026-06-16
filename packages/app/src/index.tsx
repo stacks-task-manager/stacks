@@ -3,11 +3,12 @@ import { Position, OverlayToaster, Spinner } from "@blueprintjs/core";
 import "app/utils/prototypes";
 import React, { Suspense } from "react";
 import { createRoot } from "react-dom/client";
-import { HashRouter } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 
 import "./index.scss";
 import { setTranslations } from "@stacks/translations";
 import { UpdatePoller } from "app/utils/polling";
+import { APP_BASENAME, normalizeLegacyHashRoute } from "app/hooks/router";
 import { PreferencesActions } from "app/store/actions/preferences";
 import { BootAPI } from "app/api";
 import { AiChatActions } from "app/store/actions/aiChat";
@@ -31,6 +32,7 @@ const initToast = async () => {
 };
 
 initToast();
+normalizeLegacyHashRoute();
 
 window.updatePoller = new UpdatePoller();
 window.addEventListener("beforeunload", () => {
@@ -56,9 +58,9 @@ void (async () => {
 
     root.render(
         <Suspense fallback={<AppLoading />}>
-            <HashRouter>
+            <BrowserRouter basename={APP_BASENAME}>
                 <App />
-            </HashRouter>
+            </BrowserRouter>
         </Suspense>
     );
 })();

@@ -66,6 +66,7 @@ const App = () => {
             Mousetrap.unbind(["command+[", "ctrl+["]);
             Mousetrap.unbind(["command+]", "ctrl+]"]);
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {

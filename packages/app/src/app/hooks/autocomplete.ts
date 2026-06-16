@@ -317,7 +317,7 @@ export const useAutocomplete = (options: {
                                 .map((person: IPerson) => {
                                     return {
                                         key: `${person.firstName} ${person.lastName}`,
-                                        value: `#/person/${person.id}`,
+                                        value: `/person/${person.id}`,
                                         icon: person.avatar ? undefined : APPICONS.PERSON,
                                         image: person.avatar,
                                         item: {

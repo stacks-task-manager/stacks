@@ -2,7 +2,8 @@
 /**
  * Mounts versioned JSON API, static assets, and authenticated route modules on a Hono app.
  */
-import { Hono } from "hono";
+import { extname } from "node:path";
+import { Context, Hono } from "hono";
 import { proxy } from "hono/proxy";
 import { serveStatic } from "@hono/node-server/serve-static";
 
@@ -35,6 +36,24 @@ import roles from "./routes/roles";
 import exportRoute from "./routes/export";
 import info from "./routes/info";
 
+const APP_STATIC_ROOT = "./app";
+
+function getAppProxyHeaders(c: Context) {
+    return {
+        ...c.req.header(),
+        cookie: c.req.header("cookie") || "",
+    };
+}
+
+function rewriteAppRequestPath(path: string): string {
+    return path.replace(/^\/app/, "") || "/";
+}
+
+function isAppAssetRequest(path: string): boolean {
+    const relativePath = rewriteAppRequestPath(path);
+    return relativePath.startsWith("/static/") || extname(relativePath) !== "";
+}
+
 /**
  * Register API routes with conditional static file serving
  *
@@ -51,16 +70,23 @@ export const registerApiRoutes = (app: Hono) => {
 
     if (isDevelopment) {
         // Development: Proxy to React dev server
+        app.all("/app", requireAuthSession, c => {
+            const user = c.get("user") as User;
+            if (!user) {
+                return c.redirect("/login");
+            }
+            return proxy(`http://localhost:3001/app/`, {
+                headers: getAppProxyHeaders(c),
+            });
+        });
+
         app.all("/app/*", requireAuthSession, c => {
             const user = c.get("user") as User;
             if (!user) {
                 return c.redirect("/login");
             }
             return proxy(`http://localhost:3001${c.req.path}`, {
-                headers: {
-                    ...c.req.header(),
-                    cookie: c.req.header("cookie") || "",
-                },
+                headers: getAppProxyHeaders(c),
             });
         });
 
@@ -80,19 +106,27 @@ export const registerApiRoutes = (app: Hono) => {
         // Serve other static files by extension (CSS, JS, images, etc.)
         app.use("*", async (c, next) => {
             return serveStatic({
-                root: "./app",
+                root: APP_STATIC_ROOT,
             })(c, next);
         });
 
-        // Serve app files automatically from static folder
-        app.use(
-            "/app/*",
-            requireAuthSession,
-            serveStatic({
-                root: "./app",
-                rewriteRequestPath: (path: string) => path.replace(/^\/app/, ""),
-            })
-        );
+        const serveAppIndex = serveStatic({
+            root: APP_STATIC_ROOT,
+            rewriteRequestPath: () => "/index.html",
+        });
+
+        const serveAppAsset = serveStatic({
+            root: APP_STATIC_ROOT,
+            rewriteRequestPath: rewriteAppRequestPath,
+        });
+
+        app.use("/app", requireAuthSession, serveAppIndex);
+        app.use("/app/*", requireAuthSession, async (c, next) => {
+            if (isAppAssetRequest(c.req.path)) {
+                return serveAppAsset(c, next);
+            }
+            return serveAppIndex(c, next);
+        });
     }
 
     // Google OAuth routes (no auth required for some endpoints)
