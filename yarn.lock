@@ -120,16 +120,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ai-sdk/gateway@npm:3.0.112":
-  version: 3.0.112
-  resolution: "@ai-sdk/gateway@npm:3.0.112"
+"@ai-sdk/gateway@npm:3.0.132":
+  version: 3.0.132
+  resolution: "@ai-sdk/gateway@npm:3.0.132"
   dependencies:
     "@ai-sdk/provider": 3.0.10
-    "@ai-sdk/provider-utils": 4.0.27
+    "@ai-sdk/provider-utils": 4.0.29
     "@vercel/oidc": 3.2.0
   peerDependencies:
     zod: ^3.25.76 || ^4.1.8
-  checksum: f2070ea51883ec2ebdb9f47c8d45704ab1b44326e6e67ef16547ade9929c2884920f4fe5a0d6b6ac3fd7b29789ea2061babc5b3027a14cc64daf2f2377d07fc4
+  checksum: 42ca02a268d4a4573a363634ccd6d6fe81d350e9966da2b02556146bb5deebc6573b2f11b65688040208dd2248724c4ef1fa12919a49b96fe5d8af5230ffcfed
   languageName: node
   linkType: hard
 
@@ -155,6 +155,19 @@ __metadata:
   peerDependencies:
     zod: ^3.25.76 || ^4.1.8
   checksum: 7cbd267715c54900558cb689a1db5f30433eee0b3587db83693f661107ef5d2f8046503ab6f66d31d7321021a141dd2b9b2d3335d686cd85128406687e39ad31
+  languageName: node
+  linkType: hard
+
+"@ai-sdk/provider-utils@npm:4.0.29":
+  version: 4.0.29
+  resolution: "@ai-sdk/provider-utils@npm:4.0.29"
+  dependencies:
+    "@ai-sdk/provider": 3.0.10
+    "@standard-schema/spec": ^1.1.0
+    eventsource-parser: ^3.0.8
+  peerDependencies:
+    zod: ^3.25.76 || ^4.1.8
+  checksum: a6bd72855b9643c9709324ac00d896ec039d22f7dc5f4d89848b524944f0800be12ed2779a1ed791c6220388e7b0dd29efe45e7eba776361c8cca0401d516c70
   languageName: node
   linkType: hard
 
@@ -4550,10 +4563,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@opentelemetry/api@npm:1.9.0":
-  version: 1.9.0
-  resolution: "@opentelemetry/api@npm:1.9.0"
-  checksum: 9e88e59d53ced668f3daaecfd721071c5b85a67dd386f1c6f051d1be54375d850016c881f656ffbe9a03bedae85f7e89c2f2b635313f9c9b195ad033cdc31020
+"@opentelemetry/api@npm:^1.9.0":
+  version: 1.9.1
+  resolution: "@opentelemetry/api@npm:1.9.1"
+  checksum: 2b16f28c422619263b126c3601e954c3b16013d13b2ea747d4e2f84199e1f7a5bf8372cb03c17fbff881fff5511fa107297afbb47f43e171170a2924d0103b4f
   languageName: node
   linkType: hard
 
@@ -7534,7 +7547,7 @@ __metadata:
     "@types/pg": ^8.11.14
     "@types/sequelize": ^4.28.20
     "@types/uuid": ^9.0.8
-    ai: ^6.0.146
+    ai: ^6.0.206
     bcryptjs: ^3.0.2
     date-fns: ^4.1.0
     dotenv: ^17.2.2
@@ -10547,17 +10560,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ai@npm:^6.0.146":
-  version: 6.0.177
-  resolution: "ai@npm:6.0.177"
+"ai@npm:^6.0.206":
+  version: 6.0.206
+  resolution: "ai@npm:6.0.206"
   dependencies:
-    "@ai-sdk/gateway": 3.0.112
+    "@ai-sdk/gateway": 3.0.132
     "@ai-sdk/provider": 3.0.10
-    "@ai-sdk/provider-utils": 4.0.27
-    "@opentelemetry/api": 1.9.0
+    "@ai-sdk/provider-utils": 4.0.29
+    "@opentelemetry/api": ^1.9.0
   peerDependencies:
     zod: ^3.25.76 || ^4.1.8
-  checksum: e431ad651816bb0ceb1ae3206fd758093bd1bf7930b445483ba92508676d7c530577622fa626a79de48c20c8419280ccfc9b88d178a25e7442037dbe1bdde8fa
+  checksum: 62a60a1f85f4f89e008060a6045c28238749906775947f2b213ef595e8a2e5f2afae707d7dd34068c933c168315a49e9c769d78d5afdc9ef8e8c884d9a1f4591
   languageName: node
   linkType: hard
 

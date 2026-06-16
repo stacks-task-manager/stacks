@@ -22,7 +22,7 @@
         "@hono/zod-validator": "^0.4.3",
         "@stacks/translations": "workspace:*",
         "@types/lodash": "^4.17.24",
-        "ai": "^6.0.146",
+        "ai": "^6.0.206",
         "bcryptjs": "^3.0.2",
         "date-fns": "^4.1.0",
         "dotenv": "^17.2.2",
