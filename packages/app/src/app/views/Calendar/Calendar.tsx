@@ -94,11 +94,12 @@ function toChangePayload(arg: EventDropArg | EventResizeDoneArg) {
 
 export const Calendar = () => {
     const { calendarShowAllEvents } = usePreferences(["calendarShowAllEvents"]);
-    const { view, date, calendars } = CalendarStore.use(
+    const { view, date, calendars, showCalendars } = CalendarStore.use(
         state => ({
             view: state.view,
             date: state.date,
             calendars: state.calendars,
+            showCalendars: state.filters.showCalendars,
         }),
         shallowEqual
     );
@@ -110,19 +111,26 @@ export const Calendar = () => {
 
     const previousDate = useRef<Date | null>(null);
     const previousView = useRef<string | null>(null);
+    const previousShowCalendars = useRef<string | null>(null);
     const calendarRef = useRef<FullCalendar>(null);
 
     useRealtimeUpdates("events", CalendarActions.reload);
 
     useEffect(() => {
-        if (previousDate.current === date && previousView.current === view) {
+        const showCalendarsKey = JSON.stringify(showCalendars);
+        if (
+            previousDate.current === date &&
+            previousView.current === view &&
+            previousShowCalendars.current === showCalendarsKey
+        ) {
             return;
         }
 
         CalendarActions.load();
         previousDate.current = date;
         previousView.current = view;
-    }, [date, view]);
+        previousShowCalendars.current = showCalendarsKey;
+    }, [date, view, showCalendars]);
 
     useEffect(() => {
         const id = requestAnimationFrame(() => {

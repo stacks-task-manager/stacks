@@ -27,6 +27,17 @@ export const EventsFilteredSchema = z
     .object({
         from: z.iso.datetime(),
         to: z.iso.datetime(),
+        calendars: z.preprocess(
+            val => {
+                if (val == null) return undefined;
+                return typeof val === "string" ? [val] : val;
+            },
+            z
+                .string()
+                .regex(/^(local|google:.+|microsoft:.+)$/)
+                .array()
+                .optional()
+        ),
     })
     .strict();
 

@@ -55,10 +55,11 @@ class GoogleOAuthService {
     private config: GoogleOAuthConfig;
 
     constructor() {
+        const appOrigin = process.env.APP_ORIGIN?.trim() || "http://localhost:3000";
         this.config = {
             clientId: process.env.GOOGLE_CLIENT_ID || "",
             clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
-            redirectUri: process.env.GOOGLE_REDIRECT_URI || "http://localhost:3000/auth/google/callback",
+            redirectUri: process.env.GOOGLE_REDIRECT_URI || `${appOrigin}/api/google/callback`,
         };
 
         this.oauth2Client = new google.auth.OAuth2(
@@ -74,6 +75,7 @@ class GoogleOAuthService {
     getAuthUrl(): string {
         const scopes = [
             "https://www.googleapis.com/auth/calendar.readonly",
+            "https://www.googleapis.com/auth/calendar.events",
             "https://www.googleapis.com/auth/userinfo.email",
             "https://www.googleapis.com/auth/userinfo.profile",
         ];
@@ -191,6 +193,7 @@ class GoogleOAuthService {
      */
     async getCalendarEvents(
         userId: string,
+        calendarId: string = "primary",
         timeMin?: string,
         timeMax?: string
     ): Promise<GoogleCalendarEvent[]> {
@@ -208,7 +211,7 @@ class GoogleOAuthService {
             const calendar = google.calendar({ version: "v3", auth: this.oauth2Client });
 
             const response = await calendar.events.list({
-                calendarId: "primary",
+                calendarId,
                 timeMin: timeMin || new Date().toISOString(),
                 timeMax: timeMax,
                 maxResults: 250,
@@ -241,15 +244,15 @@ class GoogleOAuthService {
                     })),
                     creator: event.creator
                         ? {
-                              email: event.creator.email || "",
-                              displayName: event.creator.displayName,
-                          }
+                            email: event.creator.email || "",
+                            displayName: event.creator.displayName,
+                        }
                         : undefined,
                     organizer: event.organizer
                         ? {
-                              email: event.organizer.email || "",
-                              displayName: event.organizer.displayName,
-                          }
+                            email: event.organizer.email || "",
+                            displayName: event.organizer.displayName,
+                        }
                         : undefined,
                     status: event.status,
                     htmlLink: event.htmlLink,

@@ -97,6 +97,7 @@ export const registerApiRoutes = (app: Hono) => {
 
     // Google OAuth routes (no auth required for some endpoints)
     app.route("/api/google", googleAuth);
+    app.route("/api/integrations/google", googleAuth);
 
     // Public license / source disclosure (AGPL §13). Mounted before requireAuth so
     // remote users — including unauthenticated ones — can discover the source URL.

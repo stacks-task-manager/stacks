@@ -7,10 +7,10 @@ import { CalendarActions } from "app/store/actions";
 import { TasksActions } from "app/store/actions";
 import { CalendarStore } from "app/store/calendar";
 import { shallowEqual } from "./store";
-import { addDays, endOfDay, endOfMonth, endOfWeek, startOfDay, startOfMonth, startOfWeek } from "date-fns";
+import { endOfDay, endOfMonth, endOfWeek, startOfDay, startOfMonth, startOfWeek } from "date-fns";
 import { useTasksByPeriod } from "./tasks";
-import { EVENTTYPE } from "@stacks/types";
-import { usePeople, usePeopleWithBirthdayInRange } from "./people";
+import { EVENTTYPE, type ICalendarEvent } from "@stacks/types";
+import { usePeopleWithBirthdayInRange } from "./people";
 
 export const useCalendars = () => {
     const { tokens, calendars, loading } = CalendarStore.use(
@@ -113,7 +113,17 @@ export const useEvents = () => {
 
     const { tasks } = useTasksByPeriod(from, to, true);
 
-    const allEvents = [...events];
+    const allEvents = events.filter(ev => {
+        if (ev.resource.type !== EVENTTYPE.EVENT) return true;
+        const calEvent = ev.resource.data as ICalendarEvent;
+        if (calEvent.source === "local") {
+            return filters.showCalendars.includes("local");
+        }
+        if (calEvent.source === "google") {
+            return filters.showCalendars.includes(`google-${calEvent.calendar}`);
+        }
+        return true;
+    });
 
     if (filters.showTasks) {
         for (const task of tasks) {

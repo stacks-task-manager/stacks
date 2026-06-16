@@ -19,6 +19,7 @@ PermissionEntity.belongsTo(EventEntity, { foreignKey: "id", constraints: false }
 interface EventsFilter {
     from: string;
     to: string;
+    calendars?: string[];
 }
 
 interface Where {
@@ -33,7 +34,7 @@ interface Where {
 /**
  * Convert Google Calendar events to local event format
  */
-function convertGoogleEventsToLocalFormat(googleEvents: GoogleCalendarEvent[]): ICalendarEvent[] {
+function convertGoogleEventsToLocalFormat(googleEvents: GoogleCalendarEvent[], calendarId: string): ICalendarEvent[] {
     const user = getCurrentUser();
     return googleEvents.map(googleEvent => {
         // Handle all-day events and timed events
@@ -48,7 +49,7 @@ function convertGoogleEventsToLocalFormat(googleEvents: GoogleCalendarEvent[]): 
         const isAllDay = !googleEvent.start.dateTime && !googleEvent.end.dateTime;
 
         return {
-            id: `google_${googleEvent.id}`,
+            id: `google_${calendarId}_${googleEvent.id}`,
             title: googleEvent.summary || "Untitled Event",
             description: googleEvent.description || "",
             start: startDate,
@@ -56,7 +57,7 @@ function convertGoogleEventsToLocalFormat(googleEvents: GoogleCalendarEvent[]): 
             allDay: isAllDay,
             assignees: [],
             source: "google" as const,
-            calendar: "primary", // Default calendar for Google events
+            calendar: calendarId,
             location: googleEvent.location || "",
             // externalId: googleEvent.id,
             // htmlLink: googleEvent.htmlLink,
@@ -100,29 +101,59 @@ async function getOne(id: string) {
 
 async function getAll(filters: EventsFilter) {
     try {
+        const user = getCurrentUser();
+        const calendars = filters.calendars;
+        const includeLocal = calendars ? calendars.includes("local") : true;
+        const googleCalendarIds = (calendars ?? [])
+            .filter(c => typeof c === "string" && c.startsWith("google:"))
+            .map(c => c.slice("google:".length))
+            .filter(Boolean);
+
         const where: Where = {
             start: { [Op.gte]: parseISO(filters.from) },
             end: { [Op.lte]: parseISO(filters.to) }
         };
 
-        // Get local events
-        const events = await findAll({
-            entity: EventEntity,
-            filter: where,
-        });
+        const events: ICalendarEvent[] = [];
+        if (includeLocal) {
+            const localEvents = await findAll({
+                entity: EventEntity,
+                filter: where,
+            });
+            events.push(...(localEvents as unknown as ICalendarEvent[]));
+        }
 
-        // Try to get Google Calendar events if user has valid tokens
-        // try {
-        //     const hasGoogleTokens = await googleOAuthService.hasValidTokens(user.id);
-        //     if (hasGoogleTokens) {
-        //         const googleEvents = await googleOAuthService.getCalendarEvents(user.id, timeMin, timeMax);
-        //         const convertedGoogleEvents = convertGoogleEventsToLocalFormat(googleEvents, user);
-        //         events.push(...convertedGoogleEvents);
-        //     }
-        // } catch (googleError) {
-        //     console.warn('Failed to fetch Google Calendar events:', googleError);
-        //     // Continue with local events only
-        // }
+        if (googleCalendarIds.length > 0) {
+            try {
+                const hasGoogleTokens = await googleOAuthService.hasValidTokens(user.id);
+                if (hasGoogleTokens) {
+                    const timeMin = filters.from;
+                    const timeMax = filters.to;
+
+                    const results = await Promise.allSettled(
+                        googleCalendarIds.map(async calendarId => {
+                            const googleEvents = await googleOAuthService.getCalendarEvents(
+                                user.id,
+                                calendarId,
+                                timeMin,
+                                timeMax
+                            );
+                            return convertGoogleEventsToLocalFormat(googleEvents, calendarId);
+                        })
+                    );
+
+                    for (const r of results) {
+                        if (r.status === "fulfilled") {
+                            events.push(...r.value);
+                        } else {
+                            console.warn("Failed to fetch Google Calendar events:", r.reason);
+                        }
+                    }
+                }
+            } catch (googleError) {
+                console.warn("Failed to fetch Google Calendar events:", googleError);
+            }
+        }
 
         return events;
     } catch (error) {
