@@ -191,7 +191,8 @@ const checkHasFilters = (filters: IFilters, defaultState: DefaultProjectState, c
     if (filters.priority != null) filterCount++;
 
     // check if we're inside the inbox or mytasks
-    const isProject = !window.location.hash.includes("inbox") && !window.location.hash.includes("mytasks");
+    const currentPath = getHashPathname();
+    const isProject = !currentPath.includes("inbox") && !currentPath.includes("mytasks");
 
     if (isProject && Boolean(defaultState)) {
         if (filters.state !== defaultState) filterCount++;

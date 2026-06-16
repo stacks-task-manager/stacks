@@ -1,6 +1,6 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 /**
- * Route shape sent from the React app (HashRouter location).
+ * Route shape sent from the React app.
  */
 export type AiChatClientRoutePayload = {
     section: string;

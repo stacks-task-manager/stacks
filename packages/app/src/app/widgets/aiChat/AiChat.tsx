@@ -4,11 +4,11 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Icon } from "app/components/common";
+import { getHashPathname, getProjectLastView, getViewType } from "app/hooks";
 import { shallowEqual } from "app/hooks/store";
 import { AiChatActions } from "app/store/actions/aiChat";
 import { AiChatStore, type AiChatMessage } from "app/store/aiChat";
 import toast from "app/utils/toast";
-import { getProjectLastView, getViewType } from "app/hooks";
 
 import { AiChatMarkdown } from "./AiChatMarkdown";
 
@@ -150,10 +150,10 @@ export const AiChat: React.FC = () => {
         const nextMessages = [...history, { role: "user" as const, content: text }];
 
         try {
-            const route = window.location.hash.replace("#/", "").split("/");
+            const route = getHashPathname().split("/").filter(Boolean);
             const clientRoute: Record<string, string> = {
-                section: route[0],
-                sectionId: route[1],
+                section: route[0] ?? "",
+                sectionId: route[1] ?? "",
             };
 
             if (clientRoute.section === "project") {

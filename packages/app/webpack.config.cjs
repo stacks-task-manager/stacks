@@ -88,7 +88,7 @@ module.exports = (env, argv) => {
     process.env.NODE_ENV = mode;
     process.env.BABEL_ENV = process.env.BABEL_ENV || mode;
     const isProd = mode === "production";
-    const publicUrl = (process.env.PUBLIC_URL || "").replace(/\/$/, "");
+    const publicUrl = (process.env.PUBLIC_URL || "/app").replace(/\/$/, "");
 
     const htmlTemplate = fs
         .readFileSync(path.join(publicDir, "index.html"), "utf8")
@@ -106,7 +106,7 @@ module.exports = (env, argv) => {
             filename: isProd ? "static/js/[name].[contenthash:8].js" : "static/js/bundle.js",
             chunkFilename: isProd ? "static/js/[name].[contenthash:8].chunk.js" : "static/js/[name].chunk.js",
             assetModuleFilename: "static/media/[name].[hash][ext]",
-            publicPath: isProd ? "./" : "/",
+            publicPath: `${publicUrl}/`,
             clean: isProd,
         },
         resolve: {
@@ -377,8 +377,8 @@ module.exports = (env, argv) => {
         devServer: !isProd
             ? {
                   hot: true,
-                  historyApiFallback: { disableDotRule: true },
-                  static: { directory: publicDir, publicPath: "/" },
+                  historyApiFallback: { disableDotRule: true, index: `${publicUrl}/` },
+                  static: { directory: publicDir, publicPath: `${publicUrl}/` },
                   compress: true,
                   port: process.env.PORT ? Number(process.env.PORT) : 3001,
                   host: process.env.HOST || "0.0.0.0",

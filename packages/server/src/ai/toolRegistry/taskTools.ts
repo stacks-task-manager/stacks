@@ -201,7 +201,7 @@ function findTasksInputToQueryString(input: {
 export const taskAiTools = [
     defineTool({
         name: "findTasks",
-        description: `Find / search / show / open tasks in the app UI. Returns hashPath (#/tasks?...) to navigate. Use listProjects first if you need a projectId. For listing tasks inside the chat instead, use listTasks. "assigned to me / <person>" → assigneeUserIds (NOT assignedOnly).`,
+        description: `Find / search / show / open tasks in the app UI. Returns hashPath (/tasks?...) to navigate. Use listProjects first if you need a projectId. For listing tasks inside the chat instead, use listTasks. "assigned to me / <person>" → assigneeUserIds (NOT assignedOnly).`,
         inputSchema: z
             .object({
                 projectId: z.string().uuid().optional().describe("Single project UUID"),
@@ -246,7 +246,7 @@ export const taskAiTools = [
             const queryString = findTasksInputToQueryString(input);
             return {
                 queryString,
-                hashPath: queryString.length > 0 ? `#/tasks?${queryString}` : "#/tasks",
+                hashPath: queryString.length > 0 ? `/tasks?${queryString}` : "/tasks",
             };
         },
     }),

@@ -60,7 +60,7 @@ test.describe("Project - Board view", () => {
             const matchingProjects = sidebar.documentsTreeItems.filter({ hasText: projectName });
             const count = await matchingProjects.count();
             expect(count).toBeGreaterThanOrEqual(1);
-            await expect(page).toHaveURL(`/app#/project/${projectId}`);
+            await expect(page).toHaveURL(`/app/project/${projectId}`);
         });
 
         await test.step("Should add the first column via the blank slate", async () => {
