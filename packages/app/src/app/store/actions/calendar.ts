@@ -40,65 +40,79 @@ const persistFilters = () => {
 };
 
 let loadingCalendar = false;
+let pendingCalendarLoad = false;
 const load = async (reset = true) => {
-    if (loadingCalendar) return;
+    if (loadingCalendar) {
+        pendingCalendarLoad = true;
+        return;
+    }
     loadingCalendar = true;
-
-    if (reset) {
-        CalendarStore.set(
-            produce((state: ICalendarStore) => {
-                state.isLoading = false;
-                state.events = [];
-            })
-        );
-    }
-
-    const localEvents: IEvent[] = [];
-    const { from, to } = getDatesSpan();
-    const showCalendars = CalendarStore.get().filters.showCalendars;
-    const calendars = Array.from(
-        new Set(
-            showCalendars
-                .map(calendarId => {
-                    if (calendarId === "local") return "local";
-                    if (calendarId.startsWith("google-")) return `google:${calendarId.slice("google-".length)}`;
-                    return null;
-                })
-                .filter((v): v is string => typeof v === "string" && v.length > 0)
-        )
-    );
-    const calEvents = await EventsAPI.loadEvents(from, to, calendars.length ? calendars : undefined);
-
-    for (const event of calEvents) {
-        const startDate = event.start;
-        const endDate = event.end;
-
-        const start = event.allDay ? setHours(startDate, 0) : startDate;
-        const end = event.allDay ? setHours(endDate, 23) : endDate;
-
-        localEvents.push({
-            title: event.title,
-            start: start,
-            end: end,
-            allDay: event.allDay,
-            resource: {
-                data: event,
-                type: EVENTTYPE.EVENT,
-            },
-        });
-    }
+    pendingCalendarLoad = false;
 
     CalendarStore.set(
         produce((state: ICalendarStore) => {
-            state.events = [
-                ...state.events.filter(event => (event.resource.data as ICalendarEvent).calendar !== "local"),
-                ...localEvents,
-            ];
-            state.isLoading = false;
+            state.isLoading = true;
         })
     );
 
-    loadingCalendar = false;
+    try {
+        const localEvents: IEvent[] = [];
+        const { from, to } = getDatesSpan();
+        const showCalendars = CalendarStore.get().filters.showCalendars;
+        const calendars = Array.from(
+            new Set(
+                showCalendars
+                    .map(calendarId => {
+                        if (calendarId === "local") return "local";
+                        if (calendarId.startsWith("google-")) return `google:${calendarId.slice("google-".length)}`;
+                        return null;
+                    })
+                    .filter((v): v is string => typeof v === "string" && v.length > 0)
+            )
+        );
+        const calEvents = await EventsAPI.loadEvents(from, to, calendars.length ? calendars : undefined);
+
+        for (const event of calEvents) {
+            const startDate = event.start;
+            const endDate = event.end;
+
+            const start = event.allDay ? setHours(startDate, 0) : startDate;
+            const end = event.allDay ? setHours(endDate, 23) : endDate;
+
+            localEvents.push({
+                title: event.title,
+                start: start,
+                end: end,
+                allDay: event.allDay,
+                resource: {
+                    data: event,
+                    type: EVENTTYPE.EVENT,
+                },
+            });
+        }
+
+        CalendarStore.set(
+            produce((state: ICalendarStore) => {
+                state.events = localEvents;
+                state.isLoading = false;
+            })
+        );
+    } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error("Error loading calendar events:", error);
+        CalendarStore.set(
+            produce((state: ICalendarStore) => {
+                state.isLoading = false;
+            })
+        );
+        Toast.warn("Failed to load calendar events.");
+    } finally {
+        loadingCalendar = false;
+        if (pendingCalendarLoad) {
+            pendingCalendarLoad = false;
+            void load(reset);
+        }
+    }
 };
 
 const reload = async () => {
