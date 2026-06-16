@@ -14,6 +14,7 @@ export default defineConfig({
             "src/utils/__tests__/errorHandler.test.ts",
             "src/middleware/validator.query.test.ts",
             "src/loaders/__tests__/utils.test.ts",
+            "src/routes/__tests__/googleAuth.test.ts",
             "src/ai/__tests__/promptTemplate.test.ts",
             "src/ai/__tests__/clientRoute.test.ts",
             "src/ai/__tests__/promptContext.test.ts",
