@@ -45,8 +45,6 @@ const App = () => {
     const isLoadingPeople = PeopleStore.use(state => state.isLoading, shallowEqual);
     const { darkMode, hideScrollbars } = usePreferences(["darkMode", "hideScrollbars"]);
     const navigate = useNavigate();
-    const location = useLocation();
-    const locationState = location.state as { backgroundLocation?: Location };
 
     useUpdates();
 
@@ -90,18 +88,12 @@ const App = () => {
                         <Workspaces />
                         <SplitView
                             left={isLoadingPeople ? <Loading small /> : <Sidebar />}
-                            right={isLoadingPeople ? <Loading /> : <MainAppRoutes location={locationState?.backgroundLocation || location} />}
+                            right={isLoadingPeople ? <Loading /> : <RoutedMainAppRoutes />}
                         />
                     </div>
                 </div>
 
-                {locationState?.backgroundLocation && (
-                    <Routes>
-                        <Route path="/task/:id" element={<TaskDetailsPanel />} />
-                        <Route path="/person/:id" element={<PersonDetailsPanel />} />
-                        <Route path="/company/:id" element={<CompanyDetailsPanel />} />
-                    </Routes>
-                )}
+                <RoutedOverlayRoutes />
                 <AiChat />
             </DragDropProvider>
         </ErrorBoundary>
@@ -109,6 +101,29 @@ const App = () => {
 };
 
 export default App;
+
+const RoutedMainAppRoutesPure = () => {
+    const location = useLocation();
+    const locationState = location.state as { backgroundLocation?: Location };
+    return <MainAppRoutes location={locationState?.backgroundLocation || location} />;
+};
+const RoutedMainAppRoutes = React.memo(RoutedMainAppRoutesPure);
+
+const RoutedOverlayRoutesPure = () => {
+    const location = useLocation();
+    const locationState = location.state as { backgroundLocation?: Location };
+    if (!locationState?.backgroundLocation) {
+        return null;
+    }
+    return (
+        <Routes>
+            <Route path="/task/:id" element={<TaskDetailsPanel />} />
+            <Route path="/person/:id" element={<PersonDetailsPanel />} />
+            <Route path="/company/:id" element={<CompanyDetailsPanel />} />
+        </Routes>
+    );
+};
+const RoutedOverlayRoutes = React.memo(RoutedOverlayRoutesPure);
 
 interface MainAppRoutesProps {
     location: Location;
