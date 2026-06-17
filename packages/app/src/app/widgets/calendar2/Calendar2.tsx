@@ -134,10 +134,9 @@ const EventContent = ({ event, view }: { event: EventImpl, view: calendarViewTyp
         color: tinted ? adjustColor(event.extendedProps.tint, -50) : Colors.DARK_GRAY5,
     }
 
-    if (view !== "month") {
-        styles.background = `linear-gradient(0deg, ${tinted ? colorToHuedColor(event.extendedProps.tint, 10) : DEFAULT_BG_BOTTOM} 0%, ${tinted ? colorToHuedColor(event.extendedProps.tint, 2) : DEFAULT_BG_TOP} 100%)`;
-        styles.borderColor = tinted ? colorToHuedColor(event.extendedProps.tint, 40) : "#abc4ff";
-    }
+    styles.background = `linear-gradient(0deg, ${tinted ? colorToHuedColor(event.extendedProps.tint, 10) : DEFAULT_BG_BOTTOM} 0%, ${tinted ? colorToHuedColor(event.extendedProps.tint, 2) : DEFAULT_BG_TOP} 100%)`;
+    styles.borderColor = tinted ? colorToHuedColor(event.extendedProps.tint, 40) : "#abc4ff";
+
     let rulerColor = event.extendedProps.tint ?? Colors.GRAY2;
 
     if (selected) {
