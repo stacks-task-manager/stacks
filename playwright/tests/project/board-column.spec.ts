@@ -36,7 +36,7 @@ test.describe("Project - Board column", () => {
         const matchingProjects = sidebar.documentsTreeItems.filter({ hasText: projectName });
         const count = await matchingProjects.count();
         expect(count).toBeGreaterThanOrEqual(1);
-        await expect(page).toHaveURL(`/app#/project/${projectId}?state=todo`);
+        await expect(page).toHaveURL(`/app/project/${projectId}?state=todo`);
 
         await board.addColumn(MAIN_COLUMN);
     });

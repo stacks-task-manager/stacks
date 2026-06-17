@@ -16,7 +16,7 @@ import { buildAiTools } from "./tools";
 
 export type AiChatClientMessage = { role: "user" | "assistant"; content: string };
 
-/** Client: `button` shows a click target; `redirect` navigates to `hashPath` without a click. */
+/** Client: `button` shows a click target; `redirect` navigates to the app path without a click. */
 export type AiChatWidget =
     | { type: "button"; label: string; hashPath: string }
     | { type: "redirect"; label: string; hashPath: string };
@@ -118,7 +118,7 @@ function currentUserTemplateVars(): {
  * they show a button the user can click.
  *
  * Do NOT use this for side-effect tools (`createTask`, `findTasks`, etc.) —
- * those return a `hashPath` as a courtesy link, not as a "take me there"
+ * those return a route path as a courtesy link, not as a "take me there"
  * instruction. Use `aiChatLinkWidget` for those to prevent a very unpleasant
  * "every answer teleports me to /tasks" UX.
  */
@@ -156,11 +156,11 @@ function widgetsFromToolResult(toolName: string, output: unknown): AiChatWidget[
         if (typeof id !== "string" || typeof projectId !== "string") {
             return [];
         }
-        return [aiChatLinkWidget(`Open: ${title}`, `#/project/${projectId}/${id}`)];
+        return [aiChatLinkWidget(`Open: ${title}`, `/project/${projectId}/${id}`)];
     }
 
     if (toolName === "createProject" && typeof id === "string") {
-        return [aiChatLinkWidget(`Open project: ${title}`, `#/project/${id}`)];
+        return [aiChatLinkWidget(`Open project: ${title}`, `/project/${id}`)];
     }
 
     if (toolName === "findTasks" && typeof o.hashPath === "string") {

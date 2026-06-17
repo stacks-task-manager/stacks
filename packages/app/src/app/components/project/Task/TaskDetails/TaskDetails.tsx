@@ -133,11 +133,11 @@ export const TaskDetails = () => {
     }, [task]);
 
     const closeTask = () => {
-        if (window.location.hash.startsWith("#/mytasks")) {
+        if (getHashPathname().startsWith("/mytasks")) {
             navigate("/mytasks");
             return;
         }
-        if (window.location.hash.startsWith("#/tasks")) {
+        if (getHashPathname().startsWith("/tasks")) {
             const search = getHashSearch();
             navigate({ pathname: "/tasks", search: search || undefined });
             return;

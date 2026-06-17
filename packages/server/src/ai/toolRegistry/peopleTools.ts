@@ -111,7 +111,7 @@ export const peopleAiTools = [
 
     defineTool({
         name: "openProfile",
-        description: `Open a person's profile page in the app. Omit personId to open the current user's own profile ("my profile"). Returns a hashPath the UI can navigate to.`,
+        description: `Open a person's profile page in the app. Omit personId to open the current user's own profile ("my profile"). Returns a path the UI can navigate to.`,
         inputSchema: z.object({
             personId: z
                 .string()
@@ -124,7 +124,7 @@ export const peopleAiTools = [
             return {
                 personId: id,
                 isSelf,
-                hashPath: `#/person/${id}`,
+                hashPath: `/person/${id}`,
                 label: isSelf ? "Open my profile" : "Open profile",
             };
         },

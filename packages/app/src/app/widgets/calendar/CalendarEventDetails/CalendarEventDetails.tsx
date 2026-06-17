@@ -31,6 +31,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Col, Grid, Icon, Row, Scroller } from "app/components/common";
 import {
     use24Hours,
+    useCalendars,
     useDocument,
     useTask,
     useMousetrap,
@@ -96,8 +97,9 @@ export const CalendarEventDetails = () => {
 
 const EventDetailsGate = ({ id }: { id: string }) => {
     const isNew = id.includes("-new");
+    const eventId = isNew ? id.replace("-new", "") : id;
     const event = CalendarStore.use(state => state.events.find(
-        event => event.resource.data.id === id
+        event => event.resource.data.id === eventId
     ), shallowEqual);
 
     if (!event) return null;
@@ -111,13 +113,18 @@ interface EventDetailsProps {
     isAllDay: boolean;
 }
 const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew, isAllDay }) => {
-    // const calendars = CalendarStore.use(state => state.calendars, shallowEqual);
     const { dateLocale } = usePreferences(["dateLocale"]);
     const is24Hours = use24Hours();
     const titleRef = useRef<HTMLDivElement | null>(null);
-    const isDisabled = false;
+    const { calendars, isGoogleAuthenticated, loadCalendars } = useCalendars();
 
-    const { id, title, description, location, start, end } = event;
+    const { id, title, description, location, start, end, source, calendar } = event;
+
+    const isDisabled = useMemo(() => {
+        if (source === "local") return false;
+        const cal = calendars.find(c => c.id === calendar);
+        return cal?.readOnly ?? false;
+    }, [source, calendar, calendars]);
 
     const startTime = start ? format(start, "p") : "";
     const endTime = end ? format(end, "p") : "";
@@ -135,11 +142,11 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew, isAl
         }
     }, [isNew]);
 
-    // const eventCalendar = useMemo(() => {
-    //     return calendars.find(calendar => calendar.id === calendar);
-    // }, [calendar, calendars]);
-
-    // const isDisabled = useMemo(() => eventCalendar?.readOnly ?? false, [eventCalendar]);
+    useEffect(() => {
+        if (!isGoogleAuthenticated) return;
+        if (calendars.some(c => c.source === "google")) return;
+        loadCalendars();
+    }, [isGoogleAuthenticated, calendars, loadCalendars]);
 
     const handleUpdateTitle = (title: string) => {
         CalendarActions.updateEvent(id, {
@@ -272,11 +279,11 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew, isAl
         await CalendarActions.deleteEventAlert(id);
     };
 
-    // const handleChangeCalendar = (calendarId: string, source: ICalendarSource) => {
-    //     if (calendarId === calendar) return;
-
-    //     CalendarActions.moveEvent(id, calendarId, source);
-    // };
+    const handleChangeCalendar = (calendarId: string, newSource: ICalendarSource) => {
+        const newCalendar = newSource === "local" ? "local" : calendarId;
+        if (source === newSource && calendar === newCalendar) return;
+        void CalendarActions.moveEvent(event, newCalendar, newSource);
+    };
 
     const handleOpenEventLink = () => {
         if (event.original && event.original.htmlLink) {
@@ -397,16 +404,16 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew, isAl
                             />
                         </FormGroup>
                         <EventDivider />
-                        {/* <FormGroup label="Calendar">
+                        <FormGroup label="Calendar">
                             <CalendarPicker
-                                value={calendar}
+                                value={source === "local" ? "local" : calendar}
                                 disabled={isDisabled}
                                 onChange={handleChangeCalendar}
                             />
-                        </FormGroup> */}
+                        </FormGroup>
                     </div>
 
-                    {/* {source === "google" ? (
+                    {source === "google" && event.original?.htmlLink ? (
                         <>
                             <EventDivider />
 
@@ -422,7 +429,7 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew, isAl
                                 </Col>
                             </Row>
                         </>
-                    ) : null} */}
+                    ) : null}
                 </Grid>
             </Scroller>
         </div>

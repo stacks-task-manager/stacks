@@ -1,6 +1,6 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 /**
- * AI tools: UI navigation. Produces a `hashPath` plus a `label` that the client bridge
+ * AI tools: UI navigation. Produces an app path plus a `label` that the client bridge
  * turns into an auto-redirect or a click-to-open button (see `aiChatNavigationWidget`).
  *
  * Keep routes in sync with `packages/app/src/app/App.tsx` `MainAppRoutes`.
@@ -35,37 +35,37 @@ const VIEW_LABELS: Record<string, string> = {
 function buildHashPath(view: string, id: string | undefined): string {
     switch (view) {
         case "home":
-            return "#/home";
+            return "/home";
         case "calendar":
-            return "#/calendar";
+            return "/calendar";
         case "inbox":
-            return "#/inbox";
+            return "/inbox";
         case "myTasks":
-            return "#/mytasks";
+            return "/mytasks";
         case "bookmarks":
-            return "#/bookmarks";
+            return "/bookmarks";
         case "reports":
-            return "#/reports";
+            return "/reports";
         case "people":
-            return "#/people";
+            return "/people";
         case "myProfile":
-            return `#/person/${getCurrentUser().id}`;
+            return `/person/${getCurrentUser().id}`;
         case "project":
-            return `#/project/${id}`;
+            return `/project/${id}`;
         case "person":
-            return `#/person/${id}`;
+            return `/person/${id}`;
         case "company":
-            return `#/company/${id}`;
+            return `/company/${id}`;
         case "notepad":
-            return `#/notepad/${id}`;
+            return `/notepad/${id}`;
         case "goal":
-            return `#/goal/${id}`;
+            return `/goal/${id}`;
         case "file":
-            return `#/file/${id}`;
+            return `/file/${id}`;
         case "task":
-            return `#/task/${id}`;
+            return `/task/${id}`;
         case "reportType":
-            return `#/reports/${id}`;
+            return `/reports/${id}`;
         default:
             throw new Error(`Unsupported view: ${view}`);
     }

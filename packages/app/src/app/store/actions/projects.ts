@@ -10,7 +10,7 @@ import xor from "lodash/xor";
 import { DropResult } from "@hello-pangea/dnd";
 import { IAutomation, IField, IProject, IUpdate, PROJECTHEALTH } from "@stacks/types";
 import { ExportAPI, ProjectsAPI } from "app/api";
-import { getCurrentProjectId, nav, publish } from "app/hooks";
+import { getCurrentProjectId, getHashPathname, nav, publish } from "app/hooks";
 import { IProjectsStore, ProjectsStore } from "app/store/projects";
 import Dialog from "app/utils/dialog";
 import { getStorage, setStorage } from "app/utils/storage";
@@ -293,7 +293,7 @@ const removeById = async (projectId: string) => {
         })
     );
 
-    if (window.location.hash.includes(projectId)) {
+    if (getHashPathname().includes(projectId)) {
         nav("/");
     }
 };

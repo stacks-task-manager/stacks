@@ -2,7 +2,7 @@
 /**
  * Calendar data loading and mutations.
  */
-import api, { EventsAPI } from "app/api";
+import api, { CalendarIntegrationsAPI, type CalendarProvider, EventsAPI } from "app/api";
 import {
     addDays,
     addHours,
@@ -24,10 +24,10 @@ import { xor } from "lodash";
 import { EVENTTYPE, ICalendarEvent, ICalendarSource, IEvent, ITask } from "@stacks/types";
 import { getDatesSpan } from "app/hooks";
 import Dialog from "app/utils/dialog";
-import Storage from "app/utils/storage";
 import Toast from "app/utils/toast";
+import Storage from "app/utils/storage";
 import { patchFilterField } from "../actionHelpers";
-import { CalendarStore, ICalendarFilters, ICalendarStore } from "../calendar";
+import { CALENDAR_FILTERS_STORAGE_KEY, CalendarStore, ICalendarFilters, ICalendarStore } from "../calendar";
 import { TasksActions } from "./tasks";
 
 const savePrefs = async () => {
@@ -35,57 +35,96 @@ const savePrefs = async () => {
     await api("events/savePrefs", { filters });
 };
 
+const persistFilters = () => {
+    Storage.set(CALENDAR_FILTERS_STORAGE_KEY, CalendarStore.get().filters);
+};
+
 let loadingCalendar = false;
+let pendingCalendarLoad = false;
 const load = async (reset = true) => {
-    if (loadingCalendar) return;
+    if (loadingCalendar) {
+        pendingCalendarLoad = true;
+        return;
+    }
     loadingCalendar = true;
-
-    if (reset) {
-        CalendarStore.set(
-            produce((state: ICalendarStore) => {
-                state.isLoading = false;
-                state.events = [];
-            })
-        );
-    }
-
-    const localEvents: IEvent[] = [];
-    const { from, to } = getDatesSpan();
-    const calEvents = await EventsAPI.loadEvents(from, to);
-
-    for (const event of calEvents) {
-        const startDate = event.start;
-        const endDate = event.end;
-
-        const start = event.allDay ? setHours(startDate, 0) : startDate;
-        const end = event.allDay ? setHours(endDate, 23) : endDate;
-
-        localEvents.push({
-            title: event.title,
-            start: start,
-            end: end,
-            allDay: event.allDay,
-            resource: {
-                data: event,
-                type: EVENTTYPE.EVENT,
-            },
-        });
-    }
+    pendingCalendarLoad = false;
 
     CalendarStore.set(
         produce((state: ICalendarStore) => {
-            state.events = [
-                ...state.events.filter(event => (event.resource.data as ICalendarEvent).calendar !== "local"),
-                ...localEvents,
-            ];
-            state.isLoading = false;
+            state.isLoading = true;
         })
     );
 
-    loadingCalendar = false;
+    try {
+        const localEvents: IEvent[] = [];
+        const { from, to } = getDatesSpan();
+        const showCalendars = CalendarStore.get().filters.showCalendars;
+        const calendars = Array.from(
+            new Set(
+                showCalendars
+                    .map(calendarId => {
+                        if (calendarId === "local") return "local";
+                        if (calendarId.startsWith("google-")) return `google:${calendarId.slice("google-".length)}`;
+                        return null;
+                    })
+                    .filter((v): v is string => typeof v === "string" && v.length > 0)
+            )
+        );
+        const calEvents = await EventsAPI.loadEvents(from, to, calendars.length ? calendars : undefined);
+
+        for (const event of calEvents) {
+            const startDate = event.start;
+            const endDate = event.end;
+
+            const start = event.allDay ? setHours(startDate, 0) : startDate;
+            const end = event.allDay ? setHours(endDate, 23) : endDate;
+
+            localEvents.push({
+                title: event.title,
+                start: start,
+                end: end,
+                allDay: event.allDay,
+                resource: {
+                    data: event,
+                    type: EVENTTYPE.EVENT,
+                },
+            });
+        }
+
+        CalendarStore.set(
+            produce((state: ICalendarStore) => {
+                state.events = localEvents;
+                state.isLoading = false;
+            })
+        );
+    } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error("Error loading calendar events:", error);
+        CalendarStore.set(
+            produce((state: ICalendarStore) => {
+                state.isLoading = false;
+            })
+        );
+        Toast.warn("Failed to load calendar events.");
+    } finally {
+        loadingCalendar = false;
+        if (pendingCalendarLoad) {
+            pendingCalendarLoad = false;
+            void load(reset);
+        }
+    }
+};
+
+const refreshConnectedCalendars = async () => {
+    const { tokens } = CalendarStore.get();
+
+    if (tokens.google != null) {
+        await loadCalendars();
+    }
 };
 
 const reload = async () => {
+    await refreshConnectedCalendars();
     await load(false);
 };
 
@@ -406,12 +445,28 @@ const updateEvent = async (eventId: string, updatedEvent: Partial<ICalendarEvent
 
     updateDebounce = setTimeout(async () => {
         const { start, end, ...rest } = updatedEvent;
+        const startChanged = start != null;
+        const endChanged = end != null;
 
-        await EventsAPI.update(eventId, {
-            ...rest,
-            start: start ? new Date(start) : new Date(),
-            end: end ? new Date(end) : new Date(),
-        });
+        const payload: Partial<ICalendarEvent> = { ...rest };
+
+        if (startChanged || endChanged) {
+            const current = CalendarStore.get().events.find(e => e.resource.data.id === eventId);
+            const currentStart = current?.start;
+            const currentEnd = current?.end;
+
+            const startToSend = startChanged ? new Date(start as any) : currentStart ? new Date(currentStart) : undefined;
+            let endToSend = endChanged ? new Date(end as any) : currentEnd ? new Date(currentEnd) : undefined;
+
+            if (startToSend && endToSend && endToSend <= startToSend) {
+                endToSend = addHours(startToSend, 1);
+            }
+
+            if (startToSend) payload.start = startToSend;
+            if (endToSend) payload.end = endToSend;
+        }
+
+        await EventsAPI.update(eventId, payload);
     }, 500);
 };
 
@@ -569,6 +624,7 @@ const setFilter = async (key: keyof ICalendarFilters, value: ICalendarFilters[ke
         })
     );
 
+    persistFilters();
     await savePrefs();
 };
 
@@ -579,6 +635,7 @@ const toggleCalendar = async (calendarId: string) => {
         })
     );
 
+    persistFilters();
     await savePrefs();
 };
 
@@ -591,85 +648,86 @@ const toggleCalendar = async (calendarId: string) => {
 //     );
 // };
 
+let loadCalendarsPromise: Promise<void> | null = null;
 const loadCalendars = async () => {
-    // if (CalendarStore.get().tokens.google != null) {
-    //     CalendarStore.set(
-    //         produce((state: ICalendarStore) => {
-    //             state.loadingCalendars = true;
-    //         })
-    //     );
+    if (CalendarStore.get().tokens.google == null) return;
+    if (loadCalendarsPromise) return loadCalendarsPromise;
 
-    //     try {
-    //         const response = await fetch("/api/google/calendars", {
-    //             method: "GET",
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //                 Authorization: `Bearer ${Storage.get("token")}`,
-    //             },
-    //         });
+    const promise = (async () => {
+        CalendarStore.set(
+            produce((state: ICalendarStore) => {
+                state.loadingCalendars = true;
+            })
+        );
 
-    //         if (response.ok) {
-    //             const data = await response.json();
-    //             const calendars = data.map((calendar: any) => ({
-    //                 id: calendar.id,
-    //                 name: calendar.summary,
-    //                 color: calendar.backgroundColor || "#1976d2",
-    //                 source: "google" as const,
-    //                 primary: calendar.primary || false,
-    //             }));
+        try {
+            const calendars = await CalendarIntegrationsAPI.listCalendars("google");
 
-    //             CalendarStore.set(
-    //                 produce((state: ICalendarStore) => {
-    //                     // Filter out existing Google calendars and add new ones
-    //                     state.calendars = [
-    //                         ...state.calendars.filter(cal => cal.source !== "google"),
-    //                         ...calendars,
-    //                     ];
-    //                     state.loadingCalendars = false;
-    //                 })
-    //             );
-    //         } else {
-    //             throw new Error("Failed to load calendars");
-    //         }
-    //     } catch (error) {
-    //         // eslint-disable-next-line no-console
-    //         console.error("Error loading Google calendars:", error);
-    //         CalendarStore.set(
-    //             produce((state: ICalendarStore) => {
-    //                 state.loadingCalendars = false;
-    //             })
-    //         );
-    //         Toast.warn("Failed to load Google calendars.");
-    //     }
-    // }
+            CalendarStore.set(
+                produce((state: ICalendarStore) => {
+                    state.calendars = [
+                        ...state.calendars.filter(calendar => calendar.source !== "google"),
+                        ...calendars,
+                    ];
+                    state.loadingCalendars = false;
+                })
+            );
+        } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error("Error loading Google calendars:", error);
+            CalendarStore.set(
+                produce((state: ICalendarStore) => {
+                    state.loadingCalendars = false;
+                })
+            );
+            Toast.warn("Failed to load Google calendars.");
+        }
+    })();
+
+    loadCalendarsPromise = promise;
+    void promise.finally(() => {
+        if (loadCalendarsPromise === promise) {
+            loadCalendarsPromise = null;
+        }
+    });
+    return promise;
 };
 
 const moveEvent = async (event: ICalendarEvent, calendar: string, source: ICalendarSource) => {
-    if (event.calendar === calendar) return;
+    if (event.source === source && event.calendar === calendar) return;
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { id, ...evnt } = event;
-
-    if (event.source !== source) {
-        addEvent({ ...evnt, source, calendar });
-        await deleteEvent(event.id);
-    } else {
-        const updatedEvent = {
-            ...event,
+    try {
+        const savedEvent = await addEvent({
+            title: event.title,
+            description: event.description,
+            start: event.start,
+            end: event.end,
+            allDay: event.allDay,
+            assignees: event.assignees,
+            ...(event.location ? { location: event.location } : {}),
+            source,
             calendar,
-        };
+        });
 
-        updateEvent(event.id, updatedEvent, true); // skips the saving
-        // saveEvent(updatedEvent, { sourceCalendar: event.calendar });
+        if (!savedEvent) {
+            Toast.warn("Failed to move event.");
+            return;
+        }
+
+        await deleteEvent(event.id);
+        selectEvent(savedEvent.id, EVENTTYPE.EVENT);
+        await reload();
+    } catch (error) {
         // eslint-disable-next-line no-console
-        console.log("THIS IS MISSING moveEvent from a calendar to another");
+        console.error("moveEvent error:", error);
+        Toast.warn("Failed to move event.");
     }
 };
 
 const loginGoogle = async () => {
     try {
         // Get the Google OAuth authorization URL
-        const { authUrl } = await EventsAPI.loginGoogle();
+        const { authUrl } = await CalendarIntegrationsAPI.getAuthUrl("google");
         if (!authUrl) {
             Toast.warn("Failed to get Google authorization URL.");
             return;
@@ -732,24 +790,24 @@ const loginGoogle = async () => {
 
 const checkGoogleAuthStatus = async () => {
     try {
-        const response = await fetch("/api/google/status", {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${Storage.get("token")}`,
-            },
-        });
-
-        if (response.ok) {
-            const statusData = await response.json();
-            if (statusData.isAuthenticated) {
-                await handleGoogleAuthSuccess();
-            }
-        }
+        const status = await CalendarIntegrationsAPI.getStatus("google");
+        if (status.isAuthenticated) await handleGoogleAuthSuccess();
     } catch (error) {
         // eslint-disable-next-line no-console
         console.error("Failed to check Google auth status:", error);
     }
+};
+
+const hydrateFromBoot = async (integrations?: { google?: { isAuthenticated: boolean } }) => {
+    if (!integrations?.google?.isAuthenticated) return;
+
+    CalendarStore.set(
+        produce((state: ICalendarStore) => {
+            state.tokens.google = { authenticated: true };
+        })
+    );
+
+    await loadCalendars();
 };
 
 const handleGoogleAuthSuccess = async () => {
@@ -774,6 +832,7 @@ const handleGoogleAuthSuccess = async () => {
                         state.filters.showCalendars.push(`google-${primaryCalendar.id}`);
                     })
                 );
+                persistFilters();
             }
         }
 
@@ -788,28 +847,31 @@ const handleGoogleAuthSuccess = async () => {
     }
 };
 
-const logoutGoogle = async () => {
+const disconnectCalendarProvider = async (provider: CalendarProvider) => {
     try {
-        CalendarStore.set(
-            produce((state: ICalendarStore) => {
-                state.tokens.google = null;
-                state.calendars = state.calendars.filter(calendar => calendar.source !== "google");
-            })
-        );
-        await fetch("/api/google/disconnect", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${Storage.get("token")}`,
-            },
-        });
+        if (provider === "google") {
+            CalendarStore.set(
+                produce((state: ICalendarStore) => {
+                    state.tokens.google = null;
+                    state.calendars = state.calendars.filter(calendar => calendar.source !== "google");
+                })
+            );
+        }
+
+        await CalendarIntegrationsAPI.disconnect(provider);
         await load(); // Reload events without Google events
-        Toast.success("Successfully disconnected from Google Calendar.");
+        Toast.success(
+            provider === "google" ? "Successfully disconnected from Google Calendar." : "Successfully disconnected."
+        );
     } catch (error) {
         // eslint-disable-next-line no-console
-        console.error("Google logout error:", error);
-        Toast.warn("Failed to disconnect from Google Calendar.");
+        console.error("Calendar provider disconnect error:", error);
+        Toast.warn(provider === "google" ? "Failed to disconnect from Google Calendar." : "Failed to disconnect.");
     }
+};
+
+const logoutGoogle = async () => {
+    await disconnectCalendarProvider("google");
 };
 
 export const CalendarActions = {
@@ -838,4 +900,6 @@ export const CalendarActions = {
     moveEvent,
     loginGoogle,
     logoutGoogle,
+    disconnectCalendarProvider,
+    hydrateFromBoot,
 };

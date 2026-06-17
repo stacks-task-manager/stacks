@@ -14,9 +14,11 @@ describe("Google Auth API", () => {
         const res = await app.request("/api/google/status", { headers });
         expect(res.status).toBe(200);
         const body = await res.json();
-        expect(body).toHaveProperty("isAuthenticated");
-        expect(body.isAuthenticated).toBe(false);
-        expect(body.provider).toBe("google");
+        expect(body.success).toBe(true);
+        expect(body).toHaveProperty("data");
+        expect(body.data).toHaveProperty("isAuthenticated");
+        expect(body.data.isAuthenticated).toBe(false);
+        expect(body.data.provider).toBe("google");
     });
 
     test("DELETE /api/google/disconnect - should succeed", async () => {

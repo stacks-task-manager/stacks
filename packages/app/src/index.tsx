@@ -3,14 +3,16 @@ import { Position, OverlayToaster, Spinner } from "@blueprintjs/core";
 import "app/utils/prototypes";
 import React, { Suspense } from "react";
 import { createRoot } from "react-dom/client";
-import { HashRouter } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 
 import "./index.scss";
 import { setTranslations } from "@stacks/translations";
 import { UpdatePoller } from "app/utils/polling";
+import { APP_BASENAME, normalizeLegacyHashRoute } from "app/hooks/router";
 import { PreferencesActions } from "app/store/actions/preferences";
 import { BootAPI } from "app/api";
 import { AiChatActions } from "app/store/actions/aiChat";
+import { CalendarActions } from "app/store/actions/calendar";
 import { LicenseActions, ProjectFiltersActions } from "app/store/actions";
 import { getBrowserLocale } from "app/utils/browser";
 
@@ -31,6 +33,7 @@ const initToast = async () => {
 };
 
 initToast();
+normalizeLegacyHashRoute();
 
 window.updatePoller = new UpdatePoller();
 window.addEventListener("beforeunload", () => {
@@ -40,12 +43,13 @@ window.addEventListener("beforeunload", () => {
 });
 
 void (async () => {
-    const { translations, license, preferences, aiChat } = await BootAPI.load();
+    const { translations, license, preferences, aiChat, integrations } = await BootAPI.load();
     setTranslations(translations, { locale: getBrowserLocale() });
     LicenseActions.setLicense(license);
     PreferencesActions.set(preferences);
     ProjectFiltersActions.loadSaved();
     AiChatActions.setServerEnabled(Boolean(aiChat?.enabled));
+    await CalendarActions.hydrateFromBoot(integrations);
 
     if (preferences.forceWeekMonday) {
         // moment.updateLocale(savedDateLocale, { week: { dow: 1 } });
@@ -56,9 +60,9 @@ void (async () => {
 
     root.render(
         <Suspense fallback={<AppLoading />}>
-            <HashRouter>
+            <BrowserRouter basename={APP_BASENAME}>
                 <App />
-            </HashRouter>
+            </BrowserRouter>
         </Suspense>
     );
 })();

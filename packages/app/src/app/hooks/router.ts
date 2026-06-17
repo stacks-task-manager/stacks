@@ -7,16 +7,76 @@ import { useCallback, useEffect, useState } from "react";
 import { Location, NavigateOptions, useLocation } from "react-router-dom";
 import { publish } from "./event";
 
-/** Query string inside the hash (includes leading `?`), for HashRouter URLs like `#/project/1?f=1`. */
-export function getHashSearch(): string {
+export const APP_BASENAME = "/app";
+
+type WindowRouteSnapshot = {
+    pathname: string;
+    search: string;
+    hash: string;
+};
+
+function stripAppBasename(pathname: string): string {
+    if (!pathname || pathname === APP_BASENAME) {
+        return "/";
+    }
+
+    if (pathname.startsWith(`${APP_BASENAME}/`)) {
+        return pathname.slice(APP_BASENAME.length) || "/";
+    }
+
+    return pathname;
+}
+
+function getLegacyHashSnapshot(): WindowRouteSnapshot | null {
     const raw = window.location.hash.replace(/^#/, "");
-    const q = raw.indexOf("?");
-    return q === -1 ? "" : raw.slice(q);
+    if (!raw.startsWith("/")) {
+        return null;
+    }
+
+    const [pathname, search = ""] = raw.split("?");
+    return {
+        pathname: pathname || "/",
+        search: search ? `?${search}` : "",
+        hash: "",
+    };
+}
+
+function getCurrentWindowRouteSnapshot(): WindowRouteSnapshot {
+    const legacyHash = getLegacyHashSnapshot();
+    if (legacyHash) {
+        return legacyHash;
+    }
+
+    return {
+        pathname: stripAppBasename(window.location.pathname || "/") || "/",
+        search: window.location.search || "",
+        hash: window.location.hash || "",
+    };
+}
+
+/** Query string for the current app route (includes leading `?`). */
+export function getHashSearch(): string {
+    return getCurrentWindowRouteSnapshot().search;
+}
+
+/**
+ * Converts a legacy `#/route` URL into the BrowserRouter `/app/route` shape before React boots.
+ */
+export function normalizeLegacyHashRoute(): void {
+    const legacyHash = getLegacyHashSnapshot();
+    if (!legacyHash) {
+        return;
+    }
+
+    const nextUrl = `${APP_BASENAME}${legacyHash.pathname}${legacyHash.search}`;
+    const currentUrl = `${window.location.pathname}${window.location.search}`;
+    if (nextUrl !== currentUrl) {
+        window.history.replaceState(window.history.state, "", nextUrl);
+    }
 }
 
 /**
  * Background route for task modal overlay — reads the address bar synchronously (no `useLocation` subscription).
- * Supports HashRouter (`#/path?query`) and falls back to pathname/search on the rare non-hash URL.
  */
 export function snapshotTaskModalBackground(): {
     pathname: string;
@@ -24,20 +84,11 @@ export function snapshotTaskModalBackground(): {
     hash: string;
     state: null;
 } {
-    const rawHash = window.location.hash.replace(/^#/, "");
-    if (rawHash !== "") {
-        const pathname = getHashPathname() || "/";
-        return {
-            pathname,
-            search: getHashSearch(),
-            hash: "",
-            state: null,
-        };
-    }
+    const snapshot = getCurrentWindowRouteSnapshot();
     return {
-        pathname: window.location.pathname || "/",
-        search: window.location.search || "",
-        hash: window.location.hash || "",
+        pathname: snapshot.pathname,
+        search: snapshot.search,
+        hash: snapshot.hash,
         state: null,
     };
 }
@@ -79,14 +130,12 @@ export function getTaskModalListBackgroundFromHistory(): IBackgroundLocationStat
     return undefined;
 }
 
-/** Hash route path only (no `?query`) — needed before `matchPath` or `/`-split parsing. */
+/** Current app route path only (no `?query`) — kept under the old name for compatibility. */
 export function getHashPathname(): string {
-    const raw = window.location.hash.replace(/^#/, "");
-    const q = raw.indexOf("?");
-    return q === -1 ? raw : raw.slice(0, q);
+    return getCurrentWindowRouteSnapshot().pathname;
 }
 
-/** `/project/:projectId` or `/project/:projectId/:taskId` from the current hash. */
+/** `/project/:projectId` or `/project/:projectId/:taskId` from the current app URL. */
 export function getProjectIdFromHashPath(): string {
     const path = getHashPathname();
     const segments = path.split("/").filter(Boolean);

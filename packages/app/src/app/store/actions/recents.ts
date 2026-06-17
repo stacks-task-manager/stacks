@@ -7,7 +7,7 @@ import { produce } from "immer";
 import { IRecentsStore, RecentsStore } from "../recents";
 import { getStorage, setStorage } from "app/utils/storage";
 import { IRecentItem } from "@stacks/types";
-import { nav } from "app/hooks";
+import { getHashPathname, nav } from "app/hooks";
 import { stripMd } from "app/utils/string";
 
 const load = () => {
@@ -90,7 +90,7 @@ const goToLastItem = () => {
 
     if (lastItem) {
         // check if the current URL match the last viewed item
-        if (window.location.hash.replace("#", "") !== lastItem.url) {
+        if (getHashPathname() !== lastItem.url) {
             nav(lastItem.url);
         }
     }

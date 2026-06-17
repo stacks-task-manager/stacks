@@ -1,6 +1,6 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 /**
- * Calendar events, counts, and Google OAuth URL helper.
+ * Calendar events and counts.
  */
 import { ICalendarEvent, ITask, ITimeLog } from "@stacks/types";
 import request from "./request";
@@ -18,11 +18,12 @@ interface LoadTasksParams {
 
 export const EventsAPI = {
     /** Lists events for a calendar view and anchor date. */
-    async loadEvents(from: Date, to: Date): Promise<ICalendarEvent[]> {
+    async loadEvents(from: Date, to: Date, calendars?: string[]): Promise<ICalendarEvent[]> {
         return request.get("/api/events", {
             params: {
                 from: from.toISOString(),
                 to: to.toISOString(),
+                ...(calendars?.length ? { calendars } : {}),
             },
         });
     },
@@ -57,11 +58,8 @@ export const EventsAPI = {
             params: {
                 from: from.toISOString(),
                 to: to.toISOString(),
+                ...params,
             },
         });
-    },
-    /** Starts Google OAuth popup flow. */
-    async loginGoogle(): Promise<{ authUrl: string }> {
-        return request.get("/api/google/auth-url");
     },
 };

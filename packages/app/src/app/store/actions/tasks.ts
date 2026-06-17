@@ -40,6 +40,7 @@ import {
 import api, { PermissionsAPI, TaskLoadParams, TasksAPI } from "app/api";
 import {
     getCurrentProjectId,
+    getHashPathname,
     getCurrentTaskId,
     getMe,
     getStack,
@@ -1059,7 +1060,7 @@ const archive = async (taskId: string) => {
     // skip archivation if the task is a subtask
     if (task.parent != undefined) return;
 
-    if (window.location.hash.includes(taskId)) {
+    if (getHashPathname().includes(taskId)) {
         nav(`/project/${task.project}`);
     }
 

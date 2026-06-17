@@ -7,7 +7,7 @@ import { Col, Icon, Row } from "app/components/common";
 import { useCalendars } from "app/hooks";
 
 interface CalendarPickerProps {
-    value: string;
+    value?: string | null;
     disabled?: boolean;
     onChange: (calendarId: string, source: "local" | "google" | "microsoft") => void;
 }
@@ -16,7 +16,7 @@ export const CalendarPicker: FunctionComponent<CalendarPickerProps> = ({ value, 
     const { calendars, isGoogleAuthenticated, loading } = useCalendars();
 
     const current = useMemo(() => {
-        if (value === "local") {
+        if (!value || value === "local") {
             return {
                 title: "Local calendar",
                 color: Colors.ORANGE3,
@@ -52,7 +52,7 @@ export const CalendarPicker: FunctionComponent<CalendarPickerProps> = ({ value, 
                     <MenuItem
                         text="Local calendar"
                         icon={<Stop color={Colors.ORANGE3} />}
-                        labelElement={value === "local" ? <Icon icon="check" /> : null}
+                        labelElement={!value || value === "local" ? <Icon icon="check" /> : null}
                         onClick={() => onChange("local", "local")}
                     />
                     {isGoogleAuthenticated ? (
@@ -60,23 +60,23 @@ export const CalendarPicker: FunctionComponent<CalendarPickerProps> = ({ value, 
                             <MenuDivider title="Google" />
                             {loading
                                 ? [...Array(5).keys()].map(i => (
-                                      <MenuItem
-                                          key={i}
-                                          text="Lorem ipsum"
-                                          className={Classes.SKELETON}
-                                          style={{ marginBottom: 5 }}
-                                      />
-                                  ))
+                                    <MenuItem
+                                        key={i}
+                                        text="Lorem ipsum"
+                                        className={Classes.SKELETON}
+                                        style={{ marginBottom: 5 }}
+                                    />
+                                ))
                                 : calendars.map(calendar => (
-                                      <MenuItem
-                                          key={calendar.id}
-                                          text={calendar.title}
-                                          icon={<Stop color={calendar.color} />}
-                                          labelElement={value === calendar.id ? <Icon icon="check" /> : null}
-                                          disabled={calendar.readOnly}
-                                          onClick={() => onChange(calendar.id, calendar.source)}
-                                      />
-                                  ))}
+                                    <MenuItem
+                                        key={calendar.id}
+                                        text={calendar.title}
+                                        icon={<Stop color={calendar.color} />}
+                                        labelElement={value === calendar.id ? <Icon icon="check" /> : null}
+                                        disabled={calendar.readOnly}
+                                        onClick={() => onChange(calendar.id, calendar.source)}
+                                    />
+                                ))}
                         </>
                     ) : null}
                 </Menu>

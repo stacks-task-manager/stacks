@@ -94,11 +94,13 @@ function toChangePayload(arg: EventDropArg | EventResizeDoneArg) {
 
 export const Calendar = () => {
     const { calendarShowAllEvents } = usePreferences(["calendarShowAllEvents"]);
-    const { view, date, calendars } = CalendarStore.use(
+    const { view, date, calendars, showCalendars, tokens } = CalendarStore.use(
         state => ({
             view: state.view,
             date: state.date,
             calendars: state.calendars,
+            showCalendars: state.filters.showCalendars,
+            tokens: state.tokens,
         }),
         shallowEqual
     );
@@ -110,19 +112,51 @@ export const Calendar = () => {
 
     const previousDate = useRef<Date | null>(null);
     const previousView = useRef<string | null>(null);
+    const previousShowCalendars = useRef<string | null>(null);
     const calendarRef = useRef<FullCalendar>(null);
+    const lastAutoReloadAtRef = useRef<number>(0);
 
     useRealtimeUpdates("events", CalendarActions.reload);
 
     useEffect(() => {
-        if (previousDate.current === date && previousView.current === view) {
+        const showCalendarsKey = JSON.stringify(showCalendars);
+        if (
+            previousDate.current === date &&
+            previousView.current === view &&
+            previousShowCalendars.current === showCalendarsKey
+        ) {
             return;
         }
 
         CalendarActions.load();
         previousDate.current = date;
         previousView.current = view;
-    }, [date, view]);
+        previousShowCalendars.current = showCalendarsKey;
+    }, [date, view, showCalendars]);
+
+    useEffect(() => {
+        const shouldAutoReload =
+            tokens.google != null && showCalendars.some(calendarId => calendarId.startsWith("google-"));
+        if (!shouldAutoReload) return;
+
+        const triggerAutoReload = () => {
+            const now = Date.now();
+            if (document.visibilityState !== "visible") return;
+            if (now - lastAutoReloadAtRef.current < 15_000) return;
+            lastAutoReloadAtRef.current = now;
+            void CalendarActions.reload();
+        };
+
+        const intervalId = window.setInterval(triggerAutoReload, 120_000);
+        window.addEventListener("focus", triggerAutoReload);
+        document.addEventListener("visibilitychange", triggerAutoReload);
+
+        return () => {
+            window.clearInterval(intervalId);
+            window.removeEventListener("focus", triggerAutoReload);
+            document.removeEventListener("visibilitychange", triggerAutoReload);
+        };
+    }, [showCalendars, tokens.google]);
 
     useEffect(() => {
         const id = requestAnimationFrame(() => {
@@ -288,6 +322,7 @@ export const Calendar = () => {
                     initialView={mapCalendarStoreViewToFc(view)}
                     events={fcEvents}
                     showCurrentTime
+                    showAllDaySlot
                     dayMaxEvents={calendarShowAllEvents ? false : true}
                     onSlotSelect={handleSlotSelect}
                     onEventClick={handleEventClick}
