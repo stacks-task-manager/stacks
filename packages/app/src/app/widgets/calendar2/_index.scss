@@ -61,10 +61,15 @@
 
     .event-source-icon {
         position: absolute;
-        top: 2px;
+        top: 4px;
+        bottom: 4px;
         right: 2px;
         opacity: 0.2;
         user-select: none;
         pointer-events: none;
+
+        svg {
+            max-height: 100%;
+        }
     }
 }
