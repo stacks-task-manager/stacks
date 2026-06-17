@@ -115,7 +115,16 @@ const load = async (reset = true) => {
     }
 };
 
+const refreshConnectedCalendars = async () => {
+    const { tokens } = CalendarStore.get();
+
+    if (tokens.google != null) {
+        await loadCalendars();
+    }
+};
+
 const reload = async () => {
+    await refreshConnectedCalendars();
     await load(false);
 };
 
@@ -639,37 +648,49 @@ const toggleCalendar = async (calendarId: string) => {
 //     );
 // };
 
+let loadCalendarsPromise: Promise<void> | null = null;
 const loadCalendars = async () => {
     if (CalendarStore.get().tokens.google == null) return;
+    if (loadCalendarsPromise) return loadCalendarsPromise;
 
-    CalendarStore.set(
-        produce((state: ICalendarStore) => {
-            state.loadingCalendars = true;
-        })
-    );
-
-    try {
-        const calendars = await CalendarIntegrationsAPI.listCalendars("google");
-
+    const promise = (async () => {
         CalendarStore.set(
             produce((state: ICalendarStore) => {
-                state.calendars = [
-                    ...state.calendars.filter(calendar => calendar.source !== "google"),
-                    ...calendars,
-                ];
-                state.loadingCalendars = false;
+                state.loadingCalendars = true;
             })
         );
-    } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error("Error loading Google calendars:", error);
-        CalendarStore.set(
-            produce((state: ICalendarStore) => {
-                state.loadingCalendars = false;
-            })
-        );
-        Toast.warn("Failed to load Google calendars.");
-    }
+
+        try {
+            const calendars = await CalendarIntegrationsAPI.listCalendars("google");
+
+            CalendarStore.set(
+                produce((state: ICalendarStore) => {
+                    state.calendars = [
+                        ...state.calendars.filter(calendar => calendar.source !== "google"),
+                        ...calendars,
+                    ];
+                    state.loadingCalendars = false;
+                })
+            );
+        } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error("Error loading Google calendars:", error);
+            CalendarStore.set(
+                produce((state: ICalendarStore) => {
+                    state.loadingCalendars = false;
+                })
+            );
+            Toast.warn("Failed to load Google calendars.");
+        }
+    })();
+
+    loadCalendarsPromise = promise;
+    void promise.finally(() => {
+        if (loadCalendarsPromise === promise) {
+            loadCalendarsPromise = null;
+        }
+    });
+    return promise;
 };
 
 const moveEvent = async (event: ICalendarEvent, calendar: string, source: ICalendarSource) => {

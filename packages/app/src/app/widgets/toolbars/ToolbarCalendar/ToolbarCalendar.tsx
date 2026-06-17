@@ -109,7 +109,7 @@ export const ToolbarCalendar = () => {
 
                     <ReloadButton
                         tooltip={translate("Reload events")}
-                        onClick={() => CalendarActions.load()}
+                        onClick={() => CalendarActions.reload()}
                     />
 
                     <Popover

@@ -322,6 +322,7 @@ export const Calendar = () => {
                     initialView={mapCalendarStoreViewToFc(view)}
                     events={fcEvents}
                     showCurrentTime
+                    showAllDaySlot
                     dayMaxEvents={calendarShowAllEvents ? false : true}
                     onSlotSelect={handleSlotSelect}
                     onEventClick={handleEventClick}

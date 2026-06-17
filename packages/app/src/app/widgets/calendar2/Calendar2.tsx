@@ -128,6 +128,7 @@ const DEFAULT_BG_BOTTOM = "#eef2fcff";
 const EventContent = ({ event, view }: { event: EventImpl, view: calendarViewType }) => {
     const [selected, setSelected] = useState(false);
 
+    const source = event.extendedProps?.iEvent.resource.data.source;
     const tinted = Boolean(event.extendedProps?.tint);
     const styles: CSSProperties = {
         color: tinted ? adjustColor(event.extendedProps.tint, -50) : Colors.DARK_GRAY5,
@@ -164,7 +165,20 @@ const EventContent = ({ event, view }: { event: EventImpl, view: calendarViewTyp
                 <div className="event-border" style={{ backgroundColor: rulerColor }} />
             </>
         );
-    }, [event, rulerColor, styles.color, view]);
+    }, [event, rulerColor, view]);
+
+    const icon = useMemo(() => {
+        let icon: string | null = null;
+        if (source === "local") {
+            icon = "check";
+        } else if (source === "google") {
+            icon = "google";
+        } else if (source === "microsoft") {
+            icon = "microsoft";
+        }
+
+        return icon ? <Icon icon={icon} size={24} className="event-source-icon" /> : null;
+    }, [source]);
 
     return (
         <Popover
@@ -179,6 +193,7 @@ const EventContent = ({ event, view }: { event: EventImpl, view: calendarViewTyp
             renderTarget={({ isOpen, ref, ...popoverProps }) => (
                 <div {...popoverProps} className={classNames("event-content", { selected: isOpen, completed: event.extendedProps?.completed })} ref={ref} style={styles}>
                     {eventContent}
+                    {icon}
                 </div>
             )} />
     );

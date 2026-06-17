@@ -23,9 +23,13 @@
         display: block;
     }
 
+    .fc-timegrid-axis-cushion,
     .slot-time-label {
         font-size: 12px;
         color: $gray1;
+    }
+
+    .slot-time-label {
         position: absolute;
         left: 0;
         right: 0;
@@ -53,5 +57,14 @@
                 top: -5px;
             }
         }
+    }
+
+    .event-source-icon {
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        opacity: 0.2;
+        user-select: none;
+        pointer-events: none;
     }
 }
