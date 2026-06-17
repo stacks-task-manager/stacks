@@ -116,8 +116,7 @@ You can sign this CLA in one of two ways:
 **Option A — Pull Request comment (preferred):**
 On your first pull request, post the following comment:
 
-> I have read the Contributor License Agreement in `CLA.md` and I hereby agree
-> to its terms. My GitHub username is @[YOUR USERNAME].
+> I have read the CLA Document and I hereby sign the CLA
 
 **Option B — Written signature:**
 
