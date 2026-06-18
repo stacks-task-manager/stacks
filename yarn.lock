@@ -7495,7 +7495,7 @@ __metadata:
     "@react-native-community/datetimepicker": 8.4.4
     "@react-navigation/drawer": ^7.5.0
     "@stacks/types": "workspace:*"
-    "@tailwindcss/typography": ^0.5.19
+    "@tailwindcss/typography": ^0.5.20
     "@tanstack/react-query": ^5.90.12
     "@types/react": ~19.1.0
     axios: ^1.13.4
@@ -7775,14 +7775,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tailwindcss/typography@npm:^0.5.19":
-  version: 0.5.19
-  resolution: "@tailwindcss/typography@npm:0.5.19"
+"@tailwindcss/typography@npm:^0.5.20":
+  version: 0.5.20
+  resolution: "@tailwindcss/typography@npm:0.5.20"
   dependencies:
     postcss-selector-parser: 6.0.10
   peerDependencies:
     tailwindcss: "*"
-  checksum: 6e5b25a2a24b8f112c9628b29aee4579ed024f368111937a5f3be7a4adc2d768c1aa9d5d5bb2d04972c7b49e526bcaade9f9e785e2e7a0b6be3d392f7ba02e17
+  checksum: d3aba7c0df31994b93a8fd6f9fdb3137859b47db77261a089f567e5f5ad9668ba61fca5d810fcba9c0e263b7cf9ce10c8eccfdb9ba67872bb89b5b3120e2c26a
   languageName: node
   linkType: hard
 
