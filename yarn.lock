@@ -3336,12 +3336,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fullcalendar/interaction@npm:^6.1.20":
-  version: 6.1.20
-  resolution: "@fullcalendar/interaction@npm:6.1.20"
+"@fullcalendar/interaction@npm:^6.1.21":
+  version: 6.1.21
+  resolution: "@fullcalendar/interaction@npm:6.1.21"
   peerDependencies:
-    "@fullcalendar/core": ~6.1.20
-  checksum: 72d85ae5a64dfb68ca4524167bcc9f81ed355557d42d9677c247185986bbd755a091cbdd21a89ce67a7523356e225e1595312ece6e08fe7bcd77ea80a0c771b0
+    "@fullcalendar/core": ~6.1.21
+  checksum: 66a10bf11e870f68d19d04efd24c00e7b549e4bc2a39b75387817352a761db39f1a9d782344e36cecbf395c187ba7ebe586ee1ad1b669fbacf06df1793d2dfff
   languageName: node
   linkType: hard
 
@@ -7276,7 +7276,7 @@ __metadata:
     "@floating-ui/dom": ^1.6.0
     "@fullcalendar/core": ^6.1.20
     "@fullcalendar/daygrid": ^6.1.20
-    "@fullcalendar/interaction": ^6.1.20
+    "@fullcalendar/interaction": ^6.1.21
     "@fullcalendar/react": ^6.1.20
     "@fullcalendar/timegrid": ^6.1.20
     "@hello-pangea/dnd": ^18.0.0
