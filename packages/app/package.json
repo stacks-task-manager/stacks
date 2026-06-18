@@ -69,7 +69,7 @@
         "lowlight": "^3.1.0",
         "markdown-to-jsx": "^7.4.0",
         "mousetrap": "^1.6.5",
-        "nanoid": "^4.0.1",
+        "nanoid": "^5.1.14",
         "node-emoji": "^1.11.0",
         "normalize.css": "^8.0.1",
         "qs": "^6.14.0",

@@ -7367,7 +7367,7 @@ __metadata:
     markdown-to-jsx: ^7.4.0
     mini-css-extract-plugin: ^2.9.2
     mousetrap: ^1.6.5
-    nanoid: ^4.0.1
+    nanoid: ^5.1.14
     node-emoji: ^1.11.0
     normalize.css: ^8.0.1
     postcss: ^8.4.49
@@ -20413,12 +20413,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nanoid@npm:^4.0.1":
-  version: 4.0.2
-  resolution: "nanoid@npm:4.0.2"
+"nanoid@npm:^5.1.14":
+  version: 5.1.14
+  resolution: "nanoid@npm:5.1.14"
   bin:
     nanoid: bin/nanoid.js
-  checksum: 747c399cea4664dd0be1d0ec498ffd1ef8f1f5221676fc8b577e3f46f66d9afcddb9595d63d19a2e78d0bc6cc33984f65e66bf1682c850b9e26288883d96b53f
+  checksum: 9ebfa081c29db37ab58cc7b9ca2b24c08f18ed354cd9abc8a6297b255962596c73127ccbe4f4863692c4032176a63299f84e7c1d274dbefbef9026cfa7963226
   languageName: node
   linkType: hard
 
