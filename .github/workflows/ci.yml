@@ -16,7 +16,7 @@ jobs:
         runs-on: ubuntu-latest
         timeout-minutes: 20
         steps:
-            - uses: actions/checkout@v6
+            - uses: actions/checkout@v7
 
             - name: Set up Node
               uses: actions/setup-node@v6
@@ -63,7 +63,7 @@ jobs:
                     - "@stacks/app"
                     - "@stacks/locales-tui"
         steps:
-            - uses: actions/checkout@v6
+            - uses: actions/checkout@v7
 
             - name: Set up Node
               uses: actions/setup-node@v6
@@ -89,7 +89,7 @@ jobs:
         needs: install-and-build
         timeout-minutes: 15
         steps:
-            - uses: actions/checkout@v6
+            - uses: actions/checkout@v7
 
             - name: Set up Node
               uses: actions/setup-node@v6
@@ -141,7 +141,7 @@ jobs:
             POSTGRES_PASSWORD: postgres
             POSTGRES_DB: stacks_test
         steps:
-            - uses: actions/checkout@v6
+            - uses: actions/checkout@v7
 
             - name: Set up Node
               uses: actions/setup-node@v6
@@ -180,7 +180,7 @@ jobs:
         needs: install-and-build
         timeout-minutes: 10
         steps:
-            - uses: actions/checkout@v6
+            - uses: actions/checkout@v7
 
             - name: Set up Node
               uses: actions/setup-node@v6
