@@ -36,8 +36,8 @@
     "@types/sequelize": "^4.28.20",
     "esbuild": "^0.25.8",
     "react-email": "^4.2.8",
-    "tsx": "^4.7.1",
-    "typescript": "^5.8.3",
-    "vitest": "^3.0.5"
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.9"
   }
 }
