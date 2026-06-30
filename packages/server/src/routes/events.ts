@@ -7,7 +7,13 @@ import type { Context } from "hono";
 import { translate } from "@stacks/translations";
 
 import { EventsLoader } from "../loaders";
-import { EventSchema, EventsCountSchema, EventsFilteredSchema, EventUpdateSchema } from "./schema/event";
+import {
+    EventDeleteSchema,
+    EventSchema,
+    EventsCountSchema,
+    EventsFilteredSchema,
+    EventUpdateSchema,
+} from "./schema/event";
 import { validator } from "../middleware/validator";
 import { cacheMiddleware } from "../utils/cache";
 import { Errors } from "../errors";
@@ -69,10 +75,12 @@ events.patch(
 /** DELETE `/:id` — Deletes an event; 404 if missing. */
 events.delete(
     "/:id",
+    validator(EventDeleteSchema, "query"),
     asyncHandler(async (c: Context) => {
         const eventId = c.req.param("id");
+        const deleteOptions = c.req.valid("query");
 
-        const deleted = await EventsLoader.remove(eventId!);
+        const deleted = await EventsLoader.remove(eventId!, deleteOptions);
         if (!deleted) {
             throw Errors.notFound(translate("Event not found"));
         }

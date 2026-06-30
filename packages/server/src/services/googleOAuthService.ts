@@ -48,6 +48,12 @@ interface GoogleCalendarEvent {
     htmlLink?: string;
     created?: string;
     updated?: string;
+    recurringEventId?: string;
+    originalStartTime?: {
+        dateTime?: string;
+        date?: string;
+        timeZone?: string;
+    };
 }
 
 class GoogleOAuthService {
@@ -91,6 +97,14 @@ class GoogleOAuthService {
             htmlLink: event.htmlLink,
             created: event.created,
             updated: event.updated,
+            recurringEventId: event.recurringEventId,
+            originalStartTime: event.originalStartTime
+                ? {
+                    dateTime: event.originalStartTime.dateTime,
+                    date: event.originalStartTime.date,
+                    timeZone: event.originalStartTime.timeZone,
+                }
+                : undefined,
         };
     }
 
@@ -385,6 +399,32 @@ class GoogleOAuthService {
             });
         } catch (error) {
             console.error("Error deleting calendar event:", error);
+            throw error;
+        }
+    }
+
+    async cancelCalendarEventInstance(userId: string, calendarId: string, eventId: string): Promise<void> {
+        try {
+            const tokens = await this.refreshTokenIfNeeded(userId);
+            if (!tokens) {
+                throw new Error("No valid Google tokens found");
+            }
+
+            this.oauth2Client.setCredentials({
+                access_token: tokens.access_token,
+                refresh_token: tokens.refresh_token,
+            });
+
+            const calendar = google.calendar({ version: "v3", auth: this.oauth2Client });
+            await calendar.events.patch({
+                calendarId,
+                eventId,
+                requestBody: {
+                    status: "cancelled",
+                } as any,
+            });
+        } catch (error) {
+            console.error("Error cancelling recurring calendar event instance:", error);
             throw error;
         }
     }
