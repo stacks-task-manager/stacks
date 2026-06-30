@@ -77,7 +77,7 @@ const suggestion = {
 };
 
 export const SlashMention = Extension.create({
-    name: "commands",
+    name: "slashCommands",
     priority: 1000,
     addOptions() {
         return {
