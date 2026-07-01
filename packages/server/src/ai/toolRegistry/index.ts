@@ -55,6 +55,12 @@ type BindAiTool = (opts: {
     execute: (input: never) => Promise<unknown>;
 }) => unknown;
 
+export type AiToolExecuteOverride = (opts: {
+    toolName: string;
+    input: unknown;
+    defaultExecute: (input: unknown) => Promise<unknown>;
+}) => Promise<unknown>;
+
 /**
  * Build the `tools` object for `streamText` / `generateText`.
  *
@@ -62,7 +68,7 @@ type BindAiTool = (opts: {
  * in `promptContext.ts`). Omit it to get every tool — suitable for tests and
  * any non-chat call site that wants the full surface.
  */
-export function buildAiTools(allowedNames?: Iterable<string>): ToolSet {
+export function buildAiTools(allowedNames?: Iterable<string>, executeOverride?: AiToolExecuteOverride): ToolSet {
     const out = {} as ToolSet;
     const bindTool = tool as unknown as BindAiTool;
     const allow = allowedNames ? new Set(allowedNames) : null;
@@ -70,10 +76,14 @@ export function buildAiTools(allowedNames?: Iterable<string>): ToolSet {
         if (allow && !allow.has(def.name)) {
             continue;
         }
+        const defaultExecute = def.execute as (input: unknown) => Promise<unknown>;
+        const execute = executeOverride
+            ? (input: unknown) => executeOverride({ toolName: def.name, input, defaultExecute })
+            : defaultExecute;
         (out as Record<string, unknown>)[def.name] = bindTool({
             description: def.description,
             inputSchema: def.inputSchema,
-            execute: def.execute as (input: never) => Promise<unknown>,
+            execute: execute as (input: never) => Promise<unknown>,
         });
     }
     return out;

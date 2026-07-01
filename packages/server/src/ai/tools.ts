@@ -6,6 +6,7 @@ export {
     activityAiTools,
     AI_TOOL_REGISTRY,
     buildAiTools,
+    type AiToolExecuteOverride,
     defineTool,
     eventAiTools,
     notepadAiTools,

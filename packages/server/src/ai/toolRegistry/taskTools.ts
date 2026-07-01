@@ -3,7 +3,7 @@
  * AI tools: tasks listing, filters, and mutations.
  */
 import { translate } from "@stacks/translations";
-import type { ITask } from "@stacks/types";
+import { PRIORITY, type ITask } from "@stacks/types";
 import { z } from "zod";
 import { Errors } from "../../errors";
 import { ProjectsLoader, StacksLoader, TasksLoader } from "../../loaders";
@@ -20,6 +20,15 @@ function pickDefaultStackId(projectId: string, stacksOrder: string[], stacks: { 
 }
 
 const uuidOrArray = z.union([z.string().uuid(), z.array(z.string().uuid()).min(1)]);
+const ONE_HOUR_MS = 60 * 60 * 1000;
+
+function isValidDate(value: Date | null | undefined): value is Date {
+    return value instanceof Date && !Number.isNaN(value.getTime());
+}
+
+function shiftDateHours(date: Date, direction: -1 | 1): Date {
+    return new Date(date.getTime() + direction * ONE_HOUR_MS);
+}
 
 function listTasksHasFilter(d: {
     project?: string | string[];
@@ -422,19 +431,51 @@ export const taskAiTools = [
 
     defineTool({
         name: "updateTask",
-        description: `Update a task's fields (title/done/duedate/assignees). Does NOT move between columns — for that use moveTask. If you only know a title, call listTasks first (returns ids; findTasks does not).`,
+        description: `Update a task's fields (title/description/done/dates/assignees/priority/status/estimate/progress/tint). Does NOT move between columns — for that use moveTask. If you only know a title, call listTasks first (returns ids; findTasks does not). Resolve status ids via listTags when the user names a status label.`,
         inputSchema: z.object({
             taskId: z.string().describe("Task UUID"),
             title: z.string().optional(),
+            description: z.string().optional().describe("Task description; pass empty string to clear"),
             done: z.boolean().optional().describe("True = mark done (there is no delete-task tool)"),
             todo: z.boolean().optional().describe("True = mark not done"),
+            startdate: z.string().nullable().optional().describe("ISO 8601 or null to clear"),
             duedate: z.string().nullable().optional().describe("ISO 8601 or null to clear"),
+            dodate: z.string().nullable().optional().describe("ISO 8601 or null to clear"),
             assigneeUserIds: z.array(z.string()).optional().describe("Replace assignees with these UUIDs"),
+            priority: z.nativeEnum(PRIORITY).nullable().optional().describe("Priority, or null to clear"),
+            statusTagId: z.string().nullable().optional().describe("Status tag UUID, or null to clear"),
+            estimateMinutes: z
+                .number()
+                .int()
+                .min(0)
+                .nullable()
+                .optional()
+                .describe("Estimate in minutes, or null to clear"),
+            progress: z.number().min(0).max(100).optional().describe("Progress percentage from 0 to 100"),
+            tint: z.string().nullable().optional().describe("Task tint/color value, or null to clear"),
         }),
-        execute: async ({ taskId, title, done, todo, duedate, assigneeUserIds }) => {
+        execute: async ({
+            taskId,
+            title,
+            description,
+            done,
+            todo,
+            startdate,
+            duedate,
+            dodate,
+            assigneeUserIds,
+            priority,
+            statusTagId,
+            estimateMinutes,
+            progress,
+            tint,
+        }) => {
             const patch: Partial<ITask> = {};
             if (title !== undefined) {
                 patch.title = title;
+            }
+            if (description !== undefined) {
+                patch.description = description;
             }
             if (done !== undefined) {
                 patch.done = done;
@@ -442,19 +483,70 @@ export const taskAiTools = [
             if (todo === true) {
                 patch.done = false;
             }
+            if (startdate !== undefined) {
+                patch.startdate = startdate === null ? null : new Date(startdate);
+            }
             if (duedate !== undefined) {
                 patch.duedate = duedate === null ? null : new Date(duedate);
+            }
+            if (dodate !== undefined) {
+                patch.dodate = dodate === null ? null : new Date(dodate);
             }
             if (assigneeUserIds !== undefined) {
                 patch.assignees = assigneeUserIds;
             }
+            if (priority !== undefined) {
+                patch.priority = priority;
+            }
+            if (statusTagId !== undefined) {
+                patch.status = statusTagId ?? undefined;
+            }
+            if (estimateMinutes !== undefined) {
+                patch.estimate = estimateMinutes ?? undefined;
+            }
+            if (progress !== undefined) {
+                patch.progress = progress;
+                patch.done = progress === 100;
+            }
+            if (tint !== undefined) {
+                patch.tint = tint ?? undefined;
+            }
+
+            if (startdate !== undefined || duedate !== undefined) {
+                const currentTask = await TasksLoader.getOne(taskId);
+                const nextStart =
+                    patch.startdate !== undefined
+                        ? (patch.startdate as Date | null)
+                        : ((currentTask.startdate ? new Date(currentTask.startdate) : null) as Date | null);
+                const nextDue =
+                    patch.duedate !== undefined
+                        ? (patch.duedate as Date | null)
+                        : ((currentTask.duedate ? new Date(currentTask.duedate) : null) as Date | null);
+
+                if (isValidDate(nextStart) && isValidDate(nextDue) && nextStart.getTime() > nextDue.getTime()) {
+                    if (startdate !== undefined) {
+                        patch.startdate = shiftDateHours(nextDue, -1);
+                    } else if (duedate !== undefined) {
+                        patch.duedate = shiftDateHours(nextStart, 1);
+                    }
+                }
+            }
+
             const task = await TasksLoader.update(taskId, patch);
             return {
                 id: task.id,
                 title: task.title,
+                description: task.description ?? "",
                 done: task.done,
+                startdate: task.startdate ? new Date(task.startdate).toISOString() : null,
                 duedate: task.duedate ? new Date(task.duedate).toISOString() : null,
+                dodate: task.dodate ? new Date(task.dodate).toISOString() : null,
                 assignees: task.assignees ?? [],
+                priority: task.priority ?? null,
+                statusTagId: task.status ?? null,
+                estimateMinutes: task.estimate ?? null,
+                progress: task.progress,
+                tint: task.tint ?? null,
                 project: task.project,
             };
         },

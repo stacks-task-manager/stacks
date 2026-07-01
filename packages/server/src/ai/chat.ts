@@ -12,7 +12,8 @@ import {
 } from "./clientRoute";
 import { selectPromptContext } from "./promptContext";
 import { template } from "./promptTemplate";
-import { buildAiTools } from "./tools";
+import { buildAiTools, type AiToolExecuteOverride } from "./tools";
+import { createMcpToolClient } from "./mcpToolClient";
 
 export type AiChatClientMessage = { role: "user" | "assistant"; content: string };
 
@@ -32,6 +33,28 @@ export type StreamAiChatHandlers = {
 function envTrim(name: string): string {
     const v = process.env[name];
     return typeof v === "string" ? v.trim() : "";
+}
+
+function shouldUseMcpToolBackend(): boolean {
+    const mode = envTrim("AI_TOOL_BACKEND");
+    if (mode === "mcp") {
+        return true;
+    }
+    if (mode !== "mcp-canary") {
+        return false;
+    }
+    const rawPercent = envTrim("AI_TOOL_BACKEND_CANARY_PERCENT") || "5";
+    const percent = Math.max(0, Math.min(100, Number.parseInt(rawPercent, 10) || 0));
+    if (percent <= 0) {
+        return false;
+    }
+    try {
+        const userId = String((requestContext.getCurrentUser() as unknown as { id?: string }).id ?? "");
+        const sum = Array.from(userId).reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
+        return sum % 100 < percent;
+    } catch {
+        return false;
+    }
 }
 
 /**
@@ -98,7 +121,7 @@ function currentUserTemplateVars(): {
         const name = fullName || nickname || email || "Unknown user";
         return {
             hasCurrentUser: true,
-            currentUserId: u.id ?? "",
+            currentUserId: String((u as unknown as { id?: string }).id ?? ""),
             currentUserName: name,
             currentUserEmail: email,
         };
@@ -143,7 +166,7 @@ function toModelMessages(messages: AiChatClientMessage[]): ModelMessage[] {
     });
 }
 
-function widgetsFromToolResult(toolName: string, output: unknown): AiChatWidget[] {
+export function widgetsFromToolResult(toolName: string, output: unknown): AiChatWidget[] {
     if (!output || typeof output !== "object") {
         return [];
     }
@@ -238,7 +261,19 @@ export async function streamAiChat(
         })
     );
 
-    const tools = buildAiTools(selection.allowedTools);
+    const remoteToolNames = new Set<string>(["getTask", "createTask", "listStacks", "createStack", "updateStack"]);
+    const shouldUseMcp = shouldUseMcpToolBackend();
+    const mcp = shouldUseMcp ? await createMcpToolClient() : null;
+    const executeOverride: AiToolExecuteOverride | undefined = mcp
+        ? async ({ toolName, input, defaultExecute }) => {
+            if (!remoteToolNames.has(toolName)) {
+                return await defaultExecute(input);
+            }
+            return await mcp.callTool(toolName, input);
+        }
+        : undefined;
+
+    const tools = buildAiTools(selection.allowedTools, executeOverride);
 
     const messages: ModelMessage[] = [
         ...toModelMessages(history),
@@ -286,5 +321,9 @@ export async function streamAiChat(
     } catch (e) {
         console.error("[aiChat] turn failed", e);
         handlers.onError(formatAiChatError(e));
+    } finally {
+        if (mcp) {
+            await mcp.close().catch(() => undefined);
+        }
     }
 }
