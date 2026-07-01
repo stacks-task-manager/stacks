@@ -32,19 +32,22 @@ describe("promptContext.selectPromptContext", () => {
         expect(sel.reasons.tasks?.some(r => r.includes("keyword"))).toBe(true);
     });
 
-    it("exposes moveTask + listStacks under the tasks topic", () => {
+    it("exposes moveTask + listStacks + listTags under the tasks topic", () => {
         const sel = selectPromptContext({ newUserMessage: "move this task to Done" });
         expect(sel.topics).toContain("tasks");
         expect(sel.allowedTools).toContain("moveTask");
         // moveTask is useless without a way to discover stack ids; listStacks
         // must survive even on a pure-tasks turn.
         expect(sel.allowedTools).toContain("listStacks");
+        // task updates can resolve status labels via listTags.
+        expect(sel.allowedTools).toContain("listTags");
     });
 
     it("picks projects + tasks from message keywords", () => {
         const sel = selectPromptContext({ newUserMessage: "add a new column to the board" });
         expect(sel.topics).toEqual(expect.arrayContaining(["projects"]));
         expect(sel.allowedTools).toContain("createStack");
+        expect(sel.allowedTools).toContain("updateStack");
     });
 
     it("picks notepads from message keywords", () => {

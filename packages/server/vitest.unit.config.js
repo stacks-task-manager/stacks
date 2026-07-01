@@ -18,6 +18,9 @@ export default defineConfig({
             "src/ai/__tests__/clientRoute.test.ts",
             "src/ai/__tests__/promptContext.test.ts",
             "src/ai/__tests__/searchPeopleSchema.test.ts",
+            "src/ai/__tests__/stackTools.test.ts",
+            "src/ai/__tests__/taskTools.test.ts",
+            "src/ai/__tests__/widgetsFromToolResult.test.ts",
         ],
     },
 });
