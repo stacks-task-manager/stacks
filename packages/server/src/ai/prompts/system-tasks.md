@@ -6,7 +6,8 @@
 - "Assigned to <person>" → resolve UUID (identity block or `searchPeople`) → `assigneeUserIds: ["<uuid>"]`. **Not** `assignedOnly`.
 - `assigneeUserIds` = assigned to those specific people. `assignedOnly` = has ANY assignee (only use when user contrasts assigned-vs-unassigned without naming anyone).
 - Create → `createTask` (needs `projectId`; use UI block id or `listProjects`). No delete tool — complete via `updateTask` with `done: true`.
-- Update fields (title/done/duedate/assignees) → `updateTask`.
+- Update fields (title/description/done/startdate/duedate/dodate/assignees/priority/status/estimate/progress/tint) → `updateTask`.
+- When the user names a status label instead of a UUID, call `listTags` first and use the matching status tag id as `statusTagId`.
 - **Move between columns (stacks)** → `moveTask` with `taskId` + destination `stackId`. Never use `updateTask` for moves — it bypasses stack ordering. If you don't have stack ids, call `listStacks` with the task's `projectId` first. Optional `afterTaskId` to position within the destination.
 - Task comments / activity → `listActivities` with task UUID(s).
 - Task reminders → `listReminders` with the task UUID.

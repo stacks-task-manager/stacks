@@ -170,7 +170,7 @@ Each domain has its own file under [`src/ai/toolRegistry/`](../src/ai/toolRegist
 | --- | --- |
 | `taskTools.ts` | `findTasks`, `listTasks`, `createTask`, `updateTask`, `moveTask` |
 | `projectTools.ts` | `createProject`, `listProjects`, `getProject` |
-| `stackTools.ts` | `listStacks`, `createStack` |
+| `stackTools.ts` | `listStacks`, `createStack`, `updateStack` |
 | `peopleTools.ts` | `searchPeople`, `getPerson` |
 | `orgTools.ts` | `getCompany`, `listCompanies`, `listTags`, `listBookmarks` |
 | `notepadTools.ts` | `listNotepads`, `summarizeNotepad` |
@@ -192,6 +192,8 @@ defineTool({
 ```
 
 All domain arrays are spread into `AI_TOOL_REGISTRY` in [`toolRegistry/index.ts:35`](../src/ai/toolRegistry/index.ts). At streaming time, [`buildAiTools(allowedNames)`](../src/ai/toolRegistry/index.ts) returns the Vercel AI `ToolSet` filtered to just the allowed names.
+
+When `AI_TOOL_BACKEND` is set to `mcp` or `mcp-canary`, the chat pipeline can delegate selected tools to the authenticated MCP bridge at `/api/mcp` while preserving the existing WebSocket contract for the app. Keep the MCP allowlist in [`routes/mcp.ts`](../src/routes/mcp.ts) and the chat-side remote allowlist in [`chat.ts`](../src/ai/chat.ts) aligned with any tool you expect to run through MCP.
 
 The `tools.ts` module at the AI root is a thin re-export of the registry — `chat.ts` imports from there, but you should add new tools to the per-domain files.
 
