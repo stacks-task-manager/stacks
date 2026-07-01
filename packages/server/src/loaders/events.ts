@@ -22,6 +22,13 @@ interface EventsFilter {
     calendars?: string[];
 }
 
+interface EventDeleteOptions {
+    scope?: "single" | "series";
+    calendarId?: string;
+    googleEventId?: string;
+    recurringEventId?: string;
+}
+
 interface Where {
     start?: {
         [Op.gte]: Date;
@@ -46,6 +53,27 @@ function normalizeIsoDateTime(value: unknown): string | undefined {
     if (typeof value === "string") return value;
     if (value instanceof Date) return value.toISOString();
     return undefined;
+}
+
+function resolveGoogleDeleteTarget(
+    id: string,
+    options?: EventDeleteOptions
+): { calendarId: string; googleEventId: string } | null {
+    const scopedEventId =
+        options?.scope === "series" ? options.recurringEventId ?? options.googleEventId : options?.googleEventId;
+
+    if (options?.calendarId && scopedEventId) {
+        return {
+            calendarId: options.calendarId,
+            googleEventId: scopedEventId,
+        };
+    }
+
+    if (options?.scope === "series") {
+        return null;
+    }
+
+    return parseGoogleCompositeEventId(id);
 }
 
 /**
@@ -78,6 +106,13 @@ function convertGoogleEventsToLocalFormat(googleEvents: GoogleCalendarEvent[], c
             location: googleEvent.location || "",
             original: {
                 htmlLink: googleEvent.htmlLink,
+                google: {
+                    calendarId,
+                    eventId: googleEvent.id,
+                    recurringEventId: googleEvent.recurringEventId,
+                    originalStartTime: googleEvent.originalStartTime,
+                    isRecurringInstance: googleEvent.recurringEventId != null,
+                },
             },
             // externalId: googleEvent.id,
             // htmlLink: googleEvent.htmlLink,
@@ -380,17 +415,31 @@ async function update(id: string, data: Partial<ICalendarEvent>) {
     }
 }
 
-async function remove(id: string) {
+async function remove(id: string, options?: EventDeleteOptions) {
     try {
         const user = getCurrentUser();
         if (id.startsWith("google_")) {
-            const parsed = parseGoogleCompositeEventId(id);
+            const parsed = resolveGoogleDeleteTarget(id, options);
             if (!parsed) {
                 throw Errors.invalidInput("Invalid Google event id");
             }
 
             try {
-                await googleOAuthService.deleteCalendarEvent(user.id, parsed.calendarId, parsed.googleEventId);
+                const shouldCancelRecurringInstance =
+                    options?.scope === "single" &&
+                    options.recurringEventId != null &&
+                    options.googleEventId != null &&
+                    options.googleEventId === parsed.googleEventId;
+
+                if (shouldCancelRecurringInstance) {
+                    await googleOAuthService.cancelCalendarEventInstance(
+                        user.id,
+                        parsed.calendarId,
+                        parsed.googleEventId
+                    );
+                } else {
+                    await googleOAuthService.deleteCalendarEvent(user.id, parsed.calendarId, parsed.googleEventId);
+                }
                 return true;
             } catch (error: any) {
                 const status = error?.response?.status ?? error?.code;

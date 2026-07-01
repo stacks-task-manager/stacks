@@ -16,6 +16,13 @@ interface LoadTasksParams {
     projects: string[];
 }
 
+export interface EventDeleteParams {
+    scope?: "single" | "series";
+    calendarId?: string;
+    googleEventId?: string;
+    recurringEventId?: string;
+}
+
 export const EventsAPI = {
     /** Lists events for a calendar view and anchor date. */
     async loadEvents(from: Date, to: Date, calendars?: string[]): Promise<ICalendarEvent[]> {
@@ -36,8 +43,10 @@ export const EventsAPI = {
         return request.patch(`/api/events/${eventId}`, event);
     },
     /** Deletes an event. */
-    async remove(eventId: string): Promise<boolean> {
-        return request.delete(`/api/events/${eventId}`);
+    async remove(eventId: string, params?: EventDeleteParams): Promise<boolean> {
+        return request.delete(`/api/events/${eventId}`, {
+            params,
+        });
     },
     /** Event count for today. */
     async getTodaysEvents(): Promise<number> {

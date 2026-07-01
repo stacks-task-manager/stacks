@@ -2,7 +2,7 @@
 /**
  * Calendar data loading and mutations.
  */
-import api, { CalendarIntegrationsAPI, type CalendarProvider, EventsAPI } from "app/api";
+import api, { CalendarIntegrationsAPI, type CalendarProvider, type EventDeleteParams, EventsAPI } from "app/api";
 import {
     addDays,
     addHours,
@@ -26,6 +26,10 @@ import { getDatesSpan } from "app/hooks";
 import Dialog from "app/utils/dialog";
 import Toast from "app/utils/toast";
 import Storage from "app/utils/storage";
+import {
+    showRecurringDeleteDialog,
+    type RecurringDeleteScope,
+} from "app/widgets/calendar/RecurringDeleteDialog/RecurringDeleteDialog";
 import { patchFilterField } from "../actionHelpers";
 import { CALENDAR_FILTERS_STORAGE_KEY, CalendarStore, ICalendarFilters, ICalendarStore } from "../calendar";
 import { TasksActions } from "./tasks";
@@ -37,6 +41,31 @@ const savePrefs = async () => {
 
 const persistFilters = () => {
     Storage.set(CALENDAR_FILTERS_STORAGE_KEY, CalendarStore.get().filters);
+};
+
+const findCalendarEvent = (eventId: string): ICalendarEvent | undefined => {
+    const event = CalendarStore.get().events.find(item => item.resource.data.id === eventId);
+    if (!event || event.resource.type !== EVENTTYPE.EVENT) return undefined;
+    return event.resource.data as ICalendarEvent;
+};
+
+const isRecurringGoogleEvent = (event?: ICalendarEvent): boolean => {
+    return event?.source === "google" && event.original?.google?.isRecurringInstance === true;
+};
+
+const buildDeleteParams = (
+    event?: ICalendarEvent,
+    scope: RecurringDeleteScope = "single"
+): EventDeleteParams | undefined => {
+    const google = event?.original?.google;
+    if (event?.source !== "google" || !google) return undefined;
+
+    return {
+        scope,
+        calendarId: google.calendarId,
+        googleEventId: google.eventId,
+        recurringEventId: google.recurringEventId,
+    };
 };
 
 let loadingCalendar = false;
@@ -535,10 +564,24 @@ const addTempEvent = async (startDate: Date, endDate: Date) => {
     }
 };
 
-const deleteEvent = async (eventId: string) => {
-    const deleted: boolean = await EventsAPI.remove(eventId);
+const deleteEvent = async (eventOrId: string | ICalendarEvent, scope: RecurringDeleteScope = "single") => {
+    const event = typeof eventOrId === "string" ? findCalendarEvent(eventOrId) : eventOrId;
+    const eventId = typeof eventOrId === "string" ? eventOrId : eventOrId.id;
+    const deleted: boolean = await EventsAPI.remove(eventId, buildDeleteParams(event, scope));
 
     if (deleted) {
+        if (event?.source === "google") {
+            CalendarStore.set(
+                produce((state: ICalendarStore) => {
+                    if (state.selected && state.selected[0] === eventId) {
+                        state.selected = undefined;
+                    }
+                })
+            );
+            await reload();
+            return;
+        }
+
         CalendarStore.set(
             produce((state: ICalendarStore) => {
                 state.events = state.events.filter(ev => ev.resource.data.id !== eventId);
@@ -552,14 +595,24 @@ const deleteEvent = async (eventId: string) => {
     }
 };
 
-const deleteEventAlert = async (eventId: string) => {
+const deleteEventAlert = async (eventOrId: string | ICalendarEvent) => {
+    const event = typeof eventOrId === "string" ? findCalendarEvent(eventOrId) : eventOrId;
+
+    if (event && isRecurringGoogleEvent(event)) {
+        const scope = await showRecurringDeleteDialog();
+        if (!scope) return false;
+
+        await deleteEvent(event, scope);
+        return true;
+    }
+
     const response = await Dialog.confirm(
         "Delete event",
         "Are you sure you want to remove this event? This action cannot be undone!"
     );
 
     if (response) {
-        await deleteEvent(eventId);
+        await deleteEvent(event ?? eventOrId);
     }
 
     return response;
@@ -569,14 +622,9 @@ const deleteSelectedEvent = async () => {
     const selectedEventId = CalendarStore.get().selected;
     if (selectedEventId == null) return;
 
-    const selectedEvent = CalendarStore.get().events.find(
-        event => event.resource.data.id === selectedEventId[0]
-    );
-
-
-
-    if (selectedEvent && selectedEvent.resource.type === EVENTTYPE.EVENT) {
-        await deleteEventAlert(selectedEventId[0]);
+    const selectedEvent = findCalendarEvent(selectedEventId[0]);
+    if (selectedEvent) {
+        await deleteEventAlert(selectedEvent);
     }
 };
 
@@ -714,7 +762,7 @@ const moveEvent = async (event: ICalendarEvent, calendar: string, source: ICalen
             return;
         }
 
-        await deleteEvent(event.id);
+        await deleteEvent(event);
         selectEvent(savedEvent.id, EVENTTYPE.EVENT);
         await reload();
     } catch (error) {
