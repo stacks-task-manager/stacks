@@ -7569,7 +7569,7 @@ __metadata:
     "@tiptap/extension-underline": ^3.20.4
     "@tiptap/extension-youtube": ^3.20.4
     "@tiptap/extensions": ^3.20.4
-    "@tiptap/pm": ^3.20.4
+    "@tiptap/pm": ^3.27.1
     "@tiptap/react": ^3.20.4
     "@tiptap/starter-kit": ^3.20.4
     "@tiptap/suggestion": ^3.23.6
@@ -8839,7 +8839,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tiptap/pm@npm:^3.20.4, @tiptap/pm@npm:^3.23.1":
+"@tiptap/pm@npm:^3.23.1":
   version: 3.23.1
   resolution: "@tiptap/pm@npm:3.23.1"
   dependencies:
@@ -8856,6 +8856,27 @@ __metadata:
     prosemirror-transform: ^1.10.2
     prosemirror-view: ^1.38.1
   checksum: bcc62586fc4c981599050a362d15e88a0eab6e508948a9b6da70186812156cafd9393cfae5c9b567b566277a992d9e026f3b0a6bf3c8f9e6ac79a1521f30c4ca
+  languageName: node
+  linkType: hard
+
+"@tiptap/pm@npm:^3.27.1":
+  version: 3.27.1
+  resolution: "@tiptap/pm@npm:3.27.1"
+  dependencies:
+    prosemirror-changeset: ^2.3.0
+    prosemirror-commands: ^1.6.2
+    prosemirror-dropcursor: ^1.8.1
+    prosemirror-gapcursor: ^1.3.2
+    prosemirror-history: ^1.4.1
+    prosemirror-inputrules: ^1.4.0
+    prosemirror-keymap: ^1.2.3
+    prosemirror-model: ^1.25.7
+    prosemirror-schema-list: ^1.5.0
+    prosemirror-state: ^1.4.4
+    prosemirror-tables: ^1.8.0
+    prosemirror-transform: ^1.12.0
+    prosemirror-view: ^1.41.8
+  checksum: fa89464412c9be18afc5a540965d991524a8013942fd61d037d9915815a4bcab5bec10a7e562cabd1624950625f5bfaa35c47024b94c1678db374d75fdf536de
   languageName: node
   linkType: hard
 
@@ -23090,6 +23111,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"prosemirror-model@npm:^1.25.7, prosemirror-model@npm:^1.25.8":
+  version: 1.25.9
+  resolution: "prosemirror-model@npm:1.25.9"
+  dependencies:
+    orderedmap: ^2.0.0
+  checksum: c86ca3b080df8359997120d6008c527b0ae6e4bd6cf01ea917635163f417d5947a29bf9c338f73a257bafd4fdd23dd235b4518db81c8627ff1699357999d3d74
+  languageName: node
+  linkType: hard
+
 "prosemirror-schema-basic@npm:^1.2.3":
   version: 1.2.4
   resolution: "prosemirror-schema-basic@npm:1.2.4"
@@ -23121,7 +23151,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prosemirror-tables@npm:^1.6.4":
+"prosemirror-tables@npm:^1.6.4, prosemirror-tables@npm:^1.8.0":
   version: 1.8.5
   resolution: "prosemirror-tables@npm:1.8.5"
   dependencies:
@@ -23148,7 +23178,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prosemirror-transform@npm:^1.0.0, prosemirror-transform@npm:^1.1.0, prosemirror-transform@npm:^1.10.2, prosemirror-transform@npm:^1.10.5, prosemirror-transform@npm:^1.7.3":
+"prosemirror-transform@npm:^1.0.0, prosemirror-transform@npm:^1.1.0, prosemirror-transform@npm:^1.10.2, prosemirror-transform@npm:^1.10.5, prosemirror-transform@npm:^1.12.0, prosemirror-transform@npm:^1.7.3":
   version: 1.12.0
   resolution: "prosemirror-transform@npm:1.12.0"
   dependencies:
@@ -23165,6 +23195,17 @@ __metadata:
     prosemirror-state: ^1.0.0
     prosemirror-transform: ^1.1.0
   checksum: b0c3e464a33eda2eccf52e2bc8e3d6cc1740833b5242b384dd0839ecb129cd005f49c24127b5b905f3f2af8e4fe3a0ff09f12ed23df1e53284bd4639137d53c2
+  languageName: node
+  linkType: hard
+
+"prosemirror-view@npm:^1.41.8":
+  version: 1.41.9
+  resolution: "prosemirror-view@npm:1.41.9"
+  dependencies:
+    prosemirror-model: ^1.25.8
+    prosemirror-state: ^1.0.0
+    prosemirror-transform: ^1.1.0
+  checksum: c3c224e4addf5d6849548c6ec8671f546e56544325b17adc8a321142ecb74e69c25bed853cb7e29ad58c9023e6857ab79494e25909776e13db3fdb2817909449
   languageName: node
   linkType: hard
 
