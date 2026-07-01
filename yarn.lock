@@ -7735,7 +7735,7 @@ __metadata:
     "@types/react-dom": ^19.1.7
     "@types/sequelize": ^4.28.20
     esbuild: ^0.25.8
-    nodemailer: ^8.0.11
+    nodemailer: ^9.0.3
     pg: ^8.15.6
     react: ^19.1.1
     react-dom: ^19.1.1
@@ -21410,10 +21410,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nodemailer@npm:^8.0.11":
-  version: 8.0.11
-  resolution: "nodemailer@npm:8.0.11"
-  checksum: 526b750a2a506f8f1aedf91296545d914b4bd420a7f4a2f4505ba5c4d62eafb7568c07b18adb48dca2e8fb03ffad66ca534c8fde3f5585054de7371984b2721f
+"nodemailer@npm:^9.0.3":
+  version: 9.0.3
+  resolution: "nodemailer@npm:9.0.3"
+  checksum: 293c63421568e0a2231b140d444af1c425c8475ef0b0339a3a604cdccf4d37059c5b2e18e3eefcbca43bc3227f07e0c4d0d650e8d8579c6b0cafccd0160bfa4d
   languageName: node
   linkType: hard
 
