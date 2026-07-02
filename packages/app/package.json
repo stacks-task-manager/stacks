@@ -157,7 +157,7 @@
         "svg-sprite-generator": "^0.0.7",
         "terser-webpack-plugin": "^5.3.11",
         "typescript": "^5.5.0",
-        "webpack": "^5.101.3",
+        "webpack": "^5.108.3",
         "webpack-cli": "^5.1.4",
         "webpack-dev-server": "^4.15.2"
     },
