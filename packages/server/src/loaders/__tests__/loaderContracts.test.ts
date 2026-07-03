@@ -78,16 +78,43 @@ const expectedBarrelExports = [
 ].sort();
 
 function parseLoaderMethods(source: string) {
-    const exportMatch = source.match(/export const (\w+Loader)\s*=\s*\{([\s\S]*?)\n\};/);
-    expect(exportMatch).not.toBeNull();
+    // Find the export block and track brace depth to correctly handle
+    // inline function definitions inside the export object.
+    const idx = source.indexOf("export const ");
+    if (idx === -1) throw new Error("No export const found");
+    const rest = source.slice(idx);
+    const nameMatch = rest.match(/(\w+Loader)\s*=\s*\{/);
+    if (!nameMatch) throw new Error("No loader export found");
 
-    const [, exportName, body] = exportMatch!;
-    const methods = Array.from(body.matchAll(/^\s*(?:async\s+)?([A-Za-z_]\w*)\s*(?:,|\()/gm)).map(match => match[1]);
+    const exportName = nameMatch[1];
+    const startIdx = idx + nameMatch[0].length;
 
-    return {
-        exportName,
-        methods,
-    };
+    // Track brace depth to find the matching closing brace
+    let depth = 1, i = startIdx;
+    let inStr = false, strCh = "", inLC = false, inBC = false;
+    while (i < source.length && depth > 0) {
+        const c = source[i], n = source[i + 1] || "";
+        if (inLC) { if (c === "\n") inLC = false; }
+        else if (inBC) { if (c === "*" && n === "/") inBC = false; }
+        else if (inStr) { if (c === strCh) inStr = false; }
+        else {
+            if (c === "/" && n === "*") { inBC = true; i += 2; continue; }
+            if (c === "/" && n === "/") { inLC = true; i += 2; continue; }
+            if (c === '"' || c === "'" || c === "`") { inStr = true; strCh = c; }
+            if (c === "{") depth++;
+            if (c === "}") depth--;
+        }
+        i++;
+    }
+    const body = source.slice(startIdx, i - 1);
+
+    // Extract top-level members: shorthand (`word,`) or function decl (`async word(`).
+    const methods = Array.from(body.split("\n")
+        .map(line => line.match(/^    (?:async\s+)?([A-Za-z_]\w*)(?:\s*,|\s*\()/))
+        .filter(m => m)
+        .map(m => m![1]));
+
+    return { exportName, methods };
 }
 
 describe("loader source contracts", () => {
