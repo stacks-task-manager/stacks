@@ -7696,7 +7696,7 @@ __metadata:
     typescript: ^5.5.0
     unist-util-visit-parents: ^5.1.0
     use-sync-external-store: ^1.5.0
-    webpack: ^5.101.3
+    webpack: ^5.108.3
     webpack-cli: ^5.1.4
     webpack-dev-server: ^4.15.2
   languageName: unknown
@@ -7735,7 +7735,7 @@ __metadata:
     "@types/react-dom": ^19.1.7
     "@types/sequelize": ^4.28.20
     esbuild: ^0.25.8
-    nodemailer: ^8.0.11
+    nodemailer: ^9.0.3
     pg: ^8.15.6
     react: ^19.1.1
     react-dom: ^19.1.1
@@ -7767,7 +7767,7 @@ __metadata:
     "@types/react": ^18.3.12
     ink: ^4.4.1
     ink-select-input: ^5.0.0
-    ink-text-input: ^5.0.0
+    ink-text-input: ^6.0.0
     react: ^18.3.1
     tsx: ^4.19.2
     typescript: ^5.7.3
@@ -7846,7 +7846,7 @@ __metadata:
     dotenv: ^17.2.2
     esbuild: ^0.25.8
     exceljs: ^4.4.0
-    google-auth-library: ^10.2.1
+    google-auth-library: ^10.9.0
     googleapis: ^154.1.0
     handlebars: ^4.7.8
     hono: ^4.12.23
@@ -14651,6 +14651,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"enhanced-resolve@npm:^5.22.2":
+  version: 5.24.1
+  resolution: "enhanced-resolve@npm:5.24.1"
+  dependencies:
+    graceful-fs: ^4.2.4
+    tapable: ^2.3.3
+  checksum: 24a391d876493605d3504bb0588a0a1953458af78ef0501a835ce7d8f9d0ead8caf4e81f3247b5f7652b222a29ec0cf4804f2e6b0300b333fe7c70d20106c551
+  languageName: node
+  linkType: hard
+
 "entities@npm:1.0":
   version: 1.0.0
   resolution: "entities@npm:1.0.0"
@@ -14845,6 +14855,13 @@ __metadata:
   version: 2.1.0
   resolution: "es-module-lexer@npm:2.1.0"
   checksum: 65538cfb7bfc48c80cf827764132137c22bb41d1dd2921a9767bcb9763342d87ed844994f59a267b05a79a36b7ebb3ad892894db69889bf3e0af6bd7d5291223
+  languageName: node
+  linkType: hard
+
+"es-module-lexer@npm:^2.1.0":
+  version: 2.2.0
+  resolution: "es-module-lexer@npm:2.2.0"
+  checksum: a7990f0619242a9dcee88e60cf2e05ea1a8115118dca808c9be38a3d835596eb9f4f34829180a6e03170e5400505cb50b719b52b5ddab1932acfb07ea685f6a7
   languageName: node
   linkType: hard
 
@@ -17077,7 +17094,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"google-auth-library@npm:^10.1.0, google-auth-library@npm:^10.2.1":
+"google-auth-library@npm:^10.1.0":
   version: 10.6.2
   resolution: "google-auth-library@npm:10.6.2"
   dependencies:
@@ -17088,6 +17105,20 @@ __metadata:
     google-logging-utils: 1.1.3
     jws: ^4.0.0
   checksum: ded6c2c5c9f3cf6dd3fd35a46271160c3be3890cb0b50ea3c8ed8c4509322e543bf12e628f0e6b4e4505448f293a3d46c7009c0ed8c244b01538b390be9e0048
+  languageName: node
+  linkType: hard
+
+"google-auth-library@npm:^10.9.0":
+  version: 10.9.0
+  resolution: "google-auth-library@npm:10.9.0"
+  dependencies:
+    base64-js: ^1.3.0
+    ecdsa-sig-formatter: ^1.0.11
+    gaxios: ^7.1.4
+    gcp-metadata: 8.1.2
+    google-logging-utils: 1.1.3
+    jws: ^4.0.0
+  checksum: 3449a830bd5fd24f481a088ce3942f1136a2a0b514404d16b515bc22ad7cfb27cc9adb3e3769ef078aaec2877d99904035d63502370a89ec3fa64a4789770383
   languageName: node
   linkType: hard
 
@@ -17833,16 +17864,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ink-text-input@npm:^5.0.0":
-  version: 5.0.1
-  resolution: "ink-text-input@npm:5.0.1"
+"ink-text-input@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "ink-text-input@npm:6.0.0"
   dependencies:
-    chalk: ^5.2.0
-    type-fest: ^3.6.1
+    chalk: ^5.3.0
+    type-fest: ^4.18.2
   peerDependencies:
-    ink: ^4.0.0
-    react: ^18.0.0
-  checksum: 045ade486eb472e2de3d4fa2a195ca7a6af509789f350c3bb194b0f3349c554f5dd2daa720cd77518b3f2d52a4678e9894b4dc5d4470b103e6c142b22d61d161
+    ink: ">=5"
+    react: ">=18"
+  checksum: dc2511df2bf6a93a7ee94efce03eb7fb99028d378bd5446047fa9f4c13de67e8651e9fc89331cc3d158ca84974dfdd2df465a52e241a070cdc3f85048a707931
   languageName: node
   linkType: hard
 
@@ -19810,7 +19841,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"loader-runner@npm:^4.3.1":
+"loader-runner@npm:^4.3.1, loader-runner@npm:^4.3.2":
   version: 4.3.2
   resolution: "loader-runner@npm:4.3.2"
   checksum: 92906b3d187999f49f6b22c4ee49261f9a38cd8ce00051e511b804fbac7d4533a48c7c5c1e051818c44e6bbfb11e6fbc3941f1d245155fd5debc50b2b5867215
@@ -20942,6 +20973,45 @@ __metadata:
   languageName: node
   linkType: hard
 
+"minimizer-webpack-plugin@npm:^5.6.1":
+  version: 5.6.1
+  resolution: "minimizer-webpack-plugin@npm:5.6.1"
+  dependencies:
+    "@jridgewell/trace-mapping": ^0.3.25
+    jest-worker: ^27.4.5
+    schema-utils: ^4.3.0
+    terser: ^5.31.1
+  peerDependencies:
+    webpack: ^5.1.0
+  peerDependenciesMeta:
+    "@minify-html/node":
+      optional: true
+    "@swc/core":
+      optional: true
+    "@swc/css":
+      optional: true
+    "@swc/html":
+      optional: true
+    clean-css:
+      optional: true
+    cssnano:
+      optional: true
+    csso:
+      optional: true
+    esbuild:
+      optional: true
+    html-minifier-terser:
+      optional: true
+    lightningcss:
+      optional: true
+    postcss:
+      optional: true
+    uglify-js:
+      optional: true
+  checksum: ea53641ef5e5245c0a4220b807e7f747f88366704466fe5708e3a33f5cca3152ffcfe97420971e3b39baf04c2a88b2e9b578324c20992e44e301087cafeefd76
+  languageName: node
+  linkType: hard
+
 "minipass@npm:^4.2.4":
   version: 4.2.8
   resolution: "minipass@npm:4.2.8"
@@ -21410,10 +21480,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nodemailer@npm:^8.0.11":
-  version: 8.0.11
-  resolution: "nodemailer@npm:8.0.11"
-  checksum: 526b750a2a506f8f1aedf91296545d914b4bd420a7f4a2f4505ba5c4d62eafb7568c07b18adb48dca2e8fb03ffad66ca534c8fde3f5585054de7371984b2721f
+"nodemailer@npm:^9.0.3":
+  version: 9.0.3
+  resolution: "nodemailer@npm:9.0.3"
+  checksum: 293c63421568e0a2231b140d444af1c425c8475ef0b0339a3a604cdccf4d37059c5b2e18e3eefcbca43bc3227f07e0c4d0d650e8d8579c6b0cafccd0160bfa4d
   languageName: node
   linkType: hard
 
@@ -27395,10 +27465,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"type-fest@npm:^3.6.1":
-  version: 3.13.1
-  resolution: "type-fest@npm:3.13.1"
-  checksum: c06b0901d54391dc46de3802375f5579868949d71f93b425ce564e19a428a0d411ae8d8cb0e300d330071d86152c3ea86e744c3f2860a42a79585b6ec2fdae8e
+"type-fest@npm:^4.18.2":
+  version: 4.41.0
+  resolution: "type-fest@npm:4.41.0"
+  checksum: 7055c0e3eb188425d07403f1d5dc175ca4c4f093556f26871fe22041bc93d137d54bef5851afa320638ca1379106c594f5aa153caa654ac1a7f22c71588a4e80
   languageName: node
   linkType: hard
 
@@ -28468,6 +28538,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"watchpack@npm:^2.5.2":
+  version: 2.5.2
+  resolution: "watchpack@npm:2.5.2"
+  dependencies:
+    graceful-fs: ^4.1.2
+  checksum: f057bf74f80e82ac283f9a8700c3c41fddcf6136bd2b91dd8895b6cdcee1adcf5825bcb8f63e6f313ac880c8954701ee2f6f187996b45027b8540fe6b5fbc301
+  languageName: node
+  linkType: hard
+
 "wbuf@npm:^1.1.0, wbuf@npm:^1.7.3":
   version: 1.7.3
   resolution: "wbuf@npm:1.7.3"
@@ -28626,7 +28705,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack@npm:^5, webpack@npm:^5.101.3":
+"webpack-sources@npm:^3.5.0":
+  version: 3.5.0
+  resolution: "webpack-sources@npm:3.5.0"
+  checksum: 748e288620d0731be0f89efaf9cce752d245e224b4d74361d1150ebe680338946ced1bbcc0a67b887cf0a86e1ed4d6c68770b7b7c46f83975c0bc30eb8c64ff6
+  languageName: node
+  linkType: hard
+
+"webpack@npm:^5":
   version: 5.106.2
   resolution: "webpack@npm:5.106.2"
   dependencies:
@@ -28660,6 +28746,41 @@ __metadata:
   bin:
     webpack: bin/webpack.js
   checksum: fd44725871b6777b62cdcbb32492b48740bbd575811c2c45e1c9c9413d0cbf4de7aa9931b3ccfd072d155f811de3584951264bfa30164a5e2f5db66cbf52b260
+  languageName: node
+  linkType: hard
+
+"webpack@npm:^5.108.3":
+  version: 5.108.3
+  resolution: "webpack@npm:5.108.3"
+  dependencies:
+    "@types/estree": ^1.0.8
+    "@types/json-schema": ^7.0.15
+    "@webassemblyjs/ast": ^1.14.1
+    "@webassemblyjs/wasm-edit": ^1.14.1
+    "@webassemblyjs/wasm-parser": ^1.14.1
+    acorn: ^8.16.0
+    acorn-import-phases: ^1.0.3
+    browserslist: ^4.28.1
+    chrome-trace-event: ^1.0.2
+    enhanced-resolve: ^5.22.2
+    es-module-lexer: ^2.1.0
+    eslint-scope: 5.1.1
+    events: ^3.2.0
+    graceful-fs: ^4.2.11
+    loader-runner: ^4.3.2
+    mime-db: ^1.54.0
+    minimizer-webpack-plugin: ^5.6.1
+    neo-async: ^2.6.2
+    schema-utils: ^4.3.3
+    tapable: ^2.3.0
+    watchpack: ^2.5.2
+    webpack-sources: ^3.5.0
+  peerDependenciesMeta:
+    webpack-cli:
+      optional: true
+  bin:
+    webpack: bin/webpack.js
+  checksum: 66a79984b79921aa15fe0246b89f38390da699ea1abc1f55521db62fa2e5d88a224a9300c63307ce7b3fdde51e3aba0f4dbcb1f2d9af83b7bd3993ab9da5f5a2
   languageName: node
   linkType: hard
 
