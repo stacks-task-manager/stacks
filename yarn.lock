@@ -7597,7 +7597,7 @@ __metadata:
     "@tiptap/extension-superscript": ^3.20.4
     "@tiptap/extension-table": ^3.20.4
     "@tiptap/extension-text-align": ^3.20.4
-    "@tiptap/extension-text-style": ^3.20.4
+    "@tiptap/extension-text-style": ^3.27.3
     "@tiptap/extension-typography": ^3.20.4
     "@tiptap/extension-underline": ^3.20.4
     "@tiptap/extension-youtube": ^3.20.4
@@ -8774,12 +8774,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tiptap/extension-text-style@npm:^3.20.4":
-  version: 3.23.1
-  resolution: "@tiptap/extension-text-style@npm:3.23.1"
+"@tiptap/extension-text-style@npm:^3.27.3":
+  version: 3.27.3
+  resolution: "@tiptap/extension-text-style@npm:3.27.3"
   peerDependencies:
-    "@tiptap/core": 3.23.1
-  checksum: 4527ef3f2ebb73d9bbeec5aa21bf0970b067ded4912c9f78ddee9ad9e01d7ec268fd64b212539c2dc570ec9dcdc5dfee1233bcaa3416018b96009da603b04562
+    "@tiptap/core": 3.27.3
+  checksum: 6ede9e429d8691ded500503ee8495ebf4456abd39b90b15648b9b90b17aab4395960ed6688b40cc7e9a79e207645f3979e4b5d99a6d4befdea2aa4029377d001
   languageName: node
   linkType: hard
 
