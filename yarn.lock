@@ -6486,9 +6486,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native-community/datetimepicker@npm:8.4.4":
-  version: 8.4.4
-  resolution: "@react-native-community/datetimepicker@npm:8.4.4"
+"@react-native-community/datetimepicker@npm:9.1.0":
+  version: 9.1.0
+  resolution: "@react-native-community/datetimepicker@npm:9.1.0"
   dependencies:
     invariant: ^2.2.4
   peerDependencies:
@@ -6501,7 +6501,7 @@ __metadata:
       optional: true
     react-native-windows:
       optional: true
-  checksum: 659a19ec6ea6ec7538519411c60ff8eeae330b40248e28a38b540e5d8f758859f6a0fa8e9e39efbafbc6d44b57e3f68cb972b5fd4abb9a173651ca09a1ff28e5
+  checksum: 31b37df04613d299b4f107ee2325d4ea25a895bc358c080eca23ea06dc2278393950b632f67b5a27a8b2b801823f1febc201d3a555972c121e3a1f0b559180e3
   languageName: node
   linkType: hard
 
@@ -7784,7 +7784,7 @@ __metadata:
     "@gluestack-ui/core": ^3.0.24
     "@gluestack-ui/utils": ^3.0.11
     "@legendapp/motion": ^2.4.0
-    "@react-native-community/datetimepicker": 8.4.4
+    "@react-native-community/datetimepicker": 9.1.0
     "@react-navigation/drawer": ^7.5.0
     "@stacks/types": "workspace:*"
     "@tailwindcss/typography": ^0.5.20
