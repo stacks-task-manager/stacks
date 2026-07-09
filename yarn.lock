@@ -3160,6 +3160,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@expo/env@npm:~2.4.1":
+  version: 2.4.1
+  resolution: "@expo/env@npm:2.4.1"
+  dependencies:
+    chalk: ^4.0.0
+    debug: ^4.3.4
+    getenv: ^2.0.0
+  checksum: 1fd9b0285bfc67c2314643684da9ca30bf2c539ed71df190c69d980a2d3c3582bb283493246ce89842354a7a1fad395dc60812d87d6d51a592355a71453c8937
+  languageName: node
+  linkType: hard
+
 "@expo/fingerprint@npm:0.15.5":
   version: 0.15.5
   resolution: "@expo/fingerprint@npm:0.15.5"
@@ -7794,7 +7805,7 @@ __metadata:
     babel-plugin-module-resolver: ^5.0.0
     expo: ~54.0.33
     expo-constants: ~18.0.13
-    expo-linking: ~8.0.11
+    expo-linking: ~57.0.2
     expo-router: ~6.0.21
     expo-secure-store: ~15.0.8
     expo-status-bar: ~3.0.9
@@ -15804,6 +15815,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-constants@npm:~57.0.3":
+  version: 57.0.3
+  resolution: "expo-constants@npm:57.0.3"
+  dependencies:
+    "@expo/env": ~2.4.1
+  peerDependencies:
+    expo: "*"
+    react-native: "*"
+  checksum: 8eaecd23d11a8f80a1f74bcea9ba2dab143f16eaeb23f8276a883dfc3f0587bec70cd097bf3e3c7b8595ccdcb5659db2ef5abf52cc3ec1a819d2a79faec54fbf
+  languageName: node
+  linkType: hard
+
 "expo-file-system@npm:~19.0.22":
   version: 19.0.22
   resolution: "expo-file-system@npm:19.0.22"
@@ -15837,16 +15860,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-linking@npm:~8.0.11":
-  version: 8.0.12
-  resolution: "expo-linking@npm:8.0.12"
+"expo-linking@npm:~57.0.2":
+  version: 57.0.2
+  resolution: "expo-linking@npm:57.0.2"
   dependencies:
-    expo-constants: ~18.0.13
+    expo-constants: ~57.0.3
     invariant: ^2.2.4
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 6f92973acd1ae55500f3be176b4443376eab96767e2b56ca9c462f969d0c490f4a2593a07f2f5c551d5262f9b4152a1c0b3fdd2c774e21dfa154bbefb712dc8c
+  checksum: 396f0c484669c03b6a48116e0f81a2afed798ecb596649d87c4ffeb389255075f86738464f427129438ea50dc9eca4e069fc9c58b103917fc61cdb3ac3a5811d
   languageName: node
   linkType: hard
 
