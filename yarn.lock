@@ -7591,7 +7591,7 @@ __metadata:
     "@tiptap/extension-highlight": ^3.20.4
     "@tiptap/extension-image": ^3.20.4
     "@tiptap/extension-link": ^3.26.1
-    "@tiptap/extension-list": ^3.20.4
+    "@tiptap/extension-list": ^3.27.3
     "@tiptap/extension-mention": ^3.20.4
     "@tiptap/extension-subscript": ^3.23.4
     "@tiptap/extension-superscript": ^3.20.4
@@ -8622,13 +8622,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tiptap/extension-list@npm:^3.20.4, @tiptap/extension-list@npm:^3.23.1":
+"@tiptap/extension-list@npm:^3.23.1":
   version: 3.23.1
   resolution: "@tiptap/extension-list@npm:3.23.1"
   peerDependencies:
     "@tiptap/core": 3.23.1
     "@tiptap/pm": 3.23.1
   checksum: 83ce438838eb3008450d88b2d09f3033e01c2b2c30d38b88751cfee247111a0808cc3d03940d7834c4f3ee91af958a54e15225e0d438437290b028da79acb1f9
+  languageName: node
+  linkType: hard
+
+"@tiptap/extension-list@npm:^3.27.3":
+  version: 3.27.3
+  resolution: "@tiptap/extension-list@npm:3.27.3"
+  peerDependencies:
+    "@tiptap/core": 3.27.3
+    "@tiptap/pm": 3.27.3
+  checksum: b8daa74a0d8ee8c222109b4b6e1fe35d77deed88c71b4e579d17102a757e86726114debcfa611aa33ed3ba552c3cd4d4f36f994137e1ce19444f3328cac87d7b
   languageName: node
   linkType: hard
 
