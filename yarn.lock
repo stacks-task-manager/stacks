@@ -7674,7 +7674,7 @@ __metadata:
     react-dnd: ^16.0.1
     react-dnd-html5-backend: ^16.0.1
     react-dom: ^18.3.1
-    react-dropzone: ^14.3.8
+    react-dropzone: ^17.0.0
     react-intersection-observer: ^9.13.1
     react-leaflet: ^4.2.1
     react-refresh: ^0.18.0
@@ -11564,7 +11564,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"attr-accept@npm:^2.2.4":
+"attr-accept@npm:^2.2.5":
   version: 2.2.5
   resolution: "attr-accept@npm:2.2.5"
   checksum: e6a23183c112f5d313ebfc7e63e454de0600caffe9ab88f86e9df420d2399a48e27e6c46ee8de2fc6f34fee3541ecdb557f2b86e6d8bd7d24fd3a66cc75e6349
@@ -23902,16 +23902,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dropzone@npm:^14.3.8":
-  version: 14.4.1
-  resolution: "react-dropzone@npm:14.4.1"
+"react-dropzone@npm:^17.0.0":
+  version: 17.0.0
+  resolution: "react-dropzone@npm:17.0.0"
   dependencies:
-    attr-accept: ^2.2.4
+    attr-accept: ^2.2.5
     file-selector: ^2.1.0
-    prop-types: ^15.8.1
   peerDependencies:
-    react: ">= 16.8 || 18.0.0"
-  checksum: 7c16f5c36c8514cfec0687aaaf9e9c3de497bdeaa23b64b483ca26908744c478c271256f9223f458d1258a6b80535d180a270764899ea6d2e2e92f164125bc41
+    react: ">= 18"
+  checksum: 42154b1c580a0d3ac000017776c1aec320bd1cc35c94e52da9112070da2a3e77d6192b4f2c956511c99c6acc3c0c0879fcdf33aa4ef28738249f882346ea6c03
   languageName: node
   linkType: hard
 
