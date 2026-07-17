@@ -2,13 +2,11 @@
 /**
  * Calendar view state (date, view mode).
  */
-import { EVENTTYPE, IEvent, ICalendarCount, ICalendarRemote, ILocalCalendar } from "@stacks/types";
+import { EVENTTYPE, IEvent, ICalendarCount, ICalendar } from "@stacks/types";
 import { PreferencesStore } from "./preferences";
 import { entity } from "app/hooks/store";
 import { getStorage } from "app/utils/storage";
 import { produce } from "immer";
-
-export type { ICalendarRemote };
 
 export interface ICalendarFilters {
     showCalendars: string[];
@@ -33,9 +31,7 @@ export interface ICalendarStore {
     tokens: ICalendarAuth;
     filters: ICalendarFilters;
     loadingCalendars: boolean;
-    calendars: ICalendarRemote[];
-    localCalendars: ILocalCalendar[];
-    loadingLocalCalendars: boolean;
+    calendars: ICalendar[];
 }
 
 const DEFAULT_FILTERS: ICalendarFilters = {
@@ -64,8 +60,6 @@ export const CalendarStore = entity<ICalendarStore>({
     filters: { ...DEFAULT_FILTERS },
     loadingCalendars: false,
     calendars: [],
-    localCalendars: [],
-    loadingLocalCalendars: false,
 }, [
     {
         init: (origInit, entityInstance) => () => {

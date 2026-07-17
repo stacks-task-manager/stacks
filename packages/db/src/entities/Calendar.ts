@@ -3,23 +3,18 @@ import { DataTypes } from "sequelize";
 import { sequelize } from "../db.js";
 import BaseEntity from "./Base.js";
 
-class CalendarEntity extends BaseEntity {}
+class CalendarEntity extends BaseEntity { }
 
 CalendarEntity.initialize(
     {
-        resourceId: { type: DataTypes.UUID, allowNull: false },
-        resourceType: { type: DataTypes.STRING, allowNull: false },
-        parent: { type: DataTypes.UUID, allowNull: true },
         title: { type: DataTypes.STRING, allowNull: true },
-        person: { type: DataTypes.UUID, allowNull: false },
-        content: { type: DataTypes.STRING, allowNull: true },
-        type: { type: DataTypes.STRING, allowNull: false },
-        change: { type: DataTypes.JSONB, allowNull: true, defaultValue: {} },
         color: { type: DataTypes.STRING, allowNull: true },
-        isDefault: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
+        primary: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
+        source: { type: DataTypes.STRING, allowNull: false, defaultValue: "local" },
+        readOnly: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
     },
     {
-        tableName: "calendar",
+        tableName: "calendars",
         sequelize,
     }
 );

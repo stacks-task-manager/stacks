@@ -36,18 +36,6 @@ calendars.post(
     })
 );
 
-/** GET `/default` — Gets the default calendar for the current user. */
-calendars.get(
-    "/default",
-    asyncHandler(async (c: Context) => {
-        const defaultCalendar = await CalendarsLoader.getDefaultCalendar();
-        if (!defaultCalendar) {
-            throw Errors.notFound(translate("No default calendar found"));
-        }
-        return c.replySuccess(defaultCalendar);
-    })
-);
-
 /** GET `/:id` — Gets a specific calendar by ID. */
 calendars.get(
     "/:id",
@@ -66,16 +54,6 @@ calendars.patch(
         const calendarData = c.req.valid("json");
         const { id } = c.req.param();
         const updated = await CalendarsLoader.update(id, calendarData);
-        return c.replySuccess(updated);
-    })
-);
-
-/** POST `/:id/default` — Sets a calendar as the default. */
-calendars.post(
-    "/:id/default",
-    asyncHandler(async (c: Context) => {
-        const { id } = c.req.param();
-        const updated = await CalendarsLoader.setDefault(id);
         return c.replySuccess(updated);
     })
 );

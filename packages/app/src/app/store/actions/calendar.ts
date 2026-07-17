@@ -2,7 +2,7 @@
 /**
  * Calendar data loading and mutations.
  */
-import api, { CalendarIntegrationsAPI, type CalendarProvider, EventsAPI, CalendarsAPI, type LocalCalendar } from "app/api";
+import api, { CalendarIntegrationsAPI, type CalendarProvider, CalendarsAPI, EventsAPI } from "app/api";
 import {
     addDays,
     addHours,
@@ -21,11 +21,11 @@ import {
 import { produce } from "immer";
 import { xor } from "lodash";
 
-import { EVENTTYPE, ICalendarEvent, ICalendarSource, IEvent, ITask } from "@stacks/types";
+import { EVENTTYPE, ICalendarEvent, ICalendarSource, IEvent, ICalendar, ITask } from "@stacks/types";
 import { getDatesSpan } from "app/hooks";
 import Dialog from "app/utils/dialog";
-import Toast from "app/utils/toast";
 import Storage from "app/utils/storage";
+import Toast from "app/utils/toast";
 import { patchFilterField } from "../actionHelpers";
 import { CALENDAR_FILTERS_STORAGE_KEY, CalendarStore, ICalendarFilters, ICalendarStore } from "../calendar";
 import { TasksActions } from "./tasks";
@@ -91,6 +91,8 @@ const load = async (reset = true) => {
             });
         }
 
+        await loadCalendars();
+
         CalendarStore.set(
             produce((state: ICalendarStore) => {
                 state.events = localEvents;
@@ -116,11 +118,7 @@ const load = async (reset = true) => {
 };
 
 const refreshConnectedCalendars = async () => {
-    const { tokens } = CalendarStore.get();
-
-    if (tokens.google != null) {
-        await loadCalendars();
-    }
+    await loadCalendars();
 };
 
 const reload = async () => {
@@ -205,15 +203,11 @@ const changeEvent = (
     // update the task
     if (actualEvent.resource.type === EVENTTYPE.TASK) {
         const task: ITask = actualEvent.resource.data as ITask;
-        // console.log("TASK", task);
-
         let startDate: Date | undefined = undefined;
         let dueDate: Date | undefined = undefined;
 
         // if task had both dates
         if (task.startdate && task.duedate) {
-            // console.log("A");
-
             startDate = task.startdate || resize ? (changedEvent.start as Date) : undefined;
             dueDate = task.duedate || resize ? (changedEvent.end as Date) : undefined;
 
@@ -231,7 +225,6 @@ const changeEvent = (
 
         // if task had only start date
         else if (task.startdate && !task.duedate) {
-            // console.log("B");
             startDate = changedEvent.start as Date;
 
             if (changedEvent.isAllDay) {
@@ -242,7 +235,6 @@ const changeEvent = (
         }
         // if task had only due date
         else if (!task.startdate && task.duedate) {
-            // console.log("C");
             dueDate = changedEvent.end as Date;
 
             if (changedEvent.isAllDay) {
@@ -665,7 +657,7 @@ const loadCalendars = async () => {
 
         try {
             // Load local calendars
-            const localCalendars: LocalCalendar[] = await CalendarsAPI.list();
+            const localCalendars: ICalendar[] = await CalendarsAPI.list();
 
             // Load Google calendars if authenticated
             let googleCalendars: Array<{ id: string; title: string; color: string; source: "google" | "microsoft"; primary: boolean; readOnly: boolean }> = [];
@@ -676,14 +668,7 @@ const loadCalendars = async () => {
             CalendarStore.set(
                 produce((state: ICalendarStore) => {
                     state.calendars = [
-                        ...localCalendars.map(cal => ({
-                            id: cal.id,
-                            title: cal.title,
-                            color: cal.color ?? "#FF8C00",
-                            source: "local" as const,
-                            primary: cal.isDefault,
-                            readOnly: false,
-                        })),
+                        ...localCalendars,
                         ...googleCalendars,
                     ];
                     state.loadingCalendars = false;
@@ -710,9 +695,9 @@ const loadCalendars = async () => {
     return promise;
 };
 
-const createLocalCalendar = async (title: string, color?: string, isDefault = false) => {
+const createLocalCalendar = async (title: string, color?: string, primary = false) => {
     try {
-        const calendar = await CalendarsAPI.create({ title, color, isDefault });
+        const calendar = await CalendarsAPI.create({ title, color, primary });
         CalendarStore.set(
             produce((state: ICalendarStore) => {
                 state.calendars.push({
@@ -720,7 +705,7 @@ const createLocalCalendar = async (title: string, color?: string, isDefault = fa
                     title: calendar.title,
                     color: calendar.color ?? "#FF8C00",
                     source: "local",
-                    primary: calendar.isDefault,
+                    primary: calendar.primary,
                     readOnly: false,
                 });
             })
@@ -734,7 +719,7 @@ const createLocalCalendar = async (title: string, color?: string, isDefault = fa
     }
 };
 
-const updateLocalCalendar = async (id: string, data: { title?: string; color?: string; isDefault?: boolean }) => {
+const updateLocalCalendar = async (id: string, data: Partial<Pick<ICalendar, "title" | "color" | "primary">>) => {
     try {
         const calendar = await CalendarsAPI.update(id, data);
         CalendarStore.set(
@@ -745,7 +730,7 @@ const updateLocalCalendar = async (id: string, data: { title?: string; color?: s
                         ...state.calendars[idx],
                         title: calendar.title,
                         color: calendar.color ?? state.calendars[idx].color,
-                        primary: calendar.isDefault,
+                        primary: calendar.primary,
                     };
                 }
             })
@@ -780,7 +765,7 @@ const deleteLocalCalendar = async (id: string) => {
 
 const setDefaultLocalCalendar = async (id: string) => {
     try {
-        const calendar = await CalendarsAPI.setDefault(id);
+        const calendar = await CalendarsAPI.update(id, { primary: true });
         CalendarStore.set(
             produce((state: ICalendarStore) => {
                 // Update all local calendars
@@ -914,8 +899,6 @@ const hydrateFromBoot = async (integrations?: { google?: { isAuthenticated: bool
             state.tokens.google = { authenticated: true };
         })
     );
-
-    await loadCalendars();
 };
 
 const handleGoogleAuthSuccess = async () => {
@@ -925,9 +908,6 @@ const handleGoogleAuthSuccess = async () => {
                 state.tokens.google = { authenticated: true };
             })
         );
-
-        // fetching calendar lists from google
-        await loadCalendars();
 
         // if there aren't already google calendars checked in the filters
         // we'll get the primary one or the first one from the list

@@ -8,6 +8,7 @@ import { CalendarEntity } from "@stacks/db";
 import { sanitizeWhere } from "./utils";
 import { getCurrentUser } from "./context";
 import { invalidateApiCacheForCurrentRequest } from "../utils/cache";
+import { ICalendar } from "@stacks/types";
 
 export interface ILocalCalendar {
     id: string;
@@ -135,24 +136,12 @@ async function remove(id: string): Promise<boolean> {
     return true;
 }
 
-async function setDefault(id: string): Promise<ILocalCalendar> {
-    return update(id, { isDefault: true });
-}
-
-async function getDefaultCalendar(): Promise<ILocalCalendar | null> {
+const getPrimary = async (): Promise<ICalendar | null> => {
     const user = getCurrentUser();
-    const calendar = await CalendarEntity.findOne({
-        where: sanitizeWhere({ tenant: user.tenant, isDefault: true, deleted: null }),
-    });
-    if (!calendar) {
-        // Try to get the first calendar as default
-        const calendars = await getAll();
-        if (calendars.length > 0) {
-            return calendars[0];
-        }
-        return null;
-    }
-    return calendar as unknown as ILocalCalendar;
+    return await CalendarEntity.findOne({
+        where: sanitizeWhere({ tenant: user.tenant, deleted: null, primary: true }),
+        raw: true,
+    }) as ICalendar | null;
 }
 
 export const CalendarsLoader = {
@@ -161,6 +150,5 @@ export const CalendarsLoader = {
     create,
     update,
     remove,
-    setDefault,
-    getDefaultCalendar,
+    getPrimary
 };

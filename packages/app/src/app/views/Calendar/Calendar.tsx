@@ -4,7 +4,7 @@ import { DateSelectArg, EventClickArg, EventDropArg } from "@fullcalendar/core";
 import { EventResizeDoneArg } from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
 import { translate } from "@stacks/translations";
-import { APPICONS, EVENTTYPE, ICalendarEvent, IEvent, IPerson, ITask } from "@stacks/types";
+import { APPICONS, EVENTTYPE, ICalendar, ICalendarEvent, IEvent, IPerson, ITask } from "@stacks/types";
 import classNames from "classnames";
 import mousetrap from "mousetrap";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -13,7 +13,7 @@ import { Icon } from "app/components/common";
 import { getDocument, useEvents, usePreferences, useRealtimeUpdates } from "app/hooks";
 import { shallowEqual } from "app/hooks/store";
 import { CalendarActions } from "app/store/actions";
-import { CalendarStore, ICalendarRemote } from "app/store/calendar";
+import { CalendarStore } from "app/store/calendar";
 import { toggleSidebar } from "app/store/global";
 import { mapCalendarStoreViewToFc } from "app/utils/calendarFullCalendar";
 import { CalendarSlotInfo, dateSelectArgToSlotInfo } from "app/utils/calendarSlot";
@@ -48,7 +48,7 @@ function getCalendarEventTitle(ev: IEvent): string {
     return "";
 }
 
-function eventTintForFullCalendar(ev: IEvent, calendars: ICalendarRemote[]): string | undefined {
+function eventTintForFullCalendar(ev: IEvent, calendars: ICalendar[]): string | undefined {
     if (ev.resource.type === EVENTTYPE.TASK || ev.resource.type === EVENTTYPE.TIMELOG) {
         const task = ev.resource.data as ITask;
         const document = getDocument(task.project);
@@ -110,7 +110,7 @@ export const Calendar = () => {
     const [selectedSlot, setSelectedSlot] = useState<CalendarSlotInfo | null>(null);
     const [showTasksPicker, setShowTasksPicker] = useState(false);
 
-    const previousDate = useRef<Date | null>(null);
+    const previousDate = useRef<string | null>(null);
     const previousView = useRef<string | null>(null);
     const previousShowCalendars = useRef<string | null>(null);
     const calendarRef = useRef<FullCalendar>(null);
@@ -121,17 +121,19 @@ export const Calendar = () => {
     useEffect(() => {
         const showCalendarsKey = JSON.stringify(showCalendars);
         if (
-            previousDate.current === date &&
+            previousDate.current === date.toISOString() &&
             previousView.current === view &&
             previousShowCalendars.current === showCalendarsKey
         ) {
             return;
         }
 
-        CalendarActions.load();
-        previousDate.current = date;
+
+        previousDate.current = date.toISOString();
         previousView.current = view;
         previousShowCalendars.current = showCalendarsKey;
+
+        CalendarActions.load();
     }, [date, view, showCalendars]);
 
     useEffect(() => {

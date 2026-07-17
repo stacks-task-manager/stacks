@@ -49,19 +49,14 @@ export interface ICalendarCount {
     birthdays: number;
 }
 
-export interface ILocalCalendar {
-    id: string;
-    title: string;
-    color: string | null;
-    isDefault: boolean;
-}
+export type ICalendarSource = "local" | "google" | "microsoft";
 
-export interface ICalendarRemote {
+export interface ICalendar {
     id: string;
     title: string;
-    color: string;
+    color?: string;
     primary: boolean;
-    source: "local" | "google" | "microsoft";
+    source: ICalendarSource;
     readOnly: boolean;
 }
 
@@ -74,4 +69,4 @@ export interface IEvent extends Event {
     resource: IEventResource;
 }
 
-export type ICalendarSource = "local" | "google" | "microsoft";
+

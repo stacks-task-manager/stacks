@@ -170,7 +170,7 @@ async function getAll(filters: EventsFilter) {
     try {
         const user = getCurrentUser();
         const calendars = filters.calendars;
-        
+
         // Separate different calendar types
         const localCalendarIds = (calendars ?? [])
             .filter(c => typeof c === "string" && c.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i))
@@ -301,9 +301,9 @@ async function create(data: Partial<ICalendarEvent>) {
 
         // If calendar is "local" (legacy) or not specified, use the default calendar
         if (!calendar || calendar === "local") {
-            const defaultCalendar = await CalendarsLoader.getDefaultCalendar();
-            if (defaultCalendar) {
-                calendar = defaultCalendar.id;
+            const primaryCalendar = await CalendarsLoader.getPrimary();
+            if (primaryCalendar) {
+                calendar = primaryCalendar.id;
             } else {
                 // Create a default calendar if none exists
                 const newCalendar = await CalendarsLoader.create({
