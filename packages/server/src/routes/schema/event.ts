@@ -86,7 +86,7 @@ export const EventsFilteredSchema = z
             },
             z
                 .string()
-                .regex(/^(local|google:.+|microsoft:.+)$/)
+                .regex(/^(local|google:.+|microsoft:.+|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/i)
                 .array()
                 .optional()
         ),

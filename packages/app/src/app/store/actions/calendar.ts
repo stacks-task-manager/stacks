@@ -2,7 +2,7 @@
 /**
  * Calendar data loading and mutations.
  */
-import api, { CalendarIntegrationsAPI, type CalendarProvider, EventsAPI } from "app/api";
+import api, { CalendarIntegrationsAPI, type CalendarProvider, EventsAPI, CalendarsAPI, type LocalCalendar } from "app/api";
 import {
     addDays,
     addHours,
@@ -514,6 +514,10 @@ const addTempEvent = async (startDate: Date, endDate: Date) => {
         end = subDays(end, 1);
     }
 
+    // Get the default calendar ID
+    const defaultCalendar = CalendarStore.get().calendars.find(c => c.source === "local" && c.primary);
+    const calendarId = defaultCalendar?.id ?? "local";
+
     const newEvent: ICalendarEvent | false = await addEvent({
         title: "New event",
         description: "",
@@ -522,7 +526,7 @@ const addTempEvent = async (startDate: Date, endDate: Date) => {
         allDay,
         assignees: [],
         source: "local",
-        calendar: "local",
+        calendar: calendarId,
     });
 
     if (newEvent) {
@@ -650,7 +654,6 @@ const toggleCalendar = async (calendarId: string) => {
 
 let loadCalendarsPromise: Promise<void> | null = null;
 const loadCalendars = async () => {
-    if (CalendarStore.get().tokens.google == null) return;
     if (loadCalendarsPromise) return loadCalendarsPromise;
 
     const promise = (async () => {
@@ -661,26 +664,40 @@ const loadCalendars = async () => {
         );
 
         try {
-            const calendars = await CalendarIntegrationsAPI.listCalendars("google");
+            // Load local calendars
+            const localCalendars: LocalCalendar[] = await CalendarsAPI.list();
+
+            // Load Google calendars if authenticated
+            let googleCalendars: Array<{ id: string; title: string; color: string; source: "google" | "microsoft"; primary: boolean; readOnly: boolean }> = [];
+            if (CalendarStore.get().tokens.google != null) {
+                googleCalendars = await CalendarIntegrationsAPI.listCalendars("google");
+            }
 
             CalendarStore.set(
                 produce((state: ICalendarStore) => {
                     state.calendars = [
-                        ...state.calendars.filter(calendar => calendar.source !== "google"),
-                        ...calendars,
+                        ...localCalendars.map(cal => ({
+                            id: cal.id,
+                            title: cal.title,
+                            color: cal.color ?? "#FF8C00",
+                            source: "local" as const,
+                            primary: cal.isDefault,
+                            readOnly: false,
+                        })),
+                        ...googleCalendars,
                     ];
                     state.loadingCalendars = false;
                 })
             );
         } catch (error) {
             // eslint-disable-next-line no-console
-            console.error("Error loading Google calendars:", error);
+            console.error("Error loading calendars:", error);
             CalendarStore.set(
                 produce((state: ICalendarStore) => {
                     state.loadingCalendars = false;
                 })
             );
-            Toast.warn("Failed to load Google calendars.");
+            Toast.warn("Failed to load calendars.");
         }
     })();
 
@@ -691,6 +708,97 @@ const loadCalendars = async () => {
         }
     });
     return promise;
+};
+
+const createLocalCalendar = async (title: string, color?: string, isDefault = false) => {
+    try {
+        const calendar = await CalendarsAPI.create({ title, color, isDefault });
+        CalendarStore.set(
+            produce((state: ICalendarStore) => {
+                state.calendars.push({
+                    id: calendar.id,
+                    title: calendar.title,
+                    color: calendar.color ?? "#FF8C00",
+                    source: "local",
+                    primary: calendar.isDefault,
+                    readOnly: false,
+                });
+            })
+        );
+        return calendar;
+    } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error("Error creating calendar:", error);
+        Toast.warn("Failed to create calendar.");
+        return null;
+    }
+};
+
+const updateLocalCalendar = async (id: string, data: { title?: string; color?: string; isDefault?: boolean }) => {
+    try {
+        const calendar = await CalendarsAPI.update(id, data);
+        CalendarStore.set(
+            produce((state: ICalendarStore) => {
+                const idx = state.calendars.findIndex(c => c.id === id && c.source === "local");
+                if (idx !== -1) {
+                    state.calendars[idx] = {
+                        ...state.calendars[idx],
+                        title: calendar.title,
+                        color: calendar.color ?? state.calendars[idx].color,
+                        primary: calendar.isDefault,
+                    };
+                }
+            })
+        );
+        return calendar;
+    } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error("Error updating calendar:", error);
+        Toast.warn("Failed to update calendar.");
+        return null;
+    }
+};
+
+const deleteLocalCalendar = async (id: string) => {
+    try {
+        const deleted = await CalendarsAPI.remove(id);
+        if (deleted) {
+            CalendarStore.set(
+                produce((state: ICalendarStore) => {
+                    state.calendars = state.calendars.filter(c => c.id !== id);
+                })
+            );
+        }
+        return deleted;
+    } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error("Error deleting calendar:", error);
+        Toast.warn("Failed to delete calendar.");
+        return false;
+    }
+};
+
+const setDefaultLocalCalendar = async (id: string) => {
+    try {
+        const calendar = await CalendarsAPI.setDefault(id);
+        CalendarStore.set(
+            produce((state: ICalendarStore) => {
+                // Update all local calendars
+                state.calendars = state.calendars.map(c => {
+                    if (c.source === "local") {
+                        return { ...c, primary: c.id === id };
+                    }
+                    return c;
+                });
+            })
+        );
+        return calendar;
+    } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error("Error setting default calendar:", error);
+        Toast.warn("Failed to set default calendar.");
+        return null;
+    }
 };
 
 const moveEvent = async (event: ICalendarEvent, calendar: string, source: ICalendarSource) => {
@@ -902,4 +1010,8 @@ export const CalendarActions = {
     logoutGoogle,
     disconnectCalendarProvider,
     hydrateFromBoot,
+    createLocalCalendar,
+    updateLocalCalendar,
+    deleteLocalCalendar,
+    setDefaultLocalCalendar,
 };

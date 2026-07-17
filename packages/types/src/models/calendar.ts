@@ -43,6 +43,28 @@ export interface ICalendarEvent {
     };
 }
 
+export interface ICalendarCount {
+    events: number;
+    tasks: number;
+    birthdays: number;
+}
+
+export interface ILocalCalendar {
+    id: string;
+    title: string;
+    color: string | null;
+    isDefault: boolean;
+}
+
+export interface ICalendarRemote {
+    id: string;
+    title: string;
+    color: string;
+    primary: boolean;
+    source: "local" | "google" | "microsoft";
+    readOnly: boolean;
+}
+
 export interface IEventResource {
     data: ICalendarEvent | ITask | IPerson | ITimeLogExtended;
     type: EVENTTYPE;

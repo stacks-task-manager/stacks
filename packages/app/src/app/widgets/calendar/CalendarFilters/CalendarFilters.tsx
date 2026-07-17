@@ -17,21 +17,35 @@ export const CalendarFilters = () => {
         shallowEqual
     );
 
+    const { calendars, isGoogleAuthenticated, loading } = useCalendars();
+
     if (!showFilters) return null;
 
-    const {
-        showCalendars,
-        showTasks,
-        showBirthdays,
-    } = filters;
+    const { showCalendars, showTasks, showBirthdays } = filters;
+
+    // Filter local calendars
+    const localCalendars = calendars.filter(c => c.source === "local");
 
     return (
         <FiltersSidebar header="Calendar filters">
-            <Checkbox
-                label={translate("Show events")}
-                checked={showCalendars.includes("local")}
-                onChange={() => CalendarActions.toggleCalendar("local")}
-            />
+            <FormGroup label="Local calendars" style={{ marginBottom: 20 }}>
+                {localCalendars.length === 0 ? (
+                    <div className={Classes.TEXT_MUTED} style={{ fontSize: 13, padding: "8px 0" }}>
+                        No local calendars
+                    </div>
+                ) : (
+                    localCalendars.map(calendar => (
+                        <ColoredCheckbox
+                            text={calendar.title}
+                            color={calendar.color}
+                            key={calendar.id}
+                            checked={showCalendars.includes(calendar.id)}
+                            onChange={() => CalendarActions.toggleCalendar(calendar.id)}
+                        />
+                    ))
+                )}
+            </FormGroup>
+
             <Checkbox
                 label={translate("Show birthdays")}
                 checked={showBirthdays}
@@ -47,13 +61,20 @@ export const CalendarFilters = () => {
                 }
             />
 
-            <GoogleCalendars />
+            <GoogleCalendars calendars={calendars} isGoogleAuthenticated={isGoogleAuthenticated} loading={loading} />
         </FiltersSidebar>
     );
 };
 
-const GoogleCalendars = () => {
-    const { calendars, isGoogleAuthenticated, loading } = useCalendars();
+const GoogleCalendars = ({
+    calendars,
+    isGoogleAuthenticated,
+    loading,
+}: {
+    calendars: ReturnType<typeof useCalendars>["calendars"];
+    isGoogleAuthenticated: boolean;
+    loading: boolean;
+}) => {
     const filters = useCalendarsFilters();
 
     if (!isGoogleAuthenticated) return null;
@@ -72,9 +93,11 @@ const GoogleCalendars = () => {
         );
     }
 
+    const googleCalendars = calendars.filter(c => c.source === "google");
+
     return (
-        <FormGroup label="Google calendar" style={{ marginTop: 20 }}>
-            {calendars.map(calendar => (
+        <FormGroup label="Google calendars" style={{ marginTop: 20 }}>
+            {googleCalendars.map(calendar => (
                 <ColoredCheckbox
                     text={calendar.title}
                     color={calendar.color}

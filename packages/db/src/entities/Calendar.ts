@@ -15,6 +15,8 @@ CalendarEntity.initialize(
         content: { type: DataTypes.STRING, allowNull: true },
         type: { type: DataTypes.STRING, allowNull: false },
         change: { type: DataTypes.JSONB, allowNull: true, defaultValue: {} },
+        color: { type: DataTypes.STRING, allowNull: true },
+        isDefault: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
     },
     {
         tableName: "calendar",

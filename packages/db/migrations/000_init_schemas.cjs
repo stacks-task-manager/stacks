@@ -1628,7 +1628,9 @@ var init_Calendar = __esm({
         person: { type: import_sequelize6.DataTypes.UUID, allowNull: false },
         content: { type: import_sequelize6.DataTypes.STRING, allowNull: true },
         type: { type: import_sequelize6.DataTypes.STRING, allowNull: false },
-        change: { type: import_sequelize6.DataTypes.JSONB, allowNull: true, defaultValue: {} }
+        change: { type: import_sequelize6.DataTypes.JSONB, allowNull: true, defaultValue: {} },
+        color: { type: import_sequelize6.DataTypes.STRING, allowNull: true },
+        isDefault: { type: import_sequelize6.DataTypes.BOOLEAN, allowNull: false, defaultValue: false }
       },
       {
         tableName: "calendar",

@@ -2,34 +2,18 @@
 /**
  * Calendar view state (date, view mode).
  */
-import { EVENTTYPE, IEvent } from "@stacks/types";
+import { EVENTTYPE, IEvent, ICalendarCount, ICalendarRemote, ILocalCalendar } from "@stacks/types";
 import { PreferencesStore } from "./preferences";
 import { entity } from "app/hooks/store";
 import { getStorage } from "app/utils/storage";
 import { produce } from "immer";
 
-export interface ICalendarCount {
-    events: number;
-    tasks: number;
-    birthdays: number;
-}
-
-export interface ICalendarRemote {
-    title: string;
-    id: string;
-    color: string;
-    primary: boolean;
-    source: "google" | "microsoft";
-    readOnly: boolean;
-}
+export type { ICalendarRemote };
 
 export interface ICalendarFilters {
     showCalendars: string[];
     showTasks: boolean;
-    showCompletedTasks: boolean;
-    showLoggedTime: boolean;
     showBirthdays: boolean;
-    showTimebox: boolean;
     showProjects: string[];
 }
 
@@ -50,15 +34,14 @@ export interface ICalendarStore {
     filters: ICalendarFilters;
     loadingCalendars: boolean;
     calendars: ICalendarRemote[];
+    localCalendars: ILocalCalendar[];
+    loadingLocalCalendars: boolean;
 }
 
 const DEFAULT_FILTERS: ICalendarFilters = {
     showCalendars: ["local"],
     showTasks: true,
-    showCompletedTasks: false,
-    showLoggedTime: false,
     showBirthdays: true,
-    showTimebox: true,
     showProjects: [],
 };
 
@@ -81,6 +64,8 @@ export const CalendarStore = entity<ICalendarStore>({
     filters: { ...DEFAULT_FILTERS },
     loadingCalendars: false,
     calendars: [],
+    localCalendars: [],
+    loadingLocalCalendars: false,
 }, [
     {
         init: (origInit, entityInstance) => () => {

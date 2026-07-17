@@ -15,8 +15,16 @@ interface CalendarPickerProps {
 export const CalendarPicker: FunctionComponent<CalendarPickerProps> = ({ value, disabled, onChange }) => {
     const { calendars, isGoogleAuthenticated, loading } = useCalendars();
 
+    const localCalendars = useMemo(() => calendars.filter(c => c.source === "local"), [calendars]);
+    const googleCalendars = useMemo(() => calendars.filter(c => c.source === "google"), [calendars]);
+
     const current = useMemo(() => {
-        if (!value || value === "local") {
+        if (!value) {
+            // Return default local calendar if available
+            const defaultLocal = localCalendars.find(c => c.primary);
+            if (defaultLocal) {
+                return { title: defaultLocal.title, color: defaultLocal.color };
+            }
             return {
                 title: "Local calendar",
                 color: Colors.ORANGE3,
@@ -31,7 +39,7 @@ export const CalendarPicker: FunctionComponent<CalendarPickerProps> = ({ value, 
             title: "Unknown calendar",
             color: Colors.RED1,
         };
-    }, [value, calendars]);
+    }, [value, calendars, localCalendars]);
 
     if (disabled) {
         return (
@@ -48,13 +56,24 @@ export const CalendarPicker: FunctionComponent<CalendarPickerProps> = ({ value, 
         <Popover
             content={
                 <Menu>
-                    <MenuDivider title="Workspace" />
-                    <MenuItem
-                        text="Local calendar"
-                        icon={<Stop color={Colors.ORANGE3} />}
-                        labelElement={!value || value === "local" ? <Icon icon="check" /> : null}
-                        onClick={() => onChange("local", "local")}
-                    />
+                    <MenuDivider title="Local calendars" />
+                    {localCalendars.length === 0 ? (
+                        <MenuItem
+                            text="No local calendars"
+                            icon={<Stop color={Colors.GRAY4} />}
+                            disabled
+                        />
+                    ) : (
+                        localCalendars.map(calendar => (
+                            <MenuItem
+                                key={calendar.id}
+                                text={calendar.title}
+                                icon={<Stop color={calendar.color} />}
+                                labelElement={value === calendar.id ? <Icon icon="check" /> : null}
+                                onClick={() => onChange(calendar.id, "local")}
+                            />
+                        ))
+                    )}
                     {isGoogleAuthenticated ? (
                         <>
                             <MenuDivider title="Google" />
@@ -67,7 +86,7 @@ export const CalendarPicker: FunctionComponent<CalendarPickerProps> = ({ value, 
                                         style={{ marginBottom: 5 }}
                                     />
                                 ))
-                                : calendars.map(calendar => (
+                                : googleCalendars.map(calendar => (
                                     <MenuItem
                                         key={calendar.id}
                                         text={calendar.title}

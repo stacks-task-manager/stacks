@@ -9,6 +9,7 @@ import { parseISO } from "date-fns";
 import { PermissionEntity, EventEntity } from "@stacks/db";
 import { findAll, findOne, sanitizeWhere } from "./utils";
 import googleOAuthService, { type GoogleCalendarEvent } from "../services/googleOAuthService";
+import { CalendarsLoader } from "./calendar";
 
 import { ICalendarEvent } from "@stacks/types";
 import { getCurrentUser } from "./context";
@@ -28,6 +29,9 @@ interface Where {
     };
     end?: {
         [Op.lte]: Date;
+    };
+    calendar?: {
+        [Op.in]: string[];
     };
 }
 
@@ -166,6 +170,11 @@ async function getAll(filters: EventsFilter) {
     try {
         const user = getCurrentUser();
         const calendars = filters.calendars;
+        
+        // Separate different calendar types
+        const localCalendarIds = (calendars ?? [])
+            .filter(c => typeof c === "string" && c.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i))
+            .filter(Boolean);
         const includeLocal = calendars ? calendars.includes("local") : true;
         const googleCalendarIds = (calendars ?? [])
             .filter(c => typeof c === "string" && c.startsWith("google:"))
@@ -178,7 +187,10 @@ async function getAll(filters: EventsFilter) {
         };
 
         const events: ICalendarEvent[] = [];
-        if (includeLocal) {
+        if (includeLocal || localCalendarIds.length > 0) {
+            if (localCalendarIds.length > 0) {
+                where.calendar = { [Op.in]: localCalendarIds };
+            }
             const localEvents = await findAll({
                 entity: EventEntity,
                 filter: where,
@@ -248,7 +260,7 @@ async function create(data: Partial<ICalendarEvent>) {
     const user = getCurrentUser();
     try {
         const source = data.source ?? "local";
-        const calendar = data.calendar ?? (source === "local" ? "local" : undefined);
+        let calendar = data.calendar ?? (source === "local" ? "local" : undefined);
 
         if (source === "google") {
             if (!calendar) {
@@ -285,6 +297,22 @@ async function create(data: Partial<ICalendarEvent>) {
 
         if (source !== "local") {
             throw Errors.invalidInput("Unsupported calendar source");
+        }
+
+        // If calendar is "local" (legacy) or not specified, use the default calendar
+        if (!calendar || calendar === "local") {
+            const defaultCalendar = await CalendarsLoader.getDefaultCalendar();
+            if (defaultCalendar) {
+                calendar = defaultCalendar.id;
+            } else {
+                // Create a default calendar if none exists
+                const newCalendar = await CalendarsLoader.create({
+                    title: "Default Calendar",
+                    color: "#FF8C00",
+                    isDefault: true,
+                });
+                calendar = newCalendar.id;
+            }
         }
 
         const newEvent = await EventEntity.create({
