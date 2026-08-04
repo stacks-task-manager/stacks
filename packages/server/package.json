@@ -12,6 +12,7 @@
         "post-bundle": "node post-build.js",
         "setup": "yarn install",
         "dev": "tsx watch --include \"./src/**/*.ts\" --include \"../translations/src/**/*.ts\" --include \"../db/src/**/*.ts\" --include \"../types/src/**/*.ts\" --include \"../license/src/**/*.ts\" --tsconfig tsconfig.dev.json --inspect --env-file=.env src/index.ts",
+        "ai:debug": "tsx --env-file=.env src/ai/debugServer.ts",
         "test": "vitest run",
         "test:unit": "vitest run --config vitest.unit.config.js"
     },

@@ -10,6 +10,7 @@ import { selectPromptContext } from "./promptContext";
 import { template } from "./promptTemplate";
 import { buildAiTools, MCP_AI_TOOL_NAMES, type AiToolExecuteOverride } from "./tools";
 import { createMcpToolClient } from "./mcpToolClient";
+import { appendAiChatDebugTurn, type AiChatDebugToolCall } from "./debugLog";
 
 export type AiChatClientMessage = { role: "user" | "assistant"; content: string };
 
@@ -208,11 +209,46 @@ export async function streamAiChat(
     handlers: StreamAiChatHandlers,
     clientRoute?: AiChatClientRoutePayload | null
 ): Promise<void> {
+    const debugStartedAt = new Date();
+    const debugTools: AiChatDebugToolCall[] = [];
+    let debugStatus: "ok" | "error" = "ok";
+    let debugError: string | undefined;
+    let debugResponseText: string | undefined;
+    let debugSystemPrompt: string | undefined;
+    let debugMessages: ModelMessage[] | undefined;
+    let debugSelection:
+        | {
+              topics: string[];
+              allowedTools: string[];
+              promptFragments: string[];
+              reasons: Record<string, string[]>;
+          }
+        | undefined;
+    let debugUser:
+        | {
+              id?: string;
+              name?: string;
+              email?: string;
+          }
+        | undefined;
     const baseURL = envTrim("AI_OPENAI_BASE_URL");
     const modelId = envTrim("AI_MODEL");
     const apiKey = envTrim("AI_OPENAI_API_KEY") || "not-needed";
 
     if (!baseURL || !modelId) {
+        debugStatus = "error";
+        debugError = "AI is not configured";
+        await appendAiChatDebugTurn({
+            id: `${debugStartedAt.getTime()}-${Math.random().toString(36).slice(2, 10)}`,
+            startedAt: debugStartedAt.toISOString(),
+            finishedAt: new Date().toISOString(),
+            status: debugStatus,
+            modelId,
+            baseURL,
+            request: { newUserMessage, history, clientRoute },
+            tools: debugTools,
+            error: debugError,
+        });
         handlers.onError("AI is not configured");
         return;
     }
@@ -223,6 +259,11 @@ export async function streamAiChat(
 
     const routeVars = clientRouteTemplateVars(clientRoute ?? undefined);
     const identityVars = currentUserTemplateVars();
+    debugUser = {
+        id: identityVars.currentUserId || undefined,
+        name: identityVars.currentUserName || undefined,
+        email: identityVars.currentUserEmail || undefined,
+    };
     const now = new Date();
 
     const parsedRoute = clientRoute ? parseClientRoute(clientRoute) : null;
@@ -232,6 +273,12 @@ export async function streamAiChat(
         parsedRoute,
         routeSection: clientRoute?.section,
     });
+    debugSelection = {
+        topics: selection.topics,
+        allowedTools: selection.allowedTools,
+        promptFragments: selection.promptFragments,
+        reasons: selection.reasons,
+    };
 
     // Core is rendered with the full variable bag (identity + today). Topic
     // fragments currently only use `currentUserId` — passing the same bag to
@@ -247,6 +294,7 @@ export async function streamAiChat(
     if (routeVars.hasClientRoute) {
         systemPrompt += "\n\n" + template("client-ui-context.md", routeVars);
     }
+    debugSystemPrompt = systemPrompt;
 
     console.log(
         "[aiChat] prompt selection",
@@ -281,6 +329,7 @@ export async function streamAiChat(
             }),
         },
     ];
+    debugMessages = messages;
 
     try {
         const result = streamText({
@@ -290,11 +339,25 @@ export async function streamAiChat(
             system: systemPrompt,
             messages,
             experimental_onToolCallFinish: async event => {
+                const toolCall = event.toolCall as {
+                    toolName?: string;
+                    input?: unknown;
+                    args?: unknown;
+                };
+                const name = typeof toolCall.toolName === "string" ? toolCall.toolName : "";
+                debugTools.push({
+                    toolName: name,
+                    input: toolCall.input ?? toolCall.args,
+                    output: event.success ? event.output : undefined,
+                    success: event.success,
+                    error: event.success
+                        ? undefined
+                        : formatAiChatError((event as { error?: unknown }).error),
+                    timestamp: new Date().toISOString(),
+                });
                 if (!event.success) {
                     return;
                 }
-                const name =
-                    "toolName" in event.toolCall ? (event.toolCall as { toolName: string }).toolName : "";
                 widgets.push(...widgetsFromToolResult(name, event.output));
             },
             onChunk: ({ chunk }) => {
@@ -304,6 +367,8 @@ export async function streamAiChat(
             },
             onError: ({ error }) => {
                 console.error("[aiChat] stream error", error);
+                debugStatus = "error";
+                debugError = formatAiChatError(error);
                 handlers.onError(formatAiChatError(error));
             },
         });
@@ -312,11 +377,30 @@ export async function streamAiChat(
 
         const raw = (await Promise.resolve(result.text)) || "";
         const text = raw.replace(/^\s+/, "");
+        debugResponseText = text;
         handlers.onDone({ text, widgets });
     } catch (e) {
         console.error("[aiChat] turn failed", e);
+        debugStatus = "error";
+        debugError = formatAiChatError(e);
         handlers.onError(formatAiChatError(e));
     } finally {
+        await appendAiChatDebugTurn({
+            id: `${debugStartedAt.getTime()}-${Math.random().toString(36).slice(2, 10)}`,
+            startedAt: debugStartedAt.toISOString(),
+            finishedAt: new Date().toISOString(),
+            status: debugStatus,
+            modelId,
+            baseURL,
+            user: debugUser,
+            request: { newUserMessage, history, clientRoute },
+            promptSelection: debugSelection,
+            systemPrompt: debugSystemPrompt,
+            messages: debugMessages,
+            tools: debugTools,
+            responseText: debugResponseText,
+            error: debugError,
+        });
         if (mcp) {
             await mcp.close().catch(() => undefined);
         }
