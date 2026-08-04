@@ -60,11 +60,9 @@ function eventTintForFullCalendar(ev: IEvent, calendars: ICalendar[]): string | 
     }
     if (ev.resource.type === EVENTTYPE.EVENT) {
         const calEvent = ev.resource.data as ICalendarEvent;
-        if (calEvent.source === "google") {
-            const calendar = calendars.find(c => c.id === calEvent.calendar);
-            if (calendar?.color) {
-                return calendar.color;
-            }
+        const calendar = calendars.find(c => c.source === calEvent.source && c.id === calEvent.calendar);
+        if (calendar?.color) {
+            return calendar.color;
         }
         if (calEvent.color) {
             return calEvent.color;

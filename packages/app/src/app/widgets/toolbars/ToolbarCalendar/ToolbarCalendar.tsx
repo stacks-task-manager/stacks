@@ -200,15 +200,22 @@ export const ToolbarCalendar = () => {
 const DEFAULT_CALENDAR_COLOR = "#FF8C00";
 
 const NewLocalCalendarButton = () => {
+    const calendars = CalendarStore.use(state => state.calendars, shallowEqual);
     const [isOpen, setIsOpen] = useState(false);
     const [title, setTitle] = useState("");
     const [color, setColor] = useState(DEFAULT_CALENDAR_COLOR);
     const [primary, setPrimary] = useState(false);
     const [saving, setSaving] = useState(false);
+    const trimmedTitle = title.trim();
+    const normalizedTitle = trimmedTitle.toLowerCase();
+    const hasDuplicateTitle =
+        normalizedTitle.length > 0 &&
+        calendars.some(
+            calendar => calendar.source === "local" && calendar.title.trim().toLowerCase() === normalizedTitle
+        );
 
     const handleSave = async () => {
-        const trimmedTitle = title.trim();
-        if (!trimmedTitle) return;
+        if (!trimmedTitle || hasDuplicateTitle) return;
 
         setSaving(true);
         const calendar = await CalendarActions.createLocalCalendar(trimmedTitle, color, primary);
@@ -236,15 +243,24 @@ const NewLocalCalendarButton = () => {
             placement="bottom-end"
             content={
                 <div style={{ width: 240, padding: 10 }} data-testid="calendar-new-local-popover">
-                    <FormGroup label={translate("Calendar name")}>
+                    <FormGroup
+                        label={translate("Calendar name")}
+                        helperText={
+                            hasDuplicateTitle
+                                ? translate("A calendar with this name already exists.")
+                                : undefined
+                        }
+                        intent={hasDuplicateTitle ? Intent.DANGER : Intent.NONE}
+                    >
                         <InputGroup
                             value={title}
                             autoFocus
                             placeholder={translate("New local calendar")}
+                            intent={hasDuplicateTitle ? Intent.DANGER : Intent.NONE}
                             data-testid="calendar-new-local-title-input"
                             onChange={event => setTitle(event.currentTarget.value)}
                             onKeyDown={event => {
-                                if (event.key === "Enter") {
+                                if (event.key === "Enter" && !hasDuplicateTitle) {
                                     void handleSave();
                                 }
                             }}
@@ -297,7 +313,7 @@ const NewLocalCalendarButton = () => {
                             size="small"
                             intent={Intent.PRIMARY}
                             loading={saving}
-                            disabled={!title.trim()}
+                            disabled={!trimmedTitle || hasDuplicateTitle}
                             data-testid="calendar-new-local-save"
                             onClick={handleSave}
                         >

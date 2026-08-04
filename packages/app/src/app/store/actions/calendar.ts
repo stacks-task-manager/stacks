@@ -29,6 +29,7 @@ import Toast from "app/utils/toast";
 import { patchFilterField } from "../actionHelpers";
 import { CALENDAR_FILTERS_STORAGE_KEY, CalendarStore, ICalendarFilters, ICalendarStore } from "../calendar";
 import { TasksActions } from "./tasks";
+import { Intent } from "@blueprintjs/core";
 
 const toDate = (date: Date | string) => (date instanceof Date ? new Date(date) : new Date(date));
 
@@ -468,8 +469,8 @@ const updateEvent = async (eventId: string, updatedEvent: Partial<ICalendarEvent
             const startToSend = startChanged
                 ? toDate(start)
                 : currentStart
-                ? toDate(currentStart)
-                : undefined;
+                    ? toDate(currentStart)
+                    : undefined;
             let endToSend = endChanged ? toDate(end) : currentEnd ? toDate(currentEnd) : undefined;
 
             if (startToSend && endToSend && endToSend <= startToSend) {
@@ -594,9 +595,16 @@ const deleteEvent = async (eventId: string) => {
 };
 
 const deleteEventAlert = async (eventId: string) => {
+    const event = CalendarStore.get().events.find(event => event.resource.data.id === eventId);
+    const calendarEvent =
+        event?.resource.type === EVENTTYPE.EVENT ? (event.resource.data as ICalendarEvent) : null;
+    const isRecurring = Boolean(calendarEvent?.recurrenceRule);
     const response = await Dialog.confirm(
         "Delete event",
-        "Are you sure you want to remove this event? This action cannot be undone!"
+        isRecurring
+            ? "Are you sure you want to remove this event? This will remove all occurrences of this event. This action cannot be undone!"
+            : "Are you sure you want to remove this event? This action cannot be undone!",
+        Intent.DANGER
     );
 
     if (response) {
@@ -804,15 +812,15 @@ const updateLocalCalendar = async (
                     state.calendars = state.calendars.map(c =>
                         c.source === "local"
                             ? {
-                                  ...c,
-                                  ...(c.id === id
-                                      ? {
-                                            title: calendar.title,
-                                            color: calendar.color ?? c.color,
-                                        }
-                                      : {}),
-                                  primary: c.id === id,
-                              }
+                                ...c,
+                                ...(c.id === id
+                                    ? {
+                                        title: calendar.title,
+                                        color: calendar.color ?? c.color,
+                                    }
+                                    : {}),
+                                primary: c.id === id,
+                            }
                             : c
                     );
                     return;

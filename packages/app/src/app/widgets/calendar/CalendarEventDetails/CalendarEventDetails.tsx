@@ -371,10 +371,14 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew, isAl
 
     const recurrence = parseRecurrenceRule(event.recurrenceRule);
     const handleChangeRecurrence = (updates: Partial<RecurrenceState>) => {
+        const defaultUntil = end ? format(end, "yyyy-MM-dd") : format(new Date(), "yyyy-MM-dd");
         const next = {
             ...recurrence,
             ...updates,
         };
+        if (next.endMode === "until" && !next.until) {
+            next.until = defaultUntil;
+        }
         CalendarActions.updateEvent(id, {
             recurrenceRule: buildRecurrenceRule(next),
             recurrenceExDates: [],
