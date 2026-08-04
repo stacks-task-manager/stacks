@@ -14,7 +14,7 @@ export interface ILocalCalendar {
     id: string;
     title: string;
     color: string | null;
-    isDefault: boolean;
+    primary: boolean;
     tenant: string;
     createdBy: string;
     updatedBy: string;
@@ -43,21 +43,33 @@ async function getOne(id: string): Promise<ILocalCalendar> {
     return calendar as unknown as ILocalCalendar;
 }
 
-async function create(data: { title: string; color?: string; isDefault?: boolean }): Promise<ILocalCalendar> {
+function getPrimaryFlag(data: { primary?: boolean; isDefault?: boolean }): boolean {
+    return data.primary ?? data.isDefault ?? false;
+}
+
+async function create(data: {
+    title: string;
+    color?: string;
+    primary?: boolean;
+    isDefault?: boolean;
+}): Promise<ILocalCalendar> {
     const user = getCurrentUser();
+    const primary = getPrimaryFlag(data);
 
     // If setting as default, unset any existing default for this tenant
-    if (data.isDefault) {
+    if (primary) {
         await CalendarEntity.update(
-            { isDefault: false },
-            { where: sanitizeWhere({ tenant: user.tenant, isDefault: true, deleted: null }) }
+            { primary: false },
+            { where: sanitizeWhere({ tenant: user.tenant, primary: true, deleted: null }) }
         );
     }
 
     const calendar = await CalendarEntity.create({
         title: data.title,
         color: data.color ?? "#FF8C00", // Default orange color
-        isDefault: data.isDefault ?? false,
+        primary,
+        source: "local",
+        readOnly: false,
         tenant: user.tenant,
         createdBy: user.id,
         updatedBy: user.id,
@@ -72,20 +84,36 @@ async function create(data: { title: string; color?: string; isDefault?: boolean
     return calendar.toJSON() as unknown as ILocalCalendar;
 }
 
-async function update(id: string, data: { title?: string; color?: string; isDefault?: boolean }): Promise<ILocalCalendar> {
+async function update(
+    id: string,
+    data: { title?: string; color?: string; primary?: boolean; isDefault?: boolean }
+): Promise<ILocalCalendar> {
     const user = getCurrentUser();
     const calendar = await getOne(id);
+    const primary = getPrimaryFlag(data);
 
     // If setting as default, unset any existing default for this tenant
-    if (data.isDefault) {
+    if (primary) {
         await CalendarEntity.update(
-            { isDefault: false },
-            { where: sanitizeWhere({ tenant: user.tenant, isDefault: true, deleted: null, id: { [Op.ne]: id } }) }
+            { primary: false },
+            {
+                where: sanitizeWhere({
+                    tenant: user.tenant,
+                    primary: true,
+                    deleted: null,
+                    id: { [Op.ne]: id },
+                }),
+            }
         );
     }
 
+    const { isDefault, ...calendarData } = data;
     const [affectedCount] = await CalendarEntity.update(
-        { ...data, updatedBy: user.id },
+        {
+            ...calendarData,
+            ...(data.isDefault != null && data.primary == null ? { primary } : {}),
+            updatedBy: user.id,
+        },
         { where: sanitizeWhere({ id, tenant: user.tenant }) }
     );
 
@@ -103,7 +131,7 @@ async function remove(id: string): Promise<boolean> {
 
     // Don't allow deleting the default calendar if it's the only one
     const calendars = await getAll();
-    if (calendar.isDefault && calendars.length === 1) {
+    if (calendar.primary && calendars.length === 1) {
         throw Errors.badRequest("Cannot delete the only default calendar");
     }
 
@@ -120,13 +148,13 @@ async function remove(id: string): Promise<boolean> {
     }
 
     // If we deleted the default calendar, make another one default
-    if (calendar.isDefault) {
+    if (calendar.primary) {
         const remaining = await CalendarEntity.findAll({
             where: sanitizeWhere({ tenant: user.tenant, deleted: null }),
         });
         if (remaining.length > 0) {
             await CalendarEntity.update(
-                { isDefault: true, updatedBy: user.id },
+                { primary: true, updatedBy: user.id },
                 { where: sanitizeWhere({ id: remaining[0].id, tenant: user.tenant }) }
             );
         }
@@ -138,11 +166,11 @@ async function remove(id: string): Promise<boolean> {
 
 const getPrimary = async (): Promise<ICalendar | null> => {
     const user = getCurrentUser();
-    return await CalendarEntity.findOne({
+    return (await CalendarEntity.findOne({
         where: sanitizeWhere({ tenant: user.tenant, deleted: null, primary: true }),
         raw: true,
-    }) as ICalendar | null;
-}
+    })) as ICalendar | null;
+};
 
 export const CalendarsLoader = {
     getAll,
@@ -150,5 +178,5 @@ export const CalendarsLoader = {
     create,
     update,
     remove,
-    getPrimary
+    getPrimary,
 };

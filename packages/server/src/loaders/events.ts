@@ -7,6 +7,7 @@ import { addDays, endOfDay, format as formatDate, startOfDay } from "date-fns";
 import { Errors } from "../errors";
 import { parseISO } from "date-fns";
 import { PermissionEntity, EventEntity } from "@stacks/db";
+import { RRule } from "rrule";
 import { findAll, findOne, sanitizeWhere } from "./utils";
 import googleOAuthService, { type GoogleCalendarEvent } from "../services/googleOAuthService";
 import { CalendarsLoader } from "./calendar";
@@ -24,12 +25,7 @@ interface EventsFilter {
 }
 
 interface Where {
-    start?: {
-        [Op.gte]: Date;
-    };
-    end?: {
-        [Op.lte]: Date;
-    };
+    [Op.and]?: unknown[];
     calendar?: {
         [Op.in]: string[];
     };
@@ -55,7 +51,10 @@ function normalizeIsoDateTime(value: unknown): string | undefined {
 /**
  * Convert Google Calendar events to local event format
  */
-function convertGoogleEventsToLocalFormat(googleEvents: GoogleCalendarEvent[], calendarId: string): ICalendarEvent[] {
+function convertGoogleEventsToLocalFormat(
+    googleEvents: GoogleCalendarEvent[],
+    calendarId: string
+): ICalendarEvent[] {
     const user = getCurrentUser();
     return googleEvents.map(googleEvent => {
         // Handle all-day events and timed events
@@ -102,11 +101,15 @@ function convertGoogleEventsToLocalFormat(googleEvents: GoogleCalendarEvent[], c
             updated: googleEvent.updated
                 ? new Date(googleEvent.updated).toISOString()
                 : new Date().toISOString(),
+            recurrenceRule: googleEvent.recurrence?.find(rule => rule.startsWith("RRULE:")) ?? null,
         };
     });
 }
 
-function convertGoogleEventToLocalFormat(googleEvent: GoogleCalendarEvent, calendarId: string): ICalendarEvent {
+function convertGoogleEventToLocalFormat(
+    googleEvent: GoogleCalendarEvent,
+    calendarId: string
+): ICalendarEvent {
     return convertGoogleEventsToLocalFormat([googleEvent], calendarId)[0];
 }
 
@@ -127,6 +130,7 @@ function buildGoogleCalendarEventPayload(data: Partial<ICalendarEvent>) {
             summary: data.title,
             description: data.description || undefined,
             location: data.location || undefined,
+            recurrence: data.recurrenceRule ? [data.recurrenceRule] : undefined,
             start: {
                 date: formatDate(start, "yyyy-MM-dd"),
             },
@@ -140,6 +144,7 @@ function buildGoogleCalendarEventPayload(data: Partial<ICalendarEvent>) {
         summary: data.title,
         description: data.description || undefined,
         location: data.location || undefined,
+        recurrence: data.recurrenceRule ? [data.recurrenceRule] : undefined,
         start: {
             dateTime: start.toISOString(),
         },
@@ -166,6 +171,32 @@ async function getOne(id: string) {
     }
 }
 
+function recurringEventIntersectsRange(event: ICalendarEvent, from: Date, to: Date): boolean {
+    if (!event.recurrenceRule) return true;
+
+    try {
+        const durationMs = new Date(event.end).getTime() - new Date(event.start).getTime();
+        const rangeStart = new Date(from.getTime() - Math.max(durationMs, 0));
+        const rule = RRule.fromString(event.recurrenceRule.replace(/^RRULE:/, ""));
+        const occurrences = new RRule({
+            ...rule.origOptions,
+            dtstart: new Date(event.start),
+        }).between(rangeStart, to, true);
+        const excludedDates = new Set(
+            (event.recurrenceExDates ?? []).map(date => new Date(date).toISOString())
+        );
+
+        return occurrences.some(occurrence => {
+            if (excludedDates.has(occurrence.toISOString())) return false;
+            const occurrenceEnd = new Date(occurrence.getTime() + Math.max(durationMs, 0));
+            return occurrence <= to && occurrenceEnd >= from;
+        });
+    } catch (error) {
+        console.warn("Invalid recurrence rule on event:", event.id, error);
+        return false;
+    }
+}
+
 async function getAll(filters: EventsFilter) {
     try {
         const user = getCurrentUser();
@@ -173,7 +204,11 @@ async function getAll(filters: EventsFilter) {
 
         // Separate different calendar types
         const localCalendarIds = (calendars ?? [])
-            .filter(c => typeof c === "string" && c.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i))
+            .filter(
+                c =>
+                    typeof c === "string" &&
+                    c.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)
+            )
             .filter(Boolean);
         const includeLocal = calendars ? calendars.includes("local") : true;
         const googleCalendarIds = (calendars ?? [])
@@ -181,9 +216,22 @@ async function getAll(filters: EventsFilter) {
             .map(c => c.slice("google:".length))
             .filter(Boolean);
 
+        const fromDate = parseISO(filters.from);
+        const toDate = parseISO(filters.to);
         const where: Where = {
-            start: { [Op.gte]: parseISO(filters.from) },
-            end: { [Op.lte]: parseISO(filters.to) }
+            [Op.and]: [
+                {
+                    [Op.or]: [
+                        {
+                            start: { [Op.lt]: toDate },
+                            end: { [Op.gt]: fromDate },
+                        },
+                        {
+                            recurrenceRule: { [Op.ne]: null },
+                        },
+                    ],
+                },
+            ],
         };
 
         const events: ICalendarEvent[] = [];
@@ -195,7 +243,11 @@ async function getAll(filters: EventsFilter) {
                 entity: EventEntity,
                 filter: where,
             });
-            events.push(...(localEvents as unknown as ICalendarEvent[]));
+            events.push(
+                ...(localEvents as unknown as ICalendarEvent[]).filter(event =>
+                    recurringEventIntersectsRange(event, fromDate, toDate)
+                )
+            );
         }
 
         if (googleCalendarIds.length > 0) {
@@ -309,7 +361,7 @@ async function create(data: Partial<ICalendarEvent>) {
                 const newCalendar = await CalendarsLoader.create({
                     title: "Default Calendar",
                     color: "#FF8C00",
-                    isDefault: true,
+                    primary: true,
                 });
                 calendar = newCalendar.id;
             }
@@ -342,12 +394,18 @@ async function update(id: string, data: Partial<ICalendarEvent>) {
             const patch: {
                 summary?: string;
                 description?: string;
-                start?: { dateTime?: string };
-                end?: { dateTime?: string };
+                location?: string;
+                start?: { dateTime?: string; date?: string };
+                end?: { dateTime?: string; date?: string };
+                recurrence?: string[] | null;
             } = {};
 
             if (data.title != null) patch.summary = data.title;
             if (data.description != null) patch.description = data.description;
+            if (data.location != null) patch.location = data.location;
+            if (data.recurrenceRule !== undefined) {
+                patch.recurrence = data.recurrenceRule ? [data.recurrenceRule] : null;
+            }
 
             const start = normalizeIsoDateTime((data as any).start);
             const end = normalizeIsoDateTime((data as any).end);
@@ -408,6 +466,54 @@ async function update(id: string, data: Partial<ICalendarEvent>) {
     }
 }
 
+async function move(id: string, calendar: string, source: ICalendarEvent["source"]) {
+    try {
+        if (source === "local") {
+            if (id.startsWith("google_")) {
+                throw Errors.invalidInput("Cannot move Google events to local calendars");
+            }
+
+            await getOne(id);
+            const [affectedCount] = await EventEntity.update(
+                { calendar },
+                {
+                    where: sanitizeWhere({ id, source: "local" }),
+                }
+            );
+            return affectedCount > 0;
+        }
+
+        if (source === "google") {
+            const user = getCurrentUser();
+            const parsed = parseGoogleCompositeEventId(id);
+            if (!parsed) {
+                throw Errors.invalidInput("Invalid Google event id");
+            }
+
+            const calendars = await googleOAuthService.getCalendars(user.id);
+            const destination = calendars.find(googleCalendar => googleCalendar.id === calendar);
+            if (!destination) {
+                throw Errors.invalidInput("Google calendar not found");
+            }
+            if (destination.accessRole === "reader" || destination.accessRole === "freeBusyReader") {
+                throw Errors.forbidden("Google calendar is read-only");
+            }
+
+            await googleOAuthService.moveCalendarEvent(
+                user.id,
+                parsed.calendarId,
+                parsed.googleEventId,
+                calendar
+            );
+            return true;
+        }
+
+        throw Errors.invalidInput("Unsupported calendar source");
+    } catch (error) {
+        throw error;
+    }
+}
+
 async function remove(id: string) {
     try {
         const user = getCurrentUser();
@@ -418,7 +524,11 @@ async function remove(id: string) {
             }
 
             try {
-                await googleOAuthService.deleteCalendarEvent(user.id, parsed.calendarId, parsed.googleEventId);
+                await googleOAuthService.deleteCalendarEvent(
+                    user.id,
+                    parsed.calendarId,
+                    parsed.googleEventId
+                );
                 return true;
             } catch (error: any) {
                 const status = error?.response?.status ?? error?.code;
@@ -462,5 +572,6 @@ export const EventsLoader = {
     countAll,
     create,
     update,
+    move,
     remove,
 };

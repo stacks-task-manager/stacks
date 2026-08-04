@@ -39,6 +39,7 @@
         "pg": "^8.15.6",
         "playwright-core": "^1.58.0",
         "puppeteer-core": "^24.0.0",
+        "rrule": "^2.8.1",
         "sequelize": "^6.37.7",
         "sharp": "^0.34.3",
         "typescript": "^5.8.3",

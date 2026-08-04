@@ -58,7 +58,7 @@ export const seedCalendars = async () => {
                 console.log(`✅ Default calendar created for tenant: ${tenant.name}`);
             } else {
                 // Check if there's a default calendar
-                const hasDefault = calendarResults.some(calendar => calendar.get("isDefault") === true);
+                const hasDefault = calendarResults.some(calendar => calendar.get("primary") === true);
 
                 if (!hasDefault) {
                     console.log(`➡️ Setting first calendar as default for tenant: ${tenant.name}`);
@@ -66,7 +66,7 @@ export const seedCalendars = async () => {
                     // Set the first calendar as default
                     const firstCalendar = calendarResults[0];
                     await CalendarEntity.update(
-                        { isDefault: true, updatedBy: systemUser.id },
+                        { primary: true, updatedBy: systemUser.id },
                         { where: { id: firstCalendar.id, tenant: tenant.id } }
                     );
 

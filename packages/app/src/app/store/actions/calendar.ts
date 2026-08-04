@@ -16,7 +16,7 @@ import {
     startOfDay,
     subDays,
     subMonths,
-    subWeeks
+    subWeeks,
 } from "date-fns";
 import { produce } from "immer";
 import { xor } from "lodash";
@@ -30,6 +30,37 @@ import { patchFilterField } from "../actionHelpers";
 import { CALENDAR_FILTERS_STORAGE_KEY, CalendarStore, ICalendarFilters, ICalendarStore } from "../calendar";
 import { TasksActions } from "./tasks";
 
+const toDate = (date: Date | string) => (date instanceof Date ? new Date(date) : new Date(date));
+
+const normalizeCalendarEventDate = (date: Date | string, allDay: boolean, boundary: "start" | "end") => {
+    const normalized = toDate(date);
+    if (!allDay) return normalized;
+
+    return boundary === "start" ? startOfDay(normalized) : endOfDay(normalized);
+};
+
+const makeTaskCalendarEvent = (task: ITask, start?: Date, end?: Date, allDay?: boolean): IEvent => ({
+    title: task.title,
+    start,
+    end,
+    allDay,
+    resource: {
+        data: task,
+        type: EVENTTYPE.TASK,
+    },
+});
+
+const upsertCalendarEvent = (events: IEvent[], incoming: IEvent) => {
+    const incomingId = incoming.resource.data.id;
+    const index = events.findIndex(event => event.resource.data.id === incomingId);
+
+    if (index === -1) {
+        return [...events, incoming];
+    }
+
+    return events.map(event => (event.resource.data.id === incomingId ? incoming : event));
+};
+
 const savePrefs = async () => {
     const { filters } = CalendarStore.get();
     await api("events/savePrefs", { filters });
@@ -41,6 +72,7 @@ const persistFilters = () => {
 
 let loadingCalendar = false;
 let pendingCalendarLoad = false;
+let calendarsLoaded = false;
 const load = async (reset = true) => {
     if (loadingCalendar) {
         pendingCalendarLoad = true;
@@ -64,8 +96,9 @@ const load = async (reset = true) => {
                 showCalendars
                     .map(calendarId => {
                         if (calendarId === "local") return "local";
-                        if (calendarId.startsWith("google-")) return `google:${calendarId.slice("google-".length)}`;
-                        return null;
+                        if (calendarId.startsWith("google-"))
+                            return `google:${calendarId.slice("google-".length)}`;
+                        return calendarId;
                     })
                     .filter((v): v is string => typeof v === "string" && v.length > 0)
             )
@@ -73,11 +106,8 @@ const load = async (reset = true) => {
         const calEvents = await EventsAPI.loadEvents(from, to, calendars.length ? calendars : undefined);
 
         for (const event of calEvents) {
-            const startDate = event.start;
-            const endDate = event.end;
-
-            const start = event.allDay ? setHours(startDate, 0) : startDate;
-            const end = event.allDay ? setHours(endDate, 23) : endDate;
+            const start = normalizeCalendarEventDate(event.start, event.allDay, "start");
+            const end = normalizeCalendarEventDate(event.end, event.allDay, "end");
 
             localEvents.push({
                 title: event.title,
@@ -91,7 +121,9 @@ const load = async (reset = true) => {
             });
         }
 
-        await loadCalendars();
+        if (!calendarsLoaded) {
+            await loadCalendars();
+        }
 
         CalendarStore.set(
             produce((state: ICalendarStore) => {
@@ -182,7 +214,7 @@ const goNext = () => {
     );
 };
 
-const changeEvent = (
+const changeEvent = async (
     resize: boolean,
     changedEvent: {
         event: IEvent;
@@ -208,15 +240,8 @@ const changeEvent = (
 
         // if task had both dates
         if (task.startdate && task.duedate) {
-            startDate = task.startdate || resize ? (changedEvent.start as Date) : undefined;
-            dueDate = task.duedate || resize ? (changedEvent.end as Date) : undefined;
-
-            if (startDate) {
-                startDate.allDay = allDay;
-            }
-            if (dueDate) {
-                dueDate.allDay = allDay;
-            }
+            startDate = resize ? toDate(changedEvent.start) : toDate(task.startdate);
+            dueDate = resize ? toDate(changedEvent.end) : toDate(task.duedate);
 
             if (allDay && startDate && dueDate && isSameDay(startDate, dueDate)) {
                 startDate = undefined;
@@ -225,66 +250,42 @@ const changeEvent = (
 
         // if task had only start date
         else if (task.startdate && !task.duedate) {
-            startDate = changedEvent.start as Date;
-
-            if (changedEvent.isAllDay) {
-                startDate = setHours(changedEvent.start as Date, 12);
-            }
-
-            startDate.allDay = changedEvent.isAllDay;
+            startDate = toDate(changedEvent.start);
         }
         // if task had only due date
         else if (!task.startdate && task.duedate) {
-            dueDate = changedEvent.end as Date;
-
-            if (changedEvent.isAllDay) {
-                dueDate = setHours(changedEvent.end as Date, 12);
-            }
-
-            dueDate.allDay = changedEvent.isAllDay;
-
-            startDate = changedEvent.start as Date;
-            startDate.allDay = allDay;
+            dueDate = toDate(changedEvent.end);
+            startDate = toDate(changedEvent.start);
 
             if (dueDate && startDate && isSameDay(dueDate, startDate) && allDay) {
                 startDate = undefined;
             }
         }
 
+        if (startDate != null) {
+            startDate = allDay ? setMinutes(setHours(startDate, 12), 0) : startDate;
+        } else {
+            startDate = dueDate;
+            if (allDay && dueDate) {
+                startDate = setMinutes(setHours(dueDate, 12), 0);
+            }
+        }
+
+        if (dueDate != null) {
+            dueDate = allDay ? setMinutes(setHours(dueDate, 12), 30) : dueDate;
+        } else {
+            dueDate = startDate;
+            if (allDay && startDate) {
+                dueDate = setMinutes(setHours(startDate, 12), 30);
+            }
+        }
+
+        const previousEvents = CalendarStore.get().events;
+
         CalendarStore.set(
             produce((state: ICalendarStore) => {
                 state.events = state.events.map((event: IEvent) => {
                     if (event.resource.data.id === actualEvent.resource.data.id) {
-                        if (startDate != null) {
-                            if (allDay) {
-                                startDate = setMinutes(setHours(startDate, 12), 0);
-                            }
-                        } else {
-                            startDate = dueDate;
-                            if (allDay && dueDate) {
-                                startDate = setMinutes(setHours(dueDate, 12), 0);
-                            }
-                        }
-
-                        if (startDate) {
-                            startDate.allDay = allDay;
-                        }
-
-                        if (dueDate != null) {
-                            if (allDay) {
-                                dueDate = setMinutes(setHours(dueDate, 12), 30);
-                            }
-                        } else {
-                            dueDate = startDate;
-                            if (allDay && startDate) {
-                                dueDate = setMinutes(setHours(startDate, 12), 30);
-                            }
-                        }
-
-                        if (dueDate) {
-                            dueDate.allDay = allDay;
-                        }
-
                         const ev = {
                             ...event,
                             start: startDate,
@@ -299,72 +300,86 @@ const changeEvent = (
             })
         );
 
-        TasksActions.update(actualEvent.resource.data.id, {
-            startdate: startDate,
-            duedate: dueDate,
-        });
+        try {
+            await TasksActions.update(actualEvent.resource.data.id, {
+                startdate: startDate,
+                duedate: dueDate,
+            });
+        } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error("Error updating task calendar dates:", error);
+            CalendarStore.set(
+                produce((state: ICalendarStore) => {
+                    state.events = previousEvents;
+                })
+            );
+            Toast.warn("Failed to update task dates.");
+        }
     }
     // update an event
     else if (actualEvent.resource.type === EVENTTYPE.EVENT) {
         const allDay = changedEvent.isAllDay ?? changedEvent.event.allDay;
         const calEvent = changedEvent.event.resource.data as ICalendarEvent;
 
-        updateEvent(calEvent.id, {
+        await updateEvent(calEvent.id, {
             ...calEvent,
-            start: format(changedEvent.start as Date, `yyyy-MM-dd${allDay ? "" : " HH:mm"}`) as unknown as Date,
-            end: format(changedEvent.end as Date, `yyyy-MM-dd${allDay ? "" : " HH:mm"}`) as unknown as Date,
+            start: normalizeCalendarEventDate(changedEvent.start, allDay, "start"),
+            end: normalizeCalendarEventDate(changedEvent.end, allDay, "end"),
             allDay,
         });
     }
 };
 
-const onTaskDrop = (task: ITask, start: Date, allDay: boolean, end?: Date) => {
+const onTaskDrop = async (task: ITask, start: Date, allDay: boolean, end?: Date) => {
     const { view } = CalendarStore.get();
 
     const updatedTask: Partial<ITask> = {};
 
-    const event: IEvent = {
-        title: task.title,
-        allDay,
-        resource: {
-            data: { ...task, ...updatedTask },
-            type: EVENTTYPE.TASK,
-        },
-    };
+    let event: IEvent;
 
     if (view === "month" || (end && format(start, "HH:mm") === format(end, "HH:mm"))) {
-        const dueDate = start;
-        dueDate.allDay = true;
+        const dueDate = toDate(start);
         updatedTask.duedate = dueDate;
-        (event.resource.data as ITask).duedate = updatedTask.duedate;
-        event.start = start;
-        event.end = end ? endOfDay(end) : addHours(start, 1);
-        event.allDay = true;
+        event = makeTaskCalendarEvent(
+            { ...task, ...updatedTask },
+            dueDate,
+            end ? endOfDay(toDate(end)) : addHours(dueDate, 1),
+            true
+        );
     } else {
-        const startDate = start;
+        const startDate = toDate(start);
         const endDate = addHours(startDate, 1);
-        if (!allDay) {
-            startDate.allDay = false;
-            endDate.allDay = false;
-        }
         updatedTask.startdate = startDate;
         updatedTask.duedate = endDate;
 
-        (event.resource.data as ITask).startdate = updatedTask.startdate;
-        (event.resource.data as ITask).duedate = updatedTask.duedate;
-
-        event.start = start;
-        event.end = end ?? addHours(startDate, 1);
-        event.allDay = false;
+        event = makeTaskCalendarEvent(
+            { ...task, ...updatedTask },
+            startDate,
+            end ? toDate(end) : endDate,
+            false
+        );
     }
+
+    const previousEvents = CalendarStore.get().events;
 
     CalendarStore.set(
         produce((state: ICalendarStore) => {
-            state.events.push(event);
+            state.events = upsertCalendarEvent(state.events, event);
         })
     );
 
-    api("tasks/update", task.id, updatedTask);
+    try {
+        await TasksActions.update(task.id, updatedTask);
+    } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error("Error scheduling task on calendar:", error);
+        CalendarStore.set(
+            produce((state: ICalendarStore) => {
+                state.events = previousEvents;
+            })
+        );
+        Toast.warn("Failed to schedule task.");
+    }
 };
 
 const toggleFilters = () => {
@@ -376,8 +391,10 @@ const toggleFilters = () => {
     );
 };
 
-let updateDebounce: NodeJS.Timeout | null = null;
+const updateDebounces = new Map<string, ReturnType<typeof setTimeout>>();
 const updateEvent = async (eventId: string, updatedEvent: Partial<ICalendarEvent>, skipSave = false) => {
+    const previousEvents = CalendarStore.get().events;
+
     CalendarStore.set(
         produce((state: ICalendarStore) => {
             state.events = state.events.map(ev => {
@@ -402,19 +419,19 @@ const updateEvent = async (eventId: string, updatedEvent: Partial<ICalendarEvent
                     }
 
                     if (updatedEvent.start != null) {
-                        let startDate = new Date(updatedEvent.start);
-                        if (event.allDay) {
-                            startDate = setHours(startDate, 0);
-                        }
-                        event.start = startDate;
+                        event.start = normalizeCalendarEventDate(
+                            updatedEvent.start,
+                            event.allDay === true,
+                            "start"
+                        );
                     }
 
                     if (updatedEvent.end != null) {
-                        let endDate = new Date(updatedEvent.end);
-                        if (event.allDay) {
-                            endDate = setHours(endDate, 23);
-                        }
-                        event.end = endDate;
+                        event.end = normalizeCalendarEventDate(
+                            updatedEvent.end,
+                            event.allDay === true,
+                            "end"
+                        );
                     }
 
                     if (updatedEvent.allDay != null) {
@@ -430,12 +447,13 @@ const updateEvent = async (eventId: string, updatedEvent: Partial<ICalendarEvent
 
     if (skipSave) return;
 
-    if (updateDebounce) {
-        clearTimeout(updateDebounce);
-        updateDebounce = null;
+    const existingDebounce = updateDebounces.get(eventId);
+    if (existingDebounce) {
+        clearTimeout(existingDebounce);
+        updateDebounces.delete(eventId);
     }
 
-    updateDebounce = setTimeout(async () => {
+    const debounce = setTimeout(async () => {
         const { start, end, ...rest } = updatedEvent;
         const startChanged = start != null;
         const endChanged = end != null;
@@ -447,8 +465,12 @@ const updateEvent = async (eventId: string, updatedEvent: Partial<ICalendarEvent
             const currentStart = current?.start;
             const currentEnd = current?.end;
 
-            const startToSend = startChanged ? new Date(start as any) : currentStart ? new Date(currentStart) : undefined;
-            let endToSend = endChanged ? new Date(end as any) : currentEnd ? new Date(currentEnd) : undefined;
+            const startToSend = startChanged
+                ? toDate(start)
+                : currentStart
+                ? toDate(currentStart)
+                : undefined;
+            let endToSend = endChanged ? toDate(end) : currentEnd ? toDate(currentEnd) : undefined;
 
             if (startToSend && endToSend && endToSend <= startToSend) {
                 endToSend = addHours(startToSend, 1);
@@ -458,23 +480,35 @@ const updateEvent = async (eventId: string, updatedEvent: Partial<ICalendarEvent
             if (endToSend) payload.end = endToSend;
         }
 
-        await EventsAPI.update(eventId, payload);
+        try {
+            await EventsAPI.update(eventId, payload);
+        } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error("Error updating calendar event:", error);
+            CalendarStore.set(
+                produce((state: ICalendarStore) => {
+                    state.events = previousEvents;
+                })
+            );
+            Toast.warn("Failed to update event.");
+        } finally {
+            if (updateDebounces.get(eventId) === debounce) {
+                updateDebounces.delete(eventId);
+            }
+        }
     }, 500);
+
+    updateDebounces.set(eventId, debounce);
 };
 
 const addEvent = async (event: Omit<ICalendarEvent, "id">) => {
-    const savedEvent: ICalendarEvent | false = await EventsAPI.add(event);
+    try {
+        const savedEvent = await EventsAPI.add(event);
 
-    if (savedEvent) {
         CalendarStore.set(
             produce((state: ICalendarStore) => {
-                let start = savedEvent.start;
-                let end = savedEvent.end;
-
-                if (event.allDay) {
-                    start = setHours(start, 0);
-                    end = setHours(end, 23);
-                }
+                const start = normalizeCalendarEventDate(savedEvent.start, event.allDay, "start");
+                const end = normalizeCalendarEventDate(savedEvent.end, event.allDay, "end");
 
                 const calEvent = {
                     title: savedEvent.title,
@@ -487,12 +521,17 @@ const addEvent = async (event: Omit<ICalendarEvent, "id">) => {
                     },
                 };
 
-                state.events.push(calEvent);
+                state.events = upsertCalendarEvent(state.events, calEvent);
             })
         );
-    }
 
-    return savedEvent;
+        return savedEvent;
+    } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error("Error creating calendar event:", error);
+        Toast.warn("Failed to create event.");
+        return false;
+    }
 };
 
 const addTempEvent = async (startDate: Date, endDate: Date) => {
@@ -532,18 +571,24 @@ const addTempEvent = async (startDate: Date, endDate: Date) => {
 };
 
 const deleteEvent = async (eventId: string) => {
-    const deleted: boolean = await EventsAPI.remove(eventId);
+    try {
+        const deleted = await EventsAPI.remove(eventId);
 
-    if (deleted) {
-        CalendarStore.set(
-            produce((state: ICalendarStore) => {
-                state.events = state.events.filter(ev => ev.resource.data.id !== eventId);
-                if (state.selected && state.selected[0] === eventId) {
-                    state.selected = undefined;
-                }
-            })
-        );
-    } else {
+        if (deleted) {
+            CalendarStore.set(
+                produce((state: ICalendarStore) => {
+                    state.events = state.events.filter(ev => ev.resource.data.id !== eventId);
+                    if (state.selected && state.selected[0] === eventId) {
+                        state.selected = undefined;
+                    }
+                })
+            );
+        } else {
+            Toast.warn("There was a problem while removing the selected event");
+        }
+    } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error("Error deleting calendar event:", error);
         Toast.warn("There was a problem while removing the selected event");
     }
 };
@@ -568,8 +613,6 @@ const deleteSelectedEvent = async () => {
     const selectedEvent = CalendarStore.get().events.find(
         event => event.resource.data.id === selectedEventId[0]
     );
-
-
 
     if (selectedEvent && selectedEvent.resource.type === EVENTTYPE.EVENT) {
         await deleteEventAlert(selectedEventId[0]);
@@ -621,7 +664,13 @@ const setFilter = async (key: keyof ICalendarFilters, value: ICalendarFilters[ke
     );
 
     persistFilters();
-    await savePrefs();
+    try {
+        await savePrefs();
+    } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error("Error saving calendar filters:", error);
+        Toast.warn("Failed to save calendar filters.");
+    }
 };
 
 const toggleCalendar = async (calendarId: string) => {
@@ -632,7 +681,13 @@ const toggleCalendar = async (calendarId: string) => {
     );
 
     persistFilters();
-    await savePrefs();
+    try {
+        await savePrefs();
+    } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error("Error saving calendar filters:", error);
+        Toast.warn("Failed to save calendar filters.");
+    }
 };
 
 // const restoreCachedCalendars = () => {
@@ -660,20 +715,25 @@ const loadCalendars = async () => {
             const localCalendars: ICalendar[] = await CalendarsAPI.list();
 
             // Load Google calendars if authenticated
-            let googleCalendars: Array<{ id: string; title: string; color: string; source: "google" | "microsoft"; primary: boolean; readOnly: boolean }> = [];
+            let googleCalendars: Array<{
+                id: string;
+                title: string;
+                color: string;
+                source: "google" | "microsoft";
+                primary: boolean;
+                readOnly: boolean;
+            }> = [];
             if (CalendarStore.get().tokens.google != null) {
                 googleCalendars = await CalendarIntegrationsAPI.listCalendars("google");
             }
 
             CalendarStore.set(
                 produce((state: ICalendarStore) => {
-                    state.calendars = [
-                        ...localCalendars,
-                        ...googleCalendars,
-                    ];
+                    state.calendars = [...localCalendars, ...googleCalendars];
                     state.loadingCalendars = false;
                 })
             );
+            calendarsLoaded = true;
         } catch (error) {
             // eslint-disable-next-line no-console
             console.error("Error loading calendars:", error);
@@ -700,6 +760,14 @@ const createLocalCalendar = async (title: string, color?: string, primary = fals
         const calendar = await CalendarsAPI.create({ title, color, primary });
         CalendarStore.set(
             produce((state: ICalendarStore) => {
+                if (calendar.primary) {
+                    state.calendars = state.calendars.map(existingCalendar =>
+                        existingCalendar.source === "local"
+                            ? { ...existingCalendar, primary: false }
+                            : existingCalendar
+                    );
+                }
+
                 state.calendars.push({
                     id: calendar.id,
                     title: calendar.title,
@@ -708,8 +776,13 @@ const createLocalCalendar = async (title: string, color?: string, primary = fals
                     primary: calendar.primary,
                     readOnly: false,
                 });
+                if (!state.filters.showCalendars.includes(calendar.id)) {
+                    state.filters.showCalendars.push(calendar.id);
+                }
             })
         );
+        persistFilters();
+        await savePrefs();
         return calendar;
     } catch (error) {
         // eslint-disable-next-line no-console
@@ -719,11 +792,32 @@ const createLocalCalendar = async (title: string, color?: string, primary = fals
     }
 };
 
-const updateLocalCalendar = async (id: string, data: Partial<Pick<ICalendar, "title" | "color" | "primary">>) => {
+const updateLocalCalendar = async (
+    id: string,
+    data: Partial<Pick<ICalendar, "title" | "color" | "primary">>
+) => {
     try {
         const calendar = await CalendarsAPI.update(id, data);
         CalendarStore.set(
             produce((state: ICalendarStore) => {
+                if (calendar.primary) {
+                    state.calendars = state.calendars.map(c =>
+                        c.source === "local"
+                            ? {
+                                  ...c,
+                                  ...(c.id === id
+                                      ? {
+                                            title: calendar.title,
+                                            color: calendar.color ?? c.color,
+                                        }
+                                      : {}),
+                                  primary: c.id === id,
+                              }
+                            : c
+                    );
+                    return;
+                }
+
                 const idx = state.calendars.findIndex(c => c.id === id && c.source === "local");
                 if (idx !== -1) {
                     state.calendars[idx] = {
@@ -746,15 +840,25 @@ const updateLocalCalendar = async (id: string, data: Partial<Pick<ICalendar, "ti
 
 const deleteLocalCalendar = async (id: string) => {
     try {
-        const deleted = await CalendarsAPI.remove(id);
-        if (deleted) {
+        const { success } = await CalendarsAPI.remove(id);
+        if (success) {
             CalendarStore.set(
                 produce((state: ICalendarStore) => {
                     state.calendars = state.calendars.filter(c => c.id !== id);
+                    state.filters.showCalendars = state.filters.showCalendars.filter(
+                        calendarId => calendarId !== id
+                    );
+                    state.events = state.events.filter(event => {
+                        if (event.resource.type !== EVENTTYPE.EVENT) return true;
+
+                        const calendarEvent = event.resource.data as ICalendarEvent;
+                        return calendarEvent.source !== "local" || calendarEvent.calendar !== id;
+                    });
                 })
             );
+            persistFilters();
         }
-        return deleted;
+        return success;
     } catch (error) {
         // eslint-disable-next-line no-console
         console.error("Error deleting calendar:", error);
@@ -788,27 +892,22 @@ const setDefaultLocalCalendar = async (id: string) => {
 
 const moveEvent = async (event: ICalendarEvent, calendar: string, source: ICalendarSource) => {
     if (event.source === source && event.calendar === calendar) return;
+    if (event.source !== source) {
+        Toast.warn("Events can only move within the same calendar source.");
+        return;
+    }
 
     try {
-        const savedEvent = await addEvent({
-            title: event.title,
-            description: event.description,
-            start: event.start,
-            end: event.end,
-            allDay: event.allDay,
-            assignees: event.assignees,
-            ...(event.location ? { location: event.location } : {}),
-            source,
-            calendar,
-        });
-
-        if (!savedEvent) {
-            Toast.warn("Failed to move event.");
-            return;
+        await EventsAPI.move(event.id, calendar, source);
+        if (source === "local") {
+            await updateEvent(event.id, { calendar }, true);
+            selectEvent(event.id, EVENTTYPE.EVENT);
+        } else if (source === "google") {
+            const googleEventId = event.id.slice(event.id.lastIndexOf("_") + 1);
+            selectEvent(`google_${calendar}_${googleEventId}`, EVENTTYPE.EVENT);
+        } else {
+            selectEvent(event.id, EVENTTYPE.EVENT);
         }
-
-        await deleteEvent(event.id);
-        selectEvent(savedEvent.id, EVENTTYPE.EVENT);
         await reload();
     } catch (error) {
         // eslint-disable-next-line no-console
@@ -909,11 +1008,15 @@ const handleGoogleAuthSuccess = async () => {
             })
         );
 
+        await loadCalendars();
+
         // if there aren't already google calendars checked in the filters
         // we'll get the primary one or the first one from the list
         const { calendars, filters } = CalendarStore.get();
-        if (!calendars.some(calendar => filters.showCalendars.includes(`google-${calendar.id}`))) {
-            const primaryCalendar = calendars.find(calendar => calendar.primary) ?? calendars.at(0);
+        const googleCalendars = calendars.filter(calendar => calendar.source === "google");
+        if (!googleCalendars.some(calendar => filters.showCalendars.includes(`google-${calendar.id}`))) {
+            const primaryCalendar =
+                googleCalendars.find(calendar => calendar.primary) ?? googleCalendars.at(0);
             if (primaryCalendar != null) {
                 CalendarStore.set(
                     produce((state: ICalendarStore) => {
@@ -921,6 +1024,7 @@ const handleGoogleAuthSuccess = async () => {
                     })
                 );
                 persistFilters();
+                await savePrefs();
             }
         }
 
@@ -942,19 +1046,27 @@ const disconnectCalendarProvider = async (provider: CalendarProvider) => {
                 produce((state: ICalendarStore) => {
                     state.tokens.google = null;
                     state.calendars = state.calendars.filter(calendar => calendar.source !== "google");
+                    state.filters.showCalendars = state.filters.showCalendars.filter(
+                        calendarId => !calendarId.startsWith("google-")
+                    );
                 })
             );
+            persistFilters();
         }
 
         await CalendarIntegrationsAPI.disconnect(provider);
         await load(); // Reload events without Google events
         Toast.success(
-            provider === "google" ? "Successfully disconnected from Google Calendar." : "Successfully disconnected."
+            provider === "google"
+                ? "Successfully disconnected from Google Calendar."
+                : "Successfully disconnected."
         );
     } catch (error) {
         // eslint-disable-next-line no-console
         console.error("Calendar provider disconnect error:", error);
-        Toast.warn(provider === "google" ? "Failed to disconnect from Google Calendar." : "Failed to disconnect.");
+        Toast.warn(
+            provider === "google" ? "Failed to disconnect from Google Calendar." : "Failed to disconnect."
+        );
     }
 };
 

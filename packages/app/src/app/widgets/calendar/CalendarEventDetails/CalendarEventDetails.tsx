@@ -6,9 +6,11 @@ import {
     Divider,
     EditableText,
     FormGroup,
+    HTMLSelect,
     Intent,
     Menu,
     MenuItem,
+    NumericInput,
     Popover,
     Switch,
 } from "@blueprintjs/core";
@@ -40,15 +42,7 @@ import {
     useSelectedEvent,
 } from "app/hooks";
 import { shallowEqual } from "app/hooks/store";
-import {
-    EVENTTYPE,
-    ICalendarEvent,
-    ICalendarSource,
-    IPerson,
-    ITask,
-    ITimeLogExtended,
-    TAGSECTION,
-} from "@stacks/types";
+import { EVENTTYPE, ICalendarEvent, ICalendarSource, ITimeLogExtended, TAGSECTION } from "@stacks/types";
 import { CalendarActions } from "app/store/actions";
 import { CalendarStore } from "app/store/calendar";
 import { DateTimePicker } from "app/widgets/date";
@@ -58,6 +52,88 @@ import { HTMLRenderer, Tags, TagsWrapper } from "app/widgets/common";
 import { PriorityChip, TaskDetailsAssignees } from "app/components/project";
 import { TaskDetailsStatus } from "app/widgets/status";
 import { DateInput } from "@blueprintjs/datetime";
+
+type RecurrenceFrequency = "none" | "daily" | "weekly" | "monthly" | "yearly";
+type RecurrenceEndMode = "never" | "until" | "count";
+
+interface RecurrenceState {
+    frequency: RecurrenceFrequency;
+    interval: number;
+    endMode: RecurrenceEndMode;
+    until: string | null;
+    count: number;
+}
+
+const FREQUENCY_TO_RRULE: Record<Exclude<RecurrenceFrequency, "none">, string> = {
+    daily: "DAILY",
+    weekly: "WEEKLY",
+    monthly: "MONTHLY",
+    yearly: "YEARLY",
+};
+
+const RRULE_TO_FREQUENCY: Record<string, Exclude<RecurrenceFrequency, "none">> = {
+    DAILY: "daily",
+    WEEKLY: "weekly",
+    MONTHLY: "monthly",
+    YEARLY: "yearly",
+};
+
+function parseRecurrenceRule(rule?: string | null): RecurrenceState {
+    if (!rule) {
+        return {
+            frequency: "none",
+            interval: 1,
+            endMode: "never",
+            until: null,
+            count: 10,
+        };
+    }
+
+    const parts = rule.replace(/^RRULE:/, "").split(";");
+    const values = new Map(
+        parts.map(part => {
+            const [key, value] = part.split("=");
+            return [key, value];
+        })
+    );
+    const frequency = RRULE_TO_FREQUENCY[values.get("FREQ") ?? ""] ?? "none";
+    const until = values.get("UNTIL");
+
+    return {
+        frequency,
+        interval: Math.max(1, Number(values.get("INTERVAL") ?? "1") || 1),
+        endMode: values.has("COUNT") ? "count" : until ? "until" : "never",
+        until: until ? `${until.slice(0, 4)}-${until.slice(4, 6)}-${until.slice(6, 8)}` : null,
+        count: Math.max(1, Number(values.get("COUNT") ?? "10") || 10),
+    };
+}
+
+function formatUntilDate(date: string | null): string | null {
+    if (!date) return null;
+    const parsed = new Date(`${date}T23:59:59Z`);
+    if (Number.isNaN(parsed.getTime())) return null;
+    return parsed.toISOString().replace(/[-:]/g, "").replace(".000", "");
+}
+
+function buildRecurrenceRule(state: RecurrenceState): string | null {
+    if (state.frequency === "none") return null;
+
+    const parts = [`FREQ=${FREQUENCY_TO_RRULE[state.frequency]}`];
+    if (state.interval > 1) {
+        parts.push(`INTERVAL=${state.interval}`);
+    }
+    if (state.endMode === "until") {
+        const until = formatUntilDate(state.until);
+        if (until) {
+            parts.push(`UNTIL=${until}`);
+        }
+    }
+    if (state.endMode === "count") {
+        parts.push(`COUNT=${state.count}`);
+    }
+
+    return `RRULE:${parts.join(";")}`;
+}
 
 export const CalendarEventDetails = () => {
     const selected = useSelectedEvent();
@@ -69,8 +145,6 @@ export const CalendarEventDetails = () => {
     useMousetrap("backspace", () => {
         CalendarActions.deleteSelectedEvent();
     });
-
-
 
     if (selected == null) return null;
 
@@ -98,14 +172,21 @@ export const CalendarEventDetails = () => {
 const EventDetailsGate = ({ id }: { id: string }) => {
     const isNew = id.includes("-new");
     const eventId = isNew ? id.replace("-new", "") : id;
-    const event = CalendarStore.use(state => state.events.find(
-        event => event.resource.data.id === eventId
-    ), shallowEqual);
+    const event = CalendarStore.use(
+        state => state.events.find(event => event.resource.data.id === eventId),
+        shallowEqual
+    );
 
     if (!event) return null;
 
-    return <EventDetails event={event.resource.data as ICalendarEvent} isNew={isNew} isAllDay={event.allDay ?? false} />;
-}
+    return (
+        <EventDetails
+            event={event.resource.data as ICalendarEvent}
+            isNew={isNew}
+            isAllDay={event.allDay ?? false}
+        />
+    );
+};
 
 interface EventDetailsProps {
     event: ICalendarEvent;
@@ -118,7 +199,7 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew, isAl
     const titleRef = useRef<HTMLDivElement | null>(null);
     const { calendars, isGoogleAuthenticated, loadCalendars } = useCalendars();
 
-    const { id, title, description, location, start, end, source, calendar } = event;
+    const { id, description, location, start, end, source, calendar } = event;
 
     const isDisabled = useMemo(() => {
         if (source === "local") return false;
@@ -212,9 +293,7 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew, isAl
 
     const handleUpdateEndTime = (time: string) => {
         const timeObj = parse(time, "p", new Date());
-        const endDate = end
-            ? setMinutes(setHours(end, getHours(timeObj)), getMinutes(timeObj))
-            : new Date();
+        const endDate = end ? setMinutes(setHours(end, getHours(timeObj)), getMinutes(timeObj)) : new Date();
 
         let newStartDate = start;
         if (!isAfter(endDate, newStartDate) || isSameMinute(endDate, newStartDate)) {
@@ -280,15 +359,26 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew, isAl
     };
 
     const handleChangeCalendar = (calendarId: string, newSource: ICalendarSource) => {
-        const newCalendar = newSource === "local" ? "local" : calendarId;
-        if (source === newSource && calendar === newCalendar) return;
-        void CalendarActions.moveEvent(event, newCalendar, newSource);
+        if (source === newSource && calendar === calendarId) return;
+        void CalendarActions.moveEvent(event, calendarId, newSource);
     };
 
     const handleOpenEventLink = () => {
         if (event.original && event.original.htmlLink) {
             window.open(event.original.htmlLink, "_blank");
         }
+    };
+
+    const recurrence = parseRecurrenceRule(event.recurrenceRule);
+    const handleChangeRecurrence = (updates: Partial<RecurrenceState>) => {
+        const next = {
+            ...recurrence,
+            ...updates,
+        };
+        CalendarActions.updateEvent(id, {
+            recurrenceRule: buildRecurrenceRule(next),
+            recurrenceExDates: [],
+        });
     };
 
     return (
@@ -384,6 +474,84 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew, isAl
                         )}
 
                         <EventDivider />
+                        <FormGroup label="Repeats">
+                            <Grid gap={8}>
+                                <HTMLSelect
+                                    fill
+                                    value={recurrence.frequency}
+                                    disabled={isDisabled}
+                                    onChange={event =>
+                                        handleChangeRecurrence({
+                                            frequency: event.currentTarget.value as RecurrenceFrequency,
+                                        })
+                                    }
+                                >
+                                    <option value="none">Does not repeat</option>
+                                    <option value="daily">Daily</option>
+                                    <option value="weekly">Weekly</option>
+                                    <option value="monthly">Monthly</option>
+                                    <option value="yearly">Yearly</option>
+                                </HTMLSelect>
+                                {recurrence.frequency !== "none" ? (
+                                    <>
+                                        <FormGroup label="Every">
+                                            <NumericInput
+                                                fill
+                                                min={1}
+                                                max={999}
+                                                value={recurrence.interval}
+                                                disabled={isDisabled}
+                                                onValueChange={value =>
+                                                    handleChangeRecurrence({
+                                                        interval: Math.max(1, value || 1),
+                                                    })
+                                                }
+                                            />
+                                        </FormGroup>
+                                        <HTMLSelect
+                                            fill
+                                            value={recurrence.endMode}
+                                            disabled={isDisabled}
+                                            onChange={event =>
+                                                handleChangeRecurrence({
+                                                    endMode: event.currentTarget.value as RecurrenceEndMode,
+                                                })
+                                            }
+                                        >
+                                            <option value="never">Never ends</option>
+                                            <option value="until">Ends on date</option>
+                                            <option value="count">Ends after occurrences</option>
+                                        </HTMLSelect>
+                                        {recurrence.endMode === "until" ? (
+                                            <input
+                                                type="date"
+                                                className={Classes.INPUT}
+                                                value={recurrence.until ?? ""}
+                                                disabled={isDisabled}
+                                                onChange={event =>
+                                                    handleChangeRecurrence({
+                                                        until: event.currentTarget.value,
+                                                    })
+                                                }
+                                            />
+                                        ) : null}
+                                        {recurrence.endMode === "count" ? (
+                                            <NumericInput
+                                                fill
+                                                min={1}
+                                                max={999}
+                                                value={recurrence.count}
+                                                disabled={isDisabled}
+                                                onValueChange={value =>
+                                                    handleChangeRecurrence({ count: Math.max(1, value || 1) })
+                                                }
+                                            />
+                                        ) : null}
+                                    </>
+                                ) : null}
+                            </Grid>
+                        </FormGroup>
+                        <EventDivider />
                         <FormGroup label="Description and notes">
                             <EditableText
                                 value={description ?? ""}
@@ -406,7 +574,8 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew, isAl
                         <EventDivider />
                         <FormGroup label="Calendar">
                             <CalendarPicker
-                                value={source === "local" ? "local" : calendar}
+                                value={calendar}
+                                allowedSources={[source]}
                                 disabled={isDisabled}
                                 onChange={handleChangeCalendar}
                             />

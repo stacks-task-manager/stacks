@@ -5,18 +5,26 @@ import React, { FunctionComponent, useMemo } from "react";
 
 import { Col, Icon, Row } from "app/components/common";
 import { useCalendars } from "app/hooks";
+import { ICalendarSource } from "@stacks/types";
 
 interface CalendarPickerProps {
     value?: string | null;
+    allowedSources?: ICalendarSource[];
     disabled?: boolean;
-    onChange: (calendarId: string, source: "local" | "google" | "microsoft") => void;
+    onChange: (calendarId: string, source: ICalendarSource) => void;
 }
 
-export const CalendarPicker: FunctionComponent<CalendarPickerProps> = ({ value, disabled, onChange }) => {
+export const CalendarPicker: FunctionComponent<CalendarPickerProps> = ({
+    value,
+    allowedSources,
+    disabled,
+    onChange,
+}) => {
     const { calendars, isGoogleAuthenticated, loading } = useCalendars();
+    const sourceAllowed = (source: ICalendarSource) => !allowedSources || allowedSources.includes(source);
 
-    const localCalendars = useMemo(() => calendars.filter(c => c.source === "local"), [calendars]);
-    const googleCalendars = useMemo(() => calendars.filter(c => c.source === "google"), [calendars]);
+    const localCalendars = calendars.filter(c => c.source === "local" && sourceAllowed("local"));
+    const googleCalendars = calendars.filter(c => c.source === "google" && sourceAllowed("google"));
 
     const current = useMemo(() => {
         if (!value) {
@@ -56,46 +64,50 @@ export const CalendarPicker: FunctionComponent<CalendarPickerProps> = ({ value, 
         <Popover
             content={
                 <Menu>
-                    <MenuDivider title="Local calendars" />
-                    {localCalendars.length === 0 ? (
-                        <MenuItem
-                            text="No local calendars"
-                            icon={<Stop color={Colors.GRAY4} />}
-                            disabled
-                        />
-                    ) : (
-                        localCalendars.map(calendar => (
-                            <MenuItem
-                                key={calendar.id}
-                                text={calendar.title}
-                                icon={<Stop color={calendar.color} />}
-                                labelElement={value === calendar.id ? <Icon icon="check" /> : null}
-                                onClick={() => onChange(calendar.id, "local")}
-                            />
-                        ))
-                    )}
-                    {isGoogleAuthenticated ? (
+                    {sourceAllowed("local") ? (
                         <>
-                            <MenuDivider title="Google" />
-                            {loading
-                                ? [...Array(5).keys()].map(i => (
-                                    <MenuItem
-                                        key={i}
-                                        text="Lorem ipsum"
-                                        className={Classes.SKELETON}
-                                        style={{ marginBottom: 5 }}
-                                    />
-                                ))
-                                : googleCalendars.map(calendar => (
+                            <MenuDivider title="Local calendars" />
+                            {localCalendars.length === 0 ? (
+                                <MenuItem
+                                    text="No local calendars"
+                                    icon={<Stop color={Colors.GRAY4} />}
+                                    disabled
+                                />
+                            ) : (
+                                localCalendars.map(calendar => (
                                     <MenuItem
                                         key={calendar.id}
                                         text={calendar.title}
                                         icon={<Stop color={calendar.color} />}
                                         labelElement={value === calendar.id ? <Icon icon="check" /> : null}
-                                        disabled={calendar.readOnly}
-                                        onClick={() => onChange(calendar.id, calendar.source)}
+                                        onClick={() => onChange(calendar.id, "local")}
                                     />
-                                ))}
+                                ))
+                            )}
+                        </>
+                    ) : null}
+                    {isGoogleAuthenticated && sourceAllowed("google") ? (
+                        <>
+                            <MenuDivider title="Google" />
+                            {loading
+                                ? [...Array(5).keys()].map(i => (
+                                      <MenuItem
+                                          key={i}
+                                          text="Lorem ipsum"
+                                          className={Classes.SKELETON}
+                                          style={{ marginBottom: 5 }}
+                                      />
+                                  ))
+                                : googleCalendars.map(calendar => (
+                                      <MenuItem
+                                          key={calendar.id}
+                                          text={calendar.title}
+                                          icon={<Stop color={calendar.color} />}
+                                          labelElement={value === calendar.id ? <Icon icon="check" /> : null}
+                                          disabled={calendar.readOnly}
+                                          onClick={() => onChange(calendar.id, calendar.source)}
+                                      />
+                                  ))}
                         </>
                     ) : null}
                 </Menu>

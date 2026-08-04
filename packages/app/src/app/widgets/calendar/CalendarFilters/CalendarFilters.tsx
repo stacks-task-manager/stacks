@@ -36,7 +36,7 @@ export const CalendarFilters = () => {
                 ) : (
                     localCalendars.map(calendar => (
                         <ColoredCheckbox
-                            text={calendar.title}
+                            text={calendar.primary ? `${calendar.title} (Default)` : calendar.title}
                             color={calendar.color}
                             key={calendar.id}
                             checked={showCalendars.includes(calendar.id)}
@@ -61,7 +61,11 @@ export const CalendarFilters = () => {
                 }
             />
 
-            <GoogleCalendars calendars={calendars} isGoogleAuthenticated={isGoogleAuthenticated} loading={loading} />
+            <GoogleCalendars
+                calendars={calendars}
+                isGoogleAuthenticated={isGoogleAuthenticated}
+                loading={loading}
+            />
         </FiltersSidebar>
     );
 };

@@ -7,8 +7,11 @@ import { z } from "zod/v4";
 export const CalendarCreateSchema = z.object({
     title: z.string().min(1).max(255),
     color: z.string().optional(),
-    isDefault: z.boolean().optional().default(false),
+    primary: z.boolean().optional(),
+    isDefault: z.boolean().optional(),
 });
+
+export const CalendarUpdateSchema = CalendarCreateSchema.partial();
 
 export const CalendarSchema = CalendarCreateSchema.extend({
     id: z.uuid(),

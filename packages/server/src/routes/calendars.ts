@@ -7,9 +7,7 @@ import type { Context } from "hono";
 import { translate } from "@stacks/translations";
 
 import { CalendarsLoader } from "../loaders";
-import {
-    CalendarCreateSchema,
-} from "./schema/calendar";
+import { CalendarCreateSchema, CalendarUpdateSchema } from "./schema/calendar";
 import { validator } from "../middleware/validator";
 import { Errors } from "../errors";
 import { asyncHandler } from "../utils/errorHandler";
@@ -49,7 +47,7 @@ calendars.get(
 /** PATCH `/:id` — Updates a calendar. */
 calendars.patch(
     "/:id",
-    validator(CalendarCreateSchema),
+    validator(CalendarUpdateSchema),
     asyncHandler(async (c: Context) => {
         const calendarData = c.req.valid("json");
         const { id } = c.req.param();

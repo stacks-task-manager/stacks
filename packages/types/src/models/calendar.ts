@@ -36,6 +36,8 @@ export interface ICalendarEvent {
     source: "local" | "google" | "microsoft";
     calendar: string;
     location?: string;
+    recurrenceRule?: string | null;
+    recurrenceExDates?: string[];
     created?: string;
     updated?: string;
     original?: {
@@ -68,5 +70,3 @@ export interface IEventResource {
 export interface IEvent extends Event {
     resource: IEventResource;
 }
-
-

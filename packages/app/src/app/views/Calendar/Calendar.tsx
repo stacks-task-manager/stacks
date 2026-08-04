@@ -1,6 +1,6 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { Classes, Intent, Menu, MenuDivider, MenuItem, Portal } from "@blueprintjs/core";
-import { DateSelectArg, EventClickArg, EventDropArg } from "@fullcalendar/core";
+import { DateSelectArg, EventClickArg, EventDropArg, EventInput } from "@fullcalendar/core";
 import { EventResizeDoneArg } from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
 import { translate } from "@stacks/translations";
@@ -128,7 +128,6 @@ export const Calendar = () => {
             return;
         }
 
-
         previousDate.current = date.toISOString();
         previousView.current = view;
         previousShowCalendars.current = showCalendarsKey;
@@ -197,9 +196,9 @@ export const Calendar = () => {
 
     const fcEvents = useMemo(() => {
         return events.map(ev => {
-            const data = ev.resource.data as { id: string };
+            const data = ev.resource.data as { id: string; recurrenceRule?: string | null };
             const id = String(data.id);
-            return {
+            const fcEvent: EventInput = {
                 id,
                 title: getCalendarEventTitle(ev),
                 start: ev.start!,
@@ -211,6 +210,21 @@ export const Calendar = () => {
                     tint: eventTintForFullCalendar(ev, calendars),
                 },
             };
+
+            if (ev.resource.type === EVENTTYPE.EVENT) {
+                const calendarEvent = ev.resource.data as ICalendarEvent;
+                if (calendarEvent.source === "local" && calendarEvent.recurrenceRule) {
+                    const durationMs =
+                        new Date(calendarEvent.end).getTime() - new Date(calendarEvent.start).getTime();
+                    fcEvent.rrule = calendarEvent.recurrenceRule;
+                    fcEvent.duration = { milliseconds: Math.max(durationMs, 0) };
+                    fcEvent.groupId = calendarEvent.id;
+                    delete fcEvent.start;
+                    delete fcEvent.end;
+                }
+            }
+
+            return fcEvent;
         });
     }, [events, calendars]);
 

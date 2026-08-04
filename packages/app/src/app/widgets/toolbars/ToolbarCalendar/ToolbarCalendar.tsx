@@ -1,12 +1,26 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { translate } from "@stacks/translations";
-import { Button, ButtonGroup, H4, Intent, Menu, MenuItem, Popover, Tooltip } from "@blueprintjs/core";
+import {
+    Button,
+    ButtonGroup,
+    Checkbox,
+    Classes,
+    FormGroup,
+    H4,
+    InputGroup,
+    Intent,
+    Menu,
+    MenuItem,
+    Popover,
+    Tooltip,
+} from "@blueprintjs/core";
 import classNames from "classnames";
 import { format, getWeek } from "date-fns";
 import mousetrap from "mousetrap";
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import { Icon, ReloadButton, ToolbarButton } from "app/components/common";
+import { TintPicker } from "app/components/project";
 import { shallowEqual } from "app/hooks/store";
 import { CalendarActions } from "app/store/actions";
 import { CalendarStore } from "app/store/calendar";
@@ -175,10 +189,134 @@ export const ToolbarCalendar = () => {
                     </button>
                 </div>
                 <div className="section-toolbar-side">
+                    <NewLocalCalendarButton />
                     <FilterButton />
                 </div>
             </div>
         </div>
+    );
+};
+
+const DEFAULT_CALENDAR_COLOR = "#FF8C00";
+
+const NewLocalCalendarButton = () => {
+    const [isOpen, setIsOpen] = useState(false);
+    const [title, setTitle] = useState("");
+    const [color, setColor] = useState(DEFAULT_CALENDAR_COLOR);
+    const [primary, setPrimary] = useState(false);
+    const [saving, setSaving] = useState(false);
+
+    const handleSave = async () => {
+        const trimmedTitle = title.trim();
+        if (!trimmedTitle) return;
+
+        setSaving(true);
+        const calendar = await CalendarActions.createLocalCalendar(trimmedTitle, color, primary);
+        setSaving(false);
+
+        if (calendar) {
+            setTitle("");
+            setColor(DEFAULT_CALENDAR_COLOR);
+            setPrimary(false);
+            setIsOpen(false);
+        }
+    };
+
+    const handleCancel = () => {
+        setTitle("");
+        setColor(DEFAULT_CALENDAR_COLOR);
+        setPrimary(false);
+        setIsOpen(false);
+    };
+
+    return (
+        <Popover
+            isOpen={isOpen}
+            onInteraction={nextOpen => setIsOpen(nextOpen)}
+            placement="bottom-end"
+            content={
+                <div style={{ width: 240, padding: 10 }} data-testid="calendar-new-local-popover">
+                    <FormGroup label={translate("Calendar name")}>
+                        <InputGroup
+                            value={title}
+                            autoFocus
+                            placeholder={translate("New local calendar")}
+                            data-testid="calendar-new-local-title-input"
+                            onChange={event => setTitle(event.currentTarget.value)}
+                            onKeyDown={event => {
+                                if (event.key === "Enter") {
+                                    void handleSave();
+                                }
+                            }}
+                        />
+                    </FormGroup>
+                    <FormGroup label={translate("Color")}>
+                        <Popover
+                            placement="left-start"
+                            content={
+                                <TintPicker
+                                    value={color}
+                                    onChange={nextColor => setColor(nextColor ?? DEFAULT_CALENDAR_COLOR)}
+                                />
+                            }
+                        >
+                            <Button
+                                fill
+                                alignText="left"
+                                icon={
+                                    <span
+                                        style={{ background: color, width: 12, height: 12, borderRadius: 6 }}
+                                    />
+                                }
+                                endIcon={<Icon icon="chevron-down" />}
+                                data-testid="calendar-new-local-color-trigger"
+                            >
+                                {color}
+                            </Button>
+                        </Popover>
+                    </FormGroup>
+                    <Checkbox
+                        label={translate("Set as default")}
+                        checked={primary}
+                        data-testid="calendar-new-local-default-checkbox"
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                            setPrimary(event.currentTarget.checked)
+                        }
+                    />
+                    <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
+                        <Button
+                            size="small"
+                            variant="minimal"
+                            className={Classes.POPOVER_DISMISS}
+                            data-testid="calendar-new-local-cancel"
+                            onClick={handleCancel}
+                        >
+                            {translate("Cancel")}
+                        </Button>
+                        <Button
+                            size="small"
+                            intent={Intent.PRIMARY}
+                            loading={saving}
+                            disabled={!title.trim()}
+                            data-testid="calendar-new-local-save"
+                            onClick={handleSave}
+                        >
+                            {translate("Save")}
+                        </Button>
+                    </div>
+                </div>
+            }
+        >
+            <Tooltip content={translate("New local calendar")} placement="bottom-end">
+                <Button
+                    size="small"
+                    variant="minimal"
+                    icon={<Icon icon="calendar-plus-01" />}
+                    data-testid="calendar-new-local-button"
+                    onClick={() => setIsOpen(true)}
+                />
+            </Tooltip>
+        </Popover>
     );
 };
 
