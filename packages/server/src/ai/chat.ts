@@ -5,14 +5,10 @@
 import { createOpenAI } from "@ai-sdk/openai";
 import { stepCountIs, streamText, type ModelMessage } from "ai";
 import { requestContext } from "../services/requestContext";
-import {
-    clientRouteTemplateVars,
-    parseClientRoute,
-    type AiChatClientRoutePayload,
-} from "./clientRoute";
+import { clientRouteTemplateVars, parseClientRoute, type AiChatClientRoutePayload } from "./clientRoute";
 import { selectPromptContext } from "./promptContext";
 import { template } from "./promptTemplate";
-import { buildAiTools, type AiToolExecuteOverride } from "./tools";
+import { buildAiTools, MCP_AI_TOOL_NAMES, type AiToolExecuteOverride } from "./tools";
 import { createMcpToolClient } from "./mcpToolClient";
 
 export type AiChatClientMessage = { role: "user" | "assistant"; content: string };
@@ -261,16 +257,15 @@ export async function streamAiChat(
         })
     );
 
-    const remoteToolNames = new Set<string>(["getTask", "createTask", "listStacks", "createStack", "updateStack"]);
     const shouldUseMcp = shouldUseMcpToolBackend();
     const mcp = shouldUseMcp ? await createMcpToolClient() : null;
     const executeOverride: AiToolExecuteOverride | undefined = mcp
         ? async ({ toolName, input, defaultExecute }) => {
-            if (!remoteToolNames.has(toolName)) {
-                return await defaultExecute(input);
-            }
-            return await mcp.callTool(toolName, input);
-        }
+              if (!MCP_AI_TOOL_NAMES.has(toolName)) {
+                  return await defaultExecute(input);
+              }
+              return await mcp.callTool(toolName, input);
+          }
         : undefined;
 
     const tools = buildAiTools(selection.allowedTools, executeOverride);

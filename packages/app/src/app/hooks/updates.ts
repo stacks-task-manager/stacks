@@ -5,6 +5,7 @@
 import { IUpdate, POLLINGTYPE } from "@stacks/types";
 import {
     BookmarksActions,
+    CalendarActions,
     NotepadActions,
     NotificationsActions,
     PeopleActions,
@@ -37,6 +38,7 @@ export const useUpdates = () => {
     useRealtimeUpdates(POLLINGTYPE.PROJECT, ProjectsActions.reloadProject);
     useRealtimeUpdates(POLLINGTYPE.STACK, StacksActions.reloadOne);
     useRealtimeUpdates(POLLINGTYPE.TASK, TasksActions.reloadTask);
+    useRealtimeUpdates(POLLINGTYPE.EVENT, () => CalendarActions.load());
     useRealtimeUpdates(POLLINGTYPE.TIMELOG, TimelogsActions.reload);
     useRealtimeUpdates(POLLINGTYPE.NOTEPAD, NotepadActions.reload);
     useRealtimeUpdates(POLLINGTYPE.BOOKMARKS, BookmarksActions.reload);

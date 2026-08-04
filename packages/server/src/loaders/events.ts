@@ -12,8 +12,9 @@ import { findAll, findOne, sanitizeWhere } from "./utils";
 import googleOAuthService, { type GoogleCalendarEvent } from "../services/googleOAuthService";
 import { CalendarsLoader } from "./calendar";
 
-import { ICalendarEvent } from "@stacks/types";
+import { ICalendarEvent, POLLINGACTIONS, POLLINGTYPE, type IPermissions } from "@stacks/types";
 import { getCurrentUser } from "./context";
+import { sendRealtimeUpdate } from "../events";
 
 EventEntity.hasOne(PermissionEntity, { foreignKey: "id", constraints: false });
 PermissionEntity.belongsTo(EventEntity, { foreignKey: "id", constraints: false });
@@ -29,6 +30,27 @@ interface Where {
     calendar?: {
         [Op.in]: string[];
     };
+}
+
+function defaultEventPermissions(userId: string): IPermissions {
+    return {
+        id: "",
+        owner: userId,
+        type: POLLINGTYPE.EVENT,
+        isPublic: true,
+        visibleUsers: [],
+        visibleRoles: [],
+    };
+}
+
+async function sendEventRealtimeUpdate(record: string, action: POLLINGACTIONS, permissions?: IPermissions) {
+    const user = getCurrentUser();
+    await sendRealtimeUpdate({
+        type: POLLINGTYPE.EVENT,
+        record,
+        action,
+        permissions: permissions ?? defaultEventPermissions(user.id),
+    });
 }
 
 function parseGoogleCompositeEventId(id: string): { calendarId: string; googleEventId: string } | null {
@@ -325,7 +347,9 @@ async function create(data: Partial<ICalendarEvent>) {
                     calendar,
                     buildGoogleCalendarEventPayload(data)
                 );
-                return convertGoogleEventToLocalFormat(googleEvent, calendar);
+                const event = convertGoogleEventToLocalFormat(googleEvent, calendar);
+                await sendEventRealtimeUpdate(event.id, POLLINGACTIONS.CREATE);
+                return event;
             } catch (error: any) {
                 const status = error?.response?.status ?? error?.code;
                 const message = typeof error?.message === "string" ? error.message : "";
@@ -376,7 +400,9 @@ async function create(data: Partial<ICalendarEvent>) {
             updatedBy: user.id,
         });
 
-        return newEvent.toJSON();
+        const event = newEvent.toJSON();
+        await sendEventRealtimeUpdate(event.id, POLLINGACTIONS.CREATE);
+        return event;
     } catch (error) {
         throw error;
     }
@@ -419,6 +445,7 @@ async function update(id: string, data: Partial<ICalendarEvent>) {
                     parsed.googleEventId,
                     patch
                 );
+                await sendEventRealtimeUpdate(id, POLLINGACTIONS.UPDATE);
                 return true;
             } catch (error: any) {
                 const status = error?.response?.status ?? error?.code;
@@ -454,11 +481,15 @@ async function update(id: string, data: Partial<ICalendarEvent>) {
             }
         }
 
-        await getOne(id);
+        const event = await getOne(id);
 
         const [affectedCount] = await EventEntity.update(data, {
             where: sanitizeWhere({ id }),
         });
+
+        if (affectedCount > 0) {
+            await sendEventRealtimeUpdate(id, POLLINGACTIONS.UPDATE, (event as any).permissions);
+        }
 
         return affectedCount > 0;
     } catch (error) {
@@ -473,13 +504,16 @@ async function move(id: string, calendar: string, source: ICalendarEvent["source
                 throw Errors.invalidInput("Cannot move Google events to local calendars");
             }
 
-            await getOne(id);
+            const event = await getOne(id);
             const [affectedCount] = await EventEntity.update(
                 { calendar },
                 {
                     where: sanitizeWhere({ id, source: "local" }),
                 }
             );
+            if (affectedCount > 0) {
+                await sendEventRealtimeUpdate(id, POLLINGACTIONS.UPDATE, (event as any).permissions);
+            }
             return affectedCount > 0;
         }
 
@@ -505,6 +539,7 @@ async function move(id: string, calendar: string, source: ICalendarEvent["source
                 parsed.googleEventId,
                 calendar
             );
+            await sendEventRealtimeUpdate(id, POLLINGACTIONS.UPDATE);
             return true;
         }
 
@@ -529,6 +564,7 @@ async function remove(id: string) {
                     parsed.calendarId,
                     parsed.googleEventId
                 );
+                await sendEventRealtimeUpdate(id, POLLINGACTIONS.DELETED);
                 return true;
             } catch (error: any) {
                 const status = error?.response?.status ?? error?.code;
@@ -560,6 +596,7 @@ async function remove(id: string) {
             },
             { where: sanitizeWhere({ id }) }
         );
+        await sendEventRealtimeUpdate(id, POLLINGACTIONS.DELETED, (event as any).permissions);
         return true;
     } catch (error) {
         throw error;

@@ -1,11 +1,7 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { describe, expect, it } from "vitest";
 import { parseClientRoute } from "../clientRoute";
-import {
-    CORE_TOOLS,
-    TOPIC_TOOLS,
-    selectPromptContext,
-} from "../promptContext";
+import { CORE_TOOLS, TOPIC_TOOLS, selectPromptContext } from "../promptContext";
 
 describe("promptContext.selectPromptContext", () => {
     it("always includes the core fragment and core tools", () => {
@@ -60,6 +56,10 @@ describe("promptContext.selectPromptContext", () => {
         const sel = selectPromptContext({ newUserMessage: "what's on my calendar this week?" });
         expect(sel.topics).toContain("calendar");
         expect(sel.allowedTools).toContain("listCalendarEvents");
+        expect(sel.allowedTools).toContain("listCalendars");
+        expect(sel.allowedTools).toContain("createCalendarEvent");
+        expect(sel.allowedTools).toContain("moveCalendarEvent");
+        expect(sel.allowedTools).toContain("deleteCalendarEvent");
     });
 
     it("picks org from message keywords", () => {
@@ -119,6 +119,8 @@ describe("promptContext.selectPromptContext", () => {
             newUserMessage: "add a new project column and list my tasks",
         });
         expect(sel.promptFragments[0]).toBe("system-core.md");
-        expect(sel.promptFragments).toEqual(expect.arrayContaining(["system-tasks.md", "system-projects.md"]));
+        expect(sel.promptFragments).toEqual(
+            expect.arrayContaining(["system-tasks.md", "system-projects.md"])
+        );
     });
 });
