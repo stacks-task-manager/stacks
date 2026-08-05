@@ -1,6 +1,6 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { describe, expect, it } from "vitest";
-import { PermissionTransferOwnerSchema, PermissionUpdateSchema } from "../schema/permissions";
+import { PermissionUpdateSchema } from "../schema/permissions";
 
 const userId = "11111111-1111-4111-8111-111111111111";
 
@@ -27,17 +27,14 @@ describe("permission route schemas", () => {
         ).toBe(false);
     });
 
-    it("accepts only the new owner on ownership transfers", () => {
+    it("accepts owner changes in visibility updates", () => {
         expect(
-            PermissionTransferOwnerSchema.safeParse({
+            PermissionUpdateSchema.safeParse({
+                isPublic: true,
                 owner: userId,
+                visibleUsers: [],
+                visibleRoles: [],
             }).success
         ).toBe(true);
-        expect(
-            PermissionTransferOwnerSchema.safeParse({
-                owner: userId,
-                isPublic: true,
-            }).success
-        ).toBe(false);
     });
 });

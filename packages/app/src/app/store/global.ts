@@ -14,7 +14,7 @@ interface IGlobalStore {
     isNewTaskVisible: boolean;
     isNewBookmarkVisible: boolean;
     permissions?: IPermissions;
-    permissionsCallback?: (permissions: IPermissions) => void;
+    permissionsCallback?: (permissions: IPermissions) => void | Promise<void>;
 }
 
 const defaultGlobalStore: IGlobalStore = {
@@ -69,12 +69,15 @@ export const toggleNewBookmark = () => {
     );
 };
 
-export const showPermissions = (permissions: IPermissions, callback: (permissions: IPermissions) => void) => {
+export const showPermissions = (
+    permissions: IPermissions,
+    callback: (permissions: IPermissions) => void | Promise<void>
+) => {
     GlobalStore.set(
         produce((state: IGlobalStore) => {
             state.permissions = permissions;
-            state.permissionsCallback = (newPermissions: IPermissions) => {
-                callback(newPermissions);
+            state.permissionsCallback = async (newPermissions: IPermissions) => {
+                await callback(newPermissions);
 
                 GlobalStore.set(
                     produce((state: IGlobalStore) => {

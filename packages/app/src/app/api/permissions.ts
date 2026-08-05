@@ -16,9 +16,4 @@ export const PermissionsAPI = {
             visibleRoles,
         });
     },
-
-    /** PATCH owner transfer. */
-    async transferOwner(id: string, owner: string): Promise<boolean> {
-        return request.patch(`/api/permissions/${id}/owner`, { owner });
-    },
 };

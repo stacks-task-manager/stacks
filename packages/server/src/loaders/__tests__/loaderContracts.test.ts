@@ -28,7 +28,7 @@ const expectedMethodsByFile = {
     "notepads.ts": ["create", "getOne", "getAll", "update", "remove"],
     "notifications.ts": ["add", "getAll", "read", "remove"],
     "people.ts": ["getAll", "getAllWithCount", "getOne", "update", "create"],
-    "permissions.ts": ["create", "update", "transferOwner", "remove"],
+    "permissions.ts": ["create", "update", "remove"],
     "preferences.ts": ["get", "update"],
     "projects.ts": [
         "create",

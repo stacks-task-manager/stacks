@@ -96,9 +96,9 @@ export const ProjectToolbar = () => {
         const record = getDocument(projectId);
         if (!record) return;
 
-        showPermissions(record.permissions, updatedPermissions => {
-            RecordActions.updatePermissions(record.id, updatedPermissions);
-        });
+        showPermissions(record.permissions, updatedPermissions =>
+            RecordActions.updatePermissions(record.id, updatedPermissions)
+        );
     }, [projectId]);
 
     const handleToggleArchives = useCallback(() => {

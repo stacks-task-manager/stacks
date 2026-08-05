@@ -107,9 +107,9 @@ Permission updates are handled by `PATCH /api/permissions/:id` in [`src/routes/p
 
 Current behavior:
 
--   `PATCH /api/permissions/:id` accepts only `isPublic`, `visibleUsers`, `visibleRoles`, and an optional unchanged `owner` hint for compatibility.
+-   `PATCH /api/permissions/:id` accepts `isPublic`, `visibleUsers`, `visibleRoles`, and optional `owner`.
 -   The loader first loads the permission row via `getOne(id)` (ACL-filtered), then requires the current user to be the permission owner or an admin.
--   Ownership transfer through the normal update route is rejected. Use `PATCH /api/permissions/:id/owner` with `{ "owner": "<user-id>" }` for explicit transfers.
+-   Ownership transfer is saved through the same update route by including `owner` in the PATCH body.
 -   Deleting a permission row via [`PermissionsLoader.remove`](../src/loaders/permissions.ts) is restricted to the permission `owner`.
 
 ### Realtime side effects
