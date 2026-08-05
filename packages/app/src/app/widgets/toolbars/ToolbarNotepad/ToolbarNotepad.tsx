@@ -82,9 +82,9 @@ export const ToolbarNotepad = () => {
     const handleToggleVisibility = () => {
         const { notepad } = NotepadStore.get();
         if (!notepad) return;
-        showPermissions(notepad.permissions, updatedPermissions => {
-            NotepadActions.updatePermissions(notepad.id, updatedPermissions);
-        });
+        showPermissions(notepad.permissions, updatedPermissions =>
+            NotepadActions.updatePermissions(notepad.id, updatedPermissions)
+        );
     };
 
     if (isLoading) return <ToolbarNotepadLoading />;

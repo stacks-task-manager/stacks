@@ -165,6 +165,8 @@ const updatePermissions = async (notepadId: string, permissions: IPermissions) =
     const { notepad } = NotepadStore.get();
     if (!notepad) return;
     if (notepad.id !== notepadId) return;
+
+    await PermissionsAPI.update(notepadId, permissions);
     NotepadStore.set(
         produce((state: INotepadStore) => {
             state.notepad = {
@@ -173,7 +175,6 @@ const updatePermissions = async (notepadId: string, permissions: IPermissions) =
             };
         })
     );
-    await PermissionsAPI.update(notepadId, permissions);
 };
 
 export const NotepadActions = {

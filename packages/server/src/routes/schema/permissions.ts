@@ -8,6 +8,16 @@ import z from "zod/v4";
 export const PermissionSchema = z.object({
     isPublic: z.boolean().optional().default(true),
     owner: z.uuid().optional(),
-    visibleUsers: z.string().optional().array().default([]),
-    visibleRoles: z.string().optional().array().default([]),
+    visibleUsers: z.uuid().array().default([]),
+    visibleRoles: z.uuid().array().default([]),
 });
+
+/** PATCH body for updating an existing ACL row. */
+export const PermissionUpdateSchema = z
+    .object({
+        isPublic: z.boolean(),
+        owner: z.uuid().optional(),
+        visibleUsers: z.uuid().array().default([]),
+        visibleRoles: z.uuid().array().default([]),
+    })
+    .strict();

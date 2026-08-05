@@ -7,11 +7,12 @@ import { addDays, endOfDay, format as formatDate, startOfDay } from "date-fns";
 import { Errors } from "../errors";
 import { parseISO } from "date-fns";
 import { PermissionEntity, EventEntity } from "@stacks/db";
-import { findAll, findOne, sanitizeWhere } from "./utils";
+import { deleteOne, findAll, findOne, sanitizeWhere, updateOne } from "./utils";
 import googleOAuthService, { type GoogleCalendarEvent } from "../services/googleOAuthService";
 
-import { ICalendarEvent } from "@stacks/types";
+import { ICalendarEvent, POLLINGTYPE } from "@stacks/types";
 import { getCurrentUser } from "./context";
+import { PermissionsLoader } from "./permissions";
 
 EventEntity.hasOne(PermissionEntity, { foreignKey: "id", constraints: false });
 PermissionEntity.belongsTo(EventEntity, { foreignKey: "id", constraints: false });
@@ -296,7 +297,15 @@ async function create(data: Partial<ICalendarEvent>) {
             updatedBy: user.id,
         });
 
-        return newEvent.toJSON();
+        const event = newEvent.toJSON();
+        const permissions = await PermissionsLoader.create(event.id, {
+            type: POLLINGTYPE.EVENT,
+            isPublic: true,
+            visibleUsers: [],
+            visibleRoles: [],
+        });
+
+        return { ...event, permissions };
     } catch (error) {
         throw error;
     }
@@ -368,13 +377,13 @@ async function update(id: string, data: Partial<ICalendarEvent>) {
             }
         }
 
-        await getOne(id);
-
-        const [affectedCount] = await EventEntity.update(data, {
-            where: sanitizeWhere({ id }),
+        await updateOne({
+            entity: EventEntity,
+            id,
+            data,
         });
 
-        return affectedCount > 0;
+        return true;
     } catch (error) {
         throw error;
     }
@@ -413,15 +422,10 @@ async function remove(id: string) {
             }
         }
 
-        const event = await getOne(id);
-
-        await EventEntity.update(
-            {
-                deleted: new Date(),
-                deletedBy: user.id,
-            },
-            { where: sanitizeWhere({ id }) }
-        );
+        await deleteOne({
+            entity: EventEntity,
+            id,
+        });
         return true;
     } catch (error) {
         throw error;

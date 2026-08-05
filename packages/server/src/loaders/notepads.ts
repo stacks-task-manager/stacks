@@ -3,22 +3,20 @@
  * Notepad documents with attachments, permissions, and search helpers.
  */
 import { AttachmentEntity, DocumentEntity, NotepadEntity, PermissionEntity } from "@stacks/db";
-import { Errors } from "../errors";
+import { translate } from "@stacks/translations";
 import { INotepad, POLLINGACTIONS, POLLINGTYPE } from "@stacks/types";
 import { Op, Transaction } from "sequelize";
+import { Errors } from "../errors";
+import { sendRealtimeUpdate } from "../events";
+import { invalidateApiCacheForCurrentRequest } from "../utils/cache";
 import { getCurrentUser } from "./context";
 import {
     deleteOne,
     findAll,
     findOne,
-    sanitizeUpdate,
-    sanitizeWhere,
     updateOne,
-    withTransaction,
+    withTransaction
 } from "./utils";
-import { sendRealtimeUpdate } from "../events";
-import { invalidateApiCacheForCurrentRequest } from "../utils/cache";
-import { translate } from "@stacks/translations";
 
 NotepadEntity.hasOne(PermissionEntity, { foreignKey: "id", constraints: false });
 PermissionEntity.belongsTo(NotepadEntity, { foreignKey: "id", constraints: false });
@@ -49,7 +47,7 @@ async function create(data: any, extTransaction?: Transaction) {
             { ...data, tenant: user.tenant, createdBy: user.id, updatedBy: user.id },
             { transaction }
         );
-        return getOne(`${newNotepad.get("id")}`, transaction);
+        return newNotepad.toJSON();
     });
 }
 
@@ -60,7 +58,6 @@ async function create(data: any, extTransaction?: Transaction) {
  * @returns The requested notepad.
  */
 async function getOne(id: string, transaction?: Transaction) {
-    const user = getCurrentUser();
     const notepad = await findOne({
         entity: NotepadEntity,
         id,
@@ -83,7 +80,6 @@ async function getOne(id: string, transaction?: Transaction) {
 }
 
 async function getAll(filters: { query?: string }) {
-    const user = getCurrentUser();
     const filter: any = {};
     if (filters.query && filters.query.length) {
         filter[Op.and] = {
@@ -136,7 +132,6 @@ async function update(id: string, data: any, transaction?: Transaction): Promise
 
 async function remove(id: string, extTransaction?: Transaction) {
     return withTransaction(extTransaction, async transaction => {
-        const user = getCurrentUser();
         return await deleteOne({
             entity: NotepadEntity,
             id,

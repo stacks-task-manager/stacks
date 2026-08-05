@@ -1286,9 +1286,7 @@ const togglePrivacy = async (taskId: string) => {
     const task = await getTask(taskId);
     if (!task) return;
 
-    showPermissions(task.permissions, updatedPermissions => {
-        updatePermissions(taskId, updatedPermissions);
-    });
+    showPermissions(task.permissions, updatedPermissions => updatePermissions(taskId, updatedPermissions));
 };
 
 /**
