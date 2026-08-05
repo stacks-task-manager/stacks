@@ -323,7 +323,6 @@ const changeEvent = async (
         const calEvent = changedEvent.event.resource.data as ICalendarEvent;
 
         await updateEvent(calEvent.id, {
-            ...calEvent,
             start: normalizeCalendarEventDate(changedEvent.start, allDay, "start"),
             end: normalizeCalendarEventDate(changedEvent.end, allDay, "end"),
             allDay,

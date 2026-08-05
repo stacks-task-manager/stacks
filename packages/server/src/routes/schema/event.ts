@@ -14,13 +14,13 @@ const RecurrenceRuleSchema = z
 export const EventUpdateSchema = z
     .object({
         title: z.string().optional(),
-        description: z.string().optional(),
+        description: z.string().optional().nullable(),
         start: z.iso.datetime().optional(),
         end: z.iso.datetime().optional(),
         allDay: z.boolean().optional(),
         assignees: z.string().array().optional(),
         calendar: z.string().optional(),
-        location: z.string().optional(),
+        location: z.string().optional().nullable(),
         recurrenceRule: RecurrenceRuleSchema,
         recurrenceExDates: z.iso.datetime().array().optional().nullable(),
     })
@@ -55,14 +55,14 @@ export const EventUpdateSchema = z
 export const EventSchema = z
     .object({
         title: z.string(),
-        description: z.string().optional(),
+        description: z.string().optional().nullable(),
         start: z.iso.datetime(),
         end: z.iso.datetime(),
         allDay: z.boolean().optional(),
         assignees: z.string().array().optional(),
         source: z.enum(["local", "google", "microsoft"]).optional(),
         calendar: z.string().optional(),
-        location: z.string().optional(),
+        location: z.string().optional().nullable(),
         recurrenceRule: RecurrenceRuleSchema,
         recurrenceExDates: z.iso.datetime().array().optional().nullable(),
     })

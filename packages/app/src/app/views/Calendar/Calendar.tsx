@@ -48,6 +48,54 @@ function getCalendarEventTitle(ev: IEvent): string {
     return "";
 }
 
+function formatRRuleDateTime(date: Date | string): string {
+    return new Date(date).toISOString().replace(/[-:]/g, "").replace(".000", "");
+}
+
+function buildAnchoredRecurrenceRule(event: ICalendarEvent): string {
+    const rule = event.recurrenceRule ?? "";
+    if (!rule || /^DTSTART:/m.test(rule)) {
+        return rule;
+    }
+
+    return `DTSTART:${formatRRuleDateTime(event.start)}\n${rule}`;
+}
+
+function isDailyRecurrence(rule?: string | null): boolean {
+    return /(^|;)FREQ=DAILY(;|$)/i.test((rule ?? "").replace(/^RRULE:/i, ""));
+}
+
+function getTimeOfDayMs(date: Date): number {
+    return (
+        date.getHours() * 60 * 60 * 1000 +
+        date.getMinutes() * 60 * 1000 +
+        date.getSeconds() * 1000 +
+        date.getMilliseconds()
+    );
+}
+
+function getRecurringEventDurationMs(event: ICalendarEvent): number {
+    const oneDayMs = 24 * 60 * 60 * 1000;
+    const start = new Date(event.start);
+    const end = new Date(event.end);
+    const durationMs = Math.max(end.getTime() - start.getTime(), 0);
+
+    if (!isDailyRecurrence(event.recurrenceRule)) {
+        return durationMs;
+    }
+
+    if (event.allDay) {
+        return oneDayMs;
+    }
+
+    const timeOfDayDurationMs = getTimeOfDayMs(end) - getTimeOfDayMs(start);
+    if (timeOfDayDurationMs > 0) {
+        return Math.min(timeOfDayDurationMs, oneDayMs);
+    }
+
+    return Math.min(durationMs, oneDayMs);
+}
+
 function eventTintForFullCalendar(ev: IEvent, calendars: ICalendar[]): string | undefined {
     if (ev.resource.type === EVENTTYPE.TASK || ev.resource.type === EVENTTYPE.TIMELOG) {
         const task = ev.resource.data as ITask;
@@ -212,10 +260,9 @@ export const Calendar = () => {
             if (ev.resource.type === EVENTTYPE.EVENT) {
                 const calendarEvent = ev.resource.data as ICalendarEvent;
                 if (calendarEvent.source === "local" && calendarEvent.recurrenceRule) {
-                    const durationMs =
-                        new Date(calendarEvent.end).getTime() - new Date(calendarEvent.start).getTime();
-                    fcEvent.rrule = calendarEvent.recurrenceRule;
-                    fcEvent.duration = { milliseconds: Math.max(durationMs, 0) };
+                    const durationMs = getRecurringEventDurationMs(calendarEvent);
+                    fcEvent.rrule = buildAnchoredRecurrenceRule(calendarEvent);
+                    fcEvent.duration = { milliseconds: durationMs };
                     fcEvent.groupId = calendarEvent.id;
                     delete fcEvent.start;
                     delete fcEvent.end;
