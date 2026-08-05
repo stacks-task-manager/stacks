@@ -8,13 +8,14 @@ import { Errors } from "../errors";
 import { parseISO } from "date-fns";
 import { PermissionEntity, EventEntity } from "@stacks/db";
 import { RRule } from "rrule";
-import { findAll, findOne, sanitizeWhere } from "./utils";
+import { deleteOne, findAll, findOne, sanitizeWhere, updateOne } from "./utils";
 import googleOAuthService, { type GoogleCalendarEvent } from "../services/googleOAuthService";
 import { CalendarsLoader } from "./calendar";
 
 import { ICalendarEvent, POLLINGACTIONS, POLLINGTYPE, type IPermissions } from "@stacks/types";
 import { getCurrentUser } from "./context";
 import { sendRealtimeUpdate } from "../events";
+import { PermissionsLoader } from "./permissions";
 
 EventEntity.hasOne(PermissionEntity, { foreignKey: "id", constraints: false });
 PermissionEntity.belongsTo(EventEntity, { foreignKey: "id", constraints: false });
@@ -401,8 +402,15 @@ async function create(data: Partial<ICalendarEvent>) {
         });
 
         const event = newEvent.toJSON();
-        await sendEventRealtimeUpdate(event.id, POLLINGACTIONS.CREATE);
-        return event;
+        const permissions = await PermissionsLoader.create(event.id, {
+            type: POLLINGTYPE.EVENT,
+            isPublic: true,
+            visibleUsers: [],
+            visibleRoles: [],
+        });
+
+        await sendEventRealtimeUpdate(event.id, POLLINGACTIONS.CREATE, permissions);
+        return { ...event, permissions };
     } catch (error) {
         throw error;
     }
@@ -483,15 +491,14 @@ async function update(id: string, data: Partial<ICalendarEvent>) {
 
         const event = await getOne(id);
 
-        const [affectedCount] = await EventEntity.update(data, {
-            where: sanitizeWhere({ id }),
+        await updateOne({
+            entity: EventEntity,
+            id,
+            data,
         });
 
-        if (affectedCount > 0) {
-            await sendEventRealtimeUpdate(id, POLLINGACTIONS.UPDATE, (event as any).permissions);
-        }
-
-        return affectedCount > 0;
+        await sendEventRealtimeUpdate(id, POLLINGACTIONS.UPDATE, (event as any).permissions);
+        return true;
     } catch (error) {
         throw error;
     }
@@ -589,13 +596,10 @@ async function remove(id: string) {
 
         const event = await getOne(id);
 
-        await EventEntity.update(
-            {
-                deleted: new Date(),
-                deletedBy: user.id,
-            },
-            { where: sanitizeWhere({ id }) }
-        );
+        await deleteOne({
+            entity: EventEntity,
+            id,
+        });
         await sendEventRealtimeUpdate(id, POLLINGACTIONS.DELETED, (event as any).permissions);
         return true;
     } catch (error) {

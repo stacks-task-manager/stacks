@@ -1,6 +1,7 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import {
     AnchorButton,
+    Button,
     Callout,
     Classes,
     Dialog,
@@ -22,9 +23,28 @@ import { shallowEqual } from "app/hooks/store";
 import { GlobalStore, hidePermissions } from "app/store/global";
 import { PeopleStore } from "app/store/people";
 import { Assignees, PeopleDialog, TagsWrapper } from "app/widgets";
+
+const haveSameMembers = (left: string[] = [], right: string[] = []) => {
+    if (left.length !== right.length) return false;
+    return left.every(value => right.includes(value));
+};
+
+const haveSamePermissions = (left?: IPermissions, right?: IPermissions) => {
+    if (!left || !right) return true;
+
+    return (
+        left.isPublic === right.isPublic &&
+        left.owner === right.owner &&
+        haveSameMembers(left.visibleUsers, right.visibleUsers) &&
+        haveSameMembers(left.visibleRoles, right.visibleRoles)
+    );
+};
+
 export const PermissionsDialog: FunctionComponent = () => {
     // const roles = useRoles();
     const [isOpen, setIsOpen] = useState(false);
+    const [draftPermissions, setDraftPermissions] = useState<IPermissions | undefined>();
+    const [isSaving, setIsSaving] = useState(false);
     const { permissions, onSave } = GlobalStore.use(
         state => ({
             permissions: state.permissions,
@@ -34,18 +54,28 @@ export const PermissionsDialog: FunctionComponent = () => {
     );
 
     const [showPeople, setShowPeople] = useState(false);
+    const [showTransferPeople, setShowTransferPeople] = useState(false);
 
     useEffect(() => {
         setIsOpen(permissions != null);
+        setDraftPermissions(permissions);
+        setShowPeople(false);
+        setShowTransferPeople(false);
     }, [permissions]);
 
     const me = useMe();
+    const currentPermissions = draftPermissions ?? permissions;
+    const { isPublic = false, owner, visibleRoles = [], visibleUsers = [] } = currentPermissions ?? {};
+    const hasChanges = useMemo(
+        () => !haveSamePermissions(permissions, currentPermissions),
+        [permissions, currentPermissions]
+    );
 
     const assignees = useMemo(() => {
-        if (!permissions?.visibleUsers) return [];
+        if (!visibleUsers) return [];
         const { people } = PeopleStore.get();
-        return people.filter(person => permissions.visibleUsers.includes(person.id));
-    }, [permissions?.visibleUsers]);
+        return people.filter(person => visibleUsers.includes(person.id));
+    }, [visibleUsers]);
 
     const canEdit = useMemo(() => {
         if (!permissions?.owner) return false;
@@ -53,22 +83,18 @@ export const PermissionsDialog: FunctionComponent = () => {
     }, [permissions?.owner, me]);
 
     const ownerPerson = useMemo(() => {
-        if (!permissions?.owner) return null;
+        if (!owner) return null;
 
         const { people } = PeopleStore.get();
-        return people.find((person: IPerson) => person.id === permissions.owner);
-    }, [permissions?.owner]);
+        return people.find((person: IPerson) => person.id === owner);
+    }, [owner]);
 
-    if (!permissions) {
+    if (!permissions || !currentPermissions) {
         return null;
     }
 
-    const { isPublic, visibleRoles, visibleUsers } = permissions;
-
     const onChange = (newPermission: Partial<IPermissions>) => {
-        if (onSave) {
-            onSave({ ...permissions, ...newPermission });
-        }
+        setDraftPermissions(current => (current ? { ...current, ...newPermission } : current));
     };
 
     const handleClose = () => {
@@ -82,7 +108,7 @@ export const PermissionsDialog: FunctionComponent = () => {
             isPublic,
             visibleUsers,
             visibleRoles,
-            owner: permissions?.owner ?? me.id,
+            owner: owner ?? me.id,
         });
     };
 
@@ -92,7 +118,7 @@ export const PermissionsDialog: FunctionComponent = () => {
             isPublic,
             visibleUsers: xor(visibleUsers, [personId]),
             visibleRoles,
-            owner: permissions?.owner ?? me.id,
+            owner: owner ?? me.id,
         });
     };
 
@@ -102,7 +128,7 @@ export const PermissionsDialog: FunctionComponent = () => {
             isPublic,
             visibleUsers,
             visibleRoles: xor(visibleRoles, [role]),
-            owner: permissions?.owner ?? me.id,
+            owner: owner ?? me.id,
         });
     };
 
@@ -110,13 +136,34 @@ export const PermissionsDialog: FunctionComponent = () => {
         setShowPeople(!showPeople);
     };
 
+    const handleToggleTransferPeoplePicker = () => {
+        setShowTransferPeople(!showTransferPeople);
+    };
+
+    const handleTransferOwnership = async (people: string[]) => {
+        const nextOwner = people[0];
+        if (!nextOwner || nextOwner === owner) return;
+        onChange({ owner: nextOwner });
+    };
+
     const handleTogglePublic = () => {
         onChange({
             isPublic: !isPublic,
             visibleUsers,
             visibleRoles,
-            owner: permissions?.owner ?? me.id,
+            owner: owner ?? me.id,
         });
+    };
+
+    const handleUpdate = async () => {
+        if (!onSave || !draftPermissions || !hasChanges || isSaving) return;
+
+        setIsSaving(true);
+        try {
+            await onSave(draftPermissions);
+        } finally {
+            setIsSaving(false);
+        }
     };
 
     return (
@@ -165,7 +212,7 @@ export const PermissionsDialog: FunctionComponent = () => {
                     {showPeople && (
                         <PeopleDialog
                             value={visibleUsers}
-                            onClosed={handleTogglePeoplePicker}
+                            onClosed={() => setShowPeople(false)}
                             onClose={handleToggleUsersVisibility}
                         />
                     )}
@@ -220,21 +267,45 @@ export const PermissionsDialog: FunctionComponent = () => {
                 {canEdit && (
                     <SettingRow
                         title={translate("Transfer ownership")}
-                        description={translate("Transferring ownership to another individual will revoke any future privileges to modify any visibility options")}
+                        description={translate(
+                            "Transferring ownership to another individual will revoke any future privileges to modify any visibility options"
+                        )}
+                        rightElement={
+                            <AnchorButton
+                                icon={<Icon icon="user" />}
+                                onClick={handleToggleTransferPeoplePicker}
+                                data-testid="permissions-transfer-ownership-button"
+                            >
+                                {translate("Select owner")}
+                            </AnchorButton>
+                        }
                         last
-                    />
+                    >
+                        {ownerPerson && <Assignees assignees={[ownerPerson]} max={1} />}
+                        {showTransferPeople && (
+                            <PeopleDialog
+                                single
+                                value={owner ? [owner] : []}
+                                onClosed={() => setShowTransferPeople(false)}
+                                onClose={handleTransferOwnership}
+                            />
+                        )}
+                    </SettingRow>
                 )}
             </div>
             {canEdit && (
                 <div className={Classes.DIALOG_FOOTER}>
-                    <div className={Classes.DIALOG_FOOTER_ACTIONS}>
+                    <div
+                        className={Classes.DIALOG_FOOTER_ACTIONS}
+                        style={{ justifyContent: "space-between", width: "100%" }}
+                    >
                         <Tooltip
                             content={
                                 isPublic
                                     ? translate("Make this resource public, thus visible to everyone")
                                     : translate(
-                                        "Make this resource private and visible only to the owner and people in the visibility list."
-                                    )
+                                          "Make this resource private and visible only to the owner and people in the visibility list."
+                                      )
                             }
                         >
                             <AnchorButton
@@ -245,6 +316,15 @@ export const PermissionsDialog: FunctionComponent = () => {
                                 {translate(isPublic ? "Make private" : "Make public")}
                             </AnchorButton>
                         </Tooltip>
+                        <Button
+                            intent={Intent.PRIMARY}
+                            disabled={!hasChanges || isSaving}
+                            loading={isSaving}
+                            onClick={handleUpdate}
+                            data-testid="permissions-update-button"
+                        >
+                            {translate("Update")}
+                        </Button>
                     </div>
                 </div>
             )}
@@ -285,7 +365,7 @@ const RolesPicker: FunctionComponent<IRolesPickerProps> = ({ value, children, di
                 {translate("All available roles have been already assigned")}
             </div>
         );
-    }, [roles, value]);
+    }, [onToggle, roles, value]);
 
     return (
         <Popover content={content} disabled={disabled}>
