@@ -4,11 +4,14 @@
  */
 import { Op } from "sequelize";
 import { Errors } from "../errors";
-import { CalendarEntity } from "@stacks/db";
-import { sanitizeWhere } from "./utils";
+import { CalendarEntity, PermissionEntity } from "@stacks/db";
+import { findAll, findOne, sanitizeWhere, updateOne, withTransaction } from "./utils";
 import { getCurrentUser } from "./context";
 import { invalidateApiCacheForCurrentRequest } from "../utils/cache";
-import { ICalendar } from "@stacks/types";
+import { ICalendar, IPermissions, POLLINGACTIONS, POLLINGTYPE } from "@stacks/types";
+import { PermissionsLoader } from "./permissions";
+import { sendRealtimeUpdate } from "../events";
+import { translate } from "@stacks/translations";
 
 export interface ILocalCalendar {
     id: string;
@@ -22,25 +25,66 @@ export interface ILocalCalendar {
     updated: string;
     deleted: string | null;
     deletedBy: string | null;
+    permissions?: IPermissions;
+}
+
+CalendarEntity.hasOne(PermissionEntity, { foreignKey: "id", constraints: false });
+PermissionEntity.belongsTo(CalendarEntity, { foreignKey: "id", constraints: false });
+
+async function sendCalendarRealtimeUpdate(
+    record: string,
+    action: POLLINGACTIONS,
+    permissions?: IPermissions
+) {
+    const user = getCurrentUser();
+    await sendRealtimeUpdate({
+        type: POLLINGTYPE.CALENDAR,
+        record,
+        action,
+        permissions:
+            permissions ??
+            ({
+                id: record,
+                owner: user.id,
+                type: POLLINGTYPE.CALENDAR,
+                isPublic: true,
+                visibleUsers: [],
+                visibleRoles: [],
+            } as IPermissions),
+    });
+}
+
+function assertCanManageCalendar(calendar: ILocalCalendar) {
+    const user = getCurrentUser();
+    if (user.admin) return;
+
+    if (calendar.permissions?.owner !== user.id) {
+        throw Errors.forbidden(translate("Calendar update not allowed"));
+    }
 }
 
 async function getAll(): Promise<ILocalCalendar[]> {
     const user = getCurrentUser();
-    const calendars = await CalendarEntity.findAll({
-        where: sanitizeWhere({ tenant: user.tenant, deleted: null }),
+    return findAll<ILocalCalendar>({
+        entity: CalendarEntity,
+        filter: { tenant: user.tenant, deleted: null, source: "local" },
     });
-    return calendars as unknown as ILocalCalendar[];
 }
 
 async function getOne(id: string): Promise<ILocalCalendar> {
-    const user = getCurrentUser();
-    const calendar = await CalendarEntity.findOne({
-        where: sanitizeWhere({ id, tenant: user.tenant, deleted: null }),
+    const calendar = await findOne({
+        entity: CalendarEntity,
+        id,
     });
     if (!calendar) {
         throw Errors.notFound("Calendar not found");
     }
     return calendar as unknown as ILocalCalendar;
+}
+
+async function getVisibleLocalCalendarIds(): Promise<string[]> {
+    const calendars = await getAll();
+    return calendars.map(calendar => calendar.id);
 }
 
 function getPrimaryFlag(data: { primary?: boolean; isDefault?: boolean }): boolean {
@@ -52,36 +96,55 @@ async function create(data: {
     color?: string;
     primary?: boolean;
     isDefault?: boolean;
+    isPublic?: boolean;
 }): Promise<ILocalCalendar> {
     const user = getCurrentUser();
     const primary = getPrimaryFlag(data);
 
-    // If setting as default, unset any existing default for this tenant
-    if (primary) {
-        await CalendarEntity.update(
-            { primary: false },
-            { where: sanitizeWhere({ tenant: user.tenant, primary: true, deleted: null }) }
+    return withTransaction(undefined, async transaction => {
+        // If setting as default, unset any existing default for this tenant
+        if (primary) {
+            await CalendarEntity.update(
+                { primary: false },
+                { where: sanitizeWhere({ tenant: user.tenant, primary: true, deleted: null }), transaction }
+            );
+        }
+
+        const calendar = await CalendarEntity.create(
+            {
+                title: data.title,
+                color: data.color ?? "#FF8C00", // Default orange color
+                primary,
+                source: "local",
+                readOnly: false,
+                tenant: user.tenant,
+                createdBy: user.id,
+                updatedBy: user.id,
+                // Required fields from base entity
+                resourceId: user.id, // Using user ID as resourceId for local calendars
+                resourceType: "local",
+                person: user.id,
+                type: "local",
+            },
+            { transaction }
         );
-    }
 
-    const calendar = await CalendarEntity.create({
-        title: data.title,
-        color: data.color ?? "#FF8C00", // Default orange color
-        primary,
-        source: "local",
-        readOnly: false,
-        tenant: user.tenant,
-        createdBy: user.id,
-        updatedBy: user.id,
-        // Required fields from base entity
-        resourceId: user.id, // Using user ID as resourceId for local calendars
-        resourceType: "local",
-        person: user.id,
-        type: "local",
+        const calendarData = calendar.toJSON() as unknown as ILocalCalendar;
+        const permissions = await PermissionsLoader.create(
+            calendarData.id,
+            {
+                type: POLLINGTYPE.CALENDAR,
+                isPublic: data.isPublic ?? true,
+                visibleUsers: [],
+                visibleRoles: [],
+            },
+            transaction
+        );
+
+        await sendCalendarRealtimeUpdate(calendarData.id, POLLINGACTIONS.CREATE, permissions);
+        invalidateApiCacheForCurrentRequest();
+        return { ...calendarData, permissions };
     });
-
-    invalidateApiCacheForCurrentRequest();
-    return calendar.toJSON() as unknown as ILocalCalendar;
 }
 
 async function update(
@@ -90,6 +153,7 @@ async function update(
 ): Promise<ILocalCalendar> {
     const user = getCurrentUser();
     const calendar = await getOne(id);
+    assertCanManageCalendar(calendar);
     const primary = getPrimaryFlag(data);
 
     // If setting as default, unset any existing default for this tenant
@@ -108,26 +172,26 @@ async function update(
     }
 
     const { isDefault, ...calendarData } = data;
-    const [affectedCount] = await CalendarEntity.update(
-        {
+    await updateOne({
+        entity: CalendarEntity,
+        id,
+        data: {
             ...calendarData,
-            ...(data.isDefault != null && data.primary == null ? { primary } : {}),
+            ...(isDefault != null && data.primary == null ? { primary } : {}),
             updatedBy: user.id,
         },
-        { where: sanitizeWhere({ id, tenant: user.tenant }) }
-    );
-
-    if (affectedCount === 0) {
-        throw Errors.notFound("Calendar not found");
-    }
+    });
 
     invalidateApiCacheForCurrentRequest();
-    return getOne(id);
+    const updatedCalendar = await getOne(id);
+    await sendCalendarRealtimeUpdate(id, POLLINGACTIONS.UPDATE, updatedCalendar.permissions);
+    return updatedCalendar;
 }
 
 async function remove(id: string): Promise<boolean> {
     const user = getCurrentUser();
     const calendar = await getOne(id);
+    assertCanManageCalendar(calendar);
 
     // Don't allow deleting the default calendar if it's the only one
     const calendars = await getAll();
@@ -135,17 +199,16 @@ async function remove(id: string): Promise<boolean> {
         throw Errors.badRequest("Cannot delete the only default calendar");
     }
 
-    const [affectedCount] = await CalendarEntity.update(
-        {
+    await updateOne({
+        entity: CalendarEntity,
+        id,
+        data: {
             deleted: new Date(),
             deletedBy: user.id,
         },
-        { where: sanitizeWhere({ id, tenant: user.tenant }) }
-    );
+    });
 
-    if (affectedCount === 0) {
-        throw Errors.notFound("Calendar not found");
-    }
+    await PermissionsLoader.remove(id);
 
     // If we deleted the default calendar, make another one default
     if (calendar.primary) {
@@ -161,20 +224,23 @@ async function remove(id: string): Promise<boolean> {
     }
 
     invalidateApiCacheForCurrentRequest();
+    await sendCalendarRealtimeUpdate(id, POLLINGACTIONS.DELETED, calendar.permissions);
     return true;
 }
 
 const getPrimary = async (): Promise<ICalendar | null> => {
     const user = getCurrentUser();
-    return (await CalendarEntity.findOne({
-        where: sanitizeWhere({ tenant: user.tenant, deleted: null, primary: true }),
-        raw: true,
-    })) as ICalendar | null;
+    const calendars = await findAll<ICalendar>({
+        entity: CalendarEntity,
+        filter: { tenant: user.tenant, deleted: null, source: "local", primary: true },
+    });
+    return calendars[0] ?? null;
 };
 
 export const CalendarsLoader = {
     getAll,
     getOne,
+    getVisibleLocalCalendarIds,
     create,
     update,
     remove,

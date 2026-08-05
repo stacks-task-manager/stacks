@@ -5,6 +5,9 @@
 import { ICalendar } from "@stacks/types";
 import request from "./request";
 
+type CalendarCreateInput = Pick<ICalendar, "title" | "color" | "primary"> & {
+    isPublic?: boolean;
+};
 
 export const CalendarsAPI = {
     /** List all local calendars for the current tenant. */
@@ -13,7 +16,7 @@ export const CalendarsAPI = {
     },
 
     /** Create a new local calendar. */
-    async create(data: Pick<ICalendar, "title" | "color" | "primary">): Promise<ICalendar> {
+    async create(data: CalendarCreateInput): Promise<ICalendar> {
         return request.post("/api/calendars", data);
     },
 

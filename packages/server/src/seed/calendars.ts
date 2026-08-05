@@ -1,6 +1,32 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
-import { CalendarEntity, UserEntity } from "@stacks/db";
+import { CalendarEntity, PermissionEntity, UserEntity } from "@stacks/db";
 import { getLicense } from "@stacks/license";
+import { POLLINGTYPE } from "@stacks/types";
+
+const ensureCalendarPermission = async (calendar: any, owner: string) => {
+    const calendarData = typeof calendar.toJSON === "function" ? calendar.toJSON() : calendar;
+    const existing = await PermissionEntity.findOne({
+        where: {
+            id: calendarData.id,
+            tenant: calendarData.tenant,
+            deleted: null,
+        },
+    });
+
+    if (existing) return;
+
+    await PermissionEntity.create({
+        id: calendarData.id,
+        owner,
+        isPublic: true,
+        visibleUsers: [],
+        visibleRoles: [],
+        type: POLLINGTYPE.CALENDAR,
+        tenant: calendarData.tenant,
+        createdBy: calendarData.createdBy ?? owner,
+        updatedBy: calendarData.updatedBy ?? owner,
+    });
+};
 
 /**
  * Seeds the database with default calendars for each tenant if they don't exist
@@ -45,7 +71,7 @@ export const seedCalendars = async () => {
 
                 const creator = adminUser ? adminUser.toJSON() : systemUser;
 
-                await CalendarEntity.create({
+                const calendar = await CalendarEntity.create({
                     title: "Local Calendar",
                     color: "#FF8C00",
                     primary: true,
@@ -54,9 +80,18 @@ export const seedCalendars = async () => {
                     createdBy: creator.id,
                     updatedBy: creator.id,
                 });
+                await ensureCalendarPermission(calendar, creator.id);
 
                 console.log(`✅ Default calendar created for tenant: ${tenant.name}`);
             } else {
+                await Promise.all(
+                    calendarResults
+                        .filter(calendar => calendar.get("source") === "local")
+                        .map(calendar =>
+                            ensureCalendarPermission(calendar, String(calendar.get("createdBy")))
+                        )
+                );
+
                 // Check if there's a default calendar
                 const hasDefault = calendarResults.some(calendar => calendar.get("primary") === true);
 

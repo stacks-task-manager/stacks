@@ -9,6 +9,7 @@ export const CalendarCreateSchema = z.object({
     color: z.string().optional(),
     primary: z.boolean().optional(),
     isDefault: z.boolean().optional(),
+    isPublic: z.boolean().optional(),
 });
 
 export const CalendarUpdateSchema = CalendarCreateSchema.partial();

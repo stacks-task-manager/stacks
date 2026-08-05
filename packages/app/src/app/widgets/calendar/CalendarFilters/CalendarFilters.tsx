@@ -1,11 +1,14 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { translate } from "@stacks/translations";
-import { Checkbox, Classes, FormGroup } from "@blueprintjs/core";
-import React from "react";
+import { Button, Checkbox, Classes, FormGroup, InputGroup, Menu, MenuItem, Popover } from "@blueprintjs/core";
+import React, { useState } from "react";
+import { ICalendar } from "@stacks/types";
+import { Col, Icon, Row } from "app/components/common";
 import { useCalendars, useCalendarsFilters } from "app/hooks";
 import { shallowEqual } from "app/hooks/store";
 import { CalendarActions } from "app/store/actions";
 import { CalendarStore } from "app/store/calendar";
+import { showPermissions } from "app/store/global";
 import { ColoredCheckbox, FiltersSidebar, TagsWrapper } from "app/widgets/common";
 
 export const CalendarFilters = () => {
@@ -35,12 +38,10 @@ export const CalendarFilters = () => {
                     </div>
                 ) : (
                     localCalendars.map(calendar => (
-                        <ColoredCheckbox
-                            text={calendar.primary ? `${calendar.title} (Default)` : calendar.title}
-                            color={calendar.color}
+                        <LocalCalendarFilterRow
                             key={calendar.id}
+                            calendar={calendar}
                             checked={showCalendars.includes(calendar.id)}
-                            onChange={() => CalendarActions.toggleCalendar(calendar.id)}
                         />
                     ))
                 )}
@@ -67,6 +68,107 @@ export const CalendarFilters = () => {
                 loading={loading}
             />
         </FiltersSidebar>
+    );
+};
+
+const LocalCalendarFilterRow = ({ calendar, checked }: { calendar: ICalendar; checked: boolean }) => {
+    const [title, setTitle] = useState(calendar.title);
+    const [color, setColor] = useState(calendar.color ?? "#FF8C00");
+
+    const canEdit = Boolean(calendar.permissions);
+
+    const handleSave = async () => {
+        await CalendarActions.updateLocalCalendar(calendar.id, {
+            title: title.trim() || calendar.title,
+            color,
+        });
+    };
+
+    const handleSetDefault = async () => {
+        if (calendar.primary) return;
+        await CalendarActions.setDefaultLocalCalendar(calendar.id);
+    };
+
+    const handlePermissions = () => {
+        if (!calendar.permissions) return;
+        showPermissions(calendar.permissions, updatedPermissions =>
+            CalendarActions.updateLocalCalendarPermissions(calendar.id, updatedPermissions)
+        );
+    };
+
+    return (
+        <Row
+            data-testid="local-calendar-filter"
+        >
+            <Col>
+                <ColoredCheckbox
+                    text={calendar.primary ? `${calendar.title} (Default)` : calendar.title}
+                    color={calendar.color}
+                    checked={checked}
+                    onChange={() => CalendarActions.toggleCalendar(calendar.id)}
+                />
+            </Col>
+            <Col>
+                <Popover
+                    placement="bottom-end"
+                    content={
+                        <Menu>
+                            <li style={{ padding: 8, width: 220 }}>
+                                <FormGroup label={translate("Name")} labelFor={`calendar-title-${calendar.id}`}>
+                                    <InputGroup
+                                        id={`calendar-title-${calendar.id}`}
+                                        value={title}
+                                        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                                            setTitle(event.currentTarget.value)
+                                        }
+                                        data-testid={`calendar-title-input-${calendar.id}`}
+                                    />
+                                </FormGroup>
+                                <FormGroup label={translate("Color")} labelFor={`calendar-color-${calendar.id}`}>
+                                    <InputGroup
+                                        id={`calendar-color-${calendar.id}`}
+                                        type="color"
+                                        value={color}
+                                        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                                            setColor(event.currentTarget.value)
+                                        }
+                                        data-testid={`calendar-color-input-${calendar.id}`}
+                                    />
+                                </FormGroup>
+                                <Button
+                                    fill
+                                    size="small"
+                                    text={translate("Save")}
+                                    onClick={handleSave}
+                                    data-testid={`calendar-save-button-${calendar.id}`}
+                                />
+                            </li>
+                            <MenuItem
+                                text={translate("Set as default")}
+                                icon={<Icon icon="check" />}
+                                disabled={calendar.primary}
+                                onClick={handleSetDefault}
+                                data-testid={`calendar-default-button-${calendar.id}`}
+                            />
+                            <MenuItem
+                                text={translate("Permissions")}
+                                icon={<Icon icon="lock-01" />}
+                                disabled={!canEdit}
+                                onClick={handlePermissions}
+                                data-testid={`calendar-permissions-button-${calendar.id}`}
+                            />
+                        </Menu>
+                    }
+                >
+                    <Button
+                        size="small"
+                        variant="minimal"
+                        icon={<Icon icon="dots-vertical" />}
+                        data-testid={`calendar-actions-button-${calendar.id}`}
+                    />
+                </Popover>
+            </Col>
+        </Row>
     );
 };
 

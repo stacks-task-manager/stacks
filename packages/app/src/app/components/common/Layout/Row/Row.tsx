@@ -12,6 +12,7 @@ interface IRowProps extends HTMLDivProps {
     align?: "center" | "top" | "bottom";
     cursor?: React.CSSProperties["cursor"];
     className?: string;
+    "data-testid"?: string;
 }
 export const Row: FunctionComponent<IRowProps> = ({
     gutter,
@@ -57,7 +58,7 @@ export const Row: FunctionComponent<IRowProps> = ({
         }
 
         return styles;
-    }, [gutter, padding, justify]);
+    }, [cursor, style, gutter, wrap, padding, justify, align]);
     return (
         <div className={classNames("layout-row", className)} style={styles} {...rest}>
             {children}

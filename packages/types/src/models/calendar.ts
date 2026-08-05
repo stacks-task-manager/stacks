@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { ITask } from "./task.js";
 import { IPerson } from "./people.js";
 import { ITimeLog } from "./timelogs.js";
+import { IPermissions } from "./permissions.js";
 
 export interface Event {
     allDay?: boolean | undefined;
@@ -60,6 +61,7 @@ export interface ICalendar {
     primary: boolean;
     source: ICalendarSource;
     readOnly: boolean;
+    permissions?: IPermissions;
 }
 
 export interface IEventResource {

@@ -259,8 +259,16 @@ async function getAll(filters: EventsFilter) {
 
         const events: ICalendarEvent[] = [];
         if (includeLocal || localCalendarIds.length > 0) {
-            if (localCalendarIds.length > 0) {
-                where.calendar = { [Op.in]: localCalendarIds };
+            const visibleCalendarIds = await CalendarsLoader.getVisibleLocalCalendarIds();
+            const allowedCalendarIds =
+                localCalendarIds.length > 0
+                    ? localCalendarIds.filter(calendarId => visibleCalendarIds.includes(calendarId))
+                    : visibleCalendarIds;
+
+            if (allowedCalendarIds.length === 0) {
+                where.calendar = { [Op.in]: [] };
+            } else {
+                where.calendar = { [Op.in]: allowedCalendarIds };
             }
             const localEvents = await findAll({
                 entity: EventEntity,
@@ -390,6 +398,8 @@ async function create(data: Partial<ICalendarEvent>) {
                 });
                 calendar = newCalendar.id;
             }
+        } else {
+            await CalendarsLoader.getOne(calendar);
         }
 
         const newEvent = await EventEntity.create({
@@ -512,6 +522,7 @@ async function move(id: string, calendar: string, source: ICalendarEvent["source
             }
 
             const event = await getOne(id);
+            await CalendarsLoader.getOne(calendar);
             const [affectedCount] = await EventEntity.update(
                 { calendar },
                 {

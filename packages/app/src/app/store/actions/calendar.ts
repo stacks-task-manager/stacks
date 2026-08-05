@@ -2,7 +2,13 @@
 /**
  * Calendar data loading and mutations.
  */
-import api, { CalendarIntegrationsAPI, type CalendarProvider, CalendarsAPI, EventsAPI } from "app/api";
+import api, {
+    CalendarIntegrationsAPI,
+    type CalendarProvider,
+    CalendarsAPI,
+    EventsAPI,
+    PermissionsAPI,
+} from "app/api";
 import {
     addDays,
     addHours,
@@ -21,7 +27,15 @@ import {
 import { produce } from "immer";
 import { xor } from "lodash";
 
-import { EVENTTYPE, ICalendarEvent, ICalendarSource, IEvent, ICalendar, ITask } from "@stacks/types";
+import {
+    EVENTTYPE,
+    ICalendarEvent,
+    ICalendarSource,
+    IEvent,
+    ICalendar,
+    IPermissions,
+    ITask,
+} from "@stacks/types";
 import { getDatesSpan } from "app/hooks";
 import Dialog from "app/utils/dialog";
 import Storage from "app/utils/storage";
@@ -468,8 +482,8 @@ const updateEvent = async (eventId: string, updatedEvent: Partial<ICalendarEvent
             const startToSend = startChanged
                 ? toDate(start)
                 : currentStart
-                    ? toDate(currentStart)
-                    : undefined;
+                ? toDate(currentStart)
+                : undefined;
             let endToSend = endChanged ? toDate(end) : currentEnd ? toDate(currentEnd) : undefined;
 
             if (startToSend && endToSend && endToSend <= startToSend) {
@@ -762,9 +776,9 @@ const loadCalendars = async () => {
     return promise;
 };
 
-const createLocalCalendar = async (title: string, color?: string, primary = false) => {
+const createLocalCalendar = async (title: string, color?: string, primary = false, isPublic = true) => {
     try {
-        const calendar = await CalendarsAPI.create({ title, color, primary });
+        const calendar = await CalendarsAPI.create({ title, color, primary, isPublic });
         CalendarStore.set(
             produce((state: ICalendarStore) => {
                 if (calendar.primary) {
@@ -782,6 +796,7 @@ const createLocalCalendar = async (title: string, color?: string, primary = fals
                     source: "local",
                     primary: calendar.primary,
                     readOnly: false,
+                    permissions: calendar.permissions,
                 });
                 if (!state.filters.showCalendars.includes(calendar.id)) {
                     state.filters.showCalendars.push(calendar.id);
@@ -799,6 +814,28 @@ const createLocalCalendar = async (title: string, color?: string, primary = fals
     }
 };
 
+const updateLocalCalendarPermissions = async (id: string, permissions: IPermissions) => {
+    try {
+        await PermissionsAPI.update(id, permissions);
+        CalendarStore.set(
+            produce((state: ICalendarStore) => {
+                const idx = state.calendars.findIndex(c => c.id === id && c.source === "local");
+                if (idx !== -1) {
+                    state.calendars[idx] = {
+                        ...state.calendars[idx],
+                        permissions,
+                    };
+                }
+            })
+        );
+        await reload();
+    } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error("Error updating calendar permissions:", error);
+        Toast.warn("Failed to update calendar permissions.");
+    }
+};
+
 const updateLocalCalendar = async (
     id: string,
     data: Partial<Pick<ICalendar, "title" | "color" | "primary">>
@@ -811,15 +848,16 @@ const updateLocalCalendar = async (
                     state.calendars = state.calendars.map(c =>
                         c.source === "local"
                             ? {
-                                ...c,
-                                ...(c.id === id
-                                    ? {
-                                        title: calendar.title,
-                                        color: calendar.color ?? c.color,
-                                    }
-                                    : {}),
-                                primary: c.id === id,
-                            }
+                                  ...c,
+                                  ...(c.id === id
+                                      ? {
+                                            title: calendar.title,
+                                            color: calendar.color ?? c.color,
+                                            permissions: calendar.permissions ?? c.permissions,
+                                        }
+                                      : {}),
+                                  primary: c.id === id,
+                              }
                             : c
                     );
                     return;
@@ -832,6 +870,7 @@ const updateLocalCalendar = async (
                         title: calendar.title,
                         color: calendar.color ?? state.calendars[idx].color,
                         primary: calendar.primary,
+                        permissions: calendar.permissions ?? state.calendars[idx].permissions,
                     };
                 }
             })
@@ -1111,6 +1150,7 @@ export const CalendarActions = {
     hydrateFromBoot,
     createLocalCalendar,
     updateLocalCalendar,
+    updateLocalCalendarPermissions,
     deleteLocalCalendar,
     setDefaultLocalCalendar,
 };

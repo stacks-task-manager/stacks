@@ -205,6 +205,7 @@ const NewLocalCalendarButton = () => {
     const [title, setTitle] = useState("");
     const [color, setColor] = useState(DEFAULT_CALENDAR_COLOR);
     const [primary, setPrimary] = useState(false);
+    const [isPublic, setIsPublic] = useState(true);
     const [saving, setSaving] = useState(false);
     const trimmedTitle = title.trim();
     const normalizedTitle = trimmedTitle.toLowerCase();
@@ -218,13 +219,14 @@ const NewLocalCalendarButton = () => {
         if (!trimmedTitle || hasDuplicateTitle) return;
 
         setSaving(true);
-        const calendar = await CalendarActions.createLocalCalendar(trimmedTitle, color, primary);
+        const calendar = await CalendarActions.createLocalCalendar(trimmedTitle, color, primary, isPublic);
         setSaving(false);
 
         if (calendar) {
             setTitle("");
             setColor(DEFAULT_CALENDAR_COLOR);
             setPrimary(false);
+            setIsPublic(true);
             setIsOpen(false);
         }
     };
@@ -233,6 +235,7 @@ const NewLocalCalendarButton = () => {
         setTitle("");
         setColor(DEFAULT_CALENDAR_COLOR);
         setPrimary(false);
+        setIsPublic(true);
         setIsOpen(false);
     };
 
@@ -297,6 +300,14 @@ const NewLocalCalendarButton = () => {
                         data-testid="calendar-new-local-default-checkbox"
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                             setPrimary(event.currentTarget.checked)
+                        }
+                    />
+                    <Checkbox
+                        label={translate("Public visibility")}
+                        checked={isPublic}
+                        data-testid="calendar-new-local-public-checkbox"
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                            setIsPublic(event.currentTarget.checked)
                         }
                     />
                     <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
