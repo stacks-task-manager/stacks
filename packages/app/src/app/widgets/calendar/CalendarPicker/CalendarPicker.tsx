@@ -1,4 +1,5 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+import { translate } from "@stacks/translations";
 import { Button, Classes, Colors, Menu, MenuDivider, MenuItem, Popover } from "@blueprintjs/core";
 import { Stop } from "@blueprintjs/icons";
 import React, { FunctionComponent, useMemo } from "react";
@@ -34,7 +35,7 @@ export const CalendarPicker: FunctionComponent<CalendarPickerProps> = ({
                 return { title: defaultLocal.title, color: defaultLocal.color };
             }
             return {
-                title: "Local calendar",
+                title: translate("Local calendar"),
                 color: Colors.ORANGE3,
             };
         }
@@ -44,7 +45,7 @@ export const CalendarPicker: FunctionComponent<CalendarPickerProps> = ({
         }
 
         return {
-            title: "Unknown calendar",
+            title: translate("Unknown calendar"),
             color: Colors.RED1,
         };
     }, [value, calendars, localCalendars]);
@@ -66,10 +67,10 @@ export const CalendarPicker: FunctionComponent<CalendarPickerProps> = ({
                 <Menu>
                     {sourceAllowed("local") ? (
                         <>
-                            <MenuDivider title="Local calendars" />
+                            <MenuDivider title={translate("Local calendars")} />
                             {localCalendars.length === 0 ? (
                                 <MenuItem
-                                    text="No local calendars"
+                                    text={translate("No local calendars")}
                                     icon={<Stop color={Colors.GRAY4} />}
                                     disabled
                                 />

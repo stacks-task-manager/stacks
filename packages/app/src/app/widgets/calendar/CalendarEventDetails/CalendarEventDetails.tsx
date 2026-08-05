@@ -408,7 +408,7 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew, isAl
             <EventHeader
                 menus={
                     <MenuItem
-                        text="Delete event"
+                        text={translate("Delete event")}
                         icon={<Icon icon="trash" />}
                         intent={Intent.DANGER}
                         onClick={handleDeleteEvent}
@@ -448,7 +448,7 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew, isAl
                         ) : (
                             <Row gutter={10}>
                                 <Col>
-                                    <FormGroup label="Starts">
+                                    <FormGroup label={translate("Starts")}>
                                         <Grid gap={10}>
                                             {!isAllDay && (
                                                 <DateTimePicker
@@ -473,7 +473,7 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew, isAl
                                     <Icon icon="arrow-right" />
                                 </Col>
                                 <Col>
-                                    <FormGroup label="Ends">
+                                    <FormGroup label={translate("Ends")}>
                                         <Grid gap={10}>
                                             {!isAllDay && (
                                                 <DateTimePicker
@@ -498,7 +498,7 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew, isAl
                         )}
 
                         <EventDivider />
-                        <FormGroup label="Repeats">
+                        <FormGroup label={translate("Repeats")}>
                             <Grid gap={8}>
                                 <HTMLSelect
                                     fill
@@ -510,15 +510,15 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew, isAl
                                         })
                                     }
                                 >
-                                    <option value="none">Does not repeat</option>
-                                    <option value="daily">Daily</option>
-                                    <option value="weekly">Weekly</option>
-                                    <option value="monthly">Monthly</option>
-                                    <option value="yearly">Yearly</option>
+                                    <option value="none">{translate("Does not repeat")}</option>
+                                    <option value="daily">{translate("Daily")}</option>
+                                    <option value="weekly">{translate("Weekly")}</option>
+                                    <option value="monthly">{translate("Monthly")}</option>
+                                    <option value="yearly">{translate("Yearly")}</option>
                                 </HTMLSelect>
                                 {recurrence.frequency !== "none" ? (
                                     <>
-                                        <FormGroup label="Every">
+                                        <FormGroup label={translate("Every")}>
                                             <NumericInput
                                                 fill
                                                 min={1}
@@ -542,9 +542,11 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew, isAl
                                                 })
                                             }
                                         >
-                                            <option value="never">Never ends</option>
-                                            <option value="until">Ends on date</option>
-                                            <option value="count">Ends after occurrences</option>
+                                            <option value="never">{translate("Never ends")}</option>
+                                            <option value="until">{translate("Ends on date")}</option>
+                                            <option value="count">
+                                                {translate("Ends after occurrences")}
+                                            </option>
                                         </HTMLSelect>
                                         {recurrence.endMode === "until" ? (
                                             <input
@@ -576,19 +578,19 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew, isAl
                             </Grid>
                         </FormGroup>
                         <EventDivider />
-                        <FormGroup label="Description and notes">
+                        <FormGroup label={translate("Description and notes")}>
                             <EditableText
                                 value={description ?? ""}
-                                placeholder="Add notes"
+                                placeholder={translate("Add notes")}
                                 multiline
                                 disabled={isDisabled}
                                 onChange={handleUpdateDescription}
                             />
                         </FormGroup>
                         <EventDivider />
-                        <FormGroup label="Location">
+                        <FormGroup label={translate("Location")}>
                             <EditableText
-                                placeholder="Enter location"
+                                placeholder={translate("Enter location")}
                                 multiline
                                 value={location}
                                 disabled={isDisabled}
@@ -596,7 +598,7 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew, isAl
                             />
                         </FormGroup>
                         <EventDivider />
-                        <FormGroup label="Calendar">
+                        <FormGroup label={translate("Calendar")}>
                             <CalendarPicker
                                 value={calendar}
                                 allowedSources={[source]}
@@ -617,7 +619,7 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew, isAl
                                         size="small"
                                         onClick={handleOpenEventLink}
                                     >
-                                        View in Google Calendar
+                                        {translate("View in Google Calendar")}
                                     </Button>
                                 </Col>
                             </Row>
@@ -676,21 +678,21 @@ const TaskDetails: FunctionComponent<TaskDetailsProps> = ({ taskId }) => {
                             startAllDay={startAllDay}
                             end={task.duedate}
                             endAllDay={dueAllDay}
-                            startLabel="Start date"
-                            endLabel="Due date"
+                            startLabel={translate("Start date")}
+                            endLabel={translate("Due date")}
                         />
 
                         <EventDivider />
 
-                        <FormGroup label="Description">
+                        <FormGroup label={translate("Description")}>
                             {task.description.length ? (
                                 <HTMLRenderer html={task.description} />
                             ) : (
-                                <span className={Classes.TEXT_MUTED}>No description</span>
+                                <span className={Classes.TEXT_MUTED}>{translate("No description")}</span>
                             )}
                         </FormGroup>
 
-                        <FormGroup label="Assignees">
+                        <FormGroup label={translate("Assignees")}>
                             {task.assignees ? (
                                 <TaskDetailsAssignees
                                     assignees={task.assignees || []}
@@ -699,33 +701,33 @@ const TaskDetails: FunctionComponent<TaskDetailsProps> = ({ taskId }) => {
                                     taskId="none"
                                 />
                             ) : (
-                                <span className={Classes.TEXT_MUTED}>No assignees</span>
+                                <span className={Classes.TEXT_MUTED}>{translate("No assignees")}</span>
                             )}
                         </FormGroup>
 
-                        <FormGroup label="Tags">
+                        <FormGroup label={translate("Tags")}>
                             {task.tags ? (
                                 <TagsWrapper>
                                     <Tags value={task.tags ?? []} section={TAGSECTION.PROJECTS} />
                                 </TagsWrapper>
                             ) : (
-                                <span className={Classes.TEXT_MUTED}>No tags</span>
+                                <span className={Classes.TEXT_MUTED}>{translate("No tags")}</span>
                             )}
                         </FormGroup>
 
-                        <FormGroup label="Status">
+                        <FormGroup label={translate("Status")}>
                             {task.status ? (
                                 <TaskDetailsStatus value={task.status} disabled taskId="none" />
                             ) : (
-                                <span className={Classes.TEXT_MUTED}>No status</span>
+                                <span className={Classes.TEXT_MUTED}>{translate("No status")}</span>
                             )}
                         </FormGroup>
 
-                        <FormGroup label="Priority">
+                        <FormGroup label={translate("Priority")}>
                             {task.priority ? (
                                 <PriorityChip priority={task.priority} />
                             ) : (
-                                <span className={Classes.TEXT_MUTED}>No priority</span>
+                                <span className={Classes.TEXT_MUTED}>{translate("No priority")}</span>
                             )}
                         </FormGroup>
                     </Grid>
@@ -735,7 +737,7 @@ const TaskDetails: FunctionComponent<TaskDetailsProps> = ({ taskId }) => {
                     <Row>
                         <Col justify="right">
                             <Button intent={Intent.PRIMARY} size="small" onClick={handleOpenTask}>
-                                Open task details
+                                {translate("Open task details")}
                             </Button>
                         </Col>
                     </Row>
@@ -846,7 +848,7 @@ const ReadOnlyDates: FunctionComponent<ReadOnlyDatesProps> = ({
     return (
         <Row gutter={10} justify="between">
             <Col>
-                <FormGroup label={startLabel ?? "Starts"}>
+                <FormGroup label={startLabel ?? translate("Starts")}>
                     <Grid gap={2}>
                         <Row align="center" gutter={5} justify="left">
                             <Icon icon="calendar" size={12} />
@@ -867,7 +869,7 @@ const ReadOnlyDates: FunctionComponent<ReadOnlyDatesProps> = ({
                 <Icon icon="arrow-right" />
             </Col>
             <Col>
-                <FormGroup label={endLabel ?? "Ends"}>
+                <FormGroup label={endLabel ?? translate("Ends")}>
                     <Grid gap={2}>
                         <Row align="center" gutter={5} justify="left">
                             <Icon icon="calendar" size={12} />

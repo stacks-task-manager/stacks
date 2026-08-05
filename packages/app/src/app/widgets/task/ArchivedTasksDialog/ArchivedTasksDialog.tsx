@@ -28,24 +28,27 @@ export const ArchivedTasksDialog = ({ onClose }: { onClose: () => void }) => {
 
     const handleSelectTask = (task: ITask) => {
         setSelected(xor(selected, [task.id]));
-    }
+    };
 
-    const handleUnarchive = useCallback(async (stackId?: string) => {
-        if (selected.length === 0) return;
+    const handleUnarchive = useCallback(
+        async (stackId?: string) => {
+            if (selected.length === 0) return;
 
-        const result = await AppDialog.confirm(
-            translate("Unarchive tasks"),
-            translate("Are you sure you want to unarchive the selected tasks?"),
-            Intent.WARNING
-        );
+            const result = await AppDialog.confirm(
+                translate("Unarchive tasks"),
+                translate("Are you sure you want to unarchive the selected tasks?"),
+                Intent.WARNING
+            );
 
-        if (!result) return;
+            if (!result) return;
 
-        for (const taskId of selected) {
-            await TasksActions.unarchive(taskId, stackId);
-        }
-        setSelected([]);
-    }, [selected]);
+            for (const taskId of selected) {
+                await TasksActions.unarchive(taskId, stackId);
+            }
+            setSelected([]);
+        },
+        [selected]
+    );
 
     const handleDelete = useCallback(async () => {
         if (selected.length === 0) return;
@@ -65,7 +68,9 @@ export const ArchivedTasksDialog = ({ onClose }: { onClose: () => void }) => {
     }, [selected]);
 
     return (
-        <Dialog title={translate("Archived Tasks")} isOpen={isOpen}
+        <Dialog
+            title={translate("Archived tasks")}
+            isOpen={isOpen}
             onOpened={handleLoadArchived}
             onClose={() => setIsOpen(false)}
             onClosed={onClose}
@@ -83,7 +88,7 @@ export const ArchivedTasksDialog = ({ onClose }: { onClose: () => void }) => {
                                 minWidth: 100,
                                 isSortable: true,
                                 resizable: true,
-                            }
+                            },
                         }}
                         selected={selected}
                         onSelect={handleSelectTask}
@@ -114,11 +119,7 @@ export const ArchivedTasksDialog = ({ onClose }: { onClose: () => void }) => {
                         )}
                     </div>
                     <div>
-                        <Button
-                            onClick={() => setIsOpen(false)}
-                        >
-                            {translate("Close")}
-                        </Button>
+                        <Button onClick={() => setIsOpen(false)}>{translate("Close")}</Button>
                         <ButtonGroup>
                             <Button
                                 intent={Intent.PRIMARY}
@@ -128,13 +129,17 @@ export const ArchivedTasksDialog = ({ onClose }: { onClose: () => void }) => {
                                 Restore{selected.length ? ` ${selected.length}` : ""} tasks
                             </Button>
                             <Popover
-                                content={project && <StacksMenu
-                                    projectId={project.id}
-                                    showTitle
-                                    onClick={handleUnarchive}
-                                    selected={undefined}
-                                    nested
-                                />}
+                                content={
+                                    project && (
+                                        <StacksMenu
+                                            projectId={project.id}
+                                            showTitle
+                                            onClick={handleUnarchive}
+                                            selected={undefined}
+                                            nested
+                                        />
+                                    )
+                                }
                                 placement="left-end"
                                 renderTarget={({ isOpen, ...props }) => (
                                     <Button
@@ -147,11 +152,10 @@ export const ArchivedTasksDialog = ({ onClose }: { onClose: () => void }) => {
                                     />
                                 )}
                             />
-
                         </ButtonGroup>
                     </div>
                 </div>
             </div>
         </Dialog>
-    )
-}
+    );
+};

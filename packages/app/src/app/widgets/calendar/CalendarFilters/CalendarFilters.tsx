@@ -30,11 +30,11 @@ export const CalendarFilters = () => {
     const localCalendars = calendars.filter(c => c.source === "local");
 
     return (
-        <FiltersSidebar header="Calendar filters">
-            <FormGroup label="Local calendars" style={{ marginBottom: 20 }}>
+        <FiltersSidebar header={translate("Calendar filters")}>
+            <FormGroup label={translate("Local calendars")} style={{ marginBottom: 20 }}>
                 {localCalendars.length === 0 ? (
                     <div className={Classes.TEXT_MUTED} style={{ fontSize: 13, padding: "8px 0" }}>
-                        No local calendars
+                        {translate("No local calendars")}
                     </div>
                 ) : (
                     localCalendars.map(calendar => (
@@ -97,12 +97,10 @@ const LocalCalendarFilterRow = ({ calendar, checked }: { calendar: ICalendar; ch
     };
 
     return (
-        <Row
-            data-testid="local-calendar-filter"
-        >
+        <Row data-testid="local-calendar-filter">
             <Col>
                 <ColoredCheckbox
-                    text={calendar.primary ? `${calendar.title} (Default)` : calendar.title}
+                    text={calendar.primary ? `${calendar.title} (${translate("Default")})` : calendar.title}
                     color={calendar.color}
                     checked={checked}
                     onChange={() => CalendarActions.toggleCalendar(calendar.id)}
@@ -114,7 +112,10 @@ const LocalCalendarFilterRow = ({ calendar, checked }: { calendar: ICalendar; ch
                     content={
                         <Menu>
                             <li style={{ padding: 8, width: 220 }}>
-                                <FormGroup label={translate("Name")} labelFor={`calendar-title-${calendar.id}`}>
+                                <FormGroup
+                                    label={translate("Name")}
+                                    labelFor={`calendar-title-${calendar.id}`}
+                                >
                                     <InputGroup
                                         id={`calendar-title-${calendar.id}`}
                                         value={title}
@@ -124,7 +125,10 @@ const LocalCalendarFilterRow = ({ calendar, checked }: { calendar: ICalendar; ch
                                         data-testid={`calendar-title-input-${calendar.id}`}
                                     />
                                 </FormGroup>
-                                <FormGroup label={translate("Color")} labelFor={`calendar-color-${calendar.id}`}>
+                                <FormGroup
+                                    label={translate("Color")}
+                                    labelFor={`calendar-color-${calendar.id}`}
+                                >
                                     <InputGroup
                                         id={`calendar-color-${calendar.id}`}
                                         type="color"
@@ -189,7 +193,7 @@ const GoogleCalendars = ({
 
     if (loading) {
         return (
-            <FormGroup label="Google calendars">
+            <FormGroup label={translate("Google calendars")}>
                 <TagsWrapper vertical gap={10}>
                     {Array.from(Array(5).keys()).map(i => (
                         <div key={i} className={Classes.SKELETON} style={{ height: 20, width: "100%" }} />
@@ -202,7 +206,7 @@ const GoogleCalendars = ({
     const googleCalendars = calendars.filter(c => c.source === "google");
 
     return (
-        <FormGroup label="Google calendars" style={{ marginTop: 20 }}>
+        <FormGroup label={translate("Google calendars")} style={{ marginTop: 20 }}>
             {googleCalendars.map(calendar => (
                 <ColoredCheckbox
                     text={calendar.title}

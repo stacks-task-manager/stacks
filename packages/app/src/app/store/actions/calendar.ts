@@ -27,6 +27,7 @@ import {
 import { produce } from "immer";
 import { xor } from "lodash";
 
+import { translate } from "@stacks/translations";
 import {
     EVENTTYPE,
     ICalendarEvent,
@@ -154,7 +155,7 @@ const load = async (reset = true) => {
                 state.isLoading = false;
             })
         );
-        Toast.warn("Failed to load calendar events.");
+        Toast.warn(translate("Failed to load calendar events"));
     } finally {
         loadingCalendar = false;
         if (pendingCalendarLoad) {
@@ -328,7 +329,7 @@ const changeEvent = async (
                     state.events = previousEvents;
                 })
             );
-            Toast.warn("Failed to update task dates.");
+            Toast.warn(translate("Failed to update task dates"));
         }
     }
     // update an event
@@ -392,7 +393,7 @@ const onTaskDrop = async (task: ITask, start: Date, allDay: boolean, end?: Date)
                 state.events = previousEvents;
             })
         );
-        Toast.warn("Failed to schedule task.");
+        Toast.warn(translate("Failed to schedule task"));
     }
 };
 
@@ -504,7 +505,7 @@ const updateEvent = async (eventId: string, updatedEvent: Partial<ICalendarEvent
                     state.events = previousEvents;
                 })
             );
-            Toast.warn("Failed to update event.");
+            Toast.warn(translate("Failed to update event"));
         } finally {
             if (updateDebounces.get(eventId) === debounce) {
                 updateDebounces.delete(eventId);
@@ -543,7 +544,7 @@ const addEvent = async (event: Omit<ICalendarEvent, "id">) => {
     } catch (error) {
         // eslint-disable-next-line no-console
         console.error("Error creating calendar event:", error);
-        Toast.warn("Failed to create event.");
+        Toast.warn(translate("Failed to create event"));
         return false;
     }
 };
@@ -564,7 +565,7 @@ const addTempEvent = async (startDate: Date, endDate: Date) => {
     const calendarId = defaultCalendar?.id ?? "local";
 
     const newEvent: ICalendarEvent | false = await addEvent({
-        title: "New event",
+        title: translate("New event"),
         description: "",
         start: startOfDay(start),
         end: endOfDay(end),
@@ -598,12 +599,12 @@ const deleteEvent = async (eventId: string) => {
                 })
             );
         } else {
-            Toast.warn("There was a problem while removing the selected event");
+            Toast.warn(translate("Problem removing selected event"));
         }
     } catch (error) {
         // eslint-disable-next-line no-console
         console.error("Error deleting calendar event:", error);
-        Toast.warn("There was a problem while removing the selected event");
+        Toast.warn(translate("Problem removing selected event"));
     }
 };
 
@@ -613,10 +614,10 @@ const deleteEventAlert = async (eventId: string) => {
         event?.resource.type === EVENTTYPE.EVENT ? (event.resource.data as ICalendarEvent) : null;
     const isRecurring = Boolean(calendarEvent?.recurrenceRule);
     const response = await Dialog.confirm(
-        "Delete event",
+        translate("Delete event"),
         isRecurring
-            ? "Are you sure you want to remove this event? This will remove all occurrences of this event. This action cannot be undone!"
-            : "Are you sure you want to remove this event? This action cannot be undone!",
+            ? translate("Delete recurring event confirmation")
+            : translate("Delete event confirmation"),
         Intent.DANGER
     );
 
@@ -690,7 +691,7 @@ const setFilter = async (key: keyof ICalendarFilters, value: ICalendarFilters[ke
     } catch (error) {
         // eslint-disable-next-line no-console
         console.error("Error saving calendar filters:", error);
-        Toast.warn("Failed to save calendar filters.");
+        Toast.warn(translate("Failed to save calendar filters"));
     }
 };
 
@@ -707,7 +708,7 @@ const toggleCalendar = async (calendarId: string) => {
     } catch (error) {
         // eslint-disable-next-line no-console
         console.error("Error saving calendar filters:", error);
-        Toast.warn("Failed to save calendar filters.");
+        Toast.warn(translate("Failed to save calendar filters"));
     }
 };
 
@@ -763,7 +764,7 @@ const loadCalendars = async () => {
                     state.loadingCalendars = false;
                 })
             );
-            Toast.warn("Failed to load calendars.");
+            Toast.warn(translate("Failed to load calendars"));
         }
     })();
 
@@ -809,7 +810,7 @@ const createLocalCalendar = async (title: string, color?: string, primary = fals
     } catch (error) {
         // eslint-disable-next-line no-console
         console.error("Error creating calendar:", error);
-        Toast.warn("Failed to create calendar.");
+        Toast.warn(translate("Failed to create calendar"));
         return null;
     }
 };
@@ -832,7 +833,7 @@ const updateLocalCalendarPermissions = async (id: string, permissions: IPermissi
     } catch (error) {
         // eslint-disable-next-line no-console
         console.error("Error updating calendar permissions:", error);
-        Toast.warn("Failed to update calendar permissions.");
+        Toast.warn(translate("Failed to update calendar permissions"));
     }
 };
 
@@ -879,7 +880,7 @@ const updateLocalCalendar = async (
     } catch (error) {
         // eslint-disable-next-line no-console
         console.error("Error updating calendar:", error);
-        Toast.warn("Failed to update calendar.");
+        Toast.warn(translate("Failed to update calendar"));
         return null;
     }
 };
@@ -908,7 +909,7 @@ const deleteLocalCalendar = async (id: string) => {
     } catch (error) {
         // eslint-disable-next-line no-console
         console.error("Error deleting calendar:", error);
-        Toast.warn("Failed to delete calendar.");
+        Toast.warn(translate("Failed to delete calendar"));
         return false;
     }
 };
@@ -931,7 +932,7 @@ const setDefaultLocalCalendar = async (id: string) => {
     } catch (error) {
         // eslint-disable-next-line no-console
         console.error("Error setting default calendar:", error);
-        Toast.warn("Failed to set default calendar.");
+        Toast.warn(translate("Failed to set default calendar"));
         return null;
     }
 };
@@ -939,7 +940,7 @@ const setDefaultLocalCalendar = async (id: string) => {
 const moveEvent = async (event: ICalendarEvent, calendar: string, source: ICalendarSource) => {
     if (event.source === source && event.calendar === calendar) return;
     if (event.source !== source) {
-        Toast.warn("Events can only move within the same calendar source.");
+        Toast.warn(translate("Events can only move within same calendar source"));
         return;
     }
 
@@ -958,7 +959,7 @@ const moveEvent = async (event: ICalendarEvent, calendar: string, source: ICalen
     } catch (error) {
         // eslint-disable-next-line no-console
         console.error("moveEvent error:", error);
-        Toast.warn("Failed to move event.");
+        Toast.warn(translate("Failed to move event"));
     }
 };
 
@@ -967,7 +968,7 @@ const loginGoogle = async () => {
         // Get the Google OAuth authorization URL
         const { authUrl } = await CalendarIntegrationsAPI.getAuthUrl("google");
         if (!authUrl) {
-            Toast.warn("Failed to get Google authorization URL.");
+            Toast.warn(translate("Failed to get Google authorization URL"));
             return;
         }
 
@@ -979,7 +980,7 @@ const loginGoogle = async () => {
         );
 
         if (!popup) {
-            Toast.warn("Popup blocked. Please allow popups for this site.");
+            Toast.warn(translate("Popup blocked allow popups"));
             return;
         }
 
@@ -1005,7 +1006,7 @@ const loginGoogle = async () => {
                 clearInterval(checkClosed);
                 popup.close();
                 window.removeEventListener("message", messageListener);
-                Toast.warn("Google authentication failed.");
+                Toast.warn(translate("Google authentication failed"));
             }
         };
 
@@ -1022,7 +1023,7 @@ const loginGoogle = async () => {
     } catch (error) {
         // eslint-disable-next-line no-console
         console.error("Google login error:", error);
-        Toast.warn("Something went wrong while logging in your Google account.");
+        Toast.warn(translate("Google login failed"));
     }
 };
 
@@ -1077,11 +1078,11 @@ const handleGoogleAuthSuccess = async () => {
         // loading google events
         await load();
 
-        Toast.success("Successfully connected to Google Calendar!");
+        Toast.success(translate("Successfully connected to Google Calendar"));
     } catch (error) {
         // eslint-disable-next-line no-console
         console.error("Error handling Google auth success:", error);
-        Toast.warn("Failed to load Google Calendar data.");
+        Toast.warn(translate("Failed to load Google Calendar data"));
     }
 };
 
@@ -1104,14 +1105,16 @@ const disconnectCalendarProvider = async (provider: CalendarProvider) => {
         await load(); // Reload events without Google events
         Toast.success(
             provider === "google"
-                ? "Successfully disconnected from Google Calendar."
-                : "Successfully disconnected."
+                ? translate("Successfully disconnected from Google Calendar")
+                : translate("Successfully disconnected")
         );
     } catch (error) {
         // eslint-disable-next-line no-console
         console.error("Calendar provider disconnect error:", error);
         Toast.warn(
-            provider === "google" ? "Failed to disconnect from Google Calendar." : "Failed to disconnect."
+            provider === "google"
+                ? translate("Failed to disconnect from Google Calendar")
+                : translate("Failed to disconnect")
         );
     }
 };

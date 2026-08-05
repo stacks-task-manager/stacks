@@ -77,7 +77,7 @@ async function getOne(id: string): Promise<ILocalCalendar> {
         id,
     });
     if (!calendar) {
-        throw Errors.notFound("Calendar not found");
+        throw Errors.notFound(translate("Calendar not found"));
     }
     return calendar as unknown as ILocalCalendar;
 }
@@ -196,7 +196,7 @@ async function remove(id: string): Promise<boolean> {
     // Don't allow deleting the default calendar if it's the only one
     const calendars = await getAll();
     if (calendar.primary && calendars.length === 1) {
-        throw Errors.badRequest("Cannot delete the only default calendar");
+        throw Errors.badRequest(translate("Cannot delete only default calendar"));
     }
 
     await updateOne({

@@ -137,7 +137,7 @@ export const ToolbarCalendar = () => {
                         }
                     >
                         <Tooltip
-                            content="Jump to date"
+                            content={translate("Jump to date")}
                             placement="bottom-end"
                             hoverOpenDelay={500}
                             // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -248,11 +248,7 @@ const NewLocalCalendarButton = () => {
                 <div style={{ width: 240, padding: 10 }} data-testid="calendar-new-local-popover">
                     <FormGroup
                         label={translate("Calendar name")}
-                        helperText={
-                            hasDuplicateTitle
-                                ? translate("A calendar with this name already exists.")
-                                : undefined
-                        }
+                        helperText={hasDuplicateTitle ? translate("Calendar duplicate name") : undefined}
                         intent={hasDuplicateTitle ? Intent.DANGER : Intent.NONE}
                     >
                         <InputGroup
@@ -361,7 +357,7 @@ const FilterButton = () => {
     return (
         <ToolbarButton
             icon="filter"
-            title="Filters"
+            title={translate("Filters")}
             tooltip={translate("Filter project")}
             keys={["meta", "F"]}
             placement="bottom-end"
@@ -381,16 +377,20 @@ const AuthButtons = () => {
     };
 
     return (
-        <MenuItem text="Connect" icon={<Icon icon="calendar-plus-01" />}>
+        <MenuItem text={translate("Connect")} icon={<Icon icon="calendar-plus-01" />}>
             {isGoogleAuthenticated ? (
                 <MenuItem
-                    text="Log out from Google"
+                    text={translate("Log out from Google")}
                     icon={<Icon icon="google" />}
                     intent={Intent.WARNING}
                     onClick={() => CalendarActions.disconnectCalendarProvider("google")}
                 />
             ) : (
-                <MenuItem text="Log in with Google" icon={<Icon icon="google" />} onClick={handleLogin} />
+                <MenuItem
+                    text={translate("Log in with Google")}
+                    icon={<Icon icon="google" />}
+                    onClick={handleLogin}
+                />
             )}
         </MenuItem>
     );
