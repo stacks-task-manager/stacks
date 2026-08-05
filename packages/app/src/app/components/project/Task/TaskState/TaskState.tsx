@@ -16,7 +16,14 @@ interface ITaskStateProps {
     readonly?: boolean;
     testId?: string;
 }
-export const TaskState: FunctionComponent<ITaskStateProps> = ({ taskId, id, large, disabled, readonly, testId }) => {
+export const TaskState: FunctionComponent<ITaskStateProps> = ({
+    taskId,
+    id,
+    large,
+    disabled,
+    readonly,
+    testId,
+}) => {
     const { isLoading: isTaskLoading, task } = useTask(taskId);
     const { subtasks, isLoading: isSubtasksLoading } = useSubtasks(taskId, false);
     const { tasks, isLoading: isDependantsLoading } = useDependants(taskId, false);
@@ -41,22 +48,25 @@ export const TaskState: FunctionComponent<ITaskStateProps> = ({ taskId, id, larg
                 disabled
                 testId={testId}
             />
-        )
+        );
     }
 
     // 2. if has dependent tasks that are not done show a - red icon
     if (tasks.length > 0) {
         return (
-            <Popover lazy content={
-                <>
-                    <div style={{ padding: "10px 10px 0 10px" }}>
-                        <strong>{translate("Task can't be completed")}</strong>
-                        <p>{translate("Waiting on these tasks to be completed")}</p>
-                    </div>
+            <Popover
+                lazy
+                content={
+                    <>
+                        <div style={{ padding: "10px 10px 0 10px" }}>
+                            <strong>{translate("Task cannot be completed")}</strong>
+                            <p>{translate("Waiting on these tasks to be completed")}</p>
+                        </div>
 
-                    <TaskItems parentId={taskId} tasks={tasks} minWidth={300} />
-                </>
-            }>
+                        <TaskItems parentId={taskId} tasks={tasks} minWidth={300} />
+                    </>
+                }
+            >
                 <RoundButton
                     icon="minus"
                     id={id}
@@ -67,7 +77,7 @@ export const TaskState: FunctionComponent<ITaskStateProps> = ({ taskId, id, larg
                     testId={testId}
                 />
             </Popover>
-        )
+        );
     }
 
     // 3. if has incomplete subtasks show the number of the incomplete subtasks
@@ -83,12 +93,12 @@ export const TaskState: FunctionComponent<ITaskStateProps> = ({ taskId, id, larg
                 active
                 testId={testId}
             />
-        )
+        );
     }
 
     // 4. if all subtasks are done or no subtasks show a checkmark
     const intent = task?.done ? Intent.SUCCESS : undefined;
-    const tooltip = readonly ? undefined : taskToggleDoneLabel(Boolean(task?.done))
+    const tooltip = readonly ? undefined : taskToggleDoneLabel(Boolean(task?.done));
 
     return (
         <RoundButton

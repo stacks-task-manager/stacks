@@ -126,9 +126,7 @@ export const Tasks = () => {
                     <BlankSlate
                         title={translate("No tasks found")}
                         icon="filter"
-                        description={translate(
-                            "There are no tasks that match your current filter settings. Try adjusting your filter and try again"
-                        )}
+                        description={translate("No matching tasks filter")}
                     />
                 </Grid>
             );

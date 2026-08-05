@@ -36,7 +36,7 @@ export const ArchivedTasksDialog = ({ onClose }: { onClose: () => void }) => {
 
             const result = await AppDialog.confirm(
                 translate("Unarchive tasks"),
-                translate("Are you sure you want to unarchive the selected tasks?"),
+                translate("Unarchive selected tasks confirmation"),
                 Intent.WARNING
             );
 
@@ -55,7 +55,7 @@ export const ArchivedTasksDialog = ({ onClose }: { onClose: () => void }) => {
 
         const result = await AppDialog.confirm(
             translate("Delete tasks"),
-            translate("Are you sure you want to delete the selected tasks?"),
+            translate("Delete selected tasks confirmation"),
             Intent.DANGER
         );
 
@@ -98,7 +98,7 @@ export const ArchivedTasksDialog = ({ onClose }: { onClose: () => void }) => {
                         <BlankSlate
                             icon={APPICONS.ARCHIVED}
                             title={translate("No archived tasks")}
-                            description={translate("There are no archived tasks in this project.")}
+                            description={translate("No archived tasks in project")}
                         />
                     </Grid>
                 )}

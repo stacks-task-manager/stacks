@@ -1,13 +1,32 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { translate } from "@stacks/translations";
-import { Button, Checkbox, Classes, Colors, Dialog, InputGroup, Menu, MenuItem, Tag } from "@blueprintjs/core";
+import {
+    Button,
+    Checkbox,
+    Classes,
+    Colors,
+    Dialog,
+    InputGroup,
+    Menu,
+    MenuItem,
+    Tag,
+} from "@blueprintjs/core";
 import { ItemPredicate, ItemRenderer, Select } from "@blueprintjs/select";
 import { APPICONS, PRIORITY, TreeNode } from "@stacks/types";
 import React, { useEffect, useState } from "react";
 import { xor } from "lodash";
 
 import { BlankSlate, Grid, Icon, Row, Scroller } from "app/components/common";
-import { useDocument, useProjectDocuments, useProjectStacks, useStack, useStackInfo, useStackTasks, useStorage, useTask } from "app/hooks";
+import {
+    useDocument,
+    useProjectDocuments,
+    useProjectStacks,
+    useStack,
+    useStackInfo,
+    useStackTasks,
+    useStorage,
+    useTask,
+} from "app/hooks";
 import { ProjectsActions, TasksActions } from "app/store/actions";
 import { PriorityChip } from "app/components/project";
 import { TaskAssignees } from "../TaskAssignees/TaskAssignees";
@@ -47,11 +66,26 @@ interface TaskDependenciesDialogProps {
     onClose?: () => void;
 }
 
-export const TaskDependenciesDialog = ({ parentId, values, onSelect, onClose }: TaskDependenciesDialogProps) => {
+export const TaskDependenciesDialog = ({
+    parentId,
+    values,
+    onSelect,
+    onClose,
+}: TaskDependenciesDialogProps) => {
     const [isOpen, setIsOpen] = useState(true);
     const [query, setQuery] = useState("");
-    const [selectedProject, setSelectedProject] = useStorage<string | undefined>("task-dependencies-project", false, undefined, parentId);
-    const [selectedStack, setSelectedStack] = useStorage<string | undefined>("task-dependencies-stack", false, undefined, parentId);
+    const [selectedProject, setSelectedProject] = useStorage<string | undefined>(
+        "task-dependencies-project",
+        false,
+        undefined,
+        parentId
+    );
+    const [selectedStack, setSelectedStack] = useStorage<string | undefined>(
+        "task-dependencies-stack",
+        false,
+        undefined,
+        parentId
+    );
     const [selectedTasks, setSelectedTasks] = useState<string[]>(values ?? []);
     const projects = useProjectDocuments();
     const stacks = useProjectStacks(selectedProject);
@@ -104,7 +138,7 @@ export const TaskDependenciesDialog = ({ parentId, values, onSelect, onClose }: 
                         items={projects}
                         itemPredicate={filterProject}
                         itemRenderer={renderProject}
-                        noResults={<MenuItem disabled={true} text="No results." />}
+                        noResults={<MenuItem disabled={true} text={translate("No results")} />}
                         onItemSelect={handleSelectProject}
                         fill
                     >
@@ -115,7 +149,7 @@ export const TaskDependenciesDialog = ({ parentId, values, onSelect, onClose }: 
                         <Scroller vertical maxHeight={550}>
                             {stacks && (
                                 <Menu>
-                                    {stacks.map((stack) => (
+                                    {stacks.map(stack => (
                                         <StackItem
                                             key={stack.id}
                                             stackId={stack.id}
@@ -130,9 +164,10 @@ export const TaskDependenciesDialog = ({ parentId, values, onSelect, onClose }: 
                         <Grid vertical>
                             <BlankSlate
                                 title="Select project"
-                                description="Select a project to add dependencies."
+                                description={translate("Select project dependencies hint")}
                                 icon={APPICONS.PROJECT}
-                                small />
+                                small
+                            />
                         </Grid>
                     )}
                 </div>
@@ -143,7 +178,7 @@ export const TaskDependenciesDialog = ({ parentId, values, onSelect, onClose }: 
                         disabled={!selectedProject || !selectedStack}
                         leftIcon="search"
                         value={query}
-                        onChange={(e) => setQuery(e.target.value)}
+                        onChange={e => setQuery(e.target.value)}
                     />
 
                     <TasksPanel
@@ -156,29 +191,32 @@ export const TaskDependenciesDialog = ({ parentId, values, onSelect, onClose }: 
             </div>
             <div className={Classes.DIALOG_FOOTER}>
                 <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-                    <Button
-                        variant="minimal"
-                        onClick={() => setIsOpen(false)}
-                    >
+                    <Button variant="minimal" onClick={() => setIsOpen(false)}>
                         {translate("Cancel")}
                     </Button>
                     <Button
                         text={`Select tasks ${selectedTasks.length > 0 ? `(${selectedTasks.length})` : ""}`}
                         intent="primary"
                         disabled={selectedTasks.length === 0 && onSelect != null}
-                        onClick={handleOnSelect} />
+                        onClick={handleOnSelect}
+                    />
                 </div>
             </div>
         </Dialog>
     );
-}
+};
 
 const ProjectButton = ({ projectId }: { projectId?: string }) => {
-    const project = useDocument(projectId)
+    const project = useDocument(projectId);
     return (
-        <Button text={project?.title ?? "Select a project"} fill endIcon="double-caret-vertical" alignText="left" />
+        <Button
+            text={project?.title ?? "Select a project"}
+            fill
+            endIcon="double-caret-vertical"
+            alignText="left"
+        />
     );
-}
+};
 
 interface StackItemProps {
     stackId: string;
@@ -189,21 +227,25 @@ const StackItem = ({ stackId, selected, onClick }: StackItemProps) => {
     const info = useStackInfo(stackId);
 
     if (!info) {
-        return (<MenuItem text="Loading..." className={Classes.SKELETON} />);
+        return <MenuItem text="Loading..." className={Classes.SKELETON} />;
     }
 
-    const { tint, tasks, title, } = info;
+    const { tint, tasks, title } = info;
 
     return (
         <MenuItem
             text={title}
             icon={<Icon icon="stop-filled" color={tint || Colors.GRAY3} />}
-            labelElement={<Tag round minimal>{tasks?.length}</Tag>}
+            labelElement={
+                <Tag round minimal>
+                    {tasks?.length}
+                </Tag>
+            }
             active={selected}
             onClick={() => onClick(stackId)}
         />
     );
-}
+};
 
 interface TasksPanelProps {
     parentId?: string;
@@ -219,9 +261,10 @@ const TasksPanel = ({ parentId, stackId, selected, onSelect }: TasksPanelProps) 
             <Grid vertical>
                 <BlankSlate
                     title="Select a column"
-                    description="Select a column to view the tasks."
+                    description={translate("Select column tasks hint")}
                     icon={APPICONS.TASK}
-                    small />
+                    small
+                />
             </Grid>
         );
     }
@@ -229,8 +272,9 @@ const TasksPanel = ({ parentId, stackId, selected, onSelect }: TasksPanelProps) 
     return (
         <Scroller vertical maxHeight={550}>
             <Menu>
-                {tasks.map((task) => (
-                    <TaskItem key={task.id}
+                {tasks.map(task => (
+                    <TaskItem
+                        key={task.id}
                         taskId={task.id}
                         disabled={task.id === parentId}
                         selected={selected.includes(task.id)}
@@ -240,7 +284,7 @@ const TasksPanel = ({ parentId, stackId, selected, onSelect }: TasksPanelProps) 
             </Menu>
         </Scroller>
     );
-}
+};
 
 interface TaskItemProps {
     taskId: string;
@@ -262,18 +306,22 @@ const TaskItem = ({ taskId, selected, disabled, onClick }: TaskItemProps) => {
             text={
                 <Grid gap={0}>
                     <Checkbox label={title} inline checked={selected} />
-                    <div className={Classes.TEXT_MUTED} style={{ paddingLeft: 25 }}>{projectInfo?.title ?? "No project"} / {stack?.title ?? "No stack"}</div>
+                    <div className={Classes.TEXT_MUTED} style={{ paddingLeft: 25 }}>
+                        {projectInfo?.title ?? "No project"} / {stack?.title ?? "No stack"}
+                    </div>
                 </Grid>
             }
             disabled={disabled}
             multiline
             onClick={() => onClick(taskId)}
-            labelElement={(
+            labelElement={
                 <Row align="center" gutter={5}>
                     {priority && priority !== PRIORITY.NONE && <PriorityChip priority={priority} />}
-                    {assignees.length > 0 && <TaskAssignees assignees={assignees} minimal showEmpty max={1} disabled />}
+                    {assignees.length > 0 && (
+                        <TaskAssignees assignees={assignees} minimal showEmpty max={1} disabled />
+                    )}
                 </Row>
-            )}
+            }
         />
     );
-}
+};

@@ -51,7 +51,7 @@ const CopyMove = () => {
     const projects = useProjectDocuments();
 
     const dialogTitle = useMemo(() => {
-        return `${action === COPYMOVEACTION.COPY ? translate("Copy:") : translate("Move:")} ${
+        return `${action === COPYMOVEACTION.COPY ? translate("Copy label") : translate("Move label")} ${
             tasks.length > 1 ? `${tasks.length} tasks` : title
         }`;
     }, [tasks, title, action]);
@@ -315,11 +315,7 @@ const CopyMove = () => {
                 <div className="dialog-footer-actions">
                     <Checkbox checked={keepSettings} onChange={handleChangeKeepSettings}>
                         {translate("Remember")}{" "}
-                        <Tooltip
-                            content={translate(
-                                "If checked the selected options will be kept the next time you open the Copy/Move window for the same type (Tasks or Stacks)"
-                            )}
-                        >
+                        <Tooltip content={translate("Remember copy move settings hint")}>
                             <Icon icon="info-circle" size={14} />
                         </Tooltip>
                     </Checkbox>

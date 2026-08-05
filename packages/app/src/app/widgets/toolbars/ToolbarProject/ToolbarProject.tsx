@@ -606,7 +606,7 @@ const AttachmentsSearch = () => {
     return (
         <InputGroup
             leftIcon={<Icon icon="search" />}
-            placeholder={translate("Search attachments...")}
+            placeholder={translate("Search attachments")}
             round
             type="search"
             onChange={handleChangeQuery}
@@ -632,7 +632,7 @@ const LinksSearch = () => {
     return (
         <InputGroup
             leftIcon={<Icon icon="search" />}
-            placeholder={translate("Search links...")}
+            placeholder={translate("Search links")}
             round
             type="search"
             onChange={handleChangeQuery}

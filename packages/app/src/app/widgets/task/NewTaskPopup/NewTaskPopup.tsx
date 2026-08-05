@@ -179,7 +179,7 @@ export const NewTaskPopup: FunctionComponent<INewTaskPopupProps> = ({
         if (titleRef.current && titleRef.current.value.length > 0 && !ignoreEmpty) {
             const confirm = await dialog.confirm(
                 "Close unsaved task",
-                "Are you sure you want to close and cancel saving this new task?"
+                translate("Close unsaved task confirmation")
             );
             closing.current = false;
             if (!confirm) return;
@@ -530,7 +530,7 @@ const ProjectSelect: FunctionComponent<IProjectSelectProps> = ({ projectId, onCh
                     <BlankSlate
                         icon={APPICONS.PROJECT}
                         title="No projects"
-                        description="You don't have any projects yet. Please create a project before adding a task"
+                        description={translate("No projects new task")}
                         maxWidth={200}
                         small
                     />
@@ -627,7 +627,7 @@ const InfoPopup: FunctionComponent<IInfoPopupProps> = ({ small }) => {
                             <td>
                                 <strong>Ctrl+Enter</strong>
                             </td>
-                            <td>Saves and opens the task (when focusing the title)</td>
+                            <td>{translate("Save open task hint")}</td>
                         </tr>
                     </tbody>
                 </table>

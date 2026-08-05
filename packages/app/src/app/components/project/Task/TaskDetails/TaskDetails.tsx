@@ -451,7 +451,10 @@ const Task: FunctionComponent<ITaskProps> = React.memo(
                                         />
                                     }
                                 >
-                                    <Tooltip content={translate("Update task completed date")} placement="bottom">
+                                    <Tooltip
+                                        content={translate("Update task completed date")}
+                                        placement="bottom"
+                                    >
                                         <AnchorButton
                                             size="small"
                                             variant="minimal"
@@ -986,7 +989,7 @@ const TaskDetailInfo: FunctionComponent<ITaskDetailInfoProps> = React.memo(
                         centered={centered}
                     >
                         <Tooltip
-                            content={translate("Time spent across all task time logs.")}
+                            content={translate("Task time logs spent hint")}
                             placement="top"
                             disabled={disabled}
                         >
@@ -1053,7 +1056,11 @@ const TaskDetailInfo: FunctionComponent<ITaskDetailInfoProps> = React.memo(
             case TASKDETAILMATRIX.HOURLY_RATE:
                 const project = getProject(task.project);
                 return (
-                    <TaskDetailsSection title={translate("Task hourly rate")} vertical={vertical} centered={centered}>
+                    <TaskDetailsSection
+                        title={translate("Task hourly rate")}
+                        vertical={vertical}
+                        centered={centered}
+                    >
                         <FeeInput
                             value={task.hourlyRate}
                             currency={project?.currency}
