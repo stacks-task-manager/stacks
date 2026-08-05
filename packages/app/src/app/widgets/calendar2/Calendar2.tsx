@@ -116,8 +116,8 @@ export const Calendar2 = forwardRef<FullCalendar, CalendarProps>((props, ref) =>
                 eventDrop={props.onEventDrop ?? props.onEventChange}
                 eventResize={props.onEventResize ?? props.onEventChange}
                 datesSet={props.onDatesChanged} // the dates changed either via the calendar api (next/prev) or calendar toolbar
-                // contentHeight="auto"
-                // height="auto"
+            // contentHeight="auto"
+            // height="auto"
             />
         </div>
     );
@@ -137,9 +137,8 @@ const EventContent = ({ event, view }: { event: EventImpl; view: calendarViewTyp
         color: tinted ? adjustColor(event.extendedProps.tint, -50) : Colors.DARK_GRAY5,
     };
 
-    styles.background = `linear-gradient(0deg, ${
-        tinted ? colorToHuedColor(event.extendedProps.tint, 10) : DEFAULT_BG_BOTTOM
-    } 0%, ${tinted ? colorToHuedColor(event.extendedProps.tint, 2) : DEFAULT_BG_TOP} 100%)`;
+    styles.background = `linear-gradient(0deg, ${tinted ? colorToHuedColor(event.extendedProps.tint, 10) : DEFAULT_BG_BOTTOM
+        } 0%, ${tinted ? colorToHuedColor(event.extendedProps.tint, 2) : DEFAULT_BG_TOP} 100%)`;
     styles.borderColor = tinted ? colorToHuedColor(event.extendedProps.tint, 40) : "#abc4ff";
 
     let rulerColor = event.extendedProps.tint ?? Colors.GRAY2;
@@ -181,14 +180,14 @@ const EventContent = ({ event, view }: { event: EventImpl; view: calendarViewTyp
     const icon = useMemo(() => {
         let icon: string | null = null;
         if (source === "local") {
-            icon = "check";
+            icon = "calendar-date";
         } else if (source === "google") {
             icon = "google";
         } else if (source === "microsoft") {
             icon = "microsoft";
         }
 
-        return icon ? <Icon icon={icon} size={24} className="event-source-icon" /> : null;
+        return icon ? <Icon icon={icon} size={18} className="event-source-icon" /> : null;
     }, [source]);
 
     return (

@@ -27,6 +27,8 @@ import {
     isSameMinute,
     addHours,
     subDays,
+    parseISO,
+    isValid,
 } from "date-fns";
 import React, { FunctionComponent, useCallback, useEffect, useMemo, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -115,6 +117,15 @@ function formatUntilDate(date: string | null): string | null {
     return parsed.toISOString().replace(/[-:]/g, "").replace(".000", "");
 }
 
+function parseCalendarDateInput(value: string): Date {
+    const isoDate = parseISO(value);
+    if (isValid(isoDate)) {
+        return isoDate;
+    }
+
+    return parse(value, "P", new Date());
+}
+
 function buildRecurrenceRule(state: RecurrenceState): string | null {
     if (state.frequency === "none") return null;
 
@@ -179,9 +190,16 @@ const EventDetailsGate = ({ id }: { id: string }) => {
 
     if (!event) return null;
 
+    const data = event.resource.data as ICalendarEvent;
+
     return (
         <EventDetails
-            event={event.resource.data as ICalendarEvent}
+            event={{
+                ...data,
+                start: event.start ?? data.start,
+                end: event.end ?? data.end,
+                allDay: event.allDay ?? data.allDay,
+            }}
             isNew={isNew}
             isAllDay={event.allDay ?? false}
         />
@@ -310,7 +328,7 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew, isAl
     const handleUpdateStartDate = (st: string | null, isUserChange: boolean) => {
         if (!isUserChange || !st) return;
 
-        let startDate = parse(st, "P", new Date());
+        let startDate = parseCalendarDateInput(st);
         if (!end) return;
 
         let endDate = end;
@@ -336,7 +354,7 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew, isAl
         if (!start) return;
 
         let startDate = start;
-        let endDate = parse(en, "P", new Date());
+        let endDate = parseCalendarDateInput(en);
         if (isAllDay) {
             if (isSameDay(endDate, startDate)) {
                 startDate = setHours(setMinutes(startDate, 0), 0);
@@ -441,7 +459,8 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew, isAl
                                                 />
                                             )}
                                             <DateInput
-                                                value={format(start, "P")}
+                                                value={format(start, "yyyy-MM-dd")}
+                                                dateFnsFormat="P"
                                                 locale={dateLocale}
                                                 maxDate={end ? new Date(end) : undefined}
                                                 disabled={isDisabled}
@@ -466,7 +485,8 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew, isAl
                                                 />
                                             )}
                                             <DateInput
-                                                value={format(end, "P")}
+                                                value={format(end, "yyyy-MM-dd")}
+                                                dateFnsFormat="P"
                                                 locale={dateLocale}
                                                 disabled={isDisabled}
                                                 onChange={handleUpdateEndDate}
