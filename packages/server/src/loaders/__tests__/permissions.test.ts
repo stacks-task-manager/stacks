@@ -3,6 +3,14 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { POLLINGACTIONS, POLLINGTYPE } from "@stacks/types";
 import { PermissionEntity } from "@stacks/db";
 
+vi.mock("@stacks/db", () => ({
+    PermissionEntity: {
+        create: vi.fn(),
+        findOne: vi.fn(),
+        update: vi.fn(),
+    },
+}));
+
 vi.mock("../../events", () => ({
     sendRealtimeUpdate: vi.fn(),
 }));
@@ -43,31 +51,39 @@ const permissionRow = (overrides: Record<string, any> = {}) => ({
     ...overrides,
 });
 
+const transaction = { id: "tx-1" } as any;
+
 describe("PermissionsLoader", () => {
     const sendRealtimeUpdateMock = vi.mocked(sendRealtimeUpdate);
+    const findOneMock = vi.mocked(PermissionEntity.findOne);
+    const updateMock = vi.mocked(PermissionEntity.update);
 
     beforeEach(() => {
-        vi.restoreAllMocks();
         vi.clearAllMocks();
+        findOneMock.mockReset();
+        updateMock.mockReset();
     });
 
     it("rejects permission updates from visible non-owners", async () => {
-        vi.spyOn(PermissionEntity, "findOne").mockResolvedValue({
+        findOneMock.mockResolvedValue({
             toJSON: () => permissionRow({ owner: "user-2" }),
         } as any);
-        const updateSpy = vi.spyOn(PermissionEntity, "update");
 
         await expect(
             runWithContext(() =>
-                PermissionsLoader.update("perm-1", {
-                    isPublic: false,
-                    visibleUsers: ["user-3"],
-                    visibleRoles: [],
-                })
+                PermissionsLoader.update(
+                    "perm-1",
+                    {
+                        isPublic: false,
+                        visibleUsers: ["user-3"],
+                        visibleRoles: [],
+                    },
+                    transaction
+                )
             )
         ).rejects.toThrow(/permission update not allowed/i);
 
-        expect(updateSpy).not.toHaveBeenCalled();
+        expect(updateMock).not.toHaveBeenCalled();
     });
 
     it("updates visibility and owner fields for owners and emits realtime updates", async () => {
@@ -76,10 +92,10 @@ describe("PermissionsLoader", () => {
             owner: "user-3",
             visibleUsers: ["user-3"],
         });
-        vi.spyOn(PermissionEntity, "findOne").mockResolvedValue({
+        findOneMock.mockResolvedValue({
             toJSON: () => permissionRow(),
         } as any);
-        vi.spyOn(PermissionEntity, "update").mockResolvedValue([
+        updateMock.mockResolvedValue([
             1,
             [
                 {
@@ -89,12 +105,16 @@ describe("PermissionsLoader", () => {
         ] as any);
 
         const result = await runWithContext(() =>
-            PermissionsLoader.update("perm-1", {
-                isPublic: false,
-                owner: "user-3",
-                visibleUsers: ["user-3"],
-                visibleRoles: [],
-            })
+            PermissionsLoader.update(
+                "perm-1",
+                {
+                    isPublic: false,
+                    owner: "user-3",
+                    visibleUsers: ["user-3"],
+                    visibleRoles: [],
+                },
+                transaction
+            )
         );
 
         expect(result).toBe(true);
@@ -118,33 +138,36 @@ describe("PermissionsLoader", () => {
     });
 
     it("rejects owner changes from visible non-owners", async () => {
-        vi.spyOn(PermissionEntity, "findOne").mockResolvedValue({
+        findOneMock.mockResolvedValue({
             toJSON: () => permissionRow(),
         } as any);
-        const updateSpy = vi.spyOn(PermissionEntity, "update");
 
         await expect(
             runWithContext(
                 () =>
-                    PermissionsLoader.update("perm-1", {
-                        isPublic: true,
-                        owner: "user-2",
-                        visibleUsers: [],
-                        visibleRoles: [],
-                    }),
+                    PermissionsLoader.update(
+                        "perm-1",
+                        {
+                            isPublic: true,
+                            owner: "user-2",
+                            visibleUsers: [],
+                            visibleRoles: [],
+                        },
+                        transaction
+                    ),
                 { id: "user-4" }
             )
         ).rejects.toThrow(/permission update not allowed/i);
 
-        expect(updateSpy).not.toHaveBeenCalled();
+        expect(updateMock).not.toHaveBeenCalled();
     });
 
     it("lets admins update permission ownership through the normal update path", async () => {
         const updated = permissionRow({ owner: "user-3" });
-        vi.spyOn(PermissionEntity, "findOne").mockResolvedValue({
+        findOneMock.mockResolvedValue({
             toJSON: () => permissionRow({ owner: "user-2" }),
         } as any);
-        vi.spyOn(PermissionEntity, "update").mockResolvedValue([
+        updateMock.mockResolvedValue([
             1,
             [
                 {
@@ -155,12 +178,16 @@ describe("PermissionsLoader", () => {
 
         const result = await runWithContext(
             () =>
-                PermissionsLoader.update("perm-1", {
-                    isPublic: true,
-                    owner: "user-3",
-                    visibleUsers: [],
-                    visibleRoles: [],
-                }),
+                PermissionsLoader.update(
+                    "perm-1",
+                    {
+                        isPublic: true,
+                        owner: "user-3",
+                        visibleUsers: [],
+                        visibleRoles: [],
+                    },
+                    transaction
+                ),
             {
                 admin: true,
                 id: "admin-1",
