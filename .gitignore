@@ -95,3 +95,8 @@ license.key
 *.pem
 !packages/server/public.pem
 !third-party/**/*.pem
+
+# graft's local graph cache — regenerable, not committed (run `graft build`).
+graft/
+opencode.json
+opencode-swarm.json

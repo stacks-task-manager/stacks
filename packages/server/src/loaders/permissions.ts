@@ -25,6 +25,13 @@ type PermissionCreateInput = {
     type: POLLINGTYPE;
 };
 
+type PermissionUpdateInput = {
+    isPublic: boolean;
+    owner?: string;
+    visibleUsers: string[];
+    visibleRoles: string[];
+};
+
 /** Creates default+merged ACL for a resource id inside a transaction. */
 async function create(id: string, permissions?: PermissionCreateInput, extTransaction?: Transaction) {
     return withTransaction(extTransaction, async transaction => {
@@ -58,15 +65,80 @@ async function getOne(id: string, extTransaction?: Transaction): Promise<IPermis
     });
 }
 
-/** Replaces ACL and emits polling updates for the resource and sometimes documents. */
-async function update(id: string, permissions: IPermissions, transaction?: Transaction) {
+/** Updates ACL visibility and emits polling updates for the resource and sometimes documents. */
+async function update(id: string, permissions: PermissionUpdateInput, transaction?: Transaction) {
     try {
-        await getOne(id);
+        const user = getCurrentUser();
+        const currentPermissions = await getOne(id, transaction);
 
-        const [affectedCount, updatedPermissions] = await PermissionEntity.update(permissions, {
-            where: sanitizeWhere({ id }),
-            returning: true,
-        });
+        if (!user.admin && currentPermissions.owner !== user.id) {
+            throw Errors.forbidden(translate("Permission update not allowed"));
+        }
+
+        if (permissions.owner && permissions.owner !== currentPermissions.owner) {
+            throw Errors.badRequest(translate("Permission ownership transfer not supported"));
+        }
+
+        const [affectedCount, updatedPermissions] = await PermissionEntity.update(
+            {
+                isPublic: permissions.isPublic,
+                visibleUsers: permissions.visibleUsers,
+                visibleRoles: permissions.visibleRoles,
+            },
+            {
+                where: sanitizeWhere({ id }),
+                returning: true,
+                transaction,
+            }
+        );
+
+        if (affectedCount === 0) {
+            return false;
+        }
+
+        if (updatedPermissions && updatedPermissions.length) {
+            const updatedRow = updatedPermissions[0].toJSON() as IPermissions & { type: POLLINGTYPE };
+            sendRealtimeUpdate({
+                type: updatedRow.type,
+                action: POLLINGACTIONS.UPDATE,
+                record: id,
+                permissions: updatedRow,
+            });
+
+            if ([POLLINGTYPE.PROJECT, POLLINGTYPE.NOTEPAD].includes(updatedRow.type)) {
+                sendRealtimeUpdate({
+                    type: POLLINGTYPE.DOCUMENTS,
+                    action: POLLINGACTIONS.UPDATE,
+                    record: id,
+                    permissions: updatedRow,
+                });
+            }
+        }
+
+        return true;
+    } catch (error) {
+        throw error;
+    }
+}
+
+/** Transfers ACL ownership. Only the current owner or an admin may transfer. */
+async function transferOwner(id: string, owner: string, transaction?: Transaction) {
+    try {
+        const user = getCurrentUser();
+        const currentPermissions = await getOne(id, transaction);
+
+        if (!user.admin && currentPermissions.owner !== user.id) {
+            throw Errors.forbidden(translate("Permission ownership transfer not allowed"));
+        }
+
+        const [affectedCount, updatedPermissions] = await PermissionEntity.update(
+            { owner },
+            {
+                where: sanitizeWhere({ id }),
+                returning: true,
+                transaction,
+            }
+        );
 
         if (affectedCount === 0) {
             return false;
@@ -123,5 +195,6 @@ async function remove(id: string, transaction?: Transaction): Promise<boolean> {
 export const PermissionsLoader = {
     create,
     update,
+    transferOwner,
     remove,
 };

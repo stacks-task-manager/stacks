@@ -1463,6 +1463,7 @@ var init_updates = __esm({
       POLLINGTYPE2["PROJECT"] = "project";
       POLLINGTYPE2["STACK"] = "stack";
       POLLINGTYPE2["TASK"] = "task";
+      POLLINGTYPE2["EVENT"] = "event";
       POLLINGTYPE2["DOCUMENTS"] = "documents";
       POLLINGTYPE2["DOCUMENT"] = "document";
       POLLINGTYPE2["ACTIVITY"] = "activity";

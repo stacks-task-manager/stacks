@@ -115,6 +115,7 @@ async function update(id: string, data: Partial<IProject>, extTransaction?: Tran
             entity: ProjectEntity,
             id,
             data,
+            writePolicy: "visible",
             transaction,
         });
 
@@ -141,7 +142,7 @@ async function remove(id: string, extTransaction?: Transaction): Promise<boolean
 
         const project = await getOne(id, transaction);
         // check if the person deleting the project is the project owner or admin
-        if (project.projectOwner !== user.id || !user.admin) {
+        if (project.projectOwner !== user.id && !user.admin) {
             throw Errors.forbidden(translate("Project delete not allowed"));
         }
 
@@ -152,6 +153,7 @@ async function remove(id: string, extTransaction?: Transaction): Promise<boolean
         await deleteOne<IProject>({
             entity: ProjectEntity,
             id,
+            writePolicy: "visible",
             transaction,
         });
 

@@ -75,27 +75,27 @@ describe("loader sanitizeWhere helpers", () => {
         });
     });
 
-    it("non-admin users get isPublic/owner/role/user/fallback OR clause", () => {
+    it("non-admin users get isPublic/owner/role/user OR clause", () => {
         requestContext.run(baseContext(), () => {
             const where: any = sanitizeWherePermissions({}, true);
             const clauses = where[Op.or] as any[];
-            expect(clauses).toHaveLength(5);
+            expect(clauses).toHaveLength(4);
             const sqls = clauses.map(sqlOf).join(" | ");
             expect(sqls).toContain('"PermissionEntity"."isPublic" = true');
             expect(sqls).toContain('"PermissionEntity"."owner"');
             expect(sqls).toContain('"PermissionEntity"."visibleRoles" ?');
             expect(sqls).toContain('"PermissionEntity"."visibleUsers" ?');
-            expect(sqls).toContain('"PermissionEntity"."id" IS NULL');
+            expect(sqls).not.toContain('"PermissionEntity"."id" IS NULL');
         });
     });
 
-    it("delete visibility is restricted to public or owner", () => {
+    it("delete visibility is restricted to owner", () => {
         requestContext.run(baseContext(), () => {
             const where: any = sanitizeWhereDelete({ id: "x" }, true);
             const clauses = where[Op.or] as any[];
-            expect(clauses).toHaveLength(2);
+            expect(clauses).toHaveLength(1);
             const sqls = clauses.map(sqlOf).join(" | ");
-            expect(sqls).toContain('"PermissionEntity"."isPublic" = true');
+            expect(sqls).not.toContain('"PermissionEntity"."isPublic" = true');
             expect(sqls).toContain('"PermissionEntity"."owner"');
         });
     });
@@ -124,6 +124,7 @@ describe("loader row helpers", () => {
             id: "row-1",
             PermissionEntity: {
                 id: "perm-1",
+                type: POLLINGTYPE.TASK,
                 isPublic: false,
                 visibleUsers: ["user-2"],
                 visibleRoles: ["role-2"],
@@ -135,6 +136,8 @@ describe("loader row helpers", () => {
 
         expect(row.PermissionEntity).toBeUndefined();
         expect(row.permissions).toEqual({
+            id: "perm-1",
+            type: POLLINGTYPE.TASK,
             isPublic: false,
             visibleUsers: ["user-2"],
             visibleRoles: ["role-2"],
@@ -145,6 +148,7 @@ describe("loader row helpers", () => {
     it("attachPermissionsToRow falls back to default permissions when join is empty", () => {
         const row: any = {
             id: "row-1",
+            createdBy: "creator-1",
             PermissionEntity: {
                 id: null,
             },
@@ -153,10 +157,12 @@ describe("loader row helpers", () => {
         attachPermissionsToRow(row);
 
         expect(row.permissions).toEqual({
+            id: "row-1",
+            type: POLLINGTYPE.PERMISSION,
             isPublic: defaultPermissions.isPublic,
             visibleUsers: defaultPermissions.visibleUsers,
             visibleRoles: defaultPermissions.visibleRoles,
-            owner: undefined,
+            owner: "creator-1",
         });
     });
 });
@@ -229,6 +235,7 @@ describe("loader CRUD helpers", () => {
                 title: "Visible",
                 PermissionEntity: {
                     id: "perm-1",
+                    type: POLLINGTYPE.TASK,
                     isPublic: false,
                     visibleUsers: ["user-3"],
                     visibleRoles: ["role-3"],
@@ -248,6 +255,8 @@ describe("loader CRUD helpers", () => {
             id: "row-1",
             title: "Visible",
             permissions: {
+                id: "perm-1",
+                type: POLLINGTYPE.TASK,
                 isPublic: false,
                 visibleUsers: ["user-3"],
                 visibleRoles: ["role-3"],
@@ -277,6 +286,7 @@ describe("loader CRUD helpers", () => {
                     id: "row-1",
                     PermissionEntity: {
                         id: "perm-1",
+                        type: POLLINGTYPE.TASK,
                         isPublic: true,
                         visibleUsers: [],
                         visibleRoles: [],
@@ -285,6 +295,7 @@ describe("loader CRUD helpers", () => {
                 },
                 {
                     id: "row-2",
+                    createdBy: "creator-2",
                     PermissionEntity: {
                         id: null,
                     },
@@ -320,6 +331,8 @@ describe("loader CRUD helpers", () => {
             {
                 id: "row-1",
                 permissions: {
+                    id: "perm-1",
+                    type: POLLINGTYPE.TASK,
                     isPublic: true,
                     visibleUsers: [],
                     visibleRoles: [],
@@ -328,11 +341,14 @@ describe("loader CRUD helpers", () => {
             },
             {
                 id: "row-2",
+                createdBy: "creator-2",
                 permissions: {
+                    id: "row-2",
+                    type: POLLINGTYPE.PERMISSION,
                     isPublic: true,
                     visibleUsers: [],
                     visibleRoles: [],
-                    owner: undefined,
+                    owner: "creator-2",
                 },
             },
         ]);
@@ -392,6 +408,61 @@ describe("loader CRUD helpers", () => {
                 nest: true,
             })
         );
+        expect(record).toEqual({ id: "row-1", title: "Updated" });
+    });
+
+    it("updateOne rejects visible records that are owned by someone else", async () => {
+        const entity = {
+            findOne: vi.fn().mockResolvedValue({
+                id: "row-1",
+                PermissionEntity: {
+                    id: "perm-1",
+                    isPublic: true,
+                    visibleUsers: [],
+                    visibleRoles: [],
+                    owner: "user-2",
+                },
+            }),
+            update: vi.fn(),
+        };
+
+        await expect(
+            runWithContext(() =>
+                updateOne({
+                    entity,
+                    id: "row-1",
+                    data: { title: "Updated" },
+                })
+            )
+        ).rejects.toThrow(/record update not allowed/i);
+        expect(entity.update).not.toHaveBeenCalled();
+    });
+
+    it("updateOne can defer write checks to the domain loader", async () => {
+        const entity = {
+            findOne: vi.fn().mockResolvedValue({
+                id: "row-1",
+                PermissionEntity: {
+                    id: "perm-1",
+                    isPublic: true,
+                    visibleUsers: [],
+                    visibleRoles: [],
+                    owner: "user-2",
+                },
+            }),
+            update: vi.fn().mockResolvedValue([1, [{ id: "row-1", title: "Updated" }]]),
+        };
+
+        const record = await runWithContext(() =>
+            updateOne({
+                entity,
+                id: "row-1",
+                data: { title: "Updated" },
+                writePolicy: "visible",
+            })
+        );
+
+        expect(entity.update).toHaveBeenCalled();
         expect(record).toEqual({ id: "row-1", title: "Updated" });
     });
 
@@ -488,6 +559,44 @@ describe("loader CRUD helpers", () => {
         expect(records).toEqual([{ id: "row-1" }, { id: "row-2" }]);
     });
 
+    it("updateAll rejects a visible row owned by someone else", async () => {
+        const entity = {
+            findAll: vi.fn().mockResolvedValue([
+                {
+                    id: "row-1",
+                    PermissionEntity: {
+                        id: "perm-1",
+                        isPublic: true,
+                        visibleUsers: [],
+                        visibleRoles: [],
+                        owner: "user-1",
+                    },
+                },
+                {
+                    id: "row-2",
+                    PermissionEntity: {
+                        id: "perm-2",
+                        isPublic: true,
+                        visibleUsers: [],
+                        visibleRoles: [],
+                        owner: "user-2",
+                    },
+                },
+            ]),
+            update: vi.fn(),
+        };
+
+        await expect(
+            runWithContext(() =>
+                updateAll({
+                    entity,
+                    data: { archived: true },
+                })
+            )
+        ).rejects.toThrow(/record update not allowed/i);
+        expect(entity.update).not.toHaveBeenCalled();
+    });
+
     it("deleteOne performs a soft delete stamped with the current user", async () => {
         const entity = {
             findOne: vi.fn().mockResolvedValue({
@@ -518,6 +627,32 @@ describe("loader CRUD helpers", () => {
             expect.any(Object)
         );
         expect(record).toEqual({ id: "row-1", deletedBy: "user-1" });
+    });
+
+    it("deleteOne rejects visible records owned by someone else", async () => {
+        const entity = {
+            findOne: vi.fn().mockResolvedValue({
+                id: "row-1",
+                PermissionEntity: {
+                    id: "perm-1",
+                    isPublic: true,
+                    visibleUsers: [],
+                    visibleRoles: [],
+                    owner: "user-2",
+                },
+            }),
+            update: vi.fn(),
+        };
+
+        await expect(
+            runWithContext(() =>
+                deleteOne({
+                    entity,
+                    id: "row-1",
+                })
+            )
+        ).rejects.toThrow(/record update not allowed/i);
+        expect(entity.update).not.toHaveBeenCalled();
     });
 
     it("deleteAll performs a bulk soft delete for visible rows", async () => {

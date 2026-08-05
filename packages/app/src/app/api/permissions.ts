@@ -8,6 +8,17 @@ import request from "./request";
 export const PermissionsAPI = {
     /** PATCH sharing settings. */
     async update(id: string, permission: IPermissions): Promise<boolean> {
-        return request.patch(`/api/permissions/${id}`, permission);
+        const { isPublic, owner, visibleUsers, visibleRoles } = permission;
+        return request.patch(`/api/permissions/${id}`, {
+            isPublic,
+            owner,
+            visibleUsers,
+            visibleRoles,
+        });
+    },
+
+    /** PATCH owner transfer. */
+    async transferOwner(id: string, owner: string): Promise<boolean> {
+        return request.patch(`/api/permissions/${id}/owner`, { owner });
     },
 };

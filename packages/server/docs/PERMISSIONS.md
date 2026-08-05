@@ -51,7 +51,7 @@ These helpers:
 1. Apply tenant + soft-delete scoping via `sanitizeWhere(...)`.
 2. LEFT JOIN `PermissionEntity` onto the target entity by `id`.
 3. Apply ACL filtering via `sanitizeWherePermissions(...)`.
-4. Normalize the shape by mapping the joined permission row (or a default) onto `record.permissions`.
+4. Normalize the shape by mapping the joined permission row onto `record.permissions`.
 
 The core ACL predicate is [`sanitizeWherePermissions`](../src/loaders/utils.ts):
 
@@ -61,22 +61,23 @@ The core ACL predicate is [`sanitizeWherePermissions`](../src/loaders/utils.ts):
     -   `owner = <currentUserId>`
     -   `visibleUsers` contains `<currentUserId>`
     -   `visibleRoles` contains `<currentUserRoleId>`
-    -   the joined permission row is missing (`PermissionEntity.id IS NULL`)
 
-That last rule is important: **if a resource has no permission row, it is treated as visible** (and the response gets `permissions: { isPublic: true, visibleUsers: [], visibleRoles: [] }` via `defaultPermissions`).
+Missing permission rows are not treated as visible for non-admin users. Existing resources are backfilled by the ACL migration, and new ACL-backed resources should create their permission row in the same write flow as the resource.
 
 ### How writes are gated
 
-There is no general “write ACL” separate from “read ACL”. Many write paths effectively boil down to:
+Generic write helpers separate read visibility from write ownership. By default, `updateOne`, `updateAll`, `deleteOne`, and `deleteAll`:
 
--   load the record through `findOne(...)` (ACL applies)
--   update/delete the record
+-   load the record through `findOne(...)` / `findAll(...)` (ACL applies)
+-   allow admins
+-   allow the permission owner
+-   reject non-owner users even when the record is public or shared with them
 
-Some domains add additional checks (owner, admin, or RBAC) on top of visibility.
+Some domains add additional checks (owner, admin, or RBAC) on top of visibility. If a domain has already performed its own write authorization, it can call the helper with `writePolicy: "visible"` so the helper only enforces visibility and tenant scoping.
 
 Examples:
 
--   Project updates check either `canWrite(PROJECT_SETTINGS)` or `projectOwner === currentUser` in [`ProjectsLoader.update`](../src/loaders/projects.ts).
+-   Project updates check either `canWrite(PROJECT_SETTINGS)` or `projectOwner === currentUser` in [`ProjectsLoader.update`](../src/loaders/projects.ts), then call the generic helper with `writePolicy: "visible"`.
 -   Activity/comment creation checks `canWrite(COMMENTS)` in [`ActivitiesLoader`](../src/loaders/activities.ts).
 
 ## 2. Which resources use ACL
@@ -96,6 +97,7 @@ Notable resources:
 -   **Tasks** — permission rows are created in [`TasksLoader.create`](../src/loaders/tasks.ts). Realtime broadcasts merge task permissions with the project’s permissions via `mergePermissions(...)`, but SQL visibility filtering is still driven by the task’s own permission row.
 -   **Stacks** — permission rows are created as public in [`StacksLoader.create`](../src/loaders/stacks.ts) (“not used, will always be public”).
 -   **Bookmarks** — permission rows are created as private in [`BookmarksLoader.create`](../src/loaders/bookmarks.ts).
+-   **Events** — local event rows create a permission row in [`EventsLoader.create`](../src/loaders/events.ts).
 
 ## 3. Updating permissions
 
@@ -105,9 +107,10 @@ Permission updates are handled by `PATCH /api/permissions/:id` in [`src/routes/p
 
 Current behavior:
 
--   The loader first loads the permission row via `getOne(id)` (ACL-filtered), and then performs an update.
+-   `PATCH /api/permissions/:id` accepts only `isPublic`, `visibleUsers`, `visibleRoles`, and an optional unchanged `owner` hint for compatibility.
+-   The loader first loads the permission row via `getOne(id)` (ACL-filtered), then requires the current user to be the permission owner or an admin.
+-   Ownership transfer through the normal update route is rejected. Use `PATCH /api/permissions/:id/owner` with `{ "owner": "<user-id>" }` for explicit transfers.
 -   Deleting a permission row via [`PermissionsLoader.remove`](../src/loaders/permissions.ts) is restricted to the permission `owner`.
--   Updating a permission row is not additionally restricted to the owner at the server layer; the UI enforces “owner or admin can edit” in [`PermissionsDialog`](../../app/src/app/components/common/Permissions/PermissionsDialog/PermissionsDialog.tsx).
 
 ### Realtime side effects
 

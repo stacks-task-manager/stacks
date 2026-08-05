@@ -28,7 +28,7 @@ const expectedMethodsByFile = {
     "notepads.ts": ["create", "getOne", "getAll", "update", "remove"],
     "notifications.ts": ["add", "getAll", "read", "remove"],
     "people.ts": ["getAll", "getAllWithCount", "getOne", "update", "create"],
-    "permissions.ts": ["create", "update", "remove"],
+    "permissions.ts": ["create", "update", "transferOwner", "remove"],
     "preferences.ts": ["get", "update"],
     "projects.ts": [
         "create",
@@ -44,11 +44,45 @@ const expectedMethodsByFile = {
     "reports.ts": [],
     "roles.ts": ["create", "update", "getAll", "bulkCreate", "getOne", "getById"],
     "search.ts": ["query"],
-    "stacks.ts": ["create", "getAll", "getOne", "update", "remove", "removeAll", "move", "addTaskOrder", "removeTaskOrder"],
+    "stacks.ts": [
+        "create",
+        "getAll",
+        "getOne",
+        "update",
+        "remove",
+        "removeAll",
+        "move",
+        "addTaskOrder",
+        "removeTaskOrder",
+    ],
     "tags.ts": ["getAll", "create", "update"],
-    "tasks.ts": ["create", "getAll", "countAll", "getOne", "removeById", "removeByProject", "removeByStack", "update", "archive", "unarchive", "move"],
+    "tasks.ts": [
+        "create",
+        "getAll",
+        "countAll",
+        "getOne",
+        "removeById",
+        "removeByProject",
+        "removeByStack",
+        "update",
+        "archive",
+        "unarchive",
+        "move",
+    ],
     "tenants.ts": ["getOne"],
-    "timelogs.ts": ["getAll", "getOne", "create", "update", "remove", "removeByTask", "removeByTasks", "removeByProject", "review", "updateStatus", "updateTotals"],
+    "timelogs.ts": [
+        "getAll",
+        "getOne",
+        "create",
+        "update",
+        "remove",
+        "removeByTask",
+        "removeByTasks",
+        "removeByProject",
+        "review",
+        "updateStatus",
+        "updateTotals",
+    ],
 } as const;
 
 const expectedBarrelExports = [
@@ -90,17 +124,36 @@ function parseLoaderMethods(source: string) {
     const startIdx = idx + nameMatch[0].length;
 
     // Track brace depth to find the matching closing brace
-    let depth = 1, i = startIdx;
-    let inStr = false, strCh = "", inLC = false, inBC = false;
+    let depth = 1,
+        i = startIdx;
+    let inStr = false,
+        strCh = "",
+        inLC = false,
+        inBC = false;
     while (i < source.length && depth > 0) {
-        const c = source[i], n = source[i + 1] || "";
-        if (inLC) { if (c === "\n") inLC = false; }
-        else if (inBC) { if (c === "*" && n === "/") inBC = false; }
-        else if (inStr) { if (c === strCh) inStr = false; }
-        else {
-            if (c === "/" && n === "*") { inBC = true; i += 2; continue; }
-            if (c === "/" && n === "/") { inLC = true; i += 2; continue; }
-            if (c === '"' || c === "'" || c === "`") { inStr = true; strCh = c; }
+        const c = source[i],
+            n = source[i + 1] || "";
+        if (inLC) {
+            if (c === "\n") inLC = false;
+        } else if (inBC) {
+            if (c === "*" && n === "/") inBC = false;
+        } else if (inStr) {
+            if (c === strCh) inStr = false;
+        } else {
+            if (c === "/" && n === "*") {
+                inBC = true;
+                i += 2;
+                continue;
+            }
+            if (c === "/" && n === "/") {
+                inLC = true;
+                i += 2;
+                continue;
+            }
+            if (c === '"' || c === "'" || c === "`") {
+                inStr = true;
+                strCh = c;
+            }
             if (c === "{") depth++;
             if (c === "}") depth--;
         }
@@ -109,10 +162,13 @@ function parseLoaderMethods(source: string) {
     const body = source.slice(startIdx, i - 1);
 
     // Extract top-level members: shorthand (`word,`) or function decl (`async word(`).
-    const methods = Array.from(body.split("\n")
-        .map(line => line.match(/^    (?:async\s+)?([A-Za-z_]\w*)(?:\s*,|\s*\()/))
-        .filter(m => m)
-        .map(m => m![1]));
+    const methods = Array.from(
+        body
+            .split("\n")
+            .map(line => line.match(/^    (?:async\s+)?([A-Za-z_]\w*)(?:\s*,|\s*\()/))
+            .filter(m => m)
+            .map(m => m![1])
+    );
 
     return { exportName, methods };
 }
@@ -120,7 +176,11 @@ function parseLoaderMethods(source: string) {
 describe("loader source contracts", () => {
     it("keeps the domain loader file list in sync", () => {
         const loaderFiles = readdirSync(loadersDir)
-            .filter(file => file.endsWith(".ts") && !["context.ts", "index.ts", "sqlLiteral.ts", "utils.ts"].includes(file))
+            .filter(
+                file =>
+                    file.endsWith(".ts") &&
+                    !["context.ts", "index.ts", "sqlLiteral.ts", "utils.ts"].includes(file)
+            )
             .sort();
 
         expect(loaderFiles).toEqual(Object.keys(expectedMethodsByFile).sort());
@@ -128,7 +188,9 @@ describe("loader source contracts", () => {
 
     it("re-exports every supported loader module from the barrel", () => {
         const indexSource = readFileSync(indexPath, "utf8");
-        const exports = Array.from(indexSource.matchAll(/export \* from "\.\/([^"]+)";/g)).map(match => match[1]).sort();
+        const exports = Array.from(indexSource.matchAll(/export \* from "\.\/([^"]+)";/g))
+            .map(match => match[1])
+            .sort();
 
         expect(exports).toEqual(expectedBarrelExports);
     });
@@ -138,7 +200,9 @@ describe("loader source contracts", () => {
         expect(source).toContain('export { ReportsLoader } from "../reports";');
     });
 
-    for (const [file, expectedMethods] of Object.entries(expectedMethodsByFile).filter(([file]) => file !== "reports.ts")) {
+    for (const [file, expectedMethods] of Object.entries(expectedMethodsByFile).filter(
+        ([file]) => file !== "reports.ts"
+    )) {
         it(`${file} exports the expected public loader methods`, () => {
             const source = readFileSync(`${loadersDir}/${file}`, "utf8");
             const { exportName, methods } = parseLoaderMethods(source);
