@@ -9,7 +9,7 @@ const indexPath = fileURLToPath(new URL("../index.ts", import.meta.url));
 const expectedMethodsByFile = {
     "activities.ts": ["create", "getAllByResources"],
     "bookmarks.ts": ["create", "remove", "getAll"],
-    "calendar.ts": ["getAll", "getOne", "create", "update", "remove", "getPrimary"],
+    "calendar.ts": ["getAll", "getOne", "getVisibleLocalCalendarIds", "create", "update", "remove", "getPrimary"],
     "companies.ts": ["getAll", "getOne", "create", "update"],
     "documents.ts": ["create", "getOne", "getAll", "remove", "update"],
     "emails.ts": ["queueEmail"],
