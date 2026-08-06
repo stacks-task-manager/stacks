@@ -37,6 +37,7 @@ export default defineConfig({
         },
         {
             name: "chrome",
+            testMatch: /tests\/.*\.spec\.ts/,
             use: {
                 ...devices["Desktop Chrome"],
                 viewport: globals.viewport.desktop,
@@ -49,7 +50,7 @@ export default defineConfig({
     /* Run your local dev server before starting the tests */
     webServer: {
         command: "yarn dev:app",
-        url: "http://localhost:3000",
+        url: "http://localhost:3001",
         reuseExistingServer: !process.env.CI,
     },
 });

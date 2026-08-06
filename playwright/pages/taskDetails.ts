@@ -26,6 +26,10 @@ class TaskDetails extends Base {
     public startDate: Locator;
     public closeButton: Locator;
     public body: Locator;
+    public fullscreenButton: Locator;
+    public menuButton: Locator;
+    public menu: Locator;
+    public tabs: Locator;
 
     constructor(page: Page) {
         super(page);
@@ -35,7 +39,7 @@ class TaskDetails extends Base {
         this.subtasks = new Subtasks(page);
         this.datePicker = new DatePicker(page);
 
-        this.drawer = page.getByTestId("task-details-drawer");
+        this.drawer = page.getByTestId("task-details");
         this.panel = page.locator('[aria-labelledby="task-details-panel"]');
         this.task = page.getByTestId("task-details");
         this.title = this.task.getByTestId("task-details-title");
@@ -50,6 +54,10 @@ class TaskDetails extends Base {
         this.startDate = this.task.getByTestId("task-details-start-date");
         this.closeButton = this.task.getByTestId("task-details-close-button");
         this.body = this.task.getByTestId("task-details-body");
+        this.fullscreenButton = this.task.getByTestId("task-details-fullscreen-button");
+        this.menuButton = this.task.getByTestId("task-details-menu-button");
+        this.menu = page.getByTestId("task-details-menu");
+        this.tabs = page.getByTestId("task-details-tabs");
     }
 
     public async waitUntilOpen(): Promise<void> {
@@ -139,6 +147,33 @@ class TaskDetails extends Base {
     public async close(): Promise<void> {
         await this.closeButton.click();
         await this.drawer.waitFor({ state: "hidden" });
+    }
+
+    public async toggleFullscreen(): Promise<void> {
+        await this.fullscreenButton.click();
+    }
+
+    public async openMenu(): Promise<void> {
+        await this.menuButton.click();
+        await this.page.getByTestId("task-details-menu-toggle-complete").waitFor({ state: "visible" });
+    }
+
+    public async closeMenu(): Promise<void> {
+        await this.page.keyboard.press("Escape");
+        await this.menu.waitFor({ state: "hidden" });
+    }
+
+    public async toggleDoneFromMenu(): Promise<void> {
+        await this.openMenu();
+        await this.page.getByTestId("task-details-menu-toggle-complete").click();
+    }
+
+    public menuItem(testId: string): Locator {
+        return this.page.getByTestId(testId);
+    }
+
+    public tab(tabName: string): Locator {
+        return this.tabs.getByRole("tab", { name: tabName });
     }
 }
 

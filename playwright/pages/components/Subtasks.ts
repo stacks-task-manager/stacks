@@ -1,4 +1,4 @@
-import { Locator, Page } from "@playwright/test";
+import { expect, Locator, Page } from "@playwright/test";
 import { DateRangePicker } from "./DatePicker";
 
 export class Subtasks {
@@ -19,9 +19,15 @@ export class Subtasks {
     public async saveSubtask(subtask: string) {
         await this.input.fill(subtask);
         await this.input.press("Enter");
+        await expect(this.subtaskRowByTitle(subtask)).toBeVisible();
     }
 
     public async addSubtask(subtask: string) {
+        if (await this.input.isVisible()) {
+            await this.saveSubtask(subtask);
+            return;
+        }
+
         await this.addButton.click();
         await this.input.waitFor({ state: "visible" });
         await this.saveSubtask(subtask);
@@ -36,7 +42,9 @@ export class Subtasks {
     }
 
     public subtaskRowByTitle(title: string): Locator {
-        return this.wrapper.getByTestId("subtask-item").filter({ has: this.page.getByTestId("subtask-title").filter({ hasText: title }) });
+        return this.wrapper
+            .getByTestId("subtask-item")
+            .filter({ has: this.page.getByTestId("subtask-title").filter({ hasText: title }) });
     }
 
     public subtaskStateByTitle(title: string): Locator {

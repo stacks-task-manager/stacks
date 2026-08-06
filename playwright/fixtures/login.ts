@@ -1,6 +1,8 @@
 import { expect } from "@playwright/test";
 import users from "../config/users";
 
+let hasLoggedAlreadyLoggedIn = false;
+
 export const doLogin = async ({ page, user }: { page: any; user: keyof typeof users }) => {
     await page.goto("/login");
 
@@ -22,7 +24,10 @@ export const loginFixture = {
             await page.goto("/app");
             try {
                 await page.getByTestId("profile-button").waitFor({ state: "visible", timeout: 5000 });
-                console.log("[loginFixture] Already logged in");
+                if (!hasLoggedAlreadyLoggedIn) {
+                    console.log("[loginFixture] Already logged in");
+                    hasLoggedAlreadyLoggedIn = true;
+                }
                 return;
             } catch (e) {
                 console.log("[loginFixture] Not logged in, performing login...", e);

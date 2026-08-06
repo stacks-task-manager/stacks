@@ -7,8 +7,9 @@ import { Scroller } from "../../Scroller/Scroller";
 interface ITableProps {
     children: React.ReactNode;
     sticky?: boolean;
+    testId?: string;
 }
-export const Table: FunctionComponent<ITableProps> = ({ children, sticky }) => {
+export const Table: FunctionComponent<ITableProps> = ({ children, sticky, testId }) => {
     const [scrolled, setScrolled] = useState(false);
 
     const handleScroll = useCallback(
@@ -29,7 +30,9 @@ export const Table: FunctionComponent<ITableProps> = ({ children, sticky }) => {
             parentClassName={classnames("table-wrapper", { scrolled, sticky })}
             onScroll={handleScroll}
         >
-            <table className="custom-html-table">{children}</table>
+            <table className="custom-html-table" data-testid={testId}>
+                {children}
+            </table>
         </Scroller>
     );
 };

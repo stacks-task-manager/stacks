@@ -151,7 +151,7 @@ const CompanyEditing: FunctionComponent<ICompanyEditingProps> = ({ company, onCl
     };
 
     const update = (key: keyof ICompany, value: ICompany[keyof ICompany]) => {
-        setUpdatedCompany({ ...updatedCompany, [key]: value });
+        setUpdatedCompany(current => ({ ...current, [key]: value }));
     };
 
     const handleAddLogo = async () => {
@@ -237,6 +237,7 @@ const CompanyEditing: FunctionComponent<ICompanyEditingProps> = ({ company, onCl
                                             defaultValue={updatedCompany?.title}
                                             placeholder="Title"
                                             size="large"
+                                            data-testid="company-details-title-input"
                                             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                                                 update("title", e.currentTarget.value)
                                             }
@@ -279,6 +280,7 @@ const CompanyEditing: FunctionComponent<ICompanyEditingProps> = ({ company, onCl
                                             id="notes"
                                             rows={5}
                                             defaultValue={updatedCompany?.notes ?? undefined}
+                                            data-testid="company-details-notes-input"
                                             onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                                                 update("notes", e.currentTarget.value)
                                             }
@@ -303,6 +305,7 @@ const CompanyEditing: FunctionComponent<ICompanyEditingProps> = ({ company, onCl
                                             defaultValue={updatedCompany?.address ?? undefined}
                                             id="address"
                                             placeholder="Address"
+                                            data-testid="company-details-address-input"
                                             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                                                 update("address", e.currentTarget.value)
                                             }
@@ -329,6 +332,7 @@ const CompanyEditing: FunctionComponent<ICompanyEditingProps> = ({ company, onCl
                                         <InputGroup
                                             defaultValue={updatedCompany?.city ?? undefined}
                                             id="city"
+                                            data-testid="company-details-city-input"
                                             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                                                 update("city", e.currentTarget.value)
                                             }
@@ -389,6 +393,7 @@ const CompanyEditing: FunctionComponent<ICompanyEditingProps> = ({ company, onCl
                                             id="email"
                                             placeholder={translate("Email")}
                                             type="email"
+                                            data-testid="company-details-email-input"
                                             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                                                 update("email", e.currentTarget.value)
                                             }
@@ -413,6 +418,7 @@ const CompanyEditing: FunctionComponent<ICompanyEditingProps> = ({ company, onCl
                                     <FormGroup label={translate("Phone")}>
                                         <InputGroup
                                             defaultValue={updatedCompany?.phone ?? undefined}
+                                            data-testid="company-details-phone-input"
                                             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                                                 update("phone", e.currentTarget.value)
                                             }

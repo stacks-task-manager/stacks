@@ -10,15 +10,21 @@ interface FiltersSidebarProps {
     header?: React.ReactNode;
     footer?: React.ReactNode;
     width?: number;
+    "data-testid"?: string;
 }
 export const FiltersSidebar: FunctionComponent<FiltersSidebarProps> = ({
     children,
     header,
     footer,
     width,
+    "data-testid": dataTestId,
 }) => {
     return (
-        <div className="filters-sidebar" style={{ maxWidth: width, minWidth: width }}>
+        <div
+            className="filters-sidebar"
+            style={{ maxWidth: width, minWidth: width }}
+            data-testid={dataTestId}
+        >
             {header != null ? <div className="filters-sidebar-header">{header}</div> : null}
             <Scroller vertical className="filters-sidebar-filters" thin shadows>
                 {children}

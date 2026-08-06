@@ -1,10 +1,5 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
-import {
-    DragDropContext,
-    Draggable,
-    DropResult,
-    ResponderProvided
-} from "@hello-pangea/dnd";
+import { DragDropContext, Draggable, DropResult, ResponderProvided } from "@hello-pangea/dnd";
 import classNames from "classnames";
 import noop from "lodash/noop";
 import React, { useMemo } from "react";
@@ -54,7 +49,6 @@ export interface TablePersistentSectionProps<T> {
     group: TablePersistentGroupData<T>;
     columns: number;
     onToggle?: () => void;
-
 }
 
 export interface TablePersistentGroupProps {
@@ -106,7 +100,7 @@ export function tablePersistentAutoSort<T>(
     b: T,
     columns: ITableColumns<T>,
     sortBy: string,
-    sortDesc: boolean,
+    sortDesc: boolean
 ): number {
     if (!sortBy || sortBy === "none") {
         return 0;
@@ -200,16 +194,19 @@ export function TablePersistent<T>({
         defaultColumnOrder: Object.keys(columns),
         defaultColumnsWidths: {},
     });
-    const { visibleColumns, columnWidths, columnsOrder, sortBy, sortDesc } = storeInstance.store.use(state => ({
-        visibleColumns: state.visibleColumns,
-        columnWidths: state.columnWidths,
-        columnsOrder: [
-            ...state.columnsOrder,
-            ...Object.keys(columns).filter(col => !state.columnsOrder.includes(col)),
-        ],
-        sortBy: state.sortBy,
-        sortDesc: state.sortDesc,
-    }), shallowEqual);
+    const { visibleColumns, columnWidths, columnsOrder, sortBy, sortDesc } = storeInstance.store.use(
+        state => ({
+            visibleColumns: state.visibleColumns,
+            columnWidths: state.columnWidths,
+            columnsOrder: [
+                ...state.columnsOrder,
+                ...Object.keys(columns).filter(col => !state.columnsOrder.includes(col)),
+            ],
+            sortBy: state.sortBy,
+            sortDesc: state.sortDesc,
+        }),
+        shallowEqual
+    );
 
     const isDataGrouped = useMemo(() => {
         const item = data.at(0);
@@ -223,8 +220,7 @@ export function TablePersistent<T>({
                 : tablePersistentAutoSort(A, B, columns, sortBy, sortDesc);
 
         const shouldSort =
-            onSort != null ||
-            (Boolean(sortBy) && sortBy !== "none" && columns[sortBy]?.isSortable === true);
+            onSort != null || (Boolean(sortBy) && sortBy !== "none" && columns[sortBy]?.isSortable === true);
 
         if (!shouldSort) {
             return data;
@@ -258,11 +254,17 @@ export function TablePersistent<T>({
 
     const canReorder = enableReorder !== false;
     const orderedColumns = canReorder ? objectOrder(columns, columnsOrder, true) : columns;
-    const visibleColumnsToRender = canReorder ? columnsOrder.filter(col => visibleColumns.includes(col)) : Object.keys(columns);
+    const effectiveVisibleColumns = [
+        ...visibleColumns,
+        ...Object.keys(columns).filter(col => columns[col]?.unhideable && !visibleColumns.includes(col)),
+    ];
+    const visibleColumnsToRender = canReorder
+        ? columnsOrder.filter(col => effectiveVisibleColumns.includes(col))
+        : Object.keys(columns);
 
     return (
         <DragDropContext onDragEnd={onDragEnd ? onDragEnd : noop}>
-            <Table sticky={sticky}>
+            <Table sticky={sticky} testId={`table-${id}`}>
                 <TableHead>
                     {Object.keys(orderedColumns)
                         .filter(col => visibleColumnsToRender.includes(col))
@@ -286,15 +288,14 @@ export function TablePersistent<T>({
                                     onResize={handleResizeColumn}
                                 />
                             );
-                        })
-                    }
+                        })}
 
                     <TableHeaderCell name="resize" />
 
                     {canReorder && (
                         <TableColumnPicker<T>
                             columns={columns}
-                            visibleColumns={visibleColumns}
+                            visibleColumns={effectiveVisibleColumns}
                             order={columnsOrder}
                             onChange={handleColumnsChange}
                         />
@@ -364,11 +365,7 @@ interface TableContentRendererProps<T> {
     onClick?: (row: T, column: string, event: React.MouseEvent<HTMLTableCellElement>) => void;
     onSelect?: (row: T) => void;
 }
-function TableContentRenderer<T>({
-    groupId,
-    rows,
-    ...props
-}: TableContentRendererProps<T>) {
+function TableContentRenderer<T>({ groupId, rows, ...props }: TableContentRendererProps<T>) {
     // Flatten rows to a single list for a single Droppable
     const flatRows = React.useMemo(() => flattenTree(rows), [rows]);
 
@@ -431,8 +428,12 @@ function TableRowFlat<T>(props: TableRowFlatProps<T>) {
             {(provided, snapshot) => (
                 <Lazy
                     rootElement="tr"
+                    initialVisible={index < 50}
                     loadingElement={
-                        <TableRowPlaceholder provided={provided} cols={visibleColumns.length + (canReorder ? 1 : 0)} />
+                        <TableRowPlaceholder
+                            provided={provided}
+                            cols={visibleColumns.length + (canReorder ? 1 : 0)}
+                        />
                     }
                     ref={provided.innerRef}
                     className={classNames(`table-row row-level-${level}`, {
@@ -441,6 +442,7 @@ function TableRowFlat<T>(props: TableRowFlatProps<T>) {
                     })}
                     data-source-index={index}
                     data-parent={parentId}
+                    data-testid={`table-${tableId}-row-${row.id}`}
                     stayRendered
                     {...provided.draggableProps}
                 >
@@ -460,7 +462,11 @@ function TableRowFlat<T>(props: TableRowFlatProps<T>) {
                                     tableId={tableId}
                                     row={row}
                                     column={col}
-                                    callback={cellCallback ? () => cellCallback({ tableId, row, column: col }) : undefined}
+                                    callback={
+                                        cellCallback
+                                            ? () => cellCallback({ tableId, row, column: col })
+                                            : undefined
+                                    }
                                 />
                             );
                         }
@@ -469,29 +475,32 @@ function TableRowFlat<T>(props: TableRowFlatProps<T>) {
                             <TableBodyCell
                                 className={classNames(`cell-${col} col-index-${colIndex}`)}
                                 key={`${index}-${col}`}
+                                data-testid={`table-${tableId}-cell-${row.id}-${col}`}
                                 onClick={
                                     column.clickable && onClick
-                                        ? (event: React.MouseEvent<HTMLTableCellElement>) => onClick(row, col, event)
+                                        ? (event: React.MouseEvent<HTMLTableCellElement>) =>
+                                              onClick(row, col, event)
                                         : undefined
                                 }
                                 hasCheckbox={onSelect != null && !colIndex}
                                 onCheck={onSelect ? () => onSelect(row) : undefined}
                                 isChecked={selected?.includes(row.id)}
-                                dragHandle={draggable && colIndex === 0 ? (
-                                    <span
-                                        className="table-row-drag-handle"
-                                        {...provided.dragHandleProps}
-                                    >
-                                        <Icon icon="drag" size={14} />
-                                    </span>
-                                ) : undefined}
+                                dragHandle={
+                                    draggable && colIndex === 0 ? (
+                                        <span className="table-row-drag-handle" {...provided.dragHandleProps}>
+                                            <Icon icon="drag" size={14} />
+                                        </span>
+                                    ) : undefined
+                                }
                                 paddingLeft={colIndex === 0 ? 30 * level : 0}
-                                levelIndicator={colIndex === 0 ? (
-                                    <TableLevelIndicator
-                                        level={level}
-                                        isLast={isLast}
-                                        isParent={Boolean(row.children && row.children.length > 0)}
-                                    />) : undefined
+                                levelIndicator={
+                                    colIndex === 0 ? (
+                                        <TableLevelIndicator
+                                            level={level}
+                                            isLast={isLast}
+                                            isParent={Boolean(row.children && row.children.length > 0)}
+                                        />
+                                    ) : undefined
                                 }
                             >
                                 <ContentRenderer content={content} />
@@ -512,15 +521,15 @@ const ContentRenderer = ({ content }: { content: unknown }) => {
     }
 
     if (content instanceof Date) {
-        return <>{formatDate(content)}</>
+        return <>{formatDate(content)}</>;
     }
 
     if (typeof content === "object") {
-        return <>{content as React.ReactNode}</>
+        return <>{content as React.ReactNode}</>;
     }
 
     return <>{content.toString()}</>;
-}
+};
 
 interface TableGroupRendererProps<T> {
     tableId: string;
@@ -627,21 +636,24 @@ function TableGroupRenderer<T>({
                                     />
                                 ) : undefined
                             }
-                            cells={GroupCellComponent != null ? (
-                                <>
-                                    {Object.keys(columns).slice(1).map((column) => (
-                                        <TableSectionCell key={column}>
-                                            <GroupCellComponent
-                                                column={column}
-                                                title={columns[column].title}
-                                                section={group}
-                                            />
-                                        </TableSectionCell>
-                                    ))}
-                                    <TableSectionCell>
-                                    </TableSectionCell>
-                                </>
-                            ) : undefined}
+                            cells={
+                                GroupCellComponent != null ? (
+                                    <>
+                                        {Object.keys(columns)
+                                            .slice(1)
+                                            .map(column => (
+                                                <TableSectionCell key={column}>
+                                                    <GroupCellComponent
+                                                        column={column}
+                                                        title={columns[column].title}
+                                                        section={group}
+                                                    />
+                                                </TableSectionCell>
+                                            ))}
+                                        <TableSectionCell></TableSectionCell>
+                                    </>
+                                ) : undefined
+                            }
                             isChecked={selectedGroups?.includes(group.groupId)}
                             onToggle={() => handleToggleGroup(group.groupId)}
                             onCheck={onGroupSelect ? () => handleSelectGroup(group.groupId) : undefined}
@@ -683,7 +695,9 @@ function TableGroupRenderer<T>({
                                         />
                                     </TableBodyCell>
                                     <TableBodyCell span={visibleColumns.length}></TableBodyCell>
-                                    {canReorder && <TableBodyCell className="menu-cell">&nbsp;</TableBodyCell>}
+                                    {canReorder && (
+                                        <TableBodyCell className="menu-cell">&nbsp;</TableBodyCell>
+                                    )}
                                 </tr>
                             </TableBody>
                         ) : null}

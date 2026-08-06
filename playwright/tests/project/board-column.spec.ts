@@ -36,7 +36,7 @@ test.describe("Project - Board column", () => {
         const matchingProjects = sidebar.documentsTreeItems.filter({ hasText: projectName });
         const count = await matchingProjects.count();
         expect(count).toBeGreaterThanOrEqual(1);
-        await expect(page).toHaveURL(`/app/project/${projectId}?state=todo`);
+        await project.expectProjectUrl(projectId);
 
         await board.addColumn(MAIN_COLUMN);
     });
@@ -46,10 +46,17 @@ test.describe("Project - Board column", () => {
     });
 
     test.afterAll(async () => {
-        await project.delete(projectName);
-        const matchingProjects = sidebar.documentsTreeItems.filter({ hasText: projectName });
-        await expect(matchingProjects).toHaveCount(0);
-        await expect(page.getByRole("alert")).toHaveText("Record deleted successfully");
+        if (page && !page.isClosed()) {
+            const matchingProjects = sidebar.documentsTreeItems.filter({ hasText: projectName });
+            const hadProject = (await matchingProjects.count()) > 0;
+            if (hadProject) {
+                await project.delete(projectName);
+            }
+            await expect(matchingProjects).toHaveCount(0);
+            if (hadProject) {
+                await expect(page.getByRole("alert")).toHaveText("Record deleted successfully");
+            }
+        }
 
         if (page && !page.isClosed()) {
             await page.close();
@@ -102,7 +109,7 @@ test.describe("Project - Board column", () => {
             "Archive completed tasks...",
             "Collapse stack",
             "TintOpen sub menu",
-            "Delete stack",
+            "Delete stack...",
         ]);
 
         await column.getByTestId("column-header-menu-button").click();
@@ -427,7 +434,7 @@ test.describe("Project - Board column", () => {
         await column.getByTestId("column-header-menu-button").click();
         await expect(board.columnContextMenu).toBeVisible();
 
-        await board.columnContextMenuItems.getByText("Delete stack").click();
+        await board.columnContextMenuItems.getByText("Delete stack...").click();
 
         const confirmationDialog = page.getByRole("alertdialog");
         await expect(confirmationDialog).toBeVisible();
@@ -492,15 +499,15 @@ test.describe("Project - Board column", () => {
             "Column 3",
         ]);
 
-        await board.moveColumn("Column 1", 200);
+        await board.moveColumnToPosition("Column 1", 1);
         const cols1 = await board.columns.getByTestId("column-header-title").allTextContents();
         expect(cols1).toEqual(["Column 2", "Column 1", "Column 3"]);
 
-        await board.moveColumn("Column 1", 200);
+        await board.moveColumnToPosition("Column 1", 2);
         const cols2 = await board.columns.getByTestId("column-header-title").allTextContents();
         expect(cols2).toEqual(["Column 2", "Column 3", "Column 1"]);
 
-        await board.moveColumn("Column 3", -200);
+        await board.moveColumnToPosition("Column 3", 0);
         const cols3 = await board.columns.getByTestId("column-header-title").allTextContents();
         expect(cols3).toEqual(["Column 3", "Column 2", "Column 1"]);
 
@@ -525,7 +532,7 @@ test.describe("Project - Board column", () => {
 
         await column.getByTestId("column-header-menu-button").click();
         await expect(board.columnContextMenu).toBeVisible();
-        await board.columnContextMenu.getByRole("menuitem", { name: "Delete stack" }).click();
+        await board.columnContextMenu.getByRole("menuitem", { name: "Delete stack..." }).click();
         await expect(board.columnContextMenu).toBeHidden();
 
         const confirmationDialog = page.getByRole("alertdialog");

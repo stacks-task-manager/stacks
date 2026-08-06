@@ -85,6 +85,7 @@ interface IToolbarButtonProps {
     minimal?: boolean;
     loading?: boolean;
     spin?: boolean;
+    "data-testid"?: string;
     onClick?: (event: React.MouseEvent) => void;
 }
 export const ToolbarButton: FunctionComponent<IToolbarButtonProps> = ({
@@ -104,6 +105,7 @@ export const ToolbarButton: FunctionComponent<IToolbarButtonProps> = ({
     minimal,
     loading,
     spin,
+    "data-testid": dataTestId,
     onClick,
 }) => {
     if (tooltip) {
@@ -123,6 +125,7 @@ export const ToolbarButton: FunctionComponent<IToolbarButtonProps> = ({
                     onClick={onClick}
                     loading={loading}
                     className={classNames("toolbar-button", { badge })}
+                    data-testid={dataTestId}
                 />
             </HotkeyTooltip>
         );
@@ -140,6 +143,7 @@ export const ToolbarButton: FunctionComponent<IToolbarButtonProps> = ({
             loading={loading}
             onClick={onClick}
             className={classNames("toolbar-button", { badge })}
+            data-testid={dataTestId}
         />
     );
 };

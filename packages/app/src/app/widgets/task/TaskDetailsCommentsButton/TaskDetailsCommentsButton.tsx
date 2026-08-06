@@ -24,6 +24,7 @@ export const TaskDetailsCommentsButton = ({ taskId, count }: { taskId: string; c
                     minimal
                     icon={<Icon icon="message-chat-square" />}
                     onClick={handleScrollToComments}
+                    data-testid="task-details-comments-button"
                 >
                     <div className="button-badge primary">{count}</div>
                 </AnchorButton>

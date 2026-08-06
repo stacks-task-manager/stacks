@@ -64,13 +64,15 @@ export const Notepad = () => {
     const handleAddCover = async () => {
         if (!notepad?.id) return;
         pickFiles({
-            recordId: notepad.id, type: FILES_TYPE.NOTEPAD_COVER, onUploaded: async (attachments: IAttachment[]) => {
+            recordId: notepad.id,
+            type: FILES_TYPE.NOTEPAD_COVER,
+            onUploaded: async (attachments: IAttachment[]) => {
                 for (const attachment of attachments) {
                     if (attachment.type === FILES_TYPE.NOTEPAD_COVER && attachment.thumbnailUrl) {
-                        await NotepadActions.setCover(attachment.thumbnailUrl)
+                        await NotepadActions.setCover(attachment.thumbnailUrl);
                     }
                 }
-            }
+            },
         });
     };
 
@@ -81,7 +83,7 @@ export const Notepad = () => {
 
     return (
         <AppView toolbar={<ToolbarNotepad />}>
-            <AppViewContent id="notepad" className={classNames({ wide })}>
+            <AppViewContent id="notepad" className={classNames({ wide })} data-testid="notepad-view">
                 {isLoading && (
                     <div style={{ padding: 20 }}>
                         <h1 style={{ width: "50%", margin: "0 auto" }} className={Classes.SKELETON}>
@@ -123,6 +125,7 @@ export const Notepad = () => {
                                 variant="minimal"
                                 icon={<Icon icon={wide ? "shrink" : "expand-01"} />}
                                 onClick={() => setWide(!wide)}
+                                data-testid="notepad-wide-toggle-button"
                             />
                         )}
                     />
@@ -138,6 +141,11 @@ export const Notepad = () => {
                                 variant="minimal"
                                 icon={<Icon icon={notepad?.cover ? "image-x" : "image-up"} />}
                                 onClick={notepad?.cover ? handleRemoveCover : handleAddCover}
+                                data-testid={
+                                    notepad?.cover
+                                        ? "notepad-remove-cover-button"
+                                        : "notepad-add-cover-button"
+                                }
                             />
                         )}
                     />
