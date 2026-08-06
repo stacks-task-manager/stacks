@@ -25,6 +25,19 @@ class Base {
         return this.page.url();
     }
 
+    async expectPath(pathname: string, searchParams?: Record<string, string>) {
+        await expect
+            .poll(() => {
+                const url = new URL(this.page.url());
+                const paramsMatch = Object.entries(searchParams ?? {}).every(
+                    ([key, value]) => url.searchParams.get(key) === value
+                );
+
+                return url.pathname === pathname && paramsMatch;
+            })
+            .toBe(true);
+    }
+
     async wait() {
         return this.page.waitForTimeout(2000);
     }

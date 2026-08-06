@@ -41,7 +41,7 @@ test.describe("Project - Task details", () => {
         const matchingProjects = sidebar.documentsTreeItems.filter({ hasText: projectName });
         const count = await matchingProjects.count();
         expect(count).toBeGreaterThanOrEqual(1);
-        await expect(page).toHaveURL(`/app/project/${projectId}`);
+        await project.expectProjectUrl(projectId);
 
         await board.addColumn(MAIN_COLUMN);
         await project.addTask({
@@ -52,6 +52,12 @@ test.describe("Project - Task details", () => {
                 description: TASK_DESCRIPTION,
             },
         });
+        await preferences.toggleSetting("Task details", "Show attachments", true);
+        await preferences.toggleSetting("Task details", "Show subtasks", true);
+        await preferences.toggleSetting("Task details", "Show dependencies", true);
+        await preferences.toggleSetting("Task details", "Show locations", true);
+        await preferences.toggleSetting("Task details", "Show links", true);
+        await preferences.toggleSetting("Task details", "Show time entries", true);
         await board.openCard(TASK_TITLE);
     });
 
@@ -60,13 +66,22 @@ test.describe("Project - Task details", () => {
     });
 
     test.afterAll(async () => {
-        await taskDetails.close();
-        await expect(taskDetails.task).toBeHidden();
+        if (page && !page.isClosed()) {
+            if (await taskDetails.drawer.isVisible()) {
+                await taskDetails.close();
+                await expect(taskDetails.task).toBeHidden();
+            }
 
-        await project.delete(projectName);
-        const matchingProjects = sidebar.documentsTreeItems.filter({ hasText: projectName });
-        await expect(matchingProjects).toHaveCount(0);
-        await expect(page.getByRole("alert")).toHaveText("Record deleted successfully");
+            const matchingProjects = sidebar.documentsTreeItems.filter({ hasText: projectName });
+            const hadProject = (await matchingProjects.count()) > 0;
+            if (hadProject) {
+                await project.delete(projectName);
+            }
+            await expect(matchingProjects).toHaveCount(0);
+            if (hadProject) {
+                await expect(page.getByRole("alert")).toHaveText("Record deleted successfully");
+            }
+        }
 
         if (page && !page.isClosed()) {
             await page.close();
@@ -217,6 +232,33 @@ test.describe("Project - Task details", () => {
         await expect(taskDetails.title).toBeVisible();
     });
 
+    test("Should expose header fullscreen, tabs, and task menu actions", async () => {
+        await taskDetails.toggleFullscreen();
+        await expect(taskDetails.drawer).toHaveClass(/fullscreen/);
+        await taskDetails.toggleFullscreen();
+        await expect(taskDetails.drawer).not.toHaveClass(/fullscreen/);
+
+        if ((await taskDetails.tabs.count()) > 0) {
+            await expect(taskDetails.tabs).toBeVisible();
+            await expect(taskDetails.tab("Files")).toBeVisible();
+            await expect(taskDetails.tab("Dependencies")).toBeVisible();
+            await expect(taskDetails.tab("Time entries")).toBeVisible();
+            await expect(taskDetails.tab("Links")).toBeVisible();
+            await expect(taskDetails.tab("Locations")).toBeVisible();
+        }
+
+        await taskDetails.openMenu();
+        await expect(taskDetails.menuItem("task-details-menu-toggle-complete")).toBeVisible();
+        await expect(taskDetails.menuItem("task-details-menu-bookmark")).toBeVisible();
+        await expect(taskDetails.menuItem("task-details-menu-share-link")).toBeVisible();
+        await expect(taskDetails.menuItem("task-details-menu-copy-move")).toBeVisible();
+        await expect(taskDetails.menuItem("task-details-menu-attach-parent")).toBeVisible();
+        await expect(taskDetails.menuItem("task-details-menu-privacy")).toBeVisible();
+        await expect(taskDetails.menuItem("task-details-menu-archive")).toBeVisible();
+        await expect(taskDetails.menuItem("task-details-menu-delete")).toBeVisible();
+        await taskDetails.closeMenu();
+    });
+
     test("Should manage subtasks", async () => {
         await test.step("Should add a subtask from the header", async () => {
             await taskDetails.headerNewSubtaskButton.click();
@@ -235,9 +277,9 @@ test.describe("Project - Task details", () => {
         await test.step("Should toggle subtask completion from the list", async () => {
             const stateButton = taskDetails.subtasks.subtaskStateByTitle("Subtask 1");
             await stateButton.click();
-            await expect(stateButton).toHaveClass(/active/);
+            await expect(stateButton).toHaveClass(/(^|\s)active(\s|$)/);
             await stateButton.click();
-            await expect(stateButton).not.toHaveClass(/active/);
+            await expect(stateButton).not.toHaveClass(/(^|\s)active(\s|$)/);
         });
         await test.step.skip("Should add dates", async () => {});
         await test.step.skip("Should assign people", async () => {});

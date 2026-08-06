@@ -52,7 +52,7 @@ export const NewPersonPopover: FunctionComponent<INewPersonPopoverProps> = ({ ch
             firstName,
             lastName,
             role,
-        }
+        };
 
         if (company) {
             newPerson.company = company;
@@ -102,6 +102,7 @@ export const NewPersonPopover: FunctionComponent<INewPersonPopoverProps> = ({ ch
                                     autoFocus
                                     onChange={e => setFirstName(e.currentTarget.value)}
                                     onKeyDown={handleKeyDown}
+                                    data-testid="new-person-first-name-input"
                                 />
                             </Col>
                             <Col>
@@ -110,6 +111,7 @@ export const NewPersonPopover: FunctionComponent<INewPersonPopoverProps> = ({ ch
                                     placeholder={translate("Last name")}
                                     onChange={e => setLastName(e.currentTarget.value)}
                                     onKeyDown={handleKeyDown}
+                                    data-testid="new-person-last-name-input"
                                 />
                             </Col>
                         </Row>
@@ -120,6 +122,7 @@ export const NewPersonPopover: FunctionComponent<INewPersonPopoverProps> = ({ ch
                             value={email}
                             placeholder="john@domain.com"
                             onChange={e => setEmail(e.currentTarget.value)}
+                            data-testid="new-person-email-input"
                         />
                     </FormGroup>
 
@@ -156,10 +159,16 @@ export const NewPersonPopover: FunctionComponent<INewPersonPopoverProps> = ({ ch
                             className={Classes.POPOVER_DISMISS}
                             ref={cancelRef}
                             onClick={handleClear}
+                            data-testid="new-person-cancel-button"
                         >
                             {translate("Cancel")}
                         </Button>
-                        <Button intent={Intent.PRIMARY} onClick={handleAddPerson} disabled={!canAdd}>
+                        <Button
+                            intent={Intent.PRIMARY}
+                            onClick={handleAddPerson}
+                            disabled={!canAdd}
+                            data-testid="new-person-add-button"
+                        >
                             {translate("Add")}
                         </Button>
                     </div>

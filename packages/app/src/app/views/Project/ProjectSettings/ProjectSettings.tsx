@@ -148,273 +148,302 @@ export const ProjectSettings = () => {
             onClose={ProjectsStatusActions.toggleSettingsVisibility}
             className="project-settings"
             style={{ width: 600 }}
+            data-testid="project-settings-dialog"
         >
-            <div className={classNames([Classes.DIALOG_HEADER, "has-tabs"])}>
-                <h6 className={Classes.HEADING}>{translate("Project settings")}</h6>
+            <div data-testid="project-settings-dialog-content">
+                <div className={classNames([Classes.DIALOG_HEADER, "has-tabs"])}>
+                    <h6 className={Classes.HEADING}>{translate("Project settings")}</h6>
 
-                <Tabs
-                    animate
-                    fill
-                    defaultSelectedTabId="settings"
-                    selectedTabId={currentTab}
-                    onChange={(currentTab: string) => setCurrentTab(currentTab)}
-                >
-                    <Tab id="settings" title={translate("Settings")} />
-                    <Tab id="interface" title={translate("Interface")} />
-                    <Tab id="time" title="Time" />
-                    <Tab id="fields" title={translate("Fields")} />
-                </Tabs>
-                <div style={{ width: 10 }} />
-                <Button
-                    variant="minimal"
-                    className={Classes.DIALOG_CLOSE_BUTTON}
-                    icon="cross"
-                    onClick={ProjectsStatusActions.toggleSettingsVisibility}
-                />
-            </div>
+                    <Tabs
+                        animate
+                        fill
+                        defaultSelectedTabId="settings"
+                        selectedTabId={currentTab}
+                        onChange={(currentTab: string) => setCurrentTab(currentTab)}
+                        data-testid="project-settings-tabs"
+                    >
+                        <Tab
+                            id="settings"
+                            title={
+                                <span data-testid="project-settings-tab-settings">
+                                    {translate("Settings")}
+                                </span>
+                            }
+                        />
+                        <Tab
+                            id="interface"
+                            title={
+                                <span data-testid="project-settings-tab-interface">
+                                    {translate("Interface")}
+                                </span>
+                            }
+                        />
+                        <Tab id="time" title={<span data-testid="project-settings-tab-time">Time</span>} />
+                        <Tab
+                            id="fields"
+                            title={
+                                <span data-testid="project-settings-tab-fields">{translate("Fields")}</span>
+                            }
+                        />
+                    </Tabs>
+                    <div style={{ width: 10 }} />
+                    <Button
+                        variant="minimal"
+                        className={Classes.DIALOG_CLOSE_BUTTON}
+                        icon="cross"
+                        onClick={ProjectsStatusActions.toggleSettingsVisibility}
+                        data-testid="project-settings-close-button"
+                    />
+                </div>
 
-            <div className={Classes.DIALOG_BODY}>
-                {currentTab === "settings" ? (
-                    <div>
-                        <SettingRow
-                            title="Project description"
-                            description="A brief description of the project, its purpose, and its scope."
-                        >
-                            <TextArea
-                                placeholder="Project description"
-                                fill
-                                value={tempDescription ?? project.description ?? ""}
-                                onChange={handleDescriptionChange}
-                            />
-                        </SettingRow>
-                        <SettingRow
-                            title="Project owner"
-                            description="The project owner is typically, but not always, the head of the business unit receiving the product, and bears business responsibility for successful project implementation."
-                            rightElement={
-                                <TaskDetailsAssignees
-                                    assignees={project.projectOwner ? [project.projectOwner] : []}
-                                    single
-                                    large
-                                    taskId="none"
-                                    disabled={isDisabled}
-                                    onChange={(assignees: string[]) =>
-                                        ProjectsActions.setOwner(assignees.at(0))
-                                    }
+                <div className={Classes.DIALOG_BODY}>
+                    {currentTab === "settings" ? (
+                        <div>
+                            <SettingRow
+                                title="Project description"
+                                description="A brief description of the project, its purpose, and its scope."
+                            >
+                                <TextArea
+                                    placeholder="Project description"
+                                    fill
+                                    value={tempDescription ?? project.description ?? ""}
+                                    onChange={handleDescriptionChange}
+                                    data-testid="project-settings-description-input"
                                 />
-                            }
-                        />
-                        <SettingRow
-                            title={translate("Company")}
-                            description="The customer's company name"
-                            rightElement={
-                                <CompanyPicker
-                                    defaultValue={project.company}
-                                    maxWidth={150}
-                                    disabled={isDisabled}
-                                    onChange={ProjectsActions.setCompany}
-                                />
-                            }
-                        />
-                        <SettingRow
-                            title="Default stack"
-                            description="Select the default stack where to add your tasks. If none is selected the first stack will be used."
-                            rightElement={
-                                <StackSelect
-                                    projectId={project.id}
-                                    stackId={defaultStack}
-                                    disabled={isDisabled}
-                                    onChange={handleSetStack}
-                                />
-                            }
-                        />
-                        <SettingRow
-                            title="Default filtering state"
-                            description="Select the default state of the filtered tasks. If none is selected, by default only incomplete tasks will be shown."
-                            rightElement={
-                                <HTMLSelect
-                                    value={defaultFilterState}
-                                    disabled={isDisabled}
-                                    onChange={handleSetFilter}
-                                >
-                                    <option value="">Default</option>
-                                    <option value="all">All tasks</option>
-                                    <option value="done">Completed tasks</option>
-                                    <option value="todo">Incomplete tasks</option>
-                                </HTMLSelect>
-                            }
-                        />
-
-                        <SettingRow
-                            title="Show subtasks"
-                            description="Control the visibility of subtasks in the main project view. When enabled, subtasks will be displayed alongside regular tasks instead of being hidden within task details."
-                            last
-                            rightElement={
-                                <Switch
-                                    checked={showSubtasks}
-                                    disabled={isDisabled}
-                                    onChange={handleSetShowSubtasks}
-                                />
-                            }
-                        />
-                    </div>
-                ) : null}
-
-                {currentTab === "time" ? (
-                    <div>
-                        <SettingRow
-                            sectionTitle="Settings"
-                            title="Start date"
-                            description="This will indicate the date on which the project should begin."
-                            rightElement={
-                                <DatePickerButton
-                                    value={startDate ?? null}
-                                    maxDate={endDate ?? undefined}
-                                    enableTimePicker={false}
-                                    onChange={handleChangeStartDate}
-                                    extendedFormat="PPP"
-                                    disabled={isDisabled}
-                                />
-                            }
-                        />
-                        <SettingRow
-                            title="End date"
-                            description="This will indicate the date on which the project should end."
-                            rightElement={
-                                <DatePickerButton
-                                    value={endDate ?? null}
-                                    maxDate={addYears(new Date(), 2)}
-                                    minDate={startDate}
-                                    enableTimePicker={false}
-                                    onChange={handleChangeEndDate}
-                                    extendedFormat="PPP"
-                                    disabled={isDisabled}
-                                />
-                            }
-                        />
-                        <SettingRow
-                            title="Timesheets approvers"
-                            description="Designated users who can review and approve timesheets in addition to the project owner"
-                            rightElement={
-                                <TaskDetailsAssignees
-                                    assignees={project.approvers}
-                                    single
-                                    large
-                                    taskId="none"
-                                    disabled={isDisabled}
-                                    onChange={(assignees: string[]) =>
-                                        ProjectsActions.setApprovers(assignees)
-                                    }
-                                />
-                            }
-                        />
-                        <SettingRow
-                            title="Project estimate"
-                            description="Estimated time to complete the project in hours."
-                            rightElement={
-                                <PopupTime
-                                    value={project.estimate ?? 0}
-                                    disabled={isDisabled}
-                                    labelKey="Estimated time"
-                                    onChange={ProjectsActions.setEstimate}
-                                >
-                                    <>
-                                        {!Boolean(project.estimate) && (
-                                            <RoundButton
-                                                dashed
-                                                title="Add estimate"
-                                                icon="clock-plus"
-                                                disabled={isDisabled}
-                                            />
-                                        )}
-                                        {Boolean(project.estimate) && (
-                                            <Tag
-                                                minimal
-                                                interactive={!isDisabled}
-                                                onRemove={
-                                                    project.estimate && !isDisabled
-                                                        ? () => ProjectsActions.setEstimate(undefined)
-                                                        : undefined
-                                                }
-                                                intent={Intent.SUCCESS}
-                                            >
-                                                {project.estimate
-                                                    ? formatStringDuration(project.estimate)
-                                                    : "Not estimated"}
-                                            </Tag>
-                                        )}
-                                    </>
-                                </PopupTime>
-                            }
-                        />
-                        <SettingRow
-                            title={translate("Hourly fee")}
-                            description="Configure your hourly fee/rate for this project. This is used to calculate earning based on the estimated vs. spent time."
-                            last
-                            rightElement={
-                                <FeeInputPopup
-                                    value={project.hourlyRate}
-                                    currency={project.currency}
-                                    disabled={isDisabled}
-                                    label={translate("Hourly fee")}
-                                    onChange={handleHourlyFeeChange}
-                                >
-                                    <Tag
-                                        minimal
-                                        interactive={me.id === project.projectOwner}
-                                        className="hourly-fee-tag"
-                                    >
-                                        <strong>
-                                            {currency && currency.symbol} {project.hourlyRate}
-                                        </strong>
-                                    </Tag>
-                                </FeeInputPopup>
-                            }
-                        />
-                    </div>
-                ) : null}
-
-                {currentTab === "interface" ? (
-                    <div>
-                        <SettingRow
-                            sectionTitle="Interface"
-                            title="Default view"
-                            description="Customize the default view type for this project. Whenever you click on this project the selected view will be shown."
-                            rightElement={
-                                <ProjectViewPicker
-                                    disabled={isDisabled}
-                                    value={defaultView}
-                                    onChange={handleViewChange}
-                                />
-                            }
-                        />
-
-                        <SettingRow
-                            title="Custom background image"
-                            description="Enter the image URL you want to use as a background in your project."
-                            last
-                        >
-                            <InputGroup
-                                value={project.backgroundUrl}
-                                onChange={handleSetBackground}
-                                disabled={isDisabled}
+                            </SettingRow>
+                            <SettingRow
+                                title="Project owner"
+                                description="The project owner is typically, but not always, the head of the business unit receiving the product, and bears business responsibility for successful project implementation."
                                 rightElement={
-                                    project.backgroundUrl != null && project.backgroundUrl.length > 0 ? (
-                                        <Tooltip content="Clear background image" placement="top-end">
-                                            <Button
-                                                size="small"
-                                                variant="minimal"
-                                                onClick={clearBackgroundImage}
-                                                icon={<Icon icon="trash" />}
-                                            />
-                                        </Tooltip>
-                                    ) : undefined
+                                    <TaskDetailsAssignees
+                                        assignees={project.projectOwner ? [project.projectOwner] : []}
+                                        single
+                                        large
+                                        taskId="none"
+                                        disabled={isDisabled}
+                                        onChange={(assignees: string[]) =>
+                                            ProjectsActions.setOwner(assignees.at(0))
+                                        }
+                                    />
                                 }
                             />
-                        </SettingRow>
-                    </div>
-                ) : null}
+                            <SettingRow
+                                title={translate("Company")}
+                                description="The customer's company name"
+                                rightElement={
+                                    <CompanyPicker
+                                        defaultValue={project.company}
+                                        maxWidth={150}
+                                        disabled={isDisabled}
+                                        onChange={ProjectsActions.setCompany}
+                                    />
+                                }
+                            />
+                            <SettingRow
+                                title="Default stack"
+                                description="Select the default stack where to add your tasks. If none is selected the first stack will be used."
+                                rightElement={
+                                    <StackSelect
+                                        projectId={project.id}
+                                        stackId={defaultStack}
+                                        disabled={isDisabled}
+                                        onChange={handleSetStack}
+                                    />
+                                }
+                            />
+                            <SettingRow
+                                title="Default filtering state"
+                                description="Select the default state of the filtered tasks. If none is selected, by default only incomplete tasks will be shown."
+                                rightElement={
+                                    <HTMLSelect
+                                        value={defaultFilterState}
+                                        disabled={isDisabled}
+                                        onChange={handleSetFilter}
+                                        data-testid="project-settings-default-filter-select"
+                                    >
+                                        <option value="">Default</option>
+                                        <option value="all">All tasks</option>
+                                        <option value="done">Completed tasks</option>
+                                        <option value="todo">Incomplete tasks</option>
+                                    </HTMLSelect>
+                                }
+                            />
 
-                {currentTab === "fields" ? <FieldsProjectSettings disabled={isDisabled} /> : null}
+                            <SettingRow
+                                title="Show subtasks"
+                                description="Control the visibility of subtasks in the main project view. When enabled, subtasks will be displayed alongside regular tasks instead of being hidden within task details."
+                                last
+                                rightElement={
+                                    <Switch
+                                        checked={showSubtasks}
+                                        disabled={isDisabled}
+                                        onChange={handleSetShowSubtasks}
+                                        data-testid="project-settings-show-subtasks-switch"
+                                    />
+                                }
+                            />
+                        </div>
+                    ) : null}
+
+                    {currentTab === "time" ? (
+                        <div>
+                            <SettingRow
+                                sectionTitle="Settings"
+                                title="Start date"
+                                description="This will indicate the date on which the project should begin."
+                                rightElement={
+                                    <DatePickerButton
+                                        value={startDate ?? null}
+                                        maxDate={endDate ?? undefined}
+                                        enableTimePicker={false}
+                                        onChange={handleChangeStartDate}
+                                        extendedFormat="PPP"
+                                        disabled={isDisabled}
+                                    />
+                                }
+                            />
+                            <SettingRow
+                                title="End date"
+                                description="This will indicate the date on which the project should end."
+                                rightElement={
+                                    <DatePickerButton
+                                        value={endDate ?? null}
+                                        maxDate={addYears(new Date(), 2)}
+                                        minDate={startDate}
+                                        enableTimePicker={false}
+                                        onChange={handleChangeEndDate}
+                                        extendedFormat="PPP"
+                                        disabled={isDisabled}
+                                    />
+                                }
+                            />
+                            <SettingRow
+                                title="Timesheets approvers"
+                                description="Designated users who can review and approve timesheets in addition to the project owner"
+                                rightElement={
+                                    <TaskDetailsAssignees
+                                        assignees={project.approvers}
+                                        single
+                                        large
+                                        taskId="none"
+                                        disabled={isDisabled}
+                                        onChange={(assignees: string[]) =>
+                                            ProjectsActions.setApprovers(assignees)
+                                        }
+                                    />
+                                }
+                            />
+                            <SettingRow
+                                title="Project estimate"
+                                description="Estimated time to complete the project in hours."
+                                rightElement={
+                                    <PopupTime
+                                        value={project.estimate ?? 0}
+                                        disabled={isDisabled}
+                                        labelKey="Estimated time"
+                                        onChange={ProjectsActions.setEstimate}
+                                    >
+                                        <>
+                                            {!Boolean(project.estimate) && (
+                                                <RoundButton
+                                                    dashed
+                                                    title="Add estimate"
+                                                    icon="clock-plus"
+                                                    disabled={isDisabled}
+                                                />
+                                            )}
+                                            {Boolean(project.estimate) && (
+                                                <Tag
+                                                    minimal
+                                                    interactive={!isDisabled}
+                                                    onRemove={
+                                                        project.estimate && !isDisabled
+                                                            ? () => ProjectsActions.setEstimate(undefined)
+                                                            : undefined
+                                                    }
+                                                    intent={Intent.SUCCESS}
+                                                >
+                                                    {project.estimate
+                                                        ? formatStringDuration(project.estimate)
+                                                        : "Not estimated"}
+                                                </Tag>
+                                            )}
+                                        </>
+                                    </PopupTime>
+                                }
+                            />
+                            <SettingRow
+                                title={translate("Hourly fee")}
+                                description="Configure your hourly fee/rate for this project. This is used to calculate earning based on the estimated vs. spent time."
+                                last
+                                rightElement={
+                                    <FeeInputPopup
+                                        value={project.hourlyRate}
+                                        currency={project.currency}
+                                        disabled={isDisabled}
+                                        label={translate("Hourly fee")}
+                                        onChange={handleHourlyFeeChange}
+                                    >
+                                        <Tag
+                                            minimal
+                                            interactive={me.id === project.projectOwner}
+                                            className="hourly-fee-tag"
+                                        >
+                                            <strong>
+                                                {currency && currency.symbol} {project.hourlyRate}
+                                            </strong>
+                                        </Tag>
+                                    </FeeInputPopup>
+                                }
+                            />
+                        </div>
+                    ) : null}
+
+                    {currentTab === "interface" ? (
+                        <div>
+                            <SettingRow
+                                sectionTitle="Interface"
+                                title="Default view"
+                                description="Customize the default view type for this project. Whenever you click on this project the selected view will be shown."
+                                rightElement={
+                                    <ProjectViewPicker
+                                        disabled={isDisabled}
+                                        value={defaultView}
+                                        onChange={handleViewChange}
+                                    />
+                                }
+                            />
+
+                            <SettingRow
+                                title="Custom background image"
+                                description="Enter the image URL you want to use as a background in your project."
+                                last
+                            >
+                                <InputGroup
+                                    value={project.backgroundUrl}
+                                    onChange={handleSetBackground}
+                                    disabled={isDisabled}
+                                    data-testid="project-settings-background-url-input"
+                                    rightElement={
+                                        project.backgroundUrl != null && project.backgroundUrl.length > 0 ? (
+                                            <Tooltip content="Clear background image" placement="top-end">
+                                                <Button
+                                                    size="small"
+                                                    variant="minimal"
+                                                    onClick={clearBackgroundImage}
+                                                    icon={<Icon icon="trash" />}
+                                                    data-testid="project-settings-clear-background-button"
+                                                />
+                                            </Tooltip>
+                                        ) : undefined
+                                    }
+                                />
+                            </SettingRow>
+                        </div>
+                    ) : null}
+
+                    {currentTab === "fields" ? <FieldsProjectSettings disabled={isDisabled} /> : null}
+                </div>
             </div>
         </Dialog>
     );

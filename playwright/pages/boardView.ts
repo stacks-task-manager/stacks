@@ -59,7 +59,7 @@ class BoardView extends Base {
         await expect(menuButton).toBeVisible();
         await menuButton.click();
 
-        const deleteMenuItem = this.columnContextMenuItems.filter({ hasText: "Delete stack" });
+        const deleteMenuItem = this.columnContextMenuItems.filter({ hasText: "Delete stack..." });
         await expect(deleteMenuItem).toBeVisible();
         await deleteMenuItem.click();
         const dialog = this.page.getByRole("alertdialog");
@@ -75,7 +75,11 @@ class BoardView extends Base {
 
     public async openCard(cardName: string): Promise<void> {
         const card = await this.getCardByName(cardName);
-        await card.getByTestId("task-card-inner-wrapper").click();
+        const clickTarget = card.getByTestId("task-card-click-target");
+        await expect(card).toBeVisible();
+        await clickTarget.scrollIntoViewIfNeeded();
+        await clickTarget.click();
+        await expect(this.page.getByTestId("task-details")).toBeVisible();
     }
 
     public async deleteTaskCard(taskName: string): Promise<void> {
@@ -115,6 +119,48 @@ class BoardView extends Base {
             await this.page.mouse.move(x + amount, y, { steps: 10 });
             await this.page.mouse.up();
         }
+    }
+
+    public async moveColumnToPosition(columnName: string, targetIndex: number): Promise<void> {
+        const sourceColumn = this.getColumnByName(columnName);
+        const targetColumn = this.columns.nth(targetIndex);
+        const sourceHeader = sourceColumn.getByTestId("column-header-wrapper");
+        const targetHeader = targetColumn.getByTestId("column-header-wrapper");
+
+        await sourceHeader.scrollIntoViewIfNeeded();
+        await targetHeader.scrollIntoViewIfNeeded();
+
+        const sourceBox = await sourceHeader.boundingBox();
+        const targetBox = await targetHeader.boundingBox();
+
+        if (!sourceBox || !targetBox) {
+            throw new Error(`Unable to drag column "${columnName}" because a header has no bounding box`);
+        }
+
+        const startX = sourceBox.x + sourceBox.width / 2;
+        const startY = sourceBox.y + sourceBox.height / 2;
+        const targetCenterX = targetBox.x + targetBox.width / 2;
+        const targetCenterY = targetBox.y + targetBox.height / 2;
+        const movingRight = targetCenterX > startX;
+        const endX = movingRight ? targetBox.x + targetBox.width * 0.8 : targetBox.x + targetBox.width * 0.2;
+
+        const responsePromise = this.page.waitForResponse(
+            response => response.url().includes("/api/stacks/move") && response.request().method() === "POST"
+        );
+
+        await this.page.mouse.move(startX, startY);
+        await this.page.mouse.down();
+        await this.page.mouse.move(startX, startY + 10, { steps: 5 });
+        await this.page.mouse.move(endX, targetCenterY, { steps: 30 });
+        await this.page.mouse.up();
+
+        await responsePromise;
+        await expect
+            .poll(async () => {
+                const titles = await this.columns.getByTestId("column-header-title").allTextContents();
+                return titles.indexOf(columnName);
+            })
+            .toBe(targetIndex);
     }
 
     public async moveTaskInColumn(taskName: string, columnName: string, amount: number): Promise<void> {
