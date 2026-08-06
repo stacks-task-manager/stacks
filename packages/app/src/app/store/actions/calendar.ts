@@ -34,6 +34,7 @@ import {
     ICalendarSource,
     IEvent,
     ICalendar,
+    IUpdate,
     IPermissions,
     ITask,
 } from "@stacks/types";
@@ -89,6 +90,26 @@ const persistFilters = () => {
 let loadingCalendar = false;
 let pendingCalendarLoad = false;
 let calendarsLoaded = false;
+
+const selectDefaultGoogleCalendar = async () => {
+    const { calendars, filters } = CalendarStore.get();
+    const googleCalendars = calendars.filter(calendar => calendar.source === "google");
+    if (googleCalendars.some(calendar => filters.showCalendars.includes(`google-${calendar.id}`))) {
+        return;
+    }
+
+    const primaryCalendar = googleCalendars.find(calendar => calendar.primary) ?? googleCalendars.at(0);
+    if (primaryCalendar == null) return;
+
+    CalendarStore.set(
+        produce((state: ICalendarStore) => {
+            state.filters.showCalendars.push(`google-${primaryCalendar.id}`);
+        })
+    );
+    persistFilters();
+    await savePrefs();
+};
+
 const load = async (reset = true) => {
     if (loadingCalendar) {
         pendingCalendarLoad = true;
@@ -104,6 +125,13 @@ const load = async (reset = true) => {
     );
 
     try {
+        if (!calendarsLoaded) {
+            await loadCalendars();
+        }
+        if (CalendarStore.get().tokens.google != null) {
+            await selectDefaultGoogleCalendar();
+        }
+
         const localEvents: IEvent[] = [];
         const { from, to } = getDatesSpan();
         const showCalendars = CalendarStore.get().filters.showCalendars;
@@ -137,10 +165,6 @@ const load = async (reset = true) => {
             });
         }
 
-        if (!calendarsLoaded) {
-            await loadCalendars();
-        }
-
         CalendarStore.set(
             produce((state: ICalendarStore) => {
                 state.events = localEvents;
@@ -166,7 +190,7 @@ const load = async (reset = true) => {
 };
 
 const refreshConnectedCalendars = async () => {
-    await loadCalendars();
+    await loadCalendars({ force: true });
 };
 
 const reload = async () => {
@@ -722,8 +746,12 @@ const toggleCalendar = async (calendarId: string) => {
 // };
 
 let loadCalendarsPromise: Promise<void> | null = null;
-const loadCalendars = async () => {
-    if (loadCalendarsPromise) return loadCalendarsPromise;
+let loadCalendarsRequestId = 0;
+const loadCalendars = async ({ force = false }: { force?: boolean } = {}) => {
+    if (!force && loadCalendarsPromise) return loadCalendarsPromise;
+
+    const requestId = force ? ++loadCalendarsRequestId : loadCalendarsRequestId;
+    if (force) calendarsLoaded = false;
 
     const promise = (async () => {
         CalendarStore.set(
@@ -749,6 +777,8 @@ const loadCalendars = async () => {
                 googleCalendars = await CalendarIntegrationsAPI.listCalendars("google");
             }
 
+            if (requestId !== loadCalendarsRequestId) return;
+
             CalendarStore.set(
                 produce((state: ICalendarStore) => {
                     state.calendars = [...localCalendars, ...googleCalendars];
@@ -759,6 +789,7 @@ const loadCalendars = async () => {
         } catch (error) {
             // eslint-disable-next-line no-console
             console.error("Error loading calendars:", error);
+            if (requestId !== loadCalendarsRequestId) return;
             CalendarStore.set(
                 produce((state: ICalendarStore) => {
                     state.loadingCalendars = false;
@@ -983,57 +1014,10 @@ const loginGoogle = async () => {
             Toast.warn(translate("Popup blocked allow popups"));
             return;
         }
-
-        // Listen for the popup to close or receive a message
-        const checkClosed = setInterval(() => {
-            if (popup.closed) {
-                clearInterval(checkClosed);
-                // Check if authentication was successful
-                checkGoogleAuthStatus();
-            }
-        }, 1000);
-
-        // Listen for messages from the popup (if callback sends postMessage)
-        const messageListener = (event: MessageEvent) => {
-            if (event.origin !== window.location.origin) return;
-
-            if (event.data.type === "GOOGLE_AUTH_SUCCESS") {
-                clearInterval(checkClosed);
-                popup.close();
-                window.removeEventListener("message", messageListener);
-                handleGoogleAuthSuccess();
-            } else if (event.data.type === "GOOGLE_AUTH_ERROR") {
-                clearInterval(checkClosed);
-                popup.close();
-                window.removeEventListener("message", messageListener);
-                Toast.warn(translate("Google authentication failed"));
-            }
-        };
-
-        window.addEventListener("message", messageListener);
-
-        // Cleanup after 5 minutes
-        setTimeout(() => {
-            clearInterval(checkClosed);
-            window.removeEventListener("message", messageListener);
-            if (!popup.closed) {
-                popup.close();
-            }
-        }, 300000);
     } catch (error) {
         // eslint-disable-next-line no-console
         console.error("Google login error:", error);
         Toast.warn(translate("Google login failed"));
-    }
-};
-
-const checkGoogleAuthStatus = async () => {
-    try {
-        const status = await CalendarIntegrationsAPI.getStatus("google");
-        if (status.isAuthenticated) await handleGoogleAuthSuccess();
-    } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error("Failed to check Google auth status:", error);
     }
 };
 
@@ -1045,6 +1029,7 @@ const hydrateFromBoot = async (integrations?: { google?: { isAuthenticated: bool
             state.tokens.google = { authenticated: true };
         })
     );
+    calendarsLoaded = false;
 };
 
 const handleGoogleAuthSuccess = async () => {
@@ -1055,25 +1040,8 @@ const handleGoogleAuthSuccess = async () => {
             })
         );
 
-        await loadCalendars();
-
-        // if there aren't already google calendars checked in the filters
-        // we'll get the primary one or the first one from the list
-        const { calendars, filters } = CalendarStore.get();
-        const googleCalendars = calendars.filter(calendar => calendar.source === "google");
-        if (!googleCalendars.some(calendar => filters.showCalendars.includes(`google-${calendar.id}`))) {
-            const primaryCalendar =
-                googleCalendars.find(calendar => calendar.primary) ?? googleCalendars.at(0);
-            if (primaryCalendar != null) {
-                CalendarStore.set(
-                    produce((state: ICalendarStore) => {
-                        state.filters.showCalendars.push(`google-${primaryCalendar.id}`);
-                    })
-                );
-                persistFilters();
-                await savePrefs();
-            }
-        }
+        await loadCalendars({ force: true });
+        await selectDefaultGoogleCalendar();
 
         // loading google events
         await load();
@@ -1086,23 +1054,55 @@ const handleGoogleAuthSuccess = async () => {
     }
 };
 
+const applyGoogleDisconnected = async () => {
+    CalendarStore.set(
+        produce((state: ICalendarStore) => {
+            state.tokens.google = null;
+            state.calendars = state.calendars.filter(calendar => calendar.source !== "google");
+            state.filters.showCalendars = state.filters.showCalendars.filter(
+                calendarId => !calendarId.startsWith("google-")
+            );
+        })
+    );
+    calendarsLoaded = false;
+    persistFilters();
+    await load();
+};
+
+const syncGoogleAuthStatus = async () => {
+    try {
+        const status = await CalendarIntegrationsAPI.getStatus("google");
+        if (status.isAuthenticated) {
+            await handleGoogleAuthSuccess();
+            return;
+        }
+
+        await applyGoogleDisconnected();
+    } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error("Failed to sync Google auth status:", error);
+    }
+};
+
+const reloadFromRealtimeUpdate = (update: IUpdate) => {
+    if (update.record === "google") {
+        void syncGoogleAuthStatus();
+        return;
+    }
+
+    void reload();
+};
+
 const disconnectCalendarProvider = async (provider: CalendarProvider) => {
     try {
         if (provider === "google") {
-            CalendarStore.set(
-                produce((state: ICalendarStore) => {
-                    state.tokens.google = null;
-                    state.calendars = state.calendars.filter(calendar => calendar.source !== "google");
-                    state.filters.showCalendars = state.filters.showCalendars.filter(
-                        calendarId => !calendarId.startsWith("google-")
-                    );
-                })
-            );
-            persistFilters();
+            await applyGoogleDisconnected();
         }
 
         await CalendarIntegrationsAPI.disconnect(provider);
-        await load(); // Reload events without Google events
+        if (provider !== "google") {
+            await load();
+        }
         Toast.success(
             provider === "google"
                 ? translate("Successfully disconnected from Google Calendar")
@@ -1150,6 +1150,8 @@ export const CalendarActions = {
     loginGoogle,
     logoutGoogle,
     disconnectCalendarProvider,
+    syncGoogleAuthStatus,
+    reloadFromRealtimeUpdate,
     hydrateFromBoot,
     createLocalCalendar,
     updateLocalCalendar,

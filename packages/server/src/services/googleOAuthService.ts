@@ -435,9 +435,11 @@ class GoogleOAuthService {
             }
 
             const currentTokens = (user.get("oauthTokens") as any) || {};
-            delete currentTokens.google;
+            const remainingTokens = { ...currentTokens };
+            delete remainingTokens.google;
 
-            await user.update({ oauthTokens: currentTokens });
+            this.oauth2Client.setCredentials({});
+            await user.update({ oauthTokens: remainingTokens });
         } catch (error) {
             console.error("Error removing tokens:", error);
             throw new Error("Failed to remove Google tokens");

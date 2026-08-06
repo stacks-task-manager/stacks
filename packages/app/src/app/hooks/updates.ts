@@ -27,6 +27,7 @@ export const useRealtimeUpdates = <TSection extends string>(
         return () => {
             if (removeUpdatePoller) removeUpdatePoller();
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 };
 
@@ -38,7 +39,7 @@ export const useUpdates = () => {
     useRealtimeUpdates(POLLINGTYPE.PROJECT, ProjectsActions.reloadProject);
     useRealtimeUpdates(POLLINGTYPE.STACK, StacksActions.reloadOne);
     useRealtimeUpdates(POLLINGTYPE.TASK, TasksActions.reloadTask);
-    useRealtimeUpdates(POLLINGTYPE.CALENDAR, CalendarActions.reload);
+    useRealtimeUpdates(POLLINGTYPE.CALENDAR, CalendarActions.reloadFromRealtimeUpdate);
     useRealtimeUpdates(POLLINGTYPE.EVENT, () => CalendarActions.load());
     useRealtimeUpdates(POLLINGTYPE.TIMELOG, TimelogsActions.reload);
     useRealtimeUpdates(POLLINGTYPE.NOTEPAD, NotepadActions.reload);
