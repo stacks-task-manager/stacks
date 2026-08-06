@@ -41,6 +41,7 @@ export const PeopleFilter = () => {
     return (
         <FiltersSidebar
             header={<strong>Filter people</strong>}
+            data-testid="people-filters-sidebar"
             footer={
                 hasFilters ? (
                     <Button

@@ -41,8 +41,19 @@ class Preferences extends Base {
         await tabLocator.click();
 
         const preferenceRow = this.getPreferenceRow(label);
+        const checkboxLocator = preferenceRow.getByRole("checkbox");
+        const isChecked = await checkboxLocator.isChecked();
 
-        await preferenceRow.getByRole("checkbox").setChecked(checkbox, { force: true });
+        if (isChecked !== checkbox) {
+            const responsePromise = this.page.waitForResponse(
+                response =>
+                    response.url().includes("/api/preferences") &&
+                    response.request().method() === "PATCH" &&
+                    response.ok()
+            );
+            await checkboxLocator.setChecked(checkbox, { force: true });
+            await responsePromise;
+        }
 
         await this.closeButton.click();
         await this.preferencesDialog.waitFor({ state: "hidden" });

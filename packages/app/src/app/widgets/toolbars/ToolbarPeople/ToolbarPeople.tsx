@@ -234,11 +234,12 @@ export const ToolbarPeople = () => {
                         <div className="section-toolbar-options">
                             <Popover
                                 content={
-                                    <Menu>
+                                    <Menu data-testid="people-toolbar-menu">
                                         <MenuItem
                                             text={translate("Tags Statuses")}
                                             icon={<Icon icon="tag" />}
                                             onClick={handleToggleTagMgr}
+                                            data-testid="people-toolbar-menu-tags-statuses"
                                         />
                                         <MenuDivider />
                                         <MenuItem
@@ -249,11 +250,13 @@ export const ToolbarPeople = () => {
                                                 text={translate("Export as", { type: ".xlsx" })}
                                                 icon={<Icon icon="download-04" />}
                                                 onClick={() => handleExport("excel")}
+                                                data-testid="people-toolbar-menu-export-xlsx"
                                             />
                                             <MenuItem
                                                 text={translate("Export as", { type: ".json" })}
                                                 icon={<Icon icon="download-04" />}
                                                 onClick={() => handleExport("json")}
+                                                data-testid="people-toolbar-menu-export-json"
                                             />
                                         </MenuItem>
                                         <MenuItem text={translate("Import")} icon={<Icon icon="upload-04" />}>
@@ -261,13 +264,19 @@ export const ToolbarPeople = () => {
                                                 text={translate("Import from", { type: ".xlsx" })}
                                                 icon={<Icon icon="upload-04" />}
                                                 onClick={handleImport}
+                                                data-testid="people-toolbar-menu-import-xlsx"
                                             />
                                         </MenuItem>
                                     </Menu>
                                 }
                                 placement="bottom"
                             >
-                                <Button size="small" variant="minimal" icon={<Icon icon="chevron-down" />} />
+                                <Button
+                                    size="small"
+                                    variant="minimal"
+                                    icon={<Icon icon="chevron-down" />}
+                                    data-testid="people-toolbar-menu-button"
+                                />
                             </Popover>
                         </div>
                     </div>
@@ -344,6 +353,7 @@ const PeopleButtons = () => {
                         placement="bottom-end"
                         minimal={false}
                         active
+                        data-testid="people-add-person-button"
                     />
                 </NewPersonPopover>
             )}
@@ -376,6 +386,7 @@ const Tabs = ({ narrow }: { narrow: boolean }) => {
                         key={view.id}
                         className={classNames("view-type-button", { active: viewType === view.id })}
                         onClick={() => PeopleActions.changeViewType(view.id)}
+                        data-testid={`people-tab-${view.id}`}
                     >
                         <Icon icon={view.icon} size={14} />
                         {!narrow && PEOPLE_VIEW_TYPE_LABELS[view.id]}
@@ -605,6 +616,7 @@ const PeopleSearch = () => {
         <InputGroup
             value={query}
             leftIcon={<Icon icon="search" />}
+            data-testid="people-search-input"
             placeholder={
                 viewType === "contacts" || viewType === "workload"
                     ? translate("Search person")
@@ -623,11 +635,12 @@ const PeopleGroupingToggle = () => {
     return (
         <Popover
             content={
-                <Menu>
+                <Menu data-testid="people-grouping-menu">
                     <MenuItem
                         text={translate("Ungrouped")}
                         icon={<Icon icon={PEOPLE_GROUPING_TYPE_ICONS.UNGROUPED} />}
                         onClick={() => PeopleActions.setGrouping(PEOPLE_GROUPING_TYPE.UNGROUPED)}
+                        data-testid="people-grouping-ungrouped"
                         labelElement={
                             grouping === PEOPLE_GROUPING_TYPE.UNGROUPED ? <Icon icon="check" /> : null
                         }
@@ -636,6 +649,7 @@ const PeopleGroupingToggle = () => {
                         text={translate("Company")}
                         icon={<Icon icon={PEOPLE_GROUPING_TYPE_ICONS.COMPANY} />}
                         onClick={() => PeopleActions.setGrouping(PEOPLE_GROUPING_TYPE.COMPANY)}
+                        data-testid="people-grouping-company"
                         labelElement={
                             grouping === PEOPLE_GROUPING_TYPE.COMPANY ? <Icon icon="check" /> : null
                         }
@@ -651,12 +665,13 @@ const PeopleGroupingToggle = () => {
                     <Icon
                         icon={
                             PEOPLE_GROUPING_TYPE_ICONS[
-                            grouping.toUpperCase() as unknown as keyof typeof PEOPLE_GROUPING_TYPE_ICONS
+                                grouping.toUpperCase() as unknown as keyof typeof PEOPLE_GROUPING_TYPE_ICONS
                             ]
                         }
                     />
                 }
                 endIcon={<Icon icon="chevron-down" />}
+                data-testid="people-grouping-button"
             >
                 {translate("Group by")}
                 &nbsp;
@@ -679,6 +694,7 @@ const FilterButton = () => {
                     icon={<Icon icon="trash" />}
                     intent={Intent.WARNING}
                     onClick={PeopleActions.resetFilters}
+                    data-testid="people-clear-filters-button"
                 >
                     {translate("Clear filter")}
                 </Button>
@@ -693,6 +709,7 @@ const FilterButton = () => {
                 placement="bottom-end"
                 onClick={PeopleActions.toggleFilters}
                 active={filtersVisible}
+                data-testid="people-filters-button"
             />
         </>
     );
@@ -713,6 +730,7 @@ const AddCompanyButton = () => {
                 placement="bottom-end"
                 minimal={false}
                 active
+                data-testid="people-add-company-button"
             />
         </PopupNewGeneric>
     );

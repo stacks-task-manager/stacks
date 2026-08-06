@@ -260,6 +260,7 @@ export const TaskDetailsPanel = () => {
                 portalClassName="task-details-portal"
                 style={{ borderColor: task?.tint || undefined }}
                 aria-labelledby="task-details-panel"
+                data-testid="task-details-drawer"
             >
                 {isLoading && <TaskDetailsLoading onClose={handleClose} />}
                 {task && !isLoading && (
@@ -281,6 +282,7 @@ export const TaskDetailsPanel = () => {
                 isOpen={open}
                 onClose={handleDialogClose}
                 onClosed={handleDialogClosed}
+                data-testid="task-details-drawer"
             >
                 {isLoading && <TaskDetailsLoading onClose={handleClose} />}
                 {task && !isLoading && (
@@ -387,7 +389,7 @@ const Task: FunctionComponent<ITaskProps> = React.memo(
 
         return (
             <div
-                className="task-details-header-wrapper"
+                className={classNames("task-details-header-wrapper", { fullscreen })}
                 data-testid="task-details"
                 {...getRootProps()}
                 onFocus={noop}
@@ -451,7 +453,10 @@ const Task: FunctionComponent<ITaskProps> = React.memo(
                                         />
                                     }
                                 >
-                                    <Tooltip content={translate("Update task completed date")} placement="bottom">
+                                    <Tooltip
+                                        content={translate("Update task completed date")}
+                                        placement="bottom"
+                                    >
                                         <AnchorButton
                                             size="small"
                                             variant="minimal"
@@ -488,7 +493,12 @@ const Task: FunctionComponent<ITaskProps> = React.memo(
                                 }
                                 placement="bottom-end"
                             >
-                                <Button size="small" variant="minimal" icon={<Icon icon="dots-vertical" />} />
+                                <Button
+                                    size="small"
+                                    variant="minimal"
+                                    icon={<Icon icon="dots-vertical" />}
+                                    data-testid="task-details-menu-button"
+                                />
                             </Popover>
 
                             {onFullscreen != null ? (
@@ -732,7 +742,13 @@ const TaskDetailsTabs: FunctionComponent<TaskDetailsTabsProps> = ({ task, disabl
     const dependenciesCount = <DependenciesCount taskId={task.id} />;
 
     return (
-        <Tabs id="options" selectedTabId={activeTab} renderActiveTabPanelOnly onChange={handleTabChange}>
+        <Tabs
+            id="options"
+            selectedTabId={activeTab}
+            renderActiveTabPanelOnly
+            onChange={handleTabChange}
+            data-testid="task-details-tabs"
+        >
             {task && taskDetailsAttachments ? (
                 <Tab
                     id="files"
@@ -1053,7 +1069,11 @@ const TaskDetailInfo: FunctionComponent<ITaskDetailInfoProps> = React.memo(
             case TASKDETAILMATRIX.HOURLY_RATE:
                 const project = getProject(task.project);
                 return (
-                    <TaskDetailsSection title={translate("Task hourly rate")} vertical={vertical} centered={centered}>
+                    <TaskDetailsSection
+                        title={translate("Task hourly rate")}
+                        vertical={vertical}
+                        centered={centered}
+                    >
                         <FeeInput
                             value={task.hourlyRate}
                             currency={project?.currency}
@@ -1125,12 +1145,13 @@ const TaskDetailsMenu: FunctionComponent<ITaskDetailsMenuProps> = ({
 
     if (archived) {
         return (
-            <Menu>
+            <Menu data-testid="task-details-menu">
                 <MenuItem
                     text={translate("Unarchive")}
                     intent={Intent.SUCCESS}
                     icon={<Icon icon="archive" />}
                     onClick={() => handleUnarchive()}
+                    data-testid="task-details-menu-unarchive"
                 />
                 <MenuItem
                     text={translate("Unarchive to")}
@@ -1151,18 +1172,20 @@ const TaskDetailsMenu: FunctionComponent<ITaskDetailsMenuProps> = ({
                     intent={Intent.DANGER}
                     icon={<Icon icon="trash" />}
                     onClick={handleDeleteTask}
+                    data-testid="task-details-menu-delete"
                 />
             </Menu>
         );
     }
 
     return (
-        <Menu>
+        <Menu data-testid="task-details-menu">
             <MenuItem
                 text={taskToggleDoneLabel(Boolean(task?.done))}
                 intent={task?.done ? Intent.PRIMARY : Intent.SUCCESS}
                 icon={<Icon icon={task?.done ? "circle" : "check-circle"} />}
                 onClick={handleToggleComplete}
+                data-testid="task-details-menu-toggle-complete"
             />
 
             <MenuDivider />
@@ -1170,11 +1193,13 @@ const TaskDetailsMenu: FunctionComponent<ITaskDetailsMenuProps> = ({
                 text={translate("Bookmark")}
                 icon={<Icon icon="bookmark" />}
                 onClick={toggleNewBookmark}
+                data-testid="task-details-menu-bookmark"
             />
             <MenuItem
                 text={translate("Share link")}
                 icon={<Icon icon="link-01" />}
                 onClick={() => share(`t/${task.id}`)}
+                data-testid="task-details-menu-share-link"
             />
             <MenuDivider />
             <MenuItem
@@ -1182,22 +1207,30 @@ const TaskDetailsMenu: FunctionComponent<ITaskDetailsMenuProps> = ({
                 icon={<Icon icon="clipboard" />}
                 disabled={disabled}
                 onClick={handleCopyMove}
+                data-testid="task-details-menu-copy-move"
             />
-            <MenuItem text={translate("Export")} icon={<Icon icon="download-04" />}>
+            <MenuItem
+                text={translate("Export")}
+                icon={<Icon icon="download-04" />}
+                data-testid="task-details-menu-export"
+            >
                 <MenuItem
                     text={translate("Export as", { type: ".xlsx" })}
                     icon={<Icon icon="download-04" />}
                     onClick={() => handleExport("csv")}
+                    data-testid="task-details-menu-export-xlsx"
                 />
                 <MenuItem
                     text={translate("Export as", { type: ".json" })}
                     icon={<Icon icon="download-04" />}
                     onClick={() => handleExport("json")}
+                    data-testid="task-details-menu-export-json"
                 />
                 <MenuItem
                     text={translate("Export as", { type: ".pdf" })}
                     icon={<Icon icon="download-04" />}
                     onClick={() => handleExport("pdf")}
+                    data-testid="task-details-menu-export-pdf"
                 />
             </MenuItem>
 
@@ -1208,6 +1241,7 @@ const TaskDetailsMenu: FunctionComponent<ITaskDetailsMenuProps> = ({
                     icon={<Icon icon="git-branch-01" />}
                     disabled={disabled}
                     onClick={onToggleParent}
+                    data-testid="task-details-menu-attach-parent"
                 />
             ) : (
                 <MenuItem
@@ -1216,6 +1250,7 @@ const TaskDetailsMenu: FunctionComponent<ITaskDetailsMenuProps> = ({
                     onClick={() => TasksActions.alertDetach(task.id)}
                     intent={Intent.WARNING}
                     disabled={disabled}
+                    data-testid="task-details-menu-detach-parent"
                 />
             )}
 
@@ -1226,6 +1261,7 @@ const TaskDetailsMenu: FunctionComponent<ITaskDetailsMenuProps> = ({
                 icon={<Icon icon="lock-01" />}
                 disabled={disabled}
                 onClick={onTogglePrivacy}
+                data-testid="task-details-menu-privacy"
             />
             <MenuDivider />
 
@@ -1234,12 +1270,14 @@ const TaskDetailsMenu: FunctionComponent<ITaskDetailsMenuProps> = ({
                 intent={Intent.WARNING}
                 icon={<Icon icon="archive" />}
                 onClick={handleArchive}
+                data-testid="task-details-menu-archive"
             />
             <MenuItem
                 text={translate("Delete task", { suffix: "..." })}
                 intent={Intent.DANGER}
                 icon={<Icon icon="trash" />}
                 onClick={handleDeleteTask}
+                data-testid="task-details-menu-delete"
             />
         </Menu>
     );

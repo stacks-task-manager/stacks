@@ -2,7 +2,9 @@
 /**
  * Company create and patch shapes (rich address and billing fields on update).
  */
-import { z } from 'zod/v4';
+import { z } from "zod/v4";
+
+const NullableStringSchema = z.string().nullable().optional();
 
 /** Required fields for a new company. */
 export const NewCompanySchema = z.object({
@@ -12,52 +14,52 @@ export const NewCompanySchema = z.object({
 /** Partial company update; all fields optional. */
 export const UpdateCompanySchema = z.object({
     title: z.string().optional(),
-    logo: z.string().optional(),
+    logo: NullableStringSchema,
 
-    industry: z.string().optional(),
-    notes: z.string().optional(),
-    altCode: z.string().optional(),
+    industry: NullableStringSchema,
+    notes: NullableStringSchema,
+    altCode: NullableStringSchema,
 
     // Contacts
-    website: z.string().optional(),
-    email: z.string().optional(),
-    phone: z.string().optional(),
-    cell: z.string().optional(),
-    fax: z.string().optional(),
+    website: NullableStringSchema,
+    email: NullableStringSchema,
+    phone: NullableStringSchema,
+    cell: NullableStringSchema,
+    fax: NullableStringSchema,
 
     // Address
-    address: z.string().optional(),
-    county: z.string().optional(),
-    zip: z.string().optional(),
-    city: z.string().optional(),
-    country: z.string().optional(),
-    address2: z.string().optional(),
+    address: NullableStringSchema,
+    county: NullableStringSchema,
+    zip: NullableStringSchema,
+    city: NullableStringSchema,
+    country: NullableStringSchema,
+    address2: NullableStringSchema,
 
     // Registered office address
-    registeredOfficeAddress: z.string().optional(),
-    registeredOfficeCounty: z.string().optional(),
-    registeredOfficeZip: z.string().optional(),
-    registeredOfficeCity: z.string().optional(),
-    registeredOfficeCountry: z.string().optional(),
-    registeredOfficeAddress2: z.string().optional(),
+    registeredOfficeAddress: NullableStringSchema,
+    registeredOfficeCounty: NullableStringSchema,
+    registeredOfficeZip: NullableStringSchema,
+    registeredOfficeCity: NullableStringSchema,
+    registeredOfficeCountry: NullableStringSchema,
+    registeredOfficeAddress2: NullableStringSchema,
 
     // Billing address
-    billingAddress: z.string().optional(),
-    billingCounty: z.string().optional(),
-    billingZip: z.string().optional(),
-    billingCity: z.string().optional(),
-    billingCountry: z.string().optional(),
-    billingAddress2: z.string().optional(),
+    billingAddress: NullableStringSchema,
+    billingCounty: NullableStringSchema,
+    billingZip: NullableStringSchema,
+    billingCity: NullableStringSchema,
+    billingCountry: NullableStringSchema,
+    billingAddress2: NullableStringSchema,
 
     // Shipping address
-    shippingAddress: z.string().optional(),
-    shippingCounty: z.string().optional(),
-    shippingZip: z.string().optional(),
-    shippingCity: z.string().optional(),
-    shippingCountry: z.string().optional(),
-    shippingAddress2: z.string().optional(),
+    shippingAddress: NullableStringSchema,
+    shippingCounty: NullableStringSchema,
+    shippingZip: NullableStringSchema,
+    shippingCity: NullableStringSchema,
+    shippingCountry: NullableStringSchema,
+    shippingAddress2: NullableStringSchema,
 
     // Payment & Banking
-    payment: z.string().optional(),
-    vat: z.string().optional(),
+    payment: NullableStringSchema,
+    vat: NullableStringSchema,
 });

@@ -13,7 +13,13 @@ export const PersonDetailsEditButton: FunctionComponent<PersonDetailsEditButtonP
 
     return (
         <Tooltip content={translate("Edit person")} placement="bottom">
-            <Button size="small" variant="minimal" icon={<Icon icon="user-edit" />} onClick={onClick} />
+            <Button
+                size="small"
+                variant="minimal"
+                icon={<Icon icon="user-edit" />}
+                onClick={onClick}
+                data-testid="person-details-edit-button"
+            />
         </Tooltip>
     );
 };

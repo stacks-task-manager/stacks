@@ -323,6 +323,7 @@ const PersonEditing: FunctionComponent<IPersonEditingProps> = ({ person, onClose
                                         id="first-name"
                                         placeholder={translate("First name")}
                                         large
+                                        data-testid="person-details-first-name-input"
                                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                                             update("firstName", e.currentTarget.value)
                                         }
@@ -338,6 +339,7 @@ const PersonEditing: FunctionComponent<IPersonEditingProps> = ({ person, onClose
                                         id="last-name"
                                         placeholder={translate("Last name")}
                                         large
+                                        data-testid="person-details-last-name-input"
                                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                                             update("lastName", e.currentTarget.value)
                                         }
@@ -353,6 +355,7 @@ const PersonEditing: FunctionComponent<IPersonEditingProps> = ({ person, onClose
                                         defaultValue={updatedPerson?.nickname ?? undefined}
                                         id="nickname"
                                         placeholder={translate("Nickname")}
+                                        data-testid="person-details-nickname-input"
                                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                                             update("nickname", e.currentTarget.value)
                                         }
@@ -495,6 +498,7 @@ const PersonEditing: FunctionComponent<IPersonEditingProps> = ({ person, onClose
                                         defaultValue={updatedPerson?.jobTitle ?? undefined}
                                         id="jobTitle"
                                         placeholder={translate("Job title")}
+                                        data-testid="person-details-job-title-input"
                                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                                             update("jobTitle", e.currentTarget.value)
                                         }
@@ -513,6 +517,7 @@ const PersonEditing: FunctionComponent<IPersonEditingProps> = ({ person, onClose
                                         id="email"
                                         placeholder={translate("Email")}
                                         type="email"
+                                        data-testid="person-details-email-input"
                                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                                             update("email", e.currentTarget.value)
                                         }
@@ -526,6 +531,7 @@ const PersonEditing: FunctionComponent<IPersonEditingProps> = ({ person, onClose
                                     <InputGroup
                                         defaultValue={updatedPerson?.officePhone ?? undefined}
                                         id="officePhone"
+                                        data-testid="person-details-office-phone-input"
                                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                                             update("officePhone", e.currentTarget.value)
                                         }
@@ -745,6 +751,7 @@ const PersonEditing: FunctionComponent<IPersonEditingProps> = ({ person, onClose
                                         id="notes"
                                         rows={5}
                                         defaultValue={updatedPerson?.notes ?? undefined}
+                                        data-testid="person-details-notes-input"
                                         onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                                             update("notes", e.currentTarget.value)
                                         }
