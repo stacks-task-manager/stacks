@@ -338,7 +338,10 @@ export const Calendar = () => {
                                 }}
                                 className={classNames([Classes.POPOVER])}
                             >
-                                <div className={Classes.POPOVER_CONTENT}>
+                                <div
+                                    className={Classes.POPOVER_CONTENT}
+                                    data-testid="calendar-slot-menu"
+                                >
                                     {showTasksPicker ? (
                                         <CalendarTasksMenu
                                             slot={selectedSlot}
@@ -353,12 +356,14 @@ export const Calendar = () => {
                                                 icon={<Icon icon={APPICONS.CALENDAREVENTADD} />}
                                                 intent={Intent.SUCCESS}
                                                 onClick={handleShowQuickEvent}
+                                                data-testid="calendar-slot-add-event"
                                             />
                                             <MenuItem
                                                 text={`${translate("Add task")}...`}
                                                 icon={<Icon icon={APPICONS.TASK} />}
                                                 intent={Intent.PRIMARY}
                                                 onClick={handleShowTasksPicker}
+                                                data-testid="calendar-slot-add-task"
                                             />
                                             <MenuDivider />
                                             <MenuItem
@@ -366,6 +371,7 @@ export const Calendar = () => {
                                                 icon={<Icon icon={APPICONS.CLOSE} />}
                                                 intent={Intent.WARNING}
                                                 onClick={cancelSlotSelection}
+                                                data-testid="calendar-slot-cancel"
                                             />
                                         </Menu>
                                     ) : null}

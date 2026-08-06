@@ -9,6 +9,7 @@ interface IReloadButtonProps {
     iconSize?: number;
     placement?: Placement;
     disabled?: boolean;
+    "data-testid"?: string;
     onClick: () => void;
 }
 export const ReloadButton: FunctionComponent<IReloadButtonProps> = ({
@@ -16,6 +17,7 @@ export const ReloadButton: FunctionComponent<IReloadButtonProps> = ({
     iconSize,
     placement,
     disabled,
+    "data-testid": dataTestId,
     onClick,
 }) => {
     const [isLoading, setIsLoading] = useState(true);
@@ -46,6 +48,7 @@ export const ReloadButton: FunctionComponent<IReloadButtonProps> = ({
             spin={isLoading}
             onClick={handleClick}
             disabled={disabled || isLoading}
+            data-testid={dataTestId}
         />
     );
 };

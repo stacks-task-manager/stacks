@@ -404,7 +404,7 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew, isAl
     };
 
     return (
-        <div className="filters-sidebar" style={{ minWidth: 300 }}>
+        <div className="filters-sidebar" style={{ minWidth: 300 }} data-testid="calendar-event-details">
             <EventHeader
                 menus={
                     <MenuItem
@@ -412,6 +412,7 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew, isAl
                         icon={<Icon icon="trash" />}
                         intent={Intent.DANGER}
                         onClick={handleDeleteEvent}
+                        data-testid="calendar-event-delete-menu-item"
                     />
                 }
             />
@@ -419,13 +420,15 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew, isAl
             <Scroller vertical className="filters-sidebar-filters" thin shadows>
                 <Grid gap={5}>
                     <h5 className={Classes.HEADING} style={{ margin: 0 }}>
-                        <EditableText
-                            value={event.title as string}
-                            multiline
-                            onChange={handleUpdateTitle}
-                            elementRef={titleRef}
-                            disabled={isDisabled}
-                        />
+                        <div data-testid="calendar-event-title">
+                            <EditableText
+                                value={event.title as string}
+                                multiline
+                                onChange={handleUpdateTitle}
+                                elementRef={titleRef}
+                                disabled={isDisabled}
+                            />
+                        </div>
                     </h5>
 
                     <EventDivider />
@@ -436,6 +439,7 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew, isAl
                                 label={translate("All day")}
                                 checked={event.allDay}
                                 onChange={handleUpdateAllDay}
+                                data-testid="calendar-event-all-day"
                             />
                         )}
                         {isDisabled ? (
@@ -456,16 +460,19 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew, isAl
                                                     is24Hour={is24Hours}
                                                     disabled={isDisabled}
                                                     onChange={handleUpdateStartTime}
+                                                    data-testid="calendar-event-start-time"
                                                 />
                                             )}
-                                            <DateInput
-                                                value={format(start, "yyyy-MM-dd")}
-                                                dateFnsFormat="P"
-                                                locale={dateLocale}
-                                                maxDate={end ? new Date(end) : undefined}
-                                                disabled={isDisabled}
-                                                onChange={handleUpdateStartDate}
-                                            />
+                                            <div data-testid="calendar-event-start-date">
+                                                <DateInput
+                                                    value={format(start, "yyyy-MM-dd")}
+                                                    dateFnsFormat="P"
+                                                    locale={dateLocale}
+                                                    maxDate={end ? new Date(end) : undefined}
+                                                    disabled={isDisabled}
+                                                    onChange={handleUpdateStartDate}
+                                                />
+                                            </div>
                                         </Grid>
                                     </FormGroup>
                                 </Col>
@@ -482,15 +489,18 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew, isAl
                                                     min={isSameDayValue ? startTime : undefined}
                                                     disabled={isDisabled}
                                                     onChange={handleUpdateEndTime}
+                                                    data-testid="calendar-event-end-time"
                                                 />
                                             )}
-                                            <DateInput
-                                                value={format(end, "yyyy-MM-dd")}
-                                                dateFnsFormat="P"
-                                                locale={dateLocale}
-                                                disabled={isDisabled}
-                                                onChange={handleUpdateEndDate}
-                                            />
+                                            <div data-testid="calendar-event-end-date">
+                                                <DateInput
+                                                    value={format(end, "yyyy-MM-dd")}
+                                                    dateFnsFormat="P"
+                                                    locale={dateLocale}
+                                                    disabled={isDisabled}
+                                                    onChange={handleUpdateEndDate}
+                                                />
+                                            </div>
                                         </Grid>
                                     </FormGroup>
                                 </Col>
@@ -579,32 +589,38 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew, isAl
                         </FormGroup>
                         <EventDivider />
                         <FormGroup label={translate("Description and notes")}>
-                            <EditableText
-                                value={description ?? ""}
-                                placeholder={translate("Add notes")}
-                                multiline
-                                disabled={isDisabled}
-                                onChange={handleUpdateDescription}
-                            />
+                            <div data-testid="calendar-event-description">
+                                <EditableText
+                                    value={description ?? ""}
+                                    placeholder={translate("Add notes")}
+                                    multiline
+                                    disabled={isDisabled}
+                                    onChange={handleUpdateDescription}
+                                />
+                            </div>
                         </FormGroup>
                         <EventDivider />
                         <FormGroup label={translate("Location")}>
-                            <EditableText
-                                placeholder={translate("Enter location")}
-                                multiline
-                                value={location}
-                                disabled={isDisabled}
-                                onChange={handleUpdateLocation}
-                            />
+                            <div data-testid="calendar-event-location">
+                                <EditableText
+                                    placeholder={translate("Enter location")}
+                                    multiline
+                                    value={location}
+                                    disabled={isDisabled}
+                                    onChange={handleUpdateLocation}
+                                />
+                            </div>
                         </FormGroup>
                         <EventDivider />
                         <FormGroup label={translate("Calendar")}>
-                            <CalendarPicker
-                                value={calendar}
-                                allowedSources={[source]}
-                                disabled={isDisabled}
-                                onChange={handleChangeCalendar}
-                            />
+                            <div data-testid="calendar-event-calendar-picker">
+                                <CalendarPicker
+                                    value={calendar}
+                                    allowedSources={[source]}
+                                    disabled={isDisabled}
+                                    onChange={handleChangeCalendar}
+                                />
+                            </div>
                         </FormGroup>
                     </div>
 
@@ -974,6 +990,7 @@ const EventHeader: FunctionComponent<EventHeaderProps> = ({ menus }) => {
                             minimal
                             icon={<Icon icon="dots-vertical" />}
                             active={isOpen}
+                            data-testid="calendar-event-menu-button"
                             {...popoverProps}
                         />
                     )}
@@ -986,6 +1003,7 @@ const EventHeader: FunctionComponent<EventHeaderProps> = ({ menus }) => {
                 variant="minimal"
                 icon={<Icon icon="close" />}
                 onClick={CalendarActions.unselectEvent}
+                data-testid="calendar-event-details-close"
             />
         </div>
     );

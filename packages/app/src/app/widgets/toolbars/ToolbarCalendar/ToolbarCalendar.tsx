@@ -95,11 +95,13 @@ export const ToolbarCalendar = () => {
                     </div>
                 </div>
                 <div className="section-toolbar-side fixed">
-                    <H4 style={{ margin: 0 }}>{currentDate}</H4>
+                    <H4 style={{ margin: 0 }} data-testid="calendar-current-date">
+                        {currentDate}
+                    </H4>
 
                     <span className="section-toolbar-divider" />
 
-                    <Button size="small" onClick={CalendarActions.setToday}>
+                    <Button size="small" onClick={CalendarActions.setToday} data-testid="calendar-today-button">
                         {translate("Today")}
                     </Button>
 
@@ -109,6 +111,7 @@ export const ToolbarCalendar = () => {
                             size="small"
                             variant="minimal"
                             onClick={CalendarActions.goPrev}
+                            data-testid="calendar-prev-button"
                         />
 
                         <Button
@@ -116,6 +119,7 @@ export const ToolbarCalendar = () => {
                             size="small"
                             variant="minimal"
                             onClick={CalendarActions.goNext}
+                            data-testid="calendar-next-button"
                         />
                     </ButtonGroup>
 
@@ -124,6 +128,7 @@ export const ToolbarCalendar = () => {
                     <ReloadButton
                         tooltip={translate("Reload events")}
                         onClick={() => CalendarActions.reload()}
+                        data-testid="calendar-reload-button"
                     />
 
                     <Popover
@@ -147,6 +152,7 @@ export const ToolbarCalendar = () => {
                                     size="small"
                                     variant="minimal"
                                     icon={<Icon icon="calendar" />}
+                                    data-testid="calendar-jump-date-button"
                                 />
                             )}
                         />
@@ -169,6 +175,7 @@ export const ToolbarCalendar = () => {
                     <button
                         className={classNames("view-type-button", { active: "day" === view })}
                         onClick={() => CalendarActions.setView("day")}
+                        data-testid="calendar-view-day-button"
                     >
                         <Icon icon="rows-03" />
                         {translate("Day")}
@@ -176,6 +183,7 @@ export const ToolbarCalendar = () => {
                     <button
                         className={classNames("view-type-button", { active: "week" === view })}
                         onClick={() => CalendarActions.setView("week")}
+                        data-testid="calendar-view-week-button"
                     >
                         <Icon icon="columns-03" />
                         {translate("Week")}
@@ -183,6 +191,7 @@ export const ToolbarCalendar = () => {
                     <button
                         className={classNames("view-type-button", { active: "month" === view })}
                         onClick={() => CalendarActions.setView("month")}
+                        data-testid="calendar-view-month-button"
                     >
                         <Icon icon="layout-grid-01" />
                         {translate("Month")}

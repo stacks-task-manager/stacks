@@ -11,6 +11,7 @@ interface DateTimePickerProps {
     min?: string;
     max?: string;
     disabled?: boolean;
+    "data-testid"?: string;
     onChange: (time: string) => void;
 }
 
@@ -20,6 +21,7 @@ export const DateTimePicker: FunctionComponent<DateTimePickerProps> = ({
     min,
     max,
     disabled,
+    "data-testid": dataTestId,
     onChange,
 }) => {
     const [open, setOpen] = useState(false);
@@ -179,6 +181,7 @@ export const DateTimePicker: FunctionComponent<DateTimePickerProps> = ({
                     onFocus={handleFocus}
                     onBlur={handleBlur}
                     disabled={disabled}
+                    data-testid={dataTestId}
                 />
             )}
         />

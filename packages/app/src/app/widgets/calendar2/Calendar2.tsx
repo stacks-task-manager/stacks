@@ -43,7 +43,7 @@ interface CalendarProps {
 
 export const Calendar2 = forwardRef<FullCalendar, CalendarProps>((props, ref) => {
     return (
-        <div className="calendar2">
+        <div className="calendar2" data-testid="calendar-surface" data-calendar-view={props.initialView}>
             <FullCalendar
                 ref={ref}
                 plugins={[timeGridPlugin, dayGridPlugin, interactionPlugin, rrulePlugin]}
@@ -132,6 +132,7 @@ const EventContent = ({ event, view }: { event: EventImpl; view: calendarViewTyp
     const [selected, setSelected] = useState(false);
 
     const source = event.extendedProps?.iEvent.resource.data.source;
+    const eventId = String(event.id);
     const tinted = Boolean(event.extendedProps?.tint);
     const styles: CSSProperties = {
         color: tinted ? adjustColor(event.extendedProps.tint, -50) : Colors.DARK_GRAY5,
@@ -207,6 +208,8 @@ const EventContent = ({ event, view }: { event: EventImpl; view: calendarViewTyp
                         selected: isOpen,
                         completed: event.extendedProps?.completed,
                     })}
+                    data-testid={`calendar-event-${eventId}`}
+                    data-calendar-event-title={event.title}
                     ref={ref}
                     style={styles}
                 >
