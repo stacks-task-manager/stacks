@@ -1054,6 +1054,15 @@ const handleGoogleAuthSuccess = async () => {
     }
 };
 
+if (typeof window !== "undefined") {
+    window.addEventListener("message", event => {
+        if (event.origin !== window.location.origin || event.data?.type !== "GOOGLE_AUTH_SUCCESS") {
+            return;
+        }
+        void handleGoogleAuthSuccess();
+    });
+}
+
 const applyGoogleDisconnected = async () => {
     CalendarStore.set(
         produce((state: ICalendarStore) => {

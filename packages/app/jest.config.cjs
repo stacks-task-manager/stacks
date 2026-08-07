@@ -6,6 +6,7 @@ process.env.NODE_ENV = "test";
 module.exports = {
     globalSetup: "<rootDir>/jest-global-setup.cjs",
     testEnvironment: "jsdom",
+    testEnvironmentOptions: { url: "http://localhost:3000" },
     roots: ["<rootDir>/src"],
     testMatch: ["**/__tests__/**/*.spec.[jt]s?(x)"],
     moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json"],

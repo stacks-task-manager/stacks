@@ -39,6 +39,19 @@ jest.mock("app/utils/toast", () => ({
     },
 }));
 
+jest.mock("app/hooks", () => ({
+    getDatesSpan: jest.fn(() => ({ from: new Date("2026-01-01"), to: new Date("2026-01-02") })),
+}));
+
+jest.mock("app/utils/dialog", () => ({
+    __esModule: true,
+    default: { confirm: jest.fn() },
+}));
+
+jest.mock("app/store/actions/tasks", () => ({
+    TasksActions: { update: jest.fn() },
+}));
+
 jest.mock("@stacks/translations", () => ({
     translate: (key: string) => key,
 }));

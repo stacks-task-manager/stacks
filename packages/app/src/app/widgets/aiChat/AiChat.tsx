@@ -1,5 +1,15 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
-import { Button, Card, Classes, Colors, InputGroup, Intent, Tooltip } from "@blueprintjs/core";
+import {
+    Button,
+    Card,
+    Checkbox,
+    Classes,
+    Colors,
+    InputGroup,
+    Intent,
+    Radio,
+    Tooltip,
+} from "@blueprintjs/core";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -40,10 +50,18 @@ const panelStyle: React.CSSProperties = {
 /** Avoid duplicate auto-navigation (e.g. React StrictMode or remounts). */
 const redirectedAssistantMessageIds = new Set<string>();
 
-function MessageBubble({ msg }: { msg: AiChatMessage }) {
+function MessageBubble({
+    msg,
+    onChoice,
+}: {
+    msg: AiChatMessage;
+    onChoice?: (messageId: string, widgetId: string, optionIds: string[], text: string) => void;
+}) {
     const navigate = useNavigate();
     const isUser = msg.role === "user";
     const body = isUser ? msg.content : msg.content.replace(/^\s+/, "");
+
+    const [selected, setSelected] = useState<Record<string, string[]>>({});
 
     useEffect(() => {
         if (isUser) {
@@ -64,6 +82,21 @@ function MessageBubble({ msg }: { msg: AiChatMessage }) {
         navigate(path);
     }, [isUser, msg.id, msg.widgets, navigate]);
 
+    const submitChoice = (
+        widget: Extract<NonNullable<AiChatMessage["widgets"]>[number], { type: "choice" }>,
+        optionIds: string[]
+    ) => {
+        if (widget.answered || optionIds.length === 0 || !onChoice) {
+            return;
+        }
+        const labels = widget.options
+            .filter(option => optionIds.includes(option.id))
+            .map(option => option.label);
+        if (labels.length > 0) {
+            onChoice(msg.id, widget.id, optionIds, `${widget.question}\nSelected: ${labels.join(", ")}`);
+        }
+    };
+
     return (
         <div
             style={{
@@ -79,20 +112,93 @@ function MessageBubble({ msg }: { msg: AiChatMessage }) {
             }}
         >
             {isUser ? body : <AiChatMarkdown>{body}</AiChatMarkdown>}
-            {msg.widgets?.map((w, i) =>
-                w.type === "button" ? (
-                    <div key={i} style={{ marginTop: 8 }}>
-                        <Button
-                            size="small"
-                            variant={isUser ? "minimal" : undefined}
-                            intent={Intent.PRIMARY}
-                            onClick={() => navigate(w.hashPath.replace(/^#/, ""))}
-                        >
-                            {w.label}
-                        </Button>
+            {msg.widgets?.map((w, i) => {
+                if (w.type === "button") {
+                    return (
+                        <div key={i} style={{ marginTop: 8 }}>
+                            <Button
+                                size="small"
+                                variant={isUser ? "minimal" : undefined}
+                                intent={Intent.PRIMARY}
+                                onClick={() => navigate(w.hashPath.replace(/^#/, ""))}
+                            >
+                                {w.label}
+                            </Button>
+                        </div>
+                    );
+                }
+                if (w.type !== "choice") {
+                    return null;
+                }
+                const current = selected[w.id] ?? [];
+                return (
+                    <div key={w.id} style={{ marginTop: 10 }} data-testid={`ai-chat-choice-${w.id}`}>
+                        <div style={{ marginBottom: 6, fontWeight: 600 }}>{w.question}</div>
+                        {w.control === "buttons" ? (
+                            <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                                {w.options.map(option => (
+                                    <Button
+                                        key={option.id}
+                                        small
+                                        intent={Intent.PRIMARY}
+                                        disabled={w.answered || !onChoice}
+                                        data-testid={`ai-chat-choice-option-${option.id}`}
+                                        onClick={() => submitChoice(w, [option.id])}
+                                    >
+                                        {option.label}
+                                    </Button>
+                                ))}
+                            </div>
+                        ) : (
+                            <>
+                                {w.options.map(option => {
+                                    const checked = current.includes(option.id);
+                                    const onChange = () => {
+                                        setSelected(previous => {
+                                            const values = previous[w.id] ?? [];
+                                            const next = checked
+                                                ? values.filter(id => id !== option.id)
+                                                : w.control === "radio"
+                                                ? [option.id]
+                                                : [...values, option.id];
+                                            return { ...previous, [w.id]: next };
+                                        });
+                                    };
+                                    return w.control === "radio" ? (
+                                        <Radio
+                                            key={option.id}
+                                            label={option.label}
+                                            checked={checked}
+                                            onChange={onChange}
+                                            disabled={w.answered || !onChoice}
+                                            data-testid={`ai-chat-choice-option-${option.id}`}
+                                        />
+                                    ) : (
+                                        <Checkbox
+                                            key={option.id}
+                                            label={option.label}
+                                            checked={checked}
+                                            onChange={onChange}
+                                            disabled={w.answered || !onChoice}
+                                            data-testid={`ai-chat-choice-option-${option.id}`}
+                                        />
+                                    );
+                                })}
+                                <Button
+                                    small
+                                    intent={Intent.PRIMARY}
+                                    disabled={w.answered || current.length === 0 || !onChoice}
+                                    data-testid={`ai-chat-choice-next-${w.id}`}
+                                    onClick={() => submitChoice(w, current)}
+                                    style={{ marginTop: 4 }}
+                                >
+                                    {w.submitLabel || "Next"}
+                                </Button>
+                            </>
+                        )}
                     </div>
-                ) : null
-            )}
+                );
+            })}
         </div>
     );
 }
@@ -133,48 +239,57 @@ export const AiChat: React.FC = () => {
         return off;
     }, [serverEnabled]);
 
-    const send = useCallback(async () => {
-        if (!draft.trim() || isAwaitingReply) {
-            return;
-        }
-        const text = draft;
-
-        const history = AiChatStore.get().messages.map(m => ({
-            role: m.role,
-            content: m.role === "assistant" ? m.content.replace(/^\s+/, "") : m.content,
-        }));
-
-        const clientRequestId = AiChatActions.appendUserMessage(text);
-        setDraft("");
-
-        const nextMessages = [...history, { role: "user" as const, content: text }];
-
-        try {
-            const route = getHashPathname().split("/").filter(Boolean);
-            const clientRoute: Record<string, string> = {
-                section: route[0] ?? "",
-                sectionId: route[1] ?? "",
-            };
-
-            if (clientRoute.section === "project") {
-                clientRoute.viewType = getProjectLastView(clientRoute.sectionId);
-            } else if (clientRoute.section === "people") {
-                clientRoute.viewType = getViewType();
+    const sendMessage = useCallback(
+        async (content: string) => {
+            if (!content.trim() || isAwaitingReply) {
+                return;
             }
 
-            await window.updatePoller.sendMessage({
-                type: "ai_chat_request",
-                payload: {
-                    clientRequestId,
-                    messages: nextMessages,
-                    clientRoute,
-                },
-            });
-        } catch {
-            toast.error("Not connected. Check your connection.");
-            AiChatActions.clearActiveChatRequestIfMatch(clientRequestId);
+            const history = AiChatStore.get().messages.map(m => ({
+                role: m.role,
+                content: m.role === "assistant" ? m.content.replace(/^\s+/, "") : m.content,
+            }));
+
+            const clientRequestId = AiChatActions.appendUserMessage(content);
+
+            const nextMessages = [...history, { role: "user" as const, content }];
+
+            try {
+                const route = getHashPathname().split("/").filter(Boolean);
+                const clientRoute: Record<string, string> = {
+                    section: route[0] ?? "",
+                    sectionId: route[1] ?? "",
+                };
+
+                if (clientRoute.section === "project") {
+                    clientRoute.viewType = getProjectLastView(clientRoute.sectionId);
+                } else if (clientRoute.section === "people") {
+                    clientRoute.viewType = getViewType();
+                }
+
+                await window.updatePoller.sendMessage({
+                    type: "ai_chat_request",
+                    payload: {
+                        clientRequestId,
+                        messages: nextMessages,
+                        clientRoute,
+                    },
+                });
+            } catch {
+                toast.error("Not connected. Check your connection.");
+                AiChatActions.clearActiveChatRequestIfMatch(clientRequestId);
+            }
+        },
+        [isAwaitingReply]
+    );
+
+    const send = useCallback(async () => {
+        if (!draft.trim()) {
+            return;
         }
-    }, [draft, isAwaitingReply]);
+        setDraft("");
+        await sendMessage(draft);
+    }, [draft, sendMessage]);
 
     if (!serverEnabled) {
         return null;
@@ -192,7 +307,7 @@ export const AiChat: React.FC = () => {
             />
 
             {panelOpen && (
-                <Card style={panelStyle} elevation={3}>
+                <Card data-testid="ai-chat-panel" style={panelStyle} elevation={3}>
                     <div
                         style={{
                             display: "flex",
@@ -230,7 +345,18 @@ export const AiChat: React.FC = () => {
                             </div>
                         )}
                         {messages.map(m => (
-                            <MessageBubble key={m.id} msg={m} />
+                            <MessageBubble
+                                key={m.id}
+                                msg={m}
+                                onChoice={
+                                    isAwaitingReply
+                                        ? undefined
+                                        : (messageId, widgetId, optionIds, text) => {
+                                              AiChatActions.answerChoice(messageId, widgetId, optionIds);
+                                              void sendMessage(text);
+                                          }
+                                }
+                            />
                         ))}
                         {isAwaitingReply && streamingTextVisible && (
                             <MessageBubble

@@ -11,13 +11,9 @@ import { template } from "./promptTemplate";
 import { buildAiTools, MCP_AI_TOOL_NAMES, type AiToolExecuteOverride } from "./tools";
 import { createMcpToolClient } from "./mcpToolClient";
 import { appendAiChatDebugTurn, type AiChatDebugToolCall } from "./debugLog";
+import type { AiChatClientMessage, AiChatWidget } from "@stacks/types";
 
-export type AiChatClientMessage = { role: "user" | "assistant"; content: string };
-
-/** Client: `button` shows a click target; `redirect` navigates to the app path without a click. */
-export type AiChatWidget =
-    | { type: "button"; label: string; hashPath: string }
-    | { type: "redirect"; label: string; hashPath: string };
+export type { AiChatClientMessage, AiChatWidget } from "@stacks/types";
 
 export type { AiChatClientRoutePayload } from "./clientRoute";
 
@@ -170,6 +166,37 @@ export function widgetsFromToolResult(toolName: string, output: unknown): AiChat
     const o = output as Record<string, unknown>;
     const id = o.id;
     const title = typeof o.title === "string" ? o.title : "Open";
+
+    if (toolName === "askUserChoice") {
+        if (
+            typeof o.id !== "string" ||
+            typeof o.question !== "string" ||
+            !["buttons", "radio", "checkbox"].includes(String(o.control)) ||
+            !Array.isArray(o.options)
+        ) {
+            return [];
+        }
+        const options = o.options.filter(
+            (option): option is { id: string; label: string; value?: string } =>
+                Boolean(option) &&
+                typeof option === "object" &&
+                typeof (option as Record<string, unknown>).id === "string" &&
+                typeof (option as Record<string, unknown>).label === "string"
+        );
+        if (options.length === 0) {
+            return [];
+        }
+        return [
+            {
+                type: "choice",
+                id: o.id,
+                question: o.question,
+                control: o.control as "buttons" | "radio" | "checkbox",
+                options,
+                ...(typeof o.submitLabel === "string" ? { submitLabel: o.submitLabel } : {}),
+            },
+        ];
+    }
 
     if (toolName === "createTask") {
         const projectId = o.projectId;

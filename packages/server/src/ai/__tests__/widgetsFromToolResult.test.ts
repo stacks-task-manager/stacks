@@ -27,7 +27,9 @@ describe("ai.widgetsFromToolResult", () => {
             projectId: "proj-1",
             title: "Hello",
         });
-        expect(widgets).toEqual([{ type: "button", label: "Open: Hello", hashPath: "/project/proj-1/task-1" }]);
+        expect(widgets).toEqual([
+            { type: "button", label: "Open: Hello", hashPath: "/project/proj-1/task-1" },
+        ]);
     });
 
     it("returns a link widget for createProject", () => {
@@ -35,7 +37,9 @@ describe("ai.widgetsFromToolResult", () => {
             id: "proj-1",
             title: "New project",
         });
-        expect(widgets).toEqual([{ type: "button", label: "Open project: New project", hashPath: "/project/proj-1" }]);
+        expect(widgets).toEqual([
+            { type: "button", label: "Open project: New project", hashPath: "/project/proj-1" },
+        ]);
     });
 
     it("returns a link widget for findTasks", () => {
@@ -64,5 +68,44 @@ describe("ai.widgetsFromToolResult", () => {
             expect(widgets).toEqual([{ type: "redirect", label: "Open my profile", hashPath: "/people/me" }]);
         });
     });
-});
 
+    it("returns a choice widget for askUserChoice", () => {
+        const widgets = widgetsFromToolResult("askUserChoice", {
+            id: "choice-1",
+            question: "Which view?",
+            control: "checkbox",
+            options: [
+                { id: "board", label: "Board", value: "board" },
+                { id: "list", label: "List" },
+            ],
+            submitLabel: "Continue",
+        });
+        expect(widgets).toEqual([
+            {
+                type: "choice",
+                id: "choice-1",
+                question: "Which view?",
+                control: "checkbox",
+                options: [
+                    { id: "board", label: "Board", value: "board" },
+                    { id: "list", label: "List" },
+                ],
+                submitLabel: "Continue",
+            },
+        ]);
+    });
+
+    it("rejects malformed choice results", () => {
+        expect(
+            widgetsFromToolResult("askUserChoice", { id: "choice-1", control: "radio", options: [] })
+        ).toEqual([]);
+        expect(
+            widgetsFromToolResult("askUserChoice", {
+                id: "choice-1",
+                question: "Choose",
+                control: "select",
+                options: [{ id: "one", label: "One" }],
+            })
+        ).toEqual([]);
+    });
+});
