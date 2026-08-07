@@ -74,7 +74,7 @@ cp packages/server/env.example packages/server/.env
 Customize each with your local Postgres credentials and secrets:
 
 - `packages/db/.env` — `POSTGRES_HOST`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`, `POSTGRES_PORT`
-- `packages/server/.env` — `APP_PORT`, `COOKIE_SECRET`, `JWT_SECRET`, CORS origins, optional `AI_OPENAI_BASE_URL` / `AI_OPENAI_API_KEY` / `AI_MODEL`
+- `packages/server/.env` — `APP_PORT`, `COOKIE_SECRET`, `JWT_SECRET`, CORS origins, optional `AI_BASE_URL` / `AI_API_KEY` / `AI_MODEL`
 
 Keep the `POSTGRES_*` values consistent across every `.env` that has them — the server, the migration tooling, and (if you set it up) the email service all read independently and must agree.
 

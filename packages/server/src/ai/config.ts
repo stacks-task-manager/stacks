@@ -21,7 +21,7 @@ export function isAiChatConfigured(): boolean {
     if (isAiChatKillSwitchOn()) {
         return false;
     }
-    const base = envTrim("AI_OPENAI_BASE_URL");
+    const base = envTrim("AI_BASE_URL");
     const model = envTrim("AI_MODEL");
     return Boolean(base && model);
 }

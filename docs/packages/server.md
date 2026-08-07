@@ -37,7 +37,7 @@ Optional:
 -   `CORS_ORIGINS` — comma-separated list of allowed origins; if unset, CORS is permissive
 -   `REQUIRE_SECRETS=1` — enforce strong secrets outside production
 -   Google Calendar OAuth: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, optional `GOOGLE_REDIRECT_URI`
--   AI assistant: `AI_OPENAI_BASE_URL`, `AI_OPENAI_API_KEY`, `AI_MODEL`, `AI_CHAT_ENABLED`, `AI_CHAT_AUTO_REDIRECT`
+-   AI assistant: `AI_BASE_URL`, `AI_API_KEY`, `AI_MODEL`, `AI_CHAT_ENABLED`, `AI_CHAT_AUTO_REDIRECT`
 
 ## Development
 
