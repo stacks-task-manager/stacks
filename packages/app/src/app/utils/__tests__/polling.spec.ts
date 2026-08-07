@@ -65,11 +65,6 @@ function emitUpdate(update: IUpdate) {
 
 describe("UpdatePoller", () => {
     beforeAll(async () => {
-        Object.defineProperty(window, "location", {
-            value: { protocol: "http:", hostname: "localhost", port: "3000" },
-            writable: true,
-            configurable: true,
-        });
         globalThis.WebSocket = MockWebSocket as unknown as typeof WebSocket;
         ({ UpdatePoller } = await import("app/utils/polling"));
     });

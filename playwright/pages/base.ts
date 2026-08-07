@@ -9,8 +9,8 @@ class Base {
         this.tooltip = page.locator('[class*="tooltip"] [class*="popover-content"]');
     }
 
-    async open() {
-        return await this.page.goto("/");
+    async open(): Promise<void> {
+        await this.page.goto("/");
     }
 
     async goto(slug: string) {

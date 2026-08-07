@@ -3,7 +3,13 @@
  * AI chat panel messages and streaming.
  */
 import { produce } from "immer";
-import { AiChatStore, AI_CHAT_MESSAGES_KEY, IAiChatStore, type AiChatMessage, type AiChatWidget } from "../aiChat";
+import {
+    AiChatStore,
+    AI_CHAT_MESSAGES_KEY,
+    IAiChatStore,
+    type AiChatMessage,
+    type AiChatWidget,
+} from "../aiChat";
 import { setStorage } from "app/utils/storage";
 
 function newId(prefix: string) {
@@ -106,6 +112,24 @@ export const AiChatActions = {
                 s.isAwaitingReply = false;
                 s.activeClientRequestId = null;
                 s.streamingAssistantContent = "";
+            })
+        );
+        persistMessages();
+    },
+
+    answerChoice(messageId: string, widgetId: string, selectedOptionIds: string[]) {
+        AiChatStore.set(
+            produce((s: IAiChatStore) => {
+                const message = s.messages.find(m => m.id === messageId);
+                const widget = message?.widgets?.find(
+                    (candidate): candidate is Extract<AiChatWidget, { type: "choice" }> =>
+                        candidate.type === "choice" && candidate.id === widgetId
+                );
+                if (!widget || widget.answered || selectedOptionIds.length === 0) {
+                    return;
+                }
+                widget.answered = true;
+                widget.selectedOptionIds = selectedOptionIds;
             })
         );
         persistMessages();

@@ -37,6 +37,7 @@ export type PromptTopic = (typeof PROMPT_TOPICS)[number];
  *      topic matches (e.g. a pure "who am I" turn).
  */
 export const CORE_TOOLS: readonly string[] = [
+    "askUserChoice",
     "navigate",
     "openProfile",
     "globalSearch",
