@@ -36,13 +36,13 @@ Set in `packages/server/.env`. All five are described in [`docs/packages/server.
 
 | Variable                | Purpose                                                                                                     |
 | ----------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `AI_OPENAI_BASE_URL`    | OpenAI-compatible endpoint (e.g. a local LLM server). Required.                                             |
-| `AI_OPENAI_API_KEY`     | Key for the endpoint. Defaults to `"not-needed"` for local servers.                                         |
+| `AI_BASE_URL`    | OpenAI-compatible endpoint (e.g. a local LLM server). Required.                                             |
+| `AI_API_KEY`     | Key for the endpoint. Defaults to `"not-needed"` for local servers.                                         |
 | `AI_MODEL`              | Model id passed to `openai.chat(modelId)`. Required.                                                        |
 | `AI_CHAT_ENABLED`       | Kill switch — set to `false` / `0` / `off` to disable even when configured.                                 |
 | `AI_CHAT_AUTO_REDIRECT` | When `true`, `navigate`/`openProfile` results auto-navigate the client instead of rendering a click button. |
 
-`isAiChatConfigured()` ([`src/ai/config.ts:20`](../src/ai/config.ts)) returns `false` when the kill switch is on or `AI_OPENAI_BASE_URL` / `AI_MODEL` are missing — in which case `ai_chat_request` messages return an `ai_chat_error` with `"AI chat is not enabled"`.
+`isAiChatConfigured()` ([`src/ai/config.ts:20`](../src/ai/config.ts)) returns `false` when the kill switch is on or `AI_BASE_URL` / `AI_MODEL` are missing — in which case `ai_chat_request` messages return an `ai_chat_error` with `"AI chat is not enabled"`.
 
 ## Request flow
 

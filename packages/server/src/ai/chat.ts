@@ -258,9 +258,9 @@ export async function streamAiChat(
               email?: string;
           }
         | undefined;
-    const baseURL = envTrim("AI_OPENAI_BASE_URL");
+    const baseURL = envTrim("AI_BASE_URL");
     const modelId = envTrim("AI_MODEL");
-    const apiKey = envTrim("AI_OPENAI_API_KEY") || "not-needed";
+    const apiKey = envTrim("AI_API_KEY") || "not-needed";
 
     if (!baseURL || !modelId) {
         debugStatus = "error";
