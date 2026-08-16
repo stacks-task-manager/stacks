@@ -1,6 +1,7 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 export * from "./models/activity.js";
 export * from "./models/automation.js";
+export * from "./models/aiChat.js";
 export * from "./models/basic.js";
 export * from "./models/bookmarks.js";
 export * from "./models/calendar.js";

@@ -1,5 +1,5 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
-import { IUpdate, USER_ONLINE_STATUS } from "@stacks/types";
+import { IUpdate, USER_ONLINE_STATUS, type AiChatWidget } from "@stacks/types";
 import { getMe } from "app/hooks";
 import { PeopleActions } from "app/store/actions";
 import { PeopleStore } from "app/store/people";
@@ -27,14 +27,11 @@ type ConnectionStatusCallback = (status: ConnectionStatus) => void;
 export type AiChatWsPayload =
     | { kind: "delta"; clientRequestId: string; delta: string }
     | {
-        kind: "done";
-        clientRequestId: string;
-        text: string;
-        widgets: Array<
-            | { type: "button"; label: string; hashPath: string }
-            | { type: "redirect"; label: string; hashPath: string }
-        >;
-    }
+          kind: "done";
+          clientRequestId: string;
+          text: string;
+          widgets: AiChatWidget[];
+      }
     | { kind: "error"; clientRequestId?: string; message: string };
 
 type AiChatWsCallback = (payload: AiChatWsPayload) => void;
@@ -50,7 +47,10 @@ export class UpdatePoller {
     private isDestroyed = false;
     private connectionStatusListeners: Set<ConnectionStatusCallback> = new Set();
     private aiChatListeners: Set<AiChatWsCallback> = new Set();
-    private updateListenerDebounces = new Map<UpdateListenerCallback, Map<string, UpdateCallbackDebounceEntry>>();
+    private updateListenerDebounces = new Map<
+        UpdateListenerCallback,
+        Map<string, UpdateCallbackDebounceEntry>
+    >();
     public readonly instanceId: string;
     private token: string | null;
 
