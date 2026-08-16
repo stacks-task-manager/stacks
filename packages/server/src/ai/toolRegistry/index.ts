@@ -5,6 +5,7 @@
 import { tool } from "ai";
 import type { ToolSet } from "ai";
 import { activityAiTools } from "./activityTools";
+import { choiceAiTools } from "./choiceTools";
 import { eventAiTools } from "./eventTools";
 import { navigationAiTools } from "./navigationTools";
 import { notepadAiTools } from "./notepadTools";
@@ -18,6 +19,7 @@ import { taskAiTools } from "./taskTools";
 
 export { defineTool } from "./defineTool";
 export { activityAiTools } from "./activityTools";
+export { choiceAiTools } from "./choiceTools";
 export { eventAiTools } from "./eventTools";
 export { navigationAiTools } from "./navigationTools";
 export { notepadAiTools } from "./notepadTools";
@@ -43,6 +45,7 @@ export const AI_TOOL_REGISTRY = [
     ...reminderAiTools,
     ...eventAiTools,
     ...activityAiTools,
+    ...choiceAiTools,
     ...navigationAiTools,
 ];
 

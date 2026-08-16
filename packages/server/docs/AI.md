@@ -8,17 +8,17 @@ Implementation lives in [`packages/server/src/ai/`](../src/ai). The client widge
 
 ## Table of Contents
 
-- [Overview](#overview)
-- [Configuration](#configuration)
-- [Request flow](#request-flow)
-- [WebSocket contract](#websocket-contract)
-- [Prompt templates](#prompt-templates)
-- [Dynamic prompt + tool selection](#dynamic-prompt--tool-selection)
-- [Tool registry](#tool-registry)
-- [Adding a new tool](#adding-a-new-tool)
-- [Adding a new prompt topic](#adding-a-new-prompt-topic)
-- [Widgets (button vs. redirect)](#widgets-button-vs-redirect)
-- [Testing](#testing)
+-   [Overview](#overview)
+-   [Configuration](#configuration)
+-   [Request flow](#request-flow)
+-   [WebSocket contract](#websocket-contract)
+-   [Prompt templates](#prompt-templates)
+-   [Dynamic prompt + tool selection](#dynamic-prompt--tool-selection)
+-   [Tool registry](#tool-registry)
+-   [Adding a new tool](#adding-a-new-tool)
+-   [Adding a new prompt topic](#adding-a-new-prompt-topic)
+-   [Widgets (button vs. redirect)](#widgets-button-vs-redirect)
+-   [Testing](#testing)
 
 ## Overview
 
@@ -34,15 +34,15 @@ There is no separate HTTP endpoint for chat; everything rides the user's authent
 
 Set in `packages/server/.env`. All five are described in [`docs/packages/server.md`](../../../docs/packages/server.md#environment) and read in [`src/ai/config.ts`](../src/ai/config.ts) + [`src/ai/chat.ts`](../src/ai/chat.ts):
 
-| Variable | Purpose |
-| --- | --- |
-| `AI_OPENAI_BASE_URL` | OpenAI-compatible endpoint (e.g. a local LLM server). Required. |
-| `AI_OPENAI_API_KEY` | Key for the endpoint. Defaults to `"not-needed"` for local servers. |
-| `AI_MODEL` | Model id passed to `openai.chat(modelId)`. Required. |
-| `AI_CHAT_ENABLED` | Kill switch — set to `false` / `0` / `off` to disable even when configured. |
+| Variable                | Purpose                                                                                                     |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `AI_BASE_URL`    | OpenAI-compatible endpoint (e.g. a local LLM server). Required.                                             |
+| `AI_API_KEY`     | Key for the endpoint. Defaults to `"not-needed"` for local servers.                                         |
+| `AI_MODEL`              | Model id passed to `openai.chat(modelId)`. Required.                                                        |
+| `AI_CHAT_ENABLED`       | Kill switch — set to `false` / `0` / `off` to disable even when configured.                                 |
 | `AI_CHAT_AUTO_REDIRECT` | When `true`, `navigate`/`openProfile` results auto-navigate the client instead of rendering a click button. |
 
-`isAiChatConfigured()` ([`src/ai/config.ts:20`](../src/ai/config.ts)) returns `false` when the kill switch is on or `AI_OPENAI_BASE_URL` / `AI_MODEL` are missing — in which case `ai_chat_request` messages return an `ai_chat_error` with `"AI chat is not enabled"`.
+`isAiChatConfigured()` ([`src/ai/config.ts:20`](../src/ai/config.ts)) returns `false` when the kill switch is on or `AI_BASE_URL` / `AI_MODEL` are missing — in which case `ai_chat_request` messages return an `ai_chat_error` with `"AI chat is not enabled"`.
 
 ## Request flow
 
@@ -72,10 +72,10 @@ Vercel AI SDK streamText
 
 Key entry points:
 
-- WebSocket handler registration: [`registerAiChatWebSocketHandlers()`](../src/ai/wsBridge.ts) — wired up once at boot from [`src/index.ts`](../src/index.ts).
-- Streaming turn: [`streamAiChat()`](../src/ai/chat.ts) — call only inside an active `requestContext.run(...)` (the bridge does that for you).
-- Selector: [`selectPromptContext()`](../src/ai/promptContext.ts).
-- Template loader: [`template()`](../src/ai/promptTemplate.ts) — Handlebars over Markdown files in `src/ai/prompts/`.
+-   WebSocket handler registration: [`registerAiChatWebSocketHandlers()`](../src/ai/wsBridge.ts) — wired up once at boot from [`src/index.ts`](../src/index.ts).
+-   Streaming turn: [`streamAiChat()`](../src/ai/chat.ts) — call only inside an active `requestContext.run(...)` (the bridge does that for you).
+-   Selector: [`selectPromptContext()`](../src/ai/promptContext.ts).
+-   Template loader: [`template()`](../src/ai/promptTemplate.ts) — Handlebars over Markdown files in `src/ai/prompts/`.
 
 ## WebSocket contract
 
@@ -111,9 +111,21 @@ All four message types travel over the existing `/ws` connection (same JWT auth 
 
 ```ts
 type AiChatWidget =
-  | { type: "button";   label: string; hashPath: string }
-  | { type: "redirect"; label: string; hashPath: string };
+    | { type: "button"; label: string; hashPath: string }
+    | { type: "redirect"; label: string; hashPath: string }
+    | {
+          type: "choice";
+          id: string;
+          question: string;
+          control: "buttons" | "radio" | "checkbox";
+          options: { id: string; label: string; value?: string }[];
+          submitLabel?: string;
+      };
 ```
+
+`askUserChoice` is always available to the assistant. Button choices submit immediately; radio and checkbox choices require the client-side `Next` button. The client sends selected labels back as the next ordinary user message and persists the widget as answered.
+
+Because the choice is answered in a separate round-trip, the assistant must **ask first and act later**: it calls `askUserChoice` and stops — the chosen labels come back as the next user message, and only then does it run `moveTask` / `updateTask` / `createTask` etc. It must never both ask and perform the mutation in the same turn (otherwise the action happens before the answer). The system prompt and the `askUserChoice` tool description carry that instruction; the widget already renders the question and options, so the assistant must not repeat them as plain text.
 
 The client side that drives this lives at [`packages/app/src/app/widgets/aiChat/AiChat.tsx`](../../app/src/app/widgets/aiChat/AiChat.tsx) (sends `ai_chat_request`) and [`packages/app/src/app/store/actions/aiChat.ts`](../../app/src/app/store/actions/aiChat.ts) (handles deltas/done/error into the Zustand store).
 
@@ -121,16 +133,16 @@ The client side that drives this lives at [`packages/app/src/app/widgets/aiChat/
 
 Templates are Markdown files under [`src/ai/prompts/`](../src/ai/prompts) rendered with Handlebars by [`promptTemplate.ts`](../src/ai/promptTemplate.ts). At build time `yarn build` copies `src/ai/prompts → dist/ai/prompts` (the loader uses `__dirname`-relative paths).
 
-| File | Role |
-| --- | --- |
-| `system-core.md` | Always included. Identity, ground-truth rules, always-available tools. |
-| `system-tasks.md` | Appended when topic `tasks` is active. |
-| `system-projects.md` | Appended when topic `projects` is active. |
-| `system-notepads.md` | Appended when topic `notepads` is active. |
-| `system-calendar.md` | Appended when topic `calendar` is active. |
-| `system-org.md` | Appended when topic `org` is active. |
-| `client-ui-context.md` | Appended when the request includes a `clientRoute`. |
-| `client-chat.md` | Wraps the latest user message before it goes to the model. |
+| File                   | Role                                                                   |
+| ---------------------- | ---------------------------------------------------------------------- |
+| `system-core.md`       | Always included. Identity, ground-truth rules, always-available tools. |
+| `system-tasks.md`      | Appended when topic `tasks` is active.                                 |
+| `system-projects.md`   | Appended when topic `projects` is active.                              |
+| `system-notepads.md`   | Appended when topic `notepads` is active.                              |
+| `system-calendar.md`   | Appended when topic `calendar` is active.                              |
+| `system-org.md`        | Appended when topic `org` is active.                                   |
+| `client-ui-context.md` | Appended when the request includes a `clientRoute`.                    |
+| `client-chat.md`       | Wraps the latest user message before it goes to the model.             |
 
 Template variables available in every fragment: `todaysDate`, `todaysDateISO`, plus identity (`hasCurrentUser`, `currentUserId`, `currentUserName`, `currentUserEmail`). The `client-ui-context.md` and `client-chat.md` templates additionally receive `viewKind`, `viewSummary`, `routeSection`, and per-entity inferred ids (`projectId`, `taskId`, `notepadId`, `personId`, `companyId`, `reportType`) — see [`clientRouteTemplateVars()`](../src/ai/clientRoute.ts).
 
@@ -155,8 +167,8 @@ The output is a `PromptContextSelection`:
 
 Two invariants worth knowing:
 
-- **Core tools are always exposed.** `CORE_TOOLS` (navigate, openProfile, globalSearch, listProjects, searchPeople, getProject, getTask, getPerson, getCompany, summarizeNotepad) survive every filter — they unblock identity, navigation, and single-record reads no matter the topic.
-- **Topic tools must be listed in `TOPIC_TOOLS`.** If a `system-<topic>.md` fragment mentions a tool that isn't in the topic's tool list, the model will hallucinate calls to a tool that isn't registered this turn. Keep the two in lockstep.
+-   **Core tools are always exposed.** `CORE_TOOLS` (navigate, openProfile, globalSearch, listProjects, searchPeople, getProject, getTask, getPerson, getCompany, summarizeNotepad) survive every filter — they unblock identity, navigation, and single-record reads no matter the topic.
+-   **Topic tools must be listed in `TOPIC_TOOLS`.** If a `system-<topic>.md` fragment mentions a tool that isn't in the topic's tool list, the model will hallucinate calls to a tool that isn't registered this turn. Keep the two in lockstep.
 
 If no topic signal fires, the selector defaults to `tasks` — the most common Stacks use case and a safe fallback since core tools still cover pure navigation/identity.
 
@@ -166,29 +178,29 @@ The selection is logged on every turn under the `[aiChat] prompt selection` line
 
 Each domain has its own file under [`src/ai/toolRegistry/`](../src/ai/toolRegistry):
 
-| File | Contains |
-| --- | --- |
-| `taskTools.ts` | `findTasks`, `listTasks`, `createTask`, `updateTask`, `moveTask` |
-| `projectTools.ts` | `createProject`, `listProjects`, `getProject` |
-| `stackTools.ts` | `listStacks`, `createStack`, `updateStack` |
-| `peopleTools.ts` | `searchPeople`, `getPerson` |
-| `orgTools.ts` | `getCompany`, `listCompanies`, `listTags`, `listBookmarks` |
-| `notepadTools.ts` | `listNotepads`, `summarizeNotepad` |
-| `reminderTools.ts` | `listReminders` |
-| `eventTools.ts` | `listCalendarEvents` |
-| `activityTools.ts` | `listActivities` |
-| `searchTools.ts` | `globalSearch` |
-| `navigationTools.ts` | `navigate`, `openProfile` |
+| File                 | Contains                                                         |
+| -------------------- | ---------------------------------------------------------------- |
+| `taskTools.ts`       | `findTasks`, `listTasks`, `createTask`, `updateTask`, `moveTask` |
+| `projectTools.ts`    | `createProject`, `listProjects`, `getProject`                    |
+| `stackTools.ts`      | `listStacks`, `createStack`, `updateStack`                       |
+| `peopleTools.ts`     | `searchPeople`, `getPerson`                                      |
+| `orgTools.ts`        | `getCompany`, `listCompanies`, `listTags`, `listBookmarks`       |
+| `notepadTools.ts`    | `listNotepads`, `summarizeNotepad`                               |
+| `reminderTools.ts`   | `listReminders`                                                  |
+| `eventTools.ts`      | `listCalendarEvents`                                             |
+| `activityTools.ts`   | `listActivities`                                                 |
+| `searchTools.ts`     | `globalSearch`                                                   |
+| `navigationTools.ts` | `navigate`, `openProfile`                                        |
 
 Each tool is built with [`defineTool()`](../src/ai/toolRegistry/defineTool.ts):
 
 ```ts
 defineTool({
-  name: string,                              // model-facing name
-  description: string,                       // model-facing description; tokens count, keep it tight
-  inputSchema: ZodType,                      // Zod schema for arguments (also validates)
-  execute: async (input) => Promise<unknown>,// handler; runs inside requestContext
-})
+    name: string, // model-facing name
+    description: string, // model-facing description; tokens count, keep it tight
+    inputSchema: ZodType, // Zod schema for arguments (also validates)
+    execute: async input => Promise<unknown>, // handler; runs inside requestContext
+});
 ```
 
 All domain arrays are spread into `AI_TOOL_REGISTRY` in [`toolRegistry/index.ts:35`](../src/ai/toolRegistry/index.ts). At streaming time, [`buildAiTools(allowedNames)`](../src/ai/toolRegistry/index.ts) returns the Vercel AI `ToolSet` filtered to just the allowed names.
@@ -233,10 +245,10 @@ export const timelogAiTools = [
 
 Conventions worth following (see existing tools for examples):
 
-- **`execute` runs inside `requestContext`** — loaders authenticated as the current user. Use them; don't reach into Sequelize directly.
-- **Return small objects.** Truncate lists (most existing tools cap at 50–100 rows and set `truncated: true`). Token budget matters.
-- **Validate at the boundary with Zod.** The schema is also what the model sees, so the `.describe(...)` strings are real prompt engineering — be specific.
-- **Throw to fail.** A thrown error becomes a tool error visible to the model; it'll often retry with different args.
+-   **`execute` runs inside `requestContext`** — loaders authenticated as the current user. Use them; don't reach into Sequelize directly.
+-   **Return small objects.** Truncate lists (most existing tools cap at 50–100 rows and set `truncated: true`). Token budget matters.
+-   **Validate at the boundary with Zod.** The schema is also what the model sees, so the `.describe(...)` strings are real prompt engineering — be specific.
+-   **Throw to fail.** A thrown error becomes a tool error visible to the model; it'll often retry with different args.
 
 ### 3. Register it in the registry
 
@@ -258,8 +270,8 @@ export const AI_TOOL_REGISTRY = [
 
 There are two ways the model can see the tool:
 
-- **Always available** — add the name to `CORE_TOOLS` in [`promptContext.ts:39`](../src/ai/promptContext.ts). Only do this if the description is small and the tool is broadly useful from any context.
-- **Topic-gated (preferred)** — add the name to the appropriate entry of `TOPIC_TOOLS`. For `listTimeLogs` that's likely a new `timelogs` topic, or an extension of `tasks` if you don't want to introduce a topic.
+-   **Always available** — add the name to `CORE_TOOLS` in [`promptContext.ts:39`](../src/ai/promptContext.ts). Only do this if the description is small and the tool is broadly useful from any context.
+-   **Topic-gated (preferred)** — add the name to the appropriate entry of `TOPIC_TOOLS`. For `listTimeLogs` that's likely a new `timelogs` topic, or an extension of `tasks` if you don't want to introduce a topic.
 
 ```ts
 // src/ai/promptContext.ts
@@ -296,19 +308,19 @@ When a new domain is big enough to warrant its own fragment (multiple tools, dis
 
 Two helpers in [`chat.ts`](../src/ai/chat.ts) decide which widget shape to emit:
 
-- **`aiChatNavigationWidget(label, hashPath)`** — for navigation-intent tools (`navigate`, `openProfile`). Emits `type: "redirect"` when `AI_CHAT_AUTO_REDIRECT=true`, otherwise `type: "button"`.
-- **`aiChatLinkWidget(label, hashPath)`** — always emits `type: "button"`. Use this for side-effect tools that return a courtesy link ("here's the task I just made"), to avoid the "every answer teleports me to /tasks" UX.
+-   **`aiChatNavigationWidget(label, hashPath)`** — for navigation-intent tools (`navigate`, `openProfile`). Emits `type: "redirect"` when `AI_CHAT_AUTO_REDIRECT=true`, otherwise `type: "button"`.
+-   **`aiChatLinkWidget(label, hashPath)`** — always emits `type: "button"`. Use this for side-effect tools that return a courtesy link ("here's the task I just made"), to avoid the "every answer teleports me to /tasks" UX.
 
 `widgetsFromToolResult(toolName, output)` in [`chat.ts:146`](../src/ai/chat.ts) is the dispatch map. If you add a tool that should surface a widget, register it here.
 
 ## Testing
 
-- The selector has a dedicated test file: [`packages/server/src/ai/__tests__/promptContext.test.ts`](../src/ai/__tests__). Add cases there when you add a topic or change a regex.
-- Tool `execute` handlers are plain async functions and can be tested without booting the WS server.
-- For a manual end-to-end smoke, start `yarn dev` and open the chat widget in the app — the server logs `[aiChat] prompt selection` on every turn with the topics/tools/reasons it picked, which makes it easy to see whether the selector did what you expected.
+-   The selector has a dedicated test file: [`packages/server/src/ai/__tests__/promptContext.test.ts`](../src/ai/__tests__). Add cases there when you add a topic or change a regex.
+-   Tool `execute` handlers are plain async functions and can be tested without booting the WS server.
+-   For a manual end-to-end smoke, start `yarn dev` and open the chat widget in the app — the server logs `[aiChat] prompt selection` on every turn with the topics/tools/reasons it picked, which makes it easy to see whether the selector did what you expected.
 
 ## Related
 
-- [`docs/packages/server.md`](../../../docs/packages/server.md) — server package overview, environment variables.
-- [`packages/server/docs/ONBOARDING.md`](ONBOARDING.md) — bootstrap order, loaders, request lifecycle.
-- [`packages/app/src/app/widgets/aiChat/`](../../app/src/app/widgets/aiChat) — the React widget on the other end of the WebSocket.
+-   [`docs/packages/server.md`](../../../docs/packages/server.md) — server package overview, environment variables.
+-   [`packages/server/docs/ONBOARDING.md`](ONBOARDING.md) — bootstrap order, loaders, request lifecycle.
+-   [`packages/app/src/app/widgets/aiChat/`](../../app/src/app/widgets/aiChat) — the React widget on the other end of the WebSocket.
