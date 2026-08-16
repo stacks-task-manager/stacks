@@ -17,13 +17,11 @@ export type SeedChatMessage = {
 };
 
 class AiChat extends Base {
-    public page: Page;
     public assistantButton: Locator;
     public panel: Locator;
 
     constructor(page: Page) {
         super(page);
-        this.page = page;
         this.assistantButton = page.getByLabel("Open AI assistant");
         this.panel = page.getByTestId("ai-chat-panel");
     }
@@ -60,10 +58,13 @@ class AiChat extends Base {
      * reads on boot), then reload so the widgets render without needing a live AI round-trip.
      */
     async seed(messages: SeedChatMessage[]) {
-        await this.page.evaluate(payload => {
-            const tenant = document.cookie.match(/(?:^|; )tenant=([^;]*)/)?.[1] ?? "";
-            window.localStorage.setItem(`${tenant}/ai-chat-messages`, JSON.stringify(payload));
-        }, { messages });
+        await this.page.evaluate(
+            payload => {
+                const tenant = document.cookie.match(/(?:^|; )tenant=([^;]*)/)?.[1] ?? "";
+                window.localStorage.setItem(`${tenant}/ai-chat-messages`, JSON.stringify(payload));
+            },
+            { messages }
+        );
         await this.page.reload();
         await this.open();
     }

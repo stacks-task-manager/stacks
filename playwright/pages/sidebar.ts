@@ -6,7 +6,6 @@ export type DocumentType = "folder" | "project" | "task" | "notepad" | "file" | 
 export type SidebarPages = "home" | "people" | "inbox" | "bookmarks" | "calendar" | "myTasks" | "reports";
 
 class Sidebar extends Base {
-    public page: Page;
     public sidebar: Locator;
     public toggleButton: Locator;
     public pinnedItemsWrapper: Locator;
@@ -60,8 +59,6 @@ class Sidebar extends Base {
 
     constructor(page: Page) {
         super(page);
-
-        this.page = page;
 
         this.sidebar = page.getByTestId("sidebar");
         this.toggleButton = this.sidebar.getByTestId("toggle-sidebar-button");

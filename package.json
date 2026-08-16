@@ -60,6 +60,7 @@
         "---- TEST ----": "",
         "test:server": "yarn workspace @stacks/server run test",
         "test:server:unit": "yarn workspace @stacks/server run test:unit",
+        "type-check:e2e": "yarn workspace @stacks/app tsc --project ../../tsconfig.playwright.json --noEmit",
         "test:e2e": "playwright test",
         "test:e2e:ui": "playwright test --ui",
         "test:e2e:headed": "playwright test --headed",
