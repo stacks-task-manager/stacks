@@ -98,7 +98,7 @@ const LocalCalendarFilterRow = ({ calendar, checked }: { calendar: ICalendar; ch
 
     return (
         <Row data-testid="local-calendar-filter">
-            <Col>
+            <Col fill>
                 <ColoredCheckbox
                     text={calendar.primary ? `${calendar.title} (${translate("Default")})` : calendar.title}
                     color={calendar.color}
@@ -106,7 +106,7 @@ const LocalCalendarFilterRow = ({ calendar, checked }: { calendar: ICalendar; ch
                     onChange={() => CalendarActions.toggleCalendar(calendar.id)}
                 />
             </Col>
-            <Col>
+            <Col collapse>
                 <Popover
                     placement="bottom-end"
                     content={
