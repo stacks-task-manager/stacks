@@ -35,6 +35,7 @@ packages/app/node_modules/
 
 # logs
 logs/
+packages/server/.ai-chat-debug/
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -95,3 +96,8 @@ license.key
 *.pem
 !packages/server/public.pem
 !third-party/**/*.pem
+
+# graft's local graph cache — regenerable, not committed (run `graft build`).
+graft/
+opencode.json
+opencode-swarm.json

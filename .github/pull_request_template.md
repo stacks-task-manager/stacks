@@ -26,12 +26,6 @@ Explanation of the change.
 -   [ ] I considered backwards compatibility and migrations (if applicable)
 -   [ ] I signed the CLA (required for first-time contributors)
 
-## CLA (first-time contributors)
-
-Post this comment on the PR:
-
-> I have read the Contributor License Agreement in `.github/CLA.md` and I hereby agree to its terms. My GitHub username is @[YOUR USERNAME].
-
 ## Related Issues
 
 -   Closes #

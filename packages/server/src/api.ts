@@ -35,6 +35,8 @@ import reminders from "./routes/reminders";
 import roles from "./routes/roles";
 import exportRoute from "./routes/export";
 import info from "./routes/info";
+import mcp from "./routes/mcp";
+import calendars from "./routes/calendars";
 
 const APP_STATIC_ROOT = "./app";
 
@@ -176,4 +178,6 @@ export const registerApiRoutes = (app: Hono) => {
     mountAuthenticated("boot", boot);
     mountAuthenticated("roles", roles);
     mountAuthenticated("export", exportRoute);
+    mountAuthenticated("mcp", mcp);
+    mountAuthenticated("calendars", calendars);
 };

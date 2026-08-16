@@ -61,6 +61,7 @@ export const ToolbarTitle: FunctionComponent<ToolbarTitleProps> = ({ documentId 
                     minWidth={0}
                     disabled={!document}
                     onEdit={handleEditing}
+                    data-testid="toolbar-title-input"
                 />
             </h1>
         </>

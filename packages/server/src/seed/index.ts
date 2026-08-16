@@ -4,11 +4,8 @@
  */
 import { seedTenants } from "./tenants.js";
 import { seedUsers } from "./users.js";
+import { seedCalendars } from "./calendars.js";
 import { workspaceSeed } from "./workspace.js";
-import { DocumentEntity, PermissionEntity, ProjectEntity, UserEntity } from "@stacks/db";
-import { RECORDTYPE } from "@stacks/types";
-import { randomUUID } from "crypto";
-import { getLicense } from "@stacks/license";
 
 /** Runs the full seed pipeline; logs errors without throwing. */
 export const seedDatabase = async () => {
@@ -19,6 +16,8 @@ export const seedDatabase = async () => {
         await seedUsers();
 
         await seedTenants();
+
+        await seedCalendars();
 
         await workspaceSeed();
 

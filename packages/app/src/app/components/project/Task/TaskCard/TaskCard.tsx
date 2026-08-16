@@ -133,10 +133,13 @@ export const TaskCardComponent: FunctionComponent<TaskCardComponentProps> = prop
         () => taskCardSubtasksExpanded.get(taskId) ?? false
     );
 
-    const setSubtasksVisible = useCallback((visible: boolean) => {
-        taskCardSubtasksExpanded.set(taskId, visible);
-        setIsSubtasksVisible(visible);
-    }, [taskId]);
+    const setSubtasksVisible = useCallback(
+        (visible: boolean) => {
+            taskCardSubtasksExpanded.set(taskId, visible);
+            setIsSubtasksVisible(visible);
+        },
+        [taskId]
+    );
 
     const onDrop = useCallback(async (_acceptedFiles: FileWithPath[]) => {
         // Drop-to-attach is wired up in TaskDetails. The card-level drop handler is
@@ -221,6 +224,7 @@ export const TaskCardComponent: FunctionComponent<TaskCardComponentProps> = prop
                     ["--task-tint-rgb" as string]: task.tint && colorToRGBA(task.tint, 5),
                 }}
                 onClick={handleOpenTask}
+                data-testid="task-card-click-target"
             >
                 <div
                     className={classnames("task-card-inner-wrapper", [Classes.POPOVER_DISMISS], {

@@ -23,6 +23,7 @@ export const CompanyDetailsUpdateButton: FunctionComponent<CompanyDetailsUpdateB
             id="cd-update"
             disabled={disabled}
             onClick={onClick}
+            data-testid="company-details-update-button"
         >
             Update company
         </Button>

@@ -5,7 +5,7 @@ import React, { FunctionComponent } from "react";
 
 import { Icon } from "app/components/common";
 
-interface ITableBodyCellProps {
+interface ITableBodyCellProps extends React.TdHTMLAttributes<HTMLTableCellElement> {
     children?: React.ReactNode;
     align?: "center" | "right";
     menu?: React.ReactNode;
@@ -23,7 +23,6 @@ interface ITableBodyCellProps {
     dragHandle?: React.ReactNode;
     levelIndicator?: React.ReactNode;
     onCheck?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-    onClick?: (event: React.MouseEvent<HTMLTableCellElement>) => void;
 }
 export const TableBodyCell: FunctionComponent<ITableBodyCellProps> = ({
     children,
@@ -44,6 +43,7 @@ export const TableBodyCell: FunctionComponent<ITableBodyCellProps> = ({
     levelIndicator,
     onCheck,
     onClick,
+    ...tdProps
 }) => {
     const handleCheck = (event: React.ChangeEvent<HTMLInputElement>) => {
         event.stopPropagation();
@@ -58,7 +58,7 @@ export const TableBodyCell: FunctionComponent<ITableBodyCellProps> = ({
 
     if (menu) {
         return (
-            <td className="with-menu" width={width}>
+            <td className="with-menu" width={width} {...tdProps}>
                 <Popover
                     placement="left"
                     content={<>{menu}</>}
@@ -81,11 +81,19 @@ export const TableBodyCell: FunctionComponent<ITableBodyCellProps> = ({
     return (
         <td
             onMouseDown={handleClick}
-            className={classNames(["table-td", className, {
-                secondary
-            }], { interactive: Boolean(onClick) })}
+            className={classNames(
+                [
+                    "table-td",
+                    className,
+                    {
+                        secondary,
+                    },
+                ],
+                { interactive: Boolean(onClick) }
+            )}
             colSpan={span}
             width={width}
+            {...tdProps}
         >
             {levelIndicator}
             {dragHandle}
@@ -98,7 +106,7 @@ export const TableBodyCell: FunctionComponent<ITableBodyCellProps> = ({
                 style={{
                     gap,
                     paddingLeft,
-                    paddingRight
+                    paddingRight,
                 }}
             >
                 {hasCheckbox && (

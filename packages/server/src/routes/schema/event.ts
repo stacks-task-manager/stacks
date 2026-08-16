@@ -4,14 +4,25 @@
  */
 import { z } from "zod/v4";
 
+const RecurrenceRuleSchema = z
+    .string()
+    .regex(/^RRULE:/, "Recurrence rule must use RRULE: format")
+    .optional()
+    .nullable();
+
 /** Partial update for an existing event. */
 export const EventUpdateSchema = z
     .object({
         title: z.string().optional(),
-        description: z.string().optional(),
+        description: z.string().optional().nullable(),
         start: z.iso.datetime().optional(),
         end: z.iso.datetime().optional(),
+        allDay: z.boolean().optional(),
         assignees: z.string().array().optional(),
+        calendar: z.string().optional(),
+        location: z.string().optional().nullable(),
+        recurrenceRule: RecurrenceRuleSchema,
+        recurrenceExDates: z.iso.datetime().array().optional().nullable(),
     })
     .check(payload => {
         const value = payload.value;
@@ -44,14 +55,16 @@ export const EventUpdateSchema = z
 export const EventSchema = z
     .object({
         title: z.string(),
-        description: z.string().optional(),
+        description: z.string().optional().nullable(),
         start: z.iso.datetime(),
         end: z.iso.datetime(),
         allDay: z.boolean().optional(),
         assignees: z.string().array().optional(),
         source: z.enum(["local", "google", "microsoft"]).optional(),
         calendar: z.string().optional(),
-        location: z.string().optional(),
+        location: z.string().optional().nullable(),
+        recurrenceRule: RecurrenceRuleSchema,
+        recurrenceExDates: z.iso.datetime().array().optional().nullable(),
     })
     .check(payload => {
         const value = payload.value;
@@ -86,7 +99,9 @@ export const EventsFilteredSchema = z
             },
             z
                 .string()
-                .regex(/^(local|google:.+|microsoft:.+)$/)
+                .regex(
+                    /^(local|google:.+|microsoft:.+|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/i
+                )
                 .array()
                 .optional()
         ),
@@ -103,18 +118,20 @@ export const EventsCountSchema = z
 export const EventDeleteSchema = z
     .object({
         scope: z.enum(["single", "series"]).optional(),
-        calendarId: z.string().optional(),
-        googleEventId: z.string().optional(),
-        recurringEventId: z.string().optional(),
+        calendarId: z.string().min(1).optional(),
+        googleEventId: z.string().min(1).optional(),
+        recurringEventId: z.string().min(1).optional(),
     })
     .strict()
     .check(payload => {
         const value = payload.value;
-        const hasGoogleCalendar = value.calendarId != null;
-        const hasGoogleEvent = value.googleEventId != null;
-        const hasRecurringEvent = value.recurringEventId != null;
+        const hasGoogleCalendar = value.calendarId !== undefined;
+        const hasGoogleEvent = value.googleEventId !== undefined;
+        const hasRecurringEvent = value.recurringEventId !== undefined;
+        const hasGoogleDeleteMetadata =
+            value.scope !== undefined || hasGoogleCalendar || hasGoogleEvent || hasRecurringEvent;
 
-        if (!hasGoogleCalendar && !hasGoogleEvent && !hasRecurringEvent) {
+        if (!hasGoogleDeleteMetadata) {
             return;
         }
 
@@ -127,16 +144,16 @@ export const EventDeleteSchema = z
             });
         }
 
-        if (!hasGoogleEvent && !hasRecurringEvent) {
+        if (!hasGoogleEvent) {
             payload.issues.push({
                 code: "custom",
-                message: "A Google event identifier is required",
+                message: "googleEventId is required for Google deletes",
                 path: ["googleEventId"],
                 input: value,
             });
         }
 
-        if (value.scope === "series" && !hasRecurringEvent && !hasGoogleEvent) {
+        if (value.scope === "series" && !hasRecurringEvent) {
             payload.issues.push({
                 code: "custom",
                 message: "A recurring event identifier is required to delete a series",
@@ -145,3 +162,10 @@ export const EventDeleteSchema = z
             });
         }
     });
+
+export const EventMoveSchema = z
+    .object({
+        calendar: z.string().min(1),
+        source: z.enum(["local", "google", "microsoft"]),
+    })
+    .strict();

@@ -5,6 +5,7 @@
 import { tool } from "ai";
 import type { ToolSet } from "ai";
 import { activityAiTools } from "./activityTools";
+import { choiceAiTools } from "./choiceTools";
 import { eventAiTools } from "./eventTools";
 import { navigationAiTools } from "./navigationTools";
 import { notepadAiTools } from "./notepadTools";
@@ -18,6 +19,7 @@ import { taskAiTools } from "./taskTools";
 
 export { defineTool } from "./defineTool";
 export { activityAiTools } from "./activityTools";
+export { choiceAiTools } from "./choiceTools";
 export { eventAiTools } from "./eventTools";
 export { navigationAiTools } from "./navigationTools";
 export { notepadAiTools } from "./notepadTools";
@@ -43,8 +45,27 @@ export const AI_TOOL_REGISTRY = [
     ...reminderAiTools,
     ...eventAiTools,
     ...activityAiTools,
+    ...choiceAiTools,
     ...navigationAiTools,
 ];
+
+export const MCP_AI_TOOL_NAMES = new Set<string>([
+    "getTask",
+    "createTask",
+    "listStacks",
+    "createStack",
+    "updateStack",
+    "listCalendars",
+    "createLocalCalendar",
+    "updateLocalCalendar",
+    "deleteLocalCalendar",
+    "listCalendarEvents",
+    "getCalendarEvent",
+    "createCalendarEvent",
+    "updateCalendarEvent",
+    "moveCalendarEvent",
+    "deleteCalendarEvent",
+]);
 
 /**
  * Build the `tools` object for `streamText` / `generateText` from {@link AI_TOOL_REGISTRY}.
@@ -55,6 +76,12 @@ type BindAiTool = (opts: {
     execute: (input: never) => Promise<unknown>;
 }) => unknown;
 
+export type AiToolExecuteOverride = (opts: {
+    toolName: string;
+    input: unknown;
+    defaultExecute: (input: unknown) => Promise<unknown>;
+}) => Promise<unknown>;
+
 /**
  * Build the `tools` object for `streamText` / `generateText`.
  *
@@ -62,7 +89,10 @@ type BindAiTool = (opts: {
  * in `promptContext.ts`). Omit it to get every tool — suitable for tests and
  * any non-chat call site that wants the full surface.
  */
-export function buildAiTools(allowedNames?: Iterable<string>): ToolSet {
+export function buildAiTools(
+    allowedNames?: Iterable<string>,
+    executeOverride?: AiToolExecuteOverride
+): ToolSet {
     const out = {} as ToolSet;
     const bindTool = tool as unknown as BindAiTool;
     const allow = allowedNames ? new Set(allowedNames) : null;
@@ -70,10 +100,14 @@ export function buildAiTools(allowedNames?: Iterable<string>): ToolSet {
         if (allow && !allow.has(def.name)) {
             continue;
         }
+        const defaultExecute = def.execute as (input: unknown) => Promise<unknown>;
+        const execute = executeOverride
+            ? (input: unknown) => executeOverride({ toolName: def.name, input, defaultExecute })
+            : defaultExecute;
         (out as Record<string, unknown>)[def.name] = bindTool({
             description: def.description,
             inputSchema: def.inputSchema,
-            execute: def.execute as (input: never) => Promise<unknown>,
+            execute: execute as (input: never) => Promise<unknown>,
         });
     }
     return out;

@@ -25,6 +25,13 @@ type PermissionCreateInput = {
     type: POLLINGTYPE;
 };
 
+type PermissionUpdateInput = {
+    isPublic: boolean;
+    owner?: string;
+    visibleUsers: string[];
+    visibleRoles: string[];
+};
+
 /** Creates default+merged ACL for a resource id inside a transaction. */
 async function create(id: string, permissions?: PermissionCreateInput, extTransaction?: Transaction) {
     return withTransaction(extTransaction, async transaction => {
@@ -58,15 +65,29 @@ async function getOne(id: string, extTransaction?: Transaction): Promise<IPermis
     });
 }
 
-/** Replaces ACL and emits polling updates for the resource and sometimes documents. */
-async function update(id: string, permissions: IPermissions, transaction?: Transaction) {
+/** Updates ACL visibility and emits polling updates for the resource and sometimes documents. */
+async function update(id: string, permissions: PermissionUpdateInput, transaction?: Transaction) {
     try {
-        await getOne(id);
+        const user = getCurrentUser();
+        const currentPermissions = await getOne(id, transaction);
 
-        const [affectedCount, updatedPermissions] = await PermissionEntity.update(permissions, {
-            where: sanitizeWhere({ id }),
-            returning: true,
-        });
+        if (!user.admin && currentPermissions.owner !== user.id) {
+            throw Errors.forbidden(translate("Permission update not allowed"));
+        }
+
+        const [affectedCount, updatedPermissions] = await PermissionEntity.update(
+            {
+                isPublic: permissions.isPublic,
+                owner: permissions.owner ?? currentPermissions.owner,
+                visibleUsers: permissions.visibleUsers,
+                visibleRoles: permissions.visibleRoles,
+            },
+            {
+                where: sanitizeWhere({ id }),
+                returning: true,
+                transaction,
+            }
+        );
 
         if (affectedCount === 0) {
             return false;
@@ -89,6 +110,15 @@ async function update(id: string, permissions: IPermissions, transaction?: Trans
                     permissions: updatedRow,
                 });
             }
+
+            if (updatedRow.type === POLLINGTYPE.CALENDAR) {
+                sendRealtimeUpdate({
+                    type: POLLINGTYPE.EVENT,
+                    action: POLLINGACTIONS.UPDATE,
+                    record: id,
+                    permissions: updatedRow,
+                });
+            }
         }
 
         return true;
@@ -102,7 +132,7 @@ async function remove(id: string, transaction?: Transaction): Promise<boolean> {
     const user = getCurrentUser();
     try {
         const permission = await getOne(id);
-        if (permission.owner !== user.id) {
+        if (!user.admin && permission.owner !== user.id) {
             throw Errors.forbidden(translate("Permission delete not allowed"));
         }
 

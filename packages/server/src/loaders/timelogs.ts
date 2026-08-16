@@ -227,12 +227,17 @@ async function update(id: string, data: Partial<ITimeLog>) {
     return withTransaction(undefined, async (transaction: Transaction) => {
         const timelog = await getOne(id);
 
-        const udatedTimelog = await updateOne<ITimeLog>({
-            entity: TimelogEntity,
-            id,
-            data,
+        const [, updatedRows] = await TimelogEntity.update(data, {
+            where: sanitizeWhere({ id }),
+            returning: true,
             transaction,
         });
+
+        const updatedTimelogEntity = updatedRows[0];
+        if (!updatedTimelogEntity) {
+            throw Errors.internal(translate("Could not update record"));
+        }
+        const udatedTimelog = updatedTimelogEntity.toJSON() as ITimeLog;
 
         await updateTotals(timelog.task);
 

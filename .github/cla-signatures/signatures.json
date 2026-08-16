@@ -1,3 +1,12 @@
 {
-   "signedContributors": []
+  "signedContributors": [
+    {
+      "name": "synapse",
+      "id": 71137,
+      "comment_id": 4840970345,
+      "created_at": "2026-06-30T07:32:40Z",
+      "repoId": 1232706490,
+      "pullRequestNo": 62
+    }
+  ]
 }

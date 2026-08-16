@@ -1,11 +1,7 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { describe, expect, it } from "vitest";
 import { parseClientRoute } from "../clientRoute";
-import {
-    CORE_TOOLS,
-    TOPIC_TOOLS,
-    selectPromptContext,
-} from "../promptContext";
+import { CORE_TOOLS, TOPIC_TOOLS, selectPromptContext } from "../promptContext";
 
 describe("promptContext.selectPromptContext", () => {
     it("always includes the core fragment and core tools", () => {
@@ -32,19 +28,22 @@ describe("promptContext.selectPromptContext", () => {
         expect(sel.reasons.tasks?.some(r => r.includes("keyword"))).toBe(true);
     });
 
-    it("exposes moveTask + listStacks under the tasks topic", () => {
+    it("exposes moveTask + listStacks + listTags under the tasks topic", () => {
         const sel = selectPromptContext({ newUserMessage: "move this task to Done" });
         expect(sel.topics).toContain("tasks");
         expect(sel.allowedTools).toContain("moveTask");
         // moveTask is useless without a way to discover stack ids; listStacks
         // must survive even on a pure-tasks turn.
         expect(sel.allowedTools).toContain("listStacks");
+        // task updates can resolve status labels via listTags.
+        expect(sel.allowedTools).toContain("listTags");
     });
 
     it("picks projects + tasks from message keywords", () => {
         const sel = selectPromptContext({ newUserMessage: "add a new column to the board" });
         expect(sel.topics).toEqual(expect.arrayContaining(["projects"]));
         expect(sel.allowedTools).toContain("createStack");
+        expect(sel.allowedTools).toContain("updateStack");
     });
 
     it("picks notepads from message keywords", () => {
@@ -57,6 +56,10 @@ describe("promptContext.selectPromptContext", () => {
         const sel = selectPromptContext({ newUserMessage: "what's on my calendar this week?" });
         expect(sel.topics).toContain("calendar");
         expect(sel.allowedTools).toContain("listCalendarEvents");
+        expect(sel.allowedTools).toContain("listCalendars");
+        expect(sel.allowedTools).toContain("createCalendarEvent");
+        expect(sel.allowedTools).toContain("moveCalendarEvent");
+        expect(sel.allowedTools).toContain("deleteCalendarEvent");
     });
 
     it("picks org from message keywords", () => {
@@ -116,6 +119,8 @@ describe("promptContext.selectPromptContext", () => {
             newUserMessage: "add a new project column and list my tasks",
         });
         expect(sel.promptFragments[0]).toBe("system-core.md");
-        expect(sel.promptFragments).toEqual(expect.arrayContaining(["system-tasks.md", "system-projects.md"]));
+        expect(sel.promptFragments).toEqual(
+            expect.arrayContaining(["system-tasks.md", "system-projects.md"])
+        );
     });
 });

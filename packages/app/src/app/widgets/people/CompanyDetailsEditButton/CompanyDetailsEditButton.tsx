@@ -12,7 +12,13 @@ export const CompanyDetailsEditButton: FunctionComponent<CompanyDetailsEditButto
 
     return (
         <Tooltip content="Edit company" placement="bottom">
-            <Button size="small" variant="minimal" icon={<Icon icon="edit-05" />} onClick={onClick} />
+            <Button
+                size="small"
+                variant="minimal"
+                icon={<Icon icon="edit-05" />}
+                onClick={onClick}
+                data-testid="company-details-edit-button"
+            />
         </Tooltip>
     );
 };

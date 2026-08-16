@@ -1,9 +1,17 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { Colors, Popover } from "@blueprintjs/core";
-import { DateInput, DateSelectArg, DatesSetArg, EventClickArg, EventDropArg, EventSourceInput } from "@fullcalendar/core";
+import {
+    DateInput,
+    DateSelectArg,
+    DatesSetArg,
+    EventClickArg,
+    EventDropArg,
+    EventSourceInput,
+} from "@fullcalendar/core";
 import { EventImpl } from "@fullcalendar/core/internal";
 import interactionPlugin, { EventResizeDoneArg } from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
+import rrulePlugin from "@fullcalendar/rrule";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import { Icon } from "app/components/common";
@@ -35,36 +43,36 @@ interface CalendarProps {
 
 export const Calendar2 = forwardRef<FullCalendar, CalendarProps>((props, ref) => {
     return (
-        <div className="calendar2">
+        <div className="calendar2" data-testid="calendar-surface" data-calendar-view={props.initialView}>
             <FullCalendar
                 ref={ref}
-                plugins={[timeGridPlugin, dayGridPlugin, interactionPlugin]}
+                plugins={[timeGridPlugin, dayGridPlugin, interactionPlugin, rrulePlugin]}
                 initialView={props.initialView}
                 initialDate={props.initialDate}
                 weekends={props.showWeekends}
                 views={{
                     one: {
-                        type: 'timeGridWeek',
+                        type: "timeGridWeek",
                         duration: { days: 1 },
-                        buttonText: '1 Day'
+                        buttonText: "1 Day",
                     },
                     three: {
-                        type: 'timeGridWeek',
+                        type: "timeGridWeek",
                         duration: { days: 3 },
-                        buttonText: '3 Days'
+                        buttonText: "3 Days",
                     },
                     weekdays: {
-                        type: 'timeGridWeek',
-                        buttonText: 'Weekdays',
-                        weekends: false
+                        type: "timeGridWeek",
+                        buttonText: "Weekdays",
+                        weekends: false,
                     },
                     week: {
-                        type: 'timeGridWeek',
-                        buttonText: 'Week'
+                        type: "timeGridWeek",
+                        buttonText: "Week",
                     },
                     month: {
-                        type: 'dayGridMonth',
-                        buttonText: 'Month'
+                        type: "dayGridMonth",
+                        buttonText: "Month",
                     },
                 }}
                 editable={true}
@@ -77,13 +85,14 @@ export const Calendar2 = forwardRef<FullCalendar, CalendarProps>((props, ref) =>
                 events={props.events}
                 eventClick={props.onEventClick}
                 allDaySlot={props.showAllDaySlot === true}
-
                 selectable={true} // whether empty space can be selected
                 // selectMirror={true}
                 select={props.onSlotSelect}
                 // dateClick={console.log}
 
-                eventContent={({ event, view }) => <EventContent event={event} view={view.type as calendarViewType} />}
+                eventContent={({ event, view }) => (
+                    <EventContent event={event} view={view.type as calendarViewType} />
+                )}
                 dayHeaderContent={({ date }) => {
                     return (
                         <div className="day-header">
@@ -93,11 +102,7 @@ export const Calendar2 = forwardRef<FullCalendar, CalendarProps>((props, ref) =>
                     );
                 }}
                 slotLabelContent={({ date }) => {
-                    return (
-                        <div className="slot-time-label">
-                            {formatFullCalendarSlotTime(date)}
-                        </div>
-                    );
+                    return <div className="slot-time-label">{formatFullCalendarSlotTime(date)}</div>;
                 }}
                 nowIndicatorContent={({ date }) => {
                     return (
@@ -107,17 +112,15 @@ export const Calendar2 = forwardRef<FullCalendar, CalendarProps>((props, ref) =>
                     );
                 }}
                 headerToolbar={false}
-
                 dayMaxEvents={props.dayMaxEvents ?? true}
                 eventDrop={props.onEventDrop ?? props.onEventChange}
                 eventResize={props.onEventResize ?? props.onEventChange}
-
                 datesSet={props.onDatesChanged} // the dates changed either via the calendar api (next/prev) or calendar toolbar
             // contentHeight="auto"
             // height="auto"
             />
         </div>
-    )
+    );
 });
 
 Calendar2.displayName = "Calendar2";
@@ -125,16 +128,18 @@ Calendar2.displayName = "Calendar2";
 const DEFAULT_BG_TOP = "#edf2fb";
 const DEFAULT_BG_BOTTOM = "#eef2fcff";
 
-const EventContent = ({ event, view }: { event: EventImpl, view: calendarViewType }) => {
+const EventContent = ({ event, view }: { event: EventImpl; view: calendarViewType }) => {
     const [selected, setSelected] = useState(false);
 
     const source = event.extendedProps?.iEvent.resource.data.source;
+    const eventId = String(event.id);
     const tinted = Boolean(event.extendedProps?.tint);
     const styles: CSSProperties = {
         color: tinted ? adjustColor(event.extendedProps.tint, -50) : Colors.DARK_GRAY5,
-    }
+    };
 
-    styles.background = `linear-gradient(0deg, ${tinted ? colorToHuedColor(event.extendedProps.tint, 10) : DEFAULT_BG_BOTTOM} 0%, ${tinted ? colorToHuedColor(event.extendedProps.tint, 2) : DEFAULT_BG_TOP} 100%)`;
+    styles.background = `linear-gradient(0deg, ${tinted ? colorToHuedColor(event.extendedProps.tint, 10) : DEFAULT_BG_BOTTOM
+        } 0%, ${tinted ? colorToHuedColor(event.extendedProps.tint, 2) : DEFAULT_BG_TOP} 100%)`;
     styles.borderColor = tinted ? colorToHuedColor(event.extendedProps.tint, 40) : "#abc4ff";
 
     let rulerColor = event.extendedProps.tint ?? Colors.GRAY2;
@@ -151,7 +156,9 @@ const EventContent = ({ event, view }: { event: EventImpl, view: calendarViewTyp
             return (
                 <>
                     <div className="fc-daygrid-event-dot" style={{ borderColor: rulerColor }}></div>
-                    <div className="fc-event-time">{`${parseInt(time[0])}${time[1] ? time[1].substring(0, 1) : ""}`.toLowerCase()}</div>
+                    <div className="fc-event-time">
+                        {`${parseInt(time[0])}${time[1] ? time[1].substring(0, 1) : ""}`.toLowerCase()}
+                    </div>
                     <div className="fc-event-title">{event.title}</div>
                 </>
             );
@@ -160,7 +167,12 @@ const EventContent = ({ event, view }: { event: EventImpl, view: calendarViewTyp
         return (
             <>
                 <div className="event-title">{event.title}</div>
-                {event.start != null && <div className="event-date"><Icon icon="clock" size={12} /> {format(event.start, "p")} - {format(event.end ?? addMinutes(event.start, 30), "p")}</div>}
+                {event.start != null && (
+                    <div className="event-date">
+                        <Icon icon="clock" size={12} /> {format(event.start, "p")} -{" "}
+                        {format(event.end ?? addMinutes(event.start, 30), "p")}
+                    </div>
+                )}
                 <div className="event-border" style={{ backgroundColor: rulerColor }} />
             </>
         );
@@ -169,14 +181,14 @@ const EventContent = ({ event, view }: { event: EventImpl, view: calendarViewTyp
     const icon = useMemo(() => {
         let icon: string | null = null;
         if (source === "local") {
-            icon = "check";
+            icon = "calendar-date";
         } else if (source === "google") {
             icon = "google";
         } else if (source === "microsoft") {
             icon = "microsoft";
         }
 
-        return icon ? <Icon icon={icon} size={24} className="event-source-icon" /> : null;
+        return icon ? <Icon icon={icon} size={18} className="event-source-icon" /> : null;
     }, [source]);
 
     return (
@@ -190,10 +202,21 @@ const EventContent = ({ event, view }: { event: EventImpl, view: calendarViewTyp
             onOpening={() => setSelected(true)}
             onClosing={() => setSelected(false)}
             renderTarget={({ isOpen, ref, ...popoverProps }) => (
-                <div {...popoverProps} className={classNames("event-content", { selected: isOpen, completed: event.extendedProps?.completed })} ref={ref} style={styles}>
+                <div
+                    {...popoverProps}
+                    className={classNames("event-content", {
+                        selected: isOpen,
+                        completed: event.extendedProps?.completed,
+                    })}
+                    data-testid={`calendar-event-${eventId}`}
+                    data-calendar-event-title={event.title}
+                    ref={ref}
+                    style={styles}
+                >
                     {eventContent}
                     {icon}
                 </div>
-            )} />
+            )}
+        />
     );
-}
+};

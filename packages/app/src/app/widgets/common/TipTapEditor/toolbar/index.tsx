@@ -76,9 +76,11 @@ export const TipTapToolbar: FunctionComponent<TipTapToolbarProps> = ({
     });
 
     useEffect(() => {
-        if (!editor) return;
+        if (!editor || editor.isDestroyed) return;
 
         const updateToolbar = () => {
+            if (editor.isDestroyed) return;
+
             setState(
                 produce((state: TipTapToolbarState) => {
                     state.isBold = editor.isActive("bold");
@@ -115,7 +117,7 @@ export const TipTapToolbar: FunctionComponent<TipTapToolbarProps> = ({
         };
     }, [editor]);
 
-    if (!editor) return <div>No editor</div>;
+    if (!editor || editor.isDestroyed) return null;
 
     return (
         <div className={classNames("tiptap-toolbar", className)} data-testid="tip-tap-toolbar">

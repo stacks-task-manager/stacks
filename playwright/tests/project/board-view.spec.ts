@@ -36,10 +36,17 @@ test.describe("Project - Board view", () => {
     });
 
     test.afterAll(async () => {
-        await project.delete(projectName);
-        const matchingProjects = sidebar.documentsTreeItems.filter({ hasText: projectName });
-        await expect(matchingProjects).toHaveCount(0);
-        await expect(page.getByRole("alert")).toHaveText("Record deleted successfully");
+        if (page && !page.isClosed()) {
+            const matchingProjects = sidebar.documentsTreeItems.filter({ hasText: projectName });
+            const hadProject = (await matchingProjects.count()) > 0;
+            if (hadProject) {
+                await project.delete(projectName);
+            }
+            await expect(matchingProjects).toHaveCount(0);
+            if (hadProject) {
+                await expect(page.getByRole("alert")).toHaveText("Record deleted successfully");
+            }
+        }
 
         if (page && !page.isClosed()) {
             await page.close();
@@ -60,7 +67,7 @@ test.describe("Project - Board view", () => {
             const matchingProjects = sidebar.documentsTreeItems.filter({ hasText: projectName });
             const count = await matchingProjects.count();
             expect(count).toBeGreaterThanOrEqual(1);
-            await expect(page).toHaveURL(`/app/project/${projectId}`);
+            await project.expectProjectUrl(projectId);
         });
 
         await test.step("Should add the first column via the blank slate", async () => {

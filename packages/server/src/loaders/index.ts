@@ -5,6 +5,7 @@
 export * from "./context";
 export * from "./activities";
 export * from "./bookmarks";
+export * from "./calendar";
 export * from "./companies";
 export * from "./documents";
 export * from "./emails";

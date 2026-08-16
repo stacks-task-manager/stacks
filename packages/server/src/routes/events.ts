@@ -9,6 +9,7 @@ import { translate } from "@stacks/translations";
 import { EventsLoader } from "../loaders";
 import {
     EventDeleteSchema,
+    EventMoveSchema,
     EventSchema,
     EventsCountSchema,
     EventsFilteredSchema,
@@ -65,6 +66,23 @@ events.patch(
 
         const updated = await EventsLoader.update(id, eventData);
         if (!updated) {
+            throw Errors.notFound(translate("Event not found"));
+        }
+
+        return c.replySuccess({ success: true });
+    })
+);
+
+/** PATCH `/:id/move` — Moves an event within its existing calendar source. */
+events.patch(
+    "/:id/move",
+    validator(EventMoveSchema),
+    asyncHandler(async (c: Context) => {
+        const moveData = c.req.valid("json");
+        const { id } = c.req.param();
+
+        const moved = await EventsLoader.move(id, moveData.calendar, moveData.source);
+        if (!moved) {
             throw Errors.notFound(translate("Event not found"));
         }
 

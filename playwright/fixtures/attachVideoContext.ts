@@ -2,6 +2,7 @@ import { join, normalize } from "path";
 import type { BrowserContext, TestInfo } from "@playwright/test";
 
 export const TEMP_VIDEOS_DIR = normalize(`pw-videos`);
+const shouldRecordVideo = process.env.E2E_RECORD_VIDEO !== "false";
 
 export const attachVideoContextFixtures = {
     // provide a mechanism to establish a reference to the active
@@ -20,6 +21,10 @@ export const attachVideoContextFixtures = {
             });
 
             if (testInfo.status && ["failed", "timedOut", "interrupted"].includes(testInfo.status)) {
+                if (!shouldRecordVideo) {
+                    return;
+                }
+
                 if (!ctx) {
                     return;
                 }

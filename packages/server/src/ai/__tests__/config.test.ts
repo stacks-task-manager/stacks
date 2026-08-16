@@ -7,7 +7,7 @@ describe("ai config", () => {
 
     beforeEach(() => {
         delete process.env.AI_CHAT_ENABLED;
-        delete process.env.AI_OPENAI_BASE_URL;
+        delete process.env.AI_BASE_URL;
         delete process.env.AI_MODEL;
     });
 
@@ -20,13 +20,13 @@ describe("ai config", () => {
     });
 
     it("is true when base URL and model set", () => {
-        process.env.AI_OPENAI_BASE_URL = "http://127.0.0.1:1234/v1";
+        process.env.AI_BASE_URL = "http://127.0.0.1:1234/v1";
         process.env.AI_MODEL = "test-model";
         expect(isAiChatConfigured()).toBe(true);
     });
 
     it("is false when kill switch is false string", () => {
-        process.env.AI_OPENAI_BASE_URL = "http://127.0.0.1:1234/v1";
+        process.env.AI_BASE_URL = "http://127.0.0.1:1234/v1";
         process.env.AI_MODEL = "test-model";
         process.env.AI_CHAT_ENABLED = "false";
         expect(isAiChatConfigured()).toBe(false);

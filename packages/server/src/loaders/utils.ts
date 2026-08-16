@@ -8,6 +8,8 @@ import { pgStringLiteral } from "./sqlLiteral";
 import { IPermissions, POLLINGTYPE } from "@stacks/types";
 import { translate } from "@stacks/translations";
 
+type ResourceWritePolicy = "owner" | "visible";
+
 export const sanitizeUpdate = <T = any>(newData: Partial<T>) => {
     const { tenant, createdBy, updatedBy, deletedBy, deleted, ...data } = newData as any;
     const sanitizedData: any = { ...data };
@@ -42,7 +44,6 @@ export const sanitizeWherePermissions = (whereData?: object, prefix?: boolean) =
             literal(`${prefixWithDot}"owner" = ${pgStringLiteral(user.id)}`),
             literal(`${prefixWithDot}"visibleRoles" ? ${pgStringLiteral(user.role)}`),
             literal(`${prefixWithDot}"visibleUsers" ? ${pgStringLiteral(user.id)}`),
-            literal(`"PermissionEntity"."id" IS NULL`),
         ];
     }
 
@@ -50,7 +51,7 @@ export const sanitizeWherePermissions = (whereData?: object, prefix?: boolean) =
 };
 
 /**
- * Generating a where condition where a resource can be deleted if it's public or the owner
+ * Generating a where condition where a resource can be deleted if it's owned by the user.
  * @param whereData The original WHERE clause data.
  * @param prefix Whether to prefix the fields with the PermissionEntity table name.
  * @returns The sanitized WHERE clause.
@@ -62,10 +63,7 @@ export const sanitizeWhereDelete = (whereData?: object, prefix?: boolean) => {
     const prefixWithDot = prefix ? `"PermissionEntity".` : "";
 
     if (!user.admin) {
-        whereCondition[Op.or] = [
-            literal(`${prefixWithDot}"isPublic" = true`),
-            literal(`${prefixWithDot}"owner" = ${pgStringLiteral(user.id)}`),
-        ];
+        whereCondition[Op.or] = [literal(`${prefixWithDot}"owner" = ${pgStringLiteral(user.id)}`)];
     }
 
     return whereCondition;
@@ -76,12 +74,25 @@ export const attachPermissionsToRow = (item: any) => {
     const permissions = item.PermissionEntity.id !== null ? item.PermissionEntity : { ...defaultPermissions };
     delete item.PermissionEntity;
     item.permissions = {
+        id: permissions.id ?? item.id,
+        type: permissions.type ?? POLLINGTYPE.PERMISSION,
         isPublic: permissions.isPublic,
         visibleUsers: permissions.visibleUsers,
         visibleRoles: permissions.visibleRoles,
-        owner: permissions.owner,
+        owner: permissions.owner ?? item.createdBy,
     };
 };
+
+function assertCanWriteResource(record: any, policy: ResourceWritePolicy) {
+    if (policy === "visible") return;
+
+    const user = getCurrentUser();
+    if (user.admin) return;
+
+    if (record.permissions?.owner !== user.id) {
+        throw Errors.forbidden(translate("Record update not allowed"));
+    }
+}
 
 export const createOne = async <T>({
     entity,
@@ -212,11 +223,13 @@ export const updateOne = async <T>({
     entity,
     id,
     data,
+    writePolicy = "owner",
     transaction,
 }: {
     entity: any;
     id: string;
     data: any;
+    writePolicy?: ResourceWritePolicy;
     transaction?: Transaction;
 }): Promise<T> => {
     const record = await findOne({ entity, id, transaction });
@@ -224,6 +237,8 @@ export const updateOne = async <T>({
     if (!record) {
         throw Errors.notFound(translate("Record not found"));
     }
+
+    assertCanWriteResource(record, writePolicy);
 
     const user = getCurrentUser();
 
@@ -259,16 +274,22 @@ export const updateAll = async <T>({
     entity,
     data,
     filter,
+    writePolicy = "owner",
     transaction,
 }: {
     entity: any;
     data: any;
     filter?: object;
+    writePolicy?: ResourceWritePolicy;
     transaction?: Transaction;
 }): Promise<T[]> => {
     const items = await findAll({ entity, filter, transaction });
     if (items === null || items.length === 0) {
         return [];
+    }
+
+    for (const item of items) {
+        assertCanWriteResource(item, writePolicy);
     }
 
     const user = getCurrentUser();
@@ -300,10 +321,12 @@ export const updateAll = async <T>({
 export const deleteOne = async <T>({
     entity,
     id,
+    writePolicy = "owner",
     transaction,
 }: {
     entity: any;
     id: string;
+    writePolicy?: ResourceWritePolicy;
     transaction?: Transaction;
 }): Promise<T> => {
     const user = getCurrentUser();
@@ -311,6 +334,7 @@ export const deleteOne = async <T>({
         entity,
         id,
         data: { deleted: new Date(), deletedBy: user.id },
+        writePolicy,
         transaction,
     });
 };
@@ -325,10 +349,12 @@ export const deleteOne = async <T>({
 export const deleteAll = async <T>({
     entity,
     filter,
+    writePolicy = "owner",
     transaction,
 }: {
     entity: any;
     filter?: object;
+    writePolicy?: ResourceWritePolicy;
     transaction?: Transaction;
 }): Promise<T[]> => {
     const user = getCurrentUser();
@@ -336,6 +362,7 @@ export const deleteAll = async <T>({
         entity,
         data: { deleted: new Date(), deletedBy: user.id },
         filter,
+        writePolicy,
         transaction,
     });
 };

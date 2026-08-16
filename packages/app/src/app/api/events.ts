@@ -2,7 +2,7 @@
 /**
  * Calendar events and counts.
  */
-import { ICalendarEvent, ITask, ITimeLog } from "@stacks/types";
+import { ICalendarEvent, ICalendarSource, ITask, ITimeLog } from "@stacks/types";
 import request from "./request";
 
 interface LoadTasks {
@@ -16,12 +16,19 @@ interface LoadTasksParams {
     projects: string[];
 }
 
-export interface EventDeleteParams {
-    scope?: "single" | "series";
-    calendarId?: string;
-    googleEventId?: string;
-    recurringEventId?: string;
-}
+export type EventDeleteParams =
+    | {
+          scope?: "single";
+          calendarId: string;
+          googleEventId: string;
+          recurringEventId?: string;
+      }
+    | {
+          scope: "series";
+          calendarId: string;
+          googleEventId: string;
+          recurringEventId: string;
+      };
 
 export const EventsAPI = {
     /** Lists events for a calendar view and anchor date. */
@@ -41,6 +48,10 @@ export const EventsAPI = {
     /** PATCH an event. */
     async update(eventId: string, event: Partial<ICalendarEvent>): Promise<boolean> {
         return request.patch(`/api/events/${eventId}`, event);
+    },
+    /** Moves an event within its existing provider/source. */
+    async move(eventId: string, calendar: string, source: ICalendarSource): Promise<boolean> {
+        return request.patch(`/api/events/${eventId}/move`, { calendar, source });
     },
     /** Deletes an event. */
     async remove(eventId: string, params?: EventDeleteParams): Promise<boolean> {

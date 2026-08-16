@@ -9,8 +9,8 @@ class Base {
         this.tooltip = page.locator('[class*="tooltip"] [class*="popover-content"]');
     }
 
-    async open() {
-        return await this.page.goto("/");
+    async open(): Promise<void> {
+        await this.page.goto("/");
     }
 
     async goto(slug: string) {
@@ -23,6 +23,19 @@ class Base {
 
     async getUrl() {
         return this.page.url();
+    }
+
+    async expectPath(pathname: string, searchParams?: Record<string, string>) {
+        await expect
+            .poll(() => {
+                const url = new URL(this.page.url());
+                const paramsMatch = Object.entries(searchParams ?? {}).every(
+                    ([key, value]) => url.searchParams.get(key) === value
+                );
+
+                return url.pathname === pathname && paramsMatch;
+            })
+            .toBe(true);
     }
 
     async wait() {

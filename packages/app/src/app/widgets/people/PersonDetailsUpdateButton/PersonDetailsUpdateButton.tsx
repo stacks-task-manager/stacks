@@ -23,6 +23,7 @@ export const PersonDetailsUpdateButton: FunctionComponent<PersonDetailsUpdateBut
             disabled={disabled}
             id="pd-update"
             onClick={onClick}
+            data-testid="person-details-update-button"
         >
             {translate("Update person")}
         </Button>

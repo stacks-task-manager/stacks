@@ -18,13 +18,7 @@
 import type { AiChatClientMessage } from "./chat";
 import type { ParsedClientRoute } from "./clientRoute";
 
-export const PROMPT_TOPICS = [
-    "tasks",
-    "projects",
-    "notepads",
-    "calendar",
-    "org",
-] as const;
+export const PROMPT_TOPICS = ["tasks", "projects", "notepads", "calendar", "org"] as const;
 
 export type PromptTopic = (typeof PROMPT_TOPICS)[number];
 
@@ -37,6 +31,7 @@ export type PromptTopic = (typeof PROMPT_TOPICS)[number];
  *      topic matches (e.g. a pure "who am I" turn).
  */
 export const CORE_TOOLS: readonly string[] = [
+    "askUserChoice",
     "navigate",
     "openProfile",
     "globalSearch",
@@ -63,12 +58,24 @@ export const TOPIC_TOOLS: Record<PromptTopic, readonly string[]> = {
         "updateTask",
         "moveTask",
         "listStacks",
+        "listTags",
         "listActivities",
         "listReminders",
     ],
-    projects: ["createProject", "listStacks", "createStack"],
+    projects: ["createProject", "listStacks", "createStack", "updateStack"],
     notepads: ["listNotepads"],
-    calendar: ["listCalendarEvents"],
+    calendar: [
+        "listCalendars",
+        "createLocalCalendar",
+        "updateLocalCalendar",
+        "deleteLocalCalendar",
+        "listCalendarEvents",
+        "getCalendarEvent",
+        "createCalendarEvent",
+        "updateCalendarEvent",
+        "moveCalendarEvent",
+        "deleteCalendarEvent",
+    ],
     org: ["listTags", "listCompanies", "listBookmarks"],
 };
 
@@ -80,10 +87,8 @@ export const TOPIC_TOOLS: Record<PromptTopic, readonly string[]> = {
  * matchers intentionally use word boundaries and common synonyms.
  */
 const TOPIC_KEYWORDS: Record<PromptTopic, RegExp> = {
-    tasks:
-        /\b(task|tasks|todo|to-?do|assign(?:ee|ed)?|due\s*date|due|complete[ds]?|mark(?: as)? (?:done|todo)|backlog|ticket)\b/i,
-    projects:
-        /\b(project|projects|board|column|stack|kanban|lane|pipeline|milestone)\b/i,
+    tasks: /\b(task|tasks|todo|to-?do|assign(?:ee|ed)?|due\s*date|due|complete[ds]?|mark(?: as)? (?:done|todo)|backlog|ticket)\b/i,
+    projects: /\b(project|projects|board|column|stack|kanban|lane|pipeline|milestone)\b/i,
     notepads: /\b(note|notes|notepad|notepads|doc|document(?!ation)|memo)\b/i,
     calendar:
         /\b(calendar|event|events|meeting|meetings|schedule[ds]?|appointment|today'?s schedule|this week)\b/i,
@@ -146,7 +151,10 @@ function stickyTopicsFromHistory(history: AiChatClientMessage[]): PromptTopic[] 
     // Look at the last 3 turns (user+assistant combined text). Short window so
     // stale intent doesn't dominate — if the user changes topic, one fresh
     // keyword-free turn drops the old sticky topic.
-    const tail = history.slice(-3).map(m => m.content).join("\n");
+    const tail = history
+        .slice(-3)
+        .map(m => m.content)
+        .join("\n");
     if (!tail.trim()) {
         return [];
     }
@@ -165,9 +173,7 @@ function uniq<T>(values: readonly T[]): T[] {
  * core tools can also answer pure navigation / identity questions, so this
  * is a safe fallback (vs. enabling nothing and getting stuck).
  */
-export function selectPromptContext(
-    inputs: PromptContextInputs
-): PromptContextSelection {
+export function selectPromptContext(inputs: PromptContextInputs): PromptContextSelection {
     const reasons: Record<string, string[]> = {};
     const activate = (topic: PromptTopic, reason: string) => {
         (reasons[topic] ??= []).push(reason);

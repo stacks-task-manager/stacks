@@ -54,6 +54,7 @@ interface GoogleCalendarEvent {
         date?: string;
         timeZone?: string;
     };
+    recurrence?: string[];
 }
 
 class GoogleOAuthService {
@@ -83,15 +84,15 @@ class GoogleOAuthService {
             })),
             creator: event.creator
                 ? {
-                    email: event.creator.email || "",
-                    displayName: event.creator.displayName,
-                }
+                      email: event.creator.email || "",
+                      displayName: event.creator.displayName,
+                  }
                 : undefined,
             organizer: event.organizer
                 ? {
-                    email: event.organizer.email || "",
-                    displayName: event.organizer.displayName,
-                }
+                      email: event.organizer.email || "",
+                      displayName: event.organizer.displayName,
+                  }
                 : undefined,
             status: event.status,
             htmlLink: event.htmlLink,
@@ -100,11 +101,12 @@ class GoogleOAuthService {
             recurringEventId: event.recurringEventId,
             originalStartTime: event.originalStartTime
                 ? {
-                    dateTime: event.originalStartTime.dateTime,
-                    date: event.originalStartTime.date,
-                    timeZone: event.originalStartTime.timeZone,
-                }
+                      dateTime: event.originalStartTime.dateTime,
+                      date: event.originalStartTime.date,
+                      timeZone: event.originalStartTime.timeZone,
+                  }
                 : undefined,
+            recurrence: event.recurrence,
         };
     }
 
@@ -318,6 +320,7 @@ class GoogleOAuthService {
             start?: { dateTime?: string; date?: string; timeZone?: string };
             end?: { dateTime?: string; date?: string; timeZone?: string };
             location?: string;
+            recurrence?: string[] | null;
         }
     ): Promise<GoogleCalendarEvent> {
         try {
@@ -354,6 +357,7 @@ class GoogleOAuthService {
             start?: { dateTime?: string; date?: string; timeZone?: string };
             end?: { dateTime?: string; date?: string; timeZone?: string };
             location?: string;
+            recurrence?: string[];
         }
     ): Promise<GoogleCalendarEvent> {
         try {
@@ -376,6 +380,37 @@ class GoogleOAuthService {
             return this.mapGoogleEvent(response.data);
         } catch (error) {
             console.error("Error creating calendar event:", error);
+            throw error;
+        }
+    }
+
+    async moveCalendarEvent(
+        userId: string,
+        sourceCalendarId: string,
+        eventId: string,
+        destinationCalendarId: string
+    ): Promise<GoogleCalendarEvent> {
+        try {
+            const tokens = await this.refreshTokenIfNeeded(userId);
+            if (!tokens) {
+                throw new Error("No valid Google tokens found");
+            }
+
+            this.oauth2Client.setCredentials({
+                access_token: tokens.access_token,
+                refresh_token: tokens.refresh_token,
+            });
+
+            const calendar = google.calendar({ version: "v3", auth: this.oauth2Client });
+            const response = await calendar.events.move({
+                calendarId: sourceCalendarId,
+                eventId,
+                destination: destinationCalendarId,
+            });
+
+            return this.mapGoogleEvent(response.data);
+        } catch (error) {
+            console.error("Error moving calendar event:", error);
             throw error;
         }
     }
@@ -440,9 +475,11 @@ class GoogleOAuthService {
             }
 
             const currentTokens = (user.get("oauthTokens") as any) || {};
-            delete currentTokens.google;
+            const remainingTokens = { ...currentTokens };
+            delete remainingTokens.google;
 
-            await user.update({ oauthTokens: currentTokens });
+            this.oauth2Client.setCredentials({});
+            await user.update({ oauthTokens: remainingTokens });
         } catch (error) {
             console.error("Error removing tokens:", error);
             throw new Error("Failed to remove Google tokens");

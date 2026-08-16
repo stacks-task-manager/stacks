@@ -1,10 +1,10 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { Classes, Intent, Menu, MenuDivider, MenuItem, Portal } from "@blueprintjs/core";
-import { DateSelectArg, EventClickArg, EventDropArg } from "@fullcalendar/core";
+import { DateSelectArg, EventClickArg, EventDropArg, EventInput } from "@fullcalendar/core";
 import { EventResizeDoneArg } from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
 import { translate } from "@stacks/translations";
-import { APPICONS, EVENTTYPE, ICalendarEvent, IEvent, IPerson, ITask } from "@stacks/types";
+import { APPICONS, EVENTTYPE, ICalendar, ICalendarEvent, IEvent, IPerson, ITask } from "@stacks/types";
 import classNames from "classnames";
 import mousetrap from "mousetrap";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -13,7 +13,7 @@ import { Icon } from "app/components/common";
 import { getDocument, useEvents, usePreferences, useRealtimeUpdates } from "app/hooks";
 import { shallowEqual } from "app/hooks/store";
 import { CalendarActions } from "app/store/actions";
-import { CalendarStore, ICalendarRemote } from "app/store/calendar";
+import { CalendarStore } from "app/store/calendar";
 import { toggleSidebar } from "app/store/global";
 import { mapCalendarStoreViewToFc } from "app/utils/calendarFullCalendar";
 import { CalendarSlotInfo, dateSelectArgToSlotInfo } from "app/utils/calendarSlot";
@@ -48,7 +48,55 @@ function getCalendarEventTitle(ev: IEvent): string {
     return "";
 }
 
-function eventTintForFullCalendar(ev: IEvent, calendars: ICalendarRemote[]): string | undefined {
+function formatRRuleDateTime(date: Date | string): string {
+    return new Date(date).toISOString().replace(/[-:]/g, "").replace(".000", "");
+}
+
+function buildAnchoredRecurrenceRule(event: ICalendarEvent): string {
+    const rule = event.recurrenceRule ?? "";
+    if (!rule || /^DTSTART:/m.test(rule)) {
+        return rule;
+    }
+
+    return `DTSTART:${formatRRuleDateTime(event.start)}\n${rule}`;
+}
+
+function isDailyRecurrence(rule?: string | null): boolean {
+    return /(^|;)FREQ=DAILY(;|$)/i.test((rule ?? "").replace(/^RRULE:/i, ""));
+}
+
+function getTimeOfDayMs(date: Date): number {
+    return (
+        date.getHours() * 60 * 60 * 1000 +
+        date.getMinutes() * 60 * 1000 +
+        date.getSeconds() * 1000 +
+        date.getMilliseconds()
+    );
+}
+
+function getRecurringEventDurationMs(event: ICalendarEvent): number {
+    const oneDayMs = 24 * 60 * 60 * 1000;
+    const start = new Date(event.start);
+    const end = new Date(event.end);
+    const durationMs = Math.max(end.getTime() - start.getTime(), 0);
+
+    if (!isDailyRecurrence(event.recurrenceRule)) {
+        return durationMs;
+    }
+
+    if (event.allDay) {
+        return oneDayMs;
+    }
+
+    const timeOfDayDurationMs = getTimeOfDayMs(end) - getTimeOfDayMs(start);
+    if (timeOfDayDurationMs > 0) {
+        return Math.min(timeOfDayDurationMs, oneDayMs);
+    }
+
+    return Math.min(durationMs, oneDayMs);
+}
+
+function eventTintForFullCalendar(ev: IEvent, calendars: ICalendar[]): string | undefined {
     if (ev.resource.type === EVENTTYPE.TASK || ev.resource.type === EVENTTYPE.TIMELOG) {
         const task = ev.resource.data as ITask;
         const document = getDocument(task.project);
@@ -60,11 +108,9 @@ function eventTintForFullCalendar(ev: IEvent, calendars: ICalendarRemote[]): str
     }
     if (ev.resource.type === EVENTTYPE.EVENT) {
         const calEvent = ev.resource.data as ICalendarEvent;
-        if (calEvent.source === "google") {
-            const calendar = calendars.find(c => c.id === calEvent.calendar);
-            if (calendar?.color) {
-                return calendar.color;
-            }
+        const calendar = calendars.find(c => c.source === calEvent.source && c.id === calEvent.calendar);
+        if (calendar?.color) {
+            return calendar.color;
         }
         if (calEvent.color) {
             return calEvent.color;
@@ -110,7 +156,7 @@ export const Calendar = () => {
     const [selectedSlot, setSelectedSlot] = useState<CalendarSlotInfo | null>(null);
     const [showTasksPicker, setShowTasksPicker] = useState(false);
 
-    const previousDate = useRef<Date | null>(null);
+    const previousDate = useRef<string | null>(null);
     const previousView = useRef<string | null>(null);
     const previousShowCalendars = useRef<string | null>(null);
     const calendarRef = useRef<FullCalendar>(null);
@@ -121,17 +167,18 @@ export const Calendar = () => {
     useEffect(() => {
         const showCalendarsKey = JSON.stringify(showCalendars);
         if (
-            previousDate.current === date &&
+            previousDate.current === date.toISOString() &&
             previousView.current === view &&
             previousShowCalendars.current === showCalendarsKey
         ) {
             return;
         }
 
-        CalendarActions.load();
-        previousDate.current = date;
+        previousDate.current = date.toISOString();
         previousView.current = view;
         previousShowCalendars.current = showCalendarsKey;
+
+        CalendarActions.load();
     }, [date, view, showCalendars]);
 
     useEffect(() => {
@@ -195,9 +242,9 @@ export const Calendar = () => {
 
     const fcEvents = useMemo(() => {
         return events.map(ev => {
-            const data = ev.resource.data as { id: string };
+            const data = ev.resource.data as { id: string; recurrenceRule?: string | null };
             const id = String(data.id);
-            return {
+            const fcEvent: EventInput = {
                 id,
                 title: getCalendarEventTitle(ev),
                 start: ev.start!,
@@ -209,6 +256,20 @@ export const Calendar = () => {
                     tint: eventTintForFullCalendar(ev, calendars),
                 },
             };
+
+            if (ev.resource.type === EVENTTYPE.EVENT) {
+                const calendarEvent = ev.resource.data as ICalendarEvent;
+                if (calendarEvent.source === "local" && calendarEvent.recurrenceRule) {
+                    const durationMs = getRecurringEventDurationMs(calendarEvent);
+                    fcEvent.rrule = buildAnchoredRecurrenceRule(calendarEvent);
+                    fcEvent.duration = { milliseconds: durationMs };
+                    fcEvent.groupId = calendarEvent.id;
+                    delete fcEvent.start;
+                    delete fcEvent.end;
+                }
+            }
+
+            return fcEvent;
         });
     }, [events, calendars]);
 
@@ -277,7 +338,10 @@ export const Calendar = () => {
                                 }}
                                 className={classNames([Classes.POPOVER])}
                             >
-                                <div className={Classes.POPOVER_CONTENT}>
+                                <div
+                                    className={Classes.POPOVER_CONTENT}
+                                    data-testid="calendar-slot-menu"
+                                >
                                     {showTasksPicker ? (
                                         <CalendarTasksMenu
                                             slot={selectedSlot}
@@ -292,12 +356,14 @@ export const Calendar = () => {
                                                 icon={<Icon icon={APPICONS.CALENDAREVENTADD} />}
                                                 intent={Intent.SUCCESS}
                                                 onClick={handleShowQuickEvent}
+                                                data-testid="calendar-slot-add-event"
                                             />
                                             <MenuItem
                                                 text={`${translate("Add task")}...`}
                                                 icon={<Icon icon={APPICONS.TASK} />}
                                                 intent={Intent.PRIMARY}
                                                 onClick={handleShowTasksPicker}
+                                                data-testid="calendar-slot-add-task"
                                             />
                                             <MenuDivider />
                                             <MenuItem
@@ -305,6 +371,7 @@ export const Calendar = () => {
                                                 icon={<Icon icon={APPICONS.CLOSE} />}
                                                 intent={Intent.WARNING}
                                                 onClick={cancelSlotSelection}
+                                                data-testid="calendar-slot-cancel"
                                             />
                                         </Menu>
                                     ) : null}

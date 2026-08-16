@@ -4,7 +4,7 @@ import React from "react";
 import { RecurringDeleteDialog } from "../RecurringDeleteDialog";
 
 jest.mock("@blueprintjs/core", () => {
-    // Use React from the module scope since imports can't be inside the jest mock factory function
+    const ReactModule = jest.requireActual("react");
 
     return {
         Button: ({ children, onClick, ...props }: any) => (
@@ -12,8 +12,8 @@ jest.mock("@blueprintjs/core", () => {
                 {children}
             </button>
         ),
-        Dialog: ({ isOpen, onClosed, title, children }: any) => {
-            React.useEffect(() => {
+        Dialog: ({ isOpen, onClose, onClosed, title, children }: any) => {
+            ReactModule.useEffect(() => {
                 if (!isOpen) {
                     onClosed?.();
                 }
@@ -24,6 +24,9 @@ jest.mock("@blueprintjs/core", () => {
             return (
                 <div>
                     <div>{title}</div>
+                    <button data-testid="recurring-delete-dismiss" type="button" onClick={onClose}>
+                        Dismiss
+                    </button>
                     {children}
                 </div>
             );
@@ -45,7 +48,7 @@ describe("RecurringDeleteDialog", () => {
 
         render(<RecurringDeleteDialog onClose={onClose} />);
 
-        fireEvent.click(screen.getByText("Only this event"));
+        fireEvent.click(screen.getByTestId("recurring-delete-single"));
 
         await waitFor(() => {
             expect(onClose).toHaveBeenCalledWith("single");
@@ -57,10 +60,28 @@ describe("RecurringDeleteDialog", () => {
 
         render(<RecurringDeleteDialog onClose={onClose} />);
 
-        fireEvent.click(screen.getByText("Entire series"));
+        fireEvent.click(screen.getByTestId("recurring-delete-series"));
 
         await waitFor(() => {
             expect(onClose).toHaveBeenCalledWith("series");
         });
+    });
+
+    it("returns null when cancel is selected", async () => {
+        const onClose = jest.fn();
+        render(<RecurringDeleteDialog onClose={onClose} />);
+
+        fireEvent.click(screen.getByTestId("recurring-delete-cancel"));
+
+        await waitFor(() => expect(onClose).toHaveBeenCalledWith(null));
+    });
+
+    it("returns null when the dialog is dismissed", async () => {
+        const onClose = jest.fn();
+        render(<RecurringDeleteDialog onClose={onClose} />);
+
+        fireEvent.click(screen.getByTestId("recurring-delete-dismiss"));
+
+        await waitFor(() => expect(onClose).toHaveBeenCalledWith(null));
     });
 });

@@ -75,10 +75,7 @@ export const Subtasks: FunctionComponent<ISubtasksProps> = ({ parent, disabled }
                                     />
                                 </Col>
                                 <Col justify="right" align="center">
-                                    <Tooltip
-                                        content={translate("When you click on a subtask, hold down the cmd/ctrl key to edit it inline.")}
-                                        placement="top-end"
-                                    >
+                                    <Tooltip content={translate("Subtask edit hint")} placement="top-end">
                                         <Icon
                                             icon="info-circle"
                                             cursor="help"
@@ -150,14 +147,14 @@ const SubtasksItems: FunctionComponent<SubtasksItemsProps> = ({ parent, disabled
 
     /** Match board-task DnD: DOM order must follow parent.subtasksOrder or indices splice the wrong ids. */
     const orderedSubtasks = useMemo(() => {
-        const baseOrder = parent.subtasksOrder?.length ? parent.subtasksOrder : filteredSubtasks.map(t => t.id);
+        const baseOrder = parent.subtasksOrder?.length
+            ? parent.subtasksOrder
+            : filteredSubtasks.map(t => t.id);
         const rank = (id: string) => {
             const i = baseOrder.indexOf(id);
             return i === -1 ? Number.MAX_SAFE_INTEGER : i;
         };
-        return [...filteredSubtasks].sort(
-            (a, b) => rank(a.id) - rank(b.id) || a.id.localeCompare(b.id)
-        );
+        return [...filteredSubtasks].sort((a, b) => rank(a.id) - rank(b.id) || a.id.localeCompare(b.id));
     }, [filteredSubtasks, parent.subtasksOrder]);
 
     const subtasksContainerId = `subtasks-${parent.id}`;
@@ -255,7 +252,7 @@ export const NewSubtaskInput: FunctionComponent<NewSubtaskInputProps> = ({ small
             fill
             size={small ? "small" : undefined}
             autoResize
-            placeholder={translate("What needs to be done?")}
+            placeholder={translate("New task placeholder")}
             className="subtasks-new-input"
             data-testid="subtasks-input"
         />
@@ -267,7 +264,10 @@ const SubtasksProgress = ({ percent }: { percent: number }) => {
         <span className="subtasks-progress">
             <HotkeyChip keys={[`${Math.round((percent || 0) * 100)}%`]} light />
 
-            <Tooltip content={translate("The progress is based on the immediate children subtasks")} placement="top">
+            <Tooltip
+                content={translate("The progress is based on the immediate children subtasks")}
+                placement="top"
+            >
                 <ProgressBar
                     value={percent}
                     stripes={false}

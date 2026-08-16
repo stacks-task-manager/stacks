@@ -96,9 +96,9 @@ export const ProjectToolbar = () => {
         const record = getDocument(projectId);
         if (!record) return;
 
-        showPermissions(record.permissions, updatedPermissions => {
-            RecordActions.updatePermissions(record.id, updatedPermissions);
-        });
+        showPermissions(record.permissions, updatedPermissions =>
+            RecordActions.updatePermissions(record.id, updatedPermissions)
+        );
     }, [projectId]);
 
     const handleToggleArchives = useCallback(() => {
@@ -274,19 +274,21 @@ const ProjectMenu = ({
         share(`p/${projectId}`);
     };
     return (
-        <Menu>
+        <Menu data-testid="project-menu">
             {canViewSettings && (
                 <>
                     <MenuItem
                         text={translate("Project settings")}
                         icon={<Icon icon="settings-04" />}
                         onClick={ProjectsStatusActions.toggleSettingsVisibility}
+                        data-testid="project-menu-settings"
                     />
                     <MenuDivider />
                     <MenuItem
                         text={translate("Automations")}
                         icon={<Icon icon="cpu-chip-01" />}
                         onClick={onToggleAutomations}
+                        data-testid="project-menu-automations"
                     />
                 </>
             )}
@@ -295,6 +297,7 @@ const ProjectMenu = ({
                 text={translate("Tags Statuses")}
                 icon={<Icon icon="tag" />}
                 onClick={onToggleTagsMgr}
+                data-testid="project-menu-tags-statuses"
             />
             <DocumentTintMenuItem documentId={projectId} />
             <MenuDivider />
@@ -302,33 +305,42 @@ const ProjectMenu = ({
                 text={translate("Duplicate project")}
                 icon={<Icon icon="copy" />}
                 onClick={handleDuplicate}
+                data-testid="project-menu-duplicate"
             />
             <MenuItem
                 text={translate("Bookmark")}
                 icon={<Icon icon="bookmark" />}
                 onClick={toggleNewBookmark}
+                data-testid="project-menu-bookmark"
             />
             {/* <MenuItem
                         text="Make template"
                         icon={<Icon icon="certificate-02" />}
                         onClick={() => setShowTemplate(true)}
                     /> */}
-            <MenuItem text={translate("Export")} icon={<Icon icon="download-04" />}>
+            <MenuItem
+                text={translate("Export")}
+                icon={<Icon icon="download-04" />}
+                data-testid="project-menu-export"
+            >
                 <MenuItem
                     text={translate("Export as", { type: ".xlsx" })}
                     icon={<Icon icon="download-04" />}
                     onClick={() => handleExport("excel")}
+                    data-testid="project-menu-export-xlsx"
                 />
                 <MenuItem
                     text={translate("Export as", { type: ".json" })}
                     icon={<Icon icon="download-04" />}
                     onClick={() => handleExport("json")}
+                    data-testid="project-menu-export-json"
                 />
                 {viewType === "overview" ? (
                     <MenuItem
                         text={translate("Export as", { type: ".pdf" })}
                         icon={<Icon icon="download-04" />}
                         onClick={() => handleExport("pdf")}
+                        data-testid="project-menu-export-pdf"
                     />
                 ) : null}
             </MenuItem>
@@ -336,6 +348,7 @@ const ProjectMenu = ({
                 text={translate("Share link")}
                 icon={<Icon icon="link-01" />}
                 onClick={handleShareLink}
+                data-testid="project-menu-share-link"
             />
 
             <MenuDivider />
@@ -343,6 +356,7 @@ const ProjectMenu = ({
                 text={`${translate("Privacy")}...`}
                 icon={<Icon icon="lock-01" />}
                 onClick={onTogglePrivacy}
+                data-testid="project-menu-privacy"
             />
             <MenuDivider />
 
@@ -375,11 +389,16 @@ const ArchiveOptions = ({
 
     return (
         <>
-            <MenuItem text={translate("Archives")} icon={<Icon icon={APPICONS.ARCHIVED} />}>
+            <MenuItem
+                text={translate("Archives")}
+                icon={<Icon icon={APPICONS.ARCHIVED} />}
+                data-testid="project-menu-archives"
+            >
                 <MenuItem
                     text={translate("Show archived tasks")}
                     icon={<Icon icon={APPICONS.ARCHIVED} />}
                     onClick={onToggleArchives}
+                    data-testid="project-menu-show-archived"
                 />
                 <MenuDivider />
                 <MenuItem
@@ -387,6 +406,7 @@ const ArchiveOptions = ({
                     intent={Intent.WARNING}
                     icon={<Icon icon={APPICONS.ARCHIVED} />}
                     onClick={() => ProjectsActions.archiveCompletedAlert(projectId)}
+                    data-testid="project-menu-archive-completed"
                 />
             </MenuItem>
             <MenuDivider />
@@ -606,7 +626,7 @@ const AttachmentsSearch = () => {
     return (
         <InputGroup
             leftIcon={<Icon icon="search" />}
-            placeholder={translate("Search attachments...")}
+            placeholder={translate("Search attachments")}
             round
             type="search"
             onChange={handleChangeQuery}
@@ -632,7 +652,7 @@ const LinksSearch = () => {
     return (
         <InputGroup
             leftIcon={<Icon icon="search" />}
-            placeholder={translate("Search links...")}
+            placeholder={translate("Search links")}
             round
             type="search"
             onChange={handleChangeQuery}

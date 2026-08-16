@@ -14,6 +14,7 @@ interface IColProps extends HTMLDivProps {
     fill?: boolean;
     collapse?: boolean;
     children?: React.ReactNode;
+    "data-testid"?: string;
 }
 export const Col: FunctionComponent<IColProps> = ({
     children,
@@ -112,7 +113,7 @@ export const Col: FunctionComponent<IColProps> = ({
         }
 
         return style;
-    }, [align, justify, gap, unshrinkable, width, wrap, extStyles, vertical]);
+    }, [extStyles, align, justify, vertical, gap, collapse, width, unshrinkable, wrap, fill]);
 
     return (
         <div {...restProps} className={classNames("layout-col", className)} style={styles}>

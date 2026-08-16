@@ -3,6 +3,7 @@
  * AI chat UI store (open, draft, history pointers).
  */
 import { produce } from "immer";
+import type { AiChatWidget } from "@stacks/types";
 import { entity } from "app/hooks/store";
 import { getStorage } from "app/utils/storage";
 
@@ -10,9 +11,7 @@ export const AI_CHAT_MESSAGES_KEY = "ai-chat-messages";
 
 const MAX_PERSISTED_MESSAGES = 80;
 
-export type AiChatWidget =
-    | { type: "button"; label: string; hashPath: string }
-    | { type: "redirect"; label: string; hashPath: string };
+export type { AiChatWidget } from "@stacks/types";
 
 export type AiChatMessage = {
     id: string;
@@ -46,20 +45,17 @@ function trimMessages(list: AiChatMessage[]): AiChatMessage[] {
     return list.slice(list.length - MAX_PERSISTED_MESSAGES);
 }
 
-export const AiChatStore = entity<IAiChatStore>(
-    { ...defaultState },
-    [
-        {
-            init: (origInit, ent) => () => {
-                origInit();
-                const stored = getStorage<{ messages?: AiChatMessage[] }>(AI_CHAT_MESSAGES_KEY, true, {});
-                const messages = trimMessages(Array.isArray(stored.messages) ? stored.messages : []);
-                ent.set(
-                    produce((s: IAiChatStore) => {
-                        s.messages = messages;
-                    })
-                );
-            },
+export const AiChatStore = entity<IAiChatStore>({ ...defaultState }, [
+    {
+        init: (origInit, ent) => () => {
+            origInit();
+            const stored = getStorage<{ messages?: AiChatMessage[] }>(AI_CHAT_MESSAGES_KEY, true, {});
+            const messages = trimMessages(Array.isArray(stored?.messages) ? stored.messages : []);
+            ent.set(
+                produce((s: IAiChatStore) => {
+                    s.messages = messages;
+                })
+            );
         },
-    ]
-);
+    },
+]);

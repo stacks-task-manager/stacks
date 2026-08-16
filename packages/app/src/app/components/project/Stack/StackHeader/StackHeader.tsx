@@ -156,9 +156,7 @@ const StackHeaderMenu: FunctionComponent<IStackHeaderMenuProps> = ({
                 popoverProps={{ popoverClassName: "popover-padded-small" }}
             >
                 <FormGroup
-                    helperText={translate(
-                        "The stack will be highlighted when you go over the max number of unfinished tasks."
-                    )}
+                    helperText={translate("Max tasks limit hint")}
                     label={translate("Maximum tasks")}
                     labelFor="text-input"
                 >

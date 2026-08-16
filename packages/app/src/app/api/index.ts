@@ -11,6 +11,7 @@ export * from "./files";
 export * from "./home";
 export * from "./boot";
 export * from "./calendarIntegrations";
+export * from "./calendar";
 export * from "./notepads";
 export * from "./notifications";
 export * from "./people";

@@ -50,7 +50,7 @@ export interface TipTapEditorProps {
 
 interface TipTapEditorPropsExtended extends TipTapEditorProps {
     spellCheck?: boolean;
-    onBoot: (editor: Editor) => void;
+    onBoot: (editor: Editor | null) => void;
     onKeyDown?: (event: KeyboardEvent) => boolean | void;
 }
 
@@ -214,9 +214,10 @@ export const TipTapEditor: React.FC<TipTapEditorPropsExtended> = ({
             return () => {
                 editor.off("focus", handleFocus);
                 editor.off("blur", handleBlur);
+                onBoot(null);
             };
         }
-    }, [editor]);
+    }, [editor, onBlur, onBoot, onFocus]);
 
     useEffect(() => {
         if (editor) {

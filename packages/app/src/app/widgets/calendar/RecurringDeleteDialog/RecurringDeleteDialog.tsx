@@ -2,6 +2,7 @@
 import { Button, Classes, Dialog, Intent } from "@blueprintjs/core";
 import React, { FunctionComponent, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
+import { translate } from "@stacks/translations";
 
 export type RecurringDeleteScope = "single" | "series";
 
@@ -23,12 +24,12 @@ export const RecurringDeleteDialog: FunctionComponent<RecurringDeleteDialogProps
             isOpen={isOpen}
             canEscapeKeyClose
             canOutsideClickClose
-            title="Delete recurring event"
+            title={translate("Delete recurring event")}
             onClose={() => handleClose(null)}
             onClosed={() => onClose(result.current)}
         >
             <div className={Classes.DIALOG_BODY}>
-                <p>This event is part of a series. What would you like to delete?</p>
+                <p>{translate("Recurring event delete prompt")}</p>
             </div>
             <div className={Classes.DIALOG_FOOTER}>
                 <div className={Classes.DIALOG_FOOTER_ACTIONS}>
@@ -37,21 +38,21 @@ export const RecurringDeleteDialog: FunctionComponent<RecurringDeleteDialogProps
                         variant="minimal"
                         onClick={() => handleClose(null)}
                     >
-                        Cancel
+                        {translate("Cancel")}
                     </Button>
                     <Button
                         data-testid="recurring-delete-single"
                         intent={Intent.DANGER}
                         onClick={() => handleClose("single")}
                     >
-                        Only this event
+                        {translate("Only this event")}
                     </Button>
                     <Button
                         data-testid="recurring-delete-series"
                         intent={Intent.DANGER}
                         onClick={() => handleClose("series")}
                     >
-                        Entire series
+                        {translate("Entire series")}
                     </Button>
                 </div>
             </div>

@@ -432,6 +432,7 @@ const getDocumentCount = (type: RECORDTYPE) => {
  * @returns Promise
  */
 const updatePermissions = async (documentId: string, permissions: IPermissions) => {
+    await PermissionsAPI.update(documentId, permissions);
     RecordsStore.set(
         produce((state: IRecordsStore) => {
             state.documents = state.documents.map((record: TreeNode) => {
@@ -442,7 +443,6 @@ const updatePermissions = async (documentId: string, permissions: IPermissions) 
             });
         })
     );
-    await PermissionsAPI.update(documentId, permissions);
 };
 
 /* TIMERS */

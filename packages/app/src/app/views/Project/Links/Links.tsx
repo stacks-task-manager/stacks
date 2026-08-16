@@ -155,17 +155,17 @@ const Link: FunctionComponent<LinkProps> = ({ link }) => {
                         content={
                             <Menu>
                                 <MenuItem
-                                    text={translate("Open task...")}
+                                    text={translate("Open task")}
                                     icon={<Icon icon={APPICONS.TASK} />}
                                     onClick={() => handleOpenTask(link.task)}
                                 />
                                 <MenuItem
-                                    text={translate("Open link...")}
+                                    text={translate("Open link ellipsis")}
                                     icon={<Icon icon="link-external-01" />}
                                     onClick={handleOpenLink}
                                 />
                                 <MenuItem
-                                    text={translate("Copy url...")}
+                                    text={translate("Copy url")}
                                     icon={<Icon icon="copy" />}
                                     onClick={handleCopyLink}
                                 />

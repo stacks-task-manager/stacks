@@ -109,6 +109,32 @@ jobs:
             - name: Run server unit tests
               run: yarn test:server:unit
 
+    app-unit-tests:
+        name: App unit tests
+        runs-on: ubuntu-latest
+        needs: install-and-build
+        timeout-minutes: 15
+        steps:
+            - uses: actions/checkout@v7
+
+            - name: Set up Node
+              uses: actions/setup-node@v6
+              with:
+                  node-version-file: .nvmrc
+                  cache: yarn
+
+            - name: Enable corepack
+              run: corepack enable
+
+            - name: Install dependencies
+              run: yarn install --immutable
+
+            - name: Build internal packages
+              run: yarn build:internal
+
+            - name: Run app unit tests
+              run: yarn workspace @stacks/app test --runInBand
+
     server-integration-tests:
         name: Server integration tests (Postgres)
         runs-on: ubuntu-latest

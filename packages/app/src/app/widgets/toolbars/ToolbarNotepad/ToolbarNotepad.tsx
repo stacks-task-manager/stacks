@@ -82,15 +82,15 @@ export const ToolbarNotepad = () => {
     const handleToggleVisibility = () => {
         const { notepad } = NotepadStore.get();
         if (!notepad) return;
-        showPermissions(notepad.permissions, updatedPermissions => {
-            NotepadActions.updatePermissions(notepad.id, updatedPermissions);
-        });
+        showPermissions(notepad.permissions, updatedPermissions =>
+            NotepadActions.updatePermissions(notepad.id, updatedPermissions)
+        );
     };
 
     if (isLoading) return <ToolbarNotepadLoading />;
 
     return (
-        <div className="main-toolbar single">
+        <div className="main-toolbar single" data-testid="notepad-toolbar">
             <div className="section-toolbar">
                 <div className="section-toolbar-side side">
                     <div className="section-toolbar-title">
@@ -99,22 +99,29 @@ export const ToolbarNotepad = () => {
                     <div className="section-toolbar-options">
                         <Popover
                             content={
-                                <Menu>
+                                <Menu data-testid="notepad-menu">
                                     <MenuItem
                                         text={translate("Bookmark")}
                                         icon={<Icon icon="bookmark" />}
                                         onClick={toggleNewBookmark}
+                                        data-testid="notepad-menu-bookmark"
                                     />
-                                    <MenuItem text={translate("Export")} icon={<Icon icon="download-04" />}>
+                                    <MenuItem
+                                        text={translate("Export")}
+                                        icon={<Icon icon="download-04" />}
+                                        data-testid="notepad-menu-export"
+                                    >
                                         <MenuItem
                                             text={translate("Export as", { type: ".pdf" })}
                                             icon={<Icon icon="download-04" />}
                                             onClick={() => handleExport("pdf")}
+                                            data-testid="notepad-menu-export-pdf"
                                         />
                                         <MenuItem
                                             text={translate("Export as", { type: ".html" })}
                                             icon={<Icon icon="download-04" />}
                                             onClick={() => handleExport("html")}
+                                            data-testid="notepad-menu-export-html"
                                         />
                                         {/* <MenuItem
                                             text="Export to .md"
@@ -126,11 +133,13 @@ export const ToolbarNotepad = () => {
                                         text={translate("Copy notepad link")}
                                         icon={<Icon icon="link-external-01" />}
                                         onClick={() => share(`n/${notepadId}`)}
+                                        data-testid="notepad-menu-copy-link"
                                     />
                                     <MenuItem
                                         text={translate("Duplicate notepad")}
                                         icon={<Icon icon="copy" />}
                                         disabled
+                                        data-testid="notepad-menu-duplicate"
                                     />
                                     <MenuDivider />
                                     {notepadId && <DocumentTintMenuItem documentId={notepadId} />}
@@ -139,6 +148,7 @@ export const ToolbarNotepad = () => {
                                         text={`${translate("Privacy")}...`}
                                         icon={<Icon icon="lock-01" />}
                                         onClick={handleToggleVisibility}
+                                        data-testid="notepad-menu-privacy"
                                     />
 
                                     <MenuDivider />
@@ -147,12 +157,18 @@ export const ToolbarNotepad = () => {
                                         intent={Intent.DANGER}
                                         icon={<Icon icon="trash" />}
                                         onClick={handleDelete}
+                                        data-testid="notepad-menu-delete"
                                     />
                                 </Menu>
                             }
                             placement="bottom"
                         >
-                            <Button size="small" variant="minimal" icon={<Icon icon="chevron-down" />} />
+                            <Button
+                                size="small"
+                                variant="minimal"
+                                icon={<Icon icon="chevron-down" />}
+                                data-testid="notepad-menu-button"
+                            />
                         </Popover>
 
                         <NotepadInfoButton />
@@ -192,6 +208,7 @@ const NotepadPrivacyIcon: FunctionComponent<INotepadPrivacyIconProps> = ({ onCli
             placement="bottom"
             iconColor={Colors.RED3}
             onClick={onClick}
+            data-testid="notepad-privacy-button"
         />
     );
 };
@@ -234,7 +251,12 @@ const NotepadInfoButton = () => {
             placement="bottom"
             popoverClassName="popover-padded-medium"
         >
-            <ToolbarButton icon="info-circle" tooltip="View notepad info" placement="bottom" />
+            <ToolbarButton
+                icon="info-circle"
+                tooltip="View notepad info"
+                placement="bottom"
+                data-testid="notepad-info-button"
+            />
         </Popover>
     );
 };
