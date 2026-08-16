@@ -22,7 +22,7 @@ interface GanttTask {
     parent: string | null;
     stack?: IStack;
     project: string;
-    subtasksCount?: number
+    subtasksCount?: number;
     children: GanttTask[];
     collapsed?: boolean;
 }
@@ -39,16 +39,12 @@ function convertToGantt(tasks: ITask[], stacks: IStack[], parent?: string): Gant
         if (parent && task.parent !== parent) continue;
         if (!parent && task.parent) continue;
 
-        const startDate = task.startdate
-            ? task.startdate
-            : task.duedate
-                ? startOfDay(task.duedate)
-                : null;
+        const startDate = task.startdate ? task.startdate : task.duedate ? startOfDay(task.duedate) : null;
         const endDate = task.duedate
             ? task.duedate
             : task.startdate
-                ? endOfDay(new Date(task.startdate))
-                : null;
+            ? endOfDay(new Date(task.startdate))
+            : null;
 
         const item: GanttTask = {
             name: task.title,
@@ -63,7 +59,9 @@ function convertToGantt(tasks: ITask[], stacks: IStack[], parent?: string): Gant
         };
 
         if (item.children.length) {
-            item.children = item.children.sort((a, b) => task.subtasksOrder.indexOf(a.id) - task.subtasksOrder.indexOf(b.id));
+            item.children = item.children.sort(
+                (a, b) => task.subtasksOrder.indexOf(a.id) - task.subtasksOrder.indexOf(b.id)
+            );
         }
 
         root.push(item);
@@ -93,17 +91,14 @@ export const Gantt = () => {
     };
 
     const handleDateChange = (task: GanttTask, startDate: Date, endDate: Date) => {
-        TasksActions.setDates(
-            task.id,
-            startDate,
-            endDate
-        );
+        TasksActions.setDates(task.id, startDate, endDate);
     };
 
     if (!ganttTasks.length)
         return (
             <Grid vertical>
                 <BlankSlate
+                    testId="project-gantt-empty"
                     icon="dataflow-03"
                     title="No data"
                     description="There is not enough data to render the Gantt chart."
@@ -153,7 +148,14 @@ export const Gantt = () => {
                                     style={{ cursor: "pointer" }}
                                     onClick={() => handleOpenTask(item as GanttTask)}
                                 >
-                                    <Row justify="between">{item.name} {item.children && item.children.length > 0 && <Tag minimal round>{item.children.length}</Tag>}</Row>
+                                    <Row justify="between">
+                                        {item.name}{" "}
+                                        {item.children && item.children.length > 0 && (
+                                            <Tag minimal round>
+                                                {item.children.length}
+                                            </Tag>
+                                        )}
+                                    </Row>
                                     {item.stack != null && (
                                         <>
                                             <br />

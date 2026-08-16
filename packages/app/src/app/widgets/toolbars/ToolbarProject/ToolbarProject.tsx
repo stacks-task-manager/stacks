@@ -453,6 +453,8 @@ const ProjectViewTabs = ({ narrow }: { narrow: boolean }) => {
                         {...props}
                         className={classNames("view-type-button", { active: lastViewType === view.id })}
                         onClick={() => ProjectsStatusActions.setCurrentView(view.id)}
+                        data-testid={`project-view-tab-${view.id}`}
+                        data-active={lastViewType === view.id}
                     >
                         <Icon icon={view.icon} />
                         {!narrow ? PROJECT_VIEWS_LABELS[view.id] : null}
@@ -466,10 +468,11 @@ const ProjectViewTabs = ({ narrow }: { narrow: boolean }) => {
         return (
             <Popover
                 content={
-                    <Menu>
+                    <Menu data-testid="project-views-menu">
                         {PROJECT_VIEWS.map((view: IProjectView) => (
                             <MenuItem
                                 key={view.id}
+                                data-testid={`project-view-toggle-${view.id}`}
                                 icon={<Icon icon={view.icon} />}
                                 text={PROJECT_VIEWS_LABELS[view.id]}
                                 labelElement={
@@ -485,7 +488,7 @@ const ProjectViewTabs = ({ narrow }: { narrow: boolean }) => {
                 }
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 renderTarget={({ isOpen, ...props }) => (
-                    <button {...props} className="view-type-button views">
+                    <button {...props} className="view-type-button views" data-testid="project-views-button">
                         <Icon icon="plus" />
                         {translate("Views")}
                     </button>

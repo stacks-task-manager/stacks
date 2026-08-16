@@ -114,8 +114,14 @@ const ProjectView = () => {
         }
     }, [view]);
 
-    const isPadded = useMemo(() => ![PROJECTVIEW.BOARD, PROJECTVIEW.WORLD, PROJECTVIEW.OVERVIEW, PROJECTVIEW.NOTES].includes(view), [view]);
-    const isRelative = useMemo(() => [PROJECTVIEW.WORLD, PROJECTVIEW.TIME, PROJECTVIEW.GANTT].includes(view), [view]);
+    const isPadded = useMemo(
+        () => ![PROJECTVIEW.BOARD, PROJECTVIEW.WORLD, PROJECTVIEW.OVERVIEW, PROJECTVIEW.NOTES].includes(view),
+        [view]
+    );
+    const isRelative = useMemo(
+        () => [PROJECTVIEW.WORLD, PROJECTVIEW.TIME, PROJECTVIEW.GANTT].includes(view),
+        [view]
+    );
 
     return (
         <AppView
@@ -134,6 +140,7 @@ const ProjectView = () => {
                 padded={isPadded}
                 relative={isRelative}
                 style={{ backgroundImage: background ? `url(${background})` : undefined }}
+                data-testid={`project-view-${view}`}
             >
                 {memoizedView}
             </AppViewContent>
