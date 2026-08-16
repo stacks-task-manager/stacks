@@ -704,7 +704,7 @@ const CompanyEditing: FunctionComponent<ICompanyEditingProps> = ({ company, onCl
                             onClick={handleToggleSection}
                             isOpen={visibleSections.includes("payment")}
                         >
-                            {translate("Payment & Banking")}
+                            {translate("Payment Banking")}
                         </SectionHeader>
 
                         <Collapse isOpen={visibleSections.includes("payment")}>
@@ -729,7 +729,7 @@ const CompanyEditing: FunctionComponent<ICompanyEditingProps> = ({ company, onCl
                                             fill
                                             rows={5}
                                             defaultValue={updatedCompany?.payment ?? undefined}
-                                            placeholder={translate("IBAN, SWIFT")}
+                                            placeholder={translate("IBAN SWIFT")}
                                             onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                                                 update("payment", e.currentTarget.value)
                                             }
@@ -789,8 +789,8 @@ const CompanyRead: FunctionComponent<ICompanyProps> = ({ company, onClose, onEdi
 
     const handleClearStaff = async () => {
         const response = await Dialog.confirm(
-            translate("Remove all members?"),
-            translate("Are you sure you want to remove all members from this company?")
+            translate("Remove all members"),
+            translate("Remove company members confirmation")
         );
 
         if (response) {
@@ -837,7 +837,7 @@ const CompanyRead: FunctionComponent<ICompanyProps> = ({ company, onClose, onEdi
                                 />
                                 <MenuDivider />
                                 <MenuItem
-                                    text={translate("Delete company...")}
+                                    text={translate("Delete company")}
                                     intent={Intent.DANGER}
                                     icon={<Icon icon="trash" />}
                                     onClick={handleDeleteCompany}
@@ -1016,7 +1016,7 @@ const CompanyRead: FunctionComponent<ICompanyProps> = ({ company, onClose, onEdi
                         </TaskDetailsSection>
                     </div>
 
-                    <h4>{translate("Payment & Banking")}</h4>
+                    <h4>{translate("Payment Banking")}</h4>
 
                     <div className="person-details__section">
                         <TaskDetailsSection title={translate("VAT")} centered>

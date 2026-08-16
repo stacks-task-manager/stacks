@@ -219,10 +219,7 @@ export const taskAiTools = [
                 stackId: z.string().uuid().optional().describe("Tasks in this stack UUID"),
                 parentTaskId: z.string().uuid().optional().describe("Subtasks of this parent task UUID"),
                 searchQuery: z.string().optional().describe("Case-insensitive title/description match"),
-                from: z
-                    .string()
-                    .optional()
-                    .describe("ISO date — start of startdate/duedate range"),
+                from: z.string().optional().describe("ISO date — start of startdate/duedate range"),
                 to: z.string().optional().describe("ISO date — end of range (paired with from)"),
                 archivedOnly: z.boolean().optional().describe("True = only archived tasks"),
                 assigneeUserIds: uuidOrArray
@@ -271,10 +268,7 @@ export const taskAiTools = [
                 stackId: z.string().uuid().optional().describe("Tasks in this stack UUID"),
                 parentTaskId: z.string().uuid().optional().describe("Subtasks of this parent task UUID"),
                 searchQuery: z.string().optional().describe("Case-insensitive title/description match"),
-                from: z
-                    .string()
-                    .optional()
-                    .describe("ISO date — start of startdate/duedate range"),
+                from: z.string().optional().describe("ISO date — start of startdate/duedate range"),
                 to: z.string().optional().describe("ISO date — end of range (paired with from)"),
                 archivedOnly: z.boolean().optional().describe("True = only archived tasks"),
                 assigneeUserIds: uuidOrArray
@@ -355,7 +349,7 @@ export const taskAiTools = [
             const project = await ProjectsLoader.getOne(projectId);
             const stacks = await StacksLoader.getAll(projectId);
             if (!stacks.length) {
-                throw Errors.badRequest(translate("No stacks in project; cannot create task"));
+                throw Errors.badRequest(translate("No stacks create task"));
             }
             const resolvedStackId =
                 stackIdArg ?? pickDefaultStackId(projectId, project.stacksOrder ?? [], stacks);
@@ -523,7 +517,11 @@ export const taskAiTools = [
                         ? (patch.duedate as Date | null)
                         : ((currentTask.duedate ? new Date(currentTask.duedate) : null) as Date | null);
 
-                if (isValidDate(nextStart) && isValidDate(nextDue) && nextStart.getTime() > nextDue.getTime()) {
+                if (
+                    isValidDate(nextStart) &&
+                    isValidDate(nextDue) &&
+                    nextStart.getTime() > nextDue.getTime()
+                ) {
                     if (startdate !== undefined) {
                         patch.startdate = shiftDateHours(nextDue, -1);
                     } else if (duedate !== undefined) {

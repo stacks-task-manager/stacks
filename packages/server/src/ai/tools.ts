@@ -9,6 +9,7 @@ export {
     type AiToolExecuteOverride,
     defineTool,
     eventAiTools,
+    MCP_AI_TOOL_NAMES,
     notepadAiTools,
     orgAiTools,
     peopleAiTools,

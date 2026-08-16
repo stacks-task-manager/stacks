@@ -7,7 +7,13 @@ import type { Context } from "hono";
 import { translate } from "@stacks/translations";
 
 import { EventsLoader } from "../loaders";
-import { EventSchema, EventsCountSchema, EventsFilteredSchema, EventUpdateSchema } from "./schema/event";
+import {
+    EventMoveSchema,
+    EventSchema,
+    EventsCountSchema,
+    EventsFilteredSchema,
+    EventUpdateSchema,
+} from "./schema/event";
 import { validator } from "../middleware/validator";
 import { cacheMiddleware } from "../utils/cache";
 import { Errors } from "../errors";
@@ -59,6 +65,23 @@ events.patch(
 
         const updated = await EventsLoader.update(id, eventData);
         if (!updated) {
+            throw Errors.notFound(translate("Event not found"));
+        }
+
+        return c.replySuccess({ success: true });
+    })
+);
+
+/** PATCH `/:id/move` — Moves an event within its existing calendar source. */
+events.patch(
+    "/:id/move",
+    validator(EventMoveSchema),
+    asyncHandler(async (c: Context) => {
+        const moveData = c.req.valid("json");
+        const { id } = c.req.param();
+
+        const moved = await EventsLoader.move(id, moveData.calendar, moveData.source);
+        if (!moved) {
             throw Errors.notFound(translate("Event not found"));
         }
 

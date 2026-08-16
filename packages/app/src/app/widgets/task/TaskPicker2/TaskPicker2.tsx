@@ -1,12 +1,31 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 /** Panel-stack dialog: pick project, then stack, then task. Prefer `TaskPicker` when selecting within one project only. */
-import { Button, Classes, Colors, Dialog, InputGroup, Menu, MenuItem, Panel, PanelProps, PanelStack } from "@blueprintjs/core";
+import { translate } from "@stacks/translations";
+import {
+    Button,
+    Classes,
+    Colors,
+    Dialog,
+    InputGroup,
+    Menu,
+    MenuItem,
+    Panel,
+    PanelProps,
+    PanelStack,
+} from "@blueprintjs/core";
 import React, { useCallback, useEffect, useMemo, useState, useRef } from "react";
 
 import { APPICONS, IStack, ITask, PRIORITY, TreeNode } from "@stacks/types";
 import { BlankSlate, Grid, Icon, Row, Scroller } from "app/components/common";
 import { PriorityChip, TaskState } from "app/components/project";
-import { useProjectDocuments, useProjectStacks, useStack, useStackInfo, useStackTasks, useTask } from "app/hooks";
+import {
+    useProjectDocuments,
+    useProjectStacks,
+    useStack,
+    useStackInfo,
+    useStackTasks,
+    useTask,
+} from "app/hooks";
 import { ProjectsActions, TasksActions } from "app/store/actions";
 import { TaskAssignees } from "../TaskAssignees/TaskAssignees";
 
@@ -37,7 +56,7 @@ const ProjectsPanel: React.FC<PanelProps<TaskPickerProps>> = props => {
     const handleChangeQuery = (e: React.ChangeEvent<HTMLInputElement>) => {
         setQuery(e.target.value);
         setSelectedIndex(-1);
-    }
+    };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "ArrowDown") {
@@ -49,21 +68,24 @@ const ProjectsPanel: React.FC<PanelProps<TaskPickerProps>> = props => {
                 handleSelectProject(filteredProjects[selectedIndex]);
             }
         }
-    }
+    };
 
-    const handleSelectProject = useCallback(async (project: TreeNode) => {
-        await ProjectsActions.load([project.id], { silent: true });
-        await TasksActions.loadByProject(project.id);
-        props.openPanel({
-            props: {
-                projectId: project.id,
-                onSelect: props.onSelect,
-                onFilter: props.onFilter
-            },
-            renderPanel: StacksPanel,
-            title: project.title,
-        })
-    }, [props.onSelect]);
+    const handleSelectProject = useCallback(
+        async (project: TreeNode) => {
+            await ProjectsActions.load([project.id], { silent: true });
+            await TasksActions.loadByProject(project.id);
+            props.openPanel({
+                props: {
+                    projectId: project.id,
+                    onSelect: props.onSelect,
+                    onFilter: props.onFilter,
+                },
+                renderPanel: StacksPanel,
+                title: project.title,
+            });
+        },
+        [props.onSelect]
+    );
 
     return (
         <Grid gap={10} vertical>
@@ -93,7 +115,11 @@ const ProjectsPanel: React.FC<PanelProps<TaskPickerProps>> = props => {
                 </Scroller>
             ) : (
                 <Grid vertical>
-                    <BlankSlate icon={APPICONS.SEARCH} title="No projects found" description="Try entering a different search query." />
+                    <BlankSlate
+                        icon={APPICONS.SEARCH}
+                        title="No projects found"
+                        description={translate("Search query empty hint")}
+                    />
                 </Grid>
             )}
         </Grid>
@@ -101,7 +127,7 @@ const ProjectsPanel: React.FC<PanelProps<TaskPickerProps>> = props => {
 };
 
 interface StacksPanelInfo extends TaskPickerProps {
-    projectId: string,
+    projectId: string;
 }
 
 const StacksPanel: React.FC<PanelProps<StacksPanelInfo>> = props => {
@@ -126,7 +152,7 @@ const StacksPanel: React.FC<PanelProps<StacksPanelInfo>> = props => {
     const handleChangeQuery = (e: React.ChangeEvent<HTMLInputElement>) => {
         setQuery(e.target.value);
         setSelectedIndex(-1);
-    }
+    };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "ArrowDown") {
@@ -138,20 +164,23 @@ const StacksPanel: React.FC<PanelProps<StacksPanelInfo>> = props => {
                 handleSelectStack(filteredStacks[selectedIndex]);
             }
         }
-    }
+    };
 
-    const handleSelectStack = useCallback((stack: IStack) => {
-        props.openPanel({
-            props: {
-                projectId: props.projectId,
-                stackId: stack.id,
-                onSelect: props.onSelect,
-                onFilter: props.onFilter
-            },
-            renderPanel: TasksPanel,
-            title: stack.title,
-        });
-    }, [props.projectId, props.onSelect, props.onFilter]);
+    const handleSelectStack = useCallback(
+        (stack: IStack) => {
+            props.openPanel({
+                props: {
+                    projectId: props.projectId,
+                    stackId: stack.id,
+                    onSelect: props.onSelect,
+                    onFilter: props.onFilter,
+                },
+                renderPanel: TasksPanel,
+                title: stack.title,
+            });
+        },
+        [props.projectId, props.onSelect, props.onFilter]
+    );
 
     return (
         <Grid gap={10} vertical>
@@ -160,7 +189,7 @@ const StacksPanel: React.FC<PanelProps<StacksPanelInfo>> = props => {
                     <BlankSlate
                         icon={APPICONS.TASK}
                         title="No tasks"
-                        description="The selected project does not contain any stacks."
+                        description={translate("Project has no stacks")}
                     >
                         <Button onClick={props.closePanel}>Go back</Button>
                     </BlankSlate>
@@ -178,7 +207,7 @@ const StacksPanel: React.FC<PanelProps<StacksPanelInfo>> = props => {
                     {filteredStacks.length ? (
                         <Scroller vertical>
                             <Menu size="large">
-                                {filteredStacks.map((stack) => (
+                                {filteredStacks.map(stack => (
                                     <StackItem
                                         key={stack.id}
                                         stackId={stack.id}
@@ -191,7 +220,11 @@ const StacksPanel: React.FC<PanelProps<StacksPanelInfo>> = props => {
                         </Scroller>
                     ) : (
                         <Grid vertical>
-                            <BlankSlate icon={APPICONS.SEARCH} title="No stacks found" description="Try entering a different search query." />
+                            <BlankSlate
+                                icon={APPICONS.SEARCH}
+                                title="No stacks found"
+                                description={translate("Search query empty hint")}
+                            />
                         </Grid>
                     )}
                 </>
@@ -225,22 +258,28 @@ const TasksPanel: React.FC<PanelProps<TasksPanelInfo>> = props => {
         }
     }, [selectedIndex, filteredTasks]);
 
-    const handleChangeQuery = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-        setQuery(e.target.value);
-        setSelectedIndex(-1);
-    }, [setQuery, setSelectedIndex]);
+    const handleChangeQuery = useCallback(
+        (e: React.ChangeEvent<HTMLInputElement>) => {
+            setQuery(e.target.value);
+            setSelectedIndex(-1);
+        },
+        [setQuery, setSelectedIndex]
+    );
 
-    const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === "ArrowDown") {
-            setSelectedIndex(Math.min(selectedIndex + 1, filteredTasks.length - 1));
-        } else if (e.key === "ArrowUp") {
-            setSelectedIndex(Math.max(selectedIndex - 1, -1));
-        } else if (e.key === "Enter") {
-            if (selectedIndex >= 0) {
-                props.onSelect?.(filteredTasks[selectedIndex].id);
+    const handleKeyDown = useCallback(
+        (e: React.KeyboardEvent<HTMLInputElement>) => {
+            if (e.key === "ArrowDown") {
+                setSelectedIndex(Math.min(selectedIndex + 1, filteredTasks.length - 1));
+            } else if (e.key === "ArrowUp") {
+                setSelectedIndex(Math.max(selectedIndex - 1, -1));
+            } else if (e.key === "Enter") {
+                if (selectedIndex >= 0) {
+                    props.onSelect?.(filteredTasks[selectedIndex].id);
+                }
             }
-        }
-    }, [selectedIndex, filteredTasks, props.onSelect]);
+        },
+        [selectedIndex, filteredTasks, props.onSelect]
+    );
 
     return (
         <Grid gap={10} vertical>
@@ -249,7 +288,7 @@ const TasksPanel: React.FC<PanelProps<TasksPanelInfo>> = props => {
                     <BlankSlate
                         icon={APPICONS.TASK}
                         title="No tasks"
-                        description="The selected stack does not contain any tasks."
+                        description={translate("Stack has no tasks")}
                     >
                         <Button onClick={props.closePanel}>Go back</Button>
                     </BlankSlate>
@@ -267,7 +306,7 @@ const TasksPanel: React.FC<PanelProps<TasksPanelInfo>> = props => {
                     {filteredTasks.length ? (
                         <Scroller vertical>
                             <Menu>
-                                {filteredTasks.map((task) => (
+                                {filteredTasks.map(task => (
                                     <TaskItem
                                         key={task.id}
                                         taskId={task.id}
@@ -279,13 +318,16 @@ const TasksPanel: React.FC<PanelProps<TasksPanelInfo>> = props => {
                         </Scroller>
                     ) : (
                         <Grid vertical>
-                            <BlankSlate icon={APPICONS.SEARCH} title="No tasks found" description="Try entering a different search query." />
+                            <BlankSlate
+                                icon={APPICONS.SEARCH}
+                                title="No tasks found"
+                                description={translate("Search query empty hint")}
+                            />
                         </Grid>
                     )}
                 </>
             )}
         </Grid>
-
     );
 };
 
@@ -303,28 +345,31 @@ const useTaskPicker = ({ onSelect, onFilter }: TaskPickerProps) => {
 
     const [currentPanelStack, setCurrentPanelStack] = useState<
         Array<Panel<TaskPickerProps | StacksPanelInfo | TasksPanelInfo>>
-    >([{
-        props: { onSelect: handleSelect, onFilter: handleFilter },
-        renderPanel: ProjectsPanel,
-        title: "Projects",
-    }]);
+    >([
+        {
+            props: { onSelect: handleSelect, onFilter: handleFilter },
+            renderPanel: ProjectsPanel,
+            title: "Projects",
+        },
+    ]);
 
     const addToPanelStack = useCallback(
         (newPanel: Panel<TaskPickerProps | StacksPanelInfo | TasksPanelInfo>) =>
             setCurrentPanelStack(stack => [...stack, newPanel]),
-        [],
+        []
     );
-    const removeFromPanelStack = useCallback(
-        () => setCurrentPanelStack(stack => stack.slice(0, -1)),
-        [],
-    );
+    const removeFromPanelStack = useCallback(() => setCurrentPanelStack(stack => stack.slice(0, -1)), []);
 
     return { addToPanelStack, removeFromPanelStack, currentPanelStack };
-}
+};
 
 type TaskPickerState = ReturnType<typeof useTaskPicker>;
 
-const TaskPicker2Content = ({ addToPanelStack, removeFromPanelStack, currentPanelStack }: TaskPickerState) => {
+const TaskPicker2Content = ({
+    addToPanelStack,
+    removeFromPanelStack,
+    currentPanelStack,
+}: TaskPickerState) => {
     return (
         <div className="task-picker-2">
             <PanelStack
@@ -335,12 +380,12 @@ const TaskPicker2Content = ({ addToPanelStack, removeFromPanelStack, currentPane
             />
         </div>
     );
-}
+};
 
 export const TaskPicker2 = (props: TaskPickerProps) => {
     const taskPicker = useTaskPicker(props);
     return <TaskPicker2Content {...taskPicker} />;
-}
+};
 
 interface TaskPicker2DialogProps {
     onClose: (taskId?: string) => void;
@@ -353,7 +398,7 @@ export const TaskPicker2Dialog = ({ onClose, onFilter }: TaskPicker2DialogProps)
     const onSelect = (taskId?: string) => {
         setOpen(false);
         onClose(taskId);
-    }
+    };
 
     const taskPicker = useTaskPicker({ onSelect, onFilter });
     const { removeFromPanelStack, currentPanelStack } = taskPicker;
@@ -370,11 +415,7 @@ export const TaskPicker2Dialog = ({ onClose, onFilter }: TaskPicker2DialogProps)
         return (
             <Row justify="left" align="center" gutter={5}>
                 {currentPanelStack.length > 1 && (
-                    <Button
-                        icon="chevron-left"
-                        variant="minimal"
-                        size="small"
-                        onClick={handleBack} />
+                    <Button icon="chevron-left" variant="minimal" size="small" onClick={handleBack} />
                 )}
                 {currentTitle}
             </Row>
@@ -394,7 +435,7 @@ export const TaskPicker2Dialog = ({ onClose, onFilter }: TaskPicker2DialogProps)
             </div>
         </Dialog>
     );
-}
+};
 
 interface StackItemProps {
     stackId: string;
@@ -406,28 +447,29 @@ export const StackItem = ({ stackId, selected, onClick, onFilter }: StackItemPro
     const info = useStackInfo(stackId);
 
     if (!info) {
-        return (<MenuItem text="Loading..." className={Classes.SKELETON} />);
+        return <MenuItem text="Loading..." className={Classes.SKELETON} />;
     }
 
-    const { tint, tasks, title, } = info;
+    const { tint, tasks, title } = info;
 
     return (
         <MenuItem
             id={`stack-${stackId}`}
-            text={(
+            text={
                 <Grid gap={0}>
                     <div>{title}</div>
-                    <small className={Classes.TEXT_MUTED}>{onFilter ? onFilter(tasks)?.length : tasks?.length} tasks</small>
+                    <small className={Classes.TEXT_MUTED}>
+                        {onFilter ? onFilter(tasks)?.length : tasks?.length} tasks
+                    </small>
                 </Grid>
-            )}
+            }
             icon={<Icon icon="stop-filled" color={tint || Colors.GRAY3} />}
             labelElement={<Icon icon="chevron-right" />}
             active={selected}
             onClick={() => onClick(stackId)}
         />
     );
-}
-
+};
 
 interface TaskItemProps {
     taskId: string;
@@ -452,19 +494,22 @@ const TaskItem = ({ taskId, selected, onClick }: TaskItemProps) => {
                         <TaskState taskId={taskId} disabled />
                         {title}
                     </Row>
-                    <div className={Classes.TEXT_MUTED} style={{ paddingLeft: 25 }}>{projectInfo?.title ?? "No project"} / {stack?.title ?? "No stack"}</div>
+                    <div className={Classes.TEXT_MUTED} style={{ paddingLeft: 25 }}>
+                        {projectInfo?.title ?? "No project"} / {stack?.title ?? "No stack"}
+                    </div>
                 </Grid>
             }
             multiline
             active={selected}
-
-            labelElement={(
+            labelElement={
                 <Row align="center" gutter={5}>
                     {priority && priority !== PRIORITY.NONE && <PriorityChip priority={priority} />}
-                    {assignees.length > 0 && <TaskAssignees assignees={assignees} minimal showEmpty max={1} disabled />}
+                    {assignees.length > 0 && (
+                        <TaskAssignees assignees={assignees} minimal showEmpty max={1} disabled />
+                    )}
                 </Row>
-            )}
+            }
             onClick={onClick}
         />
     );
-}
+};

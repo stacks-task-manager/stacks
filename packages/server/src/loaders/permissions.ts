@@ -110,6 +110,15 @@ async function update(id: string, permissions: PermissionUpdateInput, transactio
                     permissions: updatedRow,
                 });
             }
+
+            if (updatedRow.type === POLLINGTYPE.CALENDAR) {
+                sendRealtimeUpdate({
+                    type: POLLINGTYPE.EVENT,
+                    action: POLLINGACTIONS.UPDATE,
+                    record: id,
+                    permissions: updatedRow,
+                });
+            }
         }
 
         return true;
@@ -123,7 +132,7 @@ async function remove(id: string, transaction?: Transaction): Promise<boolean> {
     const user = getCurrentUser();
     try {
         const permission = await getOne(id);
-        if (permission.owner !== user.id) {
+        if (!user.admin && permission.owner !== user.id) {
             throw Errors.forbidden(translate("Permission delete not allowed"));
         }
 

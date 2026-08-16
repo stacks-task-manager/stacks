@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { ITask } from "./task.js";
 import { IPerson } from "./people.js";
 import { ITimeLog } from "./timelogs.js";
+import { IPermissions } from "./permissions.js";
 
 export interface Event {
     allDay?: boolean | undefined;
@@ -36,11 +37,31 @@ export interface ICalendarEvent {
     source: "local" | "google" | "microsoft";
     calendar: string;
     location?: string;
+    recurrenceRule?: string | null;
+    recurrenceExDates?: string[];
     created?: string;
     updated?: string;
     original?: {
         htmlLink?: string;
     };
+}
+
+export interface ICalendarCount {
+    events: number;
+    tasks: number;
+    birthdays: number;
+}
+
+export type ICalendarSource = "local" | "google" | "microsoft";
+
+export interface ICalendar {
+    id: string;
+    title: string;
+    color?: string;
+    primary: boolean;
+    source: ICalendarSource;
+    readOnly: boolean;
+    permissions?: IPermissions;
 }
 
 export interface IEventResource {
@@ -51,5 +72,3 @@ export interface IEventResource {
 export interface IEvent extends Event {
     resource: IEventResource;
 }
-
-export type ICalendarSource = "local" | "google" | "microsoft";

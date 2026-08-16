@@ -37,6 +37,7 @@
         "dev:server": "yarn prune:workspaces && yarn workspace @stacks/types run compile && yarn workspace @stacks/translations run build && yarn workspace @stacks/db run compile && yarn workspace @stacks/license run build && yarn workspace @stacks/server run dev",
         "dev:email": "yarn prune:workspaces && yarn workspace @stacks/types run compile && yarn workspace @stacks/db run compile && yarn workspace @stacks/email-service run dev",
         "dev:email:templates": "yarn workspace @stacks/types run compile && yarn workspace @stacks/email-service run dev:email",
+        "ai:debug": "yarn workspace @stacks/server run ai:debug",
         "dev:locales": "yarn workspace @stacks/locales-tui start",
         "dev:mobile": "yarn workspace @stacks/mobile start",
         "reset-dev-password": "yarn workspace @stacks/db reset-password:dev",

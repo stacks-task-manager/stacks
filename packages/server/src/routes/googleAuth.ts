@@ -5,12 +5,23 @@
 import { Hono } from 'hono';
 import type { Context } from 'hono';
 import { translate } from "@stacks/translations";
+import { POLLINGACTIONS, POLLINGTYPE } from "@stacks/types";
 import { postMessageTargetOrigin } from '../config/postMessageOrigin';
+import { sendRealtimeUpdateToUser } from "../events";
 import { requireAuth } from '../middleware/auth';
 import googleOAuthService from '../services/googleOAuthService';
 import type { User } from '../types/user';
 
 const googleAuth = new Hono();
+
+const sendGoogleCalendarAuthUpdate = (userId: string) => {
+    sendRealtimeUpdateToUser(userId, {
+        type: POLLINGTYPE.CALENDAR,
+        record: "google",
+        action: POLLINGACTIONS.UPDATE,
+        automation: true,
+    });
+};
 
 const popupHtml = (targetOrigin: string, payload: Record<string, unknown>, message: string) => {
     const safeTargetOrigin = JSON.stringify(targetOrigin);
@@ -69,6 +80,7 @@ const handleCallback = async (c: Context, code?: string, error?: string) => {
 
         // Store tokens for the user
         await googleOAuthService.storeTokens(user.id, tokens);
+        sendGoogleCalendarAuthUpdate(user.id);
 
         return c.html(
             popupHtml(
@@ -126,6 +138,7 @@ const handleDisconnect = async (c: Context) => {
     try {
         const user = c.get('user') as User;
         await googleOAuthService.removeTokens(user.id);
+        sendGoogleCalendarAuthUpdate(user.id);
 
         return c.replySuccess({ disconnected: true }, 'Google account disconnected successfully');
     } catch (error) {

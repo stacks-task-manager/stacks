@@ -302,10 +302,8 @@ export const PermissionsDialog: FunctionComponent = () => {
                         <Tooltip
                             content={
                                 isPublic
-                                    ? translate("Make this resource public, thus visible to everyone")
-                                    : translate(
-                                          "Make this resource private and visible only to the owner and people in the visibility list."
-                                      )
+                                    ? translate("Public visibility hint")
+                                    : translate("Private visibility hint")
                             }
                         >
                             <AnchorButton

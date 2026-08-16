@@ -33,7 +33,7 @@ export interface IPeopleStore {
 export const defaultColumnsList = ["name", "gender", "jobTitle", "notes", "created", "updated"];
 
 export const PeopleStore = entity<IPeopleStore>({
-    isLoading: false,
+    isLoading: true,
     people: [],
     roles: [],
     companies: [],

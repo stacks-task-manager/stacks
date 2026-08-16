@@ -2,10 +2,8 @@
 import { Hono } from "hono";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp";
 import { WebStandardStreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/webStandardStreamableHttp";
-import { AI_TOOL_REGISTRY } from "../ai/toolRegistry";
+import { AI_TOOL_REGISTRY, MCP_AI_TOOL_NAMES } from "../ai/toolRegistry";
 import { serverPackageVersion } from "../packageVersions";
-
-const TOOL_NAMES = new Set<string>(["getTask", "createTask", "listStacks", "createStack", "updateStack"]);
 
 const mcpServer = new McpServer({
     name: "stacks-mcp",
@@ -13,7 +11,7 @@ const mcpServer = new McpServer({
 });
 
 for (const def of AI_TOOL_REGISTRY) {
-    if (!TOOL_NAMES.has(def.name)) {
+    if (!MCP_AI_TOOL_NAMES.has(def.name)) {
         continue;
     }
     (mcpServer as any).registerTool(

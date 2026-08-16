@@ -8,7 +8,7 @@ import { requestContext } from "../services/requestContext";
 import { clientRouteTemplateVars, parseClientRoute, type AiChatClientRoutePayload } from "./clientRoute";
 import { selectPromptContext } from "./promptContext";
 import { template } from "./promptTemplate";
-import { buildAiTools, type AiToolExecuteOverride } from "./tools";
+import { buildAiTools, MCP_AI_TOOL_NAMES, type AiToolExecuteOverride } from "./tools";
 import { createMcpToolClient } from "./mcpToolClient";
 import { appendAiChatDebugTurn, type AiChatDebugToolCall } from "./debugLog";
 import type { AiChatClientMessage, AiChatWidget } from "@stacks/types";
@@ -258,9 +258,9 @@ export async function streamAiChat(
               email?: string;
           }
         | undefined;
-    const baseURL = envTrim("AI_BASE_URL");
+    const baseURL = envTrim("AI_BASE_URL") || envTrim("AI_OPENAI_BASE_URL");
     const modelId = envTrim("AI_MODEL");
-    const apiKey = envTrim("AI_API_KEY") || "not-needed";
+    const apiKey = envTrim("AI_API_KEY") || envTrim("AI_OPENAI_API_KEY") || "not-needed";
 
     if (!baseURL || !modelId) {
         debugStatus = "error";
@@ -332,12 +332,11 @@ export async function streamAiChat(
         })
     );
 
-    const remoteToolNames = new Set<string>(["getTask", "createTask", "listStacks", "createStack", "updateStack"]);
     const shouldUseMcp = shouldUseMcpToolBackend();
     const mcp = shouldUseMcp ? await createMcpToolClient() : null;
     const executeOverride: AiToolExecuteOverride | undefined = mcp
         ? async ({ toolName, input, defaultExecute }) => {
-              if (!remoteToolNames.has(toolName)) {
+              if (!MCP_AI_TOOL_NAMES.has(toolName)) {
                   return await defaultExecute(input);
               }
               return await mcp.callTool(toolName, input);

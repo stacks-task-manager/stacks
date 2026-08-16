@@ -9,10 +9,11 @@ const indexPath = fileURLToPath(new URL("../index.ts", import.meta.url));
 const expectedMethodsByFile = {
     "activities.ts": ["create", "getAllByResources"],
     "bookmarks.ts": ["create", "remove", "getAll"],
+    "calendar.ts": ["getAll", "getOne", "getVisibleLocalCalendarIds", "create", "update", "remove", "getPrimary"],
     "companies.ts": ["getAll", "getOne", "create", "update"],
     "documents.ts": ["create", "getOne", "getAll", "remove", "update"],
     "emails.ts": ["queueEmail"],
-    "events.ts": ["getOne", "getAll", "countAll", "create", "update", "remove"],
+    "events.ts": ["getOne", "getAll", "countAll", "create", "update", "move", "remove"],
     "files.ts": [
         "uploadFile",
         "uploadFileStream",
@@ -89,6 +90,7 @@ const expectedBarrelExports = [
     "context",
     "activities",
     "bookmarks",
+    "calendar",
     "companies",
     "documents",
     "emails",

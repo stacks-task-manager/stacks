@@ -13,6 +13,7 @@ export enum POLLINGTYPE {
     PROJECT = "project",
     STACK = "stack",
     TASK = "task",
+    CALENDAR = "calendar",
     EVENT = "event",
     DOCUMENTS = "documents",
     DOCUMENT = "document",

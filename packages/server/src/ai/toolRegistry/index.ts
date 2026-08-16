@@ -49,6 +49,24 @@ export const AI_TOOL_REGISTRY = [
     ...navigationAiTools,
 ];
 
+export const MCP_AI_TOOL_NAMES = new Set<string>([
+    "getTask",
+    "createTask",
+    "listStacks",
+    "createStack",
+    "updateStack",
+    "listCalendars",
+    "createLocalCalendar",
+    "updateLocalCalendar",
+    "deleteLocalCalendar",
+    "listCalendarEvents",
+    "getCalendarEvent",
+    "createCalendarEvent",
+    "updateCalendarEvent",
+    "moveCalendarEvent",
+    "deleteCalendarEvent",
+]);
+
 /**
  * Build the `tools` object for `streamText` / `generateText` from {@link AI_TOOL_REGISTRY}.
  */
@@ -71,7 +89,10 @@ export type AiToolExecuteOverride = (opts: {
  * in `promptContext.ts`). Omit it to get every tool — suitable for tests and
  * any non-chat call site that wants the full surface.
  */
-export function buildAiTools(allowedNames?: Iterable<string>, executeOverride?: AiToolExecuteOverride): ToolSet {
+export function buildAiTools(
+    allowedNames?: Iterable<string>,
+    executeOverride?: AiToolExecuteOverride
+): ToolSet {
     const out = {} as ToolSet;
     const bindTool = tool as unknown as BindAiTool;
     const allow = allowedNames ? new Set(allowedNames) : null;

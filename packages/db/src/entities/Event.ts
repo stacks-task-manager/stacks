@@ -13,6 +13,11 @@ EventEntity.initialize(
         end: { type: DataTypes.DATE, allowNull: false },
         allDay: { type: DataTypes.BOOLEAN, allowNull: true, defaultValue: false },
         assignees: { type: DataTypes.JSONB, allowNull: true, defaultValue: [] },
+        source: { type: DataTypes.STRING, allowNull: false, defaultValue: "local" },
+        calendar: { type: DataTypes.STRING, allowNull: false, defaultValue: "local" },
+        location: { type: DataTypes.STRING, allowNull: true },
+        recurrenceRule: { type: DataTypes.TEXT, allowNull: true },
+        recurrenceExDates: { type: DataTypes.JSONB, allowNull: true },
     },
     {
         tableName: "events",

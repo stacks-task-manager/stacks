@@ -1622,17 +1622,14 @@ var init_Calendar = __esm({
     };
     CalendarEntity.initialize(
       {
-        resourceId: { type: import_sequelize6.DataTypes.UUID, allowNull: false },
-        resourceType: { type: import_sequelize6.DataTypes.STRING, allowNull: false },
-        parent: { type: import_sequelize6.DataTypes.UUID, allowNull: true },
         title: { type: import_sequelize6.DataTypes.STRING, allowNull: true },
-        person: { type: import_sequelize6.DataTypes.UUID, allowNull: false },
-        content: { type: import_sequelize6.DataTypes.STRING, allowNull: true },
-        type: { type: import_sequelize6.DataTypes.STRING, allowNull: false },
-        change: { type: import_sequelize6.DataTypes.JSONB, allowNull: true, defaultValue: {} }
+        color: { type: import_sequelize6.DataTypes.STRING, allowNull: true },
+        primary: { type: import_sequelize6.DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
+        source: { type: import_sequelize6.DataTypes.STRING, allowNull: false, defaultValue: "local" },
+        readOnly: { type: import_sequelize6.DataTypes.BOOLEAN, allowNull: false, defaultValue: false }
       },
       {
-        tableName: "calendar",
+        tableName: "calendars",
         sequelize
       }
     );
@@ -1901,7 +1898,12 @@ var init_Event = __esm({
         start: { type: import_sequelize11.DataTypes.DATE, allowNull: false },
         end: { type: import_sequelize11.DataTypes.DATE, allowNull: false },
         allDay: { type: import_sequelize11.DataTypes.BOOLEAN, allowNull: true, defaultValue: false },
-        assignees: { type: import_sequelize11.DataTypes.JSONB, allowNull: true, defaultValue: [] }
+        assignees: { type: import_sequelize11.DataTypes.JSONB, allowNull: true, defaultValue: [] },
+        source: { type: import_sequelize11.DataTypes.STRING, allowNull: false, defaultValue: "local" },
+        calendar: { type: import_sequelize11.DataTypes.STRING, allowNull: false, defaultValue: "local" },
+        location: { type: import_sequelize11.DataTypes.STRING, allowNull: true },
+        recurrenceRule: { type: import_sequelize11.DataTypes.TEXT, allowNull: true },
+        recurrenceExDates: { type: import_sequelize11.DataTypes.JSONB, allowNull: true }
       },
       {
         tableName: "events",

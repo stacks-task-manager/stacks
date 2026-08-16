@@ -117,7 +117,8 @@ export const useEvents = () => {
         if (ev.resource.type !== EVENTTYPE.EVENT) return true;
         const calEvent = ev.resource.data as ICalendarEvent;
         if (calEvent.source === "local") {
-            return filters.showCalendars.includes("local");
+            // Check if the calendar ID is in the filters (local calendars now have UUIDs)
+            return filters.showCalendars.includes(calEvent.calendar);
         }
         if (calEvent.source === "google") {
             return filters.showCalendars.includes(`google-${calEvent.calendar}`);

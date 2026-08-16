@@ -1002,7 +1002,7 @@ const TaskDetailInfo: FunctionComponent<ITaskDetailInfoProps> = React.memo(
                         centered={centered}
                     >
                         <Tooltip
-                            content={translate("Time spent across all task time logs.")}
+                            content={translate("Task time logs spent hint")}
                             placement="top"
                             disabled={disabled}
                         >
