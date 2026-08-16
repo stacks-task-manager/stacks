@@ -6,6 +6,7 @@ import api, {
     CalendarIntegrationsAPI,
     type CalendarProvider,
     CalendarsAPI,
+    type EventDeleteParams,
     EventsAPI,
     PermissionsAPI,
 } from "app/api";
@@ -41,6 +42,10 @@ import {
 import { getDatesSpan } from "app/hooks";
 import Dialog from "app/utils/dialog";
 import Storage from "app/utils/storage";
+import {
+    showRecurringDeleteDialog,
+    type RecurringDeleteScope,
+} from "app/widgets/calendar/RecurringDeleteDialog/RecurringDeleteDialog";
 import Toast from "app/utils/toast";
 import { patchFilterField } from "../actionHelpers";
 import { CALENDAR_FILTERS_STORAGE_KEY, CalendarStore, ICalendarFilters, ICalendarStore } from "../calendar";
@@ -85,6 +90,44 @@ const savePrefs = async () => {
 
 const persistFilters = () => {
     Storage.set(CALENDAR_FILTERS_STORAGE_KEY, CalendarStore.get().filters);
+};
+
+const findCalendarEvent = (eventId: string): ICalendarEvent | undefined => {
+    const event = CalendarStore.get().events.find(item => item.resource.data.id === eventId);
+    if (!event || event.resource.type !== EVENTTYPE.EVENT) return undefined;
+    return event.resource.data as ICalendarEvent;
+};
+
+const isRecurringGoogleEvent = (event?: ICalendarEvent): boolean => {
+    return event?.source === "google" && event.original?.google?.isRecurringInstance === true;
+};
+
+const buildDeleteParams = (
+    event?: ICalendarEvent,
+    scope: RecurringDeleteScope = "single"
+): EventDeleteParams | undefined => {
+    const google = event?.original?.google;
+    if (event?.source !== "google" || !google) return undefined;
+
+    const recurringEventId = google.recurringEventId;
+    if (scope === "series") {
+        if (!recurringEventId) {
+            throw new Error("Cannot delete a Google event series without its parent event id");
+        }
+        return {
+            scope,
+            calendarId: google.calendarId,
+            googleEventId: google.eventId,
+            recurringEventId,
+        };
+    }
+
+    return {
+        scope: "single",
+        calendarId: google.calendarId,
+        googleEventId: google.eventId,
+        recurringEventId,
+    };
 };
 
 let loadingCalendar = false;
@@ -609,11 +652,25 @@ const addTempEvent = async (startDate: Date, endDate: Date) => {
     }
 };
 
-const deleteEvent = async (eventId: string) => {
+const deleteEvent = async (eventOrId: string | ICalendarEvent, scope: RecurringDeleteScope = "single") => {
+    const event = typeof eventOrId === "string" ? findCalendarEvent(eventOrId) : eventOrId;
+    const eventId = typeof eventOrId === "string" ? eventOrId : eventOrId.id;
     try {
-        const deleted = await EventsAPI.remove(eventId);
+        const deleted = await EventsAPI.remove(eventId, buildDeleteParams(event, scope));
 
         if (deleted) {
+            if (event?.source === "google") {
+                CalendarStore.set(
+                    produce((state: ICalendarStore) => {
+                        if (state.selected && state.selected[0] === eventId) {
+                            state.selected = undefined;
+                        }
+                    })
+                );
+                await reload();
+                return true;
+            }
+
             CalendarStore.set(
                 produce((state: ICalendarStore) => {
                     state.events = state.events.filter(ev => ev.resource.data.id !== eventId);
@@ -622,21 +679,30 @@ const deleteEvent = async (eventId: string) => {
                     }
                 })
             );
+            return true;
         } else {
             Toast.warn(translate("Problem removing selected event"));
+            return false;
         }
     } catch (error) {
         // eslint-disable-next-line no-console
         console.error("Error deleting calendar event:", error);
         Toast.warn(translate("Problem removing selected event"));
+        return false;
     }
 };
 
-const deleteEventAlert = async (eventId: string) => {
-    const event = CalendarStore.get().events.find(event => event.resource.data.id === eventId);
-    const calendarEvent =
-        event?.resource.type === EVENTTYPE.EVENT ? (event.resource.data as ICalendarEvent) : null;
-    const isRecurring = Boolean(calendarEvent?.recurrenceRule);
+const deleteEventAlert = async (eventOrId: string | ICalendarEvent) => {
+    const event = typeof eventOrId === "string" ? findCalendarEvent(eventOrId) : eventOrId;
+    const eventId = typeof eventOrId === "string" ? eventOrId : eventOrId.id;
+
+    if (isRecurringGoogleEvent(event)) {
+        const scope = await showRecurringDeleteDialog();
+        if (!scope) return false;
+        return deleteEvent(event!, scope);
+    }
+
+    const isRecurring = Boolean(event?.recurrenceRule);
     const response = await Dialog.confirm(
         translate("Delete event"),
         isRecurring
@@ -646,22 +712,19 @@ const deleteEventAlert = async (eventId: string) => {
     );
 
     if (response) {
-        await deleteEvent(eventId);
+        return deleteEvent(event ?? eventId);
     }
 
-    return response;
+    return false;
 };
 
 const deleteSelectedEvent = async () => {
     const selectedEventId = CalendarStore.get().selected;
     if (selectedEventId == null) return;
 
-    const selectedEvent = CalendarStore.get().events.find(
-        event => event.resource.data.id === selectedEventId[0]
-    );
-
-    if (selectedEvent && selectedEvent.resource.type === EVENTTYPE.EVENT) {
-        await deleteEventAlert(selectedEventId[0]);
+    const selectedEvent = findCalendarEvent(selectedEventId[0]);
+    if (selectedEvent) {
+        await deleteEventAlert(selectedEvent);
     }
 };
 

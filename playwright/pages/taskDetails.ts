@@ -6,7 +6,6 @@ import { Subtasks } from "./components/Subtasks";
 import { DatePicker } from "./components/DatePicker";
 
 class TaskDetails extends Base {
-    public page: Page;
     public peopleDialog: PeopleDialog;
     public subtasks: Subtasks;
     public datePicker: DatePicker;
@@ -34,7 +33,6 @@ class TaskDetails extends Base {
     constructor(page: Page) {
         super(page);
 
-        this.page = page;
         this.peopleDialog = new PeopleDialog(page);
         this.subtasks = new Subtasks(page);
         this.datePicker = new DatePicker(page);

@@ -132,7 +132,7 @@ describe('DragDropContext', () => {
       };
 
       // Suppress console.error for this test
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
       
       expect(() => render(<TestChild />)).toThrow('useDragDrop must be used within a DragDropProvider');
       

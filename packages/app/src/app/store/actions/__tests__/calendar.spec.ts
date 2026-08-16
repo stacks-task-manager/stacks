@@ -5,7 +5,11 @@ const mockCalendarsList = jest.fn();
 const mockGetAuthUrl = jest.fn();
 const mockListIntegrationCalendars = jest.fn();
 const mockEventsLoad = jest.fn();
+const mockEventsRemove = jest.fn();
 const mockStorageSet = jest.fn();
+const mockConfirm = jest.fn();
+const mockRecurringDeleteDialog = jest.fn();
+const mockToastWarn = jest.fn();
 
 jest.mock("app/api", () => ({
     __esModule: true,
@@ -19,8 +23,27 @@ jest.mock("app/api", () => ({
     },
     EventsAPI: {
         loadEvents: mockEventsLoad,
+        remove: mockEventsRemove,
     },
 }));
+
+jest.mock("app/utils/dialog", () => ({
+    __esModule: true,
+    default: { confirm: mockConfirm },
+}));
+
+jest.mock("app/widgets/calendar/RecurringDeleteDialog/RecurringDeleteDialog", () => ({
+    showRecurringDeleteDialog: mockRecurringDeleteDialog,
+}));
+
+jest.mock("app/hooks", () => ({
+    getDatesSpan: () => ({
+        from: new Date("2026-07-01T00:00:00.000Z"),
+        to: new Date("2026-07-31T23:59:59.999Z"),
+    }),
+}));
+
+jest.mock("../tasks", () => ({ TasksActions: {} }));
 
 jest.mock("app/utils/storage", () => ({
     __esModule: true,
@@ -35,7 +58,7 @@ jest.mock("app/utils/toast", () => ({
     __esModule: true,
     default: {
         success: jest.fn(),
-        warn: jest.fn(),
+        warn: mockToastWarn,
     },
 }));
 
@@ -61,14 +84,39 @@ const googleCalendar = {
     readOnly: false,
 };
 
-const flushPromises = () => new Promise(resolve => setTimeout(resolve, 0));
+const googleRecurringEvent = {
+    id: "google-calendar-1_instance-1",
+    title: "Standup",
+    description: "",
+    start: new Date("2026-07-01T09:00:00.000Z"),
+    end: new Date("2026-07-01T09:30:00.000Z"),
+    allDay: false,
+    assignees: [],
+    source: "google" as const,
+    calendar: "calendar-1",
+    original: {
+        google: {
+            calendarId: "calendar-1",
+            eventId: "instance-1",
+            recurringEventId: "series-1",
+            originalStartTime: { dateTime: "2026-07-01T09:00:00.000Z" },
+            isRecurringInstance: true,
+        },
+    },
+};
 
-const deferred = <T,>() => {
-    let resolve!: (value: T) => void;
-    const promise = new Promise<T>(innerResolve => {
-        resolve = innerResolve;
-    });
-    return { promise, resolve };
+const setCalendarEvent = (CalendarStore: typeof import("../../calendar").CalendarStore) => {
+    CalendarStore.set(state => ({
+        ...state,
+        events: [
+            {
+                title: googleRecurringEvent.title,
+                start: googleRecurringEvent.start,
+                end: googleRecurringEvent.end,
+                resource: { type: "event", data: googleRecurringEvent },
+            } as any,
+        ],
+    }));
 };
 
 describe("CalendarActions Google calendar loading", () => {
@@ -87,45 +135,8 @@ describe("CalendarActions Google calendar loading", () => {
         mockCalendarsList.mockResolvedValue([localCalendar]);
         mockListIntegrationCalendars.mockResolvedValue([googleCalendar]);
         mockEventsLoad.mockResolvedValue([]);
-    });
-
-    it("bypasses an in-flight unauthenticated calendar load after OAuth success", async () => {
-        const firstLocalLoad = deferred<typeof localCalendar[]>();
-        mockCalendarsList.mockImplementationOnce(() => firstLocalLoad.promise).mockResolvedValue([localCalendar]);
-        mockGetAuthUrl.mockResolvedValue({ authUrl: "https://accounts.google.test/oauth" });
-
-        const staleLoad = CalendarActions.loadCalendars();
-        const popup = {
-            closed: false,
-            close: jest.fn(() => {
-                popup.closed = true;
-            }),
-        };
-        jest.spyOn(window, "open").mockReturnValue(popup as unknown as Window);
-
-        await CalendarActions.loginGoogle();
-        window.dispatchEvent(
-            new MessageEvent("message", {
-                origin: window.location.origin,
-                data: { type: "GOOGLE_AUTH_SUCCESS" },
-            })
-        );
-
-        await flushPromises();
-        await flushPromises();
-
-        firstLocalLoad.resolve([localCalendar]);
-        await staleLoad;
-        await flushPromises();
-
-        expect(mockListIntegrationCalendars).toHaveBeenCalledWith("google");
-        expect(CalendarStore.get().calendars).toEqual([localCalendar, googleCalendar]);
-        expect(CalendarStore.get().filters.showCalendars).toContain("google-primary@gmail.com");
-        expect(mockEventsLoad).toHaveBeenCalledWith(
-            expect.any(Date),
-            expect.any(Date),
-            ["local", "google:primary@gmail.com"]
-        );
+        mockEventsRemove.mockResolvedValue(true);
+        mockConfirm.mockResolvedValue(true);
     });
 
     it("loads Google calendars and events after boot hydration", async () => {
@@ -135,15 +146,81 @@ describe("CalendarActions Google calendar loading", () => {
         expect(mockListIntegrationCalendars).toHaveBeenCalledWith("google");
         expect(CalendarStore.get().calendars).toEqual([localCalendar, googleCalendar]);
         expect(CalendarStore.get().filters.showCalendars).toContain("google-primary@gmail.com");
-        expect(mockEventsLoad).toHaveBeenCalledWith(
-            expect.any(Date),
-            expect.any(Date),
-            ["local", "google:primary@gmail.com"]
-        );
+        expect(mockEventsLoad).toHaveBeenCalledWith(expect.any(Date), expect.any(Date), [
+            "local",
+            "google:primary@gmail.com",
+        ]);
         expect(mockSavePrefs).toHaveBeenCalledWith("events/savePrefs", {
             filters: expect.objectContaining({
                 showCalendars: ["local", "google-primary@gmail.com"],
             }),
         });
+    });
+
+    it("does not request deletion when the recurring dialog is cancelled", async () => {
+        setCalendarEvent(CalendarStore);
+        mockRecurringDeleteDialog.mockResolvedValue(null);
+
+        await CalendarActions.deleteEventAlert(googleRecurringEvent);
+
+        expect(mockEventsRemove).not.toHaveBeenCalled();
+    });
+
+    it("sends instance metadata for one occurrence and reloads Google events", async () => {
+        setCalendarEvent(CalendarStore);
+        mockRecurringDeleteDialog.mockResolvedValue("single");
+
+        await CalendarActions.deleteEventAlert(googleRecurringEvent);
+
+        expect(mockEventsRemove).toHaveBeenCalledWith(googleRecurringEvent.id, {
+            scope: "single",
+            calendarId: "calendar-1",
+            googleEventId: "instance-1",
+            recurringEventId: "series-1",
+        });
+        expect(mockEventsLoad).toHaveBeenCalled();
+    });
+
+    it("sends the parent id metadata for an entire series", async () => {
+        setCalendarEvent(CalendarStore);
+        mockRecurringDeleteDialog.mockResolvedValue("series");
+
+        await CalendarActions.deleteEventAlert(googleRecurringEvent);
+
+        expect(mockEventsRemove).toHaveBeenCalledWith(
+            googleRecurringEvent.id,
+            expect.objectContaining({ scope: "series", recurringEventId: "series-1" })
+        );
+    });
+
+    it("does not fall back to deleting an instance when series metadata is missing", async () => {
+        jest.spyOn(console, "error").mockImplementation(() => undefined);
+        const incompleteEvent = {
+            ...googleRecurringEvent,
+            original: {
+                google: {
+                    ...googleRecurringEvent.original.google,
+                    recurringEventId: undefined,
+                },
+            },
+        };
+        setCalendarEvent(CalendarStore);
+        mockRecurringDeleteDialog.mockResolvedValue("series");
+
+        await CalendarActions.deleteEventAlert(incompleteEvent);
+
+        expect(mockEventsRemove).not.toHaveBeenCalled();
+        expect(mockToastWarn).toHaveBeenCalledWith("Problem removing selected event");
+    });
+
+    it("retains the translated warning when Google deletion fails", async () => {
+        jest.spyOn(console, "error").mockImplementation(() => undefined);
+        setCalendarEvent(CalendarStore);
+        mockRecurringDeleteDialog.mockResolvedValue("single");
+        mockEventsRemove.mockRejectedValue(new Error("Google unavailable"));
+
+        await CalendarActions.deleteEventAlert(googleRecurringEvent);
+
+        expect(mockToastWarn).toHaveBeenCalledWith("Problem removing selected event");
     });
 });

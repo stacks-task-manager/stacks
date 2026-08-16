@@ -5,6 +5,7 @@ const mocks = vi.hoisted(() => ({
     findByPk: vi.fn(),
     setCredentials: vi.fn(),
     generateAuthUrl: vi.fn(),
+    patchEvent: vi.fn(),
 }));
 
 vi.mock("@stacks/db", () => ({
@@ -21,6 +22,7 @@ vi.mock("googleapis", () => ({
                 generateAuthUrl: mocks.generateAuthUrl,
             })),
         },
+        calendar: vi.fn(() => ({ events: { patch: mocks.patchEvent } })),
     },
 }));
 
@@ -63,5 +65,28 @@ describe("googleOAuthService", () => {
         });
         expect(oauthTokens.google).toBeDefined();
         expect(mocks.setCredentials).toHaveBeenCalledWith({});
+    });
+
+    it("uses the stored credentials and cancelled status for one recurring instance", async () => {
+        const tokens = {
+            access_token: "google-access",
+            refresh_token: "google-refresh",
+            scope: "calendar",
+            token_type: "Bearer",
+            expiry_date: Date.now() + 10 * 60_000,
+        };
+        mocks.findByPk.mockResolvedValue({ get: vi.fn(() => ({ google: tokens })) });
+
+        await googleOAuthService.cancelCalendarEventInstance("user-1", "calendar-1", "instance-1");
+
+        expect(mocks.setCredentials).toHaveBeenCalledWith({
+            access_token: tokens.access_token,
+            refresh_token: tokens.refresh_token,
+        });
+        expect(mocks.patchEvent).toHaveBeenCalledWith({
+            calendarId: "calendar-1",
+            eventId: "instance-1",
+            requestBody: { status: "cancelled" },
+        });
     });
 });

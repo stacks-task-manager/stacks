@@ -11,6 +11,7 @@ module.exports = {
     moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json"],
     moduleNameMapper: {
         "\\.(css|scss|sass)$": "identity-obj-proxy",
+        "\\.(avif|bmp|gif|ico|jpe?g|mp3|mp4|ogg|png|svg|wav|webm|webp)$": "<rootDir>/src/testFileMock.js",
         // Compiled output: @stacks/types/translations use `.js` specifiers in source; Jest resolves those via dist.
         "^@stacks/types$": "<rootDir>/../types/dist/index.js",
         "^@stacks/translations$": "<rootDir>/../translations/dist/index.js",

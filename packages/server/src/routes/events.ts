@@ -8,6 +8,7 @@ import { translate } from "@stacks/translations";
 
 import { EventsLoader } from "../loaders";
 import {
+    EventDeleteSchema,
     EventMoveSchema,
     EventSchema,
     EventsCountSchema,
@@ -92,10 +93,12 @@ events.patch(
 /** DELETE `/:id` — Deletes an event; 404 if missing. */
 events.delete(
     "/:id",
+    validator(EventDeleteSchema, "query"),
     asyncHandler(async (c: Context) => {
         const eventId = c.req.param("id");
+        const deleteOptions = c.req.valid("query");
 
-        const deleted = await EventsLoader.remove(eventId!);
+        const deleted = await EventsLoader.remove(eventId!, deleteOptions);
         if (!deleted) {
             throw Errors.notFound(translate("Event not found"));
         }

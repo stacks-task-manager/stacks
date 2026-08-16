@@ -115,6 +115,54 @@ export const EventsCountSchema = z
     })
     .strict();
 
+export const EventDeleteSchema = z
+    .object({
+        scope: z.enum(["single", "series"]).optional(),
+        calendarId: z.string().min(1).optional(),
+        googleEventId: z.string().min(1).optional(),
+        recurringEventId: z.string().min(1).optional(),
+    })
+    .strict()
+    .check(payload => {
+        const value = payload.value;
+        const hasGoogleCalendar = value.calendarId !== undefined;
+        const hasGoogleEvent = value.googleEventId !== undefined;
+        const hasRecurringEvent = value.recurringEventId !== undefined;
+        const hasGoogleDeleteMetadata =
+            value.scope !== undefined || hasGoogleCalendar || hasGoogleEvent || hasRecurringEvent;
+
+        if (!hasGoogleDeleteMetadata) {
+            return;
+        }
+
+        if (!hasGoogleCalendar) {
+            payload.issues.push({
+                code: "custom",
+                message: "calendarId is required for Google deletes",
+                path: ["calendarId"],
+                input: value,
+            });
+        }
+
+        if (!hasGoogleEvent) {
+            payload.issues.push({
+                code: "custom",
+                message: "googleEventId is required for Google deletes",
+                path: ["googleEventId"],
+                input: value,
+            });
+        }
+
+        if (value.scope === "series" && !hasRecurringEvent) {
+            payload.issues.push({
+                code: "custom",
+                message: "A recurring event identifier is required to delete a series",
+                path: ["recurringEventId"],
+                input: value,
+            });
+        }
+    });
+
 export const EventMoveSchema = z
     .object({
         calendar: z.string().min(1),

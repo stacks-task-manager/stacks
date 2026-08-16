@@ -6,7 +6,6 @@ import Sidebar from "./sidebar";
 type CalendarView = "month" | "week" | "day";
 
 class Calendar extends Base {
-    public page: Page;
     public sidebar: Sidebar;
     public surface: Locator;
     public currentDate: Locator;
@@ -28,7 +27,6 @@ class Calendar extends Base {
     constructor(page: Page) {
         super(page);
 
-        this.page = page;
         this.sidebar = new Sidebar(page);
         this.surface = page.getByTestId("calendar-surface");
         this.currentDate = page.getByTestId("calendar-current-date");

@@ -24,6 +24,18 @@ export interface ITimeLogExtended extends ITimeLog {
     taskId: string;
 }
 
+export interface IGoogleCalendarEventMetadata {
+    calendarId: string;
+    eventId: string;
+    recurringEventId?: string;
+    originalStartTime?: {
+        dateTime?: string;
+        date?: string;
+        timeZone?: string;
+    };
+    isRecurringInstance: boolean;
+}
+
 export interface ICalendarEvent {
     id: string;
     title: string;
@@ -43,6 +55,7 @@ export interface ICalendarEvent {
     updated?: string;
     original?: {
         htmlLink?: string;
+        google?: IGoogleCalendarEventMetadata;
     };
 }
 
