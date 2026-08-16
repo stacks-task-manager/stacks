@@ -78,6 +78,7 @@ export class TaskDetailsPanel extends React.Component<IPanelInterface> {
                 <DragDropContext onDragEnd={this.handleDragEnd}>
                     <div className="td-grid">
                         <SettingRow
+                            testId="task-details-grid-sections"
                             title="Task details grid sections"
                             description="Configure the look and feel of the task details."
                             last
@@ -112,7 +113,11 @@ export class TaskDetailsPanel extends React.Component<IPanelInterface> {
                             </div>
                         </SettingRow>
 
-                        <SettingRow title="Task details rows sections" last>
+                        <SettingRow
+                            testId="task-details-row-sections"
+                            title="Task details rows sections"
+                            last
+                        >
                             <div
                                 className={classNames("td-rows", {
                                     unassigned: preferences.taskDetailsRows.length === 0,
@@ -157,6 +162,7 @@ export class TaskDetailsPanel extends React.Component<IPanelInterface> {
                 </DragDropContext>
 
                 <SettingRow
+                    testId="task-details-attachments"
                     title="Show attachments"
                     description="When turned on, the attachments will be shown in task details tabs."
                     rightElement={
@@ -170,6 +176,7 @@ export class TaskDetailsPanel extends React.Component<IPanelInterface> {
                 />
 
                 <SettingRow
+                    testId="task-details-subtasks"
                     title="Show subtasks"
                     description="When turned on, the subtasks will be shown in task details."
                     rightElement={
@@ -183,6 +190,7 @@ export class TaskDetailsPanel extends React.Component<IPanelInterface> {
                 />
 
                 <SettingRow
+                    testId="task-details-dependencies"
                     title="Show dependencies"
                     description="When turned on, the dependencies will be shown in task details tabs."
                     rightElement={
@@ -196,6 +204,7 @@ export class TaskDetailsPanel extends React.Component<IPanelInterface> {
                 />
 
                 <SettingRow
+                    testId="task-details-locations"
                     title="Show locations"
                     description="When turned on, the locations will be shown in task details tabs."
                     rightElement={
@@ -209,6 +218,7 @@ export class TaskDetailsPanel extends React.Component<IPanelInterface> {
                 />
 
                 <SettingRow
+                    testId="task-details-links"
                     title="Show links"
                     description="When turned on, the links will be shown in task details tabs."
                     rightElement={
@@ -222,6 +232,7 @@ export class TaskDetailsPanel extends React.Component<IPanelInterface> {
                 />
 
                 <SettingRow
+                    testId="task-details-time"
                     title="Show time entries"
                     description="When turned on, the time entries will be shown in task details tabs."
                     rightElement={
@@ -235,6 +246,7 @@ export class TaskDetailsPanel extends React.Component<IPanelInterface> {
                 />
 
                 <SettingRow
+                    testId="task-details-comments"
                     title="Show comments"
                     description="When turned on, the comments will be shown in task details."
                     rightElement={
@@ -248,6 +260,7 @@ export class TaskDetailsPanel extends React.Component<IPanelInterface> {
                 />
 
                 <SettingRow
+                    testId="task-details-completed-subtasks"
                     title="Show completed subtasks"
                     description="When turned on, the completed subtasks will be shown in task details. (By default completed subtasks are hidden)"
                     rightElement={

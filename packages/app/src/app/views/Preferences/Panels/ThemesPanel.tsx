@@ -20,6 +20,7 @@ export class ThemesPanel extends React.Component<IPanelInterface> {
                     </p>
                     <div className="themes">
                         <div
+                            data-testid="preferences-theme-light"
                             onClick={() => onChange("darkMode", false)}
                             className={classnames("light-theme", {
                                 active: !preferences.darkMode,
@@ -28,6 +29,7 @@ export class ThemesPanel extends React.Component<IPanelInterface> {
                             <LightTheme />
                         </div>
                         <div
+                            data-testid="preferences-theme-dark"
                             onClick={() => onChange("darkMode", true)}
                             className={classnames("dark-theme", {
                                 active: preferences.darkMode,

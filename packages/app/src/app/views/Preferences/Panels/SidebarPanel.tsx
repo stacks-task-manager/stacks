@@ -23,6 +23,7 @@ export class SidebarPanel extends React.Component<IPanelInterface> {
         return (
             <div className="preference-panel">
                 <SettingRow
+                    testId="hide-general"
                     title="Hide `General` section"
                     description="If enabled, the sidebar will not show the `General` section any more."
                     rightElement={
@@ -36,6 +37,7 @@ export class SidebarPanel extends React.Component<IPanelInterface> {
                 />
 
                 <SettingRow
+                    testId="pinned-items"
                     title="Pinned items"
                     description="Manage your prefered Sidebar pinned items. All non-pinned items will still be accessibile via the `More` context menu."
                     last
@@ -97,7 +99,7 @@ export class SidebarPanel extends React.Component<IPanelInterface> {
                                                             <Icon
                                                                 icon={
                                                                     SIDEBARICON[
-                                                                    item.toLowerCase() as SIDEBARITEMS
+                                                                        item.toLowerCase() as SIDEBARITEMS
                                                                     ]
                                                                 }
                                                             />
@@ -108,8 +110,7 @@ export class SidebarPanel extends React.Component<IPanelInterface> {
                                                                 Classes.TEXT_OVERFLOW_ELLIPSIS
                                                             )}
                                                         >
-                                                            {SIDEBAR_MENU_LABELS[item.toLowerCase()] ??
-                                                                item}
+                                                            {SIDEBAR_MENU_LABELS[item.toLowerCase()] ?? item}
                                                         </div>
                                                         <div
                                                             className={Classes.MENU_ITEM_LABEL}

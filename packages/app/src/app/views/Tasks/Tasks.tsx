@@ -175,5 +175,9 @@ export const Tasks = () => {
         );
     })();
 
-    return <AppView append={<Outlet />}>{body}</AppView>;
+    return (
+        <AppView append={<Outlet />} data-testid="tasks-view">
+            {body}
+        </AppView>
+    );
 };

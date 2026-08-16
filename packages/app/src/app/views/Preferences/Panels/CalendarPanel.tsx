@@ -14,6 +14,7 @@ export class CalendarPanel extends React.Component<IPanelInterface> {
         return (
             <div className="preference-panel">
                 <SettingRow
+                    testId="show-24-hours"
                     sectionTitle={translate("Calendar")}
                     title={translate("Use a 24 hour clock")}
                     description={translate("Switch between 12 and 24 hour time format")}
@@ -28,6 +29,7 @@ export class CalendarPanel extends React.Component<IPanelInterface> {
                 />
 
                 <SettingRow
+                    testId="calendar-default-view"
                     title={translate("Default calendar view")}
                     description={translate("Select the calendar view you wish to see by default")}
                     rightElement={
@@ -59,6 +61,7 @@ export class CalendarPanel extends React.Component<IPanelInterface> {
                 />
 
                 <SettingRow
+                    testId="calendar-show-all-events"
                     title="Show all events in the monthly view"
                     description="When enabled it will show you the complete list of events in the calendar cell."
                     rightElement={

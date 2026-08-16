@@ -5,8 +5,8 @@ import { AppViewContent, PersonTimesheet } from "app/widgets";
 
 export const PeopleTimesheet = () => {
     return (
-        <AppViewContent relative>
-            <div className="people-timesheet">
+        <AppViewContent relative data-testid="people-timesheet-view">
+            <div className="people-timesheet" data-testid="people-timesheet-content">
                 <PersonTimesheet />
             </div>
         </AppViewContent>

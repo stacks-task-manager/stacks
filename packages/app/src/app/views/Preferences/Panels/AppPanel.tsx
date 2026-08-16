@@ -15,6 +15,7 @@ export class AppPanel extends React.Component<IPanelInterface> {
         return (
             <div className="preference-panel">
                 <SettingRow
+                    testId="hide-scrollbars"
                     sectionTitle={translate("Interface")}
                     title={translate("Hide scrollbars")}
                     description={translate("Hides the overall app scrollbars to give a more minimal look")}
@@ -29,6 +30,7 @@ export class AppPanel extends React.Component<IPanelInterface> {
                 />
 
                 <SettingRow
+                    testId="show-animations"
                     title={translate("Show animations")}
                     description={translate("Show animations like progress bar counters and others")}
                     rightElement={
@@ -43,6 +45,7 @@ export class AppPanel extends React.Component<IPanelInterface> {
                 />
 
                 <SettingRow
+                    testId="save-home-to-workspace"
                     sectionTitle={translate("Home")}
                     title={translate("Save home data in your workspace")}
                     description={translate(
@@ -68,6 +71,7 @@ export class AppPanel extends React.Component<IPanelInterface> {
                 </SettingRow>
 
                 <SettingRow
+                    testId="date-locale"
                     last
                     title={translate("Date locale")}
                     description={translate("You can change the date format here based your location")}

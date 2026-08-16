@@ -21,6 +21,7 @@ export const BookmarksButton = () => {
 
     return (
         <SidebarButton
+            data-testid="bookmarks-button"
             title="Bookmarks"
             translatedTitle={translate("Bookmarks")}
             icon={SIDEBARICON.bookmarks}

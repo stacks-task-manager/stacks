@@ -58,6 +58,7 @@ export const CompanyDetails = () => {
 
     return (
         <div
+            data-testid="company-details-embedded"
             className={classNames(["person-drawer embedded", Classes.DRAWER, Classes.POSITION_RIGHT])}
             ref={companyRef}
         >

@@ -413,6 +413,7 @@ const TimesheetNavigation = () => {
             <span className="section-toolbar-divider" />
 
             <Button
+                data-testid="people-timesheet-current-week-button"
                 icon={<Icon icon="calendar-date" />}
                 intent={isCurrentWeek ? Intent.NONE : Intent.PRIMARY}
                 onClick={PersonTimesheetActions.currentInterval}
@@ -421,8 +422,16 @@ const TimesheetNavigation = () => {
             </Button>
 
             <ButtonGroup>
-                <Button icon="chevron-left" onClick={PersonTimesheetActions.prevInterval} />
-                <Button icon="chevron-right" onClick={PersonTimesheetActions.nextInterval} />
+                <Button
+                    data-testid="people-timesheet-previous-week-button"
+                    icon="chevron-left"
+                    onClick={PersonTimesheetActions.prevInterval}
+                />
+                <Button
+                    data-testid="people-timesheet-next-week-button"
+                    icon="chevron-right"
+                    onClick={PersonTimesheetActions.nextInterval}
+                />
             </ButtonGroup>
         </>
     );
@@ -438,6 +447,7 @@ const ApprovalNavigation = () => {
             <span className="section-toolbar-divider" />
 
             <Button
+                data-testid="people-approvals-current-month-button"
                 icon={<Icon icon="calendar-date" />}
                 intent={isCurrentMonth ? Intent.NONE : Intent.PRIMARY}
                 onClick={TimesheetApprovalActions.currentInterval}
@@ -446,8 +456,16 @@ const ApprovalNavigation = () => {
             </Button>
 
             <ButtonGroup>
-                <Button icon="chevron-left" onClick={TimesheetApprovalActions.prevInterval} />
-                <Button icon="chevron-right" onClick={TimesheetApprovalActions.nextInterval} />
+                <Button
+                    data-testid="people-approvals-previous-month-button"
+                    icon="chevron-left"
+                    onClick={TimesheetApprovalActions.prevInterval}
+                />
+                <Button
+                    data-testid="people-approvals-next-month-button"
+                    icon="chevron-right"
+                    onClick={TimesheetApprovalActions.nextInterval}
+                />
             </ButtonGroup>
         </>
     );
@@ -470,6 +488,7 @@ const ShowWeekendsButton = () => {
     return (
         <>
             <Button
+                data-testid="people-timesheet-toggle-weekends-button"
                 icon={<Icon icon={showWeekends ? "eye-off" : "eye"} />}
                 variant="minimal"
                 onClick={PersonTimesheetActions.toggleWeekendVisibility}
@@ -477,7 +496,11 @@ const ShowWeekendsButton = () => {
                 {showWeekends ? "Hide weekends" : "Show weekends"}
             </Button>
             <span className="section-toolbar-divider" />
-            <Button intent={Intent.SUCCESS} onClick={handleSubmit}>
+            <Button
+                data-testid="people-timesheet-submit-review-button"
+                intent={Intent.SUCCESS}
+                onClick={handleSubmit}
+            >
                 Submit for review
             </Button>
         </>
@@ -575,6 +598,7 @@ const ApprovalFilters = () => {
             >
                 <Tooltip content={translate("Filter by timelogs status")} placement="bottom-end">
                     <Button
+                        data-testid="people-approvals-status-filter-button"
                         icon={
                             <Icon
                                 color={TIMELOG_STATUS_MAP[status].color}

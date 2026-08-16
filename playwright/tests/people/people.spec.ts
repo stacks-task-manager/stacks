@@ -2,17 +2,20 @@ import type { Browser, BrowserContext, Page } from "@playwright/test";
 import { test, expect } from "../../fixtures";
 import { bootstrapContext } from "../../fixtures/bootstrapContext";
 import People from "../../pages/people";
+import Preferences from "../../pages/preferences";
 
 test.describe("People and Companies", () => {
     let browser: Browser;
     let context: BrowserContext;
     let page: Page;
     let people: People;
+    let preferences: Preferences;
 
     test.beforeAll(async ({ login: loginPage }: any) => {
         ({ browser, context, page } = await bootstrapContext());
         await loginPage({ page });
         people = new People(page);
+        preferences = new Preferences(page);
         await people.open();
     });
 
@@ -45,6 +48,16 @@ test.describe("People and Companies", () => {
         await expect(people.filtersSidebar).toBeHidden();
 
         await people.openCompanies();
+        await people.openContacts();
+    });
+
+    test("Should navigate roles, timesheet, and approvals views", async () => {
+        await people.openRoles();
+        await people.openTimesheet();
+        await people.navigateTimesheetInterval();
+        await people.toggleTimesheetWeekends();
+        await people.openApprovals();
+        await people.navigateApprovalInterval();
         await people.openContacts();
     });
 
@@ -89,5 +102,45 @@ test.describe("People and Companies", () => {
 
         await people.goto("/app/people");
         await people.waitForCompanySearchResult(companyId, updatedCompanyName);
+    });
+
+    test("Should apply embedded person and company preferences", async () => {
+        const suffix = Date.now();
+        const originalPreferences = await preferences.snapshotPreferences();
+
+        try {
+            const personId = await people.addPerson(
+                `Embedded${suffix}`,
+                "Person",
+                `embedded-person-${suffix}@example.com`
+            );
+            await people.goto("/app/people");
+            const companyId = await people.addCompany(`Embedded Company ${suffix}`);
+
+            await preferences.setPref("peopleEmbeddedPerson", true);
+            await people.goto("/app/people");
+            await people.openPerson(personId);
+            await people.expectPersonDetailsMode(true);
+
+            await people.goto("/app/people");
+            await preferences.setPref("peopleEmbeddedPerson", false);
+            await people.goto("/app/people");
+            await people.openPerson(personId);
+            await people.expectPersonDetailsMode(false);
+
+            await people.goto("/app/people");
+            await preferences.setPref("peopleEmbeddedCompany", true);
+            await people.goto("/app/people");
+            await people.openCompany(companyId);
+            await people.expectCompanyDetailsMode(true);
+
+            await people.goto("/app/people");
+            await preferences.setPref("peopleEmbeddedCompany", false);
+            await people.goto("/app/people");
+            await people.openCompany(companyId);
+            await people.expectCompanyDetailsMode(false);
+        } finally {
+            await preferences.restorePreferences(originalPreferences);
+        }
     });
 });
