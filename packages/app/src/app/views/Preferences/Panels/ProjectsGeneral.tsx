@@ -14,6 +14,7 @@ export const ProjectsGeneralPanel: FunctionComponent<IPanelInterface> = ({ onCha
     return (
         <div className="preference-panel">
             <SettingRow
+                testId="dialog-task"
                 sectionTitle={translate("General")}
                 title="Show task details as a dialog window"
                 description="Task details may be opened as a dialog window in the center of the app."
@@ -21,6 +22,7 @@ export const ProjectsGeneralPanel: FunctionComponent<IPanelInterface> = ({ onCha
             />
 
             <SettingRow
+                testId="embedded-task"
                 title="Use side-by-side task details"
                 description={
                     <>
@@ -48,6 +50,7 @@ export const ProjectsGeneralPanel: FunctionComponent<IPanelInterface> = ({ onCha
 
             {preferences.embeddedTask ? (
                 <SettingRow
+                    testId="click-outside-close"
                     title="Click outside of task detail to close"
                     description="When this option is turned on clicking outside of the task details area will close the panel."
                     rightElement={

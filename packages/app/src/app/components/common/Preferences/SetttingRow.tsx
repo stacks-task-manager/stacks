@@ -4,6 +4,7 @@ import classNames from "classnames";
 import React from "react";
 
 interface ISettingRowProps {
+    testId?: string;
     title: string | React.ReactNode;
     description?: string | React.ReactNode;
     sectionTitle?: string | React.ReactNode;
@@ -13,6 +14,7 @@ interface ISettingRowProps {
     children?: React.ReactNode;
 }
 export const SettingRow: React.FC<ISettingRowProps> = ({
+    testId,
     title,
     description,
     sectionTitle,
@@ -21,8 +23,16 @@ export const SettingRow: React.FC<ISettingRowProps> = ({
     children,
     marginTop,
 }) => {
+    const testIdPrefix = testId ? `preferences-setting-${testId}` : undefined;
+    const testableRightElement =
+        testIdPrefix && React.isValidElement(rightElement)
+            ? React.cloneElement(rightElement as React.ReactElement<{ "data-testid"?: string }>, {
+                  "data-testid": `${testIdPrefix}-control`,
+              })
+            : rightElement;
+
     return (
-        <div className={classNames("settings-row", { last })}>
+        <div className={classNames("settings-row", { last })} data-testid={testIdPrefix}>
             {sectionTitle && (
                 <div
                     className={classNames("settings-row-section-title", { marginTop }, [
@@ -41,7 +51,7 @@ export const SettingRow: React.FC<ISettingRowProps> = ({
                         </div>
                     )}
                 </div>
-                {rightElement && <div className="settings-row-right">{rightElement}</div>}
+                {testableRightElement && <div className="settings-row-right">{testableRightElement}</div>}
             </div>
             {children && <div className="settings-row-content">{children}</div>}
         </div>

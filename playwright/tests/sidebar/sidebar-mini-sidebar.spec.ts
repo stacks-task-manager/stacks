@@ -67,7 +67,7 @@ test.describe("Sidebar - Mini Sidebar", () => {
         await preferences.preferencesButton.click();
         await expect(preferences.preferencesDialog).toBeVisible();
         // close the dialog
-        await preferences.preferencesDialog.getByRole("button", { name: "Close" }).click();
+        await preferences.closePreferences();
     });
 
     test("Should show the search when clicked", async () => {

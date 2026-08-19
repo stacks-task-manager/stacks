@@ -18,7 +18,9 @@ export const Attachments = () => {
     const attachments = useProjectAttachments(id ?? "");
 
     const filteredAttachments = useMemo(() => {
-        return attachments.filter(attachment => attachment.originalName.toLowerCase().includes(query.toLowerCase()));
+        return attachments.filter(attachment =>
+            attachment.originalName.toLowerCase().includes(query.toLowerCase())
+        );
     }, [attachments, query]);
 
     const handleOpenTask = (taskId: string) => {
@@ -37,6 +39,7 @@ export const Attachments = () => {
         return (
             <Grid vertical>
                 <BlankSlate
+                    testId="project-attachments-empty"
                     icon={APPICONS.FILE}
                     title="No attachments"
                     description="This project does not contain any tasks with attachments. Open any task details to add the first attachment."

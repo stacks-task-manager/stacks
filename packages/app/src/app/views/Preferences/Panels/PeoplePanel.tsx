@@ -14,6 +14,7 @@ export class PeoplePanel extends React.Component<IPanelInterface> {
         return (
             <div className="preference-panel">
                 <SettingRow
+                    testId="people-embedded-person"
                     sectionTitle="People"
                     title="Use side-by-side person details"
                     description="When enabled, the person details will be opened side-by-side with the current view in certain cases."
@@ -27,6 +28,7 @@ export class PeoplePanel extends React.Component<IPanelInterface> {
                     }
                 />
                 <SettingRow
+                    testId="people-embedded-company"
                     title="Use side-by-side company details"
                     description="When enabled, the company details will be opened side-by-side with the current view in certain cases."
                     rightElement={

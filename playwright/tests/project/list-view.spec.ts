@@ -24,7 +24,7 @@ test.describe("Project - List view", () => {
         const projectId = await project.addNew({ name: TEST_PROJECT });
         const matchingProjects = sidebar.documentsTreeItems.filter({ hasText: TEST_PROJECT });
         await expect(matchingProjects).toHaveCount(1);
-        await expect(page).toHaveURL(`/app/project/${projectId}`);
+        await project.expectProjectUrl(projectId);
     });
 
     test.beforeEach(({ attachVideoContext }: any) => {
@@ -48,5 +48,9 @@ test.describe("Project - List view", () => {
         if (browser) {
             await browser.close();
         }
+    });
+
+    test("Should render the list view", async () => {
+        await project.switchView("list");
     });
 });

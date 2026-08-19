@@ -52,7 +52,7 @@ export const Inbox = () => {
     }, []);
 
     return (
-        <AppView toolbar={<InboxToolbar />}>
+        <AppView toolbar={<InboxToolbar />} data-testid="inbox-view">
             <AppViewContent>
                 <div id="notifications">
                     <div className="notifications__sidebar">

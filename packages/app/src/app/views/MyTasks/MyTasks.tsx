@@ -35,6 +35,7 @@ export const MyTasks = () => {
 
     return (
         <AppView
+            data-testid="my-tasks-view"
             toolbar={<ToolbarMyTasks />}
             append={
                 <>
@@ -44,7 +45,7 @@ export const MyTasks = () => {
             }
         >
             {view === "list" ? <MyTasksListView /> : <Timebox />}
-        </AppView >
+        </AppView>
     );
 };
 
@@ -83,8 +84,8 @@ const MyTasksListView = () => {
         <AppViewContent padded>
             <TasksTable tasks={projects} id="mytasks" />
         </AppViewContent>
-    )
-}
+    );
+};
 
 const MyTasksBlankSlate = () => {
     const hasFilters = useHasFilters();
@@ -92,14 +93,12 @@ const MyTasksBlankSlate = () => {
     return (
         <Grid vertical>
             <BlankSlate
-                title={translate(
-                    hasFilters ? "No tasks" : "No tasks assigned",
-                )}
+                title={translate(hasFilters ? "No tasks" : "No tasks assigned")}
                 icon="check-circle"
                 description={translate(
                     hasFilters
                         ? "Oops None of your tasks match your current filter settings Give it another try by adjusting your filter settings"
-                        : "You don t have any tasks assigned to you yet Click the button bellow to add a task",
+                        : "You don t have any tasks assigned to you yet Click the button bellow to add a task"
                 )}
                 action={
                     <Button

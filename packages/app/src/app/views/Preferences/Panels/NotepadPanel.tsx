@@ -14,6 +14,7 @@ export class NotepadPanel extends React.Component<IPanelInterface> {
         return (
             <div className="preference-panel">
                 <SettingRow
+                    testId="notepad-fix-width"
                     sectionTitle="Notepad"
                     title="Make notepad width fixed"
                     description="When enabled, the notepad's editable area will have a fixed width. When turned off, it will completely fill the available space."
@@ -28,6 +29,7 @@ export class NotepadPanel extends React.Component<IPanelInterface> {
                 />
 
                 <SettingRow
+                    testId="notepad-spell-check"
                     title="Enable spell checking"
                     description="When enabled, the notepad's editable area will spell check your text."
                     last

@@ -14,6 +14,7 @@ export class ProjectsPanel extends React.Component<IPanelInterface> {
         return (
             <div className="preference-panel">
                 <SettingRow
+                    testId="hide-new-stack"
                     sectionTitle={translate("Board")}
                     title={translate("Hide new stack button")}
                     description={translate(
@@ -30,6 +31,7 @@ export class ProjectsPanel extends React.Component<IPanelInterface> {
                     }
                 />
                 <SettingRow
+                    testId="show-stack-progress"
                     sectionTitle={translate("Stacks")}
                     title={translate("Show stack progress")}
                     description={translate(
@@ -46,6 +48,7 @@ export class ProjectsPanel extends React.Component<IPanelInterface> {
                 />
 
                 <SettingRow
+                    testId="highlight-stack"
                     title={translate("Highlight selected stack")}
                     description={translate(
                         "When using keyboard navigation to browse tasks the selected tasks stack will be visually indicated by a highlighted blue border"
@@ -68,6 +71,7 @@ export class ProjectsPanel extends React.Component<IPanelInterface> {
                     ) : null}
                 </SettingRow>
                 <SettingRow
+                    testId="show-large-stacks"
                     title={translate("Show larger stacks")}
                     description="The stacks will be shown with a larger size."
                     rightElement={
@@ -80,6 +84,7 @@ export class ProjectsPanel extends React.Component<IPanelInterface> {
                     }
                 />
                 <SettingRow
+                    testId="stacks-background"
                     title={translate("Enable columns background")}
                     description={translate(
                         "When enabled this option darkens the board column backgrounds for better visibility and contrast"
@@ -94,6 +99,7 @@ export class ProjectsPanel extends React.Component<IPanelInterface> {
                     }
                 />
                 <SettingRow
+                    testId="bigger-stack-header"
                     title={translate("Show larger Stack tint bar")}
                     description="The stack header will be bigger and more visible."
                     rightElement={
@@ -106,6 +112,7 @@ export class ProjectsPanel extends React.Component<IPanelInterface> {
                     }
                 />
                 <SettingRow
+                    testId="stack-lazy-load"
                     title={translate("Lazy load stacks")}
                     description={translate(
                         "When working on a large number of stacks on a single project this is recommended This option prevents stacks and all its contents from loading while they are not visible improving speed and memory utilization"
@@ -129,6 +136,7 @@ export class ProjectsPanel extends React.Component<IPanelInterface> {
                     ) : null}
                 </SettingRow>
                 <SettingRow
+                    testId="highlight-task"
                     sectionTitle="Task card"
                     title={translate("Highlight selected task")}
                     description={translate(
@@ -153,8 +161,11 @@ export class ProjectsPanel extends React.Component<IPanelInterface> {
                 </SettingRow>
                 {preferences.highlightTask ? (
                     <SettingRow
+                        testId="click-select-task"
                         title={translate("Click to select tasks")}
-                        description={translate("Clicking on a task will automatically select and highlight it")}
+                        description={translate(
+                            "Clicking on a task will automatically select and highlight it"
+                        )}
                         rightElement={
                             <Switch
                                 checked={preferences.clickSelectTask}
@@ -167,6 +178,7 @@ export class ProjectsPanel extends React.Component<IPanelInterface> {
                 ) : null}
 
                 <SettingRow
+                    testId="show-progress"
                     title={translate("Show progress")}
                     description={translate("Wheter to show or not the progress in the task card")}
                     rightElement={
@@ -180,6 +192,7 @@ export class ProjectsPanel extends React.Component<IPanelInterface> {
                 />
 
                 <SettingRow
+                    testId="show-description"
                     title={translate("Show description")}
                     description={translate("Wheter to show or not the description in the task card")}
                     rightElement={
@@ -193,6 +206,7 @@ export class ProjectsPanel extends React.Component<IPanelInterface> {
                 />
 
                 <SettingRow
+                    testId="show-priority"
                     title={translate("Show priority")}
                     description={translate("Wheter to show or not the priority in the task card")}
                     rightElement={
@@ -206,10 +220,9 @@ export class ProjectsPanel extends React.Component<IPanelInterface> {
                 />
                 {preferences.showPriority ? (
                     <SettingRow
+                        testId="show-extended-priority"
                         title={translate("Show verbose priority")}
-                        description={translate(
-                            "When enabled priority chips will be shown as a larger size"
-                        )}
+                        description={translate("When enabled priority chips will be shown as a larger size")}
                         rightElement={
                             <Switch
                                 checked={preferences.showExtendedPriority}
@@ -222,10 +235,9 @@ export class ProjectsPanel extends React.Component<IPanelInterface> {
                 ) : null}
 
                 <SettingRow
+                    testId="show-extended-status"
                     title={translate("Show verbose status")}
-                    description={translate(
-                        "When enabled the status chips will be shown as a larger size"
-                    )}
+                    description={translate("When enabled the status chips will be shown as a larger size")}
                     rightElement={
                         <Switch
                             checked={preferences.showExtendedStatus}
@@ -237,6 +249,7 @@ export class ProjectsPanel extends React.Component<IPanelInterface> {
                 />
 
                 <SettingRow
+                    testId="show-assignees"
                     title={translate("Show assignees")}
                     description={translate("Wheter to show or not the assignees in the task card")}
                     rightElement={
@@ -250,6 +263,7 @@ export class ProjectsPanel extends React.Component<IPanelInterface> {
                 />
 
                 <SettingRow
+                    testId="show-dates"
                     title={translate("Show dates")}
                     description={translate("Wheter to show or not the dates in the task card")}
                     rightElement={
@@ -263,6 +277,7 @@ export class ProjectsPanel extends React.Component<IPanelInterface> {
                 />
 
                 <SettingRow
+                    testId="show-subtasks"
                     title={translate("Show subtasks")}
                     description={translate("Wheter to show or not the subtasks in the task card")}
                     rightElement={
@@ -276,6 +291,7 @@ export class ProjectsPanel extends React.Component<IPanelInterface> {
                 />
 
                 <SettingRow
+                    testId="show-comments"
                     title={translate("Show comments counter")}
                     description={translate("Wheter to show or not the comments counter in the task card")}
                     rightElement={
@@ -290,6 +306,7 @@ export class ProjectsPanel extends React.Component<IPanelInterface> {
                 />
 
                 <SettingRow
+                    testId="show-notifications"
                     title={translate("Show notifications")}
                     description={translate("Wheter to show or not the notifications in the task card")}
                     rightElement={

@@ -14,6 +14,7 @@ export class NotificationsPanel extends React.Component<IPanelInterface> {
         return (
             <div className="preference-panel">
                 <SettingRow
+                    testId="show-announcements"
                     sectionTitle="Notifications"
                     title="Show announcements notifications"
                     description="When enabled, you will see announcements messages. Usually these annoucements popups will usually let you vote on the next feature."
@@ -28,6 +29,7 @@ export class NotificationsPanel extends React.Component<IPanelInterface> {
                 />
 
                 <SettingRow
+                    testId="sounds"
                     sectionTitle={translate("Sounds")}
                     title={translate("Enable sounds")}
                     description="When turned on, you will hear sounds when you interract with the app."

@@ -1,9 +1,24 @@
-import { Locator, Page } from "@playwright/test";
+import { expect, Locator, Page } from "@playwright/test";
 import Base from "./base";
 import { NewProjectDialog } from "./components/NewProjectDialog";
 import Sidebar from "./sidebar";
 import { NewTaskDialog } from "./components/NewTaskDialog";
 import { TimelogDialog } from "./components/TimelogDialog";
+
+export const PROJECT_VIEW_IDS = [
+    "board",
+    "list",
+    "attachments",
+    "links",
+    "overview",
+    "time",
+    "world",
+    "gantt",
+    "notes",
+] as const;
+
+export type ProjectViewId = (typeof PROJECT_VIEW_IDS)[number];
+export type EmptyProjectViewId = "attachments" | "links" | "gantt";
 
 class Project extends Base {
     public sidebar: Sidebar;
@@ -16,6 +31,8 @@ class Project extends Base {
     public menuButton: Locator;
     public menu: Locator;
     public dialog: Locator;
+    public viewsButton: Locator;
+    public viewsMenu: Locator;
     public settings: ProjectSettings;
 
     constructor(page: Page) {
@@ -31,6 +48,8 @@ class Project extends Base {
         this.menuButton = page.getByTestId("project-menu-button");
         this.menu = page.getByTestId("project-menu");
         this.dialog = page.getByRole("dialog");
+        this.viewsButton = page.getByTestId("project-views-button");
+        this.viewsMenu = page.getByTestId("project-views-menu");
         this.settings = new ProjectSettings(page);
     }
 
@@ -134,6 +153,63 @@ class Project extends Base {
         await this.menuItem("project-menu-settings").click();
         await this.settings.dialog.waitFor({ state: "visible" });
         await this.settings.openTab("settings");
+    }
+
+    public viewTab(view: ProjectViewId): Locator {
+        return this.toolbar.getByTestId(`project-view-tab-${view}`);
+    }
+
+    public viewToggle(view: ProjectViewId): Locator {
+        return this.viewsMenu.getByTestId(`project-view-toggle-${view}`);
+    }
+
+    public async switchView(view: ProjectViewId) {
+        await this.viewTab(view).click();
+        await expect(this.viewTab(view)).toHaveAttribute("data-active", "true");
+        await expect(this.page.getByTestId(`project-view-${view}`)).toBeVisible();
+    }
+
+    public async enableAllViews() {
+        await this.viewsButton.click();
+        await this.viewsMenu.waitFor({ state: "visible" });
+
+        for (const view of PROJECT_VIEW_IDS) {
+            if (!(await this.viewTab(view).isVisible())) {
+                await this.viewToggle(view).click();
+                await expect(this.viewTab(view)).toBeVisible();
+            }
+        }
+
+        await this.page.keyboard.press("Escape");
+        await this.viewsMenu.waitFor({ state: "hidden" });
+    }
+
+    public async expectAllViewsVisible() {
+        for (const view of PROJECT_VIEW_IDS) {
+            await expect(this.viewTab(view)).toBeVisible();
+        }
+    }
+
+    public async expectEmptyView(view: EmptyProjectViewId) {
+        await this.switchView(view);
+        await expect(this.page.getByTestId(`project-${view}-empty`)).toBeVisible();
+    }
+
+    public async setNotesAndExpectPersistence(notes: string) {
+        await this.switchView("notes");
+        const editor = this.page.getByTestId("tip-tap-editor");
+        await editor.click();
+
+        const responsePromise = this.page.waitForResponse(
+            response => response.url().includes("/api/projects/") && response.request().method() === "PATCH"
+        );
+        await this.page.keyboard.press("ControlOrMeta+A");
+        await this.page.keyboard.insertText(notes);
+        await responsePromise;
+
+        await this.page.reload();
+        await expect(this.page.getByTestId("project-view-notes")).toBeVisible();
+        await expect(this.page.getByTestId("tip-tap-editor")).toContainText(notes);
     }
 }
 

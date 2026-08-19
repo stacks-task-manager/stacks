@@ -57,8 +57,9 @@ export const Preferences = () => {
             style={{ width: 800 }}
             onClose={handleClose}
         >
-            <div className={Classes.DIALOG_BODY}>
+            <div className={Classes.DIALOG_BODY} data-testid="preferences-dialog">
                 <Tabs
+                    data-testid="preferences-tabs"
                     // id="preferences-tabs"
                     // className="custom-tabs"
                     className="settings"
@@ -67,9 +68,15 @@ export const Preferences = () => {
                     onChange={(currentTab: string) => setCurrentTab(currentTab)}
                 >
                     <SettingsTabSection title={translate("App")} icon={<Dashboard />} />
-                    <Tab id="app" title={translate("General")} panel={<AppPanel {...panelProps} />} />
+                    <Tab
+                        id="app"
+                        data-testid="preferences-tab-app"
+                        title={translate("General")}
+                        panel={<AppPanel {...panelProps} />}
+                    />
                     <Tab
                         id="calendar"
+                        data-testid="preferences-tab-calendar"
                         title={translate("Calendar")}
                         panel={<CalendarPanel {...panelProps} />}
                     />
@@ -77,17 +84,25 @@ export const Preferences = () => {
                     <SettingsTabSection title={translate("Projects")} icon={<Briefcase />} />
                     <Tab
                         id="projects"
+                        data-testid="preferences-tab-projects"
                         title={translate("General")}
                         panel={<ProjectsGeneralPanel {...panelProps} />}
                     />
-                    <Tab id="board" title={translate("Board")} panel={<ProjectsPanel {...panelProps} />} />
+                    <Tab
+                        id="board"
+                        data-testid="preferences-tab-board"
+                        title={translate("Board")}
+                        panel={<ProjectsPanel {...panelProps} />}
+                    />
                     <Tab
                         id="projects-tasks"
+                        data-testid="preferences-tab-projects-tasks"
                         title={translate("Tasks")}
                         panel={<TasksPanel {...panelProps} />}
                     />
                     <Tab
                         id="projects-tasksdetails"
+                        data-testid="preferences-tab-projects-tasksdetails"
                         title={translate("Task details")}
                         panel={<TaskDetailsPanel {...panelProps} />}
                     />
@@ -95,26 +110,48 @@ export const Preferences = () => {
                     <SettingsTabSection title="Notepad & People" icon={<Book />} />
                     <Tab
                         id="notepad"
+                        data-testid="preferences-tab-notepad"
                         title={translate("Notepads")}
                         panel={<NotepadPanel {...panelProps} />}
                     />
                     {/* <Tab id="goal" title="Goal" panel={<span />} /> */}
                     {/* <Tab id="keep" title="Keep" panel={<span />} /> */}
-                    <Tab id="people" title={translate("People")} panel={<PeoplePanel {...panelProps} />} />
+                    <Tab
+                        id="people"
+                        data-testid="preferences-tab-people"
+                        title={translate("People")}
+                        panel={<PeoplePanel {...panelProps} />}
+                    />
 
                     <SettingsTabSection title={translate("Look feel")} icon={<Notifications />} />
-                    <Tab id="sidebar" title={translate("Sidebar")} panel={<SidebarPanel {...panelProps} />} />
+                    <Tab
+                        id="sidebar"
+                        data-testid="preferences-tab-sidebar"
+                        title={translate("Sidebar")}
+                        panel={<SidebarPanel {...panelProps} />}
+                    />
                     <Tab
                         id="notifications"
+                        data-testid="preferences-tab-notifications"
                         title="Notifications & Sound"
                         panel={<NotificationsPanel {...panelProps} />}
                     />
-                    <Tab id="themes" title={translate("Themes")} panel={<ThemesPanel {...panelProps} />} />
+                    <Tab
+                        id="themes"
+                        data-testid="preferences-tab-themes"
+                        title={translate("Themes")}
+                        panel={<ThemesPanel {...panelProps} />}
+                    />
 
                     {/* <Tabs.Expander /> */}
                     <SettingsTabSection title="Other" icon={<Lifesaver />} />
 
-                    <Tab id="about" title={translate("About")} panel={<AboutPanel {...panelProps} />} />
+                    <Tab
+                        id="about"
+                        data-testid="preferences-tab-about"
+                        title={translate("About")}
+                        panel={<AboutPanel {...panelProps} />}
+                    />
                 </Tabs>
             </div>
         </Dialog>

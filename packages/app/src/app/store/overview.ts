@@ -14,18 +14,25 @@ export interface IOverviewStore {
     overview?: IProjectOverview;
 }
 
-export const OverviewStore = entity<IOverviewStore>({
-    isLoading: false,
-},[
+export const OverviewStore = entity<IOverviewStore>(
     {
-        init: (origInit, entity) => () => {
-            origInit();
-
-            entity.set(
-                produce((state: IOverviewStore) => {
-                    state.overview = getStorage(CACHE_OVERVIEW, true, {});
-                })
-            );
-        },
+        isLoading: false,
     },
-]);
+    [
+        {
+            init: (origInit, entity) => () => {
+                origInit();
+
+                entity.set(
+                    produce((state: IOverviewStore) => {
+                        state.overview = getStorage<IProjectOverview | undefined>(
+                            CACHE_OVERVIEW,
+                            true,
+                            undefined
+                        );
+                    })
+                );
+            },
+        },
+    ]
+);

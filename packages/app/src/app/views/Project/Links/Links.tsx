@@ -41,6 +41,7 @@ export const Links = () => {
         return (
             <Grid vertical>
                 <BlankSlate
+                    testId="project-links-empty"
                     icon={APPICONS.URL}
                     title={translate("No links")}
                     description={translate(

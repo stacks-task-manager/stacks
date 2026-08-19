@@ -111,6 +111,7 @@ export const TasksPanel: FunctionComponent<IPanelInterface> = ({ onChange, prefe
     return (
         <div className="preference-panel">
             <SettingRow
+                testId="fixed-cover-height"
                 title={translate("Fixed cover height")}
                 description={translate("When enabled will show the best cover aspect ratio")}
                 rightElement={
@@ -124,6 +125,7 @@ export const TasksPanel: FunctionComponent<IPanelInterface> = ({ onChange, prefe
             />
 
             <SettingRow
+                testId="task-lazy-load"
                 title={translate("Lazy load tasks")}
                 description={translate("Prevents tasks from loading while they are not visible explanation")}
                 rightElement={
@@ -144,6 +146,7 @@ export const TasksPanel: FunctionComponent<IPanelInterface> = ({ onChange, prefe
             </SettingRow>
 
             <SettingRow
+                testId="task-copy-format"
                 title={translate("Copy format")}
                 description={
                     <div>
@@ -177,6 +180,6 @@ export const TasksPanel: FunctionComponent<IPanelInterface> = ({ onChange, prefe
                     onChange={handleChange}
                 />
             </SettingRow>
-        </div >
+        </div>
     );
 };

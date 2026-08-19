@@ -47,7 +47,7 @@ export const Bookmarks = () => {
     }, [bookmarks, query]);
 
     return (
-        <AppView toolbar={<ToolbarBookmarks />}>
+        <AppView toolbar={<ToolbarBookmarks />} data-testid="bookmarks-view">
             <AppViewContent padded>
                 {bookmarks.length === 0 && (
                     <Grid gap={0} padding={30} className="vertical">
@@ -71,9 +71,7 @@ export const Bookmarks = () => {
 
                             return (
                                 <div key={type}>
-                                    <h5 className={Classes.HEADING}>
-                                        {BOOKMARK_TYPE_LABELS[type] ?? type}
-                                    </h5>
+                                    <h5 className={Classes.HEADING}>{BOOKMARK_TYPE_LABELS[type] ?? type}</h5>
                                     <ul className={classNames(Classes.MENU, Classes.ELEVATION_1)}>
                                         {grouped[type].map(bookmark => {
                                             return (
@@ -85,7 +83,7 @@ export const Bookmarks = () => {
                                                             <Icon
                                                                 icon={
                                                                     APPICONS[
-                                                                    bookmark.type.toUpperCase() as unknown as keyof typeof APPICONS
+                                                                        bookmark.type.toUpperCase() as unknown as keyof typeof APPICONS
                                                                     ]
                                                                 }
                                                             />

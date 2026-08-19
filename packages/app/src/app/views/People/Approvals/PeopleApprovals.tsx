@@ -4,9 +4,35 @@ import xor from "lodash/xor";
 import React, { FunctionComponent, useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
 
-import { Button, ButtonGroup, Classes, FormGroup, Intent, mergeRefs, Popover, Tag, TagProps, TextArea, Tooltip } from "@blueprintjs/core";
+import {
+    Button,
+    ButtonGroup,
+    Classes,
+    FormGroup,
+    Intent,
+    mergeRefs,
+    Popover,
+    Tag,
+    TagProps,
+    TextArea,
+    Tooltip,
+} from "@blueprintjs/core";
 import { APPICONS, ITimeLog, TIMELOG_STATUS } from "@stacks/types";
-import { Avatar, BlankSlate, Col, Grid, Icon, Row, Table, TableBody, TableBodyCell, TableHead, TableHeaderCell, TableSection, TableSectionCell } from "app/components/common";
+import {
+    Avatar,
+    BlankSlate,
+    Col,
+    Grid,
+    Icon,
+    Row,
+    Table,
+    TableBody,
+    TableBodyCell,
+    TableHead,
+    TableHeaderCell,
+    TableSection,
+    TableSectionCell,
+} from "app/components/common";
 import { usePerson, useTimelogsInterval } from "app/hooks";
 import { durationToHours, durationToWorkingDays, formatStringDuration } from "app/utils/date";
 import { AppViewContent, TIMELOG_STATUS_MAP, TimelogStatusIcon } from "app/widgets";
@@ -34,15 +60,18 @@ interface GroupedTimelogs {
                 };
                 total: number;
             };
-        }
+        };
     };
 }
 
 export const PeopleApprovals = () => {
-    const { interval, groupBy } = TimesheetApprovalStore.use(state => ({
-        interval: state.interval,
-        groupBy: state.groupBy,
-    }), shallowEqual);
+    const { interval, groupBy } = TimesheetApprovalStore.use(
+        state => ({
+            interval: state.interval,
+            groupBy: state.groupBy,
+        }),
+        shallowEqual
+    );
     const [visiblePeople, setVisiblePeople] = useState<string[]>([]);
     const [visibleProjects, setVisibleProjects] = useState<string[]>([]);
     const [visibleTasks, setVisibleTasks] = useState<string[]>([]);
@@ -57,7 +86,7 @@ export const PeopleApprovals = () => {
             if (!acc[cur.person]) {
                 acc[cur.person] = {
                     totals: 0,
-                    projects: {}
+                    projects: {},
                 };
             }
             if (!acc[cur.person].projects[cur.project]) {
@@ -102,62 +131,85 @@ export const PeopleApprovals = () => {
     };
     const handleToggleProject = (projectId: string) => {
         setVisibleProjects(xor(visibleProjects, [projectId]));
-    }
+    };
     const handleToggleTask = (taskId: string) => {
         setVisibleTasks(xor(visibleTasks, [taskId]));
-    }
+    };
 
     return (
-        <AppViewContent padded relative>
-            <div className="people-approvals">
-
+        <AppViewContent padded relative data-testid="people-approvals-view">
+            <div className="people-approvals" data-testid="people-approvals-content">
                 {!isLoading && timelogs.length > 0 && (
                     <Table sticky>
                         <ApprovalHeader />
-                        {Object.keys(groupByPerson).map((personId) => (
+                        {Object.keys(groupByPerson).map(personId => (
                             <React.Fragment key={personId}>
                                 <PersonSection
                                     userId={personId}
                                     total={groupByPerson[personId].totals}
                                     isOpen={visiblePeople.includes(personId)}
                                     onToggle={() => handleTogglePerson(personId)}
-                                    onToggleAll={() => handleToggleAllProjects(personId)} />
+                                    onToggleAll={() => handleToggleAllProjects(personId)}
+                                />
                                 <TableBody>
-                                    {visiblePeople.includes(personId) && Object.keys(groupByPerson[personId].projects).map((projectId) => (
-                                        <React.Fragment key={`project-${projectId}`}>
-                                            {/* Project Header Row */}
-                                            <ProjectHeaderRow
-                                                project={projectId}
-                                                title={groupByPerson[personId].projects[projectId].title}
-                                                total={groupByPerson[personId].projects[projectId].total}
-                                                estimate={groupByPerson[personId].projects[projectId].estimate}
-                                                isOpen={visibleProjects.includes(projectId)}
-                                                onToggle={handleToggleProject}
-                                            />
+                                    {visiblePeople.includes(personId) &&
+                                        Object.keys(groupByPerson[personId].projects).map(projectId => (
+                                            <React.Fragment key={`project-${projectId}`}>
+                                                {/* Project Header Row */}
+                                                <ProjectHeaderRow
+                                                    project={projectId}
+                                                    title={groupByPerson[personId].projects[projectId].title}
+                                                    total={groupByPerson[personId].projects[projectId].total}
+                                                    estimate={
+                                                        groupByPerson[personId].projects[projectId].estimate
+                                                    }
+                                                    isOpen={visibleProjects.includes(projectId)}
+                                                    onToggle={handleToggleProject}
+                                                />
 
-                                            {visibleProjects.includes(projectId) && Object.keys(groupByPerson[personId].projects[projectId].tasks).map((taskId) => (
-                                                <React.Fragment key={`task-${taskId}`}>
-                                                    {/* Task Header Row */}
-                                                    <TaskHeaderRow
-                                                        task={taskId}
-                                                        title={groupByPerson[personId].projects[projectId].tasks[taskId].title}
-                                                        total={groupByPerson[personId].projects[projectId].tasks[taskId].total}
-                                                        estimate={groupByPerson[personId].projects[projectId].tasks[taskId].estimate}
-                                                        isOpen={visibleTasks.includes(taskId)}
-                                                        onToggle={handleToggleTask}
-                                                    />
+                                                {visibleProjects.includes(projectId) &&
+                                                    Object.keys(
+                                                        groupByPerson[personId].projects[projectId].tasks
+                                                    ).map(taskId => (
+                                                        <React.Fragment key={`task-${taskId}`}>
+                                                            {/* Task Header Row */}
+                                                            <TaskHeaderRow
+                                                                task={taskId}
+                                                                title={
+                                                                    groupByPerson[personId].projects[
+                                                                        projectId
+                                                                    ].tasks[taskId].title
+                                                                }
+                                                                total={
+                                                                    groupByPerson[personId].projects[
+                                                                        projectId
+                                                                    ].tasks[taskId].total
+                                                                }
+                                                                estimate={
+                                                                    groupByPerson[personId].projects[
+                                                                        projectId
+                                                                    ].tasks[taskId].estimate
+                                                                }
+                                                                isOpen={visibleTasks.includes(taskId)}
+                                                                onToggle={handleToggleTask}
+                                                            />
 
-                                                    {/* Timelog Rows */}
-                                                    {visibleTasks.includes(taskId) && groupByPerson[personId].projects[projectId].tasks[taskId].timelogs.map((timelog: ITimeLog) => (
-                                                        <TimelogRow
-                                                            key={timelog.id}
-                                                            timelog={timelog}
-                                                        />
+                                                            {/* Timelog Rows */}
+                                                            {visibleTasks.includes(taskId) &&
+                                                                groupByPerson[personId].projects[
+                                                                    projectId
+                                                                ].tasks[taskId].timelogs.map(
+                                                                    (timelog: ITimeLog) => (
+                                                                        <TimelogRow
+                                                                            key={timelog.id}
+                                                                            timelog={timelog}
+                                                                        />
+                                                                    )
+                                                                )}
+                                                        </React.Fragment>
                                                     ))}
-                                                </React.Fragment>
-                                            ))}
-                                        </React.Fragment>
-                                    ))}
+                                            </React.Fragment>
+                                        ))}
                                 </TableBody>
                             </React.Fragment>
                         ))}
@@ -166,12 +218,16 @@ export const PeopleApprovals = () => {
 
                 {!isLoading && timelogs.length === 0 && (
                     <Grid vertical>
-                        <BlankSlate icon="calendar-view" title={
-                            <Grid gap={10} align="center">
-                                <div>No timelogs need review in the current interval:</div>
-                                <Tag minimal size="large">{format(interval.at(0) ?? new Date(), "PP")}</Tag>
-                            </Grid>
-                        }
+                        <BlankSlate
+                            icon="calendar-view"
+                            title={
+                                <Grid gap={10} align="center">
+                                    <div>No timelogs need review in the current interval:</div>
+                                    <Tag minimal size="large">
+                                        {format(interval.at(0) ?? new Date(), "PP")}
+                                    </Tag>
+                                </Grid>
+                            }
                             description="Once people will submit their timelogs for approval, they will appear here."
                         />
                     </Grid>
@@ -180,18 +236,12 @@ export const PeopleApprovals = () => {
                 {isLoading && (
                     <Grid vertical gap={10}>
                         {Array.from({ length: 10 }, (v, i) => i).map((a, i) => {
-                            return (
-                                <div
-                                    key={i}
-                                    className={Classes.SKELETON}
-                                    style={{ height: 50 }}
-                                />
-                            );
+                            return <div key={i} className={Classes.SKELETON} style={{ height: 50 }} />;
                         })}
                     </Grid>
                 )}
             </div>
-        </AppViewContent >
+        </AppViewContent>
     );
 };
 
@@ -206,8 +256,8 @@ const ApprovalHeader = () => {
             <TableHeaderCell name="time" title="Time" align="right" />
             <TableHeaderCell name="actions" title="Actions" align="right" width={100} />
         </TableHead>
-    )
-}
+    );
+};
 
 interface ProjectHeaderRowProps {
     project: string;
@@ -217,7 +267,14 @@ interface ProjectHeaderRowProps {
     isOpen?: boolean;
     onToggle: (projectId: string) => void;
 }
-const ProjectHeaderRow: FunctionComponent<ProjectHeaderRowProps> = ({ project, title, total, estimate, isOpen, onToggle }) => {
+const ProjectHeaderRow: FunctionComponent<ProjectHeaderRowProps> = ({
+    project,
+    title,
+    total,
+    estimate,
+    isOpen,
+    onToggle,
+}) => {
     return (
         <tr>
             <TableBodyCell span={2}>
@@ -227,14 +284,11 @@ const ProjectHeaderRow: FunctionComponent<ProjectHeaderRowProps> = ({ project, t
                     icon={<Icon icon={isOpen ? "chevron-up" : "chevron-down"} />}
                     variant="minimal"
                     size="small"
-                    onClick={() => onToggle(project)} />
+                    onClick={() => onToggle(project)}
+                />
             </TableBodyCell>
             <TableBodyCell span={3}>
-                <TaskSpentProgress
-                    estimated={estimate}
-                    spent={total}
-                    fill
-                />
+                <TaskSpentProgress estimated={estimate} spent={total} fill />
             </TableBodyCell>
             <TableBodyCell align="right">
                 <TotalTag total={total} intent={Intent.SUCCESS} />
@@ -242,12 +296,12 @@ const ProjectHeaderRow: FunctionComponent<ProjectHeaderRowProps> = ({ project, t
             <TableBodyCell align="right" paddingLeft={0}>
                 <ApproveButtons
                     onApprove={() => TimesheetApprovalActions.approve({ project })}
-                    onReject={(reason) => TimesheetApprovalActions.reject({ project }, reason)}
+                    onReject={reason => TimesheetApprovalActions.reject({ project }, reason)}
                 />
             </TableBodyCell>
         </tr>
-    )
-}
+    );
+};
 
 interface TaskHeaderRowProps {
     task: string;
@@ -257,7 +311,14 @@ interface TaskHeaderRowProps {
     isOpen?: boolean;
     onToggle: (taskId: string) => void;
 }
-const TaskHeaderRow: FunctionComponent<TaskHeaderRowProps> = ({ task, title, total, estimate, isOpen, onToggle }) => {
+const TaskHeaderRow: FunctionComponent<TaskHeaderRowProps> = ({
+    task,
+    title,
+    total,
+    estimate,
+    isOpen,
+    onToggle,
+}) => {
     return (
         <tr>
             <TableBodyCell span={2}>
@@ -265,16 +326,16 @@ const TaskHeaderRow: FunctionComponent<TaskHeaderRowProps> = ({ task, title, tot
                     <Icon icon="corner-down-right" />
                     <Icon icon={APPICONS.TASK} />
                     {title}
-                    <Button icon={<Icon icon={isOpen ? "chevron-up" : "chevron-down"} />} variant="minimal" size="small"
-                        onClick={() => onToggle(task)} />
+                    <Button
+                        icon={<Icon icon={isOpen ? "chevron-up" : "chevron-down"} />}
+                        variant="minimal"
+                        size="small"
+                        onClick={() => onToggle(task)}
+                    />
                 </Row>
             </TableBodyCell>
             <TableBodyCell span={3}>
-                <TaskSpentProgress
-                    estimated={estimate}
-                    spent={total}
-                    fill
-                />
+                <TaskSpentProgress estimated={estimate} spent={total} fill />
             </TableBodyCell>
             <TableBodyCell align="right">
                 <TotalTag total={total} />
@@ -282,12 +343,12 @@ const TaskHeaderRow: FunctionComponent<TaskHeaderRowProps> = ({ task, title, tot
             <TableBodyCell align="right" paddingLeft={0}>
                 <ApproveButtons
                     onApprove={() => TimesheetApprovalActions.approve({ task })}
-                    onReject={(reason) => TimesheetApprovalActions.reject({ task }, reason)}
+                    onReject={reason => TimesheetApprovalActions.reject({ task }, reason)}
                 />
             </TableBodyCell>
         </tr>
-    )
-}
+    );
+};
 
 const TimelogRow = ({ timelog }: { timelog: ITimeLog }) => {
     return (
@@ -298,10 +359,8 @@ const TimelogRow = ({ timelog }: { timelog: ITimeLog }) => {
                     <Icon icon={APPICONS.CALENDAR} /> {format(timelog.date, "PP")}
                 </Row>
             </TableBodyCell>
+            <TableBodyCell>{timelog.description || "No description"}</TableBodyCell>
             <TableBodyCell>
-                {timelog.description || 'No description'}
-            </TableBodyCell>
-            <TableBodyCell >
                 <Icon icon={timelog.billable ? "check-square" : "square"} />
             </TableBodyCell>
             <TableBodyCell>
@@ -321,14 +380,26 @@ const TimelogRow = ({ timelog }: { timelog: ITimeLog }) => {
             <TableBodyCell align="right" paddingLeft={0}>
                 <ApproveButtons
                     onApprove={() => TimesheetApprovalActions.approve({ timelog: timelog.id })}
-                    onReject={(reason) => TimesheetApprovalActions.reject({ timelog: timelog.id }, reason)}
+                    onReject={reason => TimesheetApprovalActions.reject({ timelog: timelog.id }, reason)}
                 />
             </TableBodyCell>
         </tr>
-    )
-}
+    );
+};
 
-const PersonSection = ({ userId, total, isOpen, onToggle, onToggleAll }: { userId: string, total: number, isOpen: boolean, onToggle: () => void, onToggleAll: () => void }) => {
+const PersonSection = ({
+    userId,
+    total,
+    isOpen,
+    onToggle,
+    onToggleAll,
+}: {
+    userId: string;
+    total: number;
+    isOpen: boolean;
+    onToggle: () => void;
+    onToggleAll: () => void;
+}) => {
     const { person } = usePerson(userId);
     return (
         <TableSection span={7}>
@@ -347,13 +418,16 @@ const PersonSection = ({ userId, total, isOpen, onToggle, onToggleAll }: { userI
                         <Col align="center">
                             <Button
                                 icon={<Icon icon={isOpen ? "chevron-up" : "chevron-down"} />}
-                                variant="minimal" onClick={onToggle} />
+                                variant="minimal"
+                                onClick={onToggle}
+                            />
 
                             <Tooltip content="Expand all projects" placement="top">
                                 <Button
                                     icon={<Icon icon="plus-square" />}
                                     variant="minimal"
-                                    onClick={onToggleAll} />
+                                    onClick={onToggleAll}
+                                />
                             </Tooltip>
                         </Col>
                     </Row>
@@ -371,31 +445,36 @@ const PersonSection = ({ userId, total, isOpen, onToggle, onToggleAll }: { userI
                         <ApproveButtons
                             hiddable={false}
                             onApprove={() => TimesheetApprovalActions.approve({ person: userId })}
-                            onReject={(reason) => TimesheetApprovalActions.reject({ person: userId }, reason)}
+                            onReject={reason => TimesheetApprovalActions.reject({ person: userId }, reason)}
                         />
                     </Col>
                 </Row>
             </TableSectionCell>
         </TableSection>
-    )
-}
+    );
+};
 
 interface TotalTagProps extends TagProps {
     total: number;
 }
 const TotalTag = ({ total, ...props }: TotalTagProps) => {
     return (
-        <Tooltip content={
-            <div style={{ textAlign: "center" }}>
-                <div>{`${durationToHours(total).toFixed(1)} hours`}</div>
-                <small>or</small>
-                <div>{`${durationToWorkingDays(total).toFixed(1)} working days`}</div>
-            </div>
-        } placement="top">
-            <Tag minimal {...props}>{formatStringDuration(total)}</Tag>
+        <Tooltip
+            content={
+                <div style={{ textAlign: "center" }}>
+                    <div>{`${durationToHours(total).toFixed(1)} hours`}</div>
+                    <small>or</small>
+                    <div>{`${durationToWorkingDays(total).toFixed(1)} working days`}</div>
+                </div>
+            }
+            placement="top"
+        >
+            <Tag minimal {...props}>
+                {formatStringDuration(total)}
+            </Tag>
         </Tooltip>
-    )
-}
+    );
+};
 
 interface ApproveButtonsProps {
     hiddable?: boolean;
@@ -407,26 +486,30 @@ const ApproveButtons: FunctionComponent<ApproveButtonsProps> = ({ hiddable = tru
     const [reason, setReason] = useState("");
     const handleReject = () => {
         onReject(reason);
-    }
+    };
     return (
         <ButtonGroup className={hiddable ? "timelogs-approve-buttons" : ""}>
             <Tooltip content="Approve" placement="top-end">
-                <Button icon={<Icon icon="check" />} size="small" variant="outlined" intent={Intent.SUCCESS}
-                    onClick={onApprove} />
+                <Button
+                    icon={<Icon icon="check" />}
+                    size="small"
+                    variant="outlined"
+                    intent={Intent.SUCCESS}
+                    onClick={onApprove}
+                />
             </Tooltip>
 
             <Popover
                 content={
                     <Grid>
-                        <FormGroup helperText="Write a reason for rejecting the timelog" label="Reject motive">
-                            <TextArea value={reason} onChange={(e) => setReason(e.target.value)} fill />
+                        <FormGroup
+                            helperText="Write a reason for rejecting the timelog"
+                            label="Reject motive"
+                        >
+                            <TextArea value={reason} onChange={e => setReason(e.target.value)} fill />
                         </FormGroup>
                         <Row align="center" justify="right">
-                            <Button
-                                variant="minimal"
-                                size="small"
-                                className={Classes.POPOVER_DISMISS}
-                            >
+                            <Button variant="minimal" size="small" className={Classes.POPOVER_DISMISS}>
                                 {translate("Cancel")}
                             </Button>
                             <Button
@@ -465,5 +548,5 @@ const ApproveButtons: FunctionComponent<ApproveButtonsProps> = ({ hiddable = tru
                 )}
             />
         </ButtonGroup>
-    )
-}
+    );
+};

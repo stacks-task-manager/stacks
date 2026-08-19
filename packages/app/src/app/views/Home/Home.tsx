@@ -54,6 +54,7 @@ export const Home = () => {
 
     return (
         <AppView
+            data-testid="home-view"
             prepend={
                 <>
                     {showCustomizer ? (
@@ -224,7 +225,7 @@ const PinnedBookmarks = () => {
                                                 <Icon
                                                     icon={
                                                         APPICONS[
-                                                        bookmark.type.toUpperCase() as unknown as keyof typeof APPICONS
+                                                            bookmark.type.toUpperCase() as unknown as keyof typeof APPICONS
                                                         ]
                                                     }
                                                 />
