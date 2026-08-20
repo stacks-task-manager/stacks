@@ -1,14 +1,28 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import type {
+    IActivity,
+    IAttachment,
+    ICalendar,
+    ICalendarEvent,
     ICompany,
     INotepad,
+    INotification,
     IPerson,
+    IPreferences,
     IProject,
+    IProjectOverview,
+    IReminder,
+    IReport,
+    IRole,
+    IRoleAccess,
     IStack,
     ITag,
     ITask,
     ISearchResult,
+    ITimeLog,
     PRIORITY,
+    REPORT_TYPE,
+    TIMELOG_STATUS,
     TreeNode,
 } from "@stacks/types";
 import { RECORDTYPE } from "@stacks/types";
@@ -246,6 +260,231 @@ export async function moveTask(payload: {
 
 export async function fetchTags(): Promise<ITag[]> {
     const res = await api.get<ApiSuccess<ITag[]>>("/api/tags");
+    return unwrap(res);
+}
+
+/**
+ * Filtered task list. Mirrors the web `TasksAPI.load` query shape.
+ */
+export interface TaskLoadParams {
+    ids?: string[];
+    project?: string | string[];
+    stack?: string | string[];
+    archived?: boolean;
+    completed?: boolean;
+    open?: boolean;
+    assigned?: boolean;
+    unassigned?: boolean;
+    assignees?: string[];
+    parent?: string;
+    query?: string;
+    from?: Date;
+    to?: Date;
+}
+
+export async function fetchTasks(params: TaskLoadParams): Promise<ITask[]> {
+    const res = await api.get<ApiSuccess<ITask[]>>("/api/tasks", { params });
+    return unwrap(res);
+}
+
+/* ------------------------------------------------------------------------- *
+ *  Calendars & events
+ * ------------------------------------------------------------------------- */
+
+export async function fetchCalendars(): Promise<ICalendar[]> {
+    const res = await api.get<ApiSuccess<ICalendar[]>>("/api/calendars");
+    return unwrap(res);
+}
+
+export async function createCalendar(data: {
+    title: string;
+    color?: string;
+    primary?: boolean;
+}): Promise<ICalendar> {
+    const res = await api.post<ApiSuccess<ICalendar>>("/api/calendars", data);
+    return unwrap(res);
+}
+
+/** Events overlapping [from, to]; optionally restricted to a set of calendars. */
+export async function fetchEvents(from: Date, to: Date, calendars?: string[]): Promise<ICalendarEvent[]> {
+    const res = await api.get<ApiSuccess<ICalendarEvent[]>>("/api/events", {
+        params: {
+            from: from.toISOString(),
+            to: to.toISOString(),
+            ...(calendars && calendars.length ? { calendars } : {}),
+        },
+    });
+    return unwrap(res);
+}
+
+export async function createEvent(event: Partial<ICalendarEvent>): Promise<ICalendarEvent> {
+    const res = await api.post<ApiSuccess<ICalendarEvent>>("/api/events", event);
+    return unwrap(res);
+}
+
+export async function updateEvent(eventId: string, patch: Partial<ICalendarEvent>): Promise<void> {
+    await api.patch(`/api/events/${eventId}`, patch);
+}
+
+export async function deleteEvent(eventId: string): Promise<void> {
+    await api.delete(`/api/events/${eventId}`);
+}
+
+/* ------------------------------------------------------------------------- *
+ *  Notifications
+ * ------------------------------------------------------------------------- */
+
+export async function fetchNotifications(): Promise<INotification[]> {
+    const res = await api.get<ApiSuccess<INotification[]>>("/api/notifications");
+    return unwrap(res);
+}
+
+export async function readNotification(id: string): Promise<void> {
+    await api.patch(`/api/notifications/${id}`);
+}
+
+export async function deleteNotification(id: string): Promise<void> {
+    await api.delete(`/api/notifications/${id}`);
+}
+
+/* ------------------------------------------------------------------------- *
+ *  Activities (task timeline feed)
+ * ------------------------------------------------------------------------- */
+
+export async function fetchActivities(resourceId: string): Promise<IActivity[]> {
+    const res = await api.get<ApiSuccess<IActivity[]>>(`/api/activities/${resourceId}`);
+    return unwrap(res);
+}
+
+export async function addActivity(
+    activity: Omit<IActivity, "id" | "created" | "updated">
+): Promise<IActivity> {
+    const res = await api.post<ApiSuccess<IActivity>>("/api/activities", activity);
+    return unwrap(res);
+}
+
+/* ------------------------------------------------------------------------- *
+ *  Timelogs
+ * ------------------------------------------------------------------------- */
+
+export interface TimelogsFilterParams {
+    project?: string;
+    task?: string;
+    start?: string;
+    end?: string;
+    status?: TIMELOG_STATUS;
+}
+
+export async function fetchTimelogs(params: TimelogsFilterParams): Promise<ITimeLog[]> {
+    const res = await api.get<ApiSuccess<ITimeLog[]>>("/api/timelogs", { params });
+    return unwrap(res);
+}
+
+export async function createTimelog(timelog: Partial<ITimeLog>): Promise<ITimeLog> {
+    const res = await api.post<ApiSuccess<ITimeLog>>("/api/timelogs", timelog);
+    return unwrap(res);
+}
+
+export async function updateTimelog(id: string, patch: Partial<ITimeLog>): Promise<void> {
+    await api.patch(`/api/timelogs/${id}`, patch);
+}
+
+export async function deleteTimelog(id: string): Promise<void> {
+    await api.delete(`/api/timelogs/${id}`);
+}
+
+/* ------------------------------------------------------------------------- *
+ *  Reports
+ * ------------------------------------------------------------------------- */
+
+/** Catalog of available report cards. */
+export async function fetchReports(): Promise<IReport[]> {
+    const res = await api.get<ApiSuccess<IReport[]>>("/api/reports");
+    return unwrap(res);
+}
+
+/** Payload for a single report type. The shape varies per report. */
+export async function fetchReport(type: REPORT_TYPE, span?: string): Promise<unknown> {
+    const params = span && span !== "all-time" ? { span } : undefined;
+    const res = await api.get<ApiSuccess<unknown>>(`/api/reports/${type}`, params ? { params } : {});
+    return unwrap(res);
+}
+
+/* ------------------------------------------------------------------------- *
+ *  Reminders
+ * ------------------------------------------------------------------------- */
+
+export async function fetchReminders(recordId: string): Promise<IReminder[]> {
+    const res = await api.get<ApiSuccess<IReminder[]>>(`/api/reminders/${recordId}`);
+    return unwrap(res);
+}
+
+export async function createReminder(reminder: Omit<IReminder, "id">): Promise<void> {
+    await api.post(`/api/reminders`, reminder);
+}
+
+export async function deleteReminder(id: string): Promise<void> {
+    await api.delete(`/api/reminders/${id}`);
+}
+
+/* ------------------------------------------------------------------------- *
+ *  Preferences
+ * ------------------------------------------------------------------------- */
+
+export async function fetchPreferences(): Promise<IPreferences> {
+    const res = await api.get<ApiSuccess<IPreferences>>("/api/preferences");
+    return unwrap(res);
+}
+
+export async function updatePreferences(preferences: IPreferences): Promise<void> {
+    await api.patch(`/api/preferences`, preferences);
+}
+
+/* ------------------------------------------------------------------------- *
+ *  Project analytics, roles & attachments
+ * ------------------------------------------------------------------------- */
+
+export async function fetchProjectOverview(id: string): Promise<IProjectOverview> {
+    const res = await api.get<ApiSuccess<IProjectOverview>>(`/api/projects/${id}/overview`);
+    return unwrap(res);
+}
+
+export async function fetchRoles(): Promise<IRole[]> {
+    const res = await api.get<ApiSuccess<IRole[]>>("/api/roles");
+    return unwrap(res);
+}
+
+export async function createRole(payload: {
+    title: string;
+    description?: string;
+    access?: IRoleAccess;
+    disabled?: boolean;
+}): Promise<IRole> {
+    const res = await api.post<ApiSuccess<IRole>>("/api/roles", payload);
+    return unwrap(res);
+}
+
+export async function updateRole(
+    id: string,
+    payload: {
+        title?: string;
+        description?: string;
+        access?: IRoleAccess;
+        disabled?: boolean;
+    }
+): Promise<void> {
+    await api.patch(`/api/roles/${id}`, payload);
+}
+
+export async function fetchAttachments(
+    recordId: string,
+    type?: string
+): Promise<IAttachment[]> {
+    const params = type ? { type } : undefined;
+    const res = await api.get<ApiSuccess<IAttachment[]>>(
+        `/api/files/attachments/${recordId}`,
+        params ? { params } : {}
+    );
     return unwrap(res);
 }
 

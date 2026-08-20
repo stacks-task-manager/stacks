@@ -197,8 +197,72 @@ export function ProjectView({
          * which case we skip the menu entirely since its only non-settings
          * entry would be disabled.
          */
+        // Navigation entries into the project sub-views. Only shown for real
+        // projects (the inbox/system project renders with allowDelete=false and
+        // has no header menu at all).
+        const subViewItems: HeaderMenuItem[] = allowDelete
+            ? [
+                  {
+                      label: "Overview",
+                      icon: "overview-view",
+                      onPress: () =>
+                          router.push(`/(app)/project-overview/${projectId}` as never),
+                  },
+                  {
+                      label: "Table",
+                      icon: "list-view",
+                      onPress: () =>
+                          router.push(`/(app)/project-table/${projectId}` as never),
+                  },
+                  {
+                      label: "Time",
+                      icon: "clock-stopwatch",
+                      onPress: () =>
+                          router.push(`/(app)/project-time/${projectId}` as never),
+                  },
+                  {
+                      label: "Attachments",
+                      icon: "attachment-02",
+                      onPress: () =>
+                          router.push(`/(app)/project-attachments/${projectId}` as never),
+                  },
+                  {
+                      label: "Board Overview",
+                      icon: "board-view",
+                      onPress: () =>
+                          router.push(`/(app)/project-board-overview/${projectId}` as never),
+                  },
+                  {
+                      label: "Notes",
+                      icon: "book-closed",
+                      onPress: () =>
+                          router.push(`/(app)/project-notes/${projectId}` as never),
+                  },
+                  {
+                      label: "Links",
+                      icon: "link-01",
+                      onPress: () =>
+                          router.push(`/(app)/project-links/${projectId}` as never),
+                  },
+                  {
+                      label: "Map",
+                      icon: "map-view",
+                      onPress: () =>
+                          router.push(`/(app)/project-map/${projectId}` as never),
+                  },
+                  {
+                      label: "World",
+                      icon: "map-view",
+                      onPress: () =>
+                          router.push(`/(app)/project-world/${projectId}` as never),
+                  },
+              ]
+            : [];
+
         const menuItems: HeaderMenuItem[] | null = allowDelete
             ? [
+                  ...subViewItems,
+                  { type: "divider" },
                   {
                       label: "Project settings",
                       icon: "settings-02",

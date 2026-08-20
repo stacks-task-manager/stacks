@@ -219,6 +219,31 @@ export function DrawerContent(props: DrawerContentComponentProps) {
                         title="My tasks"
                         onPress={() => go("/(app)/my-tasks")}
                     />
+                    <GeneralRow icon="list" title="Tasks" onPress={() => go("/(app)/tasks")} />
+                    <GeneralRow icon="calendar" title="Calendar" onPress={() => go("/(app)/calendar")} />
+                    <GeneralRow
+                        icon="bell"
+                        title="Notifications"
+                        onPress={() => go("/(app)/notifications")}
+                    />
+                    <GeneralRow icon="clock" title="Timelogs" onPress={() => go("/(app)/timelogs")} />
+                    <GeneralRow icon="pie-chart-03" title="Reports" onPress={() => go("/(app)/reports")} />
+                    <GeneralRow icon="calendar-check-02" title="Planner" onPress={() => go("/(app)/planner")} />
+                    <GeneralRow icon="hourglass-03" title="Timebox" onPress={() => go("/(app)/timebox")} />
+                    <GeneralRow icon="target-03" title="Goals" onPress={() => go("/(app)/goals")} />
+                    <GeneralRow icon="file" title="Files" onPress={() => go("/(app)/files")} />
+                    <GeneralRow icon="grid-view" title="Workspaces" onPress={() => go("/(app)/workspaces")} />
+                    <GeneralRow icon="key-01" title="Roles" onPress={() => go("/(app)/roles")} />
+                    <GeneralRow
+                        icon="shield-tick"
+                        title="Approvals"
+                        onPress={() => go("/(app)/approvals")}
+                    />
+                    <GeneralRow
+                        icon="clock-check"
+                        title="Timesheet"
+                        onPress={() => go("/(app)/timesheet")}
+                    />
                 </Box>
 
                 <Text className="px-3 font-semibold mb-1 mt-4">

@@ -8,4 +8,5 @@ export { TaskPriority } from "./TaskPriority";
 export { TaskProgress } from "./TaskProgress";
 export { TaskStatusBar } from "./TaskStatusBar";
 export { TaskTags } from "./TaskTags";
+export { TaskActivity } from "./TaskActivity";
 export * from "./fields";

@@ -62,8 +62,96 @@ export default function AppLayout() {
                     options={{ title: "My tasks", drawerItemStyle: { display: "none" } }}
                 />
                 <Drawer.Screen
+                    name="tasks"
+                    options={{ title: "Tasks", drawerItemStyle: { display: "none" } }}
+                />
+                <Drawer.Screen
+                    name="calendar"
+                    options={{ title: "Calendar", drawerItemStyle: { display: "none" } }}
+                />
+                <Drawer.Screen
+                    name="notifications"
+                    options={{ title: "Notifications", drawerItemStyle: { display: "none" } }}
+                />
+                <Drawer.Screen
+                    name="timelogs"
+                    options={{ title: "Timelogs", drawerItemStyle: { display: "none" } }}
+                />
+                <Drawer.Screen
+                    name="roles"
+                    options={{ title: "Roles", drawerItemStyle: { display: "none" } }}
+                />
+                <Drawer.Screen
+                    name="approvals"
+                    options={{ title: "Approvals", drawerItemStyle: { display: "none" } }}
+                />
+                <Drawer.Screen
+                    name="timesheet"
+                    options={{ title: "Timesheet", drawerItemStyle: { display: "none" } }}
+                />
+                <Drawer.Screen
+                    name="reports"
+                    options={{ title: "Reports", drawerItemStyle: { display: "none" } }}
+                />
+                <Drawer.Screen
+                    name="planner"
+                    options={{ title: "Planner", drawerItemStyle: { display: "none" } }}
+                />
+                <Drawer.Screen
+                    name="timebox"
+                    options={{ title: "Timebox", drawerItemStyle: { display: "none" } }}
+                />
+                <Drawer.Screen
+                    name="goals"
+                    options={{ title: "Goals", drawerItemStyle: { display: "none" } }}
+                />
+                <Drawer.Screen
+                    name="files"
+                    options={{ title: "Files", drawerItemStyle: { display: "none" } }}
+                />
+                <Drawer.Screen
+                    name="workspaces"
+                    options={{ title: "Workspaces", drawerItemStyle: { display: "none" } }}
+                />
+                <Drawer.Screen
                     name="document/[id]"
                     options={{ title: "Document", drawerItemStyle: { display: "none" } }}
+                />
+                <Drawer.Screen
+                    name="project-overview/[id]"
+                    options={{ title: "Overview", drawerItemStyle: { display: "none" } }}
+                />
+                <Drawer.Screen
+                    name="project-table/[id]"
+                    options={{ title: "Table", drawerItemStyle: { display: "none" } }}
+                />
+                <Drawer.Screen
+                    name="project-time/[id]"
+                    options={{ title: "Time", drawerItemStyle: { display: "none" } }}
+                />
+                <Drawer.Screen
+                    name="project-attachments/[id]"
+                    options={{ title: "Attachments", drawerItemStyle: { display: "none" } }}
+                />
+                <Drawer.Screen
+                    name="project-board-overview/[id]"
+                    options={{ title: "Board Overview", drawerItemStyle: { display: "none" } }}
+                />
+                <Drawer.Screen
+                    name="project-notes/[id]"
+                    options={{ title: "Notes", drawerItemStyle: { display: "none" } }}
+                />
+                <Drawer.Screen
+                    name="project-links/[id]"
+                    options={{ title: "Links", drawerItemStyle: { display: "none" } }}
+                />
+                <Drawer.Screen
+                    name="project-map/[id]"
+                    options={{ title: "Map", drawerItemStyle: { display: "none" } }}
+                />
+                <Drawer.Screen
+                    name="project-world/[id]"
+                    options={{ title: "World", drawerItemStyle: { display: "none" } }}
                 />
                 <Drawer.Screen
                     name="preferences"

@@ -8,7 +8,7 @@ import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
-import { useCallback, useEffect, useLayoutEffect } from "react";
+import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import {
     BackHandler,
     KeyboardAvoidingView,
@@ -17,11 +17,14 @@ import {
 } from "react-native";
 import { useHeaderHeight } from "@react-navigation/elements";
 
-import type { PRIORITY } from "@stacks/types";
+import { REMINDER_RECORD_TYPE, type PRIORITY, type IReminder } from "@stacks/types";
 
 import {
     archiveTask,
+    createReminder,
+    deleteReminder,
     deleteTask,
+    fetchReminders,
     fetchTask,
     unarchiveTask,
     updateTask,
@@ -43,6 +46,7 @@ import {
     StackSelect,
     StatusSelect,
     TagsSelect,
+    TaskActivity,
     TintSelect,
 } from "../../../src/widgets";
 
@@ -87,6 +91,13 @@ export default function TaskDetailScreen() {
     });
 
     const patch = (update: TaskUpdate) => mutation.mutate(update);
+
+    const { data: reminders, isLoading: remindersLoading } = useQuery({
+        queryKey: ["reminders", id],
+        queryFn: () => fetchReminders(id),
+    });
+
+    const [reminderDate, setReminderDate] = useState<Date | null>(null);
 
     /**
      * Dismiss the modal stack. When the modal was opened from any of the drawer
@@ -385,6 +396,82 @@ export default function TaskDetailScreen() {
                         disabled={disabled}
                     />
                 </FieldRow>
+
+                <Box className="mt-4 border-t border-outline-200 pt-3">
+                    <Text size="sm" className="font-semibold text-typography-700 mb-2">
+                        Activity
+                    </Text>
+                    <TaskActivity taskId={id} />
+                </Box>
+
+                <Box className="mt-4 border-t border-outline-200 pt-3">
+                    <Text size="sm" className="font-semibold text-typography-700 mb-2">
+                        Reminders
+                    </Text>
+                    {remindersLoading ? (
+                        <Spinner />
+                    ) : (
+                        <VStack space="sm">
+                            {(reminders ?? []).map((r: IReminder) => (
+                                <HStack
+                                    key={r.id}
+                                    space="sm"
+                                    className="items-center justify-between"
+                                >
+                                    <Text size="sm" className="text-typography-600">
+                                        {new Date(r.date).toLocaleString(undefined, {
+                                            day: "numeric",
+                                            month: "short",
+                                            hour: "2-digit",
+                                            minute: "2-digit",
+                                        })}
+                                    </Text>
+                                    <RNPressable
+                                        onPress={async () => {
+                                            await deleteReminder(r.id);
+                                            await queryClient.invalidateQueries({
+                                                queryKey: ["reminders", id],
+                                            });
+                                        }}
+                                        hitSlop={8}
+                                    >
+                                        <Text size="sm" className="text-error-600">
+                                            Remove
+                                        </Text>
+                                    </RNPressable>
+                                </HStack>
+                            ))}
+                            <FieldRow label="Add reminder">
+                                <DateField
+                                    value={reminderDate?.toISOString() ?? null}
+                                    onChange={v => setReminderDate(v ? new Date(v) : null)}
+                                    disabled={disabled}
+                                />
+                            </FieldRow>
+                            {reminderDate ? (
+                                <RNPressable
+                                    onPress={async () => {
+                                        await createReminder({
+                                            title: task.title,
+                                            subtitle: "Task reminder",
+                                            recordId: task.id,
+                                            recordType: REMINDER_RECORD_TYPE.TASK,
+                                            date: reminderDate,
+                                        });
+                                        setReminderDate(null);
+                                        await queryClient.invalidateQueries({
+                                            queryKey: ["reminders", id],
+                                        });
+                                    }}
+                                >
+                                    <Text size="sm" className="text-primary-600 font-semibold">
+                                        Save reminder
+                                    </Text>
+                                </RNPressable>
+                            ) : null}
+                        </VStack>
+                    )}
+                </Box>
             </ScrollView>
         </KeyboardAvoidingView>
     );
