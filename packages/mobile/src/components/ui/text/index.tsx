@@ -1,12 +1,20 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import React from 'react';
+import { Text as RNText, type TextProps } from 'react-native';
 
-import type { VariantProps } from '@gluestack-ui/utils/nativewind-utils';
-import { Text as RNText } from 'react-native';
-import { textStyle } from './styles';
+import { cn, SIZE_TO_TEXT } from '../lib/cn';
 
-type ITextProps = React.ComponentProps<typeof RNText> &
-  VariantProps<typeof textStyle>;
+type ITextProps = TextProps & {
+  className?: string;
+  isTruncated?: boolean;
+  bold?: boolean;
+  underline?: boolean;
+  strikeThrough?: boolean;
+  size?: '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl';
+  sub?: boolean;
+  italic?: boolean;
+  highlight?: boolean;
+};
 
 const Text = React.forwardRef<React.ComponentRef<typeof RNText>, ITextProps>(
   function Text(
@@ -26,19 +34,19 @@ const Text = React.forwardRef<React.ComponentRef<typeof RNText>, ITextProps>(
   ) {
     return (
       <RNText
-        className={textStyle({
-          isTruncated: isTruncated as boolean,
-          bold: bold as boolean,
-          underline: underline as boolean,
-          strikeThrough: strikeThrough as boolean,
-          size,
-          sub: sub as boolean,
-          italic: italic as boolean,
-          highlight: highlight as boolean,
-          class: className,
-        })}
-        {...props}
         ref={ref}
+        {...props}
+        className={cn(
+          'text-typography-700 font-body',
+          SIZE_TO_TEXT[sub ? 'xs' : size],
+          isTruncated && 'truncate',
+          bold && 'font-bold',
+          underline && 'underline',
+          strikeThrough && 'line-through',
+          italic && 'italic',
+          highlight && 'bg-yellow-500',
+          className
+        )}
       />
     );
   }

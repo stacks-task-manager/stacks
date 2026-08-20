@@ -1,17 +1,22 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import React from 'react';
-import { View, ViewProps } from 'react-native';
+import { View, type ViewProps } from 'react-native';
 
-import type { VariantProps } from '@gluestack-ui/utils/nativewind-utils';
-import { boxStyle } from './styles';
+import { cn } from '../lib/cn';
 
-type IBoxProps = ViewProps &
-  VariantProps<typeof boxStyle> & { className?: string };
+type IBoxProps = ViewProps & { className?: string };
 
 const Box = React.forwardRef<React.ComponentRef<typeof View>, IBoxProps>(
   function Box({ className, ...props }, ref) {
     return (
-      <View ref={ref} {...props} className={boxStyle({ class: className })} />
+      <View
+        ref={ref}
+        {...props}
+        className={cn(
+          'relative box-border border-0 bg-transparent items-stretch m-0 p-0',
+          className
+        )}
+      />
     );
   }
 );

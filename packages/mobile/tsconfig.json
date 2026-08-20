@@ -6,15 +6,13 @@
       "@/*": [
         "./src/*",
         "./*"
-      ],
-      "tailwind.config": [
-        "./tailwind.config.js"
       ]
     }
   },
   "include": [
     "**/*.ts",
     "**/*.tsx",
-    "nativewind-env.d.ts"
+    "global.d.ts",
+    "src/uniwind-types.d.ts"
   ]
 }

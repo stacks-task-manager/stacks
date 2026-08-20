@@ -1,7 +1,7 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ScrollView } from "react-native";
 import type { TreeNode } from "@stacks/types";
 import { PRIORITY, RECORDTYPE } from "@stacks/types";
@@ -33,9 +33,10 @@ const PRIORITY_OPTIONS: { value: PRIORITY | null; label: string }[] = [
 
 function useDebouncedValue<T>(value: T, delay: number): T {
     const [debounced, setDebounced] = useState(value);
-    const [timer, setTimer] = useState<ReturnType<typeof setTimeout> | null>(null);
-    if (timer) clearTimeout(timer);
-    setTimer(setTimeout(() => setDebounced(value), delay));
+    useEffect(() => {
+        const timer = setTimeout(() => setDebounced(value), delay);
+        return () => clearTimeout(timer);
+    }, [value, delay]);
     return debounced;
 }
 

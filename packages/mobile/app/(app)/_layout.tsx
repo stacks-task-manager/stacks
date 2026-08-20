@@ -1,5 +1,5 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
-import { DrawerActions } from "@react-navigation/native";
+import { DrawerActions } from "expo-router/react-navigation";
 import { Drawer } from "expo-router/drawer";
 import { useNavigation } from "expo-router";
 import { Pressable, Text } from "react-native";
@@ -78,18 +78,6 @@ export default function AppLayout() {
                     options={{ title: "Timelogs", drawerItemStyle: { display: "none" } }}
                 />
                 <Drawer.Screen
-                    name="roles"
-                    options={{ title: "Roles", drawerItemStyle: { display: "none" } }}
-                />
-                <Drawer.Screen
-                    name="approvals"
-                    options={{ title: "Approvals", drawerItemStyle: { display: "none" } }}
-                />
-                <Drawer.Screen
-                    name="timesheet"
-                    options={{ title: "Timesheet", drawerItemStyle: { display: "none" } }}
-                />
-                <Drawer.Screen
                     name="reports"
                     options={{ title: "Reports", drawerItemStyle: { display: "none" } }}
                 />
@@ -100,10 +88,6 @@ export default function AppLayout() {
                 <Drawer.Screen
                     name="timebox"
                     options={{ title: "Timebox", drawerItemStyle: { display: "none" } }}
-                />
-                <Drawer.Screen
-                    name="goals"
-                    options={{ title: "Goals", drawerItemStyle: { display: "none" } }}
                 />
                 <Drawer.Screen
                     name="files"

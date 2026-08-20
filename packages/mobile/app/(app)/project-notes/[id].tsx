@@ -7,7 +7,7 @@ import { WebView } from "react-native-webview";
 import type { IProject } from "@stacks/types";
 
 import { Box } from "@/components/ui/box";
-import { Button } from "@/components/ui/button";
+import { Button, ButtonText } from "@/components/ui/button";
 import { HStack } from "@/components/ui/hstack";
 import { Pressable } from "@/components/ui/pressable";
 import { Spinner } from "@/components/ui/spinner";
@@ -112,7 +112,7 @@ export default function ProjectNotesScreen() {
                                 setDraft("");
                             }}
                         >
-                            Cancel
+                            <ButtonText>Cancel</ButtonText>
                         </Button>
                         <Button
                             size="sm"
@@ -120,7 +120,7 @@ export default function ProjectNotesScreen() {
                             onPress={() => save.mutate(draft)}
                             isDisabled={save.isPending}
                         >
-                            {save.isPending ? "Saving…" : "Save"}
+                            <ButtonText>{save.isPending ? "Saving…" : "Save"}</ButtonText>
                         </Button>
                     </HStack>
                 </Box>

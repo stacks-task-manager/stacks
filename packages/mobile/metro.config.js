@@ -1,6 +1,6 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 const { getDefaultConfig } = require("expo/metro-config");
-const { withNativeWind } = require("nativewind/metro");
+const { withUniwindConfig } = require("uniwind/metro");
 const path = require("path");
 
 const projectRoot = __dirname;
@@ -38,14 +38,14 @@ const dedupeRoots = Object.fromEntries(
 );
 
 /**
- * `@gluestack-ui/core` (v3) transitively imports `react-dom` via
- * `react-aria` / `@react-aria/*`. On React Native those code paths are
- * never exercised, but metro still bundles `react-dom@18`, which at import
- * time does `var x = ReactSharedInternals.ReactCurrentDispatcher;` — and
- * React 19 removed that internals key, so the module crashes before the
- * bundle finishes loading. We redirect the entire `react-dom` specifier to
- * a local stub file that exposes no-op versions of the DOM APIs. The real
- * DOM code paths are unreachable on RN, so the stub is safe.
+ * `@10play/tentap-editor` ships a web-only editor that imports `react-dom`.
+ * On React Native those code paths are never exercised, but metro still
+ * bundles `react-dom@18`, which at import time does
+ * `var x = ReactSharedInternals.ReactCurrentDispatcher;` — and React 19
+ * removed that internals key, so the module crashes before the bundle
+ * finishes loading. We redirect the entire `react-dom` specifier to a local
+ * stub file that exposes no-op versions of the DOM APIs. The real DOM code
+ * paths are unreachable on RN, so the stub is safe.
  */
 const reactDomStub = path.resolve(projectRoot, "stubs", "react-dom.js");
 
@@ -79,4 +79,7 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
     return context.resolveRequest(context, moduleName, platform);
 };
 
-module.exports = withNativeWind(config, { input: "./global.css" });
+module.exports = withUniwindConfig(config, {
+    cssEntryFile: "./global.css",
+    dtsFile: "./src/uniwind-types.d.ts",
+});

@@ -15,7 +15,7 @@ import {
     Platform,
     Pressable as RNPressable,
 } from "react-native";
-import { useHeaderHeight } from "@react-navigation/elements";
+import { useHeaderHeight } from "expo-router/react-navigation";
 
 import { REMINDER_RECORD_TYPE, type PRIORITY, type IReminder } from "@stacks/types";
 

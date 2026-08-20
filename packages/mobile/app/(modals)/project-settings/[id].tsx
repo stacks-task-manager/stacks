@@ -3,7 +3,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import { useCallback, useLayoutEffect } from "react";
 import { KeyboardAvoidingView, Platform, Pressable as RNPressable } from "react-native";
-import { useHeaderHeight } from "@react-navigation/elements";
+import { useHeaderHeight } from "expo-router/react-navigation";
 
 import { Box } from "@/components/ui/box";
 import { HStack } from "@/components/ui/hstack";

@@ -5,8 +5,17 @@ import { ScrollView } from "react-native";
 import type { IReport, REPORT_TYPE } from "@stacks/types";
 
 import { Box } from "@/components/ui/box";
+import { Button, ButtonText } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
+import {
+    Modal,
+    ModalBackdrop,
+    ModalBody,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+} from "@/components/ui/modal";
 import { Pressable } from "@/components/ui/pressable";
 import { Spinner } from "@/components/ui/spinner";
 import { Text } from "@/components/ui/text";
@@ -79,18 +88,77 @@ function summarizePayload(payload: unknown): string[] {
     return lines;
 }
 
+function ReportModal({
+    report,
+    onClose,
+}: {
+    report: IReport | null;
+    onClose: () => void;
+}) {
+    const { data: payload, isFetching: loading } = useQuery({
+        queryKey: ["report", report?.type],
+        queryFn: () => fetchReport(report?.type as REPORT_TYPE),
+        enabled: !!report,
+    });
+
+    const summaryLines = payload ? summarizePayload(payload) : [];
+
+    return (
+        <Modal isOpen={!!report} onClose={onClose}>
+            <ModalBackdrop />
+            <ModalContent className="max-w-[95%] w-full">
+                <ModalHeader>
+                    <HStack space="sm" className="items-center">
+                        <Box
+                            style={{ backgroundColor: report?.color ?? "#3b82f6" }}
+                            className="w-1.5 rounded-sm self-stretch"
+                        />
+                        <Heading size="md" className="flex-1 text-typography-900">
+                            {report?.title}
+                        </Heading>
+                    </HStack>
+                </ModalHeader>
+                <ModalBody>
+                    {loading ? (
+                        <Box className="py-10 items-center">
+                            <Spinner />
+                        </Box>
+                    ) : summaryLines.length === 0 ? (
+                        <Box className="py-10 items-center">
+                            <Text className="text-typography-600">
+                                No data for this report.
+                            </Text>
+                        </Box>
+                    ) : (
+                        <Box className="bg-background-100 border border-outline-200 rounded-md p-3">
+                            {summaryLines.map((line, idx) => (
+                                <Text
+                                    key={idx}
+                                    size="sm"
+                                    className="text-typography-700 py-1"
+                                >
+                                    {line}
+                                </Text>
+                            ))}
+                        </Box>
+                    )}
+                </ModalBody>
+                <ModalFooter>
+                    <Button variant="outline" onPress={onClose}>
+                        <ButtonText>Close</ButtonText>
+                    </Button>
+                </ModalFooter>
+            </ModalContent>
+        </Modal>
+    );
+}
+
 export default function ReportsScreen() {
-    const [selected, setSelected] = useState<IReport | null>(null);
+    const [active, setActive] = useState<IReport | null>(null);
 
     const { data: reports = [], isLoading } = useQuery({
         queryKey: ["reports"],
         queryFn: fetchReports,
-    });
-
-    const { data: payload, isFetching: payloadLoading } = useQuery({
-        queryKey: ["report", selected?.type],
-        queryFn: () => fetchReport(selected?.type as REPORT_TYPE),
-        enabled: !!selected,
     });
 
     if (isLoading) {
@@ -109,8 +177,6 @@ export default function ReportsScreen() {
         );
     }
 
-    const summaryLines = payload ? summarizePayload(payload) : [];
-
     return (
         <ScrollView
             className="flex-1 bg-background-0"
@@ -120,61 +186,33 @@ export default function ReportsScreen() {
                 <Heading size="sm" className="px-1 mb-1 text-typography-700">
                     Reports
                 </Heading>
-                {reports.map(report => {
-                    const isActive = selected?.type === report.type;
-                    return (
-                        <Pressable
-                            key={report.type}
-                            onPress={() => setSelected(isActive ? null : report)}
-                            className={`bg-background-0 border rounded-md p-3 ${
-                                isActive ? "border-primary-600" : "border-outline-200"
-                            }`}
-                        >
-                            <HStack className="items-stretch">
-                                <Box
-                                    style={{ backgroundColor: report.color }}
-                                    className="w-1.5 rounded-sm mr-3 self-stretch"
-                                />
-                                <VStack className="flex-1" space="xs">
-                                    <Text size="sm" className="font-semibold text-typography-900" numberOfLines={1}>
-                                        {report.title}
+                {reports.map(report => (
+                    <Pressable
+                        key={report.type}
+                        onPress={() => setActive(report)}
+                        className="bg-background-0 border border-outline-200 rounded-md p-3"
+                    >
+                        <HStack className="items-stretch">
+                            <Box
+                                style={{ backgroundColor: report.color }}
+                                className="w-1.5 rounded-sm mr-3 self-stretch"
+                            />
+                            <VStack className="flex-1" space="xs">
+                                <Text size="sm" className="font-semibold text-typography-900" numberOfLines={1}>
+                                    {report.title}
+                                </Text>
+                                {report.description ? (
+                                    <Text size="xs" className="text-typography-500" numberOfLines={2}>
+                                        {report.description}
                                     </Text>
-                                    {report.description ? (
-                                        <Text size="xs" className="text-typography-500" numberOfLines={2}>
-                                            {report.description}
-                                        </Text>
-                                    ) : null}
-                                </VStack>
-                            </HStack>
-                        </Pressable>
-                    );
-                })}
+                                ) : null}
+                            </VStack>
+                        </HStack>
+                    </Pressable>
+                ))}
             </VStack>
 
-            {selected ? (
-                <VStack space="xs" className="mt-2">
-                    <Heading size="sm" className="px-1 mb-1 text-typography-700">
-                        {selected.title}
-                    </Heading>
-                    {payloadLoading ? (
-                        <Box className="py-6 items-center">
-                            <Spinner />
-                        </Box>
-                    ) : summaryLines.length === 0 ? (
-                        <Box className="py-6 items-center">
-                            <Text className="text-typography-600">No data for this report.</Text>
-                        </Box>
-                    ) : (
-                        <Box className="bg-background-0 border border-outline-200 rounded-md p-3">
-                            {summaryLines.map((line, idx) => (
-                                <Text key={idx} size="xs" className="text-typography-700 py-0.5">
-                                    {line}
-                                </Text>
-                            ))}
-                        </Box>
-                    )}
-                </VStack>
-            ) : null}
+            <ReportModal report={active} onClose={() => setActive(null)} />
         </ScrollView>
     );
 }

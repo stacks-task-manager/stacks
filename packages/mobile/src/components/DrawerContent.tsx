@@ -1,5 +1,5 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
-import type { DrawerContentComponentProps } from "@react-navigation/drawer";
+import type { DrawerContentComponentProps } from "expo-router/drawer";
 import { RECORDTYPE, type ISearchResult } from "@stacks/types";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
@@ -175,7 +175,7 @@ export function DrawerContent(props: DrawerContentComponentProps) {
             style={{ paddingTop: insets.top }}
             className="flex-1 bg-background-0"
         >
-            <Box className="px-3 mb-3">
+            <Box className="px-3 mt-3 mb-3">
                 <Input variant="rounded" size="sm">
                     <InputSlot className="pl-3">
                         <Icon icon="search" size={16} color="#64748b" />
@@ -230,20 +230,8 @@ export function DrawerContent(props: DrawerContentComponentProps) {
                     <GeneralRow icon="pie-chart-03" title="Reports" onPress={() => go("/(app)/reports")} />
                     <GeneralRow icon="calendar-check-02" title="Planner" onPress={() => go("/(app)/planner")} />
                     <GeneralRow icon="hourglass-03" title="Timebox" onPress={() => go("/(app)/timebox")} />
-                    <GeneralRow icon="target-03" title="Goals" onPress={() => go("/(app)/goals")} />
                     <GeneralRow icon="file" title="Files" onPress={() => go("/(app)/files")} />
                     <GeneralRow icon="grid-view" title="Workspaces" onPress={() => go("/(app)/workspaces")} />
-                    <GeneralRow icon="key-01" title="Roles" onPress={() => go("/(app)/roles")} />
-                    <GeneralRow
-                        icon="shield-tick"
-                        title="Approvals"
-                        onPress={() => go("/(app)/approvals")}
-                    />
-                    <GeneralRow
-                        icon="clock-check"
-                        title="Timesheet"
-                        onPress={() => go("/(app)/timesheet")}
-                    />
                 </Box>
 
                 <Text className="px-3 font-semibold mb-1 mt-4">
