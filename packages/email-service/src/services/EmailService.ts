@@ -34,7 +34,13 @@ interface QueuedEmailRow {
     tenant: string | null;
 }
 
-const REQUIRED_SMTP_VARS = ["SMTP_HOST", "SMTP_PORT", "SMTP_USER", "SMTP_PASSWORD", "SMTP_FROM_EMAIL"] as const;
+const REQUIRED_SMTP_VARS = [
+    "SMTP_HOST",
+    "SMTP_PORT",
+    "SMTP_USER",
+    "SMTP_PASSWORD",
+    "SMTP_FROM_EMAIL",
+] as const;
 const MAX_RETRIES = 3;
 const SEND_RETRY_LIMIT = 2;
 
@@ -74,9 +80,7 @@ class EmailService {
         });
 
         if (missing.length > 0) {
-            logger.error(
-                `⛔ Missing required SMTP configuration variables: ${missing.join(", ")}`
-            );
+            logger.error(`⛔ Missing required SMTP configuration variables: ${missing.join(", ")}`);
             return { config: null, missing };
         }
 
@@ -90,9 +94,7 @@ class EmailService {
         }
 
         logger.info(`📡 SMTP Server: ${process.env.SMTP_HOST}:${port}`);
-        logger.info(
-            `🔒 Secure Connection: ${secure ? "SSL/TLS (port 465)" : "STARTTLS (port 587)"}`
-        );
+        logger.info(`🔒 Secure Connection: ${secure ? "SSL/TLS (port 465)" : "STARTTLS (port 587)"}`);
 
         return {
             config: {
@@ -209,10 +211,7 @@ class EmailService {
      * Failures are recorded in a single UPDATE that either reschedules the
      * row for retry or marks it permanently failed.
      */
-    private async processQueuedEmail(
-        queuedEmail: QueuedEmailRow,
-        transaction: Transaction
-    ): Promise<void> {
+    private async processQueuedEmail(queuedEmail: QueuedEmailRow, transaction: Transaction): Promise<void> {
         const recipientEmail = queuedEmail.email;
         try {
             const emailData = parseEmailData(queuedEmail.data);
@@ -232,14 +231,8 @@ class EmailService {
                 );
             }
 
-            const emailHtml = this.templateCompiler.processTemplateVariables(
-                emailTemplate.body,
-                emailData
-            );
-            const subject = this.templateCompiler.processTemplateVariables(
-                emailTemplate.subject,
-                emailData
-            );
+            const emailHtml = this.templateCompiler.processTemplateVariables(emailTemplate.body, emailData);
+            const subject = this.templateCompiler.processTemplateVariables(emailTemplate.subject, emailData);
 
             if (!recipientEmail) {
                 throw new Error("Recipient email not found for queue row");

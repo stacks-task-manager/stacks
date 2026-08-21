@@ -2,10 +2,10 @@
 /**
  * Low-level store accessor for tools.
  */
-import type { Entity } from '../entity'
+import type { Entity } from "../entity";
 
-const store = new Set<Entity>()
-let storeEnabled = false
+const store = new Set<Entity>();
+let storeEnabled = false;
 
 /**
  * Enables the entity store that keeps references to all entities.
@@ -18,13 +18,13 @@ let storeEnabled = false
  * @param condition - optional condition for enabling the store
  */
 export function enableStore(condition = true) {
-  storeEnabled = condition
+    storeEnabled = condition;
 }
 
 export function isStoreEnabled() {
-  return storeEnabled
+    return storeEnabled;
 }
 
 export function getStore() {
-  return store
+    return store;
 }

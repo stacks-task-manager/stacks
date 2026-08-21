@@ -13,12 +13,7 @@ import { Text } from "@/components/ui/text";
 
 import type { IProject } from "@stacks/types";
 
-import {
-    fetchDocuments,
-    fetchProject,
-    updateDocument,
-    updateProject,
-} from "../../../src/api/endpoints";
+import { fetchDocuments, fetchProject, updateDocument, updateProject } from "../../../src/api/endpoints";
 import { queryClient } from "../../../src/state/queryClient";
 import { FieldRow, DebouncedTextField } from "../../../src/widgets";
 
@@ -156,9 +151,7 @@ export default function ProjectSettingsScreen() {
                 <FieldRow label="Background image URL">
                     <DebouncedTextField
                         value={project.backgroundUrl ?? ""}
-                        onChange={value =>
-                            projectMutation.mutate({ backgroundUrl: value || undefined })
-                        }
+                        onChange={value => projectMutation.mutate({ backgroundUrl: value || undefined })}
                         placeholder="https://…"
                     />
                 </FieldRow>

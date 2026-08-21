@@ -1,6 +1,5 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { Popover } from "@blueprintjs/core";
-import React from "react";
 
 import { Icon } from "app/components/common";
 import { usePerson } from "app/hooks";

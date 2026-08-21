@@ -141,7 +141,7 @@ export const BookmarkDialog: FunctionComponent<IBookmarkDialogProps> = ({ bookma
     return (
         <Dialog
             isOpen={open}
-            title="Add bookmark"
+            title={translate("Add bookmark")}
             icon={<Icon icon="bookmark" />}
             onClose={handleClose}
             onClosed={handleClosed}
@@ -149,25 +149,32 @@ export const BookmarkDialog: FunctionComponent<IBookmarkDialogProps> = ({ bookma
             aria-labelledby="new-bookmark-dialog"
         >
             <div className={Classes.DIALOG_BODY}>
-                <FormGroup label="Title">
-                    <InputGroup value={title} onChange={handleChangeTitle} autoFocus
+                <FormGroup label={translate("Title")}>
+                    <InputGroup
+                        value={title}
+                        onChange={handleChangeTitle}
+                        autoFocus
                         data-testid="new-bookmark-name-input"
                     />
                 </FormGroup>
                 {type === "url" && (
-                    <FormGroup label="Url">
-                        <InputGroup value={url} onChange={handleChangeURL}
+                    <FormGroup label={translate("URL")}>
+                        <InputGroup
+                            value={url}
+                            onChange={handleChangeURL}
                             data-testid="new-bookmark-url-input"
                         />
                     </FormGroup>
                 )}
-                <Switch checked={pinned} onChange={handleSetPinned} label="Pinned" />
+                <Switch checked={pinned} onChange={handleSetPinned} label={translate("Pinned")} />
             </div>
             <div className={Classes.DIALOG_FOOTER}>
                 <div className={Classes.DIALOG_FOOTER_ACTIONS}>
                     <Button
                         data-testid="new-bookmark-dialog-cancel-button"
-                        variant="minimal" intent={Intent.NONE} onClick={handleClose}
+                        variant="minimal"
+                        intent={Intent.NONE}
+                        onClick={handleClose}
                     >
                         {translate("Cancel")}
                     </Button>
@@ -178,7 +185,7 @@ export const BookmarkDialog: FunctionComponent<IBookmarkDialogProps> = ({ bookma
                         loading={isSaving}
                         data-testid="new-bookmark-dialog-save-button"
                     >
-                        Add bookmark
+                        {translate("Add bookmark")}
                     </Button>
                 </div>
             </div>

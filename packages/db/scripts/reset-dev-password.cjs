@@ -50,7 +50,7 @@ function printUsageAndExit() {
             "  --email       (required) Email of the user to reset",
             `  --password    (optional) New plaintext password (default: ${DEFAULT_PASSWORD})`,
             "  --tenant-id   (optional) Tenant UUID, required when the same email exists in multiple tenants",
-        ].join("\n"),
+        ].join("\n")
     );
     process.exit(1);
 }
@@ -85,12 +85,16 @@ async function main() {
     }
 
     const [rows] = await sequelize.query(
-        `SELECT id, email, tenant FROM users WHERE email = :email${tenantId ? " AND tenant = :tenant" : ""} AND deleted IS NULL`,
-        { replacements: { email, tenant: tenantId } },
+        `SELECT id, email, tenant FROM users WHERE email = :email${
+            tenantId ? " AND tenant = :tenant" : ""
+        } AND deleted IS NULL`,
+        { replacements: { email, tenant: tenantId } }
     );
 
     if (rows.length === 0) {
-        console.error(`❌ No active user found with email "${email}"${tenantId ? ` in tenant ${tenantId}` : ""}.`);
+        console.error(
+            `❌ No active user found with email "${email}"${tenantId ? ` in tenant ${tenantId}` : ""}.`
+        );
         await sequelize.close();
         process.exit(1);
     }
@@ -110,7 +114,7 @@ async function main() {
 
     await sequelize.query(
         `UPDATE users SET password = :password, token = NULL, updated = NOW() WHERE id = :id`,
-        { replacements: { password: hashedPassword, id: user.id } },
+        { replacements: { password: hashedPassword, id: user.id } }
     );
 
     console.log(`✅ Password reset for ${user.email} (tenant ${user.tenant}).`);

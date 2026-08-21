@@ -29,7 +29,10 @@ export const searchPeopleInput = z
             .min(1)
             .optional()
             .describe("Case-insensitive substring match on workspace role title (e.g. 'Admin', 'Designer')."),
-        hasEmail: z.boolean().optional().describe("true = only people with an email; false = only people without."),
+        hasEmail: z
+            .boolean()
+            .optional()
+            .describe("true = only people with an email; false = only people without."),
         hasCellPhone: z
             .boolean()
             .optional()
@@ -45,17 +48,16 @@ export const searchPeopleInput = z
             .max(12)
             .optional()
             .describe("Filter by birthday month (1 = January, 12 = December)."),
-        includeDisabled: z
-            .boolean()
-            .optional()
-            .describe("Include deactivated users (default: false)."),
+        includeDisabled: z.boolean().optional().describe("Include deactivated users (default: false)."),
         limit: z
             .number()
             .int()
             .positive()
             .max(200)
             .optional()
-            .describe("Max people to return (default 50, max 200). `total` in the response reflects all matches."),
+            .describe(
+                "Max people to return (default 50, max 200). `total` in the response reflects all matches."
+            ),
     })
     .refine(
         v =>
@@ -113,10 +115,7 @@ export const peopleAiTools = [
         name: "openProfile",
         description: `Open a person's profile page in the app. Omit personId to open the current user's own profile ("my profile"). Returns a path the UI can navigate to.`,
         inputSchema: z.object({
-            personId: z
-                .string()
-                .optional()
-                .describe("Person UUID. Omit for the current user's own profile."),
+            personId: z.string().optional().describe("Person UUID. Omit for the current user's own profile."),
         }),
         execute: async ({ personId }) => {
             const isSelf = !personId;

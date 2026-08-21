@@ -248,32 +248,33 @@ export const AssigneesPopover: FunctionComponent<IAssigneesPopoverProps> = ({
                     />
                     <Scroller thin vertical>
                         <Menu>
-                            {recentPeople.length > 0 && !query.length && <MenuDivider title="Recently selected" />}
-                            {!query.length && recentPeople.map((person: IPerson, index: number) => {
-                                return (
-                                    <PersonItem
-                                        key={person.id}
-                                        person={person}
-                                        selected={value.includes(person.id)}
-                                        small
-                                        dismissable={dismissable}
-                                        me={me?.id === person.id}
-                                        active={selected === index}
-                                        disabled={disallowed && disallowed.includes(person.id)}
-                                        onClick={() => handleToggleAssignee(person.id)}
-                                    />
-                                );
-                            })}
+                            {recentPeople.length > 0 && !query.length && (
+                                <MenuDivider title={translate("Recently selected")} />
+                            )}
+                            {!query.length &&
+                                recentPeople.map((person: IPerson, index: number) => {
+                                    return (
+                                        <PersonItem
+                                            key={person.id}
+                                            person={person}
+                                            selected={value.includes(person.id)}
+                                            small
+                                            dismissable={dismissable}
+                                            me={me?.id === person.id}
+                                            active={selected === index}
+                                            disabled={disallowed && disallowed.includes(person.id)}
+                                            onClick={() => handleToggleAssignee(person.id)}
+                                        />
+                                    );
+                                })}
                             {filteredPeople.length > 0 && (
-                                <MenuDivider title={query.length > 0 ? "Found people" : "People"} />
+                                <MenuDivider
+                                    title={query.length > 0 ? translate("Found people") : translate("People")}
+                                />
                             )}
 
                             {query.length > 0 && !filteredPeople.length && (
-                                <BlankSlate
-                                    small
-                                    title="No people found"
-                                    icon="search"
-                                />
+                                <BlankSlate small title={translate("No people found")} icon="search" />
                             )}
 
                             {filteredPeople.map((person: IPerson, index: number) => {
@@ -295,7 +296,7 @@ export const AssigneesPopover: FunctionComponent<IAssigneesPopoverProps> = ({
                     </Scroller>
 
                     {filteredPeople.length === 0 && recentPeople.length === 0 && (
-                        <BlankSlate small title="Search a person" icon="search" />
+                        <BlankSlate small title={translate("Search a person")} icon="search" />
                     )}
 
                     {!query.length && value.length > 0 && onClear && (

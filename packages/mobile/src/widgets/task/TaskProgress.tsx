@@ -13,14 +13,8 @@ export function TaskProgress({ progress }: { progress: number | null | undefined
     const pct = Math.max(0, Math.min(100, Math.round(progress)));
     return (
         <HStack space="xs" className="items-center">
-            <Box
-                style={{ width: 36, height: 6 }}
-                className="rounded-full bg-background-200 overflow-hidden"
-            >
-                <Box
-                    style={{ width: `${pct}%`, height: "100%" }}
-                    className="bg-primary-500"
-                />
+            <Box style={{ width: 36, height: 6 }} className="rounded-full bg-background-200 overflow-hidden">
+                <Box style={{ width: `${pct}%`, height: "100%" }} className="bg-primary-500" />
             </Box>
             <Text size="2xs" className="text-typography-700">
                 {pct}%

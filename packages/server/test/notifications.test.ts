@@ -19,7 +19,7 @@ describe("Notifications", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect(res.status).toBe(200);
         const body = await res.json();
         expect(body.success).toBe(true);
@@ -36,7 +36,7 @@ describe("Notifications", () => {
             },
             body: JSON.stringify({ title: "T", message: "x" }),
         });
-        
+
         expect(res.status).toBe(404);
     });
 
@@ -55,7 +55,7 @@ describe("Notifications", () => {
             },
             body: JSON.stringify(updateData),
         });
-        
+
         // 404 when the seeded user has no unread notifications or the id is unknown
         expect([200, 404, 500]).toContain(res.status);
     });
@@ -69,7 +69,7 @@ describe("Notifications", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect([200, 404]).toContain(res.status);
     });
 
@@ -81,7 +81,7 @@ describe("Notifications", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect(res.status).toBe(404);
     });
 
@@ -94,7 +94,7 @@ describe("Notifications", () => {
             },
             body: JSON.stringify({}),
         });
-        
+
         expect(res.status).toBe(404);
     });
 
@@ -106,7 +106,7 @@ describe("Notifications", () => {
                 // No Authorization header
             },
         });
-        
+
         // Should fail without authentication
         expect(res.status).toBe(401);
     });

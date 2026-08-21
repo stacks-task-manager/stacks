@@ -2,4 +2,4 @@
 
 export type IBackgroundLocationState = {
     backgroundLocation: Location;
-}
+};

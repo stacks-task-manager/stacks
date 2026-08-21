@@ -3,7 +3,11 @@ import { translate } from "@stacks/translations";
 import React, { FunctionComponent } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import { createTableCellFromRegistry, TablePersistent, TablePersistentCellProps } from "app/components/common";
+import {
+    createTableCellFromRegistry,
+    TablePersistent,
+    TablePersistentCellProps,
+} from "app/components/common";
 import { useFilteredCompanies } from "app/hooks";
 import { ICompany, ITableColumns } from "@stacks/types";
 import { PreferencesStore } from "app/store/preferences";
@@ -127,22 +131,12 @@ const CompanyDefaultCell: FunctionComponent<TablePersistentCellProps<ICompany>> 
 );
 
 const CompanyCreatedCell: FunctionComponent<TablePersistentCellProps<ICompany>> = props =>
-    props.row.created != null ? (
-        <>{formatDate(props.row.created)}</>
-    ) : (
-        <CompanyDefaultCell {...props} />
-    );
+    props.row.created != null ? <>{formatDate(props.row.created)}</> : <CompanyDefaultCell {...props} />;
 
 const CompanyUpdatedCell: FunctionComponent<TablePersistentCellProps<ICompany>> = props =>
-    props.row.updated != null ? (
-        <>{formatDate(props.row.updated)}</>
-    ) : (
-        <CompanyDefaultCell {...props} />
-    );
+    props.row.updated != null ? <>{formatDate(props.row.updated)}</> : <CompanyDefaultCell {...props} />;
 
-const companyCellRegistry: Partial<
-    Record<string, FunctionComponent<TablePersistentCellProps<ICompany>>>
-> = {
+const companyCellRegistry: Partial<Record<string, FunctionComponent<TablePersistentCellProps<ICompany>>>> = {
     title: CompanyTitleCell,
     staff: CompanyStaffCell,
     created: CompanyCreatedCell,

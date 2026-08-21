@@ -18,7 +18,14 @@ import { deepEqual } from "./store";
 export type MergeProjectFilters = (stored: IFilters | undefined) => IFilters;
 
 /**
- * Keeps task filter state in sync with the URL query string (HashRouter).
+ * Keeps task filter state in sync with the URL query string (HashRouter):
+ * hydrates the store from the URL before paint and writes merged filters back
+ * to the URL after paint.
+ * @param options Hook options.
+ * @param options.filterStoreKey Key identifying the filter slice in the store.
+ * @param options.effectiveDefaults The effective default filters.
+ * @param options.getMergedFilters Function producing the merged filters from stored filters.
+ * @returns void No return value.
  */
 export function useFilterQuerySync(options: {
     filterStoreKey: string;
@@ -28,10 +35,7 @@ export function useFilterQuerySync(options: {
     const { filterStoreKey, effectiveDefaults, getMergedFilters } = options;
     const [searchParams, setSearchParams] = useSearchParams();
 
-    const stored = ProjectFiltersStore.use(
-        state => state.filters[filterStoreKey]?.filters,
-        deepEqual
-    );
+    const stored = ProjectFiltersStore.use(state => state.filters[filterStoreKey]?.filters, deepEqual);
 
     const merged = useMemo(() => getMergedFilters(stored), [getMergedFilters, stored]);
 
@@ -75,7 +79,15 @@ export function useFilterQuerySync(options: {
 
 export type FilterMergeOptions = { projectId?: string; me?: boolean };
 
-/** Merge saved filters with defaults; optional `projectId` / `me` flags (stable deps). */
+/**
+ * Builds a stable merge function that merges saved filters over the given
+ * defaults, optionally forcing the `project` / `me` flags (stable deps).
+ * @param effectiveDefaults The effective default filters.
+ * @param options Optional merge options.
+ * @param options.projectId Optional project id to force on merged filters.
+ * @param options.me Whether to force the `me` flag on merged filters.
+ * @returns {MergeProjectFilters} A stable function that merges stored filters.
+ */
 export function useFilterMerge(
     effectiveDefaults: IFilters,
     options: FilterMergeOptions = {}
@@ -92,18 +104,31 @@ export function useFilterMerge(
     );
 }
 
-/** Stable merge helper factory for project routes. */
-export function useProjectFilterMerge(
-    projectId: string,
-    effectiveDefaults: IFilters
-): MergeProjectFilters {
+/**
+ * Stable merge helper factory for project routes; always forces the given
+ * project id onto the merged filters.
+ * @param projectId The project id to force on merged filters.
+ * @param effectiveDefaults The effective default filters.
+ * @returns {MergeProjectFilters} A stable function that merges stored filters.
+ */
+export function useProjectFilterMerge(projectId: string, effectiveDefaults: IFilters): MergeProjectFilters {
     return useFilterMerge(effectiveDefaults, { projectId });
 }
 
+/**
+ * Stable merge helper factory for "My Tasks" routes; always forces the `me` flag.
+ * @param effectiveDefaults The effective default filters.
+ * @returns {MergeProjectFilters} A stable function that merges stored filters.
+ */
 export function useMyTasksFilterMerge(effectiveDefaults: IFilters): MergeProjectFilters {
     return useFilterMerge(effectiveDefaults, { me: true });
 }
 
+/**
+ * Stable merge helper factory for the Inbox route.
+ * @param effectiveDefaults The effective default filters.
+ * @returns {MergeProjectFilters} A stable function that merges stored filters.
+ */
 export function useInboxFilterMerge(effectiveDefaults: IFilters): MergeProjectFilters {
     return useFilterMerge(effectiveDefaults, {});
 }

@@ -8,5 +8,5 @@ import { TuiViewportProvider } from "./tuiChrome.js";
 render(
     <TuiViewportProvider>
         <App />
-    </TuiViewportProvider>,
+    </TuiViewportProvider>
 );

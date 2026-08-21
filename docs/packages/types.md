@@ -4,11 +4,11 @@ Shared TypeScript types used across the server, db, web app, and mobile app. Kee
 
 ## Table of Contents
 
--   [Environment](#environment)
--   [Development](#development)
--   [Usage](#usage)
--   [Overview](#overview)
--   [Related](#related)
+- [Environment](#environment)
+- [Development](#development)
+- [Usage](#usage)
+- [Overview](#overview)
+- [Related](#related)
 
 ## Environment
 

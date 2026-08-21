@@ -11,7 +11,6 @@ import {
     ReactRenderer,
 } from "@tiptap/react";
 import { SuggestionKeyDownProps, SuggestionOptions, SuggestionProps } from "@tiptap/suggestion";
-import React from "react";
 import tippy, { GetReferenceClientRect, Instance as TippyInstance } from "tippy.js";
 
 import { SearchAPI } from "app/api";

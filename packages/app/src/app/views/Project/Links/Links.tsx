@@ -14,7 +14,7 @@ import { stripMd } from "app/utils/string";
 import toast from "app/utils/toast";
 import { flatten } from "lodash";
 import { useParams } from "react-router-dom";
-import { setClipboard } from "app/utils/browser";
+import { openInNewTab, setClipboard } from "app/utils/browser";
 
 export const Links = () => {
     const { id } = useParams();
@@ -82,7 +82,7 @@ const Link: FunctionComponent<LinkProps> = ({ link }) => {
     };
 
     const handleOpenLink = () => {
-        window.open(link.url, "_blank");
+        openInNewTab(link.url);
     };
 
     const handleCopyLink = () => {

@@ -17,8 +17,8 @@ import { getHashPathname } from "./router";
 import { getTask } from "./tasks";
 
 /**
- * Returns the current project id
- * @returns
+ * Returns the current project id parsed from the URL hash path.
+ * @returns {string} The current project id, "mytasks" when in My Tasks, or "" when no project is active.
  */
 export const getCurrentProjectId = () => {
     const path = getHashPathname();
@@ -40,8 +40,8 @@ export const getCurrentProjectId = () => {
 };
 
 /**
- * Returns the index of the project in the ProjectsStore
- * @returns
+ * Returns the index of the current project in the ProjectsStore.
+ * @returns {number} The index of the current project, or -1 when not found.
  */
 export const getCurrentProjectIndex = () => {
     const projectId = getCurrentProjectId();
@@ -49,8 +49,8 @@ export const getCurrentProjectIndex = () => {
 };
 
 /**
- * Returns the current project based on the id provided in the URL
- * @returns
+ * Returns the current project based on the id provided in the URL.
+ * @returns {IProject | undefined} The current project, or undefined when not loaded.
  */
 export const getCurrentProject = () => {
     const projectId = getCurrentProjectId();
@@ -58,9 +58,9 @@ export const getCurrentProject = () => {
 };
 
 /**
- * Returns a secific project based on the provided project id
- * @param projectId
- * @returns
+ * Returns a specific project and its loading state, loading it on demand when missing.
+ * @param {string} [projectId] The id of the project to load.
+ * @returns {{ project: IProject | undefined; isLoading: boolean }} The project (when loaded) and whether it is currently loading.
  */
 export const useProject = (projectId?: string): { project: IProject | undefined; isLoading: boolean } => {
     const project = ProjectsStore.use(
@@ -94,17 +94,17 @@ export const useProject = (projectId?: string): { project: IProject | undefined;
 };
 
 /**
- * Returns a secific project based on the provided project id
- * @param projectId
- * @returns
+ * Returns a specific project based on the provided project id.
+ * @param {string} projectId The id of the project.
+ * @returns {IProject | undefined} The project, or undefined when not found.
  */
 export const getProject = (projectId: string): IProject | undefined => {
     return ProjectsStore.get().projects.find(project => project.id === projectId);
 };
 
 /**
- * Returns the current project based on the id provided in the URL
- * @returns
+ * Returns the current project based on the id provided in the URL.
+ * @returns {{ project: IProject | undefined; isLoading: boolean }} The current project and its loading state.
  */
 export const useCurrentProject = () => {
     const { id } = useParams();
@@ -122,8 +122,8 @@ export const useCurrentProject = () => {
 };
 
 /**
- * Returns the current project's background image
- * @returns
+ * Returns the current project's background image.
+ * @returns {string | undefined} The URL of the background image, or undefined.
  */
 export const useProjectBackground = () => {
     const projectId = getCurrentProjectId();
@@ -134,8 +134,9 @@ export const useProjectBackground = () => {
 };
 
 /**
- * Returns the current project's custom fields
- * @returns
+ * Returns the current project's custom fields.
+ * @param {string} projectId The id of the project whose fields to return.
+ * @returns {IField[]} The project's custom fields, or an empty array when unavailable.
  */
 export const useProjectFields = (projectId: string) => {
     return (
@@ -182,6 +183,13 @@ export const useProjectFields = (projectId: string) => {
 //     });
 // };
 
+/**
+ * Counts how many filters are active for a project and whether any are set.
+ * @param {IFilters} filters The active filter values.
+ * @param {DefaultProjectState} defaultState The project's default filter state.
+ * @param {boolean} [counter] When true, returns the exact active filter count instead of a boolean.
+ * @returns {boolean | number} Whether any filter is active, or the active filter count when counter is set.
+ */
 const checkHasFilters = (filters: IFilters, defaultState: DefaultProjectState, counter?: boolean) => {
     let filterCount = 0;
     if (filters.query.length > 0) filterCount++;
@@ -214,6 +222,11 @@ const checkHasFilters = (filters: IFilters, defaultState: DefaultProjectState, c
     return counter ? filterCount : filterCount > 0;
 };
 
+/**
+ * Returns whether the current project has any active filters.
+ * @param {boolean} [counter] When true, returns the exact active filter count instead of a boolean.
+ * @returns {boolean | number} Whether any filter is active, or the active filter count when counter is set.
+ */
 export const useHasFilters = (counter?: boolean) => {
     const projectId = getCurrentProjectId();
     const defaultState = useProjectDefaultFilterState();

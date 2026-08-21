@@ -25,11 +25,7 @@ afterEach(() => {
 describe("syncMissingKeysFromEn", () => {
     it("fills missing keys with prefixed English without overwriting non-empty", () => {
         mkdirSync(tmp, { recursive: true });
-        writeFileSync(
-            join(tmp, "en.json"),
-            JSON.stringify({ A: "a", B: "b" }, null, 2),
-            "utf8",
-        );
+        writeFileSync(join(tmp, "en.json"), JSON.stringify({ A: "a", B: "b" }, null, 2), "utf8");
         writeFileSync(join(tmp, "de.json"), JSON.stringify({ A: "de-a" }, null, 2), "utf8");
 
         const { results, errors } = syncMissingKeysFromEn(tmp);

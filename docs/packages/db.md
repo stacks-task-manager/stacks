@@ -4,12 +4,12 @@ The database layer for Stacks. Sequelize models and associations, migration defi
 
 ## Table of Contents
 
--   [Environment](#environment)
--   [Development](#development)
--   [Schema overview](#schema-overview)
--   [Migrations](#migrations)
--   [Seeds (demo data)](#seeds-demo-data)
--   [Related](#related)
+- [Environment](#environment)
+- [Development](#development)
+- [Schema overview](#schema-overview)
+- [Migrations](#migrations)
+- [Seeds (demo data)](#seeds-demo-data)
+- [Related](#related)
 
 ## Environment
 
@@ -22,7 +22,7 @@ cp packages/db/env.example packages/db/.env
 Variables:
 
 - `POSTGRES_HOST`, `POSTGRES_PORT`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`
-- `DEBUG_DB=true` — *(optional)* enable Sequelize SQL logging
+- `DEBUG_DB=true` — _(optional)_ enable Sequelize SQL logging
 
 ## Development
 
@@ -38,16 +38,16 @@ yarn build:db      # tsc + migration compilation
 
 The schema models a multi-tenant kanban / project-management workspace. Top-level entities:
 
-| Entity | Purpose |
-| --- | --- |
-| `users`, `tenants`, `roles`, `permissions` | Identity, multi-tenancy, RBAC |
-| `projects`, `stacks`, `tasks`, `subtasks` | Core kanban hierarchy |
-| `companies`, `people` | Contacts directory |
-| `files`, `documents`, `notepads` | Attached content |
-| `events`, `reminders`, `notifications`, `activities` | Scheduling and feed |
-| `tags`, `bookmarks`, `preferences` | User metadata |
-| `timelogs` | Time tracking |
-| `email_queue` | Outbound email queue consumed by `@stacks/email-service` |
+| Entity                                               | Purpose                                                  |
+| ---------------------------------------------------- | -------------------------------------------------------- |
+| `users`, `tenants`, `roles`, `permissions`           | Identity, multi-tenancy, RBAC                            |
+| `projects`, `stacks`, `tasks`, `subtasks`            | Core kanban hierarchy                                    |
+| `companies`, `people`                                | Contacts directory                                       |
+| `files`, `documents`, `notepads`                     | Attached content                                         |
+| `events`, `reminders`, `notifications`, `activities` | Scheduling and feed                                      |
+| `tags`, `bookmarks`, `preferences`                   | User metadata                                            |
+| `timelogs`                                           | Time tracking                                            |
+| `email_queue`                                        | Outbound email queue consumed by `@stacks/email-service` |
 
 Model files live under [`packages/db/src/entities/`](../../packages/db/src/entities/); associations are wired in the package entry.
 
@@ -55,15 +55,15 @@ Model files live under [`packages/db/src/entities/`](../../packages/db/src/entit
 
 Sequelize-CLI is the migration runner. From the package directory (or with `yarn workspace @stacks/db <script>`):
 
-| Script | Effect |
-| --- | --- |
-| `yarn migrate` | Apply pending migrations |
-| `yarn migrate:undo` | Revert the most recent migration |
-| `yarn migrate:undo:all` | Revert every migration |
-| `yarn migrate:reset` | `migrate:undo:all` then `migrate` |
-| `yarn migrate:status` | Show applied / pending |
-| `yarn migrate:create --name=<slug>` | Generate a new migration file |
-| `yarn db:create` / `yarn db:drop` | Create / drop the database |
+| Script                                                                                | Effect                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| ------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `yarn migrate`                                                                        | Apply pending migrations                                                                                                                                                                                                                                                                                                                                                                                                |
+| `yarn migrate:undo`                                                                   | Revert the most recent migration                                                                                                                                                                                                                                                                                                                                                                                        |
+| `yarn migrate:undo:all`                                                               | Revert every migration                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `yarn migrate:reset`                                                                  | `migrate:undo:all` then `migrate`                                                                                                                                                                                                                                                                                                                                                                                       |
+| `yarn migrate:status`                                                                 | Show applied / pending                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `yarn migrate:create --name=<slug>`                                                   | Generate a new migration file                                                                                                                                                                                                                                                                                                                                                                                           |
+| `yarn db:create` / `yarn db:drop`                                                     | Create / drop the database                                                                                                                                                                                                                                                                                                                                                                                              |
 | `yarn reset-password:dev -- --email=<addr> [--password=<value>] [--tenant-id=<uuid>]` | **Dev-only.** Reset a user's password directly in the DB (default `$Pa$$w0rd`) and clear any pending activation token. Refuses to run with `NODE_ENV=production`; the script file lives under [`packages/db/scripts/`](../../packages/db/scripts/), which is not copied into release bundles, and the npm entry is stripped from the production `package.json` by [`post-build.cjs`](../../packages/db/post-build.cjs). |
 
 Migration files live under [`packages/db/migrations/`](../../packages/db/migrations/) (the runtime location; sources for the initial schema live under `src/`). The server runs them on boot in production releases (see `docker/Dockerfile.migration`).
@@ -81,66 +81,66 @@ migrations/
   002_…
 ```
 
-Because the comparison is string-based, the padding matters: `010_…` sorts before `2_…`. Stick to three digits and you can add 999 migrations without re-numbering. A timestamp prefix (the default that `sequelize-cli migration:generate` emits — e.g. `20260515123456-foo.cjs`) also works and will sort *after* the `NNN_` files; just pick one scheme and be consistent within a feature branch.
+Because the comparison is string-based, the padding matters: `010_…` sorts before `2_…`. Stick to three digits and you can add 999 migrations without re-numbering. A timestamp prefix (the default that `sequelize-cli migration:generate` emits — e.g. `20260515123456-foo.cjs`) also works and will sort _after_ the `NNN_` files; just pick one scheme and be consistent within a feature branch.
 
-> **Don't edit `000_init_schemas.cjs` by hand.** It's regenerated from [`src/init_schema.ts`](../../packages/db/src/init_schema.ts) by [`compile-migration.js`](../../packages/db/compile-migration.js) every time you run `yarn build:db`. Hand-edits will be overwritten. To evolve the schema, add a *new* migration file with a higher prefix.
+> **Don't edit `000_init_schemas.cjs` by hand.** It's regenerated from [`src/init_schema.ts`](../../packages/db/src/init_schema.ts) by [`compile-migration.js`](../../packages/db/compile-migration.js) every time you run `yarn build:db`. Hand-edits will be overwritten. To evolve the schema, add a _new_ migration file with a higher prefix.
 
 ### Writing a new migration
 
 1. Generate the skeleton:
 
-    ```bash
-    yarn workspace @stacks/db migrate:create --name add-due-date-to-tasks
-    ```
+   ```bash
+   yarn workspace @stacks/db migrate:create --name add-due-date-to-tasks
+   ```
 
-    This drops a timestamped file into `migrations/`. Rename it to use the numeric scheme if you want it to live alongside the existing files:
+   This drops a timestamped file into `migrations/`. Rename it to use the numeric scheme if you want it to live alongside the existing files:
 
-    ```bash
-    mv migrations/20260515123456-add-due-date-to-tasks.js \
-       migrations/001_add_due_date_to_tasks.cjs
-    ```
+   ```bash
+   mv migrations/20260515123456-add-due-date-to-tasks.js \
+      migrations/001_add_due_date_to_tasks.cjs
+   ```
 
-    (The `.cjs` extension is required because the package is `"type": "module"` — Sequelize-CLI needs CommonJS.)
+   (The `.cjs` extension is required because the package is `"type": "module"` — Sequelize-CLI needs CommonJS.)
 
 2. Fill in `up` / `down`. Always wrap multi-statement changes in a transaction so a half-applied migration rolls back cleanly:
 
-    ```js
-    "use strict";
+   ```js
+   "use strict";
 
-    /** @type {import('sequelize-cli').Migration} */
-    module.exports = {
-        async up(queryInterface, Sequelize) {
-            const t = await queryInterface.sequelize.transaction();
-            try {
-                await queryInterface.addColumn(
-                    "tasks",
-                    "duedate",
-                    { type: Sequelize.DATE, allowNull: true },
-                    { transaction: t }
-                );
-                await t.commit();
-            } catch (err) {
-                await t.rollback();
-                throw err;
-            }
-        },
+   /** @type {import('sequelize-cli').Migration} */
+   module.exports = {
+     async up(queryInterface, Sequelize) {
+       const t = await queryInterface.sequelize.transaction();
+       try {
+         await queryInterface.addColumn(
+           "tasks",
+           "duedate",
+           { type: Sequelize.DATE, allowNull: true },
+           { transaction: t }
+         );
+         await t.commit();
+       } catch (err) {
+         await t.rollback();
+         throw err;
+       }
+     },
 
-        async down(queryInterface) {
-            await queryInterface.removeColumn("tasks", "duedate");
-        },
-    };
-    ```
+     async down(queryInterface) {
+       await queryInterface.removeColumn("tasks", "duedate");
+     },
+   };
+   ```
 
 3. Apply and verify:
 
-    ```bash
-    yarn workspace @stacks/db migrate          # apply
-    yarn workspace @stacks/db migrate:status   # confirm it's listed as "up"
-    yarn workspace @stacks/db migrate:undo     # smoke-test the down path
-    yarn workspace @stacks/db migrate          # re-apply
-    ```
+   ```bash
+   yarn workspace @stacks/db migrate          # apply
+   yarn workspace @stacks/db migrate:status   # confirm it's listed as "up"
+   yarn workspace @stacks/db migrate:undo     # smoke-test the down path
+   yarn workspace @stacks/db migrate          # re-apply
+   ```
 
-    Keep the matching Sequelize model under [`src/entities/`](../../packages/db/src/entities/) in sync — the migration moves the database, the entity moves the TypeScript surface, and the two have to agree.
+   Keep the matching Sequelize model under [`src/entities/`](../../packages/db/src/entities/) in sync — the migration moves the database, the entity moves the TypeScript surface, and the two have to agree.
 
 ## Seeds (demo data)
 
@@ -148,12 +148,12 @@ The demo seeder ([`seeders/000-demo.cjs`](../../packages/db/seeders/000-demo.cjs
 
 > Looking to load **your own** content from the Desktop Stacks app instead? See [Importing a workspace from the Desktop Stacks app](server.md#importing-a-workspace-from-the-desktop-stacks-app) in the server docs — that path is server-side and runs on boot, not through `sequelize-cli`.
 
-| Script | Effect |
-| --- | --- |
-| `yarn demo:install` | Apply all seeders (load demo content) |
-| `yarn demo:install --tenantId=<uuid>` | Same, but target an existing tenant (see below) |
-| `yarn demo:undo` | Revert all seeders (deletes everything tied to the `Demo` tenant) |
-| `yarn seed:create --name=<slug>` | Generate a new seeder file |
+| Script                                | Effect                                                            |
+| ------------------------------------- | ----------------------------------------------------------------- |
+| `yarn demo:install`                   | Apply all seeders (load demo content)                             |
+| `yarn demo:install --tenantId=<uuid>` | Same, but target an existing tenant (see below)                   |
+| `yarn demo:undo`                      | Revert all seeders (deletes everything tied to the `Demo` tenant) |
+| `yarn seed:create --name=<slug>`      | Generate a new seeder file                                        |
 
 Seeders live under [`packages/db/seeders/`](../../packages/db/seeders/).
 
@@ -172,15 +172,15 @@ yarn workspace @stacks/db demo:install --tenantId=11111111-2222-3333-4444-555555
 
 How the flag interacts with what's already in the database:
 
-| State of the DB when you run `demo:install` | Result |
-| --- | --- |
-| A `Demo` tenant already exists | The seeder uses it and **ignores `--tenantId`**. Use `demo:undo` first if you want to switch tenants. |
-| No `Demo` tenant, no `--tenantId` | A new `Demo` tenant is created with a random UUID, and demo data is attached to it. |
+| State of the DB when you run `demo:install`    | Result                                                                                                                                                                               |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| A `Demo` tenant already exists                 | The seeder uses it and **ignores `--tenantId`**. Use `demo:undo` first if you want to switch tenants.                                                                                |
+| No `Demo` tenant, no `--tenantId`              | A new `Demo` tenant is created with a random UUID, and demo data is attached to it.                                                                                                  |
 | No `Demo` tenant, `--tenantId=<uuid>` provided | The seeder writes demo data under the supplied tenant ID **without inserting a new tenant row** — that tenant must already exist (the demo rows have a foreign key on `tenants.id`). |
 
 The seeder is idempotent at the row level: every demo entity has a fixed UUID in its JSON file, and the seeder skips inserts when the row already exists.
 
-> **Best run against a tenant whose users haven't been seeded yet.** The demo people in `seeders/demo/people.json` have fixed UUIDs and are only inserted on the first run; later inserts (documents, projects, permissions, tasks) reference *those* user IDs as their `createdBy`. If those users already live in another tenant — or were partially imported in an earlier run — the second insert pass will hit a `NOT NULL` violation on `createdBy`. The safest pattern is: pick a tenant with no demo people yet, run `demo:install --tenantId=<that-tenant>`, and don't re-target a different tenant without resetting the demo users first.
+> **Best run against a tenant whose users haven't been seeded yet.** The demo people in `seeders/demo/people.json` have fixed UUIDs and are only inserted on the first run; later inserts (documents, projects, permissions, tasks) reference _those_ user IDs as their `createdBy`. If those users already live in another tenant — or were partially imported in an earlier run — the second insert pass will hit a `NOT NULL` violation on `createdBy`. The safest pattern is: pick a tenant with no demo people yet, run `demo:install --tenantId=<that-tenant>`, and don't re-target a different tenant without resetting the demo users first.
 
 ### Reverting the demo data
 

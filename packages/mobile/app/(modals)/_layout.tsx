@@ -23,10 +23,7 @@ export default function ModalsLayout() {
             <Stack.Screen name="task/[id]" options={{ title: "Task" }} />
             <Stack.Screen name="people/[id]" options={{ title: "Person" }} />
             <Stack.Screen name="company/[id]" options={{ title: "Company" }} />
-            <Stack.Screen
-                name="project-settings/[id]"
-                options={{ title: "Project settings" }}
-            />
+            <Stack.Screen name="project-settings/[id]" options={{ title: "Project settings" }} />
         </Stack>
     );
 }

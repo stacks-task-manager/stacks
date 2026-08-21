@@ -42,7 +42,9 @@ export function TaskCard({
             onPress={onPress ? () => onPress(task) : undefined}
             onLongPress={onLongPress ? () => onLongPress(task) : undefined}
             delayLongPress={350}
-            className={`relative mb-2.5 overflow-hidden rounded-md border border-outline-200 active:opacity-85 ${hasTint ? "" : "bg-background-0"} ${task.done ? "opacity-60" : ""}`}
+            className={`relative mb-2.5 overflow-hidden rounded-md border border-outline-200 active:opacity-85 ${
+                hasTint ? "" : "bg-background-0"
+            } ${task.done ? "opacity-60" : ""}`}
             style={{
                 ...(hasTint ? { backgroundColor: (task.tint as string) + "11" } : null),
                 shadowColor: "#000",
@@ -81,11 +83,7 @@ export function TaskCard({
                     <HStack className="flex-wrap items-center" space="xs">
                         <TaskPriority priority={task.priority} />
                         <TaskProgress progress={task.progress} />
-                        <TaskDate
-                            startdate={task.startdate}
-                            duedate={task.duedate}
-                            done={task.done}
-                        />
+                        <TaskDate startdate={task.startdate} duedate={task.duedate} done={task.done} />
                     </HStack>
                 ) : null}
 

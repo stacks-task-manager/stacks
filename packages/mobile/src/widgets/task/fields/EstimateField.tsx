@@ -50,12 +50,7 @@ export function EstimateField({
     return (
         <HStack className="items-center self-start min-w-[160px]" space="xs">
             <Input variant="outline" size="md" className="flex-1" isDisabled={disabled}>
-                <InputField
-                    value={text}
-                    onChangeText={setText}
-                    keyboardType="numeric"
-                    placeholder="0"
-                />
+                <InputField value={text} onChangeText={setText} keyboardType="numeric" placeholder="0" />
             </Input>
             <Text className="text-typography-500" size="sm">
                 min

@@ -15,7 +15,7 @@ interface ITIRepeatsProps {
 }
 export const TIRepeats: FunctionComponent<ITIRepeatsProps> = ({ taskId, value, disabled }) => {
     const repeatsLabel = useMemo(() => {
-        if (!value) return disabled ? "No repeat" : translate("Add repeat");
+        if (!value) return disabled ? translate("No repeat") : translate("Add repeat");
 
         switch (value.type) {
             case REPEATTYPE.DAILY:
@@ -29,7 +29,7 @@ export const TIRepeats: FunctionComponent<ITIRepeatsProps> = ({ taskId, value, d
             case REPEATTYPE.PERIODICALLY:
                 return translate("Periodically");
         }
-    }, [value]);
+    }, [value, disabled]);
 
     const repeatsTooltip = useMemo(() => {
         return RepeatsTooltipContent(value);
@@ -58,7 +58,7 @@ export const TIRepeats: FunctionComponent<ITIRepeatsProps> = ({ taskId, value, d
             onOpening={handleSetDefault}
         >
             <>
-                {!value && <RoundButton dashed title="Add repeats" disabled={disabled} />}
+                {!value && <RoundButton dashed title={translate("Add repeats")} disabled={disabled} />}
                 {value && (
                     <Tooltip content={repeatsTooltip} disabled={!value} placement="top">
                         <Tag
@@ -81,20 +81,24 @@ export const RepeatsTooltipContent = (value?: IRepeats) => {
     if (!value) return "";
     switch (value.type) {
         case REPEATTYPE.DAILY:
-            return "Repeats every day after completion";
+            return translate("Repeats every day after completion");
         case REPEATTYPE.WEEKLY:
-            return `Repeats every week on the following days [${value.value.split(",").map((day: string) =>
-                format(setDay(new Date(), Number(day)), "eee")
-            )}] after completion`;
+            return translate("Repeats every week on the following days after completion", {
+                days: value.value
+                    .split(",")
+                    .map((day: string) => format(setDay(new Date(), Number(day)), "eee"))
+                    .join(", "),
+            });
         case REPEATTYPE.MONTHLY:
-            return `Repeats every month on the ${
-                value.value === "last"
-                    ? "last day"
-                    : format(setDate(new Date(), parseInt(value.value, 10)), "d")
-            } after completion`;
+            return translate("Repeats every month on the day after completion", {
+                day:
+                    value.value === "last"
+                        ? translate("last day")
+                        : format(setDate(new Date(), parseInt(value.value, 10)), "d"),
+            });
         case REPEATTYPE.YEARLY:
-            return "Every year after completion";
+            return translate("Every year after completion");
         case REPEATTYPE.PERIODICALLY:
-            return `${value.value} days after completion`;
+            return translate("Days after completion", { days: value.value });
     }
 };

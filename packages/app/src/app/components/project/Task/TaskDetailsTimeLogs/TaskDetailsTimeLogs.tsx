@@ -25,6 +25,7 @@ import { QuickTimeLogDialog, QuickTimeLogPopover } from "app/components/project"
 import { useCanAccess, useTaskTimelogs } from "app/hooks";
 import { TimelogsActions } from "app/store/actions";
 import { PeopleStore } from "app/store/people";
+import { shallowEqual } from "app/hooks/store";
 import { formatStringDuration } from "app/utils/date";
 import { Assignees } from "app/widgets";
 import { format } from "date-fns";
@@ -43,6 +44,7 @@ export const TaskDetailsTimelogsTab: FunctionComponent<ITaskDetailsTimeLogsTabPr
     useEffect(() => {
         if (isLoading) return;
         TimelogsActions.load({ task: taskId });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [taskId]);
 
     return (
@@ -71,7 +73,7 @@ export const TaskDetailsTimeLogs: FunctionComponent<ITaskDetailsTimeLogsProps> =
     loading,
 }) => {
     const { write: canLogTime } = useCanAccess(ROLE_SECTIONS.TIMELOGS);
-    const { people } = PeopleStore.get();
+    const people = PeopleStore.use(state => state.people, shallowEqual);
     const [timelog, setTimelog] = useState<ITimeLog>();
 
     const total = useMemo(() => {
@@ -128,27 +130,27 @@ export const TaskDetailsTimeLogs: FunctionComponent<ITaskDetailsTimeLogsProps> =
             )}
             <Table>
                 <TableHead>
-                    <TableHeaderCell name="date" title="Date" width={100} />
+                    <TableHeaderCell name="date" title={translate("Date")} width={100} />
                     {/* <TableHeaderCell
                         name="project"
-                        title="Project"
+                        title={translate("Project")}
                         width={120}
                         minWidth={100}
                         maxWidth={200}
                         resizable
                     /> */}
-                    <TableHeaderCell name="assignees" title="Assignees" width={100} />
-                    <TableHeaderCell name="duration" title="Duration" width={120} />
-                    <TableHeaderCell name="billable" title="Billable" width={100} />
-                    <TableHeaderCell name="billed" title="Billed" width={100} />
+                    <TableHeaderCell name="assignees" title={translate("Assignees")} width={100} />
+                    <TableHeaderCell name="duration" title={translate("Duration")} width={120} />
+                    <TableHeaderCell name="billable" title={translate("Billable")} width={100} />
+                    <TableHeaderCell name="billed" title={translate("Billed")} width={100} />
                     <TableHeaderCell
                         name="description"
-                        title="Description"
+                        title={translate("Description")}
                         width={150}
                         minWidth={100}
                         resizable
                     />
-                    <TableHeaderCell name="approved" title="Approved" width={100} />
+                    <TableHeaderCell name="approved" title={translate("Approved")} width={100} />
                     <TableHeaderCell name="empty" empty width={24} />
                 </TableHead>
                 <TableBody>

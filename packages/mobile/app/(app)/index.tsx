@@ -8,10 +8,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 export default function HomeScreen() {
     const insets = useSafeAreaInsets();
     return (
-        <Box
-            style={{ paddingTop: insets.top + 24 }}
-            className="flex-1 px-6 bg-background-0"
-        >
+        <Box style={{ paddingTop: insets.top + 24 }} className="flex-1 px-6 bg-background-0">
             <VStack space="sm">
                 <Heading size="xl">Stacks</Heading>
                 <Text className="text-typography-600">

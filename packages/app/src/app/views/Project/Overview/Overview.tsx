@@ -83,10 +83,17 @@ export const Overview = () => {
                                     </Col>
 
                                     <Col>
-                                        {params.id && <TagsOverview counter={overview.tags} projectId={params.id} />}
+                                        {params.id && (
+                                            <TagsOverview counter={overview.tags} projectId={params.id} />
+                                        )}
                                     </Col>
                                     <Col>
-                                        {params.id && <StatusesOverview counter={overview.statuses} projectId={params.id} />}
+                                        {params.id && (
+                                            <StatusesOverview
+                                                counter={overview.statuses}
+                                                projectId={params.id}
+                                            />
+                                        )}
                                     </Col>
                                 </Row>
 

@@ -10,6 +10,13 @@ import { getCurrentProject, getProject, useCurrentProject, useProject } from "./
 import { shallowEqual } from "./store";
 import { useStackTasks } from "./tasks";
 
+/**
+ * Returns the stacks of a project sorted in the given order.
+ * @param {IStack[]} allStacks All stacks across projects.
+ * @param {string} projectId The id of the project to filter stacks for.
+ * @param {string[]} stacksOrder The desired order of stack ids.
+ * @returns {IStack[]} The project's stacks sorted by stacksOrder.
+ */
 export function orderedStacksForProject(
     allStacks: IStack[],
     projectId: string,
@@ -34,7 +41,8 @@ export const useStacks = (): IStack[] => {
     }, shallowEqual);
 };
 
-/** * Returns the stacks of the current project.
+/**
+ * Returns the stacks of the current project.
  * @returns {IStack[]} Array of stacks.
  */
 export const getStacks = (): IStack[] => {
@@ -42,25 +50,41 @@ export const getStacks = (): IStack[] => {
     return StacksStore.get().stacks?.filter(stack => stack.project === project?.id) ?? [];
 };
 
+/**
+ * Returns the ids of the current project's stacks.
+ * @returns {string[]} The ids of the current project's stacks.
+ */
 export const useStacksIds = () => {
     const stacks = useStacks();
     return stacks.map((stack: IStack) => stack.id);
 };
 
+/**
+ * Returns the stack with the given id.
+ * @param {string} [stackId] The id of the stack.
+ * @returns {IStack | undefined} The stack, or undefined when not found.
+ */
 export const useStack = (stackId?: string): IStack | undefined => {
-    const { stacks } = StacksStore.use();
-    return stacks.find(stack => stack.id === stackId);
+    return StacksStore.use(
+        state => (stackId ? state.stacks.find(stack => stack.id === stackId) : undefined),
+        shallowEqual
+    );
 };
 
 /**
  * Returns the stack with the given id.
- * @param stackId Stack id.
- * @returns {IStack | undefined} Stack.
+ * @param {string} stackId Stack id.
+ * @returns {IStack | undefined} The stack, or undefined when not found.
  */
 export const getStack = (stackId: string): IStack | undefined => {
     return StacksStore.get().stacks.find(stack => stack.id === stackId);
 };
 
+/**
+ * Returns the stacks of a project in their configured order.
+ * @param {string} [projectId] The id of the project.
+ * @returns {IStack[]} The project's stacks, or an empty array when not loaded.
+ */
 export const useProjectStacks = (projectId?: string): IStack[] => {
     const { project, isLoading } = useProject(projectId);
     const stacksOrder = project?.stacksOrder ?? [];
@@ -74,6 +98,10 @@ export const useProjectStacks = (projectId?: string): IStack[] => {
 /** @deprecated Prefer {@link useStacks} (same behavior: respects project loading state). */
 export const useCurrentProjectStacks = useStacks;
 
+/**
+ * Returns a map of stack id to its ordered task ids for the current project.
+ * @returns {Record<string, string[]>} Mapping of stack id to its task order.
+ */
 export const useStacksTaskOrders = () => {
     const stacks = useStacks();
     return useMemo(() => {
@@ -84,12 +112,22 @@ export const useStacksTaskOrders = () => {
     }, [stacks]);
 };
 
+/**
+ * Returns the stacks of a project in their configured order.
+ * @param {string} projectId The id of the project.
+ * @returns {IStack[]} The project's stacks, or an empty array when the project is not found.
+ */
 export const getProjectStacks = (projectId: string): IStack[] => {
     const project = getProject(projectId);
     if (!project) return [];
     return orderedStacksForProject(StacksStore.get().stacks, projectId, project.stacksOrder ?? []);
 };
 
+/**
+ * Returns display information about a stack and its tasks.
+ * @param {string} stackId The id of the stack.
+ * @returns {{ collapsed: boolean; empty: boolean; tint: string | undefined; tasks: ITask[]; title: string } | null} Stack display info, or null when the stack is not found.
+ */
 export const useStackInfo = (stackId: string) => {
     const stack = useStack(stackId);
     const tasks = useStackTasks(stackId);
@@ -114,6 +152,11 @@ export const useStackInfo = (stackId: string) => {
     }, [stack, tasks]);
 };
 
+/**
+ * Returns menu display information about a stack and its task progress.
+ * @param {string} stackId The id of the stack.
+ * @returns {{ title: string; progress: number; limit: boolean; completedCount: number; uncompleteCount: number; tasksCount: number; maxTasks: number; tint: string | undefined; sorting: TASKSORTING | undefined } | null} Stack menu info, or null when the stack is not found.
+ */
 export const useStackMenu = (stackId: string) => {
     const stack = useStack(stackId);
     const tasks = useStackTasks(stackId);

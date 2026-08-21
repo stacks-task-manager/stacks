@@ -6,13 +6,13 @@ A getting-started guide for new contributors landing in `packages/app`. The goal
 
 ## Table of Contents
 
--   [1. Stack in one paragraph](#1-stack-in-one-paragraph)
--   [2. Boot sequence](#2-boot-sequence)
--   [3. Code layout](#3-code-layout)
--   [4. How to add a feature (worked example)](#4-how-to-add-a-feature-worked-example)
--   [5. Useful commands](#5-useful-commands)
--   [6. Conventions & gotchas](#6-conventions--gotchas)
--   [7. FAQ](#7-faq)
+- [1. Stack in one paragraph](#1-stack-in-one-paragraph)
+- [2. Boot sequence](#2-boot-sequence)
+- [3. Code layout](#3-code-layout)
+- [4. How to add a feature (worked example)](#4-how-to-add-a-feature-worked-example)
+- [5. Useful commands](#5-useful-commands)
+- [6. Conventions & gotchas](#6-conventions--gotchas)
+- [7. FAQ](#7-faq)
 
 ## 1. Stack in one paragraph
 
@@ -52,19 +52,19 @@ Two implications you'll hit on day one:
 
 Everything lives under `src/app/`. The folders are not interchangeable — knowing which one to put a new file in is half the battle.
 
-| Folder | What goes here |
-| --- | --- |
-| [`api/`](../src/app/api/) | One file per backend domain (`tasks.ts`, `projects.ts`, …). Each exports an `XAPI` object whose methods return `Promise<T>`. They all import from `./request`. **No React, no state.** |
-| [`store/`](../src/app/store/) | One slice per domain. Each file declares an `entity<T>({...defaults})` and exports it as `XStore`. **No actions, no React.** |
+| Folder                                        | What goes here                                                                                                                                                                                                |
+| --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`api/`](../src/app/api/)                     | One file per backend domain (`tasks.ts`, `projects.ts`, …). Each exports an `XAPI` object whose methods return `Promise<T>`. They all import from `./request`. **No React, no state.**                        |
+| [`store/`](../src/app/store/)                 | One slice per domain. Each file declares an `entity<T>({...defaults})` and exports it as `XStore`. **No actions, no React.**                                                                                  |
 | [`store/actions/`](../src/app/store/actions/) | One namespace per slice (`TasksActions`, `ProjectsActions`, …). Actions call `XStore.set(produce(...))`, dispatch API requests, and may call other actions. **All mutations to store state go through here.** |
-| [`hooks/`](../src/app/hooks/) | Subscriber-side: `useTasks()`, `useProject()`, `useMe()`, etc. Wrap `XStore.use(selector, equality)` with derived data. Also home of cross-store getters like `getCurrentTaskId()` for use inside actions. |
-| [`components/`](../src/app/components/) | Small, reusable, mostly presentational pieces — buttons, headers, common dialogs, the project board cell, etc. Folders are `PascalCase` matching the component name. |
-| [`widgets/`](../src/app/widgets/) | Composed feature blocks: the calendar widget, the AI chat panel, the sidebar tree. Bigger than a component, smaller than a view. |
-| [`views/`](../src/app/views/) | Top-level routed pages (`Home/`, `Project/`, `MyTasks/`, …). One folder per route group. The `Project/` folder contains sub-views (`Board`, `Gantt`, `Table`, `Time`, …). |
-| [`utils/`](../src/app/utils/) | Stateless helpers — date math, color tokens, dialog wrappers, the `UpdatePoller` class itself, sound effects, storage shims. |
-| [`icons/`](../src/app/icons/) | SVG sprite + the React `<Icon>` wrapper. Regenerate the sprite with `yarn workspace @stacks/app sprites` after adding an SVG to `packages/app/svg/`. |
-| [`locale/`](../src/app/locale/) | Translation tables, keyed by locale code. Edit with [`@stacks/locales-tui`](../../../docs/packages/locales-tui.md). |
-| [`styles/`](../src/app/styles/) | Global SCSS tokens, mixins, Blueprint overrides. Per-component styles live next to the component as `_X.scss`. |
+| [`hooks/`](../src/app/hooks/)                 | Subscriber-side: `useTasks()`, `useProject()`, `useMe()`, etc. Wrap `XStore.use(selector, equality)` with derived data. Also home of cross-store getters like `getCurrentTaskId()` for use inside actions.    |
+| [`components/`](../src/app/components/)       | Small, reusable, mostly presentational pieces — buttons, headers, common dialogs, the project board cell, etc. Folders are `PascalCase` matching the component name.                                          |
+| [`widgets/`](../src/app/widgets/)             | Composed feature blocks: the calendar widget, the AI chat panel, the sidebar tree. Bigger than a component, smaller than a view.                                                                              |
+| [`views/`](../src/app/views/)                 | Top-level routed pages (`Home/`, `Project/`, `MyTasks/`, …). One folder per route group. The `Project/` folder contains sub-views (`Board`, `Gantt`, `Table`, `Time`, …).                                     |
+| [`utils/`](../src/app/utils/)                 | Stateless helpers — date math, color tokens, dialog wrappers, the `UpdatePoller` class itself, sound effects, storage shims.                                                                                  |
+| [`icons/`](../src/app/icons/)                 | SVG sprite + the React `<Icon>` wrapper. Regenerate the sprite with `yarn workspace @stacks/app sprites` after adding an SVG to `packages/app/svg/`.                                                          |
+| [`locale/`](../src/app/locale/)               | Translation tables, keyed by locale code. Edit with [`@stacks/locales-tui`](../../../docs/packages/locales-tui.md).                                                                                           |
+| [`styles/`](../src/app/styles/)               | Global SCSS tokens, mixins, Blueprint overrides. Per-component styles live next to the component as `_X.scss`.                                                                                                |
 
 **Import paths use `app/…`, not relative paths.** The webpack config sets `resolve.modules: [src/, node_modules/]`, so `import { TasksAPI } from "app/api"` and `import { useProject } from "app/hooks"` resolve from inside `src/`.
 
@@ -74,85 +74,104 @@ Say you want to add a new "Goals" page accessible at `#/goals`. Roughly:
 
 1. **API client** — `src/app/api/goals.ts`:
 
-    ```ts
-    import { IGoal } from "@stacks/types";
-    import request from "./request";
+   ```ts
+   import { IGoal } from "@stacks/types";
+   import request from "./request";
 
-    export const GoalsAPI = {
-        list: () => request.get<IGoal[]>("/api/goals"),
-        create: (goal: Partial<IGoal>) => request.post<IGoal>("/api/goals", goal),
-    };
-    ```
+   export const GoalsAPI = {
+     list: () => request.get<IGoal[]>("/api/goals"),
+     create: (goal: Partial<IGoal>) => request.post<IGoal>("/api/goals", goal),
+   };
+   ```
 
-    Re-export from [`src/app/api/index.ts`](../src/app/api/index.ts).
+   Re-export from [`src/app/api/index.ts`](../src/app/api/index.ts).
 
 2. **Store slice** — `src/app/store/goals.ts`:
 
-    ```ts
-    import { entity } from "app/hooks/store";
-    import { IGoal } from "@stacks/types";
+   ```ts
+   import { entity } from "app/hooks/store";
+   import { IGoal } from "@stacks/types";
 
-    export interface IGoalsStore {
-        isLoading: boolean;
-        goals: IGoal[];
-    }
+   export interface IGoalsStore {
+     isLoading: boolean;
+     goals: IGoal[];
+   }
 
-    export const GoalsStore = entity<IGoalsStore>({
-        isLoading: false,
-        goals: [],
-    });
-    ```
+   export const GoalsStore = entity<IGoalsStore>({
+     isLoading: false,
+     goals: [],
+   });
+   ```
 
 3. **Actions** — `src/app/store/actions/goals.ts`:
 
-    ```ts
-    import { produce } from "immer";
-    import { GoalsAPI } from "app/api";
-    import { GoalsStore } from "app/store/goals";
+   ```ts
+   import { produce } from "immer";
+   import { GoalsAPI } from "app/api";
+   import { GoalsStore } from "app/store/goals";
 
-    export const GoalsActions = {
-        async load() {
-            GoalsStore.set(produce(d => { d.isLoading = true; }));
-            const goals = await GoalsAPI.list();
-            GoalsStore.set(produce(d => { d.goals = goals; d.isLoading = false; }));
-        },
-    };
-    ```
+   export const GoalsActions = {
+     async load() {
+       GoalsStore.set(
+         produce(d => {
+           d.isLoading = true;
+         })
+       );
+       const goals = await GoalsAPI.list();
+       GoalsStore.set(
+         produce(d => {
+           d.goals = goals;
+           d.isLoading = false;
+         })
+       );
+     },
+   };
+   ```
 
-    Re-export from [`src/app/store/actions/index.ts`](../src/app/store/actions/index.ts).
+   Re-export from [`src/app/store/actions/index.ts`](../src/app/store/actions/index.ts).
 
 4. **Hook** — `src/app/hooks/goals.ts`:
 
-    ```ts
-    import { shallowEqual } from "app/hooks/store";
-    import { GoalsStore } from "app/store/goals";
+   ```ts
+   import { shallowEqual } from "app/hooks/store";
+   import { GoalsStore } from "app/store/goals";
 
-    export const useGoals = () => GoalsStore.use(s => s.goals, shallowEqual);
-    ```
+   export const useGoals = () => GoalsStore.use(s => s.goals, shallowEqual);
+   ```
 
-    Re-export from [`src/app/hooks/index.ts`](../src/app/hooks/index.ts).
+   Re-export from [`src/app/hooks/index.ts`](../src/app/hooks/index.ts).
 
 5. **View** — `src/app/views/Goals/Goals.tsx`:
 
-    ```tsx
-    import { useEffect } from "react";
-    import { useGoals } from "app/hooks";
-    import { GoalsActions } from "app/store/actions";
+   ```tsx
+   import { useEffect } from "react";
+   import { useGoals } from "app/hooks";
+   import { GoalsActions } from "app/store/actions";
 
-    export const Goals = () => {
-        const goals = useGoals();
-        useEffect(() => { GoalsActions.load(); }, []);
-        return <ul>{goals.map(g => <li key={g.id} data-testid={`goal-${g.id}`}>{g.title}</li>)}</ul>;
-    };
-    ```
+   export const Goals = () => {
+     const goals = useGoals();
+     useEffect(() => {
+       GoalsActions.load();
+     }, []);
+     return (
+       <ul>
+         {goals.map(g => (
+           <li key={g.id} data-testid={`goal-${g.id}`}>
+             {g.title}
+           </li>
+         ))}
+       </ul>
+     );
+   };
+   ```
 
-    Add an `index.ts` barrel in `views/Goals/` and re-export from [`src/app/views/index.ts`](../src/app/views/index.ts).
+   Add an `index.ts` barrel in `views/Goals/` and re-export from [`src/app/views/index.ts`](../src/app/views/index.ts).
 
 6. **Route** — add a line to `MainAppRoutes` in [`src/app/App.tsx`](../src/app/App.tsx):
 
-    ```tsx
-    <Route path="/goals" element={<Goals />} />
-    ```
+   ```tsx
+   <Route path="/goals" element={<Goals />} />
+   ```
 
 7. **Sidebar entry** — add a link in the appropriate place under `src/app/views/Sidebar/` so the user can actually reach the page.
 

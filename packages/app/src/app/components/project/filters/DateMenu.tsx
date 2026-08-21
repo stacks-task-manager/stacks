@@ -12,9 +12,12 @@ import React, { FunctionComponent } from "react";
 interface IDateMenuProps {
     date?: string;
     onChange: (date?: string) => void;
+    /** Unique prefix for every item's test id, e.g. "start-date-filter-clear". */
+    "data-testid"?: string;
 }
-export const DateMenu: FunctionComponent<IDateMenuProps> = ({ date, onChange }) => {
+export const DateMenu: FunctionComponent<IDateMenuProps> = ({ date, onChange, "data-testid": testId }) => {
     const { dateLocale } = usePreferences(["dateLocale"]);
+    const itemTestId = (key: string) => (testId ? `${testId}-${key}` : undefined);
 
     return (
         <Menu>
@@ -23,6 +26,7 @@ export const DateMenu: FunctionComponent<IDateMenuProps> = ({ date, onChange }) 
                 onClick={() => onChange()}
                 icon={<Icon icon="calendar" />}
                 labelElement={<Icon icon={!date ? "check" : undefined} />}
+                data-testid={itemTestId("clear")}
             />
             <MenuDivider />
             <MenuItem
@@ -30,57 +34,70 @@ export const DateMenu: FunctionComponent<IDateMenuProps> = ({ date, onChange }) 
                 onClick={() => onChange("today")}
                 icon={<Icon icon="calendar-date" />}
                 labelElement={<Icon icon={date === "today" ? "check" : undefined} />}
+                data-testid={itemTestId("today")}
             />
             <MenuItem
                 text={translate("Yesterday")}
                 onClick={() => onChange("yesterday")}
                 icon={<Icon icon="calendar-date" />}
                 labelElement={<Icon icon={date === "yesterday" ? "check" : undefined} />}
+                data-testid={itemTestId("yesterday")}
             />
             <MenuItem
                 text={translate("Tomorrow")}
                 onClick={() => onChange("tomorrow")}
                 icon={<Icon icon="calendar-date" />}
                 labelElement={<Icon icon={date === "tomorrow" ? "check" : undefined} />}
+                data-testid={itemTestId("tomorrow")}
             />
             <MenuItem
                 text={translate("This week")}
                 onClick={() => onChange("thisWeek")}
                 icon={<Icon icon="calendar-date" />}
                 labelElement={<Icon icon={date === "thisWeek" ? "check" : undefined} />}
+                data-testid={itemTestId("this-week")}
             />
             <MenuItem
                 text={translate("Last week")}
                 onClick={() => onChange("lastWeek")}
                 icon={<Icon icon="calendar-date" />}
                 labelElement={<Icon icon={date === "lastWeek" ? "check" : undefined} />}
+                data-testid={itemTestId("last-week")}
             />
             <MenuItem
                 text={translate("Next week")}
                 onClick={() => onChange("nextWeek")}
                 icon={<Icon icon="calendar-date" />}
                 labelElement={<Icon icon={date === "nextWeek" ? "check" : undefined} />}
+                data-testid={itemTestId("next-week")}
             />
             <MenuItem
                 text={translate("This month")}
                 onClick={() => onChange("thisMonth")}
                 icon={<Icon icon="calendar-date" />}
                 labelElement={<Icon icon={date === "thisMonth" ? "check" : undefined} />}
+                data-testid={itemTestId("this-month")}
             />
             <MenuItem
                 text={translate("Last month")}
                 onClick={() => onChange("lastMonth")}
                 icon={<Icon icon="calendar-date" />}
                 labelElement={<Icon icon={date === "lastMonth" ? "check" : undefined} />}
+                data-testid={itemTestId("last-month")}
             />
             <MenuItem
                 text={translate("Next month")}
                 onClick={() => onChange("nextMonth")}
                 icon={<Icon icon="calendar-date" />}
                 labelElement={<Icon icon={date === "nextMonth" ? "check" : undefined} />}
+                data-testid={itemTestId("next-month")}
             />
             <MenuDivider />
-            <MenuItem text="Custom" icon={<Icon icon="calendar-check-01" />}>
+            <MenuItem
+                text={translate("Custom")}
+                icon={<Icon icon="calendar-check-01" />}
+                data-testid={itemTestId("custom")}
+            >
                 <DateRangePicker
                     shortcuts={false}
                     locale={dateLocale}

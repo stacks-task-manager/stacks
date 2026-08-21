@@ -69,15 +69,11 @@ export function OptionsModal({
                         <HStack space="md">
                             {canClear && !multi ? (
                                 <Pressable onPress={onClear} hitSlop={8}>
-                                    <Text className="text-error-600 font-semibold">
-                                        Clear
-                                    </Text>
+                                    <Text className="text-error-600 font-semibold">Clear</Text>
                                 </Pressable>
                             ) : null}
                             <Pressable onPress={onClose} hitSlop={8}>
-                                <Text className="text-primary-600 font-semibold">
-                                    Done
-                                </Text>
+                                <Text className="text-primary-600 font-semibold">Done</Text>
                             </Pressable>
                         </HStack>
                     </HStack>
@@ -85,9 +81,7 @@ export function OptionsModal({
 
                     <ScrollView style={{ maxHeight: 520 }}>
                         {options.length === 0 ? (
-                            <Text className="p-4 text-typography-500">
-                                No options available.
-                            </Text>
+                            <Text className="p-4 text-typography-500">No options available.</Text>
                         ) : (
                             <VStack>
                                 {options.map(opt => {
@@ -95,9 +89,7 @@ export function OptionsModal({
                                     return (
                                         <Pressable
                                             key={opt.id}
-                                            onPress={() =>
-                                                multi ? onToggle?.(opt.id) : onSelect?.(opt.id)
-                                            }
+                                            onPress={() => (multi ? onToggle?.(opt.id) : onSelect?.(opt.id))}
                                             className="px-4 py-3 active:bg-background-100"
                                         >
                                             <HStack space="sm" className="items-center">
@@ -112,17 +104,11 @@ export function OptionsModal({
                                                     />
                                                 ) : null}
                                                 <VStack className="flex-1">
-                                                    <Text
-                                                        size="md"
-                                                        className="text-typography-900"
-                                                    >
+                                                    <Text size="md" className="text-typography-900">
                                                         {opt.label}
                                                     </Text>
                                                     {opt.subtitle ? (
-                                                        <Text
-                                                            size="xs"
-                                                            className="text-typography-500"
-                                                        >
+                                                        <Text size="xs" className="text-typography-500">
                                                             {opt.subtitle}
                                                         </Text>
                                                     ) : null}

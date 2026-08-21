@@ -90,12 +90,7 @@ export function NewDocumentModal({
                 <ModalBody>
                     <VStack space="md">
                         <Input variant="outline" size="md">
-                            <InputField
-                                placeholder="Title"
-                                value={title}
-                                onChangeText={setTitle}
-                                autoFocus
-                            />
+                            <InputField placeholder="Title" value={title} onChangeText={setTitle} autoFocus />
                         </Input>
                         <VStack space="xs">
                             <Text size="sm" className="text-typography-600">
@@ -116,9 +111,7 @@ export function NewDocumentModal({
                                         >
                                             <Text
                                                 className={
-                                                    selected
-                                                        ? "text-primary-700"
-                                                        : "text-typography-900"
+                                                    selected ? "text-primary-700" : "text-typography-900"
                                                 }
                                             >
                                                 {opt.label}
@@ -131,12 +124,7 @@ export function NewDocumentModal({
                     </VStack>
                 </ModalBody>
                 <ModalFooter>
-                    <Button
-                        variant="outline"
-                        onPress={onClose}
-                        disabled={busy}
-                        className="mr-2"
-                    >
+                    <Button variant="outline" onPress={onClose} disabled={busy} className="mr-2">
                         <ButtonText>Cancel</ButtonText>
                     </Button>
                     <Button onPress={() => void submit()} disabled={busy || !title.trim()}>

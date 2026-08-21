@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import classNames from "classnames";
 
 import { RECORDTYPE } from "@stacks/types";
+import { openInNewTab } from "app/utils/browser";
 import { Icon } from "../Icon/Icon";
 
 export interface ILinkProps {
@@ -48,7 +49,7 @@ export const Link: FunctionComponent<ILinkProps> = ({
                 navigate(`/${type}/${id}`);
                 break;
             case RECORDTYPE.URL:
-                window.open(url, '_blank');
+                if (url) openInNewTab(url);
                 break;
             default:
                 break;

@@ -99,7 +99,8 @@ describe("RequestContextService", () => {
     test("context isolation — two concurrent runs do not leak context", () => {
         const ctx1 = { ...makeContext(), requestId: "req-1" };
         const ctx2 = { ...makeContext(), requestId: "req-2" };
-        let outer = "", inner = "";
+        let outer = "",
+            inner = "";
 
         requestContext.run(ctx1, () => {
             outer = requestContext.getRequestId();

@@ -8,13 +8,18 @@ interface ITableFooterCellProps {
     colSpan?: number;
     secondary?: boolean;
 }
-export const TableFooterCell: FunctionComponent<ITableFooterCellProps> = ({ children, align, colSpan, secondary }) => {
+export const TableFooterCell: FunctionComponent<ITableFooterCellProps> = ({
+    children,
+    align,
+    colSpan,
+    secondary,
+}) => {
     return (
         <td colSpan={colSpan} className={classNames({ secondary })}>
             <div
                 className={classNames("table-footer-cell", {
                     center: align === "center",
-                    right: align === "right"
+                    right: align === "right",
                 })}
             >
                 {children}

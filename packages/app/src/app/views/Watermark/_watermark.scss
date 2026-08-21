@@ -28,7 +28,7 @@ $watermark-border-radius: 20px;
             content: "";
             position: absolute;
             top: 0;
-            left: calc($watermark-space * -1);            
+            left: calc($watermark-space * -1);
             background-color: $watermark-color;
             width: $watermark-width;
             height: calc($watermark-height + $watermark-space);
@@ -39,13 +39,12 @@ $watermark-border-radius: 20px;
             content: "";
             position: absolute;
             top: 0;
-            right: calc($watermark-space * -1);            
+            right: calc($watermark-space * -1);
             background-color: $watermark-color;
             width: $watermark-width;
             height: calc($watermark-height + 2 * $watermark-space);
             border-radius: $watermark-border-radius;
         }
-
     }
 }
 

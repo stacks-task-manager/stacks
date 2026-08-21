@@ -38,9 +38,7 @@
         "description": "Description for Record Video 1",
         "id": "6e1698cb-1f04-461a-bad0-9d24b51bb122",
         "project": "07057501-674f-46cc-b770-a09161c8f296",
-        "tags": [
-            "6ba327fa-efa6-436c-b34d-b56c631aca58"
-        ],
+        "tags": ["6ba327fa-efa6-436c-b34d-b56c631aca58"],
         "tint": null,
         "stack": "03e5af38-1eb2-4e4f-91aa-dd0d6b3d4b39",
         "estimate": 7200,
@@ -53,9 +51,7 @@
         "description": "Description for Record Video 2",
         "id": "3ef5b1c7-7d88-47f9-ac27-135de54e50aa",
         "project": "07057501-674f-46cc-b770-a09161c8f296",
-        "tags": [
-            "e6d28746-b2ab-4081-9d12-5336d2880e2c"
-        ],
+        "tags": ["e6d28746-b2ab-4081-9d12-5336d2880e2c"],
         "tint": "#EF4444",
         "stack": "03e5af38-1eb2-4e4f-91aa-dd0d6b3d4b39",
         "estimate": 3600,
@@ -98,10 +94,7 @@
         "description": "Description for Write Workbook",
         "id": "6d8417ed-caa4-4e30-9ccf-855924ae3737",
         "project": "07057501-674f-46cc-b770-a09161c8f296",
-        "tags": [
-            "13bc7041-894b-442a-9dfe-296ad8982fc0",
-            "06d6b246-112d-49b2-be88-317063a42661"
-        ],
+        "tags": ["13bc7041-894b-442a-9dfe-296ad8982fc0", "06d6b246-112d-49b2-be88-317063a42661"],
         "tint": null,
         "stack": "03e5af38-1eb2-4e4f-91aa-dd0d6b3d4b39",
         "estimate": 18000,
@@ -114,9 +107,7 @@
         "description": "Description for Setup Teachable",
         "id": "dc40aa2f-21df-43b9-ba5d-34d69d2987bb",
         "project": "07057501-674f-46cc-b770-a09161c8f296",
-        "tags": [
-            "6ba327fa-efa6-436c-b34d-b56c631aca58"
-        ],
+        "tags": ["6ba327fa-efa6-436c-b34d-b56c631aca58"],
         "tint": "#EF4444",
         "stack": "03e5af38-1eb2-4e4f-91aa-dd0d6b3d4b39",
         "estimate": 14400,
@@ -146,9 +137,7 @@
         "description": "Description for Create Sales Page",
         "id": "eda6db05-2a47-4b15-adde-78ec6a776689",
         "project": "07057501-674f-46cc-b770-a09161c8f296",
-        "tags": [
-            "0ff4f8ba-5c25-491c-b1ae-37ba6533cb45"
-        ],
+        "tags": ["0ff4f8ba-5c25-491c-b1ae-37ba6533cb45"],
         "tint": "#EF4444",
         "stack": "03e5af38-1eb2-4e4f-91aa-dd0d6b3d4b39",
         "estimate": 25200,
@@ -191,10 +180,7 @@
         "description": "Description for Affiliate Program",
         "id": "beb19675-dee6-4e7d-ac13-d740326a2f9e",
         "project": "07057501-674f-46cc-b770-a09161c8f296",
-        "tags": [
-            "06d6b246-112d-49b2-be88-317063a42661",
-            "0ff4f8ba-5c25-491c-b1ae-37ba6533cb45"
-        ],
+        "tags": ["06d6b246-112d-49b2-be88-317063a42661", "0ff4f8ba-5c25-491c-b1ae-37ba6533cb45"],
         "tint": "#8B5CF6",
         "stack": "03e5af38-1eb2-4e4f-91aa-dd0d6b3d4b39",
         "estimate": 21600,
@@ -207,9 +193,7 @@
         "description": "Description for Student Onboarding",
         "id": "e553ce87-8479-4992-b07e-d90024e18416",
         "project": "07057501-674f-46cc-b770-a09161c8f296",
-        "tags": [
-            "0ff4f8ba-5c25-491c-b1ae-37ba6533cb45"
-        ],
+        "tags": ["0ff4f8ba-5c25-491c-b1ae-37ba6533cb45"],
         "tint": "#EC4899",
         "stack": "03e5af38-1eb2-4e4f-91aa-dd0d6b3d4b39",
         "estimate": 36000,
@@ -222,10 +206,7 @@
         "description": "Description for Community Management",
         "id": "28777633-cbc5-4e18-bd51-2e5b4f4b77a7",
         "project": "07057501-674f-46cc-b770-a09161c8f296",
-        "tags": [
-            "987d6c96-ed52-4a0f-b9e3-a131ea4d5212",
-            "5fd95ae4-6582-4ee9-9af8-9bb383f1283b"
-        ],
+        "tags": ["987d6c96-ed52-4a0f-b9e3-a131ea4d5212", "5fd95ae4-6582-4ee9-9af8-9bb383f1283b"],
         "tint": "#6366F1",
         "stack": "03e5af38-1eb2-4e4f-91aa-dd0d6b3d4b39",
         "estimate": 32400,
@@ -238,9 +219,7 @@
         "description": "Description for Define Learning Outcomes (2)",
         "id": "7e74fb15-18bf-43fa-9769-58109058ec4b",
         "project": "07057501-674f-46cc-b770-a09161c8f296",
-        "tags": [
-            "6ba327fa-efa6-436c-b34d-b56c631aca58"
-        ],
+        "tags": ["6ba327fa-efa6-436c-b34d-b56c631aca58"],
         "tint": "#EC4899",
         "stack": "d064150b-3658-42f3-850d-e8d2b356f5db",
         "estimate": 10800,
@@ -253,10 +232,7 @@
         "description": "Description for Create Slide Deck (2)",
         "id": "a18a31e1-0146-4d5d-8584-5cb7cbfc61c6",
         "project": "07057501-674f-46cc-b770-a09161c8f296",
-        "tags": [
-            "987d6c96-ed52-4a0f-b9e3-a131ea4d5212",
-            "13bc7041-894b-442a-9dfe-296ad8982fc0"
-        ],
+        "tags": ["987d6c96-ed52-4a0f-b9e3-a131ea4d5212", "13bc7041-894b-442a-9dfe-296ad8982fc0"],
         "tint": "#3B82F6",
         "stack": "d064150b-3658-42f3-850d-e8d2b356f5db",
         "estimate": 21600,
@@ -286,10 +262,7 @@
         "description": "Description for Record Video 2 (2)",
         "id": "ae763037-7312-4b48-ac40-c77844d85aa4",
         "project": "07057501-674f-46cc-b770-a09161c8f296",
-        "tags": [
-            "0ff4f8ba-5c25-491c-b1ae-37ba6533cb45",
-            "6ba327fa-efa6-436c-b34d-b56c631aca58"
-        ],
+        "tags": ["0ff4f8ba-5c25-491c-b1ae-37ba6533cb45", "6ba327fa-efa6-436c-b34d-b56c631aca58"],
         "tint": "#06B6D4",
         "stack": "d064150b-3658-42f3-850d-e8d2b356f5db",
         "estimate": 7200,
@@ -345,9 +318,7 @@
         "description": "Description for Setup Teachable (2)",
         "id": "c9d31c14-1f78-4278-864f-527d45efdaa5",
         "project": "07057501-674f-46cc-b770-a09161c8f296",
-        "tags": [
-            "19cac2e3-575e-4928-b30f-b7878545db49"
-        ],
+        "tags": ["19cac2e3-575e-4928-b30f-b7878545db49"],
         "tint": "#EF4444",
         "stack": "d064150b-3658-42f3-850d-e8d2b356f5db",
         "estimate": 32400,
@@ -360,9 +331,7 @@
         "description": "Description for Record Intro (2)",
         "id": "3e633e7b-246c-4b4b-86a8-298fd646cde3",
         "project": "07057501-674f-46cc-b770-a09161c8f296",
-        "tags": [
-            "13bc7041-894b-442a-9dfe-296ad8982fc0"
-        ],
+        "tags": ["13bc7041-894b-442a-9dfe-296ad8982fc0"],
         "tint": null,
         "stack": "d064150b-3658-42f3-850d-e8d2b356f5db",
         "estimate": 14400,
@@ -375,9 +344,7 @@
         "description": "Description for Create Sales Page (2)",
         "id": "428c5d03-ab1d-4ef2-b637-dd24f37d7738",
         "project": "07057501-674f-46cc-b770-a09161c8f296",
-        "tags": [
-            "19cac2e3-575e-4928-b30f-b7878545db49"
-        ],
+        "tags": ["19cac2e3-575e-4928-b30f-b7878545db49"],
         "tint": "#64748B",
         "stack": "d064150b-3658-42f3-850d-e8d2b356f5db",
         "estimate": 10800,
@@ -390,10 +357,7 @@
         "description": "Description for Email Sequence (2)",
         "id": "2b9ac5e7-f2b2-4c8e-9611-0095655770d0",
         "project": "07057501-674f-46cc-b770-a09161c8f296",
-        "tags": [
-            "19cac2e3-575e-4928-b30f-b7878545db49",
-            "e6d28746-b2ab-4081-9d12-5336d2880e2c"
-        ],
+        "tags": ["19cac2e3-575e-4928-b30f-b7878545db49", "e6d28746-b2ab-4081-9d12-5336d2880e2c"],
         "tint": null,
         "stack": "d064150b-3658-42f3-850d-e8d2b356f5db",
         "estimate": 10800,
@@ -406,9 +370,7 @@
         "description": "Description for Webinar Prep (2)",
         "id": "25a6d38c-69df-4a8c-912d-c83caff3b0b1",
         "project": "07057501-674f-46cc-b770-a09161c8f296",
-        "tags": [
-            "6ba327fa-efa6-436c-b34d-b56c631aca58"
-        ],
+        "tags": ["6ba327fa-efa6-436c-b34d-b56c631aca58"],
         "tint": "#64748B",
         "stack": "d064150b-3658-42f3-850d-e8d2b356f5db",
         "estimate": 36000,
@@ -421,10 +383,7 @@
         "description": "Description for Affiliate Program (2)",
         "id": "db86715f-d80e-48a5-892d-2235e5ebe946",
         "project": "07057501-674f-46cc-b770-a09161c8f296",
-        "tags": [
-            "0ff4f8ba-5c25-491c-b1ae-37ba6533cb45",
-            "19cac2e3-575e-4928-b30f-b7878545db49"
-        ],
+        "tags": ["0ff4f8ba-5c25-491c-b1ae-37ba6533cb45", "19cac2e3-575e-4928-b30f-b7878545db49"],
         "tint": "#F97316",
         "stack": "d064150b-3658-42f3-850d-e8d2b356f5db",
         "estimate": 7200,
@@ -437,9 +396,7 @@
         "description": "Description for Student Onboarding (2)",
         "id": "154e36ab-0f53-41f5-8888-fef67b2a8082",
         "project": "07057501-674f-46cc-b770-a09161c8f296",
-        "tags": [
-            "13bc7041-894b-442a-9dfe-296ad8982fc0"
-        ],
+        "tags": ["13bc7041-894b-442a-9dfe-296ad8982fc0"],
         "tint": null,
         "stack": "d064150b-3658-42f3-850d-e8d2b356f5db",
         "estimate": 36000,
@@ -469,9 +426,7 @@
         "description": "Description for Define Learning Outcomes (3)",
         "id": "433dc09d-ead1-40a7-a9a4-deaf0506fec8",
         "project": "07057501-674f-46cc-b770-a09161c8f296",
-        "tags": [
-            "13bc7041-894b-442a-9dfe-296ad8982fc0"
-        ],
+        "tags": ["13bc7041-894b-442a-9dfe-296ad8982fc0"],
         "tint": "#06B6D4",
         "stack": "67e6d466-5c1f-45f3-a3a9-b359461090d7",
         "estimate": 18000,
@@ -484,10 +439,7 @@
         "description": "Description for Create Slide Deck (3)",
         "id": "a15e2f33-5983-4572-9798-e55d6152ae66",
         "project": "07057501-674f-46cc-b770-a09161c8f296",
-        "tags": [
-            "0ff4f8ba-5c25-491c-b1ae-37ba6533cb45",
-            "19cac2e3-575e-4928-b30f-b7878545db49"
-        ],
+        "tags": ["0ff4f8ba-5c25-491c-b1ae-37ba6533cb45", "19cac2e3-575e-4928-b30f-b7878545db49"],
         "tint": "#10B981",
         "stack": "67e6d466-5c1f-45f3-a3a9-b359461090d7",
         "estimate": 14400,
@@ -517,10 +469,7 @@
         "description": "Description for Record Video 2 (3)",
         "id": "ba5b0657-1255-4153-954d-e076ac880091",
         "project": "07057501-674f-46cc-b770-a09161c8f296",
-        "tags": [
-            "06d6b246-112d-49b2-be88-317063a42661",
-            "987d6c96-ed52-4a0f-b9e3-a131ea4d5212"
-        ],
+        "tags": ["06d6b246-112d-49b2-be88-317063a42661", "987d6c96-ed52-4a0f-b9e3-a131ea4d5212"],
         "tint": "#EC4899",
         "stack": "67e6d466-5c1f-45f3-a3a9-b359461090d7",
         "estimate": 28800,
@@ -550,10 +499,7 @@
         "description": "Description for Create Quiz Questions (3)",
         "id": "4539e450-78eb-4d71-b3c2-443b1387ddf3",
         "project": "07057501-674f-46cc-b770-a09161c8f296",
-        "tags": [
-            "19cac2e3-575e-4928-b30f-b7878545db49",
-            "e6d28746-b2ab-4081-9d12-5336d2880e2c"
-        ],
+        "tags": ["19cac2e3-575e-4928-b30f-b7878545db49", "e6d28746-b2ab-4081-9d12-5336d2880e2c"],
         "tint": null,
         "stack": "67e6d466-5c1f-45f3-a3a9-b359461090d7",
         "estimate": 14400,
@@ -566,9 +512,7 @@
         "description": "Description for Write Workbook (3)",
         "id": "45eefcbb-b5a3-4106-a387-2b117dbd2bb6",
         "project": "07057501-674f-46cc-b770-a09161c8f296",
-        "tags": [
-            "6ba327fa-efa6-436c-b34d-b56c631aca58"
-        ],
+        "tags": ["6ba327fa-efa6-436c-b34d-b56c631aca58"],
         "tint": null,
         "stack": "67e6d466-5c1f-45f3-a3a9-b359461090d7",
         "estimate": 3600,
@@ -581,9 +525,7 @@
         "description": "Description for Setup Teachable (3)",
         "id": "1611c2c0-a981-473b-ac59-6d4c27fbee95",
         "project": "07057501-674f-46cc-b770-a09161c8f296",
-        "tags": [
-            "e6d28746-b2ab-4081-9d12-5336d2880e2c"
-        ],
+        "tags": ["e6d28746-b2ab-4081-9d12-5336d2880e2c"],
         "tint": null,
         "stack": "67e6d466-5c1f-45f3-a3a9-b359461090d7",
         "estimate": 18000,
@@ -613,10 +555,7 @@
         "description": "Description for Create Sales Page (3)",
         "id": "e638a0fb-2679-499d-ade4-470ec8ca5f31",
         "project": "07057501-674f-46cc-b770-a09161c8f296",
-        "tags": [
-            "19cac2e3-575e-4928-b30f-b7878545db49",
-            "5fd95ae4-6582-4ee9-9af8-9bb383f1283b"
-        ],
+        "tags": ["19cac2e3-575e-4928-b30f-b7878545db49", "5fd95ae4-6582-4ee9-9af8-9bb383f1283b"],
         "tint": null,
         "stack": "67e6d466-5c1f-45f3-a3a9-b359461090d7",
         "estimate": 32400,
@@ -629,9 +568,7 @@
         "description": "Description for Email Sequence (3)",
         "id": "580c7a97-5b37-4539-9143-c8d5d31cfd25",
         "project": "07057501-674f-46cc-b770-a09161c8f296",
-        "tags": [
-            "5fd95ae4-6582-4ee9-9af8-9bb383f1283b"
-        ],
+        "tags": ["5fd95ae4-6582-4ee9-9af8-9bb383f1283b"],
         "tint": "#6366F1",
         "stack": "cc826ef9-a66d-4215-8b56-11bd28ce8f59",
         "estimate": 32400,
@@ -657,9 +594,7 @@
         "description": "Description for Affiliate Program (3)",
         "id": "d0a89f49-3866-4640-98b1-fa6dd071508e",
         "project": "07057501-674f-46cc-b770-a09161c8f296",
-        "tags": [
-            "06d6b246-112d-49b2-be88-317063a42661"
-        ],
+        "tags": ["06d6b246-112d-49b2-be88-317063a42661"],
         "tint": "#10B981",
         "stack": "cc826ef9-a66d-4215-8b56-11bd28ce8f59",
         "estimate": 21600,
@@ -685,9 +620,7 @@
         "description": "Description for Community Management (3)",
         "id": "f269834e-34c5-4785-bdc3-162fcc8b5847",
         "project": "07057501-674f-46cc-b770-a09161c8f296",
-        "tags": [
-            "e6d28746-b2ab-4081-9d12-5336d2880e2c"
-        ],
+        "tags": ["e6d28746-b2ab-4081-9d12-5336d2880e2c"],
         "tint": null,
         "stack": "cc826ef9-a66d-4215-8b56-11bd28ce8f59",
         "estimate": 32400,
@@ -726,9 +659,7 @@
         "description": "Description for Record Video 1 (4)",
         "id": "79d14ac9-b2b7-42a3-905f-f38cbe62b285",
         "project": "07057501-674f-46cc-b770-a09161c8f296",
-        "tags": [
-            "19cac2e3-575e-4928-b30f-b7878545db49"
-        ],
+        "tags": ["19cac2e3-575e-4928-b30f-b7878545db49"],
         "tint": "#06B6D4",
         "stack": "cc826ef9-a66d-4215-8b56-11bd28ce8f59",
         "estimate": 3600,
@@ -741,9 +672,7 @@
         "description": "Description for Record Video 2 (4)",
         "id": "41c68e4b-5e2f-4907-9df1-b4aed28b73da",
         "project": "07057501-674f-46cc-b770-a09161c8f296",
-        "tags": [
-            "13bc7041-894b-442a-9dfe-296ad8982fc0"
-        ],
+        "tags": ["13bc7041-894b-442a-9dfe-296ad8982fc0"],
         "tint": null,
         "stack": "cc826ef9-a66d-4215-8b56-11bd28ce8f59",
         "estimate": 21600,
@@ -773,9 +702,7 @@
         "description": "Description for Create Quiz Questions (4)",
         "id": "72d78c17-92ea-40c1-b538-852a022d4f26",
         "project": "07057501-674f-46cc-b770-a09161c8f296",
-        "tags": [
-            "6ba327fa-efa6-436c-b34d-b56c631aca58"
-        ],
+        "tags": ["6ba327fa-efa6-436c-b34d-b56c631aca58"],
         "tint": null,
         "stack": "cc826ef9-a66d-4215-8b56-11bd28ce8f59",
         "estimate": 18000,
@@ -788,10 +715,7 @@
         "description": "Description for Write Workbook (4)",
         "id": "8aa968be-e30d-4902-89f4-053b8e0f0dfb",
         "project": "07057501-674f-46cc-b770-a09161c8f296",
-        "tags": [
-            "19cac2e3-575e-4928-b30f-b7878545db49",
-            "5fd95ae4-6582-4ee9-9af8-9bb383f1283b"
-        ],
+        "tags": ["19cac2e3-575e-4928-b30f-b7878545db49", "5fd95ae4-6582-4ee9-9af8-9bb383f1283b"],
         "tint": null,
         "stack": "cc826ef9-a66d-4215-8b56-11bd28ce8f59",
         "estimate": 28800,
@@ -804,9 +728,7 @@
         "description": "Description for Setup Teachable (4)",
         "id": "8eb52c00-98b3-4ecc-abaa-80573217e214",
         "project": "07057501-674f-46cc-b770-a09161c8f296",
-        "tags": [
-            "e6d28746-b2ab-4081-9d12-5336d2880e2c"
-        ],
+        "tags": ["e6d28746-b2ab-4081-9d12-5336d2880e2c"],
         "tint": null,
         "stack": "e21d696a-d4b3-40a7-ad7a-28d209f931d1",
         "estimate": 25200,
@@ -832,10 +754,7 @@
         "description": "Description for Create Sales Page (4)",
         "id": "40d96d79-59a4-4d38-83ee-4a4627f3de2e",
         "project": "07057501-674f-46cc-b770-a09161c8f296",
-        "tags": [
-            "06d6b246-112d-49b2-be88-317063a42661",
-            "e6d28746-b2ab-4081-9d12-5336d2880e2c"
-        ],
+        "tags": ["06d6b246-112d-49b2-be88-317063a42661", "e6d28746-b2ab-4081-9d12-5336d2880e2c"],
         "tint": "#EC4899",
         "stack": "e21d696a-d4b3-40a7-ad7a-28d209f931d1",
         "estimate": 25200,
@@ -848,9 +767,7 @@
         "description": "Description for Email Sequence (4)",
         "id": "e45c3108-77b6-42ac-871c-bcd6ead2651c",
         "project": "07057501-674f-46cc-b770-a09161c8f296",
-        "tags": [
-            "0ff4f8ba-5c25-491c-b1ae-37ba6533cb45"
-        ],
+        "tags": ["0ff4f8ba-5c25-491c-b1ae-37ba6533cb45"],
         "tint": null,
         "stack": "e21d696a-d4b3-40a7-ad7a-28d209f931d1",
         "estimate": 7200,
@@ -880,9 +797,7 @@
         "description": "Description for Affiliate Program (4)",
         "id": "7959c446-c212-4264-bd16-f7618b71760a",
         "project": "07057501-674f-46cc-b770-a09161c8f296",
-        "tags": [
-            "e6d28746-b2ab-4081-9d12-5336d2880e2c"
-        ],
+        "tags": ["e6d28746-b2ab-4081-9d12-5336d2880e2c"],
         "tint": null,
         "stack": "e21d696a-d4b3-40a7-ad7a-28d209f931d1",
         "estimate": 7200,
@@ -895,10 +810,7 @@
         "description": "Description for Student Onboarding (4)",
         "id": "8710ea70-8eab-495d-8f3e-b915840864d8",
         "project": "07057501-674f-46cc-b770-a09161c8f296",
-        "tags": [
-            "13bc7041-894b-442a-9dfe-296ad8982fc0",
-            "06d6b246-112d-49b2-be88-317063a42661"
-        ],
+        "tags": ["13bc7041-894b-442a-9dfe-296ad8982fc0", "06d6b246-112d-49b2-be88-317063a42661"],
         "tint": "#6366F1",
         "stack": "e21d696a-d4b3-40a7-ad7a-28d209f931d1",
         "estimate": 36000,
@@ -911,10 +823,7 @@
         "description": "Description for Community Management (4)",
         "id": "a9c064da-31a4-4f98-8991-6665120928d5",
         "project": "07057501-674f-46cc-b770-a09161c8f296",
-        "tags": [
-            "13bc7041-894b-442a-9dfe-296ad8982fc0",
-            "0ff4f8ba-5c25-491c-b1ae-37ba6533cb45"
-        ],
+        "tags": ["13bc7041-894b-442a-9dfe-296ad8982fc0", "0ff4f8ba-5c25-491c-b1ae-37ba6533cb45"],
         "tint": "#F97316",
         "stack": "e21d696a-d4b3-40a7-ad7a-28d209f931d1",
         "estimate": 28800,
@@ -944,10 +853,7 @@
         "description": "Description for Create Slide Deck (5)",
         "id": "2e46d13c-be32-4321-803e-abc92f435a80",
         "project": "07057501-674f-46cc-b770-a09161c8f296",
-        "tags": [
-            "987d6c96-ed52-4a0f-b9e3-a131ea4d5212",
-            "e6d28746-b2ab-4081-9d12-5336d2880e2c"
-        ],
+        "tags": ["987d6c96-ed52-4a0f-b9e3-a131ea4d5212", "e6d28746-b2ab-4081-9d12-5336d2880e2c"],
         "tint": null,
         "stack": "e21d696a-d4b3-40a7-ad7a-28d209f931d1",
         "estimate": 3600,
@@ -960,9 +866,7 @@
         "description": "Description for Record Video 1 (5)",
         "id": "e5499fe7-c916-4ed0-9485-1a993bc53619",
         "project": "07057501-674f-46cc-b770-a09161c8f296",
-        "tags": [
-            "5fd95ae4-6582-4ee9-9af8-9bb383f1283b"
-        ],
+        "tags": ["5fd95ae4-6582-4ee9-9af8-9bb383f1283b"],
         "tint": "#F97316",
         "stack": "e21d696a-d4b3-40a7-ad7a-28d209f931d1",
         "estimate": 14400,

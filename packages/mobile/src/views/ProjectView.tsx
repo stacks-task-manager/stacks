@@ -175,16 +175,12 @@ export function ProjectView({
                 title: "Reorder columns",
                 headerLeft: () => (
                     <Pressable onPress={exitReorder} className="px-3 py-1">
-                        <Text className="text-typography-600">
-                            Cancel
-                        </Text>
+                        <Text className="text-typography-600">Cancel</Text>
                     </Pressable>
                 ),
                 headerRight: () => (
                     <Pressable onPress={() => void confirmReorder()} className="px-3 py-1">
-                        <Text className="text-primary-600 font-bold">
-                            Done
-                        </Text>
+                        <Text className="text-primary-600 font-bold">Done</Text>
                     </Pressable>
                 ),
             });
@@ -205,56 +201,47 @@ export function ProjectView({
                   {
                       label: "Overview",
                       icon: "overview-view",
-                      onPress: () =>
-                          router.push(`/(app)/project-overview/${projectId}` as never),
+                      onPress: () => router.push(`/(app)/project-overview/${projectId}` as never),
                   },
                   {
                       label: "Table",
                       icon: "list-view",
-                      onPress: () =>
-                          router.push(`/(app)/project-table/${projectId}` as never),
+                      onPress: () => router.push(`/(app)/project-table/${projectId}` as never),
                   },
                   {
                       label: "Time",
                       icon: "clock-stopwatch",
-                      onPress: () =>
-                          router.push(`/(app)/project-time/${projectId}` as never),
+                      onPress: () => router.push(`/(app)/project-time/${projectId}` as never),
                   },
                   {
                       label: "Attachments",
                       icon: "attachment-02",
-                      onPress: () =>
-                          router.push(`/(app)/project-attachments/${projectId}` as never),
+                      onPress: () => router.push(`/(app)/project-attachments/${projectId}` as never),
                   },
                   {
                       label: "Board Overview",
                       icon: "board-view",
-                      onPress: () =>
-                          router.push(`/(app)/project-board-overview/${projectId}` as never),
+                      onPress: () => router.push(`/(app)/project-board-overview/${projectId}` as never),
                   },
                   {
                       label: "Notes",
                       icon: "book-closed",
-                      onPress: () =>
-                          router.push(`/(app)/project-notes/${projectId}` as never),
+                      onPress: () => router.push(`/(app)/project-notes/${projectId}` as never),
                   },
                   {
                       label: "Links",
                       icon: "link-01",
-                      onPress: () =>
-                          router.push(`/(app)/project-links/${projectId}` as never),
+                      onPress: () => router.push(`/(app)/project-links/${projectId}` as never),
                   },
                   {
                       label: "Map",
                       icon: "map-view",
-                      onPress: () =>
-                          router.push(`/(app)/project-map/${projectId}` as never),
+                      onPress: () => router.push(`/(app)/project-map/${projectId}` as never),
                   },
                   {
                       label: "World",
                       icon: "map-view",
-                      onPress: () =>
-                          router.push(`/(app)/project-world/${projectId}` as never),
+                      onPress: () => router.push(`/(app)/project-world/${projectId}` as never),
                   },
               ]
             : [];
@@ -266,8 +253,7 @@ export function ProjectView({
                   {
                       label: "Project settings",
                       icon: "settings-02",
-                      onPress: () =>
-                          router.push(`/(modals)/project-settings/${projectId}` as never),
+                      onPress: () => router.push(`/(modals)/project-settings/${projectId}` as never),
                   },
                   { type: "divider" },
                   {
@@ -275,17 +261,13 @@ export function ProjectView({
                       icon: "trash",
                       tone: "danger",
                       onPress: () =>
-                          confirmDelete(
-                              "Delete project",
-                              `Delete “${title}” and its data?`,
-                              async () => {
-                                  await deleteDocument(projectId);
-                                  await queryClient.invalidateQueries({
-                                      queryKey: ["documents"],
-                                  });
-                                  router.replace("/(app)" as never);
-                              }
-                          ),
+                          confirmDelete("Delete project", `Delete “${title}” and its data?`, async () => {
+                              await deleteDocument(projectId);
+                              await queryClient.invalidateQueries({
+                                  queryKey: ["documents"],
+                              });
+                              router.replace("/(app)" as never);
+                          }),
                   },
               ]
             : null;
@@ -341,10 +323,7 @@ export function ProjectView({
     const columnHeight = Math.max(0, boardHeight - 16);
 
     return (
-        <Box
-            className="flex-1 bg-background-100"
-            onLayout={e => setBoardHeight(e.nativeEvent.layout.height)}
-        >
+        <Box className="flex-1 bg-background-100" onLayout={e => setBoardHeight(e.nativeEvent.layout.height)}>
             <RNScrollView
                 ref={scrollRef}
                 horizontal
@@ -388,7 +367,9 @@ export function ProjectView({
                             }}
                         >
                             <Box
-                                className={`bg-background-200 rounded-lg p-2.5 overflow-hidden ${isActive ? "border-2 border-primary-500" : ""}`}
+                                className={`bg-background-200 rounded-lg p-2.5 overflow-hidden ${
+                                    isActive ? "border-2 border-primary-500" : ""
+                                }`}
                                 style={{
                                     flexGrow: 2,
                                     flexShrink: 1,
@@ -439,10 +420,7 @@ export function ProjectView({
                                                 <Text size="2xs" className="text-typography-500">
                                                     Position
                                                 </Text>
-                                                <Text
-                                                    size="xl"
-                                                    className="font-bold text-typography-900"
-                                                >
+                                                <Text size="xl" className="font-bold text-typography-900">
                                                     {index + 1}
                                                 </Text>
                                             </VStack>
@@ -464,9 +442,7 @@ export function ProjectView({
                                             <TaskCard
                                                 key={item.id}
                                                 task={item}
-                                                onPress={t =>
-                                                    router.push(`/(modals)/task/${t.id}` as never)
-                                                }
+                                                onPress={t => router.push(`/(modals)/task/${t.id}` as never)}
                                                 onLongPress={t => setMoveTarget(t)}
                                             />
                                         ))}
@@ -485,9 +461,7 @@ export function ProjectView({
                                     className="mt-2 py-2.5 rounded-md items-center border border-outline-300 active:opacity-70"
                                     style={{ borderStyle: "dashed" }}
                                 >
-                                    <Text className="text-primary-600 font-semibold">
-                                        + Add task
-                                    </Text>
+                                    <Text className="text-primary-600 font-semibold">+ Add task</Text>
                                 </Pressable>
                             ) : null}
                         </VStack>
@@ -548,7 +522,9 @@ function ReorderArrow({
         <Pressable
             onPress={disabled ? undefined : onPress}
             disabled={disabled}
-            className={`rounded-full items-center justify-center ${disabled ? "bg-background-200" : "bg-primary-500"} ${disabled ? "opacity-40" : "active:opacity-75"}`}
+            className={`rounded-full items-center justify-center ${
+                disabled ? "bg-background-200" : "bg-primary-500"
+            } ${disabled ? "opacity-40" : "active:opacity-75"}`}
             style={{
                 width: 56,
                 height: 56,

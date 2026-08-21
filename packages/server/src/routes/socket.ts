@@ -487,7 +487,7 @@ const sendMessageToUser = (
         let successCount = 0;
         let failureCount = 0;
 
-        userConnectionIds.forEach((connectionId) => {
+        userConnectionIds.forEach(connectionId => {
             const conn = connections.get(connectionId);
             if (!conn) {
                 console.warn(`Connection ${connectionId} not found for user ${userId}`);
@@ -507,9 +507,7 @@ const sendMessageToUser = (
             }
         });
 
-        console.log(
-            `Message to user ${userId}: ${successCount} delivered, ${failureCount} failed`
-        );
+        console.log(`Message to user ${userId}: ${successCount} delivered, ${failureCount} failed`);
 
         return successCount > 0;
     } catch (error) {
@@ -812,9 +810,13 @@ export const registerSocket = (app: Hono) => {
                     // Send to specific user
                     const success = sendMessageToUser(payload.targetUserId, "update", payload);
                     if (success) {
-                        console.log(`Real-time update sent to user ${payload.targetUserId}: ${payload.type}/${payload.action}`);
+                        console.log(
+                            `Real-time update sent to user ${payload.targetUserId}: ${payload.type}/${payload.action}`
+                        );
                     } else {
-                        console.log(`Failed to send real-time update to user ${payload.targetUserId}: no active connections`);
+                        console.log(
+                            `Failed to send real-time update to user ${payload.targetUserId}: no active connections`
+                        );
                     }
                 } else {
                     // Broadcast to all users (existing behavior)

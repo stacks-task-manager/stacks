@@ -43,9 +43,7 @@
         "description": "Detailed description for \"Update Patient Records\". This task involves several steps and requires attention to detail.",
         "id": "f071c185-6990-4359-bd88-8123f45dba64",
         "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
-        "tags": [
-            "9b1f60af-df45-4b85-a217-235640f23e52"
-        ],
+        "tags": ["9b1f60af-df45-4b85-a217-235640f23e52"],
         "tint": "#64748B",
         "stack": "aee75166-29f2-4be6-bcad-a599b8da5f0f",
         "estimate": 36000,
@@ -97,10 +95,7 @@
         "description": "Detailed description for \"Insurance Claim\". This task involves several steps and requires attention to detail.",
         "id": "7b49d270-d472-4b4e-a310-72a2d8997c1d",
         "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
-        "tags": [
-            "dc756809-7ae7-497d-baac-d30cc3c0e7d8",
-            "b5287e25-fb9b-4c9c-ace8-1be2b7491b20"
-        ],
+        "tags": ["dc756809-7ae7-497d-baac-d30cc3c0e7d8", "b5287e25-fb9b-4c9c-ace8-1be2b7491b20"],
         "tint": "#64748B",
         "stack": "aee75166-29f2-4be6-bcad-a599b8da5f0f",
         "estimate": 61200,
@@ -113,9 +108,7 @@
         "description": "Detailed description for \"New Patient Intake\". This task involves several steps and requires attention to detail.",
         "id": "faeadd93-0aec-4a60-9d6c-9a7ca1ff5445",
         "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
-        "tags": [
-            "9b1f60af-df45-4b85-a217-235640f23e52"
-        ],
+        "tags": ["9b1f60af-df45-4b85-a217-235640f23e52"],
         "tint": "#64748B",
         "stack": "aee75166-29f2-4be6-bcad-a599b8da5f0f",
         "estimate": 54000,
@@ -128,9 +121,7 @@
         "description": "Detailed description for \"Verify Insurance Eligibility\". This task involves several steps and requires attention to detail.",
         "id": "89a171e8-c7ad-4f35-ac70-47546a027f47",
         "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
-        "tags": [
-            "7dc1ea5c-ed61-4675-9f44-aefd52c14a56"
-        ],
+        "tags": ["7dc1ea5c-ed61-4675-9f44-aefd52c14a56"],
         "tint": "#64748B",
         "stack": "aee75166-29f2-4be6-bcad-a599b8da5f0f",
         "estimate": 54000,
@@ -156,10 +147,7 @@
         "description": "Detailed description for \"Schedule Follow-up\". This task involves several steps and requires attention to detail.",
         "id": "1492e053-ca27-46e3-95e2-79ad1562cfc3",
         "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
-        "tags": [
-            "7dc1ea5c-ed61-4675-9f44-aefd52c14a56",
-            "9b1f60af-df45-4b85-a217-235640f23e52"
-        ],
+        "tags": ["7dc1ea5c-ed61-4675-9f44-aefd52c14a56", "9b1f60af-df45-4b85-a217-235640f23e52"],
         "tint": "#3B82F6",
         "stack": "40a26e02-8f01-4b95-81bf-1994672dc875",
         "estimate": 46800,
@@ -172,9 +160,7 @@
         "description": "Detailed description for \"Referral Letter - Cardiology\". This task involves several steps and requires attention to detail.",
         "id": "92e2a2e0-8c73-49db-b932-0f150f1002fe",
         "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
-        "tags": [
-            "dc756809-7ae7-497d-baac-d30cc3c0e7d8"
-        ],
+        "tags": ["dc756809-7ae7-497d-baac-d30cc3c0e7d8"],
         "tint": "#3B82F6",
         "stack": "40a26e02-8f01-4b95-81bf-1994672dc875",
         "estimate": 36000,
@@ -200,9 +186,7 @@
         "description": "Detailed description for \"Lab Result Analysis\". This task involves several steps and requires attention to detail.",
         "id": "a424bc4a-c7fd-4d65-b25d-717085d6664f",
         "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
-        "tags": [
-            "dc756809-7ae7-497d-baac-d30cc3c0e7d8"
-        ],
+        "tags": ["dc756809-7ae7-497d-baac-d30cc3c0e7d8"],
         "tint": "#3B82F6",
         "stack": "40a26e02-8f01-4b95-81bf-1994672dc875",
         "estimate": 3600,
@@ -228,9 +212,7 @@
         "description": "Detailed description for \"MRI Report Assessment\". This task involves several steps and requires attention to detail.",
         "id": "3f7802c1-03da-4e02-94f4-d14823f0ae52",
         "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
-        "tags": [
-            "b5287e25-fb9b-4c9c-ace8-1be2b7491b20"
-        ],
+        "tags": ["b5287e25-fb9b-4c9c-ace8-1be2b7491b20"],
         "tint": "#3B82F6",
         "stack": "40a26e02-8f01-4b95-81bf-1994672dc875",
         "estimate": 43200,
@@ -243,9 +225,7 @@
         "description": "Detailed description for \"CT Scan Consultation\". This task involves several steps and requires attention to detail.",
         "id": "c2d46614-04af-4d76-8a44-39dc92f759e8",
         "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
-        "tags": [
-            "dc756809-7ae7-497d-baac-d30cc3c0e7d8"
-        ],
+        "tags": ["dc756809-7ae7-497d-baac-d30cc3c0e7d8"],
         "tint": "#3B82F6",
         "stack": "40a26e02-8f01-4b95-81bf-1994672dc875",
         "estimate": 50400,
@@ -258,10 +238,7 @@
         "description": "Detailed description for \"Telehealth Appointment\". This task involves several steps and requires attention to detail.",
         "id": "bc08b7dd-631f-4039-b9ac-e72c246c3346",
         "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
-        "tags": [
-            "dc756809-7ae7-497d-baac-d30cc3c0e7d8",
-            "b5287e25-fb9b-4c9c-ace8-1be2b7491b20"
-        ],
+        "tags": ["dc756809-7ae7-497d-baac-d30cc3c0e7d8", "b5287e25-fb9b-4c9c-ace8-1be2b7491b20"],
         "tint": "#3B82F6",
         "stack": "40a26e02-8f01-4b95-81bf-1994672dc875",
         "estimate": 72000,
@@ -274,10 +251,7 @@
         "description": "Detailed description for \"Walk-in Patient Triage\". This task involves several steps and requires attention to detail.",
         "id": "f51543d3-9215-4d4f-ad44-d4cd4ec16c7a",
         "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
-        "tags": [
-            "7dc1ea5c-ed61-4675-9f44-aefd52c14a56",
-            "dc756809-7ae7-497d-baac-d30cc3c0e7d8"
-        ],
+        "tags": ["7dc1ea5c-ed61-4675-9f44-aefd52c14a56", "dc756809-7ae7-497d-baac-d30cc3c0e7d8"],
         "tint": "#3B82F6",
         "stack": "40a26e02-8f01-4b95-81bf-1994672dc875",
         "estimate": 54000,
@@ -303,9 +277,7 @@
         "description": "Detailed description for \"Restock Medical Supplies\". This task involves several steps and requires attention to detail.",
         "id": "eaf1fe8b-9735-438b-8836-3f1056233a05",
         "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
-        "tags": [
-            "9b1f60af-df45-4b85-a217-235640f23e52"
-        ],
+        "tags": ["9b1f60af-df45-4b85-a217-235640f23e52"],
         "tint": "#F59E0B",
         "stack": "fa5d0a33-da5c-4bf9-a291-096731d54684",
         "estimate": 39600,
@@ -318,9 +290,7 @@
         "description": "Detailed description for \"Check Expiry Dates on Meds\". This task involves several steps and requires attention to detail.",
         "id": "a402ba34-c94b-46a3-b536-7bd231517600",
         "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
-        "tags": [
-            "dc756809-7ae7-497d-baac-d30cc3c0e7d8"
-        ],
+        "tags": ["dc756809-7ae7-497d-baac-d30cc3c0e7d8"],
         "tint": "#F59E0B",
         "stack": "fa5d0a33-da5c-4bf9-a291-096731d54684",
         "estimate": 18000,
@@ -333,10 +303,7 @@
         "description": "Detailed description for \"Calibrate Equipment\". This task involves several steps and requires attention to detail.",
         "id": "70706b6f-b96b-48a1-8944-d2af40d65b53",
         "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
-        "tags": [
-            "7dc1ea5c-ed61-4675-9f44-aefd52c14a56",
-            "dc756809-7ae7-497d-baac-d30cc3c0e7d8"
-        ],
+        "tags": ["7dc1ea5c-ed61-4675-9f44-aefd52c14a56", "dc756809-7ae7-497d-baac-d30cc3c0e7d8"],
         "tint": "#F59E0B",
         "stack": "fa5d0a33-da5c-4bf9-a291-096731d54684",
         "estimate": 61200,
@@ -375,9 +342,7 @@
         "description": "Detailed description for \"HIPAA Compliance Audit\". This task involves several steps and requires attention to detail.",
         "id": "2da38d29-09c6-4b84-a60b-37e76f132790",
         "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
-        "tags": [
-            "7dc1ea5c-ed61-4675-9f44-aefd52c14a56"
-        ],
+        "tags": ["7dc1ea5c-ed61-4675-9f44-aefd52c14a56"],
         "tint": "#F59E0B",
         "stack": "fa5d0a33-da5c-4bf9-a291-096731d54684",
         "estimate": 72000,
@@ -390,9 +355,7 @@
         "description": "Detailed description for \"Staff Training Session\". This task involves several steps and requires attention to detail.",
         "id": "25c09d99-7d52-4bf1-ae16-e09f8766749b",
         "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
-        "tags": [
-            "b5287e25-fb9b-4c9c-ace8-1be2b7491b20"
-        ],
+        "tags": ["b5287e25-fb9b-4c9c-ace8-1be2b7491b20"],
         "tint": "#F59E0B",
         "stack": "fa5d0a33-da5c-4bf9-a291-096731d54684",
         "estimate": 10800,
@@ -405,10 +368,7 @@
         "description": "Detailed description for \"Review Medical Journals\". This task involves several steps and requires attention to detail.",
         "id": "97f73db1-81b3-4f5e-8b16-3f040c8fd716",
         "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
-        "tags": [
-            "7dc1ea5c-ed61-4675-9f44-aefd52c14a56",
-            "dc756809-7ae7-497d-baac-d30cc3c0e7d8"
-        ],
+        "tags": ["7dc1ea5c-ed61-4675-9f44-aefd52c14a56", "dc756809-7ae7-497d-baac-d30cc3c0e7d8"],
         "tint": "#F59E0B",
         "stack": "fa5d0a33-da5c-4bf9-a291-096731d54684",
         "estimate": 64800,
@@ -421,9 +381,7 @@
         "description": "Detailed description for \"Case Study Discussion\". This task involves several steps and requires attention to detail.",
         "id": "abbd9f78-3f5c-4487-9835-f2051137c9c5",
         "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
-        "tags": [
-            "9b1f60af-df45-4b85-a217-235640f23e52"
-        ],
+        "tags": ["9b1f60af-df45-4b85-a217-235640f23e52"],
         "tint": "#F59E0B",
         "stack": "fa5d0a33-da5c-4bf9-a291-096731d54684",
         "estimate": 28800,
@@ -436,9 +394,7 @@
         "description": "Detailed description for \"Draft Medical Report\". This task involves several steps and requires attention to detail.",
         "id": "ef9af0b4-7030-4d1d-8331-bff3228161cb",
         "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
-        "tags": [
-            "b5287e25-fb9b-4c9c-ace8-1be2b7491b20"
-        ],
+        "tags": ["b5287e25-fb9b-4c9c-ace8-1be2b7491b20"],
         "tint": "#F59E0B",
         "stack": "fa5d0a33-da5c-4bf9-a291-096731d54684",
         "estimate": 54000,
@@ -451,10 +407,7 @@
         "description": "Detailed description for \"Sign Off Lab Orders\". This task involves several steps and requires attention to detail.",
         "id": "8664eefe-f57e-4dd6-ad3c-d5e6effeb937",
         "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
-        "tags": [
-            "dc756809-7ae7-497d-baac-d30cc3c0e7d8",
-            "b5287e25-fb9b-4c9c-ace8-1be2b7491b20"
-        ],
+        "tags": ["dc756809-7ae7-497d-baac-d30cc3c0e7d8", "b5287e25-fb9b-4c9c-ace8-1be2b7491b20"],
         "tint": "#F59E0B",
         "stack": "fa5d0a33-da5c-4bf9-a291-096731d54684",
         "estimate": 28800,
@@ -480,9 +433,7 @@
         "description": "Detailed description for \"Patient Education Session\". This task involves several steps and requires attention to detail.",
         "id": "ff33c21a-9464-4bbd-9395-a485eaddf2e7",
         "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
-        "tags": [
-            "7dc1ea5c-ed61-4675-9f44-aefd52c14a56"
-        ],
+        "tags": ["7dc1ea5c-ed61-4675-9f44-aefd52c14a56"],
         "tint": "#F59E0B",
         "stack": "fa5d0a33-da5c-4bf9-a291-096731d54684",
         "estimate": 18000,
@@ -547,9 +498,7 @@
         "description": "Detailed description for \"Chronic Disease Management\". This task involves several steps and requires attention to detail.",
         "id": "517f080f-5948-49ce-8b44-5af0828a1330",
         "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
-        "tags": [
-            "dc756809-7ae7-497d-baac-d30cc3c0e7d8"
-        ],
+        "tags": ["dc756809-7ae7-497d-baac-d30cc3c0e7d8"],
         "tint": "#8B5CF6",
         "stack": "ddb1f78e-5e4a-4bc3-8b1f-f2851fab9b15",
         "estimate": 10800,
@@ -562,10 +511,7 @@
         "description": "Detailed description for \"Pain Management Consult\". This task involves several steps and requires attention to detail.",
         "id": "38fd37d2-7cbd-463c-9016-fb6d4c131786",
         "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
-        "tags": [
-            "9b1f60af-df45-4b85-a217-235640f23e52",
-            "dc756809-7ae7-497d-baac-d30cc3c0e7d8"
-        ],
+        "tags": ["9b1f60af-df45-4b85-a217-235640f23e52", "dc756809-7ae7-497d-baac-d30cc3c0e7d8"],
         "tint": "#8B5CF6",
         "stack": "ddb1f78e-5e4a-4bc3-8b1f-f2851fab9b15",
         "estimate": 39600,
@@ -578,9 +524,7 @@
         "description": "Detailed description for \"Flu Shot Clinic\". This task involves several steps and requires attention to detail.",
         "id": "ef6dc3af-bc82-4087-899a-044066ff2d12",
         "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
-        "tags": [
-            "b5287e25-fb9b-4c9c-ace8-1be2b7491b20"
-        ],
+        "tags": ["b5287e25-fb9b-4c9c-ace8-1be2b7491b20"],
         "tint": "#8B5CF6",
         "stack": "ddb1f78e-5e4a-4bc3-8b1f-f2851fab9b15",
         "estimate": 46800,
@@ -619,10 +563,7 @@
         "description": "Detailed description for \"Suture Removal\". This task involves several steps and requires attention to detail.",
         "id": "34405520-ea78-4617-80b6-341cecaa2814",
         "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
-        "tags": [
-            "b5287e25-fb9b-4c9c-ace8-1be2b7491b20",
-            "dc756809-7ae7-497d-baac-d30cc3c0e7d8"
-        ],
+        "tags": ["b5287e25-fb9b-4c9c-ace8-1be2b7491b20", "dc756809-7ae7-497d-baac-d30cc3c0e7d8"],
         "tint": "#8B5CF6",
         "stack": "ddb1f78e-5e4a-4bc3-8b1f-f2851fab9b15",
         "estimate": 39600,
@@ -635,10 +576,7 @@
         "description": "Detailed description for \"Cast Application\". This task involves several steps and requires attention to detail.",
         "id": "1b6b83fa-5d3b-4205-bcb0-06a3fc0d0b75",
         "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
-        "tags": [
-            "9b1f60af-df45-4b85-a217-235640f23e52",
-            "7dc1ea5c-ed61-4675-9f44-aefd52c14a56"
-        ],
+        "tags": ["9b1f60af-df45-4b85-a217-235640f23e52", "7dc1ea5c-ed61-4675-9f44-aefd52c14a56"],
         "tint": "#8B5CF6",
         "stack": "ddb1f78e-5e4a-4bc3-8b1f-f2851fab9b15",
         "estimate": 7200,
@@ -651,9 +589,7 @@
         "description": "Detailed description for \"Splint Adjustment\". This task involves several steps and requires attention to detail.",
         "id": "69375899-a994-433e-9eb2-845f74bebe40",
         "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
-        "tags": [
-            "b5287e25-fb9b-4c9c-ace8-1be2b7491b20"
-        ],
+        "tags": ["b5287e25-fb9b-4c9c-ace8-1be2b7491b20"],
         "tint": "#10B981",
         "stack": "4f112cf9-569b-457a-a4a3-05eec0d80717",
         "estimate": 7200,
@@ -705,9 +641,7 @@
         "description": "Detailed description for \"Mental Health Screening\". This task involves several steps and requires attention to detail.",
         "id": "6b95d0b2-8971-457f-a7b7-9dc5c49ed080",
         "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
-        "tags": [
-            "b5287e25-fb9b-4c9c-ace8-1be2b7491b20"
-        ],
+        "tags": ["b5287e25-fb9b-4c9c-ace8-1be2b7491b20"],
         "tint": "#10B981",
         "stack": "4f112cf9-569b-457a-a4a3-05eec0d80717",
         "estimate": 10800,
@@ -720,9 +654,7 @@
         "description": "Detailed description for \"Prescription Authorization\". This task involves several steps and requires attention to detail.",
         "id": "6b36cd19-83fd-4a90-9ff5-366e34b6987a",
         "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
-        "tags": [
-            "9b1f60af-df45-4b85-a217-235640f23e52"
-        ],
+        "tags": ["9b1f60af-df45-4b85-a217-235640f23e52"],
         "tint": "#10B981",
         "stack": "4f112cf9-569b-457a-a4a3-05eec0d80717",
         "estimate": 10800,
@@ -735,9 +667,7 @@
         "description": "Detailed description for \"Pharmacy Consultation\". This task involves several steps and requires attention to detail.",
         "id": "67703205-f095-4919-96b5-8ec941a6696e",
         "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
-        "tags": [
-            "7dc1ea5c-ed61-4675-9f44-aefd52c14a56"
-        ],
+        "tags": ["7dc1ea5c-ed61-4675-9f44-aefd52c14a56"],
         "tint": "#10B981",
         "stack": "4f112cf9-569b-457a-a4a3-05eec0d80717",
         "estimate": 21600,
@@ -763,10 +693,7 @@
         "description": "Detailed description for \"Submit Medicare Claims\". This task involves several steps and requires attention to detail.",
         "id": "32dc5150-7afa-492e-be18-72b947a81c74",
         "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
-        "tags": [
-            "b5287e25-fb9b-4c9c-ace8-1be2b7491b20",
-            "dc756809-7ae7-497d-baac-d30cc3c0e7d8"
-        ],
+        "tags": ["b5287e25-fb9b-4c9c-ace8-1be2b7491b20", "dc756809-7ae7-497d-baac-d30cc3c0e7d8"],
         "tint": "#10B981",
         "stack": "4f112cf9-569b-457a-a4a3-05eec0d80717",
         "estimate": 68400,
@@ -779,9 +706,7 @@
         "description": "Detailed description for \"Update Fee Schedule\". This task involves several steps and requires attention to detail.",
         "id": "e8d588c3-36bb-4213-bbb9-943f39d5ed5b",
         "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
-        "tags": [
-            "b5287e25-fb9b-4c9c-ace8-1be2b7491b20"
-        ],
+        "tags": ["b5287e25-fb9b-4c9c-ace8-1be2b7491b20"],
         "tint": "#10B981",
         "stack": "4f112cf9-569b-457a-a4a3-05eec0d80717",
         "estimate": 28800,
@@ -794,9 +719,7 @@
         "description": "Detailed description for \"Patient Smith - Annual Checkup (2)\". This task involves several steps and requires attention to detail.",
         "id": "5de0daf7-0bfd-4757-9419-d867111c7e73",
         "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
-        "tags": [
-            "7dc1ea5c-ed61-4675-9f44-aefd52c14a56"
-        ],
+        "tags": ["7dc1ea5c-ed61-4675-9f44-aefd52c14a56"],
         "tint": "#10B981",
         "stack": "4f112cf9-569b-457a-a4a3-05eec0d80717",
         "estimate": 36000,
@@ -809,10 +732,7 @@
         "description": "Detailed description for \"Review Blood Work - Doe (2)\". This task involves several steps and requires attention to detail.",
         "id": "b1d3a4a0-a864-498b-807a-ccfcd7dd278d",
         "project": "b9ac3f96-6ed3-437a-aa3b-30d342c5f7ac",
-        "tags": [
-            "7dc1ea5c-ed61-4675-9f44-aefd52c14a56",
-            "9b1f60af-df45-4b85-a217-235640f23e52"
-        ],
+        "tags": ["7dc1ea5c-ed61-4675-9f44-aefd52c14a56", "9b1f60af-df45-4b85-a217-235640f23e52"],
         "tint": "#10B981",
         "stack": "4f112cf9-569b-457a-a4a3-05eec0d80717",
         "estimate": 10800,

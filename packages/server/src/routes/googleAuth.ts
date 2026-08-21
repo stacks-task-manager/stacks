@@ -2,15 +2,15 @@
 /**
  * Google Calendar OAuth helpers: URL, callback HTML, token status, disconnect, calendar list.
  */
-import { Hono } from 'hono';
-import type { Context } from 'hono';
+import { Hono } from "hono";
+import type { Context } from "hono";
 import { translate } from "@stacks/translations";
 import { POLLINGACTIONS, POLLINGTYPE } from "@stacks/types";
-import { postMessageTargetOrigin } from '../config/postMessageOrigin';
+import { postMessageTargetOrigin } from "../config/postMessageOrigin";
 import { sendRealtimeUpdateToUser } from "../events";
-import { requireAuth } from '../middleware/auth';
-import googleOAuthService from '../services/googleOAuthService';
-import type { User } from '../types/user';
+import { requireAuth } from "../middleware/auth";
+import googleOAuthService from "../services/googleOAuthService";
+import type { User } from "../types/user";
 
 const googleAuth = new Hono();
 
@@ -50,13 +50,13 @@ const popupHtml = (targetOrigin: string, payload: Record<string, unknown>, messa
 /**
  * Get Google OAuth authorization URL
  */
-googleAuth.get('/auth-url', requireAuth, async (c) => {
+googleAuth.get("/auth-url", requireAuth, async c => {
     try {
         const authUrl = googleOAuthService.getAuthUrl();
         return c.replySuccess({ authUrl });
     } catch (error) {
-        console.error('Error generating auth URL:', error);
-        return c.json({ error: 'Failed to generate authorization URL' }, 500);
+        console.error("Error generating auth URL:", error);
+        return c.json({ error: "Failed to generate authorization URL" }, 500);
     }
 });
 
@@ -72,8 +72,8 @@ const handleCallback = async (c: Context, code?: string, error?: string) => {
             );
         }
 
-        const user = c.get('user') as User;
-        if (!code) return c.json({ error: 'Authorization code is required' }, 400);
+        const user = c.get("user") as User;
+        if (!code) return c.json({ error: "Authorization code is required" }, 400);
 
         // Exchange code for tokens
         const tokens = await googleOAuthService.getTokens(code);
@@ -90,7 +90,7 @@ const handleCallback = async (c: Context, code?: string, error?: string) => {
             )
         );
     } catch (error) {
-        console.error('Error in Google OAuth callback:', error);
+        console.error("Error in Google OAuth callback:", error);
 
         return c.html(
             popupHtml(
@@ -102,13 +102,13 @@ const handleCallback = async (c: Context, code?: string, error?: string) => {
     }
 };
 
-googleAuth.get('/callback', requireAuth, async (c: Context) => {
+googleAuth.get("/callback", requireAuth, async (c: Context) => {
     const code = c.req.query("code");
     const error = c.req.query("error");
     return await handleCallback(c, code, error);
 });
 
-googleAuth.post('/callback', requireAuth, async (c: Context) => {
+googleAuth.post("/callback", requireAuth, async (c: Context) => {
     const { code } = await c.req.json();
     return await handleCallback(c, code);
 });
@@ -116,17 +116,17 @@ googleAuth.post('/callback', requireAuth, async (c: Context) => {
 /**
  * Check Google authentication status
  */
-googleAuth.get('/status', requireAuth, async (c) => {
+googleAuth.get("/status", requireAuth, async c => {
     try {
-        const user = c.get('user') as User;
+        const user = c.get("user") as User;
         const hasValidTokens = await googleOAuthService.hasValidTokens(user.id);
 
         return c.replySuccess({
             isAuthenticated: hasValidTokens,
-            provider: 'google',
+            provider: "google",
         });
     } catch (error) {
-        console.error('Error checking Google auth status:', error);
+        console.error("Error checking Google auth status:", error);
         return c.replyError(new Error(translate("Google auth check failed")));
     }
 });
@@ -136,26 +136,26 @@ googleAuth.get('/status', requireAuth, async (c) => {
  */
 const handleDisconnect = async (c: Context) => {
     try {
-        const user = c.get('user') as User;
+        const user = c.get("user") as User;
         await googleOAuthService.removeTokens(user.id);
         sendGoogleCalendarAuthUpdate(user.id);
 
-        return c.replySuccess({ disconnected: true }, 'Google account disconnected successfully');
+        return c.replySuccess({ disconnected: true }, "Google account disconnected successfully");
     } catch (error) {
-        console.error('Error disconnecting Google account:', error);
-        return c.json({ error: 'Failed to disconnect Google account' }, 500);
+        console.error("Error disconnecting Google account:", error);
+        return c.json({ error: "Failed to disconnect Google account" }, 500);
     }
 };
 
-googleAuth.delete('/disconnect', requireAuth, handleDisconnect);
-googleAuth.post('/disconnect', requireAuth, handleDisconnect);
+googleAuth.delete("/disconnect", requireAuth, handleDisconnect);
+googleAuth.post("/disconnect", requireAuth, handleDisconnect);
 
 /**
  * Get Google calendars
  */
-googleAuth.get('/calendars', requireAuth, async (c) => {
+googleAuth.get("/calendars", requireAuth, async c => {
     try {
-        const user = c.get('user') as User;
+        const user = c.get("user") as User;
         const calendars = await googleOAuthService.getCalendars(user.id);
 
         const normalized = calendars.map((calendar: any) => {
@@ -173,8 +173,8 @@ googleAuth.get('/calendars', requireAuth, async (c) => {
 
         return c.replySuccess(normalized);
     } catch (error) {
-        console.error('Error fetching Google calendars:', error);
-        return c.json({ error: 'Failed to fetch Google calendars' }, 500);
+        console.error("Error fetching Google calendars:", error);
+        return c.json({ error: "Failed to fetch Google calendars" }, 500);
     }
 });
 

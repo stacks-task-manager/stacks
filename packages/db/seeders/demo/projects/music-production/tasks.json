@@ -4,9 +4,7 @@
         "description": "Description for Write Song 1",
         "id": "3dd23fd8-fcfb-433f-890c-29117c4d2459",
         "project": "84066b96-3736-4e04-a6af-3833452c6c91",
-        "tags": [
-            "148811a9-c54d-464b-8619-54d0576b9aa0"
-        ],
+        "tags": ["148811a9-c54d-464b-8619-54d0576b9aa0"],
         "tint": null,
         "stack": "2b639d5c-a2d3-4f11-b347-7f15324cff7e",
         "estimate": 32400,
@@ -19,10 +17,7 @@
         "description": "Description for Record Drum Track",
         "id": "44c7647c-3164-4548-b9d7-9be1b08f1d78",
         "project": "84066b96-3736-4e04-a6af-3833452c6c91",
-        "tags": [
-            "3fc034dd-7ede-4c81-8557-9df7f8f7eea5",
-            "0cab18bb-ec3d-4230-9ff7-35b2a131d4dc"
-        ],
+        "tags": ["3fc034dd-7ede-4c81-8557-9df7f8f7eea5", "0cab18bb-ec3d-4230-9ff7-35b2a131d4dc"],
         "tint": "#EC4899",
         "stack": "2b639d5c-a2d3-4f11-b347-7f15324cff7e",
         "estimate": 14400,
@@ -35,9 +30,7 @@
         "description": "Description for Record Bass Line",
         "id": "cbd7234c-f5e5-487f-9239-2da6ce8bc011",
         "project": "84066b96-3736-4e04-a6af-3833452c6c91",
-        "tags": [
-            "3fc034dd-7ede-4c81-8557-9df7f8f7eea5"
-        ],
+        "tags": ["3fc034dd-7ede-4c81-8557-9df7f8f7eea5"],
         "tint": "#6366F1",
         "stack": "2b639d5c-a2d3-4f11-b347-7f15324cff7e",
         "estimate": 7200,
@@ -67,9 +60,7 @@
         "description": "Description for Add Synths",
         "id": "81d7f586-e780-4b89-92f3-8c00ff2665d2",
         "project": "84066b96-3736-4e04-a6af-3833452c6c91",
-        "tags": [
-            "0dede067-be00-4722-97d6-0d9cdd49cf47"
-        ],
+        "tags": ["0dede067-be00-4722-97d6-0d9cdd49cf47"],
         "tint": null,
         "stack": "2b639d5c-a2d3-4f11-b347-7f15324cff7e",
         "estimate": 21600,
@@ -99,10 +90,7 @@
         "description": "Description for Mix Track 2",
         "id": "6b20df5c-9964-4314-aaa4-9dc8e0909442",
         "project": "84066b96-3736-4e04-a6af-3833452c6c91",
-        "tags": [
-            "0dede067-be00-4722-97d6-0d9cdd49cf47",
-            "e5054fce-c219-4aa1-806d-c8315e50bb5e"
-        ],
+        "tags": ["0dede067-be00-4722-97d6-0d9cdd49cf47", "e5054fce-c219-4aa1-806d-c8315e50bb5e"],
         "tint": "#3B82F6",
         "stack": "2b639d5c-a2d3-4f11-b347-7f15324cff7e",
         "estimate": 28800,
@@ -115,10 +103,7 @@
         "description": "Description for Mastering Session",
         "id": "026f0ecb-0751-4142-a481-ac408d3579b2",
         "project": "84066b96-3736-4e04-a6af-3833452c6c91",
-        "tags": [
-            "148811a9-c54d-464b-8619-54d0576b9aa0",
-            "392ac4ad-07a2-44bc-ada7-729975c29552"
-        ],
+        "tags": ["148811a9-c54d-464b-8619-54d0576b9aa0", "392ac4ad-07a2-44bc-ada7-729975c29552"],
         "tint": "#8B5CF6",
         "stack": "2b639d5c-a2d3-4f11-b347-7f15324cff7e",
         "estimate": 7200,
@@ -148,9 +133,7 @@
         "description": "Description for Upload to Spotify",
         "id": "7fa76258-1b17-4684-bb06-bf6325e9a47f",
         "project": "84066b96-3736-4e04-a6af-3833452c6c91",
-        "tags": [
-            "869593a4-f35e-449c-94e5-736257f3c6e9"
-        ],
+        "tags": ["869593a4-f35e-449c-94e5-736257f3c6e9"],
         "tint": "#F97316",
         "stack": "2b639d5c-a2d3-4f11-b347-7f15324cff7e",
         "estimate": 36000,
@@ -215,9 +198,7 @@
         "description": "Description for Rehearsal",
         "id": "ad6a53b3-a196-418c-bcdc-9862966a360b",
         "project": "84066b96-3736-4e04-a6af-3833452c6c91",
-        "tags": [
-            "392ac4ad-07a2-44bc-ada7-729975c29552"
-        ],
+        "tags": ["392ac4ad-07a2-44bc-ada7-729975c29552"],
         "tint": null,
         "stack": "f6ec240b-8c16-47ec-95d1-c77287116274",
         "estimate": 14400,
@@ -230,9 +211,7 @@
         "description": "Description for Write Song 1 (2)",
         "id": "84141598-1910-4b42-8d2a-42bf30d4b6a4",
         "project": "84066b96-3736-4e04-a6af-3833452c6c91",
-        "tags": [
-            "3fc034dd-7ede-4c81-8557-9df7f8f7eea5"
-        ],
+        "tags": ["3fc034dd-7ede-4c81-8557-9df7f8f7eea5"],
         "tint": "#EF4444",
         "stack": "f6ec240b-8c16-47ec-95d1-c77287116274",
         "estimate": 28800,
@@ -245,9 +224,7 @@
         "description": "Description for Record Drum Track (2)",
         "id": "ee21ced1-f11c-49d9-974a-b152d811d241",
         "project": "84066b96-3736-4e04-a6af-3833452c6c91",
-        "tags": [
-            "869593a4-f35e-449c-94e5-736257f3c6e9"
-        ],
+        "tags": ["869593a4-f35e-449c-94e5-736257f3c6e9"],
         "tint": null,
         "stack": "f6ec240b-8c16-47ec-95d1-c77287116274",
         "estimate": 3600,
@@ -260,10 +237,7 @@
         "description": "Description for Record Bass Line (2)",
         "id": "afdc32a0-b2e4-4cb7-a776-d42c65eb3d67",
         "project": "84066b96-3736-4e04-a6af-3833452c6c91",
-        "tags": [
-            "0dede067-be00-4722-97d6-0d9cdd49cf47",
-            "e5054fce-c219-4aa1-806d-c8315e50bb5e"
-        ],
+        "tags": ["0dede067-be00-4722-97d6-0d9cdd49cf47", "e5054fce-c219-4aa1-806d-c8315e50bb5e"],
         "tint": "#EF4444",
         "stack": "f6ec240b-8c16-47ec-95d1-c77287116274",
         "estimate": 25200,
@@ -302,9 +276,7 @@
         "description": "Description for Mix Track 1 (2)",
         "id": "725339d4-d20c-43b4-ac21-66bb3638066e",
         "project": "84066b96-3736-4e04-a6af-3833452c6c91",
-        "tags": [
-            "fe6d0570-d505-4366-a9b8-4ec896c4627f"
-        ],
+        "tags": ["fe6d0570-d505-4366-a9b8-4ec896c4627f"],
         "tint": null,
         "stack": "f6ec240b-8c16-47ec-95d1-c77287116274",
         "estimate": 3600,
@@ -317,10 +289,7 @@
         "description": "Description for Mix Track 2 (2)",
         "id": "92629ffc-23d3-4e0c-bcbb-cdfdafda9c52",
         "project": "84066b96-3736-4e04-a6af-3833452c6c91",
-        "tags": [
-            "148811a9-c54d-464b-8619-54d0576b9aa0",
-            "fe6d0570-d505-4366-a9b8-4ec896c4627f"
-        ],
+        "tags": ["148811a9-c54d-464b-8619-54d0576b9aa0", "fe6d0570-d505-4366-a9b8-4ec896c4627f"],
         "tint": null,
         "stack": "f6ec240b-8c16-47ec-95d1-c77287116274",
         "estimate": 10800,
@@ -333,10 +302,7 @@
         "description": "Description for Mastering Session (2)",
         "id": "fd1ffc1b-3547-40dd-9154-f4f84e4fafe6",
         "project": "84066b96-3736-4e04-a6af-3833452c6c91",
-        "tags": [
-            "148811a9-c54d-464b-8619-54d0576b9aa0",
-            "3fc034dd-7ede-4c81-8557-9df7f8f7eea5"
-        ],
+        "tags": ["148811a9-c54d-464b-8619-54d0576b9aa0", "3fc034dd-7ede-4c81-8557-9df7f8f7eea5"],
         "tint": "#F59E0B",
         "stack": "f6ec240b-8c16-47ec-95d1-c77287116274",
         "estimate": 18000,
@@ -366,9 +332,7 @@
         "description": "Description for Upload to Spotify (2)",
         "id": "677ee54f-aff5-4ddb-aaa0-b2aca59b61f8",
         "project": "84066b96-3736-4e04-a6af-3833452c6c91",
-        "tags": [
-            "392ac4ad-07a2-44bc-ada7-729975c29552"
-        ],
+        "tags": ["392ac4ad-07a2-44bc-ada7-729975c29552"],
         "tint": null,
         "stack": "f6ec240b-8c16-47ec-95d1-c77287116274",
         "estimate": 32400,
@@ -394,10 +358,7 @@
         "description": "Description for Filming Music Video (2)",
         "id": "778bfa93-0c32-4d68-91b7-923439e3d761",
         "project": "84066b96-3736-4e04-a6af-3833452c6c91",
-        "tags": [
-            "148811a9-c54d-464b-8619-54d0576b9aa0",
-            "869593a4-f35e-449c-94e5-736257f3c6e9"
-        ],
+        "tags": ["148811a9-c54d-464b-8619-54d0576b9aa0", "869593a4-f35e-449c-94e5-736257f3c6e9"],
         "tint": "#EF4444",
         "stack": "e0bbfed8-73b6-4a41-977b-f0cc1a658581",
         "estimate": 21600,
@@ -423,9 +384,7 @@
         "description": "Description for Radio Promo (2)",
         "id": "6533996a-7122-4eb5-981d-16678f637daa",
         "project": "84066b96-3736-4e04-a6af-3833452c6c91",
-        "tags": [
-            "3fc034dd-7ede-4c81-8557-9df7f8f7eea5"
-        ],
+        "tags": ["3fc034dd-7ede-4c81-8557-9df7f8f7eea5"],
         "tint": "#3B82F6",
         "stack": "e0bbfed8-73b6-4a41-977b-f0cc1a658581",
         "estimate": 10800,
@@ -438,9 +397,7 @@
         "description": "Description for Rehearsal (2)",
         "id": "438de206-3046-4003-98f6-501cfc4386d4",
         "project": "84066b96-3736-4e04-a6af-3833452c6c91",
-        "tags": [
-            "0dede067-be00-4722-97d6-0d9cdd49cf47"
-        ],
+        "tags": ["0dede067-be00-4722-97d6-0d9cdd49cf47"],
         "tint": null,
         "stack": "e0bbfed8-73b6-4a41-977b-f0cc1a658581",
         "estimate": 36000,
@@ -470,9 +427,7 @@
         "description": "Description for Record Drum Track (3)",
         "id": "d8d784cf-124b-481d-886f-8a81154356cf",
         "project": "84066b96-3736-4e04-a6af-3833452c6c91",
-        "tags": [
-            "0cab18bb-ec3d-4230-9ff7-35b2a131d4dc"
-        ],
+        "tags": ["0cab18bb-ec3d-4230-9ff7-35b2a131d4dc"],
         "tint": "#6366F1",
         "stack": "e0bbfed8-73b6-4a41-977b-f0cc1a658581",
         "estimate": 7200,
@@ -502,10 +457,7 @@
         "description": "Description for Layer Vocals (3)",
         "id": "77ef3997-7345-4243-a16d-5ddfd98319cc",
         "project": "84066b96-3736-4e04-a6af-3833452c6c91",
-        "tags": [
-            "3fc034dd-7ede-4c81-8557-9df7f8f7eea5",
-            "148811a9-c54d-464b-8619-54d0576b9aa0"
-        ],
+        "tags": ["3fc034dd-7ede-4c81-8557-9df7f8f7eea5", "148811a9-c54d-464b-8619-54d0576b9aa0"],
         "tint": "#8B5CF6",
         "stack": "e0bbfed8-73b6-4a41-977b-f0cc1a658581",
         "estimate": 3600,
@@ -531,9 +483,7 @@
         "description": "Description for Mix Track 1 (3)",
         "id": "7c69f85d-c653-424f-9e7f-4dd98e0945e9",
         "project": "84066b96-3736-4e04-a6af-3833452c6c91",
-        "tags": [
-            "fe6d0570-d505-4366-a9b8-4ec896c4627f"
-        ],
+        "tags": ["fe6d0570-d505-4366-a9b8-4ec896c4627f"],
         "tint": null,
         "stack": "a231f801-4358-47da-99c9-32c79c82ed13",
         "estimate": 3600,
@@ -559,9 +509,7 @@
         "description": "Description for Mastering Session (3)",
         "id": "9c6cbc5c-98b3-4cbd-8f18-30836559313d",
         "project": "84066b96-3736-4e04-a6af-3833452c6c91",
-        "tags": [
-            "3fc034dd-7ede-4c81-8557-9df7f8f7eea5"
-        ],
+        "tags": ["3fc034dd-7ede-4c81-8557-9df7f8f7eea5"],
         "tint": null,
         "stack": "a231f801-4358-47da-99c9-32c79c82ed13",
         "estimate": 7200,
@@ -574,10 +522,7 @@
         "description": "Description for Album Art (3)",
         "id": "90ef16db-db7f-44d8-9f07-b48d5e9a111e",
         "project": "84066b96-3736-4e04-a6af-3833452c6c91",
-        "tags": [
-            "148811a9-c54d-464b-8619-54d0576b9aa0",
-            "392ac4ad-07a2-44bc-ada7-729975c29552"
-        ],
+        "tags": ["148811a9-c54d-464b-8619-54d0576b9aa0", "392ac4ad-07a2-44bc-ada7-729975c29552"],
         "tint": null,
         "stack": "a231f801-4358-47da-99c9-32c79c82ed13",
         "estimate": 14400,
@@ -590,10 +535,7 @@
         "description": "Description for Upload to Spotify (3)",
         "id": "3e044c9e-54f3-44c3-b1ea-64c2fe942bfa",
         "project": "84066b96-3736-4e04-a6af-3833452c6c91",
-        "tags": [
-            "0dede067-be00-4722-97d6-0d9cdd49cf47",
-            "392ac4ad-07a2-44bc-ada7-729975c29552"
-        ],
+        "tags": ["0dede067-be00-4722-97d6-0d9cdd49cf47", "392ac4ad-07a2-44bc-ada7-729975c29552"],
         "tint": null,
         "stack": "a231f801-4358-47da-99c9-32c79c82ed13",
         "estimate": 14400,
@@ -623,9 +565,7 @@
         "description": "Description for Filming Music Video (3)",
         "id": "f974544b-561a-4982-9afe-5c838556a671",
         "project": "84066b96-3736-4e04-a6af-3833452c6c91",
-        "tags": [
-            "0cab18bb-ec3d-4230-9ff7-35b2a131d4dc"
-        ],
+        "tags": ["0cab18bb-ec3d-4230-9ff7-35b2a131d4dc"],
         "tint": "#06B6D4",
         "stack": "a231f801-4358-47da-99c9-32c79c82ed13",
         "estimate": 36000,
@@ -651,10 +591,7 @@
         "description": "Description for Radio Promo (3)",
         "id": "f8d03d61-95c9-4902-bb4c-0becf150fae0",
         "project": "84066b96-3736-4e04-a6af-3833452c6c91",
-        "tags": [
-            "0dede067-be00-4722-97d6-0d9cdd49cf47",
-            "fe6d0570-d505-4366-a9b8-4ec896c4627f"
-        ],
+        "tags": ["0dede067-be00-4722-97d6-0d9cdd49cf47", "fe6d0570-d505-4366-a9b8-4ec896c4627f"],
         "tint": null,
         "stack": "a231f801-4358-47da-99c9-32c79c82ed13",
         "estimate": 32400,
@@ -680,10 +617,7 @@
         "description": "Description for Write Song 1 (4)",
         "id": "d6ad2e54-c968-4c5b-b57f-d406e73adef6",
         "project": "84066b96-3736-4e04-a6af-3833452c6c91",
-        "tags": [
-            "3fc034dd-7ede-4c81-8557-9df7f8f7eea5",
-            "0dede067-be00-4722-97d6-0d9cdd49cf47"
-        ],
+        "tags": ["3fc034dd-7ede-4c81-8557-9df7f8f7eea5", "0dede067-be00-4722-97d6-0d9cdd49cf47"],
         "tint": "#6366F1",
         "stack": "a231f801-4358-47da-99c9-32c79c82ed13",
         "estimate": 10800,
@@ -696,10 +630,7 @@
         "description": "Description for Record Drum Track (4)",
         "id": "544ba1d9-2b78-4d06-83aa-93b40e952b67",
         "project": "84066b96-3736-4e04-a6af-3833452c6c91",
-        "tags": [
-            "e5054fce-c219-4aa1-806d-c8315e50bb5e",
-            "869593a4-f35e-449c-94e5-736257f3c6e9"
-        ],
+        "tags": ["e5054fce-c219-4aa1-806d-c8315e50bb5e", "869593a4-f35e-449c-94e5-736257f3c6e9"],
         "tint": "#3B82F6",
         "stack": "a231f801-4358-47da-99c9-32c79c82ed13",
         "estimate": 25200,
@@ -712,9 +643,7 @@
         "description": "Description for Record Bass Line (4)",
         "id": "0106acf6-0b75-47d0-a9be-f8bf3478bdb6",
         "project": "84066b96-3736-4e04-a6af-3833452c6c91",
-        "tags": [
-            "148811a9-c54d-464b-8619-54d0576b9aa0"
-        ],
+        "tags": ["148811a9-c54d-464b-8619-54d0576b9aa0"],
         "tint": null,
         "stack": "a231f801-4358-47da-99c9-32c79c82ed13",
         "estimate": 18000,
@@ -727,9 +656,7 @@
         "description": "Description for Layer Vocals (4)",
         "id": "f7931342-1abf-4a87-b167-53120ffd6e0b",
         "project": "84066b96-3736-4e04-a6af-3833452c6c91",
-        "tags": [
-            "0dede067-be00-4722-97d6-0d9cdd49cf47"
-        ],
+        "tags": ["0dede067-be00-4722-97d6-0d9cdd49cf47"],
         "tint": "#F59E0B",
         "stack": "e22a078f-eea5-44e3-bb82-b8c96f6c95eb",
         "estimate": 7200,
@@ -742,9 +669,7 @@
         "description": "Description for Add Synths (4)",
         "id": "043d49be-4a3c-4c7e-ac14-53c69e73a479",
         "project": "84066b96-3736-4e04-a6af-3833452c6c91",
-        "tags": [
-            "fe6d0570-d505-4366-a9b8-4ec896c4627f"
-        ],
+        "tags": ["fe6d0570-d505-4366-a9b8-4ec896c4627f"],
         "tint": null,
         "stack": "e22a078f-eea5-44e3-bb82-b8c96f6c95eb",
         "estimate": 36000,
@@ -757,10 +682,7 @@
         "description": "Description for Mix Track 1 (4)",
         "id": "b738953d-e6f3-48ca-b64e-f05416eaee43",
         "project": "84066b96-3736-4e04-a6af-3833452c6c91",
-        "tags": [
-            "3fc034dd-7ede-4c81-8557-9df7f8f7eea5",
-            "392ac4ad-07a2-44bc-ada7-729975c29552"
-        ],
+        "tags": ["3fc034dd-7ede-4c81-8557-9df7f8f7eea5", "392ac4ad-07a2-44bc-ada7-729975c29552"],
         "tint": null,
         "stack": "e22a078f-eea5-44e3-bb82-b8c96f6c95eb",
         "estimate": 18000,
@@ -773,9 +695,7 @@
         "description": "Description for Mix Track 2 (4)",
         "id": "228039e1-861f-49de-ba1f-1609b46bb43c",
         "project": "84066b96-3736-4e04-a6af-3833452c6c91",
-        "tags": [
-            "3fc034dd-7ede-4c81-8557-9df7f8f7eea5"
-        ],
+        "tags": ["3fc034dd-7ede-4c81-8557-9df7f8f7eea5"],
         "tint": null,
         "stack": "e22a078f-eea5-44e3-bb82-b8c96f6c95eb",
         "estimate": 14400,
@@ -788,9 +708,7 @@
         "description": "Description for Mastering Session (4)",
         "id": "daad11e5-b0ad-432e-ae8f-f50cc1763f4f",
         "project": "84066b96-3736-4e04-a6af-3833452c6c91",
-        "tags": [
-            "148811a9-c54d-464b-8619-54d0576b9aa0"
-        ],
+        "tags": ["148811a9-c54d-464b-8619-54d0576b9aa0"],
         "tint": "#8B5CF6",
         "stack": "e22a078f-eea5-44e3-bb82-b8c96f6c95eb",
         "estimate": 32400,

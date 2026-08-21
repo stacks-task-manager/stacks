@@ -96,7 +96,10 @@ export const CalendarQuickEvent: FunctionComponent<CalendarQuickEventProps> = ({
                                     singleMonthOnly={sameDay}
                                     timePrecision={allDay ? undefined : TimePrecision.MINUTE}
                                     timePickerProps={{
-                                        useAmPm: new Intl.DateTimeFormat('en', { hour: 'numeric' }).formatToParts(new Date()).find(part => part.type === 'dayPeriod') !== undefined,
+                                        useAmPm:
+                                            new Intl.DateTimeFormat("en", { hour: "numeric" })
+                                                .formatToParts(new Date())
+                                                .find(part => part.type === "dayPeriod") !== undefined,
                                     }}
                                     onChange={handleChangeDates}
                                 />
@@ -109,7 +112,7 @@ export const CalendarQuickEvent: FunctionComponent<CalendarQuickEventProps> = ({
                                     {...props}
                                     ref={ref}
                                     variant="minimal"
-                                     size="small"
+                                    size="small"
                                     rightIcon={<Icon icon="chevron-down" />}
                                 >
                                     {dateLabel}
@@ -123,7 +126,12 @@ export const CalendarQuickEvent: FunctionComponent<CalendarQuickEventProps> = ({
                     <Button size="small" variant="minimal" onClick={onCancel}>
                         {translate("Cancel")}
                     </Button>
-                    <Button size="small" intent={Intent.PRIMARY} disabled={!canSave} onClick={handleSaveEvent}>
+                    <Button
+                        size="small"
+                        intent={Intent.PRIMARY}
+                        disabled={!canSave}
+                        onClick={handleSaveEvent}
+                    >
                         {translate("Save")}
                     </Button>
                 </div>

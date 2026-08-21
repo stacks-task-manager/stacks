@@ -127,7 +127,11 @@ export const SidebarButton: FunctionComponent<ISidebarButtonProps> = ({
                             onClosed={() => setMenuOpen(false)}
                             onOpening={() => setMenuOpen(true)}
                         >
-                            <Button size="small" variant="minimal" data-testid="sidebar-button-context-button">
+                            <Button
+                                size="small"
+                                variant="minimal"
+                                data-testid="sidebar-button-context-button"
+                            >
                                 <Icon icon="dots-vertical" />
                             </Button>
                         </Popover>

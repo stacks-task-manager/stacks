@@ -3,16 +3,12 @@
  * Runtime i18n: `setTranslations` + `translate`, `%{name}` interpolation, plural objects.
  */
 export {
-  setTranslations,
-  translate,
-  getLocale,
-  getTranslations,
-  registerTranslationContext,
-  isValidTranslationKey,
+    setTranslations,
+    translate,
+    getLocale,
+    getTranslations,
+    registerTranslationContext,
+    isValidTranslationKey,
 } from "./translate.js";
-export type {
-  TranslationValue,
-  SetTranslationsOptions,
-  ActiveTranslationContext,
-} from "./translate.js";
+export type { TranslationValue, SetTranslationsOptions, ActiveTranslationContext } from "./translate.js";
 export type { PluralForms, PluralCategory } from "./plural.js";

@@ -10,7 +10,7 @@ describe("Tasks", () => {
 
     beforeAll(async () => {
         token = await getAuthToken();
-        
+
         // Create a project first for task testing
         const projectRes = await app.request("/api/projects", {
             method: "POST",
@@ -49,7 +49,7 @@ describe("Tasks", () => {
             },
             body: JSON.stringify(taskData),
         });
-        
+
         expect([200, 400, 404]).toContain(res.status);
         if (res.status === 200) {
             const body = await res.json();
@@ -67,7 +67,7 @@ describe("Tasks", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect([200, 400, 404]).toContain(res.status);
         if (res.status === 200) {
             const body = await res.json();
@@ -85,7 +85,7 @@ describe("Tasks", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect([200, 400, 404]).toContain(res.status);
         if (res.status === 200) {
             const body = await res.json();
@@ -102,7 +102,7 @@ describe("Tasks", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect([200, 400, 404]).toContain(res.status);
         if (res.status === 200) {
             const body = await res.json();
@@ -119,7 +119,7 @@ describe("Tasks", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect([200, 400, 404]).toContain(res.status);
         if (res.status === 200) {
             const body = await res.json();
@@ -142,7 +142,7 @@ describe("Tasks", () => {
             },
             body: JSON.stringify(updateData),
         });
-        
+
         expect([200, 400, 404]).toContain(res.status);
         if (res.status === 200) {
             const body = await res.json();
@@ -158,7 +158,7 @@ describe("Tasks", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect([200, 400, 404]).toContain(res.status);
         if (res.status === 200) {
             const body = await res.json();
@@ -182,7 +182,7 @@ describe("Tasks", () => {
             },
             body: JSON.stringify(timelogData),
         });
-        
+
         expect([200, 404]).toContain(res.status);
         if (res.status === 200) {
             const body = await res.json();
@@ -199,7 +199,7 @@ describe("Tasks", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect([200, 404]).toContain(res.status);
         if (res.status === 200) {
             const body = await res.json();
@@ -225,7 +225,7 @@ describe("Tasks", () => {
             },
             body: JSON.stringify(taskData),
         });
-        
+
         expect([400, 404, 500]).toContain(res.status);
     });
 
@@ -237,7 +237,7 @@ describe("Tasks", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect([400, 404]).toContain(res.status);
     });
 
@@ -254,7 +254,7 @@ describe("Tasks", () => {
             },
             body: JSON.stringify(updateData),
         });
-        
+
         expect([400, 404]).toContain(res.status);
     });
 });

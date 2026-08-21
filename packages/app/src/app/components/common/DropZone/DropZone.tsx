@@ -55,9 +55,7 @@ export class DropZone2 extends React.Component<IDropZoneProps> {
                     <div className="drop-zone-inner">
                         <div className="drop-area">
                             <Icon icon="folder" size={24} />
-                            <div>
-                                {translate("Drag and drop files here")}
-                            </div>
+                            <div>{translate("Drag and drop files here")}</div>
                         </div>
                     </div>
                 </div>
@@ -183,9 +181,7 @@ export const DropZone: FunctionComponent<DropZoneProps> = ({ narrow }) => {
             <div className="drop-zone-inner">
                 <div className="drop-area">
                     <Icon icon="share-01" size={24} />
-                    <div>
-                        {translate("Drag and drop files here")}
-                    </div>
+                    <div>{translate("Drag and drop files here")}</div>
                 </div>
             </div>
         </div>

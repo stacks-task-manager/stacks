@@ -129,9 +129,11 @@ export const deleteStack = async (stackId: string, onlyTasks?: boolean) => {
 const alertDelete = (stackId: string) => {
     setTimeout(async () => {
         const { answer, checked } = await Confirm({
-            title: "Delete stack",
-            description: translate("Are you sure you want to delete this stack All tasks and attachments will also be deleted This action cannot be undone"),
-            checkboxLabel: "No, just delete all tasks",
+            title: translate("Delete stack"),
+            description: translate(
+                "Are you sure you want to delete this stack All tasks and attachments will also be deleted This action cannot be undone"
+            ),
+            checkboxLabel: translate("No, just delete all tasks"),
             intent: Intent.DANGER,
         });
 
@@ -200,7 +202,10 @@ const uncollapseSelected = () => {
 };
 
 const markAllDone = async (stackId: string) => {
-    const response = await Dialog.confirm("Mark all done", translate("Are you sure you want to mark all tasks as done"));
+    const response = await Dialog.confirm(
+        translate("Mark all done"),
+        translate("Are you sure you want to mark all tasks as done")
+    );
     if (!response) return;
 
     const tasks = getStackTasks(stackId).filter(task => !task.done);
@@ -210,7 +215,10 @@ const markAllDone = async (stackId: string) => {
 };
 
 const markAllToDo = async (stackId: string) => {
-    const response = await Dialog.confirm("Mark all done", translate("Are you sure you want to mark all tasks as to do"));
+    const response = await Dialog.confirm(
+        translate("Mark all done"),
+        translate("Are you sure you want to mark all tasks as to do")
+    );
     if (!response) return;
 
     const tasks = getStackTasks(stackId).filter(task => task.done);
@@ -220,7 +228,10 @@ const markAllToDo = async (stackId: string) => {
 };
 
 const archiveAll = async (stackId: string) => {
-    const response = await Dialog.confirm("Archive all tasks", translate("Are you sure you want to archive all tasks"));
+    const response = await Dialog.confirm(
+        translate("Archive all tasks"),
+        translate("Are you sure you want to archive all tasks")
+    );
     if (!response) return;
 
     const tasks = getStackTasks(stackId);
@@ -230,7 +241,10 @@ const archiveAll = async (stackId: string) => {
 };
 
 const archiveDone = async (stackId: string) => {
-    const response = await Dialog.confirm("Archive all completed tasks", translate("Are you sure you want to archive all completed tasks"));
+    const response = await Dialog.confirm(
+        translate("Archive all completed tasks"),
+        translate("Are you sure you want to archive all completed tasks")
+    );
     if (!response) return;
 
     const tasks = getStackTasks(stackId).filter(task => task.done);

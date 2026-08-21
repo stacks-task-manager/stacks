@@ -12,7 +12,9 @@ export function isUntranslatedValue(v: TranslationValue | undefined): boolean {
     if (v === undefined) return true;
     if (typeof v === "string") return v.trim() === "" || isSyncPlaceholderString(v);
     if (v && typeof v === "object" && !Array.isArray(v)) {
-        const vals = Object.values(v as Record<string, unknown>).filter((x): x is string => typeof x === "string");
+        const vals = Object.values(v as Record<string, unknown>).filter(
+            (x): x is string => typeof x === "string"
+        );
         if (vals.length === 0) return true;
         return vals.every(x => x.trim() === "" || isSyncPlaceholderString(x));
     }
@@ -26,7 +28,7 @@ export function filterBrowseKeys(
     sortedKeys: string[],
     map: Record<string, TranslationValue>,
     searchQuery: string,
-    untranslatedOnly: boolean,
+    untranslatedOnly: boolean
 ): string[] {
     let out = sortedKeys;
     if (untranslatedOnly) {

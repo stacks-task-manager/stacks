@@ -17,9 +17,7 @@
         "description": "Detailed description for \"Grade Midterms\". This task involves several steps and requires attention to detail.",
         "id": "d99651ee-9dbb-4599-b59a-e3816145c4a3",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "ebfc69e4-9212-4832-be42-44938c9ec577"
-        ],
+        "tags": ["ebfc69e4-9212-4832-be42-44938c9ec577"],
         "tint": "#94A3B8",
         "stack": "fdfb9407-169e-48c5-80ad-ca49326135b2",
         "estimate": 43200,
@@ -32,9 +30,7 @@
         "description": "Detailed description for \"Submit Research Grant\". This task involves several steps and requires attention to detail.",
         "id": "7775f765-9716-4908-b557-19de32049968",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "b26104c3-d51b-4924-a6a1-1566269fb02c"
-        ],
+        "tags": ["b26104c3-d51b-4924-a6a1-1566269fb02c"],
         "tint": "#94A3B8",
         "stack": "fdfb9407-169e-48c5-80ad-ca49326135b2",
         "estimate": 54000,
@@ -47,10 +43,7 @@
         "description": "Detailed description for \"Student Consultation Hours\". This task involves several steps and requires attention to detail.",
         "id": "74539e06-a715-4b92-9c8f-e9023d11391e",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "8927f7fd-0eac-4c36-9178-5ae5a4428aba",
-            "b26104c3-d51b-4924-a6a1-1566269fb02c"
-        ],
+        "tags": ["8927f7fd-0eac-4c36-9178-5ae5a4428aba", "b26104c3-d51b-4924-a6a1-1566269fb02c"],
         "tint": "#94A3B8",
         "stack": "fdfb9407-169e-48c5-80ad-ca49326135b2",
         "estimate": 7200,
@@ -63,9 +56,7 @@
         "description": "Detailed description for \"Physics Lab Setup\". This task involves several steps and requires attention to detail.",
         "id": "e165e8f9-059b-4c40-b6bf-1e996539cadc",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "ebfc69e4-9212-4832-be42-44938c9ec577"
-        ],
+        "tags": ["ebfc69e4-9212-4832-be42-44938c9ec577"],
         "tint": "#94A3B8",
         "stack": "fdfb9407-169e-48c5-80ad-ca49326135b2",
         "estimate": 21600,
@@ -78,9 +69,7 @@
         "description": "Detailed description for \"History Essay Grading\". This task involves several steps and requires attention to detail.",
         "id": "bfb48cd2-e4fc-467f-9141-0cf8e8ba8c15",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "b26104c3-d51b-4924-a6a1-1566269fb02c"
-        ],
+        "tags": ["b26104c3-d51b-4924-a6a1-1566269fb02c"],
         "tint": "#94A3B8",
         "stack": "fdfb9407-169e-48c5-80ad-ca49326135b2",
         "estimate": 10800,
@@ -93,9 +82,7 @@
         "description": "Detailed description for \"Department Meeting\". This task involves several steps and requires attention to detail.",
         "id": "eecae160-5246-4d40-aa89-34805392363f",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "8927f7fd-0eac-4c36-9178-5ae5a4428aba"
-        ],
+        "tags": ["8927f7fd-0eac-4c36-9178-5ae5a4428aba"],
         "tint": "#94A3B8",
         "stack": "fdfb9407-169e-48c5-80ad-ca49326135b2",
         "estimate": 28800,
@@ -108,9 +95,7 @@
         "description": "Detailed description for \"Publish Paper\". This task involves several steps and requires attention to detail.",
         "id": "c9b23506-bf26-4734-9502-e6de80454bf5",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "8927f7fd-0eac-4c36-9178-5ae5a4428aba"
-        ],
+        "tags": ["8927f7fd-0eac-4c36-9178-5ae5a4428aba"],
         "tint": "#94A3B8",
         "stack": "fdfb9407-169e-48c5-80ad-ca49326135b2",
         "estimate": 36000,
@@ -149,9 +134,7 @@
         "description": "Detailed description for \"Design Exam Questions\". This task involves several steps and requires attention to detail.",
         "id": "601155c2-0894-4ad0-b014-f44a91807de4",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "8af93d43-7042-4967-b410-2c7e487a6f19"
-        ],
+        "tags": ["8af93d43-7042-4967-b410-2c7e487a6f19"],
         "tint": "#94A3B8",
         "stack": "fdfb9407-169e-48c5-80ad-ca49326135b2",
         "estimate": 10800,
@@ -164,9 +147,7 @@
         "description": "Detailed description for \"Review Textbook Options\". This task involves several steps and requires attention to detail.",
         "id": "5d53a9c2-8b5f-4d1d-ae01-c5b2cafddf78",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "ebfc69e4-9212-4832-be42-44938c9ec577"
-        ],
+        "tags": ["ebfc69e4-9212-4832-be42-44938c9ec577"],
         "tint": "#3B82F6",
         "stack": "37d392ae-88c7-47c4-a352-1b8c874de38a",
         "estimate": 43200,
@@ -179,9 +160,7 @@
         "description": "Detailed description for \"Order Lab Supplies\". This task involves several steps and requires attention to detail.",
         "id": "a5d8d2bb-7b05-403f-b30e-ae67234d626e",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "8af93d43-7042-4967-b410-2c7e487a6f19"
-        ],
+        "tags": ["8af93d43-7042-4967-b410-2c7e487a6f19"],
         "tint": "#3B82F6",
         "stack": "37d392ae-88c7-47c4-a352-1b8c874de38a",
         "estimate": 10800,
@@ -194,9 +173,7 @@
         "description": "Detailed description for \"Supervise Exam\". This task involves several steps and requires attention to detail.",
         "id": "a4e729be-079a-442a-8357-45473f150736",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "b26104c3-d51b-4924-a6a1-1566269fb02c"
-        ],
+        "tags": ["b26104c3-d51b-4924-a6a1-1566269fb02c"],
         "tint": "#3B82F6",
         "stack": "37d392ae-88c7-47c4-a352-1b8c874de38a",
         "estimate": 3600,
@@ -209,10 +186,7 @@
         "description": "Detailed description for \"Proctoring Schedule\". This task involves several steps and requires attention to detail.",
         "id": "8325d19f-ad39-489e-8be4-69f20c0f9daa",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "8927f7fd-0eac-4c36-9178-5ae5a4428aba",
-            "ebfc69e4-9212-4832-be42-44938c9ec577"
-        ],
+        "tags": ["8927f7fd-0eac-4c36-9178-5ae5a4428aba", "ebfc69e4-9212-4832-be42-44938c9ec577"],
         "tint": "#3B82F6",
         "stack": "37d392ae-88c7-47c4-a352-1b8c874de38a",
         "estimate": 50400,
@@ -238,10 +212,7 @@
         "description": "Detailed description for \"Academic Advising\". This task involves several steps and requires attention to detail.",
         "id": "04b2ab1f-8edd-4644-b4c4-ea2cce874947",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "8af93d43-7042-4967-b410-2c7e487a6f19",
-            "b26104c3-d51b-4924-a6a1-1566269fb02c"
-        ],
+        "tags": ["8af93d43-7042-4967-b410-2c7e487a6f19", "b26104c3-d51b-4924-a6a1-1566269fb02c"],
         "tint": "#3B82F6",
         "stack": "37d392ae-88c7-47c4-a352-1b8c874de38a",
         "estimate": 57600,
@@ -280,9 +251,7 @@
         "description": "Detailed description for \"Committee Meeting\". This task involves several steps and requires attention to detail.",
         "id": "6fdc3389-7e28-49e6-a630-07f99319a96d",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "b26104c3-d51b-4924-a6a1-1566269fb02c"
-        ],
+        "tags": ["b26104c3-d51b-4924-a6a1-1566269fb02c"],
         "tint": "#3B82F6",
         "stack": "37d392ae-88c7-47c4-a352-1b8c874de38a",
         "estimate": 32400,
@@ -295,10 +264,7 @@
         "description": "Detailed description for \"Faculty Senate\". This task involves several steps and requires attention to detail.",
         "id": "3470d661-cdab-41b9-b67b-2eb51dec2397",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "8927f7fd-0eac-4c36-9178-5ae5a4428aba",
-            "b26104c3-d51b-4924-a6a1-1566269fb02c"
-        ],
+        "tags": ["8927f7fd-0eac-4c36-9178-5ae5a4428aba", "b26104c3-d51b-4924-a6a1-1566269fb02c"],
         "tint": "#3B82F6",
         "stack": "37d392ae-88c7-47c4-a352-1b8c874de38a",
         "estimate": 39600,
@@ -311,9 +277,7 @@
         "description": "Detailed description for \"Curriculum Development\". This task involves several steps and requires attention to detail.",
         "id": "dbf3c739-1cbf-4f6b-8c96-329c6b111f36",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "8927f7fd-0eac-4c36-9178-5ae5a4428aba"
-        ],
+        "tags": ["8927f7fd-0eac-4c36-9178-5ae5a4428aba"],
         "tint": "#3B82F6",
         "stack": "37d392ae-88c7-47c4-a352-1b8c874de38a",
         "estimate": 36000,
@@ -326,9 +290,7 @@
         "description": "Detailed description for \"Accreditation Review\". This task involves several steps and requires attention to detail.",
         "id": "d0d76cce-f17a-4076-9499-94ad27bb825b",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "8af93d43-7042-4967-b410-2c7e487a6f19"
-        ],
+        "tags": ["8af93d43-7042-4967-b410-2c7e487a6f19"],
         "tint": "#3B82F6",
         "stack": "37d392ae-88c7-47c4-a352-1b8c874de38a",
         "estimate": 57600,
@@ -341,9 +303,7 @@
         "description": "Detailed description for \"Grant Proposal Writing\". This task involves several steps and requires attention to detail.",
         "id": "d6595037-9da0-4eab-97c7-f3921a4078ec",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "8927f7fd-0eac-4c36-9178-5ae5a4428aba"
-        ],
+        "tags": ["8927f7fd-0eac-4c36-9178-5ae5a4428aba"],
         "tint": "#3B82F6",
         "stack": "37d392ae-88c7-47c4-a352-1b8c874de38a",
         "estimate": 25200,
@@ -356,9 +316,7 @@
         "description": "Detailed description for \"Literature Review\". This task involves several steps and requires attention to detail.",
         "id": "42129813-693b-42f1-9969-1ceb1b4fd129",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "ebfc69e4-9212-4832-be42-44938c9ec577"
-        ],
+        "tags": ["ebfc69e4-9212-4832-be42-44938c9ec577"],
         "tint": "#3B82F6",
         "stack": "37d392ae-88c7-47c4-a352-1b8c874de38a",
         "estimate": 18000,
@@ -384,9 +342,7 @@
         "description": "Detailed description for \"Write Abstract\". This task involves several steps and requires attention to detail.",
         "id": "aaa27c60-7675-4cb4-948d-fc7cdccb018a",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "ebfc69e4-9212-4832-be42-44938c9ec577"
-        ],
+        "tags": ["ebfc69e4-9212-4832-be42-44938c9ec577"],
         "tint": "#F59E0B",
         "stack": "c621b557-2d08-40f8-b878-05cb7bde5eee",
         "estimate": 7200,
@@ -412,10 +368,7 @@
         "description": "Detailed description for \"Peer Review Article\". This task involves several steps and requires attention to detail.",
         "id": "26b53572-d4e8-4ea7-a916-cff704b79409",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "b26104c3-d51b-4924-a6a1-1566269fb02c",
-            "8927f7fd-0eac-4c36-9178-5ae5a4428aba"
-        ],
+        "tags": ["b26104c3-d51b-4924-a6a1-1566269fb02c", "8927f7fd-0eac-4c36-9178-5ae5a4428aba"],
         "tint": "#F59E0B",
         "stack": "c621b557-2d08-40f8-b878-05cb7bde5eee",
         "estimate": 14400,
@@ -428,10 +381,7 @@
         "description": "Detailed description for \"Conference Presentation\". This task involves several steps and requires attention to detail.",
         "id": "4d7e6802-539e-45b9-b864-f3a55ae5b0b0",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "ebfc69e4-9212-4832-be42-44938c9ec577",
-            "8927f7fd-0eac-4c36-9178-5ae5a4428aba"
-        ],
+        "tags": ["ebfc69e4-9212-4832-be42-44938c9ec577", "8927f7fd-0eac-4c36-9178-5ae5a4428aba"],
         "tint": "#F59E0B",
         "stack": "c621b557-2d08-40f8-b878-05cb7bde5eee",
         "estimate": 3600,
@@ -444,10 +394,7 @@
         "description": "Detailed description for \"Poster Session Prep\". This task involves several steps and requires attention to detail.",
         "id": "6d5b1741-764d-4cec-9f4f-15d76e29009a",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "8927f7fd-0eac-4c36-9178-5ae5a4428aba",
-            "8af93d43-7042-4967-b410-2c7e487a6f19"
-        ],
+        "tags": ["8927f7fd-0eac-4c36-9178-5ae5a4428aba", "8af93d43-7042-4967-b410-2c7e487a6f19"],
         "tint": "#F59E0B",
         "stack": "c621b557-2d08-40f8-b878-05cb7bde5eee",
         "estimate": 28800,
@@ -460,10 +407,7 @@
         "description": "Detailed description for \"Travel Grant Application\". This task involves several steps and requires attention to detail.",
         "id": "b9d7300f-b43f-4554-b845-40b9501118c0",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "8927f7fd-0eac-4c36-9178-5ae5a4428aba",
-            "ebfc69e4-9212-4832-be42-44938c9ec577"
-        ],
+        "tags": ["8927f7fd-0eac-4c36-9178-5ae5a4428aba", "ebfc69e4-9212-4832-be42-44938c9ec577"],
         "tint": "#F59E0B",
         "stack": "c621b557-2d08-40f8-b878-05cb7bde5eee",
         "estimate": 10800,
@@ -476,9 +420,7 @@
         "description": "Detailed description for \"Guest Lecturer Invite\". This task involves several steps and requires attention to detail.",
         "id": "77aa990c-fa1d-4b80-8662-5fac74846aed",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "8927f7fd-0eac-4c36-9178-5ae5a4428aba"
-        ],
+        "tags": ["8927f7fd-0eac-4c36-9178-5ae5a4428aba"],
         "tint": "#F59E0B",
         "stack": "c621b557-2d08-40f8-b878-05cb7bde5eee",
         "estimate": 57600,
@@ -491,10 +433,7 @@
         "description": "Detailed description for \"Student Club Advisor\". This task involves several steps and requires attention to detail.",
         "id": "d50d6905-a9c2-4f1c-84c3-f5009fa58ecd",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "ebfc69e4-9212-4832-be42-44938c9ec577",
-            "8927f7fd-0eac-4c36-9178-5ae5a4428aba"
-        ],
+        "tags": ["ebfc69e4-9212-4832-be42-44938c9ec577", "8927f7fd-0eac-4c36-9178-5ae5a4428aba"],
         "tint": "#F59E0B",
         "stack": "c621b557-2d08-40f8-b878-05cb7bde5eee",
         "estimate": 32400,
@@ -507,9 +446,7 @@
         "description": "Detailed description for \"Library Research\". This task involves several steps and requires attention to detail.",
         "id": "0f400d8a-ad14-4000-8f2f-a58636e22dd2",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "b26104c3-d51b-4924-a6a1-1566269fb02c"
-        ],
+        "tags": ["b26104c3-d51b-4924-a6a1-1566269fb02c"],
         "tint": "#F59E0B",
         "stack": "c621b557-2d08-40f8-b878-05cb7bde5eee",
         "estimate": 68400,
@@ -522,10 +459,7 @@
         "description": "Detailed description for \"Archive Visit\". This task involves several steps and requires attention to detail.",
         "id": "d35d0061-d930-4d33-ac4b-af6cfba40c55",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "ebfc69e4-9212-4832-be42-44938c9ec577",
-            "8af93d43-7042-4967-b410-2c7e487a6f19"
-        ],
+        "tags": ["ebfc69e4-9212-4832-be42-44938c9ec577", "8af93d43-7042-4967-b410-2c7e487a6f19"],
         "tint": "#F59E0B",
         "stack": "c621b557-2d08-40f8-b878-05cb7bde5eee",
         "estimate": 32400,
@@ -590,9 +524,7 @@
         "description": "Detailed description for \"Budget Reconciliation\". This task involves several steps and requires attention to detail.",
         "id": "494e39b3-b05f-460f-8c69-60160c487a9f",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "ebfc69e4-9212-4832-be42-44938c9ec577"
-        ],
+        "tags": ["ebfc69e4-9212-4832-be42-44938c9ec577"],
         "tint": "#EF4444",
         "stack": "e6ce91ca-afd4-4823-a7a8-1f5776a2b96e",
         "estimate": 28800,
@@ -605,10 +537,7 @@
         "description": "Detailed description for \"Hire Teaching Assistant\". This task involves several steps and requires attention to detail.",
         "id": "64bfa1c3-d067-4957-8559-04636fd898e9",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "b26104c3-d51b-4924-a6a1-1566269fb02c",
-            "ebfc69e4-9212-4832-be42-44938c9ec577"
-        ],
+        "tags": ["b26104c3-d51b-4924-a6a1-1566269fb02c", "ebfc69e4-9212-4832-be42-44938c9ec577"],
         "tint": "#EF4444",
         "stack": "e6ce91ca-afd4-4823-a7a8-1f5776a2b96e",
         "estimate": 64800,
@@ -621,9 +550,7 @@
         "description": "Detailed description for \"Train Lab Assistant\". This task involves several steps and requires attention to detail.",
         "id": "5ae4acff-5f27-4a7d-bea7-c0240ec7ac94",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "ebfc69e4-9212-4832-be42-44938c9ec577"
-        ],
+        "tags": ["ebfc69e4-9212-4832-be42-44938c9ec577"],
         "tint": "#EF4444",
         "stack": "e6ce91ca-afd4-4823-a7a8-1f5776a2b96e",
         "estimate": 39600,
@@ -649,10 +576,7 @@
         "description": "Detailed description for \"Recommendation Letter\". This task involves several steps and requires attention to detail.",
         "id": "e584f6c7-de3f-4454-a103-81852fcdc997",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "8927f7fd-0eac-4c36-9178-5ae5a4428aba",
-            "b26104c3-d51b-4924-a6a1-1566269fb02c"
-        ],
+        "tags": ["8927f7fd-0eac-4c36-9178-5ae5a4428aba", "b26104c3-d51b-4924-a6a1-1566269fb02c"],
         "tint": "#EF4444",
         "stack": "e6ce91ca-afd4-4823-a7a8-1f5776a2b96e",
         "estimate": 43200,
@@ -665,10 +589,7 @@
         "description": "Detailed description for \"Alumni Networking\". This task involves several steps and requires attention to detail.",
         "id": "c95b75d3-a0c5-452b-af97-4be87c0565e9",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "8af93d43-7042-4967-b410-2c7e487a6f19",
-            "b26104c3-d51b-4924-a6a1-1566269fb02c"
-        ],
+        "tags": ["8af93d43-7042-4967-b410-2c7e487a6f19", "b26104c3-d51b-4924-a6a1-1566269fb02c"],
         "tint": "#EF4444",
         "stack": "e6ce91ca-afd4-4823-a7a8-1f5776a2b96e",
         "estimate": 14400,
@@ -681,10 +602,7 @@
         "description": "Detailed description for \"Outreach Program\". This task involves several steps and requires attention to detail.",
         "id": "87347f3e-cd3c-45cb-b5c9-fcc0abe394df",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "8927f7fd-0eac-4c36-9178-5ae5a4428aba",
-            "ebfc69e4-9212-4832-be42-44938c9ec577"
-        ],
+        "tags": ["8927f7fd-0eac-4c36-9178-5ae5a4428aba", "ebfc69e4-9212-4832-be42-44938c9ec577"],
         "tint": "#EF4444",
         "stack": "e6ce91ca-afd4-4823-a7a8-1f5776a2b96e",
         "estimate": 36000,
@@ -697,10 +615,7 @@
         "description": "Detailed description for \"Open House Event\". This task involves several steps and requires attention to detail.",
         "id": "6c0e5c7c-92d3-4abb-b0ff-7ce5d4d505ed",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "8927f7fd-0eac-4c36-9178-5ae5a4428aba",
-            "ebfc69e4-9212-4832-be42-44938c9ec577"
-        ],
+        "tags": ["8927f7fd-0eac-4c36-9178-5ae5a4428aba", "ebfc69e4-9212-4832-be42-44938c9ec577"],
         "tint": "#10B981",
         "stack": "d0ed7848-3abd-42ff-b15c-9428683f5315",
         "estimate": 61200,
@@ -713,10 +628,7 @@
         "description": "Detailed description for \"Website Update\". This task involves several steps and requires attention to detail.",
         "id": "142dc943-829b-4e6f-8418-538aa2a185bb",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "b26104c3-d51b-4924-a6a1-1566269fb02c",
-            "8af93d43-7042-4967-b410-2c7e487a6f19"
-        ],
+        "tags": ["b26104c3-d51b-4924-a6a1-1566269fb02c", "8af93d43-7042-4967-b410-2c7e487a6f19"],
         "tint": "#10B981",
         "stack": "d0ed7848-3abd-42ff-b15c-9428683f5315",
         "estimate": 3600,
@@ -729,9 +641,7 @@
         "description": "Detailed description for \"Upload Lecture Notes\". This task involves several steps and requires attention to detail.",
         "id": "de2b31a3-cd37-4994-aea8-6936d25e082c",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "b26104c3-d51b-4924-a6a1-1566269fb02c"
-        ],
+        "tags": ["b26104c3-d51b-4924-a6a1-1566269fb02c"],
         "tint": "#10B981",
         "stack": "d0ed7848-3abd-42ff-b15c-9428683f5315",
         "estimate": 57600,
@@ -744,9 +654,7 @@
         "description": "Detailed description for \"Record Online Lecture\". This task involves several steps and requires attention to detail.",
         "id": "ac661c38-4a1d-4ca8-9a3f-d5a0927ee5be",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "b26104c3-d51b-4924-a6a1-1566269fb02c"
-        ],
+        "tags": ["b26104c3-d51b-4924-a6a1-1566269fb02c"],
         "tint": "#10B981",
         "stack": "d0ed7848-3abd-42ff-b15c-9428683f5315",
         "estimate": 28800,
@@ -759,10 +667,7 @@
         "description": "Detailed description for \"Answer Student Emails\". This task involves several steps and requires attention to detail.",
         "id": "d82f12e8-ada7-4f4a-bcfc-b77e10862a1f",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "8927f7fd-0eac-4c36-9178-5ae5a4428aba",
-            "8af93d43-7042-4967-b410-2c7e487a6f19"
-        ],
+        "tags": ["8927f7fd-0eac-4c36-9178-5ae5a4428aba", "8af93d43-7042-4967-b410-2c7e487a6f19"],
         "tint": "#10B981",
         "stack": "d0ed7848-3abd-42ff-b15c-9428683f5315",
         "estimate": 43200,
@@ -775,10 +680,7 @@
         "description": "Detailed description for \"Create Moodle Quiz\". This task involves several steps and requires attention to detail.",
         "id": "ff6d785b-291b-4adc-8601-907a0868177a",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "8927f7fd-0eac-4c36-9178-5ae5a4428aba",
-            "b26104c3-d51b-4924-a6a1-1566269fb02c"
-        ],
+        "tags": ["8927f7fd-0eac-4c36-9178-5ae5a4428aba", "b26104c3-d51b-4924-a6a1-1566269fb02c"],
         "tint": "#10B981",
         "stack": "d0ed7848-3abd-42ff-b15c-9428683f5315",
         "estimate": 36000,
@@ -791,10 +693,7 @@
         "description": "Detailed description for \"Canvas Course Setup\". This task involves several steps and requires attention to detail.",
         "id": "0e798144-082f-4386-99bd-9361efc105e4",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "ebfc69e4-9212-4832-be42-44938c9ec577",
-            "8927f7fd-0eac-4c36-9178-5ae5a4428aba"
-        ],
+        "tags": ["ebfc69e4-9212-4832-be42-44938c9ec577", "8927f7fd-0eac-4c36-9178-5ae5a4428aba"],
         "tint": "#10B981",
         "stack": "d0ed7848-3abd-42ff-b15c-9428683f5315",
         "estimate": 46800,
@@ -807,10 +706,7 @@
         "description": "Detailed description for \"Blackboard Announcement\". This task involves several steps and requires attention to detail.",
         "id": "7fa03bd0-f874-4987-ac34-cc53e0f0b2ee",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "b26104c3-d51b-4924-a6a1-1566269fb02c",
-            "8af93d43-7042-4967-b410-2c7e487a6f19"
-        ],
+        "tags": ["b26104c3-d51b-4924-a6a1-1566269fb02c", "8af93d43-7042-4967-b410-2c7e487a6f19"],
         "tint": "#10B981",
         "stack": "d0ed7848-3abd-42ff-b15c-9428683f5315",
         "estimate": 18000,
@@ -823,10 +719,7 @@
         "description": "Detailed description for \"Prepare Calculus Lecture (2)\". This task involves several steps and requires attention to detail.",
         "id": "f86057b9-659d-48e9-a215-8b02e2994fdd",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "8927f7fd-0eac-4c36-9178-5ae5a4428aba",
-            "b26104c3-d51b-4924-a6a1-1566269fb02c"
-        ],
+        "tags": ["8927f7fd-0eac-4c36-9178-5ae5a4428aba", "b26104c3-d51b-4924-a6a1-1566269fb02c"],
         "tint": "#10B981",
         "stack": "d0ed7848-3abd-42ff-b15c-9428683f5315",
         "estimate": 14400,
@@ -839,9 +732,7 @@
         "description": "Detailed description for \"Grade Midterms (2)\". This task involves several steps and requires attention to detail.",
         "id": "8281df06-2b42-4ac7-aebf-8e434456bc25",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "8927f7fd-0eac-4c36-9178-5ae5a4428aba"
-        ],
+        "tags": ["8927f7fd-0eac-4c36-9178-5ae5a4428aba"],
         "tint": "#10B981",
         "stack": "d0ed7848-3abd-42ff-b15c-9428683f5315",
         "estimate": 39600,
@@ -854,10 +745,7 @@
         "description": "Detailed description for \"Submit Research Grant (2)\". This task involves several steps and requires attention to detail.",
         "id": "b17b2bc4-b99d-4045-8b79-c0a8abd42769",
         "project": "129d20bc-23c5-4b53-9f17-c994087a1520",
-        "tags": [
-            "ebfc69e4-9212-4832-be42-44938c9ec577",
-            "8af93d43-7042-4967-b410-2c7e487a6f19"
-        ],
+        "tags": ["ebfc69e4-9212-4832-be42-44938c9ec577", "8af93d43-7042-4967-b410-2c7e487a6f19"],
         "tint": "#10B981",
         "stack": "d0ed7848-3abd-42ff-b15c-9428683f5315",
         "estimate": 32400,

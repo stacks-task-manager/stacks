@@ -14,7 +14,12 @@ export const CompanyDetailsLogo: FunctionComponent<CompanyDetailsLogoProps> = ({
 
     return (
         <div className="person-details__avatar editable" style={{ padding: "15px 0" }} onClick={onClick}>
-            {company.logo && <img src={`${company.logo}?size=small`} style={{ maxHeight: 80, maxWidth: 200, mixBlendMode: "multiply" }} />}
+            {company.logo && (
+                <img
+                    src={`${company.logo}?size=small`}
+                    style={{ maxHeight: 80, maxWidth: 200, mixBlendMode: "multiply" }}
+                />
+            )}
             <small className={Classes.TEXT_DISABLED}>Click to change logo</small>
         </div>
     );

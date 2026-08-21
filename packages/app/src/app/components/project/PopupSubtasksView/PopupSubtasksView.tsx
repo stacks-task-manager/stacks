@@ -19,7 +19,9 @@ export const PopupSubtasksView: FunctionComponent<IPopupSubtasksViewProps> = ({
     const { subtasks } = useSubtasks(parentId, false);
     return (
         <Popover
-            content={<TaskItems tasks={subtasks} parentId={parentId} disabled={disabled} minWidth={300} max={10} />}
+            content={
+                <TaskItems tasks={subtasks} parentId={parentId} disabled={disabled} minWidth={300} max={10} />
+            }
             lazy
             placement="bottom-end"
         >
@@ -27,4 +29,3 @@ export const PopupSubtasksView: FunctionComponent<IPopupSubtasksViewProps> = ({
         </Popover>
     );
 };
-

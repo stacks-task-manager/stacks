@@ -38,7 +38,6 @@ people.get(
         const { count } = c.req.param();
         console.log("Getting birthdays", filters);
 
-
         const people: User[] = await PeopleLoader.getAll(filters);
         return c.replySuccess(count === "count" ? people.length : people);
     })

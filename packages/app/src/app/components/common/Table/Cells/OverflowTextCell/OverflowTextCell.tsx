@@ -9,7 +9,10 @@ interface IOverflowTextCellProps {
 }
 export const OverflowTextCell: FunctionComponent<IOverflowTextCellProps> = ({ children, faded, onClick }) => {
     return (
-        <div className={classNames("overflow-text-cell", { interactive: onClick != null, faded })} onClick={onClick}>
+        <div
+            className={classNames("overflow-text-cell", { interactive: onClick != null, faded })}
+            onClick={onClick}
+        >
             {children}
         </div>
     );

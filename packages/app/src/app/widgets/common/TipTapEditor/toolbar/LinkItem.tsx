@@ -10,7 +10,6 @@ import {
     Size,
     Tooltip,
 } from "@blueprintjs/core";
-import React from "react";
 
 import { Icon } from "app/components/common";
 import { TipTapToolbarItem } from ".";

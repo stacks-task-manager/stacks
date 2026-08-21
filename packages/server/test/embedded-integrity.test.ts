@@ -31,8 +31,7 @@ function buildSignedIntegrityFixture(): {
     const publicPem = publicKey as string;
     const privateKeyPem = privateKey as string;
 
-    const cleanCanonical =
-        "<<<H>>>__BUNDLE_HASH__<<<S>>>__BUNDLE_SIGNATURE__<<<P>>>__PUBLIC_KEY__<<<E>>>";
+    const cleanCanonical = "<<<H>>>__BUNDLE_HASH__<<<S>>>__BUNDLE_SIGNATURE__<<<P>>>__PUBLIC_KEY__<<<E>>>";
     const bundleHash = crypto.createHash("sha256").update(Buffer.from(cleanCanonical)).digest("hex");
 
     const sign = crypto.createSign("RSA-SHA256");
@@ -74,7 +73,9 @@ describe("computeNormalizedBundleHash", () => {
 describe("verifyIntegrityPayload / verifyBundleIntegrityAtPath", () => {
     it("accepts a correctly signed in-memory bundle", () => {
         const f = buildSignedIntegrityFixture();
-        expect(computeNormalizedBundleHash(f.bundleBody, f.bundleHash, f.signature, f.publicPem)).toBe(f.bundleHash);
+        expect(computeNormalizedBundleHash(f.bundleBody, f.bundleHash, f.signature, f.publicPem)).toBe(
+            f.bundleHash
+        );
         expect(verifyIntegrityPayload(f.bundleBody, f.bundleHash, f.signature, f.publicPem)).toBe(true);
     });
 
@@ -241,14 +242,18 @@ describe("integrity build plugin (end-to-end)", () => {
 
     it("produces a bundle that passes verifyBundleIntegrityAtPath", async () => {
         const f = await buildIntegrityFixture();
-        expect(verifyBundleIntegrityAtPath(f.bundlePath, f.embeddedHash, f.embeddedSig, f.publicKey)).toBe(true);
+        expect(verifyBundleIntegrityAtPath(f.bundlePath, f.embeddedHash, f.embeddedSig, f.publicKey)).toBe(
+            true
+        );
     });
 
     it("rejects a tampered built bundle (single-byte change)", async () => {
         const f = await buildIntegrityFixture();
         const tamperedPath = `${f.bundlePath}.tampered.js`;
         writeFileSync(tamperedPath, `${f.bundleContent}// tamper\n`, "utf8");
-        expect(verifyBundleIntegrityAtPath(tamperedPath, f.embeddedHash, f.embeddedSig, f.publicKey)).toBe(false);
+        expect(verifyBundleIntegrityAtPath(tamperedPath, f.embeddedHash, f.embeddedSig, f.publicKey)).toBe(
+            false
+        );
     });
 
     it("rejects a built bundle when the embedded signature does not match the embedded hash", async () => {

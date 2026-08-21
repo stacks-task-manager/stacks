@@ -59,7 +59,7 @@ export class NewStackPopup extends React.PureComponent<INewStackPopupProps, INew
 
         return (
             <div className="new-stack-popup">
-                <FormGroup label="Stack title" labelFor="text-input">
+                <FormGroup label={translate("Stack title")} labelFor="text-input">
                     <InputGroup
                         id="text-input"
                         value={this.state.title}
@@ -69,6 +69,7 @@ export class NewStackPopup extends React.PureComponent<INewStackPopupProps, INew
                         inputRef={(node: HTMLInputElement | null) => (this.inputRef = node)}
                         onChange={this.handleTitleChange}
                         onKeyDown={this.handleSaveEnter}
+                        data-testid="new-stack-title-input"
                     />
                 </FormGroup>
 
@@ -85,8 +86,9 @@ export class NewStackPopup extends React.PureComponent<INewStackPopupProps, INew
                         disabled={!canSave}
                         onClick={this.handleSave}
                         ref={(node: HTMLButtonElement | null) => (this.buttonRef = node)}
+                        data-testid="new-stack-save-button"
                     >
-                        Save stack
+                        {translate("Save stack")}
                     </Button>
                 </div>
             </div>
@@ -108,8 +110,13 @@ export class NewStackPopup extends React.PureComponent<INewStackPopupProps, INew
                 content={<TintPicker value={tint} onChange={this.handleSetColor} />}
                 position={Position.BOTTOM_RIGHT}
             >
-                <Button variant="minimal" rightIcon="caret-down" icon={buttonIcon}>
-                    {tint ? "" : "select tint"}
+                <Button
+                    variant="minimal"
+                    rightIcon="caret-down"
+                    icon={buttonIcon}
+                    data-testid="new-stack-tint-button"
+                >
+                    {tint ? "" : translate("Select tint")}
                 </Button>
             </Popover>
         );

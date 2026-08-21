@@ -51,14 +51,11 @@ export function deepCheck(a: unknown, b: unknown, verbose?: boolean) {
 function compFNSelection(compType: ComparaisonTypes, verbose = false) {
     switch (compType) {
         case "SIMPLE":
-            return (a: unknown, b: unknown, _verbose?: boolean) =>
-                simpleCheck(a, b);
+            return (a: unknown, b: unknown, _verbose?: boolean) => simpleCheck(a, b);
         case "SHALLOW":
-            return (a: unknown, b: unknown, verbose?: boolean) =>
-                shallowCheck(a, b, verbose);
+            return (a: unknown, b: unknown, verbose?: boolean) => shallowCheck(a, b, verbose);
         case "DEEP":
-            return (a: unknown, b: unknown, verbose?: boolean) =>
-                deepCheck(a, b, verbose);
+            return (a: unknown, b: unknown, verbose?: boolean) => deepCheck(a, b, verbose);
         default:
             // dev-only diagnostic — propschecker is a debugging aid, not production code
             verbose &&
@@ -74,9 +71,7 @@ function compFNSelection(compType: ComparaisonTypes, verbose = false) {
  * @param WrappedComponent The component to analyse
  * @param compType The possible comparaison type (Be carefull with "DEEP". It may get errors in case of circular references)
  */
-export function ReactFnCompPropsChecker<T extends Props>(
-    props: PropsCheckerProps<T>
-) {
+export function ReactFnCompPropsChecker<T extends Props>(props: PropsCheckerProps<T>) {
     const { children, childrenProps, compType = "SIMPLE", verbose } = props;
     const oldPropsRef = React.useRef<T>();
     React.useEffect(() => {
@@ -89,18 +84,10 @@ export function ReactFnCompPropsChecker<T extends Props>(
         const oldProps = oldPropsRef.current;
         if (oldProps === undefined) {
             console.log("First render : ");
-            Object.keys(childrenProps).forEach(k =>
-                console.log(`${k} : ${childrenProps[k]}`)
-            );
+            Object.keys(childrenProps).forEach(k => console.log(`${k} : ${childrenProps[k]}`));
         } else {
             const changedProps: string[] = Object.keys(childrenProps)
-                .filter(k =>
-                    compFNSelection(compType, verbose)(
-                        oldProps[k],
-                        childrenProps[k],
-                        verbose
-                    )
-                )
+                .filter(k => compFNSelection(compType, verbose)(oldProps[k], childrenProps[k], verbose))
                 .map(k => {
                     return `${k} : [OLD] ${oldProps[k]}, [NEW] ${childrenProps[k]}`;
                 });

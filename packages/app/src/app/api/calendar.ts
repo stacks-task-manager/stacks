@@ -21,7 +21,10 @@ export const CalendarsAPI = {
     },
 
     /** Update a calendar. */
-    async update(id: string, data: Partial<Pick<ICalendar, "title" | "color" | "primary">>): Promise<ICalendar> {
+    async update(
+        id: string,
+        data: Partial<Pick<ICalendar, "title" | "color" | "primary">>
+    ): Promise<ICalendar> {
         return request.patch(`/api/calendars/${id}`, data);
     },
 

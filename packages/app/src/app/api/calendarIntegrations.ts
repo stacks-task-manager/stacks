@@ -34,4 +34,3 @@ export const CalendarIntegrationsAPI = {
         return request.get(`/api/integrations/${provider}/calendars`);
     },
 };
-

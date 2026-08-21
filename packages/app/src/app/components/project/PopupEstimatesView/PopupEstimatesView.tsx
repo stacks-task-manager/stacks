@@ -24,9 +24,7 @@ export class PopupEstimatesView extends React.PureComponent<IPopupEstimatesViewP
     private renderBlock = (time: number, intent?: string) => {
         return (
             <div className={classnames("popup-estimates-view-block", intent)}>
-                <div className="popup-estimates-view-block-title">
-                    {translate("Estimated")}
-                </div>
+                <div className="popup-estimates-view-block-title">{translate("Estimated")}</div>
                 <Time />
                 <div className="popup-estimates-view-block-time">{time}</div>
             </div>

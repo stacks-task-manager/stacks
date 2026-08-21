@@ -36,10 +36,7 @@ export function AssigneesSelect({
     const { data: people } = usePeople();
 
     const selected = useMemo(
-        () =>
-            value
-                .map(id => (people ?? []).find(p => p.id === id))
-                .filter(Boolean) as IPerson[],
+        () => value.map(id => (people ?? []).find(p => p.id === id)).filter(Boolean) as IPerson[],
         [people, value]
     );
 
@@ -49,11 +46,7 @@ export function AssigneesSelect({
 
     return (
         <>
-            <Pressable
-                onPress={() => setOpen(true)}
-                disabled={disabled}
-                className="active:opacity-75"
-            >
+            <Pressable onPress={() => setOpen(true)} disabled={disabled} className="active:opacity-75">
                 <HStack className="items-center flex-wrap" space="xs">
                     {selected.length === 0 ? (
                         <Text size="sm" className="text-typography-400">
@@ -70,10 +63,7 @@ export function AssigneesSelect({
                                     className="rounded-full bg-background-300 items-center justify-center"
                                     style={{ width: 20, height: 20 }}
                                 >
-                                    <Text
-                                        size="2xs"
-                                        className="font-bold text-typography-800"
-                                    >
+                                    <Text size="2xs" className="font-bold text-typography-800">
                                         {initials(p)}
                                     </Text>
                                 </Box>

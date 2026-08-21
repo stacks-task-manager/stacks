@@ -206,7 +206,7 @@ export function renameKeyAcrossLocales(
     localesDir: string,
     oldKey: string,
     newKey: string,
-    newEnValue: TranslationValue,
+    newEnValue: TranslationValue
 ): { warnings: RenameWarning[] } {
     const warnings: RenameWarning[] = [];
     const enPath = enJsonPath(localesDir);
@@ -265,7 +265,7 @@ export function renameKeyAcrossLocales(
  */
 export function deleteKeyAcrossLocales(
     localesDir: string,
-    key: string,
+    key: string
 ): { removedFromOtherLocaleFiles: number } {
     const enPath = enJsonPath(localesDir);
     const en = readLocaleJson(enPath);
@@ -310,7 +310,7 @@ export function updateLocaleValue(
     localesDir: string,
     localeId: string,
     key: string,
-    value: TranslationValue,
+    value: TranslationValue
 ): void {
     const map = indexLocaleFilesById(localesDir);
     const path = map.get(localeId.toLowerCase());

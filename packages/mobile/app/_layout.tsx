@@ -39,10 +39,7 @@ function RootNavigator() {
                     <Stack.Screen name="index" />
                     <Stack.Screen name="(auth)" />
                     <Stack.Screen name="(app)" />
-                    <Stack.Screen
-                        name="(modals)"
-                        options={{ presentation: "modal", headerShown: false }}
-                    />
+                    <Stack.Screen name="(modals)" options={{ presentation: "modal", headerShown: false }} />
                 </Stack>
             </AuthGate>
         </AuthProvider>

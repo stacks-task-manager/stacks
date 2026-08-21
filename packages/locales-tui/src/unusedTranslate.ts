@@ -50,9 +50,10 @@ function lineOf(sf: ts.SourceFile, pos: number): number {
  * Walks `.ts` / `.tsx` under `roots` and collects first-arg string literals to `translate(...)`.
  * Only calls where the callee is an identifier named `translate` are counted.
  */
-export function collectTranslateStaticKeys(
-    roots: string[],
-): { staticKeys: Set<string>; dynamicSites: DynamicTranslateSite[] } {
+export function collectTranslateStaticKeys(roots: string[]): {
+    staticKeys: Set<string>;
+    dynamicSites: DynamicTranslateSite[];
+} {
     const staticKeys = new Set<string>();
     const dynamicSites: DynamicTranslateSite[] = [];
 
@@ -67,7 +68,11 @@ export function collectTranslateStaticKeys(
         const sf = ts.createSourceFile(filePath, text, ts.ScriptTarget.Latest, true, kind);
 
         const visit = (node: ts.Node): void => {
-            if (ts.isCallExpression(node) && ts.isIdentifier(node.expression) && node.expression.text === "translate") {
+            if (
+                ts.isCallExpression(node) &&
+                ts.isIdentifier(node.expression) &&
+                node.expression.text === "translate"
+            ) {
                 const arg0 = node.arguments[0];
                 const keys = extractStringLiteralsFromArg(arg0);
                 if (keys.length > 0) {
@@ -87,7 +92,7 @@ export function collectTranslateStaticKeys(
 export function findUnusedEnglishKeys(
     englishKeys: Iterable<string>,
     roots: string[],
-    repoRoot: string,
+    repoRoot: string
 ): { unused: string[]; dynamicSites: DynamicTranslateSite[] } {
     const { staticKeys, dynamicSites } = collectTranslateStaticKeys(roots);
     const unused: string[] = [];

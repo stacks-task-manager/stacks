@@ -1,5 +1,6 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
-import React, { FunctionComponent, useMemo, useState } from "react";
+import React, { FunctionComponent, useEffect, useMemo, useState } from "react";
+import { translate } from "@stacks/translations";
 import {
     Button,
     Checkbox,
@@ -16,6 +17,7 @@ import { Grid, Textarea, Icon, RoundButton, Row, Col } from "app/components/comm
 import { TaskDetailsSection } from "app/components/project";
 import { TimelogsActions } from "app/store/actions";
 import { PeopleStore } from "app/store/people";
+import { shallowEqual } from "app/hooks/store";
 import { IPerson, ITask, TreeNode } from "@stacks/types";
 import { RecordsStore } from "app/store/records";
 import { differenceInMilliseconds } from "date-fns";
@@ -29,7 +31,7 @@ interface ITimeLogDialogProps {
     onClose: (op: TimeLogDialogCloseOp) => void;
 }
 export const TimeLogDialog: FunctionComponent<ITimeLogDialogProps> = ({ task, time, onClose }) => {
-    const me = PeopleStore.get().me;
+    const me = PeopleStore.use(state => state.me, shallowEqual);
     const [open, setOpen] = useState(true);
     const [hours, setHours] = useState(
         (differenceInMilliseconds(new Date(), new Date(time * 1000)) / (1000 * 60 * 60)).toFixed(2)
@@ -44,21 +46,22 @@ export const TimeLogDialog: FunctionComponent<ITimeLogDialogProps> = ({ task, ti
     const projects = useMemo(() => {
         const { documents } = RecordsStore.get();
 
-        const projects = documents.filter(doc => doc.type === "project");
+        return documents.filter(doc => doc.type === "project");
+    }, []);
+
+    useEffect(() => {
         const currentProject = projects.find(doc => task?.project === `${doc.id}`);
 
         if (currentProject && currentProject.id) {
             setProject(`${currentProject.id}`);
         }
-
-        return projects;
-    }, [task]);
+    }, [projects, task]);
 
     const selectedProjectTitle = useMemo(() => {
-        if (!project) return "Select project";
+        if (!project) return translate("Select project");
         const selectedProject = projects.find(p => p.id === project);
         return selectedProject!.text;
-    }, [project]);
+    }, [project, projects]);
 
     const peopleList = useMemo(() => {
         const { people } = PeopleStore.get();
@@ -117,7 +120,7 @@ export const TimeLogDialog: FunctionComponent<ITimeLogDialogProps> = ({ task, ti
         <Dialog
             isOpen={open}
             lazy
-            title="Log time"
+            title={translate("Log time")}
             className="timer-log-dialog"
             onClose={handleCloseDialog}
             onClosed={handleClosed}
@@ -126,13 +129,13 @@ export const TimeLogDialog: FunctionComponent<ITimeLogDialogProps> = ({ task, ti
             {task && (
                 <>
                     <Grid padding={[20, 30]} gap={20}>
-                        <TaskDetailsSection title="Task" vertical>
+                        <TaskDetailsSection title={translate("Task")} vertical>
                             {task.title}
                         </TaskDetailsSection>
 
                         <Row gutter={20}>
                             <Col width={200}>
-                                <TaskDetailsSection title="Elapsed time" vertical>
+                                <TaskDetailsSection title={translate("Elapsed time")} vertical>
                                     <NumericInput
                                         value={hours}
                                         allowNumericCharactersOnly
@@ -141,17 +144,18 @@ export const TimeLogDialog: FunctionComponent<ITimeLogDialogProps> = ({ task, ti
                                         minorStepSize={0.5}
                                         buttonPosition="none"
                                         fill
-                                        placeholder="1.5 hrs"
+                                        placeholder={translate("1.5 hrs")}
                                         onValueChange={handleChangeHours}
+                                        data-testid="timelog-dialog-hours-input"
                                     />
                                 </TaskDetailsSection>
                             </Col>
                             <Col width={250}>
-                                <TaskDetailsSection title="Assign to" vertical>
+                                <TaskDetailsSection title={translate("Assign to")} vertical>
                                     {assignees.length === 0 && (
                                         <RoundButton
                                             dashed
-                                            title="Add people"
+                                            title={translate("Add people")}
                                             onClick={() => setShowPeoplePicker(true)}
                                         />
                                     )}
@@ -175,7 +179,7 @@ export const TimeLogDialog: FunctionComponent<ITimeLogDialogProps> = ({ task, ti
                                 </TaskDetailsSection>
                             </Col>
                             <Col>
-                                <TaskDetailsSection title="Project" vertical>
+                                <TaskDetailsSection title={translate("Project")} vertical>
                                     <Popover
                                         content={
                                             <Menu>
@@ -190,37 +194,50 @@ export const TimeLogDialog: FunctionComponent<ITimeLogDialogProps> = ({ task, ti
                                         }
                                         fill
                                     >
-                                        <Button alignText="left">{selectedProjectTitle}</Button>
+                                        <Button alignText="left" data-testid="timelog-dialog-project-button">
+                                            {selectedProjectTitle}
+                                        </Button>
                                     </Popover>
                                 </TaskDetailsSection>
                             </Col>
                         </Row>
 
-                        <TaskDetailsSection title="Description" vertical>
+                        <TaskDetailsSection title={translate("Description")} vertical>
                             <Textarea
                                 value={description}
                                 onChange={handleChangeDescription}
-                                placeholder="Add a description"
+                                placeholder={translate("Add a description")}
                                 minRows={4}
                                 style={{ width: "100%" }}
+                                data-testid="timelog-dialog-description-input"
                             />
                         </TaskDetailsSection>
-                        <Checkbox label="Billable" checked={billable} onChange={handleSetBillable} />
+                        <Checkbox
+                            label={translate("Billable")}
+                            checked={billable}
+                            onChange={handleSetBillable}
+                            data-testid="timelog-dialog-billable"
+                        />
                     </Grid>
                     <div className={Classes.DIALOG_FOOTER}>
                         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
                             <div>
-                                <Button intent={Intent.DANGER} variant="minimal" onClick={handleStop}
+                                <Button
+                                    intent={Intent.DANGER}
+                                    variant="minimal"
+                                    onClick={handleStop}
                                     data-testid="timelog-dialog-cancel-button"
                                 >
-                                    Cancel timer
+                                    {translate("Cancel timer")}
                                 </Button>
                             </div>
                             <div>
-                                <Button onClick={handleClose} variant="minimal"
+                                <Button
+                                    onClick={handleClose}
+                                    variant="minimal"
                                     data-testid="timelog-dialog-continue-button"
                                 >
-                                    Continue logging
+                                    {translate("Continue logging")}
                                 </Button>
 
                                 <Button
@@ -230,7 +247,7 @@ export const TimeLogDialog: FunctionComponent<ITimeLogDialogProps> = ({ task, ti
                                     onClick={handleSave}
                                     data-testid="timelog-dialog-save-button"
                                 >
-                                    Save log
+                                    {translate("Save log")}
                                 </Button>
                             </div>
                         </div>

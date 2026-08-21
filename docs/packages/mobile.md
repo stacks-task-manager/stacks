@@ -4,11 +4,11 @@ The Stacks mobile client. An [Expo](https://expo.dev/) + React Native app using 
 
 ## Table of Contents
 
--   [Environment](#environment)
--   [Development](#development)
--   [Overview](#overview)
--   [Building](#building)
--   [Related](#related)
+- [Environment](#environment)
+- [Development](#development)
+- [Overview](#overview)
+- [Building](#building)
+- [Related](#related)
 
 ## Environment
 

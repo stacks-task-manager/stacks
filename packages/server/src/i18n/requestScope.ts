@@ -1,6 +1,10 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { AsyncLocalStorage } from "async_hooks";
-import { registerTranslationContext, type ActiveTranslationContext, type TranslationValue } from "@stacks/translations";
+import {
+    registerTranslationContext,
+    type ActiveTranslationContext,
+    type TranslationValue,
+} from "@stacks/translations";
 
 const byRequest = new AsyncLocalStorage<ActiveTranslationContext>();
 

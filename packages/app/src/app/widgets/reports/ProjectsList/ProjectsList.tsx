@@ -2,7 +2,6 @@
 import { Intent, Menu, MenuItem, Popover, Tag } from "@blueprintjs/core";
 import { APPICONS } from "@stacks/types";
 import { Icon } from "app/components/common";
-import React from "react";
 import { useNavigate } from "react-router-dom";
 
 interface ProjectsListProject {
@@ -28,7 +27,6 @@ export const ProjectsList = ({ projects }: ProjectsListProps) => {
                 <Menu>
                     {projects.length > 0 ? (
                         projects.map(({ id, title }) => {
-
                             return (
                                 <MenuItem
                                     text={title}
@@ -39,10 +37,7 @@ export const ProjectsList = ({ projects }: ProjectsListProps) => {
                             );
                         })
                     ) : (
-                        <MenuItem
-                            text="This person is not assigned to any project yet"
-                            disabled
-                        />
+                        <MenuItem text="This person is not assigned to any project yet" disabled />
                     )}
                 </Menu>
             }
@@ -52,4 +47,4 @@ export const ProjectsList = ({ projects }: ProjectsListProps) => {
             </Tag>
         </Popover>
     );
-}
+};

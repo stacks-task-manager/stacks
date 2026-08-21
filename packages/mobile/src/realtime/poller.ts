@@ -61,7 +61,10 @@ export class UpdatePoller {
 
     private connect = () => {
         if (this.destroyed || this.isConnecting) return;
-        if (this.ws && (this.ws.readyState === WebSocket.OPEN || this.ws.readyState === WebSocket.CONNECTING)) {
+        if (
+            this.ws &&
+            (this.ws.readyState === WebSocket.OPEN || this.ws.readyState === WebSocket.CONNECTING)
+        ) {
             return;
         }
 
@@ -239,9 +242,7 @@ export class UpdatePoller {
         const open = this.ws?.readyState === WebSocket.OPEN;
         const connecting = this.isConnecting;
         const disconnected =
-            !this.ws ||
-            this.ws.readyState === WebSocket.CLOSED ||
-            this.ws.readyState === WebSocket.CLOSING;
+            !this.ws || this.ws.readyState === WebSocket.CLOSED || this.ws.readyState === WebSocket.CLOSING;
         return {
             isConnected: open && !connecting && !this.destroyed,
             isConnecting: connecting && !this.destroyed,

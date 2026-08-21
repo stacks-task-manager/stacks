@@ -84,14 +84,7 @@ export function Icon({
 
     if (!entry || !svgString) return null;
 
-    const svg = (
-        <SvgXml
-            xml={svgString}
-            width={finalWidth}
-            height={finalHeight}
-            color={color}
-        />
-    );
+    const svg = <SvgXml xml={svgString} width={finalWidth} height={finalHeight} color={color} />;
 
     if (spin) {
         const rotate = spinValue.interpolate({
@@ -100,10 +93,7 @@ export function Icon({
         });
         return (
             <Animated.View
-                style={[
-                    { width: finalWidth, height: finalHeight, transform: [{ rotate }] },
-                    style,
-                ]}
+                style={[{ width: finalWidth, height: finalHeight, transform: [{ rotate }] }, style]}
                 accessibilityLabel={accessibilityLabel}
                 testID={testID}
             >

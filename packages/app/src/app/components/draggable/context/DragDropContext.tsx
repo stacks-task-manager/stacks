@@ -283,52 +283,55 @@ export function DragDropProvider({ children }: { children: React.ReactNode }) {
     /**
      * Finds the container under the cursor that accepts the dragged type
      */
-    const findTargetContainer = useCallback((clientX: number, clientY: number, draggedType: string): ContainerConfig | null => {
-        const elementsUnderCursor = document.elementsFromPoint(clientX, clientY);
+    const findTargetContainer = useCallback(
+        (clientX: number, clientY: number, draggedType: string): ContainerConfig | null => {
+            const elementsUnderCursor = document.elementsFromPoint(clientX, clientY);
 
-        for (const el of elementsUnderCursor) {
-            const containerEl = (el as HTMLElement).closest("[data-container-id]");
-            if (containerEl) {
-                const containerId = containerEl.getAttribute("data-container-id");
-                if (containerId) {
-                    const config = containersRef.current.get(containerId);
-                    if (config && config.acceptsTypes.includes(draggedType)) {
-                        return config;
+            for (const el of elementsUnderCursor) {
+                const containerEl = (el as HTMLElement).closest("[data-container-id]");
+                if (containerEl) {
+                    const containerId = containerEl.getAttribute("data-container-id");
+                    if (containerId) {
+                        const config = containersRef.current.get(containerId);
+                        if (config && config.acceptsTypes.includes(draggedType)) {
+                            return config;
+                        }
                     }
                 }
             }
-        }
 
-        // Empty (or very short) vertical lists: the task Container can have almost no paintable
-        // area, so elementsFromPoint never hits it. Use an expanded bounding box; if several
-        // columns overlap (padding zone), pick the one whose center is closest to the pointer.
-        const pad = VERTICAL_DROP_HIT_PADDING;
-        let best: ContainerConfig | null = null;
-        let bestDist = Infinity;
-        for (const config of containersRef.current.values()) {
-            if (!config.acceptsTypes.includes(draggedType)) continue;
-            if (config.direction !== "vertical") continue;
-            const el = config.element;
-            if (!el.isConnected) continue;
-            const r = el.getBoundingClientRect();
-            if (
-                clientX < r.left - pad ||
-                clientX > r.right + pad ||
-                clientY < r.top - pad ||
-                clientY > r.bottom + pad
-            ) {
-                continue;
+            // Empty (or very short) vertical lists: the task Container can have almost no paintable
+            // area, so elementsFromPoint never hits it. Use an expanded bounding box; if several
+            // columns overlap (padding zone), pick the one whose center is closest to the pointer.
+            const pad = VERTICAL_DROP_HIT_PADDING;
+            let best: ContainerConfig | null = null;
+            let bestDist = Infinity;
+            for (const config of containersRef.current.values()) {
+                if (!config.acceptsTypes.includes(draggedType)) continue;
+                if (config.direction !== "vertical") continue;
+                const el = config.element;
+                if (!el.isConnected) continue;
+                const r = el.getBoundingClientRect();
+                if (
+                    clientX < r.left - pad ||
+                    clientX > r.right + pad ||
+                    clientY < r.top - pad ||
+                    clientY > r.bottom + pad
+                ) {
+                    continue;
+                }
+                const cx = r.left + r.width / 2;
+                const cy = r.top + r.height / 2;
+                const dist = (clientX - cx) ** 2 + (clientY - cy) ** 2;
+                if (dist < bestDist) {
+                    bestDist = dist;
+                    best = config;
+                }
             }
-            const cx = r.left + r.width / 2;
-            const cy = r.top + r.height / 2;
-            const dist = (clientX - cx) ** 2 + (clientY - cy) ** 2;
-            if (dist < bestDist) {
-                bestDist = dist;
-                best = config;
-            }
-        }
-        return best;
-    }, []);
+            return best;
+        },
+        []
+    );
 
     /**
      * Gets all draggable children of a container (excluding the placeholder and dragged element)

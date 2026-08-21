@@ -173,5 +173,5 @@ const Loading = ({ small }: { small?: boolean }) => {
         <Grid vertical>
             <Spinner size={small ? SpinnerSize.SMALL : SpinnerSize.STANDARD} />
         </Grid>
-    )
-}
+    );
+};

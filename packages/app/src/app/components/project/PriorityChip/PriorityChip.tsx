@@ -14,7 +14,7 @@ interface IPriorityChipProps {
     testId?: string;
     onRemove?: () => void;
 }
-export const PriorityChip: FunctionComponent<IPriorityChipProps> = ({
+const PriorityChipInner: FunctionComponent<IPriorityChipProps> = ({
     priority,
     interactive,
     short,
@@ -22,48 +22,23 @@ export const PriorityChip: FunctionComponent<IPriorityChipProps> = ({
     testId,
     onRemove,
 }) => {
-    const intent = useMemo(() => {
-        if (!priority) return Intent.NONE;
+    const visual = useMemo(() => {
+        if (!priority) return null;
         switch (priority) {
             case PRIORITY.LOW:
-                return Intent.SUCCESS;
+                return { intent: Intent.SUCCESS, icon: PRIORITYICON.LOW, color: Colors.GREEN3 };
             case PRIORITY.MEDIUM:
-                return Intent.WARNING;
+                return { intent: Intent.WARNING, icon: PRIORITYICON.MEDIUM, color: Colors.ORANGE3 };
             case PRIORITY.HIGH:
+                return { intent: Intent.DANGER, icon: PRIORITYICON.HIGH, color: Colors.RED3 };
             case PRIORITY.CRITICAL:
-                return Intent.DANGER;
+                return { intent: Intent.DANGER, icon: PRIORITYICON.CRITICAL, color: Colors.VERMILION3 };
         }
     }, [priority]);
 
-    const icon = useMemo(() => {
-        if (!priority) return undefined;
-        switch (priority) {
-            case PRIORITY.LOW:
-                return PRIORITYICON.LOW;
-            case PRIORITY.MEDIUM:
-                return PRIORITYICON.MEDIUM;
-            case PRIORITY.HIGH:
-                return PRIORITYICON.HIGH;
-            case PRIORITY.CRITICAL:
-                return PRIORITYICON.CRITICAL;
-        }
-    }, [priority]);
+    if (!priority || !visual) return null;
 
-    const color = useMemo(() => {
-        if (!priority) return undefined;
-        switch (priority) {
-            case PRIORITY.LOW:
-                return Colors.GREEN3;
-            case PRIORITY.MEDIUM:
-                return Colors.ORANGE3;
-            case PRIORITY.HIGH:
-                return Colors.RED3;
-            case PRIORITY.CRITICAL:
-                return Colors.VERMILION3;
-        }
-    }, [priority]);
-
-    if (!priority) return null;
+    const { intent, icon, color } = visual;
 
     return (
         <Tooltip
@@ -103,3 +78,5 @@ export const PriorityChip: FunctionComponent<IPriorityChipProps> = ({
         />
     );
 };
+
+export const PriorityChip = React.memo(PriorityChipInner);

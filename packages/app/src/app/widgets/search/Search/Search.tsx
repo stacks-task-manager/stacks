@@ -18,7 +18,7 @@ import classNames from "classnames";
 import xor from "lodash/xor";
 import { format } from "date-fns";
 import Mousetrap from "mousetrap";
-import React, { FunctionComponent, useEffect, useMemo, useRef, useState } from "react";
+import React, { FunctionComponent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { SearchAPI } from "app/api";
@@ -26,6 +26,7 @@ import { Col, Grid, HotkeyChip, Icon, Row, Scroller } from "app/components/commo
 import { PriorityChip } from "app/components/project";
 import { useNav, useStorage } from "app/hooks";
 import { APPICONS, IBookmark, ISearchResult, ITask, RECORDTYPE, TAGSECTION } from "@stacks/types";
+import { openInNewTab } from "app/utils/browser";
 import { scrollIntoView } from "app/utils/dom";
 import { ProjectStatus, Tags, TagsWrapper } from "app/widgets";
 import { AssigneesSync } from "app/widgets/people/Assignees/Assignees";
@@ -76,18 +77,12 @@ export const Search: FunctionComponent<ISearchProps> = ({ onClose }) => {
     const navigate = useNavigate();
     const nav = useNav();
 
-    const focus = () => {
-        if (inputRef.current) {
-            inputRef.current.focus();
-        }
-    };
-
-    const search = async () => {
+    const search = useCallback(async () => {
         const searchResults = await SearchAPI.search(query);
 
         setResults(searchResults);
         setIsLoading(false);
-    };
+    }, [query]);
 
     useEffect(() => {
         // focus the search input
@@ -101,8 +96,8 @@ export const Search: FunctionComponent<ISearchProps> = ({ onClose }) => {
     }, []);
 
     useEffect(() => {
-        focus();
-    }, [inputRef.current]);
+        if (inputRef.current) inputRef.current.focus();
+    }, []);
 
     useEffect(() => {
         setResults([]);
@@ -118,19 +113,7 @@ export const Search: FunctionComponent<ISearchProps> = ({ onClose }) => {
         } else {
             if (results.length > 0) setResults([]);
         }
-    }, [query]);
-
-    // scroll menu when activating a menu item
-    useEffect(() => {
-        if (selectedIndex != null) {
-            const filteredResult = filteredResults[selectedIndex];
-
-            if (filteredResult != null) {
-                const personMenuItem = document.getElementById(`search-result-${filteredResult.id}`);
-                scrollIntoView(personMenuItem, { behavior: "smooth", block: "center" });
-            }
-        }
-    }, [selectedIndex]);
+    }, [query, results.length, search]);
 
     const filteredResults = useMemo(() => {
         return results.filter(result => {
@@ -158,7 +141,19 @@ export const Search: FunctionComponent<ISearchProps> = ({ onClose }) => {
 
             return true;
         });
-    }, [results, type, subsections]);
+    }, [results, subsections]);
+
+    // scroll menu when activating a menu item
+    useEffect(() => {
+        if (selectedIndex != null) {
+            const filteredResult = filteredResults[selectedIndex];
+
+            if (filteredResult != null) {
+                const personMenuItem = document.getElementById(`search-result-${filteredResult.id}`);
+                scrollIntoView(personMenuItem, { behavior: "smooth", block: "center" });
+            }
+        }
+    }, [filteredResults, selectedIndex]);
 
     const counters: Counters = useMemo(() => {
         const counters: Counters = {};
@@ -269,7 +264,7 @@ export const Search: FunctionComponent<ISearchProps> = ({ onClose }) => {
             const bookmarkData: IBookmark = item.data as IBookmark;
 
             if (bookmarkData.type === "url") {
-                window.open(item.url, "_blank");
+                openInNewTab(item.url);
             } else {
                 nav(item.url, {
                     state: {
@@ -595,7 +590,7 @@ const TaskSearchResult: FunctionComponent<IGenericSearchResultProps> = ({ item, 
         }
 
         return APPICONS[item.type.toUpperCase() as unknown as keyof typeof APPICONS];
-    }, [item.data]);
+    }, [item.data, item.type]);
 
     const color = useMemo(() => {
         const task = item.data as ITask;
@@ -605,7 +600,7 @@ const TaskSearchResult: FunctionComponent<IGenericSearchResultProps> = ({ item, 
         }
 
         return undefined;
-    }, [item]);
+    }, [item, isArchived]);
 
     const tooltip = useMemo(() => {
         const task = item.data as ITask;
@@ -615,7 +610,7 @@ const TaskSearchResult: FunctionComponent<IGenericSearchResultProps> = ({ item, 
         }
 
         return "This task is not completed";
-    }, [item]);
+    }, [item, isArchived]);
 
     const children = useMemo(() => {
         const task = item.data as ITask;

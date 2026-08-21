@@ -42,27 +42,29 @@ const TaskTagsRaw: FunctionComponent<ITaskTagsProps> = ({
 
     return (
         <TagsWrapper nowrap={nowrap}>
-            {!disabled && (<TagsPickerPopupSync
-                value={value}
-                type={TAGTYPE.TAG}
-                section={TAGSECTION.PROJECTS}
-                placement="top"
-                disabled={disabled}
-                onToggle={onChange}
-            >
-                {children ? (
-                    children
-                ) : (
-                    <RoundButton
-                        id={id}
-                        dashed
-                        disabled={disabled}
-                        title={value.length > 0 || minimal ? undefined : translate("Add tags")}
-                        tooltip={tooltip}
-                        icon={icon}
-                    />
-                )}
-            </TagsPickerPopupSync>)}
+            {!disabled && (
+                <TagsPickerPopupSync
+                    value={value}
+                    type={TAGTYPE.TAG}
+                    section={TAGSECTION.PROJECTS}
+                    placement="top"
+                    disabled={disabled}
+                    onToggle={onChange}
+                >
+                    {children ? (
+                        children
+                    ) : (
+                        <RoundButton
+                            id={id}
+                            dashed
+                            disabled={disabled}
+                            title={value.length > 0 || minimal ? undefined : translate("Add tags")}
+                            tooltip={tooltip}
+                            icon={icon}
+                        />
+                    )}
+                </TagsPickerPopupSync>
+            )}
             <Tags
                 value={value}
                 section={TAGSECTION.PROJECTS}

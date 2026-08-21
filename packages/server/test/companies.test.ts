@@ -19,7 +19,7 @@ describe("Companies", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect(res.status).toBe(200);
         const body = await res.json();
         expect(body.success).toBe(true);
@@ -41,7 +41,7 @@ describe("Companies", () => {
             },
             body: JSON.stringify(companyData),
         });
-        
+
         expect(res.status).toBe(200);
         const body = await res.json();
         expect(body.success).toBe(true);
@@ -64,7 +64,7 @@ describe("Companies", () => {
             },
             body: JSON.stringify(companyData),
         });
-        
+
         // Should fail with validation error
         expect(res.status).toBe(400);
         const body = await res.json();
@@ -86,7 +86,7 @@ describe("Companies", () => {
             },
             body: JSON.stringify(companyData),
         });
-        
+
         // Email is not validated by schema; allow success or validation error
         expect([200, 400]).toContain(res.status);
     });
@@ -99,7 +99,7 @@ describe("Companies", () => {
                 // No Authorization header
             },
         });
-        
+
         // Should fail without authentication
         expect(res.status).toBe(401);
         const body = await res.json();
@@ -115,7 +115,7 @@ describe("Companies", () => {
                 Authorization: "Bearer invalid-token",
             },
         });
-        
+
         // Should fail with invalid token
         expect(res.status).toBe(401);
         const body = await res.json();

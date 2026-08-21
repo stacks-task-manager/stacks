@@ -139,10 +139,7 @@ export default function CompanyScreen() {
     const primaryPhone = company.phone || company.cell;
 
     return (
-        <ScrollView
-            className="flex-1 bg-background-0"
-            contentContainerStyle={{ paddingBottom: 32 }}
-        >
+        <ScrollView className="flex-1 bg-background-0" contentContainerStyle={{ paddingBottom: 32 }}>
             <VStack className="items-center px-6 pt-6 pb-4" space="sm">
                 {company.logo ? (
                     <Image
@@ -155,10 +152,7 @@ export default function CompanyScreen() {
                         className="rounded-2xl bg-background-200 items-center justify-center"
                         style={{ width: 96, height: 96 }}
                     >
-                        <Text
-                            size="2xl"
-                            className="font-bold text-typography-800"
-                        >
+                        <Text size="2xl" className="font-bold text-typography-800">
                             {companyInitial(company)}
                         </Text>
                     </Box>
@@ -169,10 +163,7 @@ export default function CompanyScreen() {
                         {company.title}
                     </Heading>
                     {sub ? (
-                        <Text
-                            size="sm"
-                            className="text-typography-600 text-center"
-                        >
+                        <Text size="sm" className="text-typography-600 text-center">
                             {sub}
                         </Text>
                     ) : null}
@@ -187,10 +178,7 @@ export default function CompanyScreen() {
                         />
                     ) : null}
                     {primaryPhone ? (
-                        <QuickAction
-                            label="Call"
-                            onPress={() => openPhone(primaryPhone as string)}
-                        />
+                        <QuickAction label="Call" onPress={() => openPhone(primaryPhone as string)} />
                     ) : null}
                     {company.website ? (
                         <QuickAction
@@ -217,26 +205,18 @@ export default function CompanyScreen() {
                     <InfoRow
                         label="Phone"
                         value={company.phone}
-                        onPress={
-                            company.phone ? () => openPhone(company.phone as string) : undefined
-                        }
+                        onPress={company.phone ? () => openPhone(company.phone as string) : undefined}
                     />
                     <InfoRow
                         label="Mobile"
                         value={company.cell}
-                        onPress={
-                            company.cell ? () => openPhone(company.cell as string) : undefined
-                        }
+                        onPress={company.cell ? () => openPhone(company.cell as string) : undefined}
                     />
                     <InfoRow label="Fax" value={company.fax} />
                     <InfoRow
                         label="Website"
                         value={company.website}
-                        onPress={
-                            company.website
-                                ? () => openWebsite(company.website as string)
-                                : undefined
-                        }
+                        onPress={company.website ? () => openWebsite(company.website as string) : undefined}
                     />
                 </Section>
 

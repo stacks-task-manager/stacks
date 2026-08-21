@@ -145,23 +145,19 @@ export const TaskTitle: FunctionComponent<ITaskTitleProps> = ({
                     <small className={Classes.TEXT_DISABLED}>
                         {task.archived && (
                             <>
-                                {translate("Archived on")}{" "}
-                                <strong>{timeSince(task.archived)}</strong>,{" "}
+                                {translate("Archived on")} <strong>{timeSince(task.archived)}</strong>,{" "}
                             </>
                         )}
                         {!task.archived && (
                             <>
-                                {translate("Created on")}{" "}
-                                <strong>{timeSince(task?.created)}</strong>,{" "}
+                                {translate("Created on")} <strong>{timeSince(task?.created)}</strong>,{" "}
                             </>
                         )}
-                        {translate("last updated on")}{" "}
-                        <strong>{timeSince(task?.updated)}</strong>
+                        {translate("last updated on")} <strong>{timeSince(task?.updated)}</strong>
                         {task.done && task.completed != null ? (
                             <>
                                 {", "}
-                                {translate("completed on")}{" "}
-                                <strong>{timeSince(task.completed)}</strong>
+                                {translate("completed on")} <strong>{timeSince(task.completed)}</strong>
                             </>
                         ) : null}
                     </small>

@@ -56,6 +56,13 @@ export function taskInDateRange(task: ITask, dateFrom: Date, dateTo: Date, loose
     return isWithinInterval(taskDate, { start: startOfDay(dateFrom), end: endOfDay(dateTo) });
 }
 
+/**
+ * Returns true when the given date does not match the specified date filter (an inverted predicate used for client-side filtering).
+ * @param filterDate Date filter key ("today", "yesterday", "tomorrow", "thisWeek", "lastWeek", "nextWeek", "thisMonth", "lastMonth", "nextMonth", or a "start|end" date range)
+ * @param date The task's date to test, or null/undefined
+ * @param loose When true, accepts a date that falls within the range boundaries
+ * @returns True when the date falls outside the filtered range
+ */
 function filterByDate(filterDate: string, date?: Date | null, loose = false) {
     if (!date) return true;
 
@@ -120,9 +127,7 @@ export function buildTaskPredicates(
 
     if (filters.query && filters.query.length > 0) {
         const q = filters.query.toLowerCase();
-        preds.push(
-            t => t.title.toLowerCase().includes(q) || t.description.toLowerCase().includes(q)
-        );
+        preds.push(t => t.title.toLowerCase().includes(q) || t.description.toLowerCase().includes(q));
     }
 
     if (filters.state !== "all") {
@@ -163,9 +168,7 @@ export function buildTaskPredicates(
 
     if (filters.assignees && filters.assignees.length > 0) {
         preds.push(
-            t =>
-                Boolean(t.assignees?.length) &&
-                filters.assignees!.some(a => t.assignees!.includes(a))
+            t => Boolean(t.assignees?.length) && filters.assignees!.some(a => t.assignees!.includes(a))
         );
     }
 
@@ -199,6 +202,13 @@ export function buildTaskPredicates(
     return preds;
 }
 
+/**
+ * Returns whether a single task passes every active filter.
+ * @param task The task to test
+ * @param filters The filters to apply
+ * @param currentUserId The id of the current user, used by the "me"/"skipMe" filters; defaults to the current user
+ * @returns True when the task passes every active filter
+ */
 export function filterTask(
     task: ITask,
     filters: IFilters,
@@ -223,6 +233,11 @@ export const useFilteredProjectTasks = () => {
     }, [tasks, filters, currentUserId]);
 };
 
+/**
+ * Returns the non-archived tasks of the current route's project whose ids are in the given list.
+ * @param taskIds The task ids to include
+ * @returns The matching non-archived tasks
+ */
 export const useProjectTasksByIds = (taskIds: string[]) => {
     const { id } = useParams();
     return TasksStore.use(
@@ -251,26 +266,32 @@ export const useFilteredProjectTasksIds = (taskIds: string[]) => {
     }, [tasks, filters, currentUserId]);
 };
 
+/**
+ * Returns the given task ids sorted according to a stack's stored task order.
+ * @param tasks The task ids to sort
+ * @param stackId The id of the stack whose order to use
+ * @returns The task ids sorted by the stack's task order
+ */
 export const useSortTaskIds = (tasks: string[], stackId: string) => {
     const stack = useStack(stackId);
-    return useMemo(
-        () => {
-            const tasksOrder = stack?.tasksOrder || [];
-            return [...tasks].sort((a, b) => tasksOrder.indexOf(a) - tasksOrder.indexOf(b));
-        },
-        [tasks, stack?.tasksOrder]
-    );
+    return useMemo(() => {
+        const tasksOrder = stack?.tasksOrder || [];
+        return [...tasks].sort((a, b) => tasksOrder.indexOf(a) - tasksOrder.indexOf(b));
+    }, [tasks, stack?.tasksOrder]);
 };
 
+/**
+ * Returns the given tasks sorted according to a stack's stored task order.
+ * @param tasks The tasks to sort
+ * @param stackId The id of the stack whose order to use
+ * @returns The tasks sorted by the stack's task order
+ */
 export const useSortTask = (tasks: ITask[], stackId: string) => {
     const stack = useStack(stackId);
-    return useMemo(
-        () => {
-            const tasksOrder = stack?.tasksOrder || [];
-            return [...tasks].sort((a, b) => tasksOrder.indexOf(a.id) - tasksOrder.indexOf(b.id));
-        },
-        [tasks, stack?.tasksOrder]
-    );
+    return useMemo(() => {
+        const tasksOrder = stack?.tasksOrder || [];
+        return [...tasks].sort((a, b) => tasksOrder.indexOf(a.id) - tasksOrder.indexOf(b.id));
+    }, [tasks, stack?.tasksOrder]);
 };
 
 /**
@@ -332,6 +353,11 @@ export const useTasks = (taskIds: string[]): { tasks: ITask[]; isLoading: boolea
     };
 };
 
+/**
+ * Returns a single task from the store without subscribing to updates.
+ * @param taskId The task id
+ * @returns The matching task, or undefined
+ */
 export const getTask = (taskId: string) => {
     return TasksStore.get().tasks.find(task => task.id === taskId);
 };
@@ -347,6 +373,10 @@ export const useCurrentTask = () => {
     return { task, isLoading, taskId: params.tid, projectId: params.id };
 };
 
+/**
+ * Returns the task id of the current route (a task, a project's task, or a my-tasks entry) parsed from the URL.
+ * @returns The task id from the hash pathname, or an empty string
+ */
 export const getCurrentTaskId = () => {
     const path = getHashPathname();
     const match1 = matchPath("/task/:id", path);
@@ -368,14 +398,29 @@ export const useProjectTasks = (projectId: string): ITask[] => {
     );
 };
 
+/**
+ * Returns the non-archived tasks of a project from the store without subscribing to updates.
+ * @param projectId The project id
+ * @returns The project's non-archived tasks
+ */
 export const getProjectTasks = (projectId: string): ITask[] => {
     return TasksStore.get().tasks.filter(task => task.project === projectId && !task.archived);
 };
 
+/**
+ * Returns the non-archived tasks of a stack from the store without subscribing to updates.
+ * @param stackId The stack id
+ * @returns The stack's non-archived tasks
+ */
 export const getStackTasks = (stackId: string): ITask[] => {
     return TasksStore.get().tasks.filter(task => task.stack === stackId && !task.archived);
 };
 
+/**
+ * Returns the ids of a stack's tasks from the store without subscribing to updates.
+ * @param stackId The stack id
+ * @returns The stack's task ids
+ */
 export const getStackTasksIds = (stackId: string): string[] => {
     return TasksStore.get()
         .tasks.filter(task => task.stack === stackId)
@@ -393,10 +438,20 @@ export const useProjectTasksIds = (projectId: string) => {
     );
 };
 
+/**
+ * Returns the ids of a project's non-archived tasks from the store without subscribing to updates.
+ * @param projectId The project id
+ * @returns The project's task ids
+ */
 export const getProjectTasksIds = (projectId: string) => {
     return getProjectTasks(projectId).map(task => task.id);
 };
 
+/**
+ * Builds a nested task tree, attaching each task's children beneath its parent.
+ * @param allTasks The flat list of tasks to build the tree from
+ * @returns The root tasks with their nested children
+ */
 function buildNestedTaskTree(allTasks: ITask[]): TablePersistentData<ITask>[] {
     const idSet = new Set(allTasks.map(t => t.id));
     const childrenByParent = new Map<string, ITask[]>();
@@ -422,6 +477,12 @@ function buildNestedTaskTree(allTasks: ITask[]): TablePersistentData<ITask>[] {
 
 type TaskDateField = "duedate" | "startdate";
 
+/**
+ * Partitions tasks into calendar buckets (overdue, today, tomorrow, this week, next week, upcoming, missing) by the given date field.
+ * @param tasks The tasks to partition
+ * @param field The date field to bucket by ("duedate" or "startdate")
+ * @returns An object mapping each bucket name to its matching undone tasks
+ */
 function partitionTasksByCalendarBuckets(tasks: ITask[], field: TaskDateField) {
     const get = (t: ITask) => (field === "duedate" ? t.duedate : t.startdate);
     return {
@@ -437,6 +498,12 @@ function partitionTasksByCalendarBuckets(tasks: ITask[], field: TaskDateField) {
     };
 }
 
+/**
+ * Converts date buckets into table group data using the given group spec.
+ * @param buckets The date buckets produced by partitionTasksByCalendarBuckets
+ * @param spec The group definitions (id, title, bucket key, empty description, and default expanded state)
+ * @returns The table groups with their data and blank-slate states
+ */
 function tableGroupsFromDateBuckets(
     buckets: ReturnType<typeof partitionTasksByCalendarBuckets>,
     spec: {
@@ -469,7 +536,12 @@ const DUE_DATE_GROUP_SPEC = {
             emptyDescription: "There are no overdue tasks",
             defaultExpanded: true,
         },
-        { groupId: "due-today", title: "Due today", key: "today" as const, emptyDescription: "There are no tasks due today" },
+        {
+            groupId: "due-today",
+            title: "Due today",
+            key: "today" as const,
+            emptyDescription: "There are no tasks due today",
+        },
         {
             groupId: "due-tomorrow",
             title: "Due tomorrow",
@@ -488,7 +560,12 @@ const DUE_DATE_GROUP_SPEC = {
             key: "nextWeek" as const,
             emptyDescription: "There are no tasks due next week",
         },
-        { groupId: "upcoming", title: "Upcoming", key: "upcoming" as const, emptyDescription: "There are no upcoming due tasks" },
+        {
+            groupId: "upcoming",
+            title: "Upcoming",
+            key: "upcoming" as const,
+            emptyDescription: "There are no upcoming due tasks",
+        },
         {
             groupId: "no-due",
             title: "No due date",
@@ -531,7 +608,12 @@ const START_DATE_GROUP_SPEC = {
             key: "nextWeek" as const,
             emptyDescription: "There are no tasks that start next week",
         },
-        { groupId: "upcoming", title: "Upcoming", key: "upcoming" as const, emptyDescription: "There are no tasks that start soon" },
+        {
+            groupId: "upcoming",
+            title: "Upcoming",
+            key: "upcoming" as const,
+            emptyDescription: "There are no tasks that start soon",
+        },
         {
             groupId: "no-start",
             title: "No start date",
@@ -549,12 +631,44 @@ const PRIORITY_GROUP_SPEC: Array<{
     icon: PRIORITYICON | APPICONS | ICONS;
     defaultExpanded?: boolean;
 }> = [
-        { groupId: "critical", title: "Critical", priority: PRIORITY.CRITICAL, emptyDescription: "There are no critical priority tasks", icon: PRIORITYICON.CRITICAL, defaultExpanded: true },
-        { groupId: "high", title: "High", priority: PRIORITY.HIGH, emptyDescription: "There are no high priority tasks", icon: PRIORITYICON.HIGH, defaultExpanded: true },
-        { groupId: "medium", title: "Medium", priority: PRIORITY.MEDIUM, emptyDescription: "There are no medium priority tasks", icon: PRIORITYICON.MEDIUM },
-        { groupId: "low", title: "Low", priority: PRIORITY.LOW, emptyDescription: "There are no low priority tasks", icon: PRIORITYICON.LOW },
-        { groupId: "none", title: "None", priority: PRIORITY.NONE, emptyDescription: "There are no unprioritized tasks", icon: ICONS.FLAG },
-    ];
+    {
+        groupId: "critical",
+        title: "Critical",
+        priority: PRIORITY.CRITICAL,
+        emptyDescription: "There are no critical priority tasks",
+        icon: PRIORITYICON.CRITICAL,
+        defaultExpanded: true,
+    },
+    {
+        groupId: "high",
+        title: "High",
+        priority: PRIORITY.HIGH,
+        emptyDescription: "There are no high priority tasks",
+        icon: PRIORITYICON.HIGH,
+        defaultExpanded: true,
+    },
+    {
+        groupId: "medium",
+        title: "Medium",
+        priority: PRIORITY.MEDIUM,
+        emptyDescription: "There are no medium priority tasks",
+        icon: PRIORITYICON.MEDIUM,
+    },
+    {
+        groupId: "low",
+        title: "Low",
+        priority: PRIORITY.LOW,
+        emptyDescription: "There are no low priority tasks",
+        icon: PRIORITYICON.LOW,
+    },
+    {
+        groupId: "none",
+        title: "None",
+        priority: PRIORITY.NONE,
+        emptyDescription: "There are no unprioritized tasks",
+        icon: ICONS.FLAG,
+    },
+];
 
 /**
  * Returns the grouped tasks for the Projects Table View
@@ -564,13 +678,13 @@ export const useGrouppedProjectTasks = () => {
     const { project } = useCurrentProject();
     const grouping = TableStore.use(state => state.grouping, shallowEqual);
     const tasksPlain = useFilteredProjectTasks();
-
-    const tasks = grouping === GROUPING_TYPE.UNGROUPED ? buildNestedTaskTree(tasksPlain) : tasksPlain;
-
     const stacks = useStacks();
+    const people = PeopleStore.use(state => state.people, shallowEqual);
 
     return useMemo(() => {
         if (!project) return [];
+
+        const tasks = grouping === GROUPING_TYPE.UNGROUPED ? buildNestedTaskTree(tasksPlain) : tasksPlain;
 
         if (grouping === GROUPING_TYPE.STACK) {
             const group: TablePersistentGroupData<ITask>[] = [];
@@ -589,10 +703,10 @@ export const useGrouppedProjectTasks = () => {
                     defaultExpanded: !index,
                     blankSlate: !stackTasks.length
                         ? {
-                            title: `${stack.title} stack empty`,
-                            description: "There are no tasks in this stack",
-                            icon: APPICONS.TASK,
-                        }
+                              title: `${stack.title} stack empty`,
+                              description: "There are no tasks in this stack",
+                              icon: APPICONS.TASK,
+                          }
                         : undefined,
                 });
                 index++;
@@ -635,7 +749,6 @@ export const useGrouppedProjectTasks = () => {
         }
 
         if (grouping === GROUPING_TYPE.PEOPLE) {
-            const { people } = PeopleStore.get();
             const group: TablePersistentGroupData<ITask>[] = [];
             for (const person of people) {
                 group.push({
@@ -657,7 +770,7 @@ export const useGrouppedProjectTasks = () => {
         }
 
         return buildNestedTaskTree(tasks);
-    }, [project, tasks, grouping, stacks]);
+    }, [project, tasksPlain, grouping, stacks, people]);
 };
 
 /**
@@ -762,6 +875,11 @@ export const useDependantsCount = (taskId: string, done?: boolean): number => {
     return isLoading ? 0 : tasks.length;
 };
 
+/**
+ * Returns the non-archived tasks belonging to a stack.
+ * @param stackId The stack id
+ * @returns The stack's non-archived tasks
+ */
 export const useStackTasks = (stackId?: string): ITask[] => {
     return TasksStore.use(
         state => state.tasks.filter(task => task.stack === stackId && !task.archived),
@@ -770,6 +888,13 @@ export const useStackTasks = (stackId?: string): ITask[] => {
     );
 };
 
+/**
+ * Returns the tasks whose start or due date falls within the given period.
+ * @param from The start of the period (inclusive)
+ * @param to The end of the period (inclusive)
+ * @param loose When true, includes tasks whose date range overlaps the period at all
+ * @returns The matching tasks and the store's loading state
+ */
 export const useTasksByPeriod = (from: Date, to: Date, loose = false) => {
     return TasksStore.use(state => {
         return {
@@ -779,6 +904,11 @@ export const useTasksByPeriod = (from: Date, to: Date, loose = false) => {
     }, shallowEqual);
 };
 
+/**
+ * Returns the archived tasks of a project.
+ * @param projectId The project id to filter by
+ * @returns The project's archived tasks and the loading state
+ */
 export const useArchivedTasks = (projectId?: string): { tasks: ITask[]; isLoading: boolean } => {
     return TasksStore.use(state => {
         return {

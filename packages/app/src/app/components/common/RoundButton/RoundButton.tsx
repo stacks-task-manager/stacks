@@ -44,6 +44,10 @@ export const RoundButton: FunctionComponent<IRoundButtonProps> = ({
     testId,
     onClick,
 }) => {
+    // Fallback test id derived from the visible title (or icon), so each round
+    // button is addressable in tests unless an explicit `testId` is provided.
+    const defaultTestId = testId ?? `round-button-${typeof title === "string" ? title : icon ?? "default"}`;
+
     return (
         <Tooltip
             content={tooltip}
@@ -64,13 +68,17 @@ export const RoundButton: FunctionComponent<IRoundButtonProps> = ({
                     id={id}
                     disabled={disabled}
                     onClick={onClick}
-                    data-testid={testId}
+                    data-testid={defaultTestId}
                 >
                     <span>
-                        {count ? count : <Icon
-                            icon={disabled ? icon ?? "minus" : icon ?? "plus"}
-                            size={minimal ? iconSize || undefined : iconSize || 12}
-                        />}
+                        {count ? (
+                            count
+                        ) : (
+                            <Icon
+                                icon={disabled ? icon ?? "minus" : icon ?? "plus"}
+                                size={minimal ? iconSize || undefined : iconSize || 12}
+                            />
+                        )}
                     </span>
                     {title}
                     {children}

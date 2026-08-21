@@ -13,34 +13,30 @@ interface ITaskDetailsCoverProps {
     url: string | null;
     disabled?: boolean;
 }
-export const TaskDetailsCover: FunctionComponent<ITaskDetailsCoverProps> = ({
-    taskId,
-    url,
-    disabled,
-}) => {
+export const TaskDetailsCover: FunctionComponent<ITaskDetailsCoverProps> = ({ taskId, url, disabled }) => {
     useElementHotkey("shift+v", "td-cover");
     const { pickFiles, removeByRecord } = useUpload();
 
     const handleSelectCoverFile = async () => {
         pickFiles({
-            recordId: taskId, type: FILES_TYPE.TASK_COVER, onUploaded: async (attachments: IAttachment[]) => {
-                const coverImage = attachments.find((attachment) => attachment.type === FILES_TYPE.TASK_COVER);
+            recordId: taskId,
+            type: FILES_TYPE.TASK_COVER,
+            onUploaded: async (attachments: IAttachment[]) => {
+                const coverImage = attachments.find(attachment => attachment.type === FILES_TYPE.TASK_COVER);
                 if (coverImage && coverImage.previewUrl) {
                     await TasksActions.addCover(taskId, coverImage.previewUrl);
                 }
-            }
+            },
         });
     };
 
     const handleRemoveCover = async () => {
         await removeByRecord(taskId, FILES_TYPE.TASK_COVER);
         await TasksActions.removeCover(taskId);
-    }
+    };
 
     if (url) {
-        return (
-            <TaskCover url={url} onRemove={handleRemoveCover} />
-        );
+        return <TaskCover url={url} onRemove={handleRemoveCover} />;
     }
 
     return (

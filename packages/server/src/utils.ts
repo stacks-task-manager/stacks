@@ -4,9 +4,4 @@
  */
 
 // Re-export real-time update functionality for easy access
-export {
-    sendRealtimeUpdate,
-    getConnectionStats,
-    registerConnection,
-    unregisterConnection
-} from './events';
+export { sendRealtimeUpdate, getConnectionStats, registerConnection, unregisterConnection } from "./events";

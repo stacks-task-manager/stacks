@@ -160,7 +160,7 @@ describe("Events Utility Functions", () => {
 
         test("should handle unregistering non-existent connections gracefully", () => {
             const nonExistentId = "non-existent-connection";
-            
+
             // Should not throw an error
             expect(() => {
                 unregisterConnection(nonExistentId);
@@ -185,7 +185,7 @@ describe("Events Utility Functions", () => {
 
             const userId1 = "test-user-1";
             const userId2 = "test-user-2";
-            
+
             registerConnection("connection-1");
             registerConnection("connection-2");
 
@@ -208,21 +208,21 @@ describe("Events Utility Functions", () => {
                 record: "task-1",
                 user: "test-user-1",
                 action: "update" as any,
-                timestamp: Date.now()
+                timestamp: Date.now(),
             };
 
             sendRealtimeUpdate(updateData);
 
             expect(mockHandler).toHaveBeenCalledWith({
                 ...updateData,
-                timestamp: expect.any(Number)
+                timestamp: expect.any(Number),
             });
         });
 
         test("should handle multiple event listeners", () => {
             const mockHandler1 = vi.fn();
             const mockHandler2 = vi.fn();
-            
+
             onUpdate(mockHandler1);
             onUpdate(mockHandler2);
 
@@ -234,18 +234,18 @@ describe("Events Utility Functions", () => {
                 record: "project-1",
                 user: "test-user-1",
                 action: "update" as any,
-                timestamp: Date.now()
+                timestamp: Date.now(),
             };
 
             sendRealtimeUpdate(updateData);
 
             expect(mockHandler1).toHaveBeenCalledWith({
                 ...updateData,
-                timestamp: expect.any(Number)
+                timestamp: expect.any(Number),
             });
             expect(mockHandler2).toHaveBeenCalledWith({
                 ...updateData,
-                timestamp: expect.any(Number)
+                timestamp: expect.any(Number),
             });
         });
 
@@ -253,7 +253,7 @@ describe("Events Utility Functions", () => {
             const mockHandler = vi.fn().mockImplementation(() => {
                 throw new Error("Handler error");
             });
-            
+
             appEmitter.on(AppEvents.DATA_UPDATE, mockHandler);
             registerConnection("test-connection");
 
@@ -262,7 +262,7 @@ describe("Events Utility Functions", () => {
                 record: "task-1",
                 user: "test-user-1",
                 action: "update" as any,
-                timestamp: Date.now()
+                timestamp: Date.now(),
             };
 
             // Should not throw error even if handler fails
@@ -279,7 +279,7 @@ describe("Events Utility Functions", () => {
                 record: "task-1",
                 user: "test-user-1",
                 action: "update" as any,
-                timestamp: Date.now()
+                timestamp: Date.now(),
             };
 
             // Should not throw error even with null data
@@ -290,29 +290,29 @@ describe("Events Utility Functions", () => {
         test("should emit updates regardless of user existence", () => {
             const mockHandler = vi.fn();
             appEmitter.on(AppEvents.DATA_UPDATE, mockHandler);
-            
+
             const updateData = {
                 type: "task_updated" as any,
                 record: "task-1",
                 user: "non-existent-user",
                 action: "update" as any,
-                timestamp: Date.now()
+                timestamp: Date.now(),
             };
 
             sendRealtimeUpdate(updateData);
             expect(mockHandler).toHaveBeenCalledWith({
                 ...updateData,
-                timestamp: expect.any(Number)
+                timestamp: expect.any(Number),
             });
         });
 
         test("should broadcast updates to all event listeners", () => {
             const mockHandler1 = vi.fn();
             const mockHandler2 = vi.fn();
-            
+
             onUpdate(mockHandler1);
             onUpdate(mockHandler2);
-            
+
             registerConnection("connection-1");
             registerConnection("connection-2");
 
@@ -321,7 +321,7 @@ describe("Events Utility Functions", () => {
                 record: "announcement-1",
                 user: "system",
                 action: "notify" as any,
-                timestamp: Date.now()
+                timestamp: Date.now(),
             };
 
             // Broadcast to all users
@@ -329,11 +329,11 @@ describe("Events Utility Functions", () => {
 
             expect(mockHandler1).toHaveBeenCalledWith({
                 ...updateData,
-                timestamp: expect.any(Number)
+                timestamp: expect.any(Number),
             });
             expect(mockHandler2).toHaveBeenCalledWith({
                 ...updateData,
-                timestamp: expect.any(Number)
+                timestamp: expect.any(Number),
             });
         });
     });
@@ -343,7 +343,7 @@ describe("Events Utility Functions", () => {
             expect(AppEvents.DATA_UPDATE).toBeDefined();
             expect(AppEvents.CONNECTION_COUNT).toBeDefined();
             expect(AppEvents.CUSTOM_MESSAGE).toBeDefined();
-            
+
             expect(typeof AppEvents.DATA_UPDATE).toBe("string");
             expect(typeof AppEvents.CONNECTION_COUNT).toBe("string");
             expect(typeof AppEvents.CUSTOM_MESSAGE).toBe("string");
@@ -397,7 +397,7 @@ describe("Events Utility Functions", () => {
                 record: "task-1",
                 user: "user-1",
                 action: "assign" as any,
-                timestamp: Date.now()
+                timestamp: Date.now(),
             };
 
             // Queue a message for the connection
@@ -412,7 +412,7 @@ describe("Events Utility Functions", () => {
 
         test("should limit queue size for connections", () => {
             const connectionId = "test-connection";
-            
+
             // Queue 150 messages (exceeding the 100 limit)
             for (let i = 0; i < 150; i++) {
                 const message = {
@@ -420,7 +420,7 @@ describe("Events Utility Functions", () => {
                     record: `notification-${i}`,
                     user: "user-1",
                     action: "create" as any,
-                    timestamp: Date.now()
+                    timestamp: Date.now(),
                 };
                 queueMessage(connectionId, message);
             }
@@ -440,7 +440,7 @@ describe("Events Utility Functions", () => {
                 record: "task-1",
                 user: "user-1",
                 action: "update" as any,
-                timestamp: Date.now()
+                timestamp: Date.now(),
             };
 
             // Queue message
@@ -462,11 +462,11 @@ describe("Events Utility Functions", () => {
     describe("Connection Stats", () => {
         test("should return accurate connection statistics", () => {
             const stats = getConnectionStats();
-            
+
             expect(stats).toHaveProperty("activeConnections");
             expect(stats).toHaveProperty("queuedConnections");
             expect(stats).toHaveProperty("totalQueuedMessages");
-            
+
             expect(typeof stats.activeConnections).toBe("number");
             expect(typeof stats.queuedConnections).toBe("number");
             expect(typeof stats.totalQueuedMessages).toBe("number");
@@ -475,16 +475,16 @@ describe("Events Utility Functions", () => {
         test("should update stats when connections change", () => {
             const initialStats = getConnectionStats();
             const initialActive = initialStats.activeConnections;
-            
+
             const connectionId = "test-connection-123";
-            
+
             registerConnection(connectionId);
-            
+
             let stats = getConnectionStats();
             expect(stats.activeConnections).toBe(initialActive + 1);
-            
+
             unregisterConnection(connectionId);
-            
+
             stats = getConnectionStats();
             expect(stats.activeConnections).toBe(initialActive);
         });

@@ -6,29 +6,29 @@ import {
     ButtonGroup,
     Colors,
     FormGroup,
-    InputGroup,
     Intent,
-    Keys,
     Popover,
     Switch,
     Tooltip,
 } from "@blueprintjs/core";
 import { translate } from "@stacks/translations";
 import { ITag, PRIORITY, PRIORITYICON, TAGSECTION } from "@stacks/types";
-import { AvatarChip, Grid, Icon } from "app/components/common";
+import { Icon } from "app/components/common";
 import { getCurrentProjectId, useMe, useProjectStatuses, useProjectTags } from "app/hooks";
+import { produce } from "immer";
+import { FunctionComponent, useMemo } from "react";
+
 import { TASK_PRIORITY } from "app/locale/dynamic-messages";
 import { ProjectFiltersActions } from "app/store/actions";
-import { PeopleStore } from "app/store/people";
 import { IFilters } from "app/store/projectFilters";
-import { PeopleDialog, StatusChip, Tags } from "app/widgets";
-import { produce } from "immer";
-import React, { createRef, FunctionComponent, useEffect, useMemo, useState } from "react";
+import { StatusChip, Tags } from "app/widgets";
 import { TagsWrapper } from "../../../widgets/common/TagsWrapper/TagsWrapper";
 import { PriorityMenu } from "../PriorityMenu/PriorityMenu";
 import { StatusesMenu } from "../StatusesMenu/StatusesMenu";
 import { TagsMenu } from "../TagsMenu/TagsMenu";
-import { DateMenu, formatDates } from "./DateMenu";
+import { AssigneesFilter } from "./AssigneesFilter";
+import { DateFilter } from "./DateFilter";
+import { QueryFilter } from "./QueryFilter";
 
 interface IProjectFilterProps {
     filters: IFilters;
@@ -38,7 +38,13 @@ export const ProjectFilter: FunctionComponent<IProjectFilterProps> = ({ filters,
     const projectId = getCurrentProjectId();
     return (
         <>
-            <QueryFilter term={filters.query} />
+            <QueryFilter
+                term={filters.query}
+                onChange={query => ProjectFiltersActions.setQuery(query)}
+                onHide={() => ProjectFiltersActions.hide()}
+                label={translate("Search task")}
+                helperText={translate("Search in task title or description")}
+            />
             <StateFilter state={filters.state} />
             {!myTasks && <MeVsAnyoneFilter me={filters.me} nobody={filters.nobody} />}
             {!myTasks ? (
@@ -53,23 +59,39 @@ export const ProjectFilter: FunctionComponent<IProjectFilterProps> = ({ filters,
                 <AssigneesFilter
                     assignees={filters.assignees}
                     disabled={Boolean(filters.me) || Boolean(filters.nobody)}
+                    onChange={people => ProjectFiltersActions.set("assignees", people)}
                 />
             )}
             <PriorityFilter priority={filters.priority} />
             <TagsFilter tags={filters.tags} projectId={projectId} />
             <StatusesFilter status={filters.status} projectId={projectId} />
-            <StartDateFilter date={filters.startDate} />
-            <DoDateFilter date={filters.doDate} />
-            <DueDateFilter date={filters.dueDate} />
+            <DateFilter
+                date={filters.startDate}
+                emptyLabel={translate("Start date")}
+                onChange={date => ProjectFiltersActions.set("startDate", date)}
+                data-testid="start-date-filter"
+            />
+            <DateFilter
+                date={filters.doDate}
+                emptyLabel={translate("Do date")}
+                onChange={date => ProjectFiltersActions.set("doDate", date)}
+                data-testid="do-date-filter"
+            />
+            <DateFilter
+                date={filters.dueDate}
+                emptyLabel={translate("Due Date")}
+                onChange={date => ProjectFiltersActions.set("dueDate", date)}
+                data-testid="due-date-filter"
+            />
             {/* {hasProjects && <ProjectsFilter project={filters.project} />} */}
-            <FormGroup label="Quick filters">
+            <FormGroup label={translate("Quick filters")}>
                 <Switch
-                    label="Only overdue tasks"
+                    label={translate("Only overdue tasks")}
                     checked={filters.overdue}
                     onChange={() => ProjectFiltersActions.set("overdue", !filters.overdue)}
                 />
                 <Switch
-                    label="Only tasks in progress"
+                    label={translate("Only tasks in progress")}
                     checked={filters.inProgress}
                     onChange={() => ProjectFiltersActions.set("inProgress", !filters.inProgress)}
                 />
@@ -87,66 +109,15 @@ export const ProjectFilter: FunctionComponent<IProjectFilterProps> = ({ filters,
     );
 };
 
-interface IQueryFilterProps {
-    term?: string;
-}
-const QueryFilter: FunctionComponent<IQueryFilterProps> = ({ term }) => {
-    const [query, setQuery] = useState(term);
-    const queryInputRef = createRef<HTMLInputElement>();
-
-    useEffect(() => {
-        if (queryInputRef.current) {
-            queryInputRef.current.focus();
-        }
-    }, []);
-
-    useEffect(() => {
-        if (term !== query) {
-            setQuery(term);
-        }
-    }, [term]);
-
-    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.keyCode === Keys.ESCAPE || ((event.metaKey || event.ctrlKey) && event.key === "f")) {
-            if (query?.length) {
-                setQuery("");
-                ProjectFiltersActions.setQuery("");
-            } else {
-                ProjectFiltersActions.hide();
-            }
-        }
-    };
-
-    const handleChangeQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setQuery(event.currentTarget.value);
-        ProjectFiltersActions.setQuery(event.currentTarget.value);
-    };
-
-    return (
-        <FormGroup label="Search task" helperText="Search in task title or description">
-            <InputGroup
-                value={query}
-                placeholder="Enter a keyword"
-                leftIcon={<Icon icon="search" />}
-                round
-                type="search"
-                onChange={handleChangeQuery}
-                inputRef={queryInputRef}
-                onKeyDown={handleKeyDown}
-            />
-        </FormGroup>
-    );
-};
-
 interface IStateFilterProps {
     state: "all" | "done" | "todo";
 }
 const StateFilter: FunctionComponent<IStateFilterProps> = ({ state }) => {
     return (
-        <FormGroup label="Task state">
+        <FormGroup label={translate("Task state")}>
             <ButtonGroup fill>
                 <Tooltip
-                    content="Incomplete tasks"
+                    content={translate("Incomplete tasks")}
                     placement="top"
                     // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     renderTarget={({ isOpen, ref, ...props }) => (
@@ -161,7 +132,7 @@ const StateFilter: FunctionComponent<IStateFilterProps> = ({ state }) => {
                     )}
                 />
                 <Tooltip
-                    content="Completed tasks"
+                    content={translate("Completed tasks")}
                     placement="top"
                     // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     renderTarget={({ isOpen, ref, ...props }) => (
@@ -176,7 +147,7 @@ const StateFilter: FunctionComponent<IStateFilterProps> = ({ state }) => {
                     )}
                 />
                 <Tooltip
-                    content="All tasks"
+                    content={translate("All tasks")}
                     placement="top"
                     // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     renderTarget={({ isOpen, ref, ...props }) => (
@@ -203,9 +174,9 @@ const TagsFilter: FunctionComponent<ITagsFilterProps> = ({ tags, projectId }) =>
     const systemTags = useProjectTags(projectId);
 
     const label = useMemo(() => {
-        if (tags.length === 0) return "All tags";
+        if (tags.length === 0) return translate("All tags");
         if (tags.length === 1) return systemTags.find((t: ITag) => t.id === tags.at(0))?.title;
-        return "Multiple tags";
+        return translate("Multiple tags");
     }, [tags, systemTags]);
 
     const icon = useMemo(() => {
@@ -244,7 +215,7 @@ const TagsFilter: FunctionComponent<ITagsFilterProps> = ({ tags, projectId }) =>
     };
 
     return (
-        <FormGroup label="Tags">
+        <FormGroup label={translate("Tags")}>
             <Popover
                 content={
                     <TagsMenu
@@ -303,7 +274,7 @@ const StatusesFilter: FunctionComponent<IStatusesFilterProps> = ({ status, proje
     }, [selectedStatus]);
 
     return (
-        <FormGroup label="Status">
+        <FormGroup label={translate("Status")}>
             <Popover
                 content={
                     <StatusesMenu
@@ -335,77 +306,6 @@ const StatusesFilter: FunctionComponent<IStatusesFilterProps> = ({ status, proje
                         onRemove={() => ProjectFiltersActions.set("status", undefined)}
                     />
                 </div>
-            )}
-        </FormGroup>
-    );
-};
-
-interface IAssigneesFilterProps {
-    assignees: string[];
-    disabled?: boolean;
-}
-const AssigneesFilter: FunctionComponent<IAssigneesFilterProps> = ({ assignees, disabled }) => {
-    const [open, setOpen] = useState(false);
-
-    const people = useMemo(() => {
-        return PeopleStore.get().people.filter(person => assignees.includes(person.id));
-    }, [assignees]);
-
-    const handleSelectAssignees = (people: string[]) => {
-        ProjectFiltersActions.set("assignees", people);
-    };
-
-    const toggleAssignee = (personId: string) => {
-        ProjectFiltersActions.set(
-            "assignees",
-            produce(assignees, (draftAssignees: string[]) => {
-                const index = draftAssignees.findIndex(a => a === personId);
-                if (index > -1) {
-                    draftAssignees.splice(index, 1);
-                } else {
-                    draftAssignees.push(personId);
-                }
-            })
-        );
-    };
-
-    const handleTogglePeopleDialog = () => {
-        setOpen(!open);
-    };
-
-    return (
-        <FormGroup label="Assginees">
-            <Button
-                fill
-                icon={<Icon icon="user-add" />}
-                alignText={Alignment.LEFT}
-                disabled={disabled}
-                onClick={handleTogglePeopleDialog}
-            >
-                Add assignees
-            </Button>
-
-            {people.length > 0 && (
-                <div style={{ marginTop: 10 }}>
-                    <Grid gap={10}>
-                        {people.map(person => (
-                            <AvatarChip
-                                key={person.id}
-                                person={person}
-                                small
-                                onRemove={() => toggleAssignee(person.id)}
-                            />
-                        ))}
-                    </Grid>
-                </div>
-            )}
-
-            {open && (
-                <PeopleDialog
-                    value={assignees}
-                    onClose={handleSelectAssignees}
-                    onClosed={handleTogglePeopleDialog}
-                />
             )}
         </FormGroup>
     );
@@ -444,14 +344,14 @@ const PriorityFilter: FunctionComponent<IPriorityFilterProps> = ({ priority }) =
 
     const label = useMemo(() => {
         if (!priority || priority === PRIORITY.NONE) {
-            return "Any priority";
+            return translate("Any priority");
         }
 
         return TASK_PRIORITY[priority];
     }, [priority]);
 
     return (
-        <FormGroup label="Priority">
+        <FormGroup label={translate("Priority")}>
             <Popover
                 content={
                     <PriorityMenu
@@ -518,11 +418,13 @@ const MeVsAnyoneFilter: FunctionComponent<IMeVsAnyoneFilterProps> = ({ me, nobod
     };
 
     return (
-        <FormGroup label="Tasks assigned to">
+        <FormGroup label={translate("Tasks assigned to")}>
             <ButtonGroup fill>
                 <Tooltip
                     disabled={!Boolean(currentUser)}
-                    content={currentUser ? "Just me" : "The current user is not yet selected."}
+                    content={
+                        currentUser ? translate("Just me") : translate("The current user is not yet selected")
+                    }
                     placement="top"
                     // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     renderTarget={({ isOpen, ref, ...props }) => (
@@ -538,7 +440,7 @@ const MeVsAnyoneFilter: FunctionComponent<IMeVsAnyoneFilterProps> = ({ me, nobod
                     )}
                 />
                 <Tooltip
-                    content="Anyone"
+                    content={translate("Anyone")}
                     placement="top"
                     // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     renderTarget={({ isOpen, ref, ...props }) => (
@@ -555,7 +457,7 @@ const MeVsAnyoneFilter: FunctionComponent<IMeVsAnyoneFilterProps> = ({ me, nobod
                     )}
                 />
                 <Tooltip
-                    content="Nobody"
+                    content={translate("Nobody")}
                     placement="top"
                     // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     renderTarget={({ isOpen, ref, ...props }) => (
@@ -583,117 +485,18 @@ const AnyoneExtra: FunctionComponent<AnyoneExtraProps> = ({ skipMe, onlyAssigned
     return (
         <>
             <Switch
-                label="Skip tasks assigned to me"
+                label={translate("Skip tasks assigned to me")}
                 checked={Boolean(skipMe)}
                 disabled={disabled}
                 onChange={() => ProjectFiltersActions.set("skipMe", !skipMe)}
             />
             <Switch
-                label="Only show assigned tasks"
+                label={translate("Only show assigned tasks")}
                 checked={Boolean(onlyAssigned)}
                 disabled={disabled}
                 onChange={() => ProjectFiltersActions.set("onlyAssigned", !onlyAssigned)}
             />
         </>
-    );
-};
-
-interface IDateFilterProps {
-    date?: string;
-}
-const StartDateFilter: FunctionComponent<IDateFilterProps> = ({ date }) => {
-    const label = useMemo(() => {
-        if (!date) return translate("Start date");
-        return formatDates(date);
-    }, [date]);
-
-    const handleSetDate = (date?: string) => {
-        ProjectFiltersActions.set("startDate", date);
-    };
-
-    return (
-        <FormGroup label={translate("Start date")}>
-            <Popover
-                content={<DateMenu date={date} onChange={handleSetDate} />}
-                minimal
-                matchTargetWidth
-                placement="bottom"
-            >
-                <Button
-                    fill
-                    icon={<Icon icon="calendar-date" />}
-                    alignText={Alignment.LEFT}
-                    rightIcon={<Icon icon="chevron-down" />}
-                    intent={date != null ? Intent.PRIMARY : Intent.NONE}
-                >
-                    {label}
-                </Button>
-            </Popover>
-        </FormGroup>
-    );
-};
-
-const DoDateFilter: FunctionComponent<IDateFilterProps> = ({ date }) => {
-    const label = useMemo(() => {
-        if (!date) return translate("Do date");
-        return formatDates(date);
-    }, [date]);
-
-    const handleSetDate = (date?: string) => {
-        ProjectFiltersActions.set("doDate", date);
-    };
-
-    return (
-        <FormGroup label={translate("Do date")}>
-            <Popover
-                content={<DateMenu date={date} onChange={handleSetDate} />}
-                minimal
-                matchTargetWidth
-                placement="bottom"
-            >
-                <Button
-                    fill
-                    icon={<Icon icon="calendar-date" />}
-                    alignText={Alignment.LEFT}
-                    rightIcon={<Icon icon="chevron-down" />}
-                    intent={date != null ? Intent.PRIMARY : Intent.NONE}
-                >
-                    {label}
-                </Button>
-            </Popover>
-        </FormGroup>
-    );
-};
-
-const DueDateFilter: FunctionComponent<IDateFilterProps> = ({ date }) => {
-    const label = useMemo(() => {
-        if (!date) return translate("Due Date");
-        return formatDates(date);
-    }, [date]);
-
-    const handleSetDate = (date?: string) => {
-        ProjectFiltersActions.set("dueDate", date);
-    };
-
-    return (
-        <FormGroup label={translate("Due Date")}>
-            <Popover
-                content={<DateMenu date={date} onChange={handleSetDate} />}
-                minimal
-                matchTargetWidth
-                placement="bottom"
-            >
-                <Button
-                    fill
-                    icon={<Icon icon="calendar-date" />}
-                    alignText={Alignment.LEFT}
-                    rightIcon={<Icon icon="chevron-down" />}
-                    intent={date != null ? Intent.PRIMARY : Intent.NONE}
-                >
-                    {label}
-                </Button>
-            </Popover>
-        </FormGroup>
     );
 };
 
@@ -709,7 +512,7 @@ const ProjectsFilter: FunctionComponent<IProjectsFilterProps> = ({ project }) =>
 
     return (
         <>
-            <FormGroup label="Project">
+            <FormGroup label={translate("Project")}>
                 <Popover
                     content={
                         <Menu>

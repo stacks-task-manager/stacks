@@ -105,8 +105,7 @@ const MentionListRef: ForwardRefRenderFunction<MentionListActions, MentionListPr
                                                             Classes.TEXT_MUTED
                                                         )}
                                                     >
-                                                        {translate("in")}{" "}
-                                                        <strong>{item.parentTitle}</strong>
+                                                        {translate("in")} <strong>{item.parentTitle}</strong>
                                                     </div>
                                                 ) : null}
                                             </div>

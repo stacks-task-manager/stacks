@@ -5,6 +5,10 @@
 import { ReportsStore } from "app/store/reports";
 import { shallowEqual } from "./store";
 
+/**
+ * Returns the available reports and their loading state.
+ * @returns The list of reports and a loading flag.
+ */
 export const useReports = () => {
     return ReportsStore.use(
         state => ({

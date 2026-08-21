@@ -47,7 +47,12 @@ export const AttachmentRow: FunctionComponent<AttachmentRowProps> = ({ file, tas
             </div>
             <div className="attachment-row__action">
                 <Tooltip content={`${translate("Save to")}...`} placement="top">
-                    <Button size="small" variant="minimal" icon={<Icon icon="save-02" />} onClick={handleSaveTo} />
+                    <Button
+                        size="small"
+                        variant="minimal"
+                        icon={<Icon icon="save-02" />}
+                        onClick={handleSaveTo}
+                    />
                 </Tooltip>
             </div>
         </div>

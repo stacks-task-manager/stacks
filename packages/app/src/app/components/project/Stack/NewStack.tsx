@@ -29,9 +29,7 @@ export const NewStack: FunctionComponent<INewStackProps> = ({ narrow }) => {
         >
             <div id="stack-add-new" className={classNames({ narrow })} data-testid="stack-add-new">
                 <Plus size={28} />
-                <div>
-                    {translate("Add a new stack")}
-                </div>
+                <div>{translate("Add a new stack")}</div>
             </div>
         </PopupNewGeneric>
     );

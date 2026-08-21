@@ -219,10 +219,7 @@
         "description": "StartupXYZ decided not to proceed due to budget limitations. Document lessons learned and maintain relationship for future opportunities.",
         "id": "a29f4ac9-12fc-48c2-90d3-13de944ef70d",
         "project": "2e2ae9f8-150b-484e-b41b-cb06d5a8d376",
-        "tags": [
-            "66f6a7b8-c9d0-e1f2-a3b4-c5d6e7f8a9b0",
-            "33a9b0c1-d2e3-f4a5-b6c7-d8e9fa0b1c2d"
-        ],
+        "tags": ["66f6a7b8-c9d0-e1f2-a3b4-c5d6e7f8a9b0", "33a9b0c1-d2e3-f4a5-b6c7-d8e9fa0b1c2d"],
         "tint": "#6B7280",
         "stack": "1857477c-419a-412e-b8e1-53f836ab2f6a",
         "estimate": 1800,
@@ -237,10 +234,7 @@
         "description": "SmallBiz Corp chose a competitor's solution. Conduct post-mortem analysis to understand decision factors and improve future proposals.",
         "id": "95e18410-866b-423a-a1fa-afa33d2e77b2",
         "project": "2e2ae9f8-150b-484e-b41b-cb06d5a8d376",
-        "tags": [
-            "55e5f6a7-b8c9-d0e1-f2a3-b4c5d6e7f8a9",
-            "22f8a9b0-c1d2-e3f4-a5b6-c7d8e9fa0b1c"
-        ],
+        "tags": ["55e5f6a7-b8c9-d0e1-f2a3-b4c5d6e7f8a9", "22f8a9b0-c1d2-e3f4-a5b6-c7d8e9fa0b1c"],
         "tint": "#6B7280",
         "stack": "1857477c-419a-412e-b8e1-53f836ab2f6a",
         "estimate": 3600,

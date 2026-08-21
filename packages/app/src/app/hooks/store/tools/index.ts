@@ -2,6 +2,6 @@
 /**
  * Devtools entry for store debugging.
  */
-export * from './inspector'
-export * from './resetAll'
-export * from './store'
+export * from "./inspector";
+export * from "./resetAll";
+export * from "./store";

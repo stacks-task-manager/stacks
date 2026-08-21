@@ -35,7 +35,11 @@ function statusColor(status?: string): string {
 
 export default function ProjectTimeScreen() {
     const { id } = useLocalSearchParams<{ id: string }>();
-    const { data: logs = [], isLoading, isError } = useQuery({
+    const {
+        data: logs = [],
+        isLoading,
+        isError,
+    } = useQuery({
         queryKey: ["timelogs", id],
         queryFn: () => fetchTimelogs({ project: id }),
     });
@@ -77,7 +81,11 @@ export default function ProjectTimeScreen() {
                     >
                         <HStack className="items-start justify-between">
                             <VStack className="flex-1 mr-2" space="xs">
-                                <Text size="sm" className="font-semibold text-typography-900" numberOfLines={1}>
+                                <Text
+                                    size="sm"
+                                    className="font-semibold text-typography-900"
+                                    numberOfLines={1}
+                                >
                                     {log.taskInfo?.title ?? log.task}
                                 </Text>
                                 <Text size="xs" className="text-typography-500">

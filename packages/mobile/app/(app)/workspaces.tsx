@@ -58,10 +58,7 @@ export default function WorkspacesScreen() {
                 <Box className="bg-background-0 border border-outline-200 rounded-md p-3">
                     <HStack className="items-center justify-between">
                         <Text className="text-typography-800">Status</Text>
-                        <Text
-                            className="font-semibold"
-                            style={{ color: connected ? "#16a34a" : "#dc2626" }}
-                        >
+                        <Text className="font-semibold" style={{ color: connected ? "#16a34a" : "#dc2626" }}>
                             {connected ? "Connected" : "Disconnected"}
                         </Text>
                     </HStack>

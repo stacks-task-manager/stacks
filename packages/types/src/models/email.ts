@@ -53,7 +53,7 @@ export interface NotificationEmailTemplate extends BaseEmailTemplate {
         message: string;
         actionUrl?: string;
         actionText?: string;
-        priority?: 'low' | 'medium' | 'high';
+        priority?: "low" | "medium" | "high";
         category?: string;
     };
 }
@@ -66,12 +66,15 @@ export type EmailTemplate =
     | NotificationEmailTemplate;
 
 // Type mapping for template data based on template type
-export type EmailTemplateData<T extends EMAIL_TEMPLATES> =
-    T extends EMAIL_TEMPLATES.WELCOME ? WelcomeEmailTemplate['data'] :
-    T extends EMAIL_TEMPLATES.PASSWORD_RESET ? PasswordResetEmailTemplate['data'] :
-    T extends EMAIL_TEMPLATES.REGISTRATION ? RegistrationEmailTemplate['data'] :
-    T extends EMAIL_TEMPLATES.NOTIFICATION ? NotificationEmailTemplate['data'] :
-    never;
+export type EmailTemplateData<T extends EMAIL_TEMPLATES> = T extends EMAIL_TEMPLATES.WELCOME
+    ? WelcomeEmailTemplate["data"]
+    : T extends EMAIL_TEMPLATES.PASSWORD_RESET
+    ? PasswordResetEmailTemplate["data"]
+    : T extends EMAIL_TEMPLATES.REGISTRATION
+    ? RegistrationEmailTemplate["data"]
+    : T extends EMAIL_TEMPLATES.NOTIFICATION
+    ? NotificationEmailTemplate["data"]
+    : never;
 
 // Type-safe sendEmail function signature
 export interface SendEmailFunction {

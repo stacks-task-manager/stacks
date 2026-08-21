@@ -59,8 +59,15 @@ export const Timelogs: FunctionComponent<IStackEstimatesProps> = ({ data }) => {
                 <ResponsiveContainer width="100%" height={320}>
                     <LineChart data={chartData} margin={{ top: 8, right: 16, left: 0, bottom: 8 }}>
                         <CartesianGrid strokeDasharray="3 3" stroke={Colors.LIGHT_GRAY2} />
-                        <XAxis dataKey="month" stroke={Colors.GRAY1} label={{ value: "Months", position: "insideBottom", offset: -4 }} />
-                        <YAxis stroke={Colors.GRAY1} label={{ value: "Hours", angle: -90, position: "insideLeft" }} />
+                        <XAxis
+                            dataKey="month"
+                            stroke={Colors.GRAY1}
+                            label={{ value: "Months", position: "insideBottom", offset: -4 }}
+                        />
+                        <YAxis
+                            stroke={Colors.GRAY1}
+                            label={{ value: "Hours", angle: -90, position: "insideLeft" }}
+                        />
                         <Tooltip />
                         <Legend />
                         {data.map(item => {

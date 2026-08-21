@@ -30,5 +30,5 @@ export const TaskDetailsDueDate: FunctionComponent<TaskDetailsDueDateProps> = ({
             onChange={(date: Date | null) => TasksActions.setDueDate(taskId, date)}
             testId="task-details-due-date"
         />
-    )
+    );
 };

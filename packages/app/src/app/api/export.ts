@@ -4,6 +4,7 @@
  * POST `/api/export` and opens the returned file blob in a new tab.
  */
 import request from "./request";
+import { openInNewTab } from "app/utils/browser";
 
 export const ExportAPI = {
     /** Triggers download for PDF/Excel/JSON/HTML exports. */
@@ -31,7 +32,7 @@ export const ExportAPI = {
             const url = URL.createObjectURL(blob as unknown as Blob);
 
             // Open the file in a new tab
-            window.open(url, "_blank");
+            openInNewTab(url);
 
             // Clean up the object URL after a short delay
             setTimeout(() => URL.revokeObjectURL(url), 1000);

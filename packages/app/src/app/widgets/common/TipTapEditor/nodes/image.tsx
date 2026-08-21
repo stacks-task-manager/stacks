@@ -106,9 +106,10 @@ const ImageWrapper = ({ HTMLAttributes, updateAttributes, extension, deleteNode 
     const handleDelete = async () => {
         const response = await Dialog.confirm(
             "Delete image?",
-            `Are you sure you want to delete this image? ${HTMLAttributes.src.startsWith("http")
-                ? ""
-                : "The image will be removed from your workspace and cannot be undone."
+            `Are you sure you want to delete this image? ${
+                HTMLAttributes.src.startsWith("http")
+                    ? ""
+                    : "The image will be removed from your workspace and cannot be undone."
             }`,
             Intent.DANGER
         );
@@ -345,12 +346,12 @@ export const Image = Node.create<ImageOptions>({
         return {
             setImage:
                 options =>
-                    ({ commands }) => {
-                        return commands.insertContent({
-                            type: this.name,
-                            attrs: options,
-                        });
-                    },
+                ({ commands }) => {
+                    return commands.insertContent({
+                        type: this.name,
+                        attrs: options,
+                    });
+                },
         };
     },
 

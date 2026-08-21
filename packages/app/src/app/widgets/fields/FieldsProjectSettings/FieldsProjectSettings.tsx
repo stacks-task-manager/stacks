@@ -25,7 +25,15 @@ export const FieldsProjectSettings = ({ disabled }: { disabled?: boolean }) => {
         setShow(true);
     };
 
-    const handleReorder = ({ itemId, fromIndex, toIndex }: { itemId: string; fromIndex: number; toIndex: number }) => {
+    const handleReorder = ({
+        itemId,
+        fromIndex,
+        toIndex,
+    }: {
+        itemId: string;
+        fromIndex: number;
+        toIndex: number;
+    }) => {
         if (fromIndex === toIndex) return;
         ProjectsActions.reorderFields(itemId, toIndex);
     };
@@ -58,7 +66,7 @@ export const FieldsProjectSettings = ({ disabled }: { disabled?: boolean }) => {
                                             <Icon
                                                 icon={
                                                     FIELDTYPEICON[
-                                                    field.type.toUpperCase() as keyof typeof FIELDTYPEICON
+                                                        field.type.toUpperCase() as keyof typeof FIELDTYPEICON
                                                     ]
                                                 }
                                             />
@@ -118,9 +126,16 @@ export const FieldsProjectSettings = ({ disabled }: { disabled?: boolean }) => {
                 <BlankSlate
                     title={translate("No fields")}
                     icon="magic-wand-01"
-                    description={translate("You don t have any custom fields yet Click the button bellow to add your first one")}
+                    description={translate(
+                        "You don t have any custom fields yet Click the button bellow to add your first one"
+                    )}
                 >
-                    <Button intent={Intent.PRIMARY} icon={<Icon icon="plus" />} onClick={() => setShow(true)} disabled={disabled}>
+                    <Button
+                        intent={Intent.PRIMARY}
+                        icon={<Icon icon="plus" />}
+                        onClick={() => setShow(true)}
+                        disabled={disabled}
+                    >
                         {translate("Add new field")}
                     </Button>
                 </BlankSlate>

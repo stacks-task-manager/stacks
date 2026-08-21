@@ -82,9 +82,7 @@ export default function PlannerScreen() {
     if (groups.length === 0) {
         return (
             <Box className="flex-1 items-center justify-center p-6">
-                <Text className="text-typography-600">
-                    No scheduled tasks in the next two weeks.
-                </Text>
+                <Text className="text-typography-600">No scheduled tasks in the next two weeks.</Text>
             </Box>
         );
     }

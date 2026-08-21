@@ -89,13 +89,25 @@ export function preloadLocales(): void {
         return;
     }
 
-    loadFamily(serverLocalesDir(), "server", mergeWithEnglishServer, m => {
-        englishServerMap = m;
-    }, mergedServerByLocale);
+    loadFamily(
+        serverLocalesDir(),
+        "server",
+        mergeWithEnglishServer,
+        m => {
+            englishServerMap = m;
+        },
+        mergedServerByLocale
+    );
 
-    loadFamily(appLocalesDir(), "app", mergeWithEnglishApp, m => {
-        englishAppMap = m;
-    }, mergedAppByLocale);
+    loadFamily(
+        appLocalesDir(),
+        "app",
+        mergeWithEnglishApp,
+        m => {
+            englishAppMap = m;
+        },
+        mergedAppByLocale
+    );
 
     if (mergedServerByLocale.size === 0) {
         setTranslations({}, { locale: DEFAULT_LOCALE });

@@ -164,8 +164,7 @@ export const TipTapEditor: React.FC<TipTapEditorPropsExtended> = ({
             if (html !== value) {
                 onUpdate({ json, html, string });
             }
-
-        }
+        },
     });
 
     useEffect(() => {
@@ -233,7 +232,12 @@ export const TipTapEditor: React.FC<TipTapEditorPropsExtended> = ({
             <span>
                 <BubblePopup editor={editor} />
             </span>
-            <EditorContent className="editor-wrapper" editor={editor} spellCheck={spellCheck} data-testid="tip-tap-editor" />
+            <EditorContent
+                className="editor-wrapper"
+                editor={editor}
+                spellCheck={spellCheck}
+                data-testid="tip-tap-editor"
+            />
         </>
     );
 };

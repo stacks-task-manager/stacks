@@ -63,12 +63,7 @@ export function HeaderMenu({
                 <Icon icon="dots-vertical" size={22} />
             </Pressable>
 
-            <RNModal
-                visible={open}
-                animationType="fade"
-                transparent
-                onRequestClose={() => setOpen(false)}
-            >
+            <RNModal visible={open} animationType="fade" transparent onRequestClose={() => setOpen(false)}>
                 <Pressable
                     onPress={() => setOpen(false)}
                     className="flex-1"
@@ -91,24 +86,17 @@ export function HeaderMenu({
                         <VStack>
                             {items.map((item, idx) => {
                                 if (item.type === "divider") {
-                                    return (
-                                        <Divider
-                                            key={`d-${idx}`}
-                                            className="my-1 bg-outline-200"
-                                        />
-                                    );
+                                    return <Divider key={`d-${idx}`} className="my-1 bg-outline-200" />;
                                 }
                                 const danger = item.tone === "danger";
                                 return (
                                     <Pressable
                                         key={`i-${idx}`}
-                                        onPress={
-                                            item.disabled
-                                                ? undefined
-                                                : () => handleSelect(item.onPress)
-                                        }
+                                        onPress={item.disabled ? undefined : () => handleSelect(item.onPress)}
                                         disabled={item.disabled}
-                                        className={`px-4 py-3 active:bg-background-100 ${item.disabled ? "opacity-50" : ""}`}
+                                        className={`px-4 py-3 active:bg-background-100 ${
+                                            item.disabled ? "opacity-50" : ""
+                                        }`}
                                     >
                                         <HStack className="items-center" space="md">
                                             {item.icon ? (
@@ -120,7 +108,9 @@ export function HeaderMenu({
                                             ) : null}
                                             <Text
                                                 size="md"
-                                                className={`font-medium ${danger ? "text-error-600" : "text-typography-900"}`}
+                                                className={`font-medium ${
+                                                    danger ? "text-error-600" : "text-typography-900"
+                                                }`}
                                             >
                                                 {item.label}
                                             </Text>

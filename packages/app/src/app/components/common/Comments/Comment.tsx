@@ -2,7 +2,7 @@
 import { translate } from "@stacks/translations";
 import { Button, Classes, Intent, Menu, MenuItem, Popover, Tag } from "@blueprintjs/core";
 import classNames from "classnames";
-import React, { FunctionComponent, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import {
     ACTIVITYTYPE,
@@ -25,10 +25,14 @@ interface ICommentProps {
     mine: boolean;
 }
 
-export const Comment: FunctionComponent<ICommentProps> = ({ resourceId, comment, mine }) => {
+export const Comment = React.memo(function Comment({ resourceId, comment, mine }: ICommentProps) {
     const [isEditing, setIsEditing] = useState(false);
     const [message, setMessage] = useState(comment.content);
     const [canSave, setCanSave] = useState(true);
+
+    useEffect(() => {
+        setMessage(comment.content);
+    }, [comment.content]);
 
     const handleToggleEdit = () => {
         if (isEditing) {
@@ -98,15 +102,17 @@ export const Comment: FunctionComponent<ICommentProps> = ({ resourceId, comment,
                             content={
                                 <Menu>
                                     <MenuItem
-                                        text="Edit comment"
+                                        text={translate("Edit comment")}
                                         icon={<Icon icon="edit-05" />}
                                         onClick={handleToggleEdit}
+                                        data-testid="comment-edit-menu-item"
                                     />
                                     <MenuItem
-                                        text="Delete comment"
+                                        text={translate("Delete comment")}
                                         icon={<Icon icon="trash" />}
                                         intent={Intent.DANGER}
                                         onClick={handleDelete}
+                                        data-testid="comment-delete-menu-item"
                                     />
                                 </Menu>
                             }
@@ -126,16 +132,19 @@ export const Comment: FunctionComponent<ICommentProps> = ({ resourceId, comment,
                             <Editor
                                 onUpdate={handleChangeMessage}
                                 value={message}
-                                placeholder="Add a comment"
+                                placeholder={translate("Add a comment")}
                                 editing
                             />
                             <Row>
                                 <Col justify="right" gap={10}>
-                                    <Button onClick={handleToggleEdit}>{translate("Cancel")}</Button>
+                                    <Button onClick={handleToggleEdit} data-testid="comment-cancel-button">
+                                        {translate("Cancel")}
+                                    </Button>
                                     <Button
                                         intent={Intent.PRIMARY}
                                         onClick={handleUpdate}
                                         disabled={!canSave}
+                                        data-testid="comment-update-button"
                                     >
                                         {translate("Update")}
                                     </Button>
@@ -147,7 +156,7 @@ export const Comment: FunctionComponent<ICommentProps> = ({ resourceId, comment,
             </div>
         </div>
     );
-};
+});
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ActivityParser = ({ field, value }: { field: string; value: any }) => {
@@ -161,7 +170,7 @@ const ActivityParser = ({ field, value }: { field: string; value: any }) => {
         return <Assignees assignees={people} small />;
     } else if (["startdate", "duedate", "dodate", "completed"].includes(field)) {
         if (!value) {
-            return <Tag minimal>None</Tag>;
+            return <Tag minimal>{translate("None")}</Tag>;
         }
         return <DateChip startDate={value} extendedFormat disabled icon={false} />;
     } else if (field === "progress") {
@@ -175,7 +184,7 @@ const ActivityParser = ({ field, value }: { field: string; value: any }) => {
             <Tags value={value} section={TAGSECTION.PROJECTS} />
         ) : (
             <Tag minimal round>
-                None
+                {translate("None")}
             </Tag>
         );
     } else if (field === "estimate") {
@@ -201,9 +210,11 @@ const fieldsTranslation: { [key: string]: string } = {
     completed: "completed date",
 };
 
+/** Activity-log fields that never report a "before" value. */
+const fieldsWithoutBefore = ["title"];
+
 const ActivityLogRenderer = ({ activity }: { activity: IActivity }) => {
     const { change } = activity;
-    const fieldsWithoutBefore = ["title"];
 
     const label = useMemo(() => {
         if (!change) {

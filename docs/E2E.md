@@ -4,14 +4,14 @@ End-to-end tests live at `playwright/` (repo root) and are driven by [Playwright
 
 ## Table of Contents
 
--   [Setup](#setup)
--   [Running the suite](#running-the-suite)
--   [Test layout](#test-layout)
--   [Conventions](#conventions)
--   [Writing a new test](#writing-a-new-test)
--   [Debugging](#debugging)
--   [CI](#ci)
--   [License caveat](#license-caveat)
+- [Setup](#setup)
+- [Running the suite](#running-the-suite)
+- [Test layout](#test-layout)
+- [Conventions](#conventions)
+- [Writing a new test](#writing-a-new-test)
+- [Debugging](#debugging)
+- [CI](#ci)
+- [License caveat](#license-caveat)
 
 ## Setup
 
@@ -86,7 +86,7 @@ If the element you need to interact with does not yet have a `data-testid`, **ad
 
 ### 2. All DOM access goes through a Page Object Model (POM)
 
-Specs never call `page.getByTestId(...)`, `page.locator(...)`, `page.click(...)`, or any other Playwright DOM API directly. They only call methods on POM classes in `playwright/pages/`. Specs should read like a short description of user intent; the POM owns *how* that intent is realized.
+Specs never call `page.getByTestId(...)`, `page.locator(...)`, `page.click(...)`, or any other Playwright DOM API directly. They only call methods on POM classes in `playwright/pages/`. Specs should read like a short description of user intent; the POM owns _how_ that intent is realized.
 
 A POM class follows this shape:
 
@@ -95,30 +95,28 @@ A POM class follows this shape:
 import type { Page, Locator } from "@playwright/test";
 
 export class BoardViewPage {
-    readonly page: Page;
-    readonly board: Locator;
-    readonly createButton: Locator;
+  readonly page: Page;
+  readonly board: Locator;
+  readonly createButton: Locator;
 
-    constructor(page: Page) {
-        this.page = page;
-        this.board = page.getByTestId("board-view");
-        this.createButton = page.getByTestId("task-create-button");
-    }
+  constructor(page: Page) {
+    this.page = page;
+    this.board = page.getByTestId("board-view");
+    this.createButton = page.getByTestId("task-create-button");
+  }
 
-    async goto(projectId: string) {
-        await this.page.goto(`/projects/${projectId}`);
-        await this.board.waitFor();
-    }
+  async goto(projectId: string) {
+    await this.page.goto(`/projects/${projectId}`);
+    await this.board.waitFor();
+  }
 
-    cardIn(stackName: string, cardTitle: string): Locator {
-        return this.page
-            .getByTestId(`stack-${stackName}`)
-            .getByTestId(`card-${cardTitle}`);
-    }
+  cardIn(stackName: string, cardTitle: string): Locator {
+    return this.page.getByTestId(`stack-${stackName}`).getByTestId(`card-${cardTitle}`);
+  }
 
-    async dragCardToStack(cardTitle: string, targetStackName: string) {
-        // implementation lives here, not in the spec
-    }
+  async dragCardToStack(cardTitle: string, targetStackName: string) {
+    // implementation lives here, not in the spec
+  }
 }
 ```
 
@@ -142,10 +140,10 @@ import { test, expect } from "@playwright/test";
 import { BoardViewPage } from "../../pages/boardView";
 
 test("a card moves between stacks", async ({ page }) => {
-    const board = new BoardViewPage(page);
-    await board.goto("project-id");
-    await board.dragCardToStack("Task 1", "Doing");
-    await expect(board.cardIn("Doing", "Task 1")).toBeVisible();
+  const board = new BoardViewPage(page);
+  await board.goto("project-id");
+  await board.dragCardToStack("Task 1", "Doing");
+  await expect(board.cardIn("Doing", "Task 1")).toBeVisible();
 });
 ```
 

@@ -56,7 +56,12 @@ export const Assignees: FunctionComponent<IAssigneesProps> = ({
     }, [assignees]);
 
     return (
-        <div className={classnames("assignees", { interractive })} id={id} onClick={onClick} data-testid={testId}>
+        <div
+            className={classnames("assignees", { interractive })}
+            id={id}
+            onClick={onClick}
+            data-testid={testId}
+        >
             {assignees.slice(0, max).map((assignee: IPerson) => (
                 <Avatar
                     person={assignee}

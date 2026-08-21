@@ -27,9 +27,7 @@ export class PopupDeleteWidget extends React.PureComponent<IPopupDeleteWidgetPro
 
         return (
             <React.Fragment>
-                <p>
-                    {translate("Are you sure you want to delete this widget This action cannot be undone")}
-                </p>
+                <p>{translate("Are you sure you want to delete this widget This action cannot be undone")}</p>
                 <Button
                     intent={Intent.DANGER}
                     icon="trash"

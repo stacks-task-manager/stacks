@@ -35,15 +35,7 @@ function useDebouncedValue<T>(value: T, delay: number): T {
 /** Only these record types are navigable/creatable from the mobile drawer. */
 const VISIBLE_TYPES = new Set<RECORDTYPE>([RECORDTYPE.FOLDER, RECORDTYPE.PROJECT, RECORDTYPE.NOTEPAD]);
 
-function GeneralRow({
-    icon,
-    title,
-    onPress,
-}: {
-    icon: IconName;
-    title: string;
-    onPress: () => void;
-}) {
+function GeneralRow({ icon, title, onPress }: { icon: IconName; title: string; onPress: () => void }) {
     return (
         <HStack className="items-center pr-2 border-b border-outline-100">
             <Pressable
@@ -55,11 +47,7 @@ function GeneralRow({
                     <Box className="w-5 items-center">
                         <Icon icon={icon} size={18} color="#64748b" />
                     </Box>
-                    <Text
-                        size="md"
-                        numberOfLines={1}
-                        className="flex-1 text-typography-900"
-                    >
+                    <Text size="md" numberOfLines={1} className="flex-1 text-typography-900">
                         {title}
                     </Text>
                 </HStack>
@@ -171,10 +159,7 @@ export function DrawerContent(props: DrawerContentComponentProps) {
     })();
 
     return (
-        <Box
-            style={{ paddingTop: insets.top }}
-            className="flex-1 bg-background-0"
-        >
+        <Box style={{ paddingTop: insets.top }} className="flex-1 bg-background-0">
             <Box className="px-3 mt-3 mb-3">
                 <Input variant="rounded" size="sm">
                     <InputSlot className="pl-3">
@@ -189,9 +174,7 @@ export function DrawerContent(props: DrawerContentComponentProps) {
                 </Input>
                 {searchBusy ? <Spinner className="mt-2" /> : null}
                 {debouncedSearch.trim().length >= 2 && searchResults?.length === 0 ? (
-                    <Text className="mt-2 text-typography-500">
-                        No results
-                    </Text>
+                    <Text className="mt-2 text-typography-500">No results</Text>
                 ) : null}
                 {(searchResults ?? []).slice(0, 20).map(r => (
                     <Pressable
@@ -208,17 +191,11 @@ export function DrawerContent(props: DrawerContentComponentProps) {
             </Box>
 
             <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingBottom: 24 }}>
-                <Text className="px-3 font-semibold mb-1">
-                    General
-                </Text>
+                <Text className="px-3 font-semibold mb-1">General</Text>
                 <Box className="mb-2">
                     <GeneralRow icon="users" title="People" onPress={() => go("/(app)/people")} />
                     <GeneralRow icon="inbox-01" title="Inbox" onPress={() => go("/(app)/inbox")} />
-                    <GeneralRow
-                        icon="check-circle"
-                        title="My tasks"
-                        onPress={() => go("/(app)/my-tasks")}
-                    />
+                    <GeneralRow icon="check-circle" title="My tasks" onPress={() => go("/(app)/my-tasks")} />
                     <GeneralRow icon="list" title="Tasks" onPress={() => go("/(app)/tasks")} />
                     <GeneralRow icon="calendar" title="Calendar" onPress={() => go("/(app)/calendar")} />
                     <GeneralRow
@@ -228,15 +205,17 @@ export function DrawerContent(props: DrawerContentComponentProps) {
                     />
                     <GeneralRow icon="clock" title="Timelogs" onPress={() => go("/(app)/timelogs")} />
                     <GeneralRow icon="pie-chart-03" title="Reports" onPress={() => go("/(app)/reports")} />
-                    <GeneralRow icon="calendar-check-02" title="Planner" onPress={() => go("/(app)/planner")} />
+                    <GeneralRow
+                        icon="calendar-check-02"
+                        title="Planner"
+                        onPress={() => go("/(app)/planner")}
+                    />
                     <GeneralRow icon="hourglass-03" title="Timebox" onPress={() => go("/(app)/timebox")} />
                     <GeneralRow icon="file" title="Files" onPress={() => go("/(app)/files")} />
                     <GeneralRow icon="grid-view" title="Workspaces" onPress={() => go("/(app)/workspaces")} />
                 </Box>
 
-                <Text className="px-3 font-semibold mb-1 mt-4">
-                    Documents
-                </Text>
+                <Text className="px-3 font-semibold mb-1 mt-4">Documents</Text>
                 {docsLoading ? <Spinner className="mt-2" /> : null}
                 <DocumentTree
                     nodes={tree}
@@ -246,9 +225,7 @@ export function DrawerContent(props: DrawerContentComponentProps) {
                     onAddChild={onAddChild}
                 />
                 {!docsLoading && tree.length === 0 ? (
-                    <Text className="px-3 py-2 text-typography-500">
-                        No documents yet.
-                    </Text>
+                    <Text className="px-3 py-2 text-typography-500">No documents yet.</Text>
                 ) : null}
             </ScrollView>
 
@@ -265,11 +242,7 @@ export function DrawerContent(props: DrawerContentComponentProps) {
                     ) : (
                         <UserAvatar id="pending" initials="…" />
                     )}
-                    <Text
-                        size="sm"
-                        numberOfLines={1}
-                        className="flex-1 font-semibold text-typography-900"
-                    >
+                    <Text size="sm" numberOfLines={1} className="flex-1 font-semibold text-typography-900">
                         {displayName}
                     </Text>
                 </HStack>

@@ -338,10 +338,7 @@ export const Calendar = () => {
                                 }}
                                 className={classNames([Classes.POPOVER])}
                             >
-                                <div
-                                    className={Classes.POPOVER_CONTENT}
-                                    data-testid="calendar-slot-menu"
-                                >
+                                <div className={Classes.POPOVER_CONTENT} data-testid="calendar-slot-menu">
                                     {showTasksPicker ? (
                                         <CalendarTasksMenu
                                             slot={selectedSlot}

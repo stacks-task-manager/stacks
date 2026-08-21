@@ -26,9 +26,7 @@ export const TasksSummary: FunctionComponent<ITasksSummaryProps> = ({
 
     return (
         <Card>
-            <h6 className={Classes.HEADING}>
-                {translate("Tasks summary")}
-            </h6>
+            <h6 className={Classes.HEADING}>{translate("Tasks summary")}</h6>
 
             <div className="project-overview-tasks">
                 {/* <div>
@@ -44,9 +42,7 @@ export const TasksSummary: FunctionComponent<ITasksSummaryProps> = ({
                             <Tag minimal>{Number(Math.round(idle * 100) / total || 0).toFixed()}%</Tag>
                         </Tooltip>
                     </div>
-                    <div className={Classes.TEXT_DISABLED}>
-                        {translate("To do")}
-                    </div>
+                    <div className={Classes.TEXT_DISABLED}>{translate("To do")}</div>
                 </div>
                 <div>
                     <div className="project-overview-count">
@@ -59,9 +55,7 @@ export const TasksSummary: FunctionComponent<ITasksSummaryProps> = ({
                             </Tag>
                         </Tooltip>
                     </div>
-                    <div className={Classes.TEXT_DISABLED}>
-                        {translate("In progress")}
-                    </div>
+                    <div className={Classes.TEXT_DISABLED}>{translate("In progress")}</div>
                 </div>
                 <div>
                     <div className="project-overview-count">
@@ -74,9 +68,7 @@ export const TasksSummary: FunctionComponent<ITasksSummaryProps> = ({
                             </Tag>
                         </Tooltip>
                     </div>
-                    <div className={Classes.TEXT_DISABLED}>
-                        {translate("Completed")}
-                    </div>
+                    <div className={Classes.TEXT_DISABLED}>{translate("Completed")}</div>
                 </div>
                 <div>
                     <div className="project-overview-count">
@@ -89,9 +81,7 @@ export const TasksSummary: FunctionComponent<ITasksSummaryProps> = ({
                             </Tag>
                         </Tooltip>
                     </div>
-                    <div className={Classes.TEXT_DISABLED}>
-                        {translate("Starting today")}
-                    </div>
+                    <div className={Classes.TEXT_DISABLED}>{translate("Starting today")}</div>
                 </div>
                 <div>
                     <div className="project-overview-count">
@@ -104,9 +94,7 @@ export const TasksSummary: FunctionComponent<ITasksSummaryProps> = ({
                             </Tag>
                         </Tooltip>
                     </div>
-                    <div className={Classes.TEXT_DISABLED}>
-                        {translate("Overdue")}
-                    </div>
+                    <div className={Classes.TEXT_DISABLED}>{translate("Overdue")}</div>
                 </div>
                 <div>
                     <div className="project-overview-count">
@@ -114,9 +102,7 @@ export const TasksSummary: FunctionComponent<ITasksSummaryProps> = ({
                             <CountUp end={archived} duration={showAnimations ? 2 : 0} />
                         </span>
                     </div>
-                    <div className={Classes.TEXT_DISABLED}>
-                        {translate("Archived")}
-                    </div>
+                    <div className={Classes.TEXT_DISABLED}>{translate("Archived")}</div>
                 </div>
             </div>
         </Card>

@@ -4,11 +4,7 @@ import { Button, Classes, FormGroup, InputGroup, Intent, Menu, MenuItem, Popover
 import React, { FunctionComponent } from "react";
 import { ToolbarDropdownButton } from "app/components/common";
 import { useHasFilters } from "app/hooks";
-import {
-    useMyTasksFilters,
-    useProjectFilters,
-    useSavedFilters,
-} from "app/hooks/projectFilters";
+import { useMyTasksFilters, useProjectFilters, useSavedFilters } from "app/hooks/projectFilters";
 import { ProjectFiltersActions } from "app/store/actions";
 import { IFilters } from "app/store/projectFilters";
 import { uuidv4 } from "app/utils/uuid";
@@ -91,7 +87,7 @@ const FilterDrawer: FunctionComponent<IProjectFilterDrawerProps> = ({ myTasks, f
                         <Popover
                             content={
                                 <>
-                                    <FormGroup label="Filter name">
+                                    <FormGroup label={translate("Filter name")}>
                                         <InputGroup
                                             defaultValue={filters.title}
                                             onChange={(event: React.ChangeEvent<HTMLInputElement>) =>

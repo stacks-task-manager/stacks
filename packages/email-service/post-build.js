@@ -28,13 +28,12 @@ async function postBuild() {
             }
 
             // Get all .tsx template files
-            const templateFiles = fs.readdirSync(templateSourceDir)
-                .filter(file => file.endsWith('.tsx'));
+            const templateFiles = fs.readdirSync(templateSourceDir).filter(file => file.endsWith(".tsx"));
 
             // Transpile each .tsx file to .js
             for (const file of templateFiles) {
                 const sourcePath = path.join(templateSourceDir, file);
-                const outputFileName = file.replace('.tsx', '.js');
+                const outputFileName = file.replace(".tsx", ".js");
                 const destPath = path.join(templateDistDir, outputFileName);
 
                 try {
@@ -52,7 +51,7 @@ async function postBuild() {
                         sourcemap: false,
                         minify: false,
                         keepNames: true,
-                        logLevel: "silent"
+                        logLevel: "silent",
                     });
                     console.log(`📄 Transpiled template file: ${file} -> ${outputFileName}`);
                 } catch (error) {

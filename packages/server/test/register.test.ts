@@ -17,6 +17,6 @@ describe("Register HTML", () => {
         const res = await app.request("/register");
         expect(res.status).toBe(200);
         const text = await res.text();
-        expect(text).toContain("<option value=\"\" selected>Please select a tenant</option>");
+        expect(text).toContain('<option value="" selected>Please select a tenant</option>');
     });
 });

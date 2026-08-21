@@ -83,7 +83,10 @@ export default function MyTasksScreen() {
     }
 
     return (
-        <ScrollView className="flex-1 bg-background-0" contentContainerStyle={{ padding: 12, paddingBottom: 40 }}>
+        <ScrollView
+            className="flex-1 bg-background-0"
+            contentContainerStyle={{ padding: 12, paddingBottom: 40 }}
+        >
             {groups.map(group => (
                 <VStack key={group.project.id} space="xs" className="mb-5">
                     <HStack className="items-center px-1 mb-1" space="sm">
@@ -104,9 +107,7 @@ export default function MyTasksScreen() {
                         <TaskCard
                             key={task.id}
                             task={task}
-                            onPress={t =>
-                                router.push(`/(modals)/task/${t.id}` as never)
-                            }
+                            onPress={t => router.push(`/(modals)/task/${t.id}` as never)}
                         />
                     ))}
                 </VStack>

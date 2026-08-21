@@ -40,7 +40,7 @@ describe("Notepads API", () => {
             },
             body: JSON.stringify(notepadData),
         });
-        
+
         expect(res.status).toBe(404);
     });
 
@@ -65,7 +65,7 @@ describe("Notepads API", () => {
 
     test("GET /api/notepads/:id - should return specific notepad details", async () => {
         const headers = await getAuthenticatedHeaders();
-        
+
         // First create a notepad
         const notepadData = {
             title: "Specific Notepad Test",
@@ -102,7 +102,7 @@ describe("Notepads API", () => {
 
     test("PATCH /api/notepads/:id - should update notepad", async () => {
         const headers = await getAuthenticatedHeaders();
-        
+
         // First create a notepad
         const notepadData = {
             title: "Update Test Notepad",
@@ -154,7 +154,7 @@ describe("Notepads API", () => {
 
     test("DELETE /api/notepads/:id - should delete notepad", async () => {
         const headers = await getAuthenticatedHeaders();
-        
+
         // First create a notepad
         const notepadData = {
             title: "Delete Test Notepad",
@@ -214,7 +214,7 @@ describe("Notepads API", () => {
             const data = await res.json();
             expect(data).toHaveProperty("data");
             expect(Array.isArray(data.data)).toBe(true);
-            
+
             // All returned notepads should be of category 'general'
             data.data.forEach((notepad: any) => {
                 expect(notepad.category).toBe("general");
@@ -245,7 +245,7 @@ describe("Notepads API", () => {
             const data = await res.json();
             expect(data).toHaveProperty("data");
             expect(Array.isArray(data.data)).toBe(true);
-            
+
             // All returned notepads should be public
             data.data.forEach((notepad: any) => {
                 expect(notepad.isPrivate).toBe(false);
@@ -289,7 +289,7 @@ describe("Notepads API", () => {
 
     test("POST /api/notepads/:id/duplicate - should duplicate notepad", async () => {
         const headers = await getAuthenticatedHeaders();
-        
+
         // First create a notepad
         const notepadData = {
             title: "Original Notepad",
@@ -342,7 +342,7 @@ describe("Notepads API", () => {
             },
             body: JSON.stringify(exportData),
         });
-        
+
         expect(res.status).toBe(404);
     });
 
@@ -362,7 +362,7 @@ describe("Notepads API", () => {
             },
             body: JSON.stringify(importData),
         });
-        
+
         expect(res.status).toBe(404);
     });
 });

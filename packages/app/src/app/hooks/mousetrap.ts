@@ -38,6 +38,14 @@ interface IHotkeyProps {
     onPress: () => void;
     type?: "keypress" | "keydown" | "keyup";
 }
+/**
+ * Renders no UI but binds a mousetrap hotkey that triggers the given callback while mounted.
+ * @param {IHotkeyProps} props - The hotkey binding props.
+ * @param {string | string[]} props.hotkey - A key, key combo or array of combos to bind.
+ * @param {() => void} props.onPress - The callback invoked when the hotkey is pressed.
+ * @param {"keypress" | "keydown" | "keyup"} [props.type] - The type of event to listen for.
+ * @returns Null (renders nothing).
+ */
 export const Hotkey: FunctionComponent<IHotkeyProps> = ({ hotkey, onPress, type }) => {
     const handlePress = () => {
         onPress();
@@ -47,6 +55,13 @@ export const Hotkey: FunctionComponent<IHotkeyProps> = ({ hotkey, onPress, type 
     return null;
 };
 
+/**
+ * Binds a hotkey that clicks (and optionally scrolls to) the element with the given id.
+ * @param {string | string[]} handlerKey - A key, key combo or array of combos according to Mousetrap documentation.
+ * @param {string} elId - The id of the DOM element to interact with.
+ * @param {boolean} [scrollTo] - Whether to smooth-scroll to the element before clicking it.
+ * @returns The bound action function that performs the scroll/click.
+ */
 export const useElementHotkey = (handlerKey: string | string[], elId: string, scrollTo?: boolean) => {
     const action = () => {
         if (scrollTo) {

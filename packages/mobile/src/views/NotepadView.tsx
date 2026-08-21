@@ -7,13 +7,7 @@ import { RichText, Toolbar, useEditorBridge } from "@10play/tentap-editor";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigation, useRouter } from "expo-router";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from "react";
-import {
-    KeyboardAvoidingView,
-    Platform,
-    StyleSheet,
-    useColorScheme,
-    View,
-} from "react-native";
+import { KeyboardAvoidingView, Platform, StyleSheet, useColorScheme, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { deleteDocument, fetchNotepad, updateNotepad } from "../api/endpoints";
@@ -173,10 +167,7 @@ function NotepadEditor({
 
     return (
         <SafeAreaView style={styles.safe} edges={["bottom"]}>
-            <KeyboardAvoidingView
-                behavior={Platform.OS === "ios" ? "padding" : undefined}
-                style={styles.kav}
-            >
+            <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={styles.kav}>
                 <View style={styles.editorArea}>
                     <RichText editor={editor} />
                 </View>

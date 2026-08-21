@@ -15,7 +15,7 @@ import {
     Tooltip,
 } from "@blueprintjs/core";
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
-import React, { FunctionComponent, useEffect, useState } from "react";
+import React, { FunctionComponent, useCallback, useEffect, useState } from "react";
 import { ProjectsAPI } from "app/api";
 import { BlankSlate, Grid, Icon } from "app/components/common";
 import { APPICONS, AUTOMATION_DO, IAutomation, IAutomationAction, IProject } from "@stacks/types";
@@ -149,7 +149,9 @@ export const AutomationsDialog: FunctionComponent<IAutomationsDialogProps> = ({ 
                                                                 content={
                                                                     <Menu>
                                                                         <MenuItem
-                                                                            text="Edit automation"
+                                                                            text={translate(
+                                                                                "Edit automation"
+                                                                            )}
                                                                             icon={<Icon icon="edit-05" />}
                                                                             onClick={(
                                                                                 event: React.MouseEvent
@@ -162,7 +164,9 @@ export const AutomationsDialog: FunctionComponent<IAutomationsDialogProps> = ({ 
                                                                         />
                                                                         <MenuDivider />
                                                                         <MenuItem
-                                                                            text="Delete automation"
+                                                                            text={translate(
+                                                                                "Delete automation"
+                                                                            )}
                                                                             icon={<Icon icon="trash" />}
                                                                             intent={Intent.DANGER}
                                                                             onClick={(
@@ -204,7 +208,9 @@ export const AutomationsDialog: FunctionComponent<IAutomationsDialogProps> = ({ 
                             <BlankSlate
                                 title={translate("No automations")}
                                 icon="cpu-chip-01"
-                                description={translate("You don t have any automations yet Click the button bellow to add your first one")}
+                                description={translate(
+                                    "You don t have any automations yet Click the button bellow to add your first one"
+                                )}
                             >
                                 <NewAutomationButton
                                     onClick={() => setShowNew(true)}
@@ -248,7 +254,7 @@ const NewAutomationButton: FunctionComponent<NewAutomationButtonProps> = ({ onCl
             <Popover
                 content={
                     <Menu>
-                        <MenuItem text="Copy from project..." icon={<Icon icon="copy" />}>
+                        <MenuItem text={translate("Copy from project...")} icon={<Icon icon="copy" />}>
                             <ProjectMenu onCopy={onCopy} />
                         </MenuItem>
                     </Menu>
@@ -298,26 +304,28 @@ const ProjectAutomations = ({
     const [isLoading, setIsLoading] = useState(false);
     const [project, setProject] = useState<IProject | undefined>();
 
-    const loadProject = async () => {
+    const loadProject = useCallback(async () => {
         setIsLoading(true);
         const loadedProject = await ProjectsAPI.load(projectId);
 
         if (loadedProject) {
             setProject(loadedProject);
-        } else {
-            undefined;
         }
         setIsLoading(false);
-    };
+    }, [projectId]);
 
     useEffect(() => {
         loadProject();
-    }, [projectId]);
+    }, [loadProject]);
 
     if (isLoading) {
         return (
             <>
-                <MenuItem className={Classes.SKELETON} text="Automation" icon={<Icon icon="cpu-chip-01" />} />
+                <MenuItem
+                    className={Classes.SKELETON}
+                    text={translate("Automation")}
+                    icon={<Icon icon="cpu-chip-01" />}
+                />
                 <MenuItem className={Classes.SKELETON} text="Automation" icon={<Icon icon="cpu-chip-01" />} />
                 <MenuItem className={Classes.SKELETON} text="Automation" icon={<Icon icon="cpu-chip-01" />} />
             </>
@@ -326,7 +334,11 @@ const ProjectAutomations = ({
 
     if (!project || (project && project.automations.length === 0)) {
         return (
-            <BlankSlate small title="There are no automations for the selected project" icon="cpu-chip-01" />
+            <BlankSlate
+                small
+                title={translate("There are no automations for the selected project")}
+                icon="cpu-chip-01"
+            />
         );
     }
 

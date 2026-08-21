@@ -76,7 +76,7 @@ describe("Home API", () => {
         const startDate = new Date();
         startDate.setDate(startDate.getDate() - 7); // 7 days ago
         const endDate = new Date();
-        
+
         const res = await app.request(
             `/api/home?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`,
             { headers }

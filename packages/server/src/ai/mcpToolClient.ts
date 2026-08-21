@@ -49,7 +49,10 @@ export async function createMcpToolClient(): Promise<McpToolClient> {
     const { Client } = require("@modelcontextprotocol/sdk/client") as {
         Client: new (info: { name: string; version: string }) => {
             connect: (transport: unknown) => Promise<void>;
-            callTool: (params: { name: string; arguments?: Record<string, unknown> }) => Promise<{ content: unknown }>;
+            callTool: (params: {
+                name: string;
+                arguments?: Record<string, unknown>;
+            }) => Promise<{ content: unknown }>;
         };
     };
     const { StreamableHTTPClientTransport } = require("@modelcontextprotocol/sdk/client/streamableHttp") as {

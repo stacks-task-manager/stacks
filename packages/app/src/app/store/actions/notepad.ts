@@ -67,11 +67,7 @@ const getNotepad = async (notepadId: string) => {
 const setContent = async (content: string) => {
     NotepadStore.set(
         produce((state: INotepadStore) => {
-            state.notepad = {
-                ...state.notepad!,
-                content,
-                updated: new Date().toJSON(),
-            };
+            state.notepad = { ...state.notepad!, content, updated: new Date().toJSON() };
         })
     );
 

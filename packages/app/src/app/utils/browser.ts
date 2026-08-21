@@ -12,7 +12,7 @@ export function getBrowserLocale(): string {
 }
 
 export function openInNewTab(url: string) {
-    window.open(url, '_blank');
+    window.open(url, "_blank");
 }
 
 export async function setClipboard(text: string) {

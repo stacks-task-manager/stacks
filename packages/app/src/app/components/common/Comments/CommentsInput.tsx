@@ -3,7 +3,7 @@ import { translate } from "@stacks/translations";
 import { Button, Classes, Intent } from "@blueprintjs/core";
 import classNames from "classnames";
 import Mousetrap from "mousetrap";
-import React, { FunctionComponent, useEffect, useMemo, useState } from "react";
+import React, { FunctionComponent, useEffect, useRef, useState } from "react";
 import { Avatar, Col, Grid, Row } from "app/components/common";
 import { shallowEqual } from "app/hooks/store";
 import { ACTIVITYRESOURCETYPE, ACTIVITYTYPE, FILES_TYPE, IAttachment } from "@stacks/types";
@@ -13,6 +13,29 @@ import { scrollIntoView } from "app/utils/dom";
 import { Editor, TipTapEditorContent } from "app/widgets";
 import { AttachmentsStore } from "app/store/attachments";
 import { useUpload } from "app/hooks/fileUpload";
+
+/**
+ * "/" quick-focus must be a module-level singleton: with many CommentsInput
+ * instances mounted, each binding/unbinding the same global key would clobber
+ * the others. We bind once and target the most-recently-mounted instance.
+ */
+let latestCommentInput: HTMLDivElement | null = null;
+let globalSlashBound = false;
+
+const focusLatestCommentInput = () => {
+    if (latestCommentInput) {
+        const editable = latestCommentInput.querySelector(
+            ".comments-input .custom-editable-text"
+        ) as HTMLDivElement | null;
+        if (editable) editable.click();
+    }
+};
+
+const ensureGlobalSlashBinding = () => {
+    if (globalSlashBound) return;
+    globalSlashBound = true;
+    Mousetrap.bind("/", focusLatestCommentInput);
+};
 
 interface ICommentsInputProps {
     resourceId: string;
@@ -24,25 +47,20 @@ export const CommentsInput: FunctionComponent<ICommentsInputProps> = ({ resource
     const me = PeopleStore.use(state => state.me, shallowEqual);
     const { pickFiles } = useUpload();
 
-    useEffect(() => {
-        Mousetrap.bind("/", () => {
-            const commentsEl = document.querySelector(
-                ".comments-input .custom-editable-text"
-            ) as HTMLDivElement;
-            if (commentsEl) {
-                commentsEl.click();
-            }
-        });
+    const inputRef = useRef<HTMLDivElement | null>(null);
 
+    useEffect(() => {
+        const node = inputRef.current;
+        latestCommentInput = node;
+        ensureGlobalSlashBinding();
         return () => {
-            Mousetrap.unbind("/");
+            if (node === latestCommentInput) {
+                latestCommentInput = null;
+            }
         };
     }, []);
 
-    const currentUser = useMemo(() => {
-        const { people } = PeopleStore.get();
-        return people.find(person => person.id === me);
-    }, [me]);
+    const currentUser = PeopleStore.use(state => state.people.find(person => person.id === me), shallowEqual);
 
     const handleChangeMessage = ({ html, string }: TipTapEditorContent) => {
         setMessage(html);
@@ -93,7 +111,6 @@ export const CommentsInput: FunctionComponent<ICommentsInputProps> = ({ resource
     };
 
     const handleAddAttachments = async (cb: (files: IAttachment[]) => void) => {
-        debugger;
         await pickFiles({ recordId: resourceId, type: FILES_TYPE.TASK_COMMENT, onUploaded: cb });
     };
 
@@ -106,7 +123,7 @@ export const CommentsInput: FunctionComponent<ICommentsInputProps> = ({ resource
     };
 
     return (
-        <div className="comments-input">
+        <div className="comments-input" ref={inputRef}>
             <Grid>
                 <Row padding={10}>
                     <Col gap={10}>
@@ -114,7 +131,7 @@ export const CommentsInput: FunctionComponent<ICommentsInputProps> = ({ resource
                         <Editor
                             value={message}
                             onUpdate={handleChangeMessage}
-                            placeholder="Add a comment"
+                            placeholder={translate("Add a comment")}
                             showHelp={false}
                             onFocus={handleFocus}
                             onBlur={handleBlur}
@@ -129,9 +146,14 @@ export const CommentsInput: FunctionComponent<ICommentsInputProps> = ({ resource
                                         <span
                                             className={classNames([Classes.TEXT_MUTED, Classes.TEXT_SMALL])}
                                         >
-                                            Ctrl+enter to send
+                                            {translate("Ctrl+enter to send")}
                                         </span>
-                                        <Button intent={Intent.PRIMARY} size="small" onClick={handleAddMessage}>
+                                        <Button
+                                            intent={Intent.PRIMARY}
+                                            size="small"
+                                            onClick={handleAddMessage}
+                                            data-testid="comment-send-button"
+                                        >
                                             {translate("Send")}
                                         </Button>
                                     </Col>

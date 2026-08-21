@@ -2,7 +2,7 @@
 /**
  * Bookmark create payload for the sidebar.
  */
-import { z } from 'zod';
+import { z } from "zod";
 
 /** Validated bookmark row from the client. */
 export const BookmarkSchema = z.object({

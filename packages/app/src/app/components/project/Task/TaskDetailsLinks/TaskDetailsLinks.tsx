@@ -17,12 +17,11 @@ import React, { FunctionComponent, useMemo, useState } from "react";
 import { BlankSlate, Col, Grid, Icon, RoundButton, Row } from "app/components/common";
 import { APPICONS, IElectronDialog, ILink } from "@stacks/types";
 import { TasksActions } from "app/store/actions";
+import { openInNewTab } from "app/utils/browser";
 import { formatDate } from "app/utils/date";
 import Dialog from "app/utils/dialog";
 import { uuidv4 } from "app/utils/uuid";
 import { URLPickerMenuItem } from "app/widgets";
-
-import { path } from "electron";
 
 interface ITaskDetailsLinksProps {
     taskId: string;
@@ -40,7 +39,7 @@ export const TaskDetailsLinks: FunctionComponent<ITaskDetailsLinksProps> = ({ ta
     };
 
     const handleOpenLink = (link: ILink) => {
-        window.open(link.url, "_blank");
+        openInNewTab(link.url);
     };
 
     if (links == null || (links != null && links.length === 0)) {
@@ -180,7 +179,7 @@ const LinkPicker: FunctionComponent<LinkPickerProps> = ({ disabled, onAdd }) => 
             onAdd({
                 id: uuidv4(),
                 url: filePath!,
-                title: path.basename(filePath),
+                title: filePath!.split(/[\\/]/).pop() ?? filePath!,
                 created: new Date(),
                 updated: new Date(),
             });

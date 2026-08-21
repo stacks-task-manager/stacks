@@ -19,9 +19,7 @@ export const ProjectMembers: FunctionComponent<IProjectMembersProps> = ({ assign
 
     return (
         <Card>
-            <h6 className={Classes.HEADING}>
-                {translate("Project members")}
-            </h6>
+            <h6 className={Classes.HEADING}>{translate("Project members")}</h6>
             {people.length > 0 ? <Assignees assignees={people} max={5} /> : <OverviewWidgetBlankSlate />}
         </Card>
     );

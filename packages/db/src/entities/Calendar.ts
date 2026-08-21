@@ -3,7 +3,7 @@ import { DataTypes } from "sequelize";
 import { sequelize } from "../db.js";
 import BaseEntity from "./Base.js";
 
-class CalendarEntity extends BaseEntity { }
+class CalendarEntity extends BaseEntity {}
 
 CalendarEntity.initialize(
     {

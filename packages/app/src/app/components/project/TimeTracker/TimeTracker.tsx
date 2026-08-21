@@ -149,9 +149,30 @@ export const TimeTracker: FunctionComponent<ITimeTrackerProps> = React.memo(
             return (
                 <>
                     <div className={classNames("time-tracker-wrapper", { detailed })}>
-                        {task && detailed && <a onClick={handleOpenTask}>{stripMd(task.title)}</a>}
-                        <Tooltip content="Stop and save time log" placement="top">
-                            <div className="time-tracker" id={id} onClick={handleStopTimer}>
+                        {task && detailed && (
+                            <a
+                                href={"/#/task/" + taskId}
+                                onClick={handleOpenTask}
+                                data-testid="time-tracker-task-link"
+                            >
+                                {stripMd(task.title)}
+                            </a>
+                        )}
+                        <Tooltip content={translate("Stop and save time log")} placement="top">
+                            <div
+                                className="time-tracker"
+                                id={id}
+                                onClick={handleStopTimer}
+                                role="button"
+                                tabIndex={0}
+                                onKeyDown={(event: React.KeyboardEvent<HTMLDivElement>) => {
+                                    if (event.key === "Enter" || event.key === " ") {
+                                        event.preventDefault();
+                                        handleStopTimer();
+                                    }
+                                }}
+                                data-testid="time-tracker-stop"
+                            >
                                 <Icon icon="stop-circle" className="stop-icon" size={detailed ? 18 : 14} />
                                 <Icon icon="clock" className="clock-icon" size={detailed ? 18 : 14} spin />
                                 {formatDuration(elapsed, "colon")}

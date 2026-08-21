@@ -2,7 +2,6 @@
 
 import { Tag } from "@blueprintjs/core";
 import { useRole } from "app/hooks";
-import React from "react";
 
 export const PersonRole = ({ roleId }: { roleId: string }) => {
     const role = useRole(roleId);
@@ -12,5 +11,5 @@ export const PersonRole = ({ roleId }: { roleId: string }) => {
         <Tag minimal round>
             {role.title}
         </Tag>
-    )
-}
+    );
+};

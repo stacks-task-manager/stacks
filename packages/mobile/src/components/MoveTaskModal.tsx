@@ -45,11 +45,7 @@ export function MoveTaskModal({
                     <VStack>
                         <Heading size="md">Move task</Heading>
                         {task ? (
-                            <Text
-                                size="sm"
-                                className="text-typography-500"
-                                numberOfLines={2}
-                            >
+                            <Text size="sm" className="text-typography-500" numberOfLines={2}>
                                 {task.title}
                             </Text>
                         ) : null}
@@ -57,9 +53,7 @@ export function MoveTaskModal({
                 </ModalHeader>
                 <ModalBody>
                     {targets.length === 0 ? (
-                        <Text className="text-typography-500">
-                            This project has no other columns.
-                        </Text>
+                        <Text className="text-typography-500">This project has no other columns.</Text>
                     ) : (
                         <ScrollView style={{ maxHeight: 400 }}>
                             <VStack>

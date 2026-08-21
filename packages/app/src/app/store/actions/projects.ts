@@ -533,7 +533,12 @@ const duplicate = async (projectId: string) => {
 };
 
 const duplicateAlert = async (projectId: string) => {
-    const confirm = await Dialog.confirm(translate("Duplicate project"), translate("Are you sure you want to duplicate this project If there are many tasks this procedure may take some time"));
+    const confirm = await Dialog.confirm(
+        translate("Duplicate project"),
+        translate(
+            "Are you sure you want to duplicate this project If there are many tasks this procedure may take some time"
+        )
+    );
 
     if (!confirm) return;
     await duplicate(projectId);

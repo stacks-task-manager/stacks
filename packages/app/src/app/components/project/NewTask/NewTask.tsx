@@ -34,11 +34,13 @@ export const NewTask: FunctionComponent<INewTaskProps> = ({ stackId, isEditing, 
         setEditing(Boolean(isEditing));
     }, [isEditing]);
 
-    onSelect(() => {
-        if (inputRef.current) {
-            setValue(inputRef.current.value);
-        }
-    });
+    useEffect(() => {
+        onSelect(() => {
+            if (inputRef.current) {
+                setValue(inputRef.current.value);
+            }
+        });
+    }, [onSelect]);
 
     const handleEndEditing = () => {
         hide(inputRef.current);
@@ -107,6 +109,7 @@ export const NewTask: FunctionComponent<INewTaskProps> = ({ stackId, isEditing, 
                     onKeyDown={handleKeyDown}
                     onBlur={handleBlur}
                     onChange={handleChange}
+                    data-testid="new-task-input"
                 />
             )}
 
@@ -117,6 +120,7 @@ export const NewTask: FunctionComponent<INewTaskProps> = ({ stackId, isEditing, 
                     small
                     onClick={() => setEditing(true)}
                     id={stackId}
+                    data-testid="new-task-add-button"
                 >
                     {translate("Add task")}
                 </Button>

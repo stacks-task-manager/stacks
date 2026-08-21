@@ -1,6 +1,5 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { translate } from "@stacks/translations";
-import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { RecentsActions } from "app/store/actions/recents";
 import { SIDEBARICON } from "@stacks/types";

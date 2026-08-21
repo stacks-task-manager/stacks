@@ -79,5 +79,7 @@ const options = {
 };
 
 export const HTMLRenderer = ({ html, breakWord }: { html: string; breakWord?: boolean }) => {
-    return <div className={classNames("tiptap html-renderer", { break: breakWord })}>{parse(html, options)}</div>;
+    return (
+        <div className={classNames("tiptap html-renderer", { break: breakWord })}>{parse(html, options)}</div>
+    );
 };

@@ -7,113 +7,55 @@ import {
     Colors,
     Dialog,
     Drawer,
-    Intent,
-    Menu,
-    MenuDivider,
-    MenuItem,
     Popover,
-    Tab,
-    Tabs,
-    Tag,
     Tooltip,
 } from "@blueprintjs/core";
 import { translate } from "@stacks/translations";
-import { taskToggleDoneLabel } from "app/locale/dynamic-messages";
 import classNames from "classnames";
 import noop from "lodash/noop";
 import React, { FunctionComponent, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { DropEvent, FileWithPath, useDropzone } from "react-dropzone";
+import { useDropzone } from "react-dropzone";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import {
-    APPICONS,
-    COPYMOVETYPE,
-    IBackgroundLocationState,
-    ITask,
-    PRIORITY,
-    ROLE_SECTIONS,
-    TASKDETAILMATRIX,
-} from "@stacks/types";
+import { IBackgroundLocationState, ITask, PRIORITY, ROLE_SECTIONS } from "@stacks/types";
 import { Comments, CommentsInput } from "app/components";
+import { AccessGate, Col, DropZone, Grid, Icon, LazyLoad, Row, Scroller } from "app/components/common";
+import { Subtasks, TaskDescription, TaskDetailsSection, TaskTitle } from "app/components/project";
 import {
-    AccessGate,
-    Col,
-    DatePickerButton,
-    DropZone,
-    Grid,
-    HotkeyChip,
-    Icon,
-    LazyLoad,
-    Row,
-    Scroller,
-} from "app/components/common";
-import {
-    DependenciesCount,
-    FeeInput,
-    Subtasks,
-    TIRepeats,
-    TaskDescription,
-    TaskDetailsAssignees,
-    TaskDetailsAttachments,
-    TaskDetailsDependencies,
-    TaskDetailsId,
-    TaskDetailsLinks,
-    TaskDetailsPriority,
-    TaskDetailsProgress,
-    TaskDetailsProjects,
-    TaskDetailsSection,
-    TaskDetailsStack,
-    TaskDetailsTint,
-    TaskEstimates,
-    TaskSpentProgress,
-    TaskTitle,
-} from "app/components/project";
-import {
-    getProject,
-    publish,
     useCanAccess,
-    useCurrentTask,
     useMousetrap,
     useOnClickOutside,
     usePreferences,
     useTask,
+    useTaskDetailsShell,
 } from "app/hooks";
 import { getHashPathname, getHashSearch } from "app/hooks/router";
 import { TasksActions } from "app/store/actions";
-import { CopyMoveActions } from "app/store/actions/copymove";
-import { RecentsActions } from "app/store/actions/recents";
-import { toggleNewBookmark, togglePreferences } from "app/store/global";
 import { PreferencesStore } from "app/store/preferences";
-import { formatStringDuration } from "app/utils/date";
 import { scrollIntoView } from "app/utils/dom";
-import { stripMd } from "app/utils/string";
-import { share } from "app/utils/url";
+import { getFilesFromEvent } from "app/utils/drop";
 import {
     LocaleDatePicker,
-    StacksMenu,
     TaskDetailsAddSubtaskButton,
     TaskDetailsAddTime,
     TaskDetailsCommentsButton,
     TaskDetailsCustomFields,
-    TaskDetailsDueDate,
     TaskDetailsFullscreenButton,
     TaskDetailsNavigation,
     TaskDetailsNotification,
-    TaskDetailsStartDate,
-    TaskDetailsStatus,
-    TaskDetailsTags,
     TaskDetailsTaskPickerDialog,
     TaskDetailsTimer,
 } from "app/widgets";
-import { TaskDetailsCover } from "../TaskDetailsCover/TaskDetailsCover";
-import { TaskDetailsLocations } from "../TaskDetailsLocations/TaskDetailsLocations";
-import { TaskDetailsTimelogsTab } from "../TaskDetailsTimeLogs/TaskDetailsTimeLogs";
+import { EditTaskDetailsLayout } from "./EditTaskDetailsLayout";
+import { TaskDetailInfo } from "./TaskDetailInfo";
+import { TaskDetailsMatrix } from "./TaskDetailsMatrix";
+import { TaskDetailsMenu } from "./TaskDetailsMenu";
+import { TaskDetailsTabs } from "./TaskDetailsTabs";
 
 export const TaskDetails = () => {
-    const [fullscreen, setFullscreen] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
-    const { isLoading, task, projectId, taskId } = useCurrentTask();
+    const { isLoading, task, projectId, taskId, fullscreen, handleToggleFullscreen } = useTaskDetailsShell();
 
     const tdRef = useRef<HTMLDivElement | null>(null);
 
@@ -122,15 +64,6 @@ export const TaskDetails = () => {
             scrollIntoView(document.getElementById(`task-details-${taskId}`), { behavior: "smooth" });
         }, 100);
     }, [taskId]);
-
-    useEffect(() => {
-        if (!task) return;
-        RecentsActions.add({
-            title: task.title,
-            icon: APPICONS.TASK,
-            url: `/task/${task.id}`,
-        });
-    }, [task]);
 
     const closeTask = () => {
         if (getHashPathname().startsWith("/mytasks")) {
@@ -167,10 +100,6 @@ export const TaskDetails = () => {
         navigate(`/project/${projectId}/${parentId}`);
     };
 
-    const handleToggleFullscreen = () => {
-        setFullscreen(!fullscreen);
-    };
-
     return (
         <div
             className={classNames(["task-details-drawer embedded", Classes.DRAWER, Classes.POSITION_RIGHT], {
@@ -200,23 +129,14 @@ export const TaskDetailsPanel = () => {
     const location = useLocation();
     const backgroundLocation = (location.state as IBackgroundLocationState).backgroundLocation;
     const [open, setOpen] = useState(true);
-    const [fullscreen, setFullscreen] = useState(false);
-    const { isLoading, task, taskId } = useCurrentTask();
+    const { isLoading, task, taskId, fullscreen, handleToggleFullscreen } = useTaskDetailsShell();
 
     useEffect(() => {
         if (!backgroundLocation) {
             navigate("/");
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [taskId]);
-
-    useEffect(() => {
-        if (!task) return;
-        RecentsActions.add({
-            title: task.title,
-            icon: APPICONS.TASK,
-            url: `/task/${task.id}`,
-        });
-    }, [task]);
 
     const handleDialogClose = () => {
         handleClose();
@@ -246,10 +166,6 @@ export const TaskDetailsPanel = () => {
         });
     };
 
-    const handleToggleFullscreen = () => {
-        setFullscreen(!fullscreen);
-    };
-
     if (PreferencesStore.get().dialogTask) {
         return (
             <Dialog
@@ -259,7 +175,7 @@ export const TaskDetailsPanel = () => {
                 className={classNames("task-details-dialog", { fullscreen, "has-tint": task?.tint != null })}
                 portalClassName="task-details-portal"
                 style={{ borderColor: task?.tint || undefined }}
-                aria-labelledby="task-details-panel"
+                aria-label={translate("Task details")}
                 data-testid="task-details-drawer"
             >
                 {isLoading && <TaskDetailsLoading onClose={handleClose} />}
@@ -314,22 +230,11 @@ const Task: FunctionComponent<ITaskProps> = React.memo(
         const { task: parentTask } = useTask(task?.parent);
         const [showTaskPicker, setShowTaskPicker] = useState(false);
 
-        const onDrop = useCallback((acceptedFiles: FileWithPath[]) => {
-            const paths = acceptedFiles.filter(f => f.path != null).map(f => f.path!);
-            handleFilesDrop(paths);
+        const onDrop = useCallback(() => {
+            // File-drop wiring on the details panel is still pending.
         }, []);
         const isArchived = task.archived !== null;
         const disabled = isArchived || task.done;
-
-        const getFilesFromEvent = async (event: DropEvent) => {
-            const { dataTransfer } = event as React.DragEvent<HTMLElement>;
-
-            const files = Array.from(dataTransfer.files).map(file => ({
-                ...file,
-                path: window.getPathForFile(file),
-            }));
-            return files as File[];
-        };
 
         const { getRootProps, isDragActive } = useDropzone({
             onDrop,
@@ -342,9 +247,9 @@ const Task: FunctionComponent<ITaskProps> = React.memo(
             ["taskDetailsRows", "taskDetailsComments", "taskDetailsSubtasks", "taskDetailsTime"]
         );
 
-        const handleTogglePrivacy = async () => {
+        const handleTogglePrivacy = useCallback(async () => {
             await TasksActions.togglePrivacy(task.id);
-        };
+        }, [task.id]);
 
         const taskPrivacyIcon = useMemo(() => {
             if (task.permissions.isPublic || isArchived) return null;
@@ -359,7 +264,7 @@ const Task: FunctionComponent<ITaskProps> = React.memo(
                     />
                 </Tooltip>
             );
-        }, [task.permissions.isPublic, isArchived]);
+        }, [task.permissions.isPublic, isArchived, handleTogglePrivacy]);
 
         const handleDeleteTask = async () => {
             const response = await TasksActions.alertDelete(task.id);
@@ -375,11 +280,6 @@ const Task: FunctionComponent<ITaskProps> = React.memo(
             if (!onOpenParent || !task.parent) return;
 
             onOpenParent(task.parent);
-        };
-
-        const handleFilesDrop = (_files: string[]) => {
-            // TasksActions.uploadAttachments(task.id, _files);
-            // File-drop wiring on the details panel is still pending.
         };
 
         const handleSelectParentTask = (parentTaskId: string) => {
@@ -416,27 +316,6 @@ const Task: FunctionComponent<ITaskProps> = React.memo(
                             ) : null}
 
                             {!isArchived && <TaskDetailsNotification task={task} disabled={disabled} />}
-                            {/* {archived ? (
-                                <Tooltip
-                                    content={
-                                        <>
-                                            {translate("Archived on")}{" "}
-                                            {formatDate(task?.archived)}
-                                        </>
-                                    }
-                                    placement="left"
-                                >
-                                    <Tag intent={Intent.PRIMARY} active round>
-                                        Task is archived
-                                    </Tag>
-                                </Tooltip>
-                            ) : (
-                                <TaskDetailsState
-                                    taskId={task.id}
-                                    isComplete={task?.done}
-                                    onClose={onClose}
-                                />
-                            )} */}
                             {task.done && (
                                 <Popover
                                     content={
@@ -690,622 +569,6 @@ const TaskDetailsCommentsInput: FunctionComponent<TaskDetailsCommentsInputProps>
     }
 
     return <CommentsInput resourceId={taskId} parentId={projectId} />;
-};
-
-interface TaskDetailsTabsProps {
-    task: ITask;
-    disabled?: boolean;
-}
-const TaskDetailsTabs: FunctionComponent<TaskDetailsTabsProps> = ({ task, disabled }) => {
-    const [activeTab, setActiveTab] = useState("files");
-
-    const {
-        taskDetailsSubtasks,
-        taskDetailsLocations,
-        taskDetailsLinks,
-        taskDetailsTime,
-        taskDetailsAttachments,
-        taskDetailsDependencies,
-    } = usePreferences([
-        "taskDetailsSubtasks",
-        "taskDetailsLocations",
-        "taskDetailsLinks",
-        "taskDetailsTime",
-        "taskDetailsAttachments",
-        "taskDetailsDependencies",
-    ]);
-
-    const showTabs = useMemo(() => {
-        return (
-            taskDetailsSubtasks ||
-            taskDetailsLocations ||
-            taskDetailsLinks ||
-            taskDetailsTime ||
-            taskDetailsAttachments ||
-            taskDetailsDependencies
-        );
-    }, [
-        taskDetailsSubtasks,
-        taskDetailsLocations,
-        taskDetailsLinks,
-        taskDetailsTime,
-        taskDetailsAttachments,
-        taskDetailsDependencies,
-    ]);
-
-    if (!showTabs) return null;
-
-    const handleTabChange = (tabId: string) => {
-        setActiveTab(tabId);
-    };
-
-    const dependenciesCount = <DependenciesCount taskId={task.id} />;
-
-    return (
-        <Tabs
-            id="options"
-            selectedTabId={activeTab}
-            renderActiveTabPanelOnly
-            onChange={handleTabChange}
-            data-testid="task-details-tabs"
-        >
-            {task && taskDetailsAttachments ? (
-                <Tab
-                    id="files"
-                    title={translate("Files")}
-                    // tagContent={
-                    //     task && task.attachments && task?.attachments.length > 0
-                    //         ? task?.attachments.length
-                    //         : undefined
-                    // }
-                    panel={<TaskDetailsAttachments taskId={task.id} disabled={disabled} />}
-                />
-            ) : null}
-            {taskDetailsDependencies && (
-                <Tab
-                    id="dependencies"
-                    title={translate("Dependencies")}
-                    tagContent={dependenciesCount && undefined}
-                    panel={<TaskDetailsDependencies taskId={task.id} disabled={disabled} />}
-                />
-            )}
-            {taskDetailsTime ? (
-                // <TaskDetailsTimelogsTab taskId={task.id} disabled={disabled} projectId={task.project} />
-                <Tab
-                    id="timelogs"
-                    title={translate("Time entries")}
-                    panel={
-                        <TaskDetailsTimelogsTab
-                            taskId={task.id}
-                            projectId={task.project}
-                            disabled={disabled}
-                        />
-                    }
-                />
-            ) : null}
-            {taskDetailsLinks ? (
-                <Tab
-                    id="links"
-                    title={translate("Links")}
-                    tagContent={task && task.links && task.links.length > 0 ? task.links.length : undefined}
-                    panel={<TaskDetailsLinks taskId={task.id} links={task.links} disabled={disabled} />}
-                />
-            ) : null}
-            {taskDetailsLocations ? (
-                <Tab
-                    id="locations"
-                    title={translate("Locations")}
-                    tagContent={
-                        task && task.locations && task.locations.length > 0
-                            ? task?.locations.length
-                            : undefined
-                    }
-                    panel={
-                        <TaskDetailsLocations
-                            taskId={task.id}
-                            locations={task.locations}
-                            disabled={disabled}
-                        />
-                    }
-                />
-            ) : null}
-        </Tabs>
-    );
-};
-
-function twoDimensional<T>(list: T[], elementsPerSubArray: number) {
-    const matrix: T[][] = [];
-    let i, k;
-
-    for (i = 0, k = -1; i < list.length; i++) {
-        if (i % elementsPerSubArray === 0) {
-            k++;
-            matrix[k] = [];
-        }
-
-        matrix[k].push(list[i]);
-    }
-
-    return matrix;
-}
-
-interface ITaskDetailsMatrixProps {
-    task: ITask;
-    disabled?: boolean;
-    onClose: (delayed?: boolean) => void;
-}
-// eslint-disable-next-line react/display-name
-const TaskDetailsMatrix: FunctionComponent<ITaskDetailsMatrixProps> = React.memo(
-    ({ task, disabled, onClose }) => {
-        const { taskDetailsMatrix } = usePreferences(["taskDetailsMatrix"]);
-
-        return (
-            <>
-                {twoDimensional<TASKDETAILMATRIX | undefined>(taskDetailsMatrix!, 3).map((row, rowIndex) => {
-                    if (!row.some(row => row != null)) return null;
-                    return (
-                        <Row gutter={20} padding={30} key={rowIndex}>
-                            {row.map((col, colIndex) => {
-                                return (
-                                    <TaskDetailInfo
-                                        task={task}
-                                        section={col}
-                                        key={colIndex}
-                                        onClose={onClose}
-                                        vertical
-                                        disabled={disabled}
-                                    />
-                                );
-                            })}
-                        </Row>
-                    );
-                })}
-            </>
-        );
-    }
-);
-
-interface ITaskDetailInfoProps {
-    task: ITask;
-    section: TASKDETAILMATRIX | undefined;
-    vertical?: boolean;
-    centered?: boolean;
-    disabled?: boolean;
-    onClose: (delayed?: boolean) => void;
-}
-// eslint-disable-next-line react/display-name
-const TaskDetailInfo: FunctionComponent<ITaskDetailInfoProps> = React.memo(
-    ({ task, section, vertical, centered, disabled, onClose }) => {
-        switch (section) {
-            case TASKDETAILMATRIX.ASSIGNEES:
-                return (
-                    <TaskDetailsSection
-                        title={translate("Assignees")}
-                        vertical={vertical}
-                        centered={centered}
-                    >
-                        <TaskDetailsAssignees
-                            taskId={task.id}
-                            assignees={task.assignees || []}
-                            disabled={disabled}
-                        />
-                    </TaskDetailsSection>
-                );
-            case TASKDETAILMATRIX.PRIORITY:
-                return (
-                    <TaskDetailsSection title={translate("Priority")} vertical={vertical} centered={centered}>
-                        <TaskDetailsPriority
-                            taskId={task.id}
-                            value={task.priority ?? PRIORITY.NONE}
-                            showEmpty
-                            canClear
-                            disabled={disabled}
-                        />
-                    </TaskDetailsSection>
-                );
-            case TASKDETAILMATRIX.STATUS:
-                return (
-                    <TaskDetailsSection title={translate("Status")} vertical={vertical} centered={centered}>
-                        <TaskDetailsStatus
-                            taskId={task.id}
-                            value={task.status}
-                            canClear
-                            disabled={disabled}
-                        />
-                    </TaskDetailsSection>
-                );
-            case TASKDETAILMATRIX.REPEATS:
-                return (
-                    <TaskDetailsSection title={translate("Repeats")} vertical={vertical} centered={centered}>
-                        <TIRepeats taskId={task.id} value={task.repeats} disabled={disabled} />
-                    </TaskDetailsSection>
-                );
-            case TASKDETAILMATRIX.PROGRESS:
-                return (
-                    <TaskDetailsSection
-                        title={translate("Progress")}
-                        accessory={<HotkeyChip keys={[`${task?.progress || 0}%`]} light />}
-                        vertical={vertical}
-                        centered
-                    >
-                        <TaskDetailsProgress
-                            taskId={task.id}
-                            progress={task?.progress}
-                            disabled={disabled}
-                            onComplete={() => onClose(true)}
-                        />
-                    </TaskDetailsSection>
-                );
-            case TASKDETAILMATRIX.DUEDATE:
-                return (
-                    <TaskDetailsSection title={translate("Due Date")} vertical={vertical} centered={centered}>
-                        <TaskDetailsDueDate
-                            value={task.duedate ?? null}
-                            disabled={disabled}
-                            minDate={task.startdate ?? undefined}
-                            taskId={task.id}
-                        />
-                    </TaskDetailsSection>
-                );
-            case TASKDETAILMATRIX.STARTDATE:
-                return (
-                    <TaskDetailsSection
-                        title={translate("Start date")}
-                        vertical={vertical}
-                        centered={centered}
-                    >
-                        <TaskDetailsStartDate
-                            value={task.startdate ?? null}
-                            disabled={disabled}
-                            maxDate={task.duedate ?? undefined}
-                            taskId={task.id}
-                        />
-                    </TaskDetailsSection>
-                );
-            case TASKDETAILMATRIX.DODATE:
-                return (
-                    <TaskDetailsSection title={translate("Do date")} vertical={vertical} centered={centered}>
-                        <DatePickerButton
-                            extendedFormat
-                            value={task.dodate ?? null}
-                            disabled={disabled}
-                            minDate={task.startdate ?? undefined}
-                            maxDate={task.duedate ?? undefined}
-                            onChange={(date: Date | null) => TasksActions.setDoDate(task.id, date)}
-                            popoverProps={{
-                                placement: "top",
-                            }}
-                        />
-                    </TaskDetailsSection>
-                );
-            case TASKDETAILMATRIX.TAGS:
-                return (
-                    <TaskDetailsSection title={translate("Tags")} vertical={vertical} centered={centered}>
-                        <TaskDetailsTags value={task.tags} disabled={disabled} taskId={task.id} />
-                    </TaskDetailsSection>
-                );
-            case TASKDETAILMATRIX.ESTIMATE:
-                return (
-                    <TaskDetailsSection title={translate("Estimate")} vertical={vertical} centered={centered}>
-                        <TaskEstimates
-                            value={task.estimate}
-                            disabled={disabled}
-                            onChange={(value: number | undefined) => TasksActions.setEstimate(task.id, value)}
-                        />
-                    </TaskDetailsSection>
-                );
-            case TASKDETAILMATRIX.TIMESPENT:
-                return (
-                    <TaskDetailsSection
-                        title={translate("Time spent")}
-                        vertical={vertical}
-                        centered={centered}
-                    >
-                        <Tooltip
-                            content={translate("Task time logs spent hint")}
-                            placement="top"
-                            disabled={disabled}
-                        >
-                            <Tag minimal intent={Intent.SUCCESS}>
-                                {formatStringDuration(task.timeSpent)}
-                            </Tag>
-                        </Tooltip>
-                    </TaskDetailsSection>
-                );
-            case TASKDETAILMATRIX.PROJECTS:
-                return (
-                    <TaskDetailsSection title={translate("Project")} vertical={vertical} centered={centered}>
-                        <TaskDetailsProjects taskId={task.id} projectId={task.project} />
-                    </TaskDetailsSection>
-                );
-            case TASKDETAILMATRIX.STACK:
-                return (
-                    <TaskDetailsStack
-                        taskId={task.id}
-                        projectId={task.project}
-                        stackId={task.stack}
-                        vertical={vertical}
-                        centered={centered}
-                        disabled={disabled}
-                    />
-                );
-
-            case TASKDETAILMATRIX.SPENTPROGRESS:
-                return (
-                    <TaskDetailsSection
-                        title={translate("Time progress")}
-                        vertical={vertical}
-                        centered={centered}
-                    >
-                        <TaskSpentProgress
-                            estimated={task.estimate || 0}
-                            spent={task.timeSpent}
-                            disabled={disabled}
-                        />
-                    </TaskDetailsSection>
-                );
-
-            case TASKDETAILMATRIX.TINT:
-                return (
-                    <TaskDetailsTint
-                        taskId={task.id}
-                        tint={task.tint ?? undefined}
-                        vertical={vertical}
-                        centered={centered}
-                        disabled={disabled}
-                    />
-                );
-
-            case TASKDETAILMATRIX.COVER:
-                return (
-                    <TaskDetailsSection title={translate("Cover")} vertical={vertical} centered={centered}>
-                        <TaskDetailsCover taskId={task.id} url={task.cover} disabled={disabled} />
-                    </TaskDetailsSection>
-                );
-
-            case TASKDETAILMATRIX.ID:
-                return <TaskDetailsId id={task.id} vertical={vertical} centered={centered} />;
-
-            case TASKDETAILMATRIX.HOURLY_RATE:
-                const project = getProject(task.project);
-                return (
-                    <TaskDetailsSection
-                        title={translate("Task hourly rate")}
-                        vertical={vertical}
-                        centered={centered}
-                    >
-                        <FeeInput
-                            value={task.hourlyRate}
-                            currency={project?.currency}
-                            readonly
-                            placeholder={project?.hourlyRate ?? 0}
-                            onChange={value => TasksActions.setHourlyRate(task.id, value)}
-                        />
-                    </TaskDetailsSection>
-                );
-
-            default:
-                return null;
-        }
-    }
-);
-
-interface ITaskDetailsMenuProps {
-    task: ITask;
-    archived?: boolean;
-    disabled?: boolean;
-    onClose: (delayed?: boolean) => void;
-    onTogglePrivacy: () => void;
-    onToggleParent: () => void;
-}
-const TaskDetailsMenu: FunctionComponent<ITaskDetailsMenuProps> = ({
-    task,
-    archived,
-    disabled,
-    onClose,
-    onTogglePrivacy,
-    onToggleParent,
-}) => {
-    const handleToggleComplete = () => {
-        TasksActions.toggleDone(task.id);
-        if (!task.done) onClose(true);
-    };
-
-    const handleArchive = async () => {
-        await TasksActions.archiveAlert(task.id);
-        onClose(true);
-    };
-
-    const handleUnarchive = async (stackId?: string) => {
-        await TasksActions.unarchive(task.id, stackId);
-        onClose(true);
-    };
-
-    const handleDeleteTask = async () => {
-        const response = await TasksActions.alertDelete(task.id);
-
-        if (response) {
-            onClose();
-        }
-    };
-
-    const handleCopyMove = () => {
-        CopyMoveActions.show({
-            title: stripMd(task.title),
-            type: COPYMOVETYPE.TASK,
-            tasks: [task.id],
-        });
-
-        onClose();
-    };
-
-    const handleExport = (type: string) => {
-        TasksActions.exportTask(task.id, type);
-    };
-
-    if (archived) {
-        return (
-            <Menu data-testid="task-details-menu">
-                <MenuItem
-                    text={translate("Unarchive")}
-                    intent={Intent.SUCCESS}
-                    icon={<Icon icon="archive" />}
-                    onClick={() => handleUnarchive()}
-                    data-testid="task-details-menu-unarchive"
-                />
-                <MenuItem
-                    text={translate("Unarchive to")}
-                    intent={Intent.SUCCESS}
-                    icon={<Icon icon="archive" />}
-                >
-                    <StacksMenu
-                        projectId={task.project}
-                        showTitle
-                        onClick={handleUnarchive}
-                        selected={undefined}
-                        nested
-                    />
-                </MenuItem>
-                <MenuDivider />
-                <MenuItem
-                    text={translate("Delete task", { suffix: "..." })}
-                    intent={Intent.DANGER}
-                    icon={<Icon icon="trash" />}
-                    onClick={handleDeleteTask}
-                    data-testid="task-details-menu-delete"
-                />
-            </Menu>
-        );
-    }
-
-    return (
-        <Menu data-testid="task-details-menu">
-            <MenuItem
-                text={taskToggleDoneLabel(Boolean(task?.done))}
-                intent={task?.done ? Intent.PRIMARY : Intent.SUCCESS}
-                icon={<Icon icon={task?.done ? "circle" : "check-circle"} />}
-                onClick={handleToggleComplete}
-                data-testid="task-details-menu-toggle-complete"
-            />
-
-            <MenuDivider />
-            <MenuItem
-                text={translate("Bookmark")}
-                icon={<Icon icon="bookmark" />}
-                onClick={toggleNewBookmark}
-                data-testid="task-details-menu-bookmark"
-            />
-            <MenuItem
-                text={translate("Share link")}
-                icon={<Icon icon="link-01" />}
-                onClick={() => share(`t/${task.id}`)}
-                data-testid="task-details-menu-share-link"
-            />
-            <MenuDivider />
-            <MenuItem
-                text={translate("Copy or Move")}
-                icon={<Icon icon="clipboard" />}
-                disabled={disabled}
-                onClick={handleCopyMove}
-                data-testid="task-details-menu-copy-move"
-            />
-            <MenuItem
-                text={translate("Export")}
-                icon={<Icon icon="download-04" />}
-                data-testid="task-details-menu-export"
-            >
-                <MenuItem
-                    text={translate("Export as", { type: ".xlsx" })}
-                    icon={<Icon icon="download-04" />}
-                    onClick={() => handleExport("csv")}
-                    data-testid="task-details-menu-export-xlsx"
-                />
-                <MenuItem
-                    text={translate("Export as", { type: ".json" })}
-                    icon={<Icon icon="download-04" />}
-                    onClick={() => handleExport("json")}
-                    data-testid="task-details-menu-export-json"
-                />
-                <MenuItem
-                    text={translate("Export as", { type: ".pdf" })}
-                    icon={<Icon icon="download-04" />}
-                    onClick={() => handleExport("pdf")}
-                    data-testid="task-details-menu-export-pdf"
-                />
-            </MenuItem>
-
-            <MenuDivider />
-            {task.parent == null ? (
-                <MenuItem
-                    text={translate("Attach task")}
-                    icon={<Icon icon="git-branch-01" />}
-                    disabled={disabled}
-                    onClick={onToggleParent}
-                    data-testid="task-details-menu-attach-parent"
-                />
-            ) : (
-                <MenuItem
-                    icon={<Icon icon="git-merge" />}
-                    text={translate("Detach from parent")}
-                    onClick={() => TasksActions.alertDetach(task.id)}
-                    intent={Intent.WARNING}
-                    disabled={disabled}
-                    data-testid="task-details-menu-detach-parent"
-                />
-            )}
-
-            <MenuDivider />
-
-            <MenuItem
-                text={`${translate("Privacy")}...`}
-                icon={<Icon icon="lock-01" />}
-                disabled={disabled}
-                onClick={onTogglePrivacy}
-                data-testid="task-details-menu-privacy"
-            />
-            <MenuDivider />
-
-            <MenuItem
-                text={translate("Archive task")}
-                intent={Intent.WARNING}
-                icon={<Icon icon="archive" />}
-                onClick={handleArchive}
-                data-testid="task-details-menu-archive"
-            />
-            <MenuItem
-                text={translate("Delete task", { suffix: "..." })}
-                intent={Intent.DANGER}
-                icon={<Icon icon="trash" />}
-                onClick={handleDeleteTask}
-                data-testid="task-details-menu-delete"
-            />
-        </Menu>
-    );
-};
-
-const EditTaskDetailsLayout = () => {
-    const handleOpenPreferences = () => {
-        togglePreferences();
-        setTimeout(() => {
-            publish("preferences:tab", "projects-tasksdetails");
-        }, 200);
-    };
-
-    return (
-        <div className="task-details-divider">
-            <div className="task-details-divider__content">
-                <Tooltip content={translate("Edit task details layout")} placement="top-end">
-                    <small
-                        className={classNames(Classes.TEXT_SMALL, Classes.TEXT_DISABLED)}
-                        onClick={handleOpenPreferences}
-                        data-testid="edit-task-details-layout"
-                    >
-                        {translate("Edit")}
-                    </small>
-                </Tooltip>
-            </div>
-        </div>
-    );
 };
 
 interface ITaskDetailsLoadingProps {

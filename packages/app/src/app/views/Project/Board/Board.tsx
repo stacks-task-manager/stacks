@@ -106,7 +106,10 @@ const BoardPure = () => {
 
             navigateNextStack(e);
 
-            if (getHashPathname().split("/").filter(Boolean).length > 2 && PreferencesStore.get().embeddedTask) {
+            if (
+                getHashPathname().split("/").filter(Boolean).length > 2 &&
+                PreferencesStore.get().embeddedTask
+            ) {
                 openTask(e);
             }
         });
@@ -118,7 +121,10 @@ const BoardPure = () => {
 
             navigatePrevStack(e);
 
-            if (getHashPathname().split("/").filter(Boolean).length > 2 && PreferencesStore.get().embeddedTask) {
+            if (
+                getHashPathname().split("/").filter(Boolean).length > 2 &&
+                PreferencesStore.get().embeddedTask
+            ) {
                 openTask(e);
             }
         });
@@ -130,7 +136,10 @@ const BoardPure = () => {
 
             navigateNextTask(e);
 
-            if (getHashPathname().split("/").filter(Boolean).length > 2 && PreferencesStore.get().embeddedTask) {
+            if (
+                getHashPathname().split("/").filter(Boolean).length > 2 &&
+                PreferencesStore.get().embeddedTask
+            ) {
                 openTask(e);
             }
         });
@@ -142,14 +151,20 @@ const BoardPure = () => {
 
             navigatePrevTask(e);
 
-            if (getHashPathname().split("/").filter(Boolean).length > 2 && PreferencesStore.get().embeddedTask) {
+            if (
+                getHashPathname().split("/").filter(Boolean).length > 2 &&
+                PreferencesStore.get().embeddedTask
+            ) {
                 openTask(e);
             }
         });
         // used to unselect the current task and stack
         mousetrap.bind("escape", () => {
             cancelSelection();
-            if (getHashPathname().split("/").filter(Boolean).length > 2 && PreferencesStore.get().embeddedTask) {
+            if (
+                getHashPathname().split("/").filter(Boolean).length > 2 &&
+                PreferencesStore.get().embeddedTask
+            ) {
                 nav(`/project/${getProjectIdFromHashPath()}`);
             }
         });

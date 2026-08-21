@@ -1,6 +1,5 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { translate } from "@stacks/translations";
-import React from "react";
 import { useLocation } from "react-router-dom";
 import { shallowEqual } from "app/hooks/store";
 import { isSameDay } from "date-fns";

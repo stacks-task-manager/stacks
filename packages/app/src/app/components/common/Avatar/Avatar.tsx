@@ -1,13 +1,20 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
-import React, { CSSProperties, FunctionComponent, useCallback, useEffect, useMemo, useState } from "react";
-import classnames from "classnames";
+import React, {
+    CSSProperties,
+    FunctionComponent,
+    KeyboardEvent,
+    useCallback,
+    useEffect,
+    useMemo,
+    useState,
+} from "react";
+import classNames from "classnames";
 import { HTMLDivProps, Placement, Tooltip } from "@blueprintjs/core";
 
 import { getInitials } from "app/utils/string";
 import { stringToColour } from "app/utils/colors";
 import { IPerson } from "@stacks/types";
 import { Icon } from "app/components/common";
-import classNames from "classnames";
 
 interface IAvatarProps extends HTMLDivProps {
     person: IPerson;
@@ -21,6 +28,15 @@ interface IAvatarProps extends HTMLDivProps {
     interractive?: boolean;
     selected?: boolean;
 }
+/**
+ * Renders a person avatar (photo or colored-initials). When `onClick` or
+ * `interractive` is set, the root becomes keyboard-activatable
+ * (`role="button"`, `tabIndex=0`) and fires `onClick` on Enter/Space.
+ *
+ * Caveat: an interactive avatar must not be nested inside another interactive
+ * element (e.g. a parent `<button>` or clickable row) — that would produce
+ * nested interactive roles and confusing keyboard behavior.
+ */
 export const Avatar: FunctionComponent<IAvatarProps> = ({
     person,
     showTooltip,
@@ -51,7 +67,7 @@ export const Avatar: FunctionComponent<IAvatarProps> = ({
                 </Tooltip>
             );
         },
-        [showTooltip]
+        [showTooltip, person.firstName, person.lastName, placement]
     );
 
     const initials = useMemo(() => {
@@ -76,21 +92,37 @@ export const Avatar: FunctionComponent<IAvatarProps> = ({
     );
 
     const badgeSize = small ? 6 : large ? 14 : 9;
+    const clickable = Boolean(onClick) || interractive;
+
+    // Keyboard activation mirrors button semantics: Enter/Space invoke `onClick`.
+    // `onClick` is typed to receive a MouseEvent (the shared `HTMLDivProps`
+    // surface), but keyboard activation yields a KeyboardEvent, so the event is
+    // coerced — it is only used for its `preventDefault` side effect here, never
+    // for mouse-specific data.
+    const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+        if (!onClick) return;
+        if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            onClick(event as unknown as React.MouseEvent<HTMLDivElement>);
+        }
+    };
 
     return (
         <div
             {...rest}
-            className={classnames("avatar", {
+            className={classNames("avatar", {
                 hasBorder,
                 small,
                 large,
                 huge,
                 narrow,
-                clickable: Boolean(onClick) || interractive,
+                clickable,
             })}
             style={styles}
             onClick={onClick}
-            tabIndex={-1}
+            onKeyDown={handleKeyDown}
+            role={clickable ? "button" : undefined}
+            tabIndex={clickable ? 0 : -1}
             title={`${person.firstName} ${person.lastName}`}
         >
             {renderTooltip(initials)}

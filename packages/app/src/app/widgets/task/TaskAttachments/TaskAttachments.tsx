@@ -49,7 +49,6 @@ const TaskAttachmentsList: FunctionComponent<TaskAttachmentsListProps> = ({ task
         // const files = await FilesAPI.load(taskId);
         // setFiles(files);
         console.log("TaskAttachmentsList load files not implemented");
-
     };
 
     useEffect(() => {

@@ -10,7 +10,7 @@ describe("Stacks", () => {
 
     beforeAll(async () => {
         token = await getAuthToken();
-        
+
         // Create a project first for stack testing
         const projectRes = await app.request("/api/projects", {
             method: "POST",
@@ -39,7 +39,7 @@ describe("Stacks", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect([200, 404]).toContain(res.status);
         if (res.status === 200) {
             const body = await res.json();
@@ -64,7 +64,7 @@ describe("Stacks", () => {
             },
             body: JSON.stringify(stackData),
         });
-        
+
         expect([200, 400, 404, 500]).toContain(res.status);
         if (res.status === 200) {
             const body = await res.json();
@@ -83,7 +83,7 @@ describe("Stacks", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect([200, 404]).toContain(res.status);
         if (res.status === 200) {
             const body = await res.json();
@@ -107,7 +107,7 @@ describe("Stacks", () => {
             },
             body: JSON.stringify(updateData),
         });
-        
+
         expect([200, 404]).toContain(res.status);
         if (res.status === 200) {
             const body = await res.json();
@@ -123,7 +123,7 @@ describe("Stacks", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect([200, 404]).toContain(res.status);
         if (res.status === 200) {
             const body = await res.json();
@@ -140,7 +140,7 @@ describe("Stacks", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect([200, 404]).toContain(res.status);
         if (res.status === 200) {
             const body = await res.json();
@@ -163,7 +163,7 @@ describe("Stacks", () => {
             },
             body: JSON.stringify(stackData),
         });
-        
+
         expect([200, 400, 404, 500]).toContain(res.status);
         if (res.status === 200) {
             const body = await res.json();
@@ -187,7 +187,7 @@ describe("Stacks", () => {
             },
             body: JSON.stringify(stackData),
         });
-        
+
         expect([400, 404, 500]).toContain(res.status);
     });
 
@@ -199,7 +199,7 @@ describe("Stacks", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect([400, 404, 500]).toContain(res.status);
     });
 
@@ -216,7 +216,7 @@ describe("Stacks", () => {
             },
             body: JSON.stringify(updateData),
         });
-        
+
         expect([400, 404, 500]).toContain(res.status);
     });
 
@@ -228,7 +228,7 @@ describe("Stacks", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect([400, 404]).toContain(res.status);
     });
 
@@ -240,7 +240,7 @@ describe("Stacks", () => {
                 // No Authorization header
             },
         });
-        
+
         // Should fail without authentication or route missing
         expect([401, 404]).toContain(res.status);
     });

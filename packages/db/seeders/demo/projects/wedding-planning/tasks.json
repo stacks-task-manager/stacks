@@ -4,9 +4,7 @@
         "description": "Description for Book Venue",
         "id": "42181755-4617-4533-963a-f104253ed0e7",
         "project": "aa823efb-1089-4368-869d-a10969fb4d84",
-        "tags": [
-            "28565bc4-a404-49a7-a104-3b1a91dea5e7"
-        ],
+        "tags": ["28565bc4-a404-49a7-a104-3b1a91dea5e7"],
         "tint": "#EC4899",
         "stack": "6cb1c9b2-ec61-4d59-90f6-556f589658eb",
         "estimate": 25200,
@@ -36,9 +34,7 @@
         "description": "Description for Send Invitations",
         "id": "e0c6091a-ffc9-4c73-b683-252968e87a38",
         "project": "aa823efb-1089-4368-869d-a10969fb4d84",
-        "tags": [
-            "bf417739-18da-4953-b72d-b89861d89dc6"
-        ],
+        "tags": ["bf417739-18da-4953-b72d-b89861d89dc6"],
         "tint": null,
         "stack": "6cb1c9b2-ec61-4d59-90f6-556f589658eb",
         "estimate": 28800,
@@ -51,10 +47,7 @@
         "description": "Description for Choose Cake",
         "id": "ce9b55a3-1753-4514-a19f-1461d3ac1b8b",
         "project": "aa823efb-1089-4368-869d-a10969fb4d84",
-        "tags": [
-            "2d3ced09-77bf-4f30-8740-7dc157d97744",
-            "941648ba-e742-4d5a-933b-89d96f6b464e"
-        ],
+        "tags": ["2d3ced09-77bf-4f30-8740-7dc157d97744", "941648ba-e742-4d5a-933b-89d96f6b464e"],
         "tint": "#EF4444",
         "stack": "6cb1c9b2-ec61-4d59-90f6-556f589658eb",
         "estimate": 3600,
@@ -67,9 +60,7 @@
         "description": "Description for Fittings",
         "id": "0fabe28d-117e-455d-ac4f-e985803aae91",
         "project": "aa823efb-1089-4368-869d-a10969fb4d84",
-        "tags": [
-            "2d3ced09-77bf-4f30-8740-7dc157d97744"
-        ],
+        "tags": ["2d3ced09-77bf-4f30-8740-7dc157d97744"],
         "tint": null,
         "stack": "6cb1c9b2-ec61-4d59-90f6-556f589658eb",
         "estimate": 3600,
@@ -82,10 +73,7 @@
         "description": "Description for Select Playlist",
         "id": "0cfbefd4-fdf7-4158-84f0-3844e737b902",
         "project": "aa823efb-1089-4368-869d-a10969fb4d84",
-        "tags": [
-            "bf417739-18da-4953-b72d-b89861d89dc6",
-            "28565bc4-a404-49a7-a104-3b1a91dea5e7"
-        ],
+        "tags": ["bf417739-18da-4953-b72d-b89861d89dc6", "28565bc4-a404-49a7-a104-3b1a91dea5e7"],
         "tint": null,
         "stack": "6cb1c9b2-ec61-4d59-90f6-556f589658eb",
         "estimate": 18000,
@@ -98,10 +86,7 @@
         "description": "Description for Book Photographer",
         "id": "e207fdc5-b5ff-42b0-9962-3590b62b999f",
         "project": "aa823efb-1089-4368-869d-a10969fb4d84",
-        "tags": [
-            "bf417739-18da-4953-b72d-b89861d89dc6",
-            "e4e707d2-b3f9-4794-987d-44f3d41e490c"
-        ],
+        "tags": ["bf417739-18da-4953-b72d-b89861d89dc6", "e4e707d2-b3f9-4794-987d-44f3d41e490c"],
         "tint": null,
         "stack": "6cb1c9b2-ec61-4d59-90f6-556f589658eb",
         "estimate": 25200,
@@ -148,10 +133,7 @@
         "description": "Description for Vows Writing",
         "id": "3222affc-3b72-4fd4-b3f0-48bbc3bbadfc",
         "project": "aa823efb-1089-4368-869d-a10969fb4d84",
-        "tags": [
-            "2d3ced09-77bf-4f30-8740-7dc157d97744",
-            "8557df2c-ec79-4ade-b4d0-ff2cd8528259"
-        ],
+        "tags": ["2d3ced09-77bf-4f30-8740-7dc157d97744", "8557df2c-ec79-4ade-b4d0-ff2cd8528259"],
         "tint": "#8B5CF6",
         "stack": "6cb1c9b2-ec61-4d59-90f6-556f589658eb",
         "estimate": 7200,
@@ -211,10 +193,7 @@
         "description": "Description for Honeymoon Booking",
         "id": "2a93afca-daf2-4073-81f6-50b480af8e2a",
         "project": "aa823efb-1089-4368-869d-a10969fb4d84",
-        "tags": [
-            "28565bc4-a404-49a7-a104-3b1a91dea5e7",
-            "e4e707d2-b3f9-4794-987d-44f3d41e490c"
-        ],
+        "tags": ["28565bc4-a404-49a7-a104-3b1a91dea5e7", "e4e707d2-b3f9-4794-987d-44f3d41e490c"],
         "tint": null,
         "stack": "0a9ec334-f14f-492f-9e94-feb541940a6f",
         "estimate": 36000,
@@ -227,9 +206,7 @@
         "description": "Description for Marriage License",
         "id": "d2fc411a-dfea-4fa0-b067-56b8e650129a",
         "project": "aa823efb-1089-4368-869d-a10969fb4d84",
-        "tags": [
-            "e4e707d2-b3f9-4794-987d-44f3d41e490c"
-        ],
+        "tags": ["e4e707d2-b3f9-4794-987d-44f3d41e490c"],
         "tint": "#EC4899",
         "stack": "0a9ec334-f14f-492f-9e94-feb541940a6f",
         "estimate": 3600,
@@ -242,9 +219,7 @@
         "description": "Description for Book Venue (2)",
         "id": "99dfedc0-2d71-44bc-abc4-34c3adfd3c72",
         "project": "aa823efb-1089-4368-869d-a10969fb4d84",
-        "tags": [
-            "8557df2c-ec79-4ade-b4d0-ff2cd8528259"
-        ],
+        "tags": ["8557df2c-ec79-4ade-b4d0-ff2cd8528259"],
         "tint": null,
         "stack": "0a9ec334-f14f-492f-9e94-feb541940a6f",
         "estimate": 14400,
@@ -257,10 +232,7 @@
         "description": "Description for Finalize Guest List (2)",
         "id": "a09500b2-f464-4868-a42d-b0646ae5f497",
         "project": "aa823efb-1089-4368-869d-a10969fb4d84",
-        "tags": [
-            "2d3ced09-77bf-4f30-8740-7dc157d97744",
-            "8557df2c-ec79-4ade-b4d0-ff2cd8528259"
-        ],
+        "tags": ["2d3ced09-77bf-4f30-8740-7dc157d97744", "8557df2c-ec79-4ade-b4d0-ff2cd8528259"],
         "tint": "#8B5CF6",
         "stack": "0a9ec334-f14f-492f-9e94-feb541940a6f",
         "estimate": 18000,
@@ -273,9 +245,7 @@
         "description": "Description for Send Invitations (2)",
         "id": "6cb1e8c1-9783-403d-9034-26e09ffee1e8",
         "project": "aa823efb-1089-4368-869d-a10969fb4d84",
-        "tags": [
-            "60a79023-b8b6-4e9b-b55f-e5a2fc6ba0de"
-        ],
+        "tags": ["60a79023-b8b6-4e9b-b55f-e5a2fc6ba0de"],
         "tint": null,
         "stack": "0a9ec334-f14f-492f-9e94-feb541940a6f",
         "estimate": 14400,
@@ -305,10 +275,7 @@
         "description": "Description for Fittings (2)",
         "id": "def72789-934d-447f-af1f-9b536aa280a9",
         "project": "aa823efb-1089-4368-869d-a10969fb4d84",
-        "tags": [
-            "60a79023-b8b6-4e9b-b55f-e5a2fc6ba0de",
-            "e4e707d2-b3f9-4794-987d-44f3d41e490c"
-        ],
+        "tags": ["60a79023-b8b6-4e9b-b55f-e5a2fc6ba0de", "e4e707d2-b3f9-4794-987d-44f3d41e490c"],
         "tint": null,
         "stack": "0a9ec334-f14f-492f-9e94-feb541940a6f",
         "estimate": 18000,
@@ -334,9 +301,7 @@
         "description": "Description for Book Photographer (2)",
         "id": "d023af6d-78d0-4aa6-99b1-fdb9c40934a0",
         "project": "aa823efb-1089-4368-869d-a10969fb4d84",
-        "tags": [
-            "8557df2c-ec79-4ade-b4d0-ff2cd8528259"
-        ],
+        "tags": ["8557df2c-ec79-4ade-b4d0-ff2cd8528259"],
         "tint": null,
         "stack": "0a9ec334-f14f-492f-9e94-feb541940a6f",
         "estimate": 36000,
@@ -362,9 +327,7 @@
         "description": "Description for Seating Chart (2)",
         "id": "cb3ae54d-4202-4a24-8819-f4b5f4baebd7",
         "project": "aa823efb-1089-4368-869d-a10969fb4d84",
-        "tags": [
-            "bf417739-18da-4953-b72d-b89861d89dc6"
-        ],
+        "tags": ["bf417739-18da-4953-b72d-b89861d89dc6"],
         "tint": null,
         "stack": "0b8dcc59-121f-4cac-bc49-9c0b276f5402",
         "estimate": 3600,
@@ -454,10 +417,7 @@
         "description": "Description for Marriage License (2)",
         "id": "f68c3b9c-9556-4071-915c-e0d651341cef",
         "project": "aa823efb-1089-4368-869d-a10969fb4d84",
-        "tags": [
-            "8557df2c-ec79-4ade-b4d0-ff2cd8528259",
-            "28565bc4-a404-49a7-a104-3b1a91dea5e7"
-        ],
+        "tags": ["8557df2c-ec79-4ade-b4d0-ff2cd8528259", "28565bc4-a404-49a7-a104-3b1a91dea5e7"],
         "tint": null,
         "stack": "0b8dcc59-121f-4cac-bc49-9c0b276f5402",
         "estimate": 7200,
@@ -470,10 +430,7 @@
         "description": "Description for Book Venue (3)",
         "id": "dc8423de-9b3f-43cd-9747-c52571f4bdf4",
         "project": "aa823efb-1089-4368-869d-a10969fb4d84",
-        "tags": [
-            "bf417739-18da-4953-b72d-b89861d89dc6",
-            "28565bc4-a404-49a7-a104-3b1a91dea5e7"
-        ],
+        "tags": ["bf417739-18da-4953-b72d-b89861d89dc6", "28565bc4-a404-49a7-a104-3b1a91dea5e7"],
         "tint": null,
         "stack": "0b8dcc59-121f-4cac-bc49-9c0b276f5402",
         "estimate": 25200,
@@ -486,9 +443,7 @@
         "description": "Description for Finalize Guest List (3)",
         "id": "275b6661-53cf-4029-996b-80c90e7c7257",
         "project": "aa823efb-1089-4368-869d-a10969fb4d84",
-        "tags": [
-            "941648ba-e742-4d5a-933b-89d96f6b464e"
-        ],
+        "tags": ["941648ba-e742-4d5a-933b-89d96f6b464e"],
         "tint": "#10B981",
         "stack": "0b8dcc59-121f-4cac-bc49-9c0b276f5402",
         "estimate": 32400,
@@ -514,10 +469,7 @@
         "description": "Description for Choose Cake (3)",
         "id": "94fcaa19-a053-4a9f-a507-947e12eece29",
         "project": "aa823efb-1089-4368-869d-a10969fb4d84",
-        "tags": [
-            "bf417739-18da-4953-b72d-b89861d89dc6",
-            "60a79023-b8b6-4e9b-b55f-e5a2fc6ba0de"
-        ],
+        "tags": ["bf417739-18da-4953-b72d-b89861d89dc6", "60a79023-b8b6-4e9b-b55f-e5a2fc6ba0de"],
         "tint": null,
         "stack": "65d47429-d567-4a1d-8058-5dad316da177",
         "estimate": 14400,
@@ -530,9 +482,7 @@
         "description": "Description for Fittings (3)",
         "id": "96ca6e90-50e8-4bbd-ac42-7a263ae41064",
         "project": "aa823efb-1089-4368-869d-a10969fb4d84",
-        "tags": [
-            "2d3ced09-77bf-4f30-8740-7dc157d97744"
-        ],
+        "tags": ["2d3ced09-77bf-4f30-8740-7dc157d97744"],
         "tint": "#10B981",
         "stack": "65d47429-d567-4a1d-8058-5dad316da177",
         "estimate": 3600,
@@ -545,10 +495,7 @@
         "description": "Description for Select Playlist (3)",
         "id": "7c172f57-60f9-4d63-8d46-39667fdd4caa",
         "project": "aa823efb-1089-4368-869d-a10969fb4d84",
-        "tags": [
-            "2d3ced09-77bf-4f30-8740-7dc157d97744",
-            "e4e707d2-b3f9-4794-987d-44f3d41e490c"
-        ],
+        "tags": ["2d3ced09-77bf-4f30-8740-7dc157d97744", "e4e707d2-b3f9-4794-987d-44f3d41e490c"],
         "tint": "#F59E0B",
         "stack": "65d47429-d567-4a1d-8058-5dad316da177",
         "estimate": 14400,
@@ -578,9 +525,7 @@
         "description": "Description for Arrange Transport (3)",
         "id": "b100550d-5245-44c1-92a5-c62acc442639",
         "project": "aa823efb-1089-4368-869d-a10969fb4d84",
-        "tags": [
-            "2d3ced09-77bf-4f30-8740-7dc157d97744"
-        ],
+        "tags": ["2d3ced09-77bf-4f30-8740-7dc157d97744"],
         "tint": "#8B5CF6",
         "stack": "65d47429-d567-4a1d-8058-5dad316da177",
         "estimate": 14400,
@@ -593,10 +538,7 @@
         "description": "Description for Seating Chart (3)",
         "id": "76796668-02c5-4e9e-87c2-c73708fe4c4a",
         "project": "aa823efb-1089-4368-869d-a10969fb4d84",
-        "tags": [
-            "28565bc4-a404-49a7-a104-3b1a91dea5e7",
-            "941648ba-e742-4d5a-933b-89d96f6b464e"
-        ],
+        "tags": ["28565bc4-a404-49a7-a104-3b1a91dea5e7", "941648ba-e742-4d5a-933b-89d96f6b464e"],
         "tint": "#6366F1",
         "stack": "65d47429-d567-4a1d-8058-5dad316da177",
         "estimate": 10800,
@@ -609,9 +551,7 @@
         "description": "Description for Vows Writing (3)",
         "id": "110b946a-4012-4b54-b4ca-cf965e7b5024",
         "project": "aa823efb-1089-4368-869d-a10969fb4d84",
-        "tags": [
-            "e4e707d2-b3f9-4794-987d-44f3d41e490c"
-        ],
+        "tags": ["e4e707d2-b3f9-4794-987d-44f3d41e490c"],
         "tint": null,
         "stack": "65d47429-d567-4a1d-8058-5dad316da177",
         "estimate": 28800,
@@ -637,9 +577,7 @@
         "description": "Description for Flower Arrangements (3)",
         "id": "8f30a8a1-80ff-4ef6-bb5b-26805297a021",
         "project": "aa823efb-1089-4368-869d-a10969fb4d84",
-        "tags": [
-            "8557df2c-ec79-4ade-b4d0-ff2cd8528259"
-        ],
+        "tags": ["8557df2c-ec79-4ade-b4d0-ff2cd8528259"],
         "tint": "#06B6D4",
         "stack": "65d47429-d567-4a1d-8058-5dad316da177",
         "estimate": 28800,
@@ -652,10 +590,7 @@
         "description": "Description for Party Favors (3)",
         "id": "d3f07f4b-393c-4ca8-aad9-213686569984",
         "project": "aa823efb-1089-4368-869d-a10969fb4d84",
-        "tags": [
-            "60a79023-b8b6-4e9b-b55f-e5a2fc6ba0de",
-            "e4e707d2-b3f9-4794-987d-44f3d41e490c"
-        ],
+        "tags": ["60a79023-b8b6-4e9b-b55f-e5a2fc6ba0de", "e4e707d2-b3f9-4794-987d-44f3d41e490c"],
         "tint": "#F59E0B",
         "stack": "65d47429-d567-4a1d-8058-5dad316da177",
         "estimate": 10800,
@@ -668,9 +603,7 @@
         "description": "Description for Honeymoon Booking (3)",
         "id": "a4130401-7dc3-4841-819b-f4fb86984e83",
         "project": "aa823efb-1089-4368-869d-a10969fb4d84",
-        "tags": [
-            "8557df2c-ec79-4ade-b4d0-ff2cd8528259"
-        ],
+        "tags": ["8557df2c-ec79-4ade-b4d0-ff2cd8528259"],
         "tint": "#64748B",
         "stack": "65d47429-d567-4a1d-8058-5dad316da177",
         "estimate": 32400,
@@ -696,10 +629,7 @@
         "description": "Description for Book Venue (4)",
         "id": "88ace35b-4516-4b7e-8a7b-849836b701b7",
         "project": "aa823efb-1089-4368-869d-a10969fb4d84",
-        "tags": [
-            "8557df2c-ec79-4ade-b4d0-ff2cd8528259",
-            "60a79023-b8b6-4e9b-b55f-e5a2fc6ba0de"
-        ],
+        "tags": ["8557df2c-ec79-4ade-b4d0-ff2cd8528259", "60a79023-b8b6-4e9b-b55f-e5a2fc6ba0de"],
         "tint": null,
         "stack": "17287438-aaef-40cc-8775-99744debec39",
         "estimate": 21600,
@@ -712,9 +642,7 @@
         "description": "Description for Finalize Guest List (4)",
         "id": "d06c2ee8-bea8-486e-a150-2bd7deff9948",
         "project": "aa823efb-1089-4368-869d-a10969fb4d84",
-        "tags": [
-            "2d3ced09-77bf-4f30-8740-7dc157d97744"
-        ],
+        "tags": ["2d3ced09-77bf-4f30-8740-7dc157d97744"],
         "tint": "#64748B",
         "stack": "17287438-aaef-40cc-8775-99744debec39",
         "estimate": 3600,
@@ -740,9 +668,7 @@
         "description": "Description for Choose Cake (4)",
         "id": "8c7e05ef-71aa-4c62-b5b8-bd46b80a4b5f",
         "project": "aa823efb-1089-4368-869d-a10969fb4d84",
-        "tags": [
-            "60a79023-b8b6-4e9b-b55f-e5a2fc6ba0de"
-        ],
+        "tags": ["60a79023-b8b6-4e9b-b55f-e5a2fc6ba0de"],
         "tint": null,
         "stack": "17287438-aaef-40cc-8775-99744debec39",
         "estimate": 32400,
@@ -755,9 +681,7 @@
         "description": "Description for Fittings (4)",
         "id": "fc11c169-9b17-41f3-8adc-c85fca3c82c5",
         "project": "aa823efb-1089-4368-869d-a10969fb4d84",
-        "tags": [
-            "28565bc4-a404-49a7-a104-3b1a91dea5e7"
-        ],
+        "tags": ["28565bc4-a404-49a7-a104-3b1a91dea5e7"],
         "tint": "#06B6D4",
         "stack": "17287438-aaef-40cc-8775-99744debec39",
         "estimate": 32400,
@@ -770,10 +694,7 @@
         "description": "Description for Select Playlist (4)",
         "id": "d0ad7cac-4800-4b2a-991f-fe6196e3ba70",
         "project": "aa823efb-1089-4368-869d-a10969fb4d84",
-        "tags": [
-            "28565bc4-a404-49a7-a104-3b1a91dea5e7",
-            "2d3ced09-77bf-4f30-8740-7dc157d97744"
-        ],
+        "tags": ["28565bc4-a404-49a7-a104-3b1a91dea5e7", "2d3ced09-77bf-4f30-8740-7dc157d97744"],
         "tint": null,
         "stack": "17287438-aaef-40cc-8775-99744debec39",
         "estimate": 21600,
@@ -786,10 +707,7 @@
         "description": "Description for Book Photographer (4)",
         "id": "245ff0c4-ba5d-4734-9184-60aaaa515aaa",
         "project": "aa823efb-1089-4368-869d-a10969fb4d84",
-        "tags": [
-            "60a79023-b8b6-4e9b-b55f-e5a2fc6ba0de",
-            "941648ba-e742-4d5a-933b-89d96f6b464e"
-        ],
+        "tags": ["60a79023-b8b6-4e9b-b55f-e5a2fc6ba0de", "941648ba-e742-4d5a-933b-89d96f6b464e"],
         "tint": null,
         "stack": "17287438-aaef-40cc-8775-99744debec39",
         "estimate": 10800,
@@ -802,9 +720,7 @@
         "description": "Description for Arrange Transport (4)",
         "id": "29d5d3d9-65f6-4b1b-84f4-3091db252644",
         "project": "aa823efb-1089-4368-869d-a10969fb4d84",
-        "tags": [
-            "2d3ced09-77bf-4f30-8740-7dc157d97744"
-        ],
+        "tags": ["2d3ced09-77bf-4f30-8740-7dc157d97744"],
         "tint": null,
         "stack": "17287438-aaef-40cc-8775-99744debec39",
         "estimate": 14400,
@@ -851,10 +767,7 @@
         "description": "Description for Rehearsal Dinner (4)",
         "id": "1706c0e4-b5f9-41ca-b722-f2cd0e0c85aa",
         "project": "aa823efb-1089-4368-869d-a10969fb4d84",
-        "tags": [
-            "bf417739-18da-4953-b72d-b89861d89dc6",
-            "28565bc4-a404-49a7-a104-3b1a91dea5e7"
-        ],
+        "tags": ["bf417739-18da-4953-b72d-b89861d89dc6", "28565bc4-a404-49a7-a104-3b1a91dea5e7"],
         "tint": "#EC4899",
         "stack": "17287438-aaef-40cc-8775-99744debec39",
         "estimate": 3600,
@@ -867,10 +780,7 @@
         "description": "Description for Flower Arrangements (4)",
         "id": "89c5a35d-28c2-4877-b54b-557fe5a289fa",
         "project": "aa823efb-1089-4368-869d-a10969fb4d84",
-        "tags": [
-            "2d3ced09-77bf-4f30-8740-7dc157d97744",
-            "8557df2c-ec79-4ade-b4d0-ff2cd8528259"
-        ],
+        "tags": ["2d3ced09-77bf-4f30-8740-7dc157d97744", "8557df2c-ec79-4ade-b4d0-ff2cd8528259"],
         "tint": null,
         "stack": "17287438-aaef-40cc-8775-99744debec39",
         "estimate": 18000,
@@ -883,9 +793,7 @@
         "description": "Description for Party Favors (4)",
         "id": "47bc1140-be2b-4c03-9c9c-fa5d1910e7a0",
         "project": "aa823efb-1089-4368-869d-a10969fb4d84",
-        "tags": [
-            "8557df2c-ec79-4ade-b4d0-ff2cd8528259"
-        ],
+        "tags": ["8557df2c-ec79-4ade-b4d0-ff2cd8528259"],
         "tint": null,
         "stack": "17287438-aaef-40cc-8775-99744debec39",
         "estimate": 3600,

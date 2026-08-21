@@ -1,6 +1,6 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
-import React from "react";
+import { translate } from "@stacks/translations";
 
 export const Planner = () => {
-    return <div>Planner</div>;
+    return <div>{translate("Planner")}</div>;
 };

@@ -29,7 +29,7 @@ export const TimelineDay: FunctionComponent<TimelineDayProps> = ({
     onAdd,
     components,
 }) => {
-    const dateObj = useMemo(() => date ? new Date(date) : null, [date]);
+    const dateObj = useMemo(() => (date ? new Date(date) : null), [date]);
 
     const isToday = useMemo(() => dateObj && isValid(dateObj) && isTodayFns(dateObj), [dateObj]);
 
@@ -137,9 +137,7 @@ const TimelineTodayProgress: FunctionComponent<TimelineTodayProgressProps> = ({ 
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             renderTarget={({ isOpen, ...props }) => (
                 <div {...props} className="timeline__today-progress" style={{ left: `${value}%` }}>
-                    <span>
-                        {translate("Today")}
-                    </span>
+                    <span>{translate("Today")}</span>
                 </div>
             )}
         />

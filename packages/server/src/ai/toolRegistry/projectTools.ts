@@ -34,7 +34,10 @@ export const projectAiTools = [
         inputSchema: z.object({
             title: z.string().min(1).describe("Project name"),
             description: z.string().optional().describe("Description"),
-            parentFolderDocumentId: z.string().optional().describe("Folder document UUID; omit for top-level"),
+            parentFolderDocumentId: z
+                .string()
+                .optional()
+                .describe("Folder document UUID; omit for top-level"),
             isPublic: z.boolean().optional().describe("Visibility; default true"),
             projectOwnerId: z.string().optional().describe("Owner UUID; defaults to current user"),
         }),

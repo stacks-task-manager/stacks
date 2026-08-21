@@ -16,7 +16,7 @@ export type KeyMismatchEntry = {
     localeId: string;
     filePath: string;
     missingKeys: string[]; // in en.json but not in this locale file
-    extraKeys: string[];   // in this locale file but not in en.json
+    extraKeys: string[]; // in this locale file but not in en.json
 };
 
 /** A value that is similar (>= threshold %) to another value in the same file. */
@@ -49,7 +49,7 @@ function valueToString(v: TranslationValue): string {
 export function findDuplicateValues(
     localeId: string,
     filePath: string,
-    data: Record<string, TranslationValue>,
+    data: Record<string, TranslationValue>
 ): DuplicateValueEntry[] {
     const groups = new Map<string, string[]>();
 
@@ -76,9 +76,7 @@ export function findDuplicateValues(
  * Compare every non-English locale file against en.json.
  * Returns entries for keys that are missing from or extra in a non-en file.
  */
-export function findKeyMismatches(
-    localesDir: string,
-): KeyMismatchEntry[] {
+export function findKeyMismatches(localesDir: string): KeyMismatchEntry[] {
     const enPath = enJsonPath(localesDir);
     const en = readLocaleJson(enPath);
     if (!en) return [];
@@ -118,7 +116,7 @@ export function findNearDuplicates(
     localeId: string,
     filePath: string,
     data: Record<string, TranslationValue>,
-    threshold: number = 85,
+    threshold: number = 85
 ): NearDuplicateEntry[] {
     const entries = Object.entries(data);
     const results: NearDuplicateEntry[] = [];
@@ -130,7 +128,12 @@ export function findNearDuplicates(
         for (const [entryKey, entryValue] of entries) {
             if (entryKey === candidateKey) continue;
             const entryStr = valueToString(entryValue);
-            const sim = Math.round(100 * (1 - levenshtein(candidateStr, entryStr) / Math.max(candidateStr.length, entryStr.length, 1)));
+            const sim = Math.round(
+                100 *
+                    (1 -
+                        levenshtein(candidateStr, entryStr) /
+                            Math.max(candidateStr.length, entryStr.length, 1))
+            );
             if (sim >= threshold) {
                 similarEntries.push({ entryKey, entryValue: entryStr, similarity: sim });
             }
@@ -150,7 +153,7 @@ export function findNearDuplicates(
 export function checkLocaleIntegrity(
     section: TranslationSection,
     localesDir: string,
-    nearDuplicateThreshold: number = 85,
+    nearDuplicateThreshold: number = 85
 ): LocaleIntegrityReport {
     const duplicateValues: DuplicateValueEntry[] = [];
     const nearDuplicates: NearDuplicateEntry[] = [];

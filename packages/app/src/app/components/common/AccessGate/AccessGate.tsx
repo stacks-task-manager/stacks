@@ -30,7 +30,8 @@ export const AccessGate: FunctionComponent<AccessGateProps> = ({
                         title="Access denied"
                         description="The content you are trying to access it not allowed for your current role."
                         icon="lock-01"
-                        small={small} />
+                        small={small}
+                    />
                 </Grid>
             );
         }

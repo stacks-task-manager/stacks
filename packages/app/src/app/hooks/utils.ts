@@ -13,6 +13,13 @@ interface IPos {
 
 const DRAG_SPACE = 20;
 
+/**
+ * Calls the handler when a click occurs outside the given element (ignoring small drag movements).
+ * @template T - The type of the referenced HTMLElement.
+ * @param {RefObject<T>} ref - Ref to the element to test clicks against.
+ * @param {(event: Event) => void} handler - Callback invoked when the click is outside the element.
+ * @param {string[]} [selectors] - Optional CSS selectors whose containing targets are excluded from outside clicks.
+ */
 export const useOnClickOutside = <T extends HTMLElement = HTMLElement>(
     ref: RefObject<T>,
     handler: (event: Event) => void,
@@ -64,6 +71,12 @@ const OPTIONS = {
     threshold: 0,
 };
 
+/**
+ * Observes the given element and returns whether it has become visible (intersecting the viewport).
+ * @template T - The type of the referenced element.
+ * @param {MutableRefObject<T>} elementRef - Ref to the element to observe.
+ * @returns True once the element first becomes visible, otherwise false.
+ */
 export const useIsVisible = <T>(elementRef: MutableRefObject<T>) => {
     const [isVisible, setIsVisible] = useState(false);
 
@@ -84,6 +97,13 @@ export const useIsVisible = <T>(elementRef: MutableRefObject<T>) => {
     return isVisible;
 };
 
+/**
+ * Observes a referenced element with an IntersectionObserver and reports its intersecting state.
+ * @param {MutableRefObject<Element | null>} ref - Ref to the element to observe.
+ * @param {IntersectionObserverInit} options - Options passed to the IntersectionObserver.
+ * @param {boolean} forward - When true, only reports the first time the element intersects and then stops observing.
+ * @returns True when the element is intersecting, otherwise false.
+ */
 export const useIntersectionObserver = (
     ref: MutableRefObject<Element | null>,
     options: IntersectionObserverInit = {},
@@ -93,6 +113,9 @@ export const useIntersectionObserver = (
     const [isIntersecting, setIsIntersecting] = useState(false);
     const observer = useRef<null | IntersectionObserver>(null);
 
+    /**
+     * Disconnects the active intersection observer, if any.
+     */
     const cleanOb = () => {
         if (observer.current) {
             observer.current.disconnect();

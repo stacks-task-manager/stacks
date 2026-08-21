@@ -39,27 +39,25 @@ export function LocationMap({
     if (markers.length === 0) {
         return (
             <VStack className="flex-1 items-center justify-center p-6">
-                <Text className="text-typography-600 text-center">
-                    No located tasks in this project.
-                </Text>
+                <Text className="text-typography-600 text-center">No located tasks in this project.</Text>
             </VStack>
         );
     }
 
     const html = buildMapHtml(markers, labelMarkers);
     return (
-        <WebView
-            originWhitelist={["*"]}
-            source={{ html }}
-            style={{ flex: 1, backgroundColor: "#f8fafc" }}
-        />
+        <WebView originWhitelist={["*"]} source={{ html }} style={{ flex: 1, backgroundColor: "#f8fafc" }} />
     );
 }
 
 export function ProjectLocationMapScreen({ world }: { world?: boolean }) {
     const { id } = useLocalSearchParams<{ id: string }>();
 
-    const { data: tasks = [], isLoading, isError } = useQuery<ITask[]>({
+    const {
+        data: tasks = [],
+        isLoading,
+        isError,
+    } = useQuery<ITask[]>({
         queryKey: ["tasks", id],
         queryFn: () => fetchTasksForProject(id),
     });
@@ -93,18 +91,14 @@ export function ProjectLocationMapScreen({ world }: { world?: boolean }) {
     return <LocationMap locations={locations} labelMarkers={world} />;
 }
 
-function buildMapHtml(
-    markers: { coords: number[]; title: string }[],
-    labelMarkers?: boolean
-): string {
+function buildMapHtml(markers: { coords: number[]; title: string }[], labelMarkers?: boolean): string {
     const center = markers[0].coords.join(",");
     const markerCalls = markers
         .map(
             (m, i) =>
                 `var m${i} = L.marker([${m.coords[0]}, ${m.coords[1]}]).addTo(map).bindPopup(${JSON.stringify(
                     m.title
-                )});` +
-                (labelMarkers ? ` m${i}.openPopup();` : "")
+                )});` + (labelMarkers ? ` m${i}.openPopup();` : "")
         )
         .join("\n");
     return `<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1">

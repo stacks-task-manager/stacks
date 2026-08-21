@@ -30,5 +30,5 @@ export const TaskDetailsStartDate: FunctionComponent<TaskDetailsStartDateProps> 
             onChange={(date: Date | null) => TasksActions.setStartDate(taskId, date)}
             testId="task-details-start-date"
         />
-    )
+    );
 };

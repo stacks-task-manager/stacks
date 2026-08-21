@@ -27,7 +27,7 @@ function findRepoRoot(fromDir: string): string {
     }
 
     throw new Error(
-        `Could not find monorepo root (package.json with workspaces). Set STACKS_ROOT or run from the stacks repo.`,
+        `Could not find monorepo root (package.json with workspaces). Set STACKS_ROOT or run from the stacks repo.`
     );
 }
 

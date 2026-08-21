@@ -194,8 +194,7 @@ async function getAll(filters: TimelogFilter, extTransaction?: Transaction) {
             transaction,
         });
         const timelogs: ITimeLog[] = timelogEntities.map(
-            (timelogEntity: InstanceType<typeof TimelogEntity>) =>
-                timelogEntity.toJSON() as ITimeLog
+            (timelogEntity: InstanceType<typeof TimelogEntity>) => timelogEntity.toJSON() as ITimeLog
         );
 
         const ids = timelogs.map(timelog => timelog.task);
@@ -355,8 +354,7 @@ async function review(start: string, end: string) {
             transaction,
         });
         const projects: IProject[] = projectsEntities.map(
-            (projectEntity: InstanceType<typeof ProjectEntity>) =>
-                projectEntity.toJSON() as IProject
+            (projectEntity: InstanceType<typeof ProjectEntity>) => projectEntity.toJSON() as IProject
         );
 
         for (const project of projects) {
@@ -447,8 +445,7 @@ async function updateTotals(taskId: string, extTransaction?: Transaction): Promi
                 transaction,
             });
             const timelogs: ITimeLog[] = timelogsEntities.map(
-                (timelogEntity: InstanceType<typeof TimelogEntity>) =>
-                    timelogEntity.toJSON() as ITimeLog
+                (timelogEntity: InstanceType<typeof TimelogEntity>) => timelogEntity.toJSON() as ITimeLog
             );
             const timeSpent = timelogs.reduce((acc: number, cur: ITimeLog) => acc + cur.duration, 0);
 

@@ -19,10 +19,7 @@ export function StatusSelect({
     const [open, setOpen] = useState(false);
     const { data: tags } = useTags();
 
-    const statuses = useMemo(
-        () => (tags ?? []).filter(t => t.type === TAGTYPE.STATUS),
-        [tags]
-    );
+    const statuses = useMemo(() => (tags ?? []).filter(t => t.type === TAGTYPE.STATUS), [tags]);
 
     const current = findTag(tags, value ?? undefined);
 

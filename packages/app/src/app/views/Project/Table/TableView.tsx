@@ -37,7 +37,10 @@ export const TableView = () => {
         return tasks as TablePersistentData<ITask>[];
     };
 
-    const resolveParentAndPosition = (droppableId: string, index: number): { parentId?: string; position: number } => {
+    const resolveParentAndPosition = (
+        droppableId: string,
+        index: number
+    ): { parentId?: string; position: number } => {
         const rows = getRowsForDroppable(droppableId);
         const flat = flattenTree(rows);
         const clampIndex = Math.max(0, Math.min(index, flat.length));
@@ -49,7 +52,10 @@ export const TableView = () => {
             const start = parentIdx + 1;
             let end = start;
             for (let j = start; j < flat.length; j++) {
-                if (flat[j].level <= parentLevel) { end = j; break; }
+                if (flat[j].level <= parentLevel) {
+                    end = j;
+                    break;
+                }
                 end = j;
             }
             const rangeStart = start;
@@ -95,7 +101,10 @@ export const TableView = () => {
         } else if (grouping === GROUPING_TYPE.UNGROUPED) {
             const { destination, draggableId } = result;
             if (!destination) return;
-            const { parentId, position } = resolveParentAndPosition(destination.droppableId, destination.index);
+            const { parentId, position } = resolveParentAndPosition(
+                destination.droppableId,
+                destination.index
+            );
             // For now, just log the resolved placement; actions can be wired as needed
             console.log("Drop resolved:", { taskId: draggableId, parentId: parentId ?? "root", position });
         }

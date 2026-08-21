@@ -1,5 +1,4 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
-import React from "react";
 import { Classes } from "@blueprintjs/core";
 import classNames from "classnames";
 

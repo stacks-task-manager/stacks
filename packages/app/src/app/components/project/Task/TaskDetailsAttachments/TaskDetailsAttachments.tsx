@@ -1,7 +1,7 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { translate } from "@stacks/translations";
 import chunk from "lodash/chunk";
-import React, { FunctionComponent, useEffect } from "react";
+import { FunctionComponent, useEffect } from "react";
 import { APPICONS, FILES_TYPE, IAttachment } from "@stacks/types";
 import { BlankSlate, Col, Grid, RoundButton, Row } from "app/components/common";
 import { useElementHotkey, useTaskAttachments } from "app/hooks";
@@ -22,24 +22,26 @@ export const TaskDetailsAttachments: FunctionComponent<ITaskDetailsAttachmentsPr
     useElementHotkey("shift+f", "td-attachments");
 
     useEffect(() => {
-        AttachmentsActions.load(taskId)
-    }, [])
+        AttachmentsActions.load(taskId);
+    }, [taskId]);
 
     const handleAttacheFiles = () => {
         const { onProgress } = pickFiles({
-            recordId: taskId, type: FILES_TYPE.TASK_ATTACHMENT, onUploaded: (attachments: IAttachment[]) => {
+            recordId: taskId,
+            type: FILES_TYPE.TASK_ATTACHMENT,
+            onUploaded: (attachments: IAttachment[]) => {
                 AttachmentsActions.appendAttachments(taskId, attachments);
-            }
+            },
         });
 
-        onProgress((progress) => {
+        onProgress(progress => {
             // console.log("onProgress", progress);
-        })
-    }
+        });
+    };
 
     const handleDeleteFile = (attachment: IAttachment) => {
         AttachmentsActions.deleteAttachment(taskId, attachment.id);
-    }
+    };
 
     if (attachments.length === 0) {
         return (
@@ -48,18 +50,22 @@ export const TaskDetailsAttachments: FunctionComponent<ITaskDetailsAttachmentsPr
                     <BlankSlate
                         icon={APPICONS.FILE}
                         title={translate("No attachments")}
-                        description={translate("This task does not have any attachments yet Click the button below to add the first one or drag and drop any files here")}
+                        description={translate(
+                            "This task does not have any attachments yet Click the button below to add the first one or drag and drop any files here"
+                        )}
                         small
                         maxWidth={250}
                     >
-                        {!disabled && (<RoundButton
-                            id="td-attachments"
-                            minimal
-                            title={translate("Select files")}
-                            icon="file-plus-02"
-                            disabled={disabled}
-                            onClick={handleAttacheFiles}
-                        />)}
+                        {!disabled && (
+                            <RoundButton
+                                id="td-attachments"
+                                minimal
+                                title={translate("Select files")}
+                                icon="file-plus-02"
+                                disabled={disabled}
+                                onClick={handleAttacheFiles}
+                            />
+                        )}
                     </BlankSlate>
                 </Col>
             </Row>

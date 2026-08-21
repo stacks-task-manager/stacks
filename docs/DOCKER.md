@@ -4,13 +4,13 @@ Stacks ships a `docker-compose` setup that runs the API server, the email worker
 
 ## Table of Contents
 
--   [Prerequisites](#prerequisites)
--   [Build the releases bundle](#1-build-the-releases-bundle)
--   [Configure the runtime](#2-configure-the-runtime)
--   [Start the stack](#3-start-the-stack)
--   [Common operations](#common-operations)
--   [Troubleshooting](#troubleshooting)
--   [Security checklist before going live](#security-checklist-before-going-live)
+- [Prerequisites](#prerequisites)
+- [Build the releases bundle](#1-build-the-releases-bundle)
+- [Configure the runtime](#2-configure-the-runtime)
+- [Start the stack](#3-start-the-stack)
+- [Common operations](#common-operations)
+- [Troubleshooting](#troubleshooting)
+- [Security checklist before going live](#security-checklist-before-going-live)
 
 ## Prerequisites
 
@@ -36,13 +36,13 @@ cp .env.example .env
 
 At minimum, set:
 
-| Variable | Notes |
-| --- | --- |
-| `POSTGRES_PASSWORD` | Use a strong value, not the default |
-| `COOKIE_SECRET` | `openssl rand -hex 32` |
-| `JWT_SECRET` | `openssl rand -hex 32` |
-| `SMTP_*` | Real SMTP host/credentials, or a local capture server for staging |
-| `PUBLIC_URL` | The public HTTPS URL users will hit |
+| Variable            | Notes                                                             |
+| ------------------- | ----------------------------------------------------------------- |
+| `POSTGRES_PASSWORD` | Use a strong value, not the default                               |
+| `COOKIE_SECRET`     | `openssl rand -hex 32`                                            |
+| `JWT_SECRET`        | `openssl rand -hex 32`                                            |
+| `SMTP_*`            | Real SMTP host/credentials, or a local capture server for staging |
+| `PUBLIC_URL`        | The public HTTPS URL users will hit                               |
 
 Also drop your license file next to the compose file:
 
@@ -60,12 +60,12 @@ docker-compose up -d --build      # or `yarn run:docker` from the repo root
 
 What runs (see [`docker/docker-compose.yml`](../docker/docker-compose.yml)):
 
-| Service | Image / Dockerfile | Ports | Purpose |
-| --- | --- | --- | --- |
-| `postgres` | `postgres:15-alpine` | internal | Database; data persisted in `./data/db` |
-| `migration` | `Dockerfile.migration` | — | One-shot job; runs migrations then exits |
-| `stacks` | `Dockerfile.server` | `3000:3000` | The API server (serves the web app from the same port) |
-| `email` | `Dockerfile.email` | internal | Email queue worker |
+| Service     | Image / Dockerfile     | Ports       | Purpose                                                |
+| ----------- | ---------------------- | ----------- | ------------------------------------------------------ |
+| `postgres`  | `postgres:15-alpine`   | internal    | Database; data persisted in `./data/db`                |
+| `migration` | `Dockerfile.migration` | —           | One-shot job; runs migrations then exits               |
+| `stacks`    | `Dockerfile.server`    | `3000:3000` | The API server (serves the web app from the same port) |
+| `email`     | `Dockerfile.email`     | internal    | Email queue worker                                     |
 
 Volumes (created automatically under `releases/`):
 
@@ -95,13 +95,13 @@ docker-compose exec -T postgres psql -U postgres "$POSTGRES_DB" < backup.sql
 
 ## Troubleshooting
 
-| Symptom | First thing to check |
-| --- | --- |
-| `stacks` container restarts in a loop | `docker-compose logs stacks` — almost always a missing/invalid `license.key` or bad Postgres credentials |
-| Port `3000` already in use on the host | Change the left side of the port mapping in `docker-compose.yml` (e.g. `"3010:3000"`) and `PUBLIC_URL` to match |
-| Migration container exits non-zero | `docker-compose logs migration` — schema is out of sync or Postgres unreachable |
-| Email worker silent | Confirm `SMTP_*` is correctly set in `.env`; the worker idles silently when SMTP is unconfigured |
-| Email actually doesn't ship | Check `email_queue` rows in Postgres for stuck `pending` entries; see [`packages/email-service.md`](packages/email-service.md) |
+| Symptom                                | First thing to check                                                                                                           |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `stacks` container restarts in a loop  | `docker-compose logs stacks` — almost always a missing/invalid `license.key` or bad Postgres credentials                       |
+| Port `3000` already in use on the host | Change the left side of the port mapping in `docker-compose.yml` (e.g. `"3010:3000"`) and `PUBLIC_URL` to match                |
+| Migration container exits non-zero     | `docker-compose logs migration` — schema is out of sync or Postgres unreachable                                                |
+| Email worker silent                    | Confirm `SMTP_*` is correctly set in `.env`; the worker idles silently when SMTP is unconfigured                               |
+| Email actually doesn't ship            | Check `email_queue` rows in Postgres for stuck `pending` entries; see [`packages/email-service.md`](packages/email-service.md) |
 
 ## Security checklist before going live
 

@@ -1,5 +1,6 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
-import { Button, Classes, H6, InputGroup, Intent } from "@blueprintjs/core";
+import { AnchorButtonProps, Button, Classes, H6, InputGroup, Intent } from "@blueprintjs/core";
+import { translate } from "@stacks/translations";
 import { Col, Grid, Icon, Row } from "app/components/common";
 import { ButtonTooltip, ColorButton } from "app/widgets";
 import React, { FunctionComponent, useRef, useState } from "react";
@@ -58,20 +59,23 @@ export const TintPicker: FunctionComponent<ITintPickerProps> = ({ value, canClea
             <Grid gap={5}>
                 <Row>
                     <Col align="center">
-                        <H6 style={{ margin: 0 }}>Select tint</H6>
+                        <H6 style={{ margin: 0 }}>{translate("Select tint")}</H6>
                     </Col>
                     <Col justify="right">
                         <ButtonTooltip
-                            buttonProps={{
-                                icon: <Icon icon={advanced ? "colors" : "dropper"} />,
-                                minimal: true,
-                                small: true,
-                                onClick: handleToggleAdvanced,
-                            }}
+                            buttonProps={
+                                {
+                                    icon: <Icon icon={advanced ? "colors" : "dropper"} />,
+                                    minimal: true,
+                                    small: true,
+                                    onClick: handleToggleAdvanced,
+                                    "data-testid": "tint-toggle-button",
+                                } as AnchorButtonProps
+                            }
                             tooltipProps={{
                                 content: advanced
-                                    ? "Switch to palette color picker"
-                                    : "Switch to advanced color picker",
+                                    ? translate("Switch to palette color picker")
+                                    : translate("Switch to advanced color picker"),
                                 placement: "top",
                             }}
                         />
@@ -83,7 +87,8 @@ export const TintPicker: FunctionComponent<ITintPickerProps> = ({ value, canClea
                         <InputGroup
                             value={color}
                             leftIcon={<Icon icon="hash-02" />}
-                            placeholder="Hex color"
+                            placeholder={translate("Hex color")}
+                            data-testid="tint-hex-input"
                             rightElement={
                                 <Button
                                     small
@@ -122,8 +127,9 @@ export const TintPicker: FunctionComponent<ITintPickerProps> = ({ value, canClea
                         intent={Intent.WARNING}
                         className={Classes.POPOVER_DISMISS}
                         onClick={() => onChange(undefined)}
+                        data-testid="tint-remove-button"
                     >
-                        Remove tint
+                        {translate("Remove tint")}
                     </Button>
                 )}
             </Grid>

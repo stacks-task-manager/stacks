@@ -1,5 +1,6 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { Classes } from "@blueprintjs/core";
+import { translate } from "@stacks/translations";
 import { ITask } from "@stacks/types";
 import { TaskState } from "app/components/project";
 import classNames from "classnames";
@@ -12,7 +13,6 @@ import { getTaskModalListBackgroundFromHistory, snapshotTaskModalBackground } fr
 import { PreferencesStore } from "app/store/preferences";
 import { Grid, Scroller } from "app/components/common";
 
-
 interface TaskItemsProps {
     parentId?: string;
     tasks: ITask[];
@@ -23,7 +23,15 @@ interface TaskItemsProps {
     showProject?: boolean;
 }
 
-export const TaskItems: FunctionComponent<TaskItemsProps> = ({ parentId, tasks, disabled, max, minWidth, maxHeight, showProject }) => {
+export const TaskItems: FunctionComponent<TaskItemsProps> = ({
+    parentId,
+    tasks,
+    disabled,
+    max,
+    minWidth,
+    maxHeight,
+    showProject,
+}) => {
     const navigate = useNav();
 
     const handleOpenParent = () => {
@@ -43,17 +51,19 @@ export const TaskItems: FunctionComponent<TaskItemsProps> = ({ parentId, tasks, 
 
     return (
         <Scroller className="task-items" minWidth={minWidth} vertical maxHeight={maxHeight}>
-            {tasks.slice(0, max || Infinity).map(task => <TaskItem key={task.id} task={task} disabled={disabled} showProject={showProject} />)}
+            {tasks.slice(0, max || Infinity).map(task => (
+                <TaskItem key={task.id} task={task} disabled={disabled} showProject={showProject} />
+            ))}
             {max && tasks.length > max && (
                 <div className="task-items-checklist-link">
                     <a className={Classes.POPOVER_DISMISS} onClick={handleOpenParent}>
-                        View all tasks
+                        {translate("View all tasks")}
                     </a>
                 </div>
             )}
         </Scroller>
     );
-}
+};
 
 interface TaskItemProps {
     task: ITask;
@@ -93,7 +103,11 @@ export const TaskItem = ({ task, disabled, children, showProject }: TaskItemProp
             >
                 <Grid className="task-items-title" gap={0}>
                     <div>{task.title}</div>
-                    {showProject === true && <small className={Classes.TEXT_MUTED}>{task.projectInfo?.title || "No project"}</small>}
+                    {showProject === true && (
+                        <small className={Classes.TEXT_MUTED}>
+                            {task.projectInfo?.title || translate("No project")}
+                        </small>
+                    )}
                 </Grid>
 
                 <span onClick={event => event.stopPropagation()}>
@@ -124,5 +138,5 @@ export const TaskItem = ({ task, disabled, children, showProject }: TaskItemProp
                 {children}
             </div>
         </div>
-    )
-}
+    );
+};

@@ -10,7 +10,7 @@ import {
     MenuItem,
     Popover,
     TextArea,
-    Tooltip
+    Tooltip,
 } from "@blueprintjs/core";
 import { DateInput } from "@blueprintjs/datetime";
 import { translate } from "@stacks/translations";
@@ -24,7 +24,6 @@ import { TimelogsActions } from "app/store/actions";
 import { formatDuration } from "app/utils/date";
 import Toast from "app/utils/toast";
 import { DurationInput, ProjectPickerPopup, TaskPickerPopup } from "app/widgets";
-
 
 export interface IQuickTimeLogProps {
     projectId?: string;
@@ -61,7 +60,7 @@ export const QuickTimeLog: FunctionComponent<IQuickTimeLogProps> = ({
     const [description, setDescription] = useState<string>(value?.description || "");
 
     useEffect(() => {
-        if (!person || (person !== me.id)) {
+        if (!person || person !== me.id) {
             setPerson(me.id);
         }
     }, [me, person]);
@@ -70,22 +69,25 @@ export const QuickTimeLog: FunctionComponent<IQuickTimeLogProps> = ({
         if (projectId && projectId !== project) {
             setProject(projectId);
         }
-    }, [project, projectId, setProject])
+    }, [project, projectId, setProject]);
 
     const canSave = useMemo(() => {
         return Boolean(duration) && Boolean(date) && Boolean(task) && Boolean(person) && Number(duration) > 0;
     }, [duration, date, task, person]);
 
-    const handleSetProject = useCallback((projectId: string) => {
-        setProject(projectId);
-        setTask(undefined);
-    }, [setProject]);
+    const handleSetProject = useCallback(
+        (projectId: string) => {
+            setProject(projectId);
+            setTask(undefined);
+        },
+        [setProject]
+    );
 
     const projectPicker = useMemo(() => {
         if (!changeProject) return null;
 
         return (
-            <FormGroup label="Project">
+            <FormGroup label={translate("Project")}>
                 <ProjectPickerPopup value={project} matchTargetWidth onChange={handleSetProject} />
             </FormGroup>
         );
@@ -95,7 +97,7 @@ export const QuickTimeLog: FunctionComponent<IQuickTimeLogProps> = ({
         if (!changeTask || !project) return null;
 
         return (
-            <FormGroup label="Task">
+            <FormGroup label={translate("Task")}>
                 <TaskPickerPopup value={task} projectId={project} onChange={setTask} />
             </FormGroup>
         );
@@ -164,7 +166,7 @@ export const QuickTimeLog: FunctionComponent<IQuickTimeLogProps> = ({
                 task,
             });
 
-            Toast.success("Time log saved successfully");
+            Toast.success(translate("Time log saved successfully"));
             onSave && onSave(timelog, another);
         }
     };
@@ -176,7 +178,7 @@ export const QuickTimeLog: FunctionComponent<IQuickTimeLogProps> = ({
             {taskPicker}
             <Row gutter={15}>
                 <Col>
-                    <FormGroup label="Date" style={{ width: "100%" }}>
+                    <FormGroup label={translate("Date")} style={{ width: "100%" }}>
                         <DateInput
                             formatDate={formatDate}
                             parseDate={parseDate}
@@ -190,7 +192,7 @@ export const QuickTimeLog: FunctionComponent<IQuickTimeLogProps> = ({
                 </Col>
 
                 <Col width={115}>
-                    <FormGroup label="Duration">
+                    <FormGroup label={translate("Duration")}>
                         <DurationInput value={duration} onChange={setDuration} />
                     </FormGroup>
                 </Col>
@@ -202,10 +204,10 @@ export const QuickTimeLog: FunctionComponent<IQuickTimeLogProps> = ({
                 </AssigneesPopover>
             </FormGroup> */}
 
-            <FormGroup label="Description">
+            <FormGroup label={translate("Description")}>
                 <TextArea
                     rows={2}
-                    placeholder="Add a description"
+                    placeholder={translate("Add a description")}
                     fill
                     value={description}
                     onChange={handleChangeDescription}
@@ -213,19 +215,25 @@ export const QuickTimeLog: FunctionComponent<IQuickTimeLogProps> = ({
 
                 <Row>
                     <Col>
-                        <Checkbox label="Billable" checked={billable} onChange={handleSetBillable} />
+                        <Checkbox
+                            label={translate("Billable")}
+                            checked={billable}
+                            onChange={handleSetBillable}
+                            data-testid="quick-timelog-billable"
+                        />
                     </Col>
                     <Col justify="right">
                         <Tooltip
-                            content={`Check this if the time spent (${formatDuration(
-                                Number(duration || 0) * 3600
-                            )}) was already billed.`}
+                            content={translate("Check this if the time spent was already billed", {
+                                duration: formatDuration(Number(duration || 0) * 3600),
+                            })}
                             placement="top"
                             hoverOpenDelay={500}
                         >
                             <Checkbox
-                                label="Billed"
+                                label={translate("Billed")}
                                 checked={billed}
+                                data-testid="quick-timelog-billed"
                                 disabled={!billable}
                                 onChange={handleSetBilled}
                             />
@@ -244,7 +252,7 @@ export const QuickTimeLog: FunctionComponent<IQuickTimeLogProps> = ({
                             intent={Intent.WARNING}
                             className={Classes.POPOVER_DISMISS}
                         >
-                            Clear timer
+                            {translate("Clear timer")}
                         </Button>
                     </Col>
                 )}
@@ -267,14 +275,14 @@ export const QuickTimeLog: FunctionComponent<IQuickTimeLogProps> = ({
                             className={Classes.POPOVER_DISMISS}
                             data-testid="quick-timelog-save-button"
                         >
-                            {value && value.id ? "Update log" : "Log time"}
+                            {value && value.id ? translate("Update log") : translate("Log time")}
                         </Button>
                         {canSaveAnother && value?.id == null && onClear == null ? (
                             <Popover
                                 content={
                                     <Menu data-testid="quick-timelog-save-another-menu">
                                         <MenuItem
-                                            text="Save and log another"
+                                            text={translate("Save and log another")}
                                             onClick={() => handleSave(true)}
                                         />
                                     </Menu>

@@ -2,23 +2,23 @@
 
 ## Table of Contents
 
--   [Project overview](#project-overview)
--   [Prerequisites](#prerequisites)
--   [Development commands](#development-commands)
--   [Important constraints](#important-constraints)
--   [Environment setup](#environment-setup)
--   [Architecture overview](#architecture-overview)
-    -   [Server subsystems](#server-subsystems)
--   [Testing overview](#testing-overview)
--   [Branching strategy](#branching-strategy)
--   [Commit message format](#commit-message-format)
--   [Code style](#code-style)
--   [File and directory conventions](#file-and-directory-conventions)
--   [What to avoid](#what-to-avoid)
--   [Documentation](#documentation)
--   [CI (future)](#ci-future)
--   [Security](#security)
--   [Docker](#docker)
+- [Project overview](#project-overview)
+- [Prerequisites](#prerequisites)
+- [Development commands](#development-commands)
+- [Important constraints](#important-constraints)
+- [Environment setup](#environment-setup)
+- [Architecture overview](#architecture-overview)
+  - [Server subsystems](#server-subsystems)
+- [Testing overview](#testing-overview)
+- [Branching strategy](#branching-strategy)
+- [Commit message format](#commit-message-format)
+- [Code style](#code-style)
+- [File and directory conventions](#file-and-directory-conventions)
+- [What to avoid](#what-to-avoid)
+- [Documentation](#documentation)
+- [CI (future)](#ci-future)
+- [Security](#security)
+- [Docker](#docker)
 
 ## Project overview
 
@@ -44,18 +44,20 @@ Tech stack: TypeScript • Hono • Sequelize/PostgreSQL • React • Expo • 
 
 From the repo root:
 
-| Command | Description |
-| --- | --- |
-| `yarn setup` | Clean install + build internal packages (types, db, license, translations). **Run this first.** |
-| `yarn build:internal` | Build all internal packages (types, db, license, translations). Run after editing `@stacks/types` or `@stacks/db`. |
-| `yarn dev` | Full local dev: internal libs + web app + server in watch mode |
-| `yarn dev:server` | API server only (rebuilds internal libs first) |
-| `yarn dev:app` | Web app dev server on port 3001 (webpack) |
-| `yarn dev:email` | Email service worker (optional) |
-| `yarn dev:mobile` | Expo mobile app |
-| `yarn build` | Full production build |
-| `yarn test:server` / `yarn test:server:unit` | Server tests (vitest) |
-| `yarn test:e2e` | Playwright E2E tests |
+| Command                                      | Description                                                                                                        |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `yarn setup`                                 | Clean install + build internal packages (types, db, license, translations). **Run this first.**                    |
+| `yarn build:internal`                        | Build all internal packages (types, db, license, translations). Run after editing `@stacks/types` or `@stacks/db`. |
+| `yarn dev`                                   | Full local dev: internal libs + web app + server in watch mode                                                     |
+| `yarn dev:server`                            | API server only (rebuilds internal libs first)                                                                     |
+| `yarn dev:app`                               | Web app dev server on port 3001 (webpack)                                                                          |
+| `yarn dev:email`                             | Email service worker (optional)                                                                                    |
+| `yarn dev:mobile`                            | Expo mobile app                                                                                                    |
+| `yarn build`                                 | Full production build                                                                                              |
+| `yarn test:server` / `yarn test:server:unit` | Server tests (vitest)                                                                                              |
+| `yarn test:e2e`                              | Playwright E2E tests                                                                                               |
+| `yarn format`                                | Prettier all files — run after any change                                                                          |
+| `yarn lint`                                  | Lint the web app                                                                                                   |
 
 ## Important constraints
 
@@ -117,6 +119,7 @@ packages/
 - i18n via `@stacks/translations`
 
 **Adding a new route** (see `packages/server/docs/ONBOARDING.md` for full detail):
+
 1. Create route handler in `src/routes/<domain>.ts`
 2. Add Zod schema in `src/routes/schema/<domain>.ts`
 3. Add loader in `src/loaders/<domain>.ts`
@@ -139,9 +142,10 @@ packages/
 - API client: single Axios instance, one file per domain under `src/app/api/`
 - Realtime: WebSocket client (`window.updatePoller`) → `useUpdates()` hook
 - UI kit: Blueprint v6 primitives + app-local components
-- i18n: `@stacks/translations` + JSON files under `src/app/locale/`. Edit with the terminal UI: `yarn workspace @stacks/locales-tui start`. See [locales-tui docs](docs/packages/locales-tui.md).
+- i18n: `@stacks/translations` + locale JSON files under `packages/server/locales/app/` (web-app UI strings) and `packages/server/locales/server/` (API strings). `en.json` is the source of truth; a key present in `en.json` falls back to English in every other locale automatically. See [locales-tui docs](docs/packages/locales-tui.md).
 
 **Adding a new feature** (see `packages/app/docs/ONBOARDING.md` for full walkthrough):
+
 1. API client in `src/app/api/<domain>.ts`
 2. Store slice in `src/app/store/<domain>.ts`
 3. Actions in `src/app/store/actions/<domain>.ts`
@@ -151,6 +155,7 @@ packages/
 7. Add `data-testid` attributes on all interactive elements
 
 **Conventions**:
+
 - Import paths use `app/…` prefix (e.g. `import { TasksAPI } from "app/api"`), not relative paths
 - All store mutations go through actions — never call `Store.set()` directly in components
 - Use `shallowEqual` (or custom equality) in `Store.use()` for object/array selectors
@@ -158,16 +163,18 @@ packages/
 - Dark mode: body class `.bp6-dark`
 - No CSS-in-JS — use SCSS modules (`_X.scss`) next to components
 - Use `@stacks/types` for all shared type imports
+- **Adding / checking a translation**: use `@stacks/locales-tui` (`yarn dev:locales`), which already implements all locale operations — don't hand-edit locale JSON. Before adding a new key, search for an existing key that already conveys the same meaning (e.g. reuse `"URL"` instead of adding `"Url"`); `findSimilarEntries` (programmatic) or the TUI's similar-key suggestion does this. To add one, use `addEnglishEntry(dir, key, value)` (or the TUI). `en.json` is the source of truth and is required — a key present in `en.json` covers all locales via English fallback; `syncMissingKeysFromEn` can backfill the other files. A key absent from `en.json` renders as `translate()` returning the uppercased key (e.g. `"Pinned"` → `"PINNED"`), so always verify the key exists. When translating a value, preserve any `{...}` placeholder tokens **verbatim** (e.g. `{day}`, `{days}`, `{duration}`, `[{days}]`) — components substitute them after `translate()` via `.replace("{days}", value)`, so changing or dropping the token breaks the label. Keep other literal tokens (e.g. `Ctrl+enter`) and separators (e.g. `-`) as-is too. Locale files live under `packages/server/locales/app/` (UI) and `packages/server/locales/server/` (API).
 
 ### Database (`packages/db`)
 
 - Sequelize models under `src/entities/`
-- Migrations under `migrations/` — zero-padded numeric prefix (001_, 002_, …)
+- Migrations under `migrations/` — zero-padded numeric prefix (001*, 002*, …)
 - `.cjs` extension required (package is `"type": "module"`)
 - Always wrap multi-statement migrations in transactions
 - Never edit `000_init_schemas.cjs` by hand — it's regenerated from `src/init_schema.ts` at build time
 
 Commands:
+
 ```bash
 yarn workspace @stacks/db migrate              # apply pending
 yarn workspace @stacks/db migrate:create --name=<slug>  # generate new migration
@@ -230,7 +237,7 @@ Types: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`, `hotfix`
 
 ## Code style
 
-- Prettier is the formatter — run `yarn format` before committing
+- Prettier is the formatter — run `yarn format` after making changes (and before committing) so formatting stays consistent across the repo
 - 4-space indentation (editorconfig)
 - Semicolons required
 - ES5 trailing commas
@@ -266,15 +273,19 @@ Types: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`, `hotfix`
 ## Documentation
 
 Per-package deep dives live in:
+
 - `packages/server/docs/` — onboarding, loaders, permissions, caching, AI assistant, embedded bundle integrity, realtime updates
 - `packages/app/docs/` — onboarding, architecture, API client
 - `docs/` — installation, E2E, Docker, contributing, per-package guides (types, db, server, app, mobile, email-service, translations, locales-tui)
+
+Full contributing guide: [CONTRIBUTING.md](CONTRIBUTING.md).
 
 Always check these docs before asking questions about package internals.
 
 ## CI (future)
 
 When CI is added, the recommended job shape:
+
 1. Spin up Postgres as a service container
 2. Provide `license.key` from a repository secret
 3. `corepack enable && yarn install && yarn setup`
@@ -292,7 +303,80 @@ When CI is added, the recommended job shape:
 
 Docker Compose configuration for local development and production deployment lives in the `docker/` directory. See [DOCKER.md](docs/DOCKER.md) for full setup instructions.
 
+## Behavioral guidelines (LLM)
+
+Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.
+
+**Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.
+
+### 1. Think before coding
+
+**Don't assume. Don't hide confusion. Surface tradeoffs.**
+
+Before implementing:
+
+- State your assumptions explicitly. If uncertain, ask.
+- If multiple interpretations exist, present them — don't pick silently.
+- If a simpler approach exists, say so. Push back when warranted.
+- If something is unclear, stop. Name what's confusing. Ask.
+
+### 2. Simplicity first
+
+**Minimum code that solves the problem. Nothing speculative.**
+
+- No features beyond what was asked.
+- No abstractions for single-use code.
+- No "flexibility" or "configurability" that wasn't requested.
+- No error handling for impossible scenarios.
+- If you write 200 lines and it could be 50, rewrite it.
+
+Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
+
+### 3. Surgical changes
+
+**Touch only what you must. Clean up only your own mess.**
+
+When editing existing code:
+
+- Don't "improve" adjacent code, comments, or formatting.
+- Don't refactor things that aren't broken.
+- Match existing style, even if you'd do it differently.
+- If you notice unrelated dead code, mention it — don't delete it.
+- After editing any source or doc file, run `yarn format` (or `npx prettier --write <file>`) so your changes stay consistently formatted before committing.
+
+When your changes create orphans:
+
+- Remove imports/variables/functions that YOUR changes made unused.
+- Don't remove pre-existing dead code unless asked.
+
+The test: Every changed line should trace directly to the user's request.
+
+### 4. Goal-driven execution
+
+**Define success criteria. Loop until verified.**
+
+Transform tasks into verifiable goals:
+
+- "Add validation" → "Write tests for invalid inputs, then make them pass"
+- "Fix the bug" → "Write a test that reproduces it, then make it pass"
+- "Refactor X" → "Ensure tests pass before and after"
+
+For multi-step tasks, state a brief plan:
+
+```
+1. [Step] → verify: [check]
+2. [Step] → verify: [check]
+3. [Step] → verify: [check]
+```
+
+Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
+
+---
+
+**These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
+
 <!-- graft:start -->
+
 ## Graft — repo context graph
 
 This repo is indexed in `graft/`: small linked markdown nodes that explain each
@@ -332,4 +416,5 @@ re-read whole files.
 
 After big code changes, refresh the graph with `graft build` (deterministic,
 no API key, $0).
+
 <!-- graft:end -->

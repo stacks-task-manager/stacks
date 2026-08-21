@@ -1,5 +1,5 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
-export type DragDirection = 'horizontal' | 'vertical';
+export type DragDirection = "horizontal" | "vertical";
 
 export interface Position {
     x: number;

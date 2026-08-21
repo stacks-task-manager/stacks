@@ -19,15 +19,7 @@ const fs = require("fs");
 const path = require("path");
 
 const REPO_ROOT = path.resolve(__dirname, "..", "..", "..");
-const SPRITE_PATH = path.join(
-    REPO_ROOT,
-    "packages",
-    "app",
-    "src",
-    "app",
-    "icons",
-    "sprites.svg"
-);
+const SPRITE_PATH = path.join(REPO_ROOT, "packages", "app", "src", "app", "icons", "sprites.svg");
 const OUTPUT_PATH = path.join(__dirname, "..", "src", "components", "Icon", "generated.ts");
 
 function runAll(regex, text) {
@@ -68,9 +60,9 @@ function main() {
         .sort()
         .map(id => {
             const { viewBox, inner } = icons[id];
-            return `    ${JSON.stringify(id)}: { viewBox: ${JSON.stringify(
-                viewBox
-            )}, inner: ${JSON.stringify(inner)} },`;
+            return `    ${JSON.stringify(id)}: { viewBox: ${JSON.stringify(viewBox)}, inner: ${JSON.stringify(
+                inner
+            )} },`;
         });
 
     const body = `/* eslint-disable */

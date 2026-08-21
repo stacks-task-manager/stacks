@@ -31,7 +31,12 @@ declare module "hono" {
     }
     interface Context<V extends ContextVariableMap = ContextVariableMap> {
         get<K extends keyof V>(key: K): V[K];
-        replyError: (error: AppError | Error | string, errors?: any, code?: number, errorCode?: string) => Response;
+        replyError: (
+            error: AppError | Error | string,
+            errors?: any,
+            code?: number,
+            errorCode?: string
+        ) => Response;
         replySuccess: <T = any>(
             data?: T,
             message?: string,

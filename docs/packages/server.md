@@ -6,14 +6,14 @@ The Stacks backend. A [Hono](https://hono.dev/) HTTP server on Node that exposes
 
 ## Table of Contents
 
--   [Environment](#environment)
--   [Development](#development)
--   [Importing a workspace from the Desktop Stacks app](#importing-a-workspace-from-the-desktop-stacks-app)
--   [API overview](#api-overview)
--   [Sending email](#sending-email)
--   [Build](#build)
--   [Deep dives](#deep-dives)
--   [Related](#related)
+- [Environment](#environment)
+- [Development](#development)
+- [Importing a workspace from the Desktop Stacks app](#importing-a-workspace-from-the-desktop-stacks-app)
+- [API overview](#api-overview)
+- [Sending email](#sending-email)
+- [Build](#build)
+- [Deep dives](#deep-dives)
+- [Related](#related)
 
 ## Environment
 
@@ -25,19 +25,19 @@ cp packages/server/env.example packages/server/.env
 
 Key variables:
 
--   `APP_PORT` — HTTP port (default `3000`)
--   `APP_ORIGIN` — public origin used for OAuth redirect URIs and popup postMessage target origin (e.g. `http://localhost:3000` in dev)
--   `POSTGRES_HOST`, `POSTGRES_PORT`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB` — database connection
--   `COOKIE_SECRET`, `JWT_SECRET` — auth / session secrets (must be strong in production)
--   `DEBUG_DB` — set to `true` to log Sequelize SQL
--   `DELETE_FILES` — whether deletes via the API also remove files from disk
+- `APP_PORT` — HTTP port (default `3000`)
+- `APP_ORIGIN` — public origin used for OAuth redirect URIs and popup postMessage target origin (e.g. `http://localhost:3000` in dev)
+- `POSTGRES_HOST`, `POSTGRES_PORT`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB` — database connection
+- `COOKIE_SECRET`, `JWT_SECRET` — auth / session secrets (must be strong in production)
+- `DEBUG_DB` — set to `true` to log Sequelize SQL
+- `DELETE_FILES` — whether deletes via the API also remove files from disk
 
 Optional:
 
--   `CORS_ORIGINS` — comma-separated list of allowed origins; if unset, CORS is permissive
--   `REQUIRE_SECRETS=1` — enforce strong secrets outside production
--   Google Calendar OAuth: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, optional `GOOGLE_REDIRECT_URI`
--   AI assistant: `AI_BASE_URL`, `AI_API_KEY`, `AI_MODEL`, `AI_CHAT_ENABLED`, `AI_CHAT_AUTO_REDIRECT`
+- `CORS_ORIGINS` — comma-separated list of allowed origins; if unset, CORS is permissive
+- `REQUIRE_SECRETS=1` — enforce strong secrets outside production
+- Google Calendar OAuth: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, optional `GOOGLE_REDIRECT_URI`
+- AI assistant: `AI_BASE_URL`, `AI_API_KEY`, `AI_MODEL`, `AI_CHAT_ENABLED`, `AI_CHAT_AUTO_REDIRECT`
 
 ## Development
 
@@ -56,9 +56,9 @@ The Desktop Stacks app stores each workspace as a folder of JSON + binary files 
 1. In the **Desktop Stacks app**, use its workspace export feature to produce a folder containing the workspace files (statuses/tags tree, people, companies, projects, tasks, attachments).
 2. Drop that folder into `packages/server/import/workspace/` (relative to the server's working directory — for `yarn dev:server` that's `packages/server/`, so the literal path is `packages/server/import/workspace/`). The importer looks at exactly this location:
 
-    ```js
-    const WORKSPACE_PATH = join(process.cwd(), "import", "workspace");
-    ```
+   ```js
+   const WORKSPACE_PATH = join(process.cwd(), "import", "workspace");
+   ```
 
 The expected file layout inside `import/workspace/` matches what the desktop app writes:
 
@@ -110,10 +110,10 @@ If something on the input side is missing, the importer logs a `⚠️ Skipping 
 
 ### Caveats
 
--   **One-shot, not idempotent.** The importer renames the folder on success, so re-running with the same bundle is a no-op unless you rename the `-imported_*` folder back. There is no built-in "undo" — to retry, drop or truncate the affected tables and start over.
--   **Always targets the license tenant.** The target tenant comes from your license file, not from a CLI flag. Swap licenses (or edit your dev tenant) to import elsewhere.
--   **Email collisions skip the person, not the import.** If an exported person's email already exists on the tenant, only that person is dropped. Their references inside the bundle (assignees, activity authors) will then resolve to `null`, which the database accepts because most assignee columns are nullable. Check the log for `Skipping workspace import: User with email …` lines after importing.
--   **Attachments are uploaded eagerly.** Every file under `files/tasks/<id>/` is read into memory and pushed through `FilesLoader.uploadFile` inside the same transaction. Very large bundles can spike memory and lengthen the boot.
+- **One-shot, not idempotent.** The importer renames the folder on success, so re-running with the same bundle is a no-op unless you rename the `-imported_*` folder back. There is no built-in "undo" — to retry, drop or truncate the affected tables and start over.
+- **Always targets the license tenant.** The target tenant comes from your license file, not from a CLI flag. Swap licenses (or edit your dev tenant) to import elsewhere.
+- **Email collisions skip the person, not the import.** If an exported person's email already exists on the tenant, only that person is dropped. Their references inside the bundle (assignees, activity authors) will then resolve to `null`, which the database accepts because most assignee columns are nullable. Check the log for `Skipping workspace import: User with email …` lines after importing.
+- **Attachments are uploaded eagerly.** Every file under `files/tasks/<id>/` is read into memory and pushed through `FilesLoader.uploadFile` inside the same transaction. Very large bundles can spike memory and lengthen the boot.
 
 ## API overview
 
@@ -162,9 +162,9 @@ import { EMAIL_TEMPLATES } from "@stacks/types";
 
 // inside a Hono handler
 await c.sendEmail(newUser.id, EMAIL_TEMPLATES.WELCOME, {
-    firstName: newUser.firstName,
-    lastName: newUser.lastName,
-    activationLink: `/auth/activate/${newUser.token}`,
+  firstName: newUser.firstName,
+  lastName: newUser.lastName,
+  activationLink: `/auth/activate/${newUser.token}`,
 });
 ```
 
@@ -195,17 +195,17 @@ import { EmailsLoader } from "../loaders";
 import { EMAIL_TEMPLATES } from "@stacks/types";
 
 await EmailsLoader.queueEmail(
-    adminUser.id,
-    {
-        firstName: adminUser.firstName,
-        lastName: adminUser.lastName,
-        activationLink: `/auth/activate/${token}`,
-    },
-    EMAIL_TEMPLATES.WELCOME,
-    "en", // locale must be supplied explicitly
-    systemUser, // a User-shaped object — provides tenant + createdBy
-    undefined, // optional scheduleAt
-    transaction // optional Sequelize transaction
+  adminUser.id,
+  {
+    firstName: adminUser.firstName,
+    lastName: adminUser.lastName,
+    activationLink: `/auth/activate/${token}`,
+  },
+  EMAIL_TEMPLATES.WELCOME,
+  "en", // locale must be supplied explicitly
+  systemUser, // a User-shaped object — provides tenant + createdBy
+  undefined, // optional scheduleAt
+  transaction // optional Sequelize transaction
 );
 ```
 
@@ -241,17 +241,17 @@ yarn release         # produces the runnable releases/server bundle
 
 These live next to the server source under [`packages/server/docs/`](../../packages/server/docs/):
 
--   [Server onboarding](../../packages/server/docs/ONBOARDING.md) — bootstrap order, request lifecycle, how to add a new route or loader
--   [AI assistant framework](../../packages/server/docs/AI.md) — chat WebSocket contract, prompt + tool selection, how to add new tools
--   [Caching system](../../packages/server/docs/CACHING.md) — the multi-tenant response cache, invalidation, and configuration
--   [Loaders](../../packages/server/docs/LOADERS.md) — the database access layer, request context, transactions, and shared query helpers
--   [Permissions and roles](../../packages/server/docs/PERMISSIONS.md) — RBAC vs per-record ACL, enforcement points, and realtime behavior
--   [Realtime updates](../../packages/server/docs/REALTIME_UPDATES.md) — server emission, WebSocket transport, instanceId suppression, and app-side consumption
--   [Embedded bundle integrity](../../packages/server/docs/EMBEDDED_INTEGRITY.md) — production bundle signing and the boot-time verification
+- [Server onboarding](../../packages/server/docs/ONBOARDING.md) — bootstrap order, request lifecycle, how to add a new route or loader
+- [AI assistant framework](../../packages/server/docs/AI.md) — chat WebSocket contract, prompt + tool selection, how to add new tools
+- [Caching system](../../packages/server/docs/CACHING.md) — the multi-tenant response cache, invalidation, and configuration
+- [Loaders](../../packages/server/docs/LOADERS.md) — the database access layer, request context, transactions, and shared query helpers
+- [Permissions and roles](../../packages/server/docs/PERMISSIONS.md) — RBAC vs per-record ACL, enforcement points, and realtime behavior
+- [Realtime updates](../../packages/server/docs/REALTIME_UPDATES.md) — server emission, WebSocket transport, instanceId suppression, and app-side consumption
+- [Embedded bundle integrity](../../packages/server/docs/EMBEDDED_INTEGRITY.md) — production bundle signing and the boot-time verification
 
 ## Related
 
--   [`@stacks/db`](db.md) — models, migrations, seeds
--   [`@stacks/types`](types.md) — request/response shapes shared with the client
--   [`@stacks/license`](license.md) — startup license validation
--   [`@stacks/translations`](translations.md) — bundled i18n strings
+- [`@stacks/db`](db.md) — models, migrations, seeds
+- [`@stacks/types`](types.md) — request/response shapes shared with the client
+- [`@stacks/license`](license.md) — startup license validation
+- [`@stacks/translations`](translations.md) — bundled i18n strings

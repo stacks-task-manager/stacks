@@ -7,6 +7,7 @@ import { NodeViewWrapper, ReactNodeViewRenderer } from "@tiptap/react";
 import classNames from "classnames";
 import React, { useEffect, useRef, useState } from "react";
 import { Icon } from "app/components/common";
+import { openInNewTab } from "app/utils/browser";
 import Toast from "app/utils/toast";
 
 interface WebviewEventTarget extends EventTarget {
@@ -139,7 +140,7 @@ const FrameWrapper = ({ HTMLAttributes, updateAttributes, deleteNode, selected }
                                     <MenuItem
                                         text={translate("Open link")}
                                         icon={<Icon icon="link-external-01" />}
-                                        onClick={() => window.open(HTMLAttributes.src, "_blank")}
+                                        onClick={() => openInNewTab(HTMLAttributes.src)}
                                     />
                                     <MenuItem
                                         text={translate("Copy link")}

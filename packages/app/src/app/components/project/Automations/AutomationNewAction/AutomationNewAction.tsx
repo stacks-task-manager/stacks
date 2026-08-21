@@ -239,22 +239,22 @@ export const AutomationNewAction: FunctionComponent<IAutomationNewActionProps> =
                 {(theAction === AUTOMATION_DO.STARTDATE ||
                     theAction === AUTOMATION_DO.DUEDATE ||
                     theAction === AUTOMATION_DO.DODATE) && (
-                        <>
-                            <span className={Classes.TEXT_DISABLED}>in&nbsp;</span>
+                    <>
+                        <span className={Classes.TEXT_DISABLED}>in&nbsp;</span>
 
-                            <NumericInput
-                                placeholder="1"
-                                min={-1000}
-                                max={1000}
-                                style={{ width: 50 }}
-                                allowNumericCharactersOnly
-                                buttonPosition="none"
-                                onValueChange={(value: number) => setDays(value)}
-                            />
+                        <NumericInput
+                            placeholder="1"
+                            min={-1000}
+                            max={1000}
+                            style={{ width: 50 }}
+                            allowNumericCharactersOnly
+                            buttonPosition="none"
+                            onValueChange={(value: number) => setDays(value)}
+                        />
 
-                            <span className={Classes.TEXT_DISABLED}>&nbsp;days</span>
-                        </>
-                    )}
+                        <span className={Classes.TEXT_DISABLED}>&nbsp;days</span>
+                    </>
+                )}
 
                 {/* ADD A TAG */}
                 {(theAction === AUTOMATION_DO.ADDTAG || theAction === AUTOMATION_DO.REMOVETAG) && (

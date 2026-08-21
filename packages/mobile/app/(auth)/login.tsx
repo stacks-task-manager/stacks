@@ -61,16 +61,15 @@ export default function LoginScreen() {
     };
 
     return (
-        <KeyboardAvoidingView
-            style={{ flex: 1 }}
-            behavior={Platform.OS === "ios" ? "padding" : undefined}
-        >
+        <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === "ios" ? "padding" : undefined}>
             <Box className="flex-1 justify-center px-6">
                 <VStack space="lg">
                     <Heading size="xl">Sign in</Heading>
 
                     <VStack space="xs">
-                        <Text size="sm" className="font-medium text-typography-700">Server</Text>
+                        <Text size="sm" className="font-medium text-typography-700">
+                            Server
+                        </Text>
                         <Input variant="outline" size="md">
                             <InputField
                                 value={url}
@@ -87,7 +86,9 @@ export default function LoginScreen() {
                     </VStack>
 
                     <VStack space="xs">
-                        <Text size="sm" className="font-medium text-typography-700">Email</Text>
+                        <Text size="sm" className="font-medium text-typography-700">
+                            Email
+                        </Text>
                         <Input variant="outline" size="md">
                             <InputField
                                 value={email}
@@ -101,7 +102,9 @@ export default function LoginScreen() {
                     </VStack>
 
                     <VStack space="xs">
-                        <Text size="sm" className="font-medium text-typography-700">Password</Text>
+                        <Text size="sm" className="font-medium text-typography-700">
+                            Password
+                        </Text>
                         <Input variant="outline" size="md">
                             <InputField
                                 value={password}

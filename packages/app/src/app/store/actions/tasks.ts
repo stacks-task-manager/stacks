@@ -81,7 +81,7 @@ const loadByProject = async (projectId: string, silent?: boolean): Promise<ITask
 
     TasksStore.set(
         produce((state: ITasksStore) => {
-            if (silent != null) {
+            if (!silent) {
                 state.isLoading = true;
             }
             // state.loadingChunk = uniq([...state.loadingChunk, ...tasksIs]);
@@ -386,7 +386,6 @@ const upsertTasks = async (tasks: ITask[]) => {
         })
     );
 
-
     publish("tasks:upserted", tasks);
 };
 
@@ -482,7 +481,9 @@ const removeSelected = async () => {
 
     const response = await Dialog.confirm(
         translate("Delete task", { suffix: "(s)?" }),
-        translate("Are you sure you want to delete this task All sub tasks and attachments will also be deleted This action cannot be undone"),
+        translate(
+            "Are you sure you want to delete this task All sub tasks and attachments will also be deleted This action cannot be undone"
+        ),
         Intent.DANGER
     );
     if (response) {
@@ -537,7 +538,9 @@ const recursivelyRemoveSubtasks = async (parentTaskId: string) => {
 const alertDelete = async (taskId: string) => {
     const response = await Dialog.confirm(
         translate("Delete task", { suffix: "?" }),
-        translate("Are you sure you want to delete this task All sub tasks and attachments will also be deleted This action cannot be undone"),
+        translate(
+            "Are you sure you want to delete this task All sub tasks and attachments will also be deleted This action cannot be undone"
+        ),
         Intent.DANGER
     );
 
@@ -556,7 +559,9 @@ const alertDelete = async (taskId: string) => {
 const alertDeleteMultiple = async (taskIds: string[]) => {
     const response = await Dialog.confirm(
         translate("Delete task", { suffix: "(s)?" }),
-        translate("Are you sure you want to delete this task All sub tasks and attachments will also be deleted This action cannot be undone"),
+        translate(
+            "Are you sure you want to delete this task All sub tasks and attachments will also be deleted This action cannot be undone"
+        ),
         Intent.DANGER
     );
     if (response) {
@@ -589,7 +594,10 @@ const attach = async (taskId: string, parentTaskId: string) => {
 };
 
 const alertDetach = async (taskId: string) => {
-    const response = await Dialog.confirm(translate("Detach subtask"), translate("Are you sure you want to detach this subtask from its parent task"));
+    const response = await Dialog.confirm(
+        translate("Detach subtask"),
+        translate("Are you sure you want to detach this subtask from its parent task")
+    );
 
     if (response) {
         await update(taskId, {
@@ -625,7 +633,6 @@ export const getTask = async (taskId: string): Promise<ITask> => {
     }
 
     const tasks = await loadSegment([taskId]);
-    await upsertTasks(tasks);
     return tasks[0];
 };
 
@@ -660,11 +667,7 @@ const toggleDone = async (taskId: string) => {
     if (!task.done) {
         await setDone(taskId);
     } else {
-        if (task.parent == null) {
-            await setTodo(taskId);
-        } else {
-            await setTodo(taskId);
-        }
+        await setTodo(taskId);
     }
 };
 
@@ -772,7 +775,6 @@ const unassignPerson = async (taskId: string, personId: string) => {
     if (task.assignees && !task.assignees.includes(personId)) return;
     await update(taskId, { assignees: (task.assignees || []).filter((id: string) => id !== personId) });
 };
-
 
 const setDates = async (taskId: string, startdate: Date | null, duedate: Date | null) => {
     await update(taskId, { startdate, duedate });
@@ -1078,7 +1080,6 @@ const archive = async (taskId: string) => {
 
     // removes if any running timers
     RecordActions.removeTimer(taskId);
-
 };
 
 /**
@@ -1239,10 +1240,11 @@ const move = async () => {
 
 const increaseCommentsCount = async (taskId: string) => {
     const task = await getTask(taskId);
+    if (!task) return;
     await update(
         taskId,
         {
-            comments: task.comments + 1,
+            comments: (task.comments || 0) + 1,
         },
         true
     );
@@ -1444,7 +1446,6 @@ const runRepeatAutomation = async (task: ITask): Promise<void> => {
                 // if (task.parent) {
                 //     appendSubtask(task.parent, newTaskId);
                 // }
-
 
                 publish("task:created", { taskId: newTaskId, task: updatedTask });
 

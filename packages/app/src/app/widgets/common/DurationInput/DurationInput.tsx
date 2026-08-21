@@ -1,5 +1,6 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { Button, InputGroup, Intent, Placement, Tooltip } from "@blueprintjs/core";
+import { translate } from "@stacks/translations";
 import { Icon } from "app/components/common";
 import { formatStringDuration, isDurationValid, parseStringDuration } from "app/utils/date";
 import React, { FunctionComponent, useCallback, useEffect, useState } from "react";
@@ -45,11 +46,14 @@ export const DurationInput: FunctionComponent<DurationInputProps> = ({
         }
     }, [isValid, inputValue, onChange]);
 
-    const handleKeyDown = useCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === "Enter") {
-            handleSubmit();
-        }
-    }, [handleSubmit]);
+    const handleKeyDown = useCallback(
+        (event: React.KeyboardEvent<HTMLInputElement>) => {
+            if (event.key === "Enter") {
+                handleSubmit();
+            }
+        },
+        [handleSubmit]
+    );
 
     return (
         <InputGroup
@@ -60,20 +64,28 @@ export const DurationInput: FunctionComponent<DurationInputProps> = ({
             onChange={handleChange}
             onBlur={handleSubmit}
             onKeyDown={handleKeyDown}
-            rightElement={showHelp === true ? (
-                <Tooltip content={
-                    <>
-                        Use the format: 2w 4d 6h 45m<br />
-                        - w = weeks<br />
-                        - d = days<br />
-                        - h = hours<br />
-                        - m = minutes
-                    </>
-                } placement={placement}>
-                    <Button variant="minimal" style={{ cursor: "help" }} icon={<Icon icon="help-circle" />} />
-                </Tooltip>
-            ) : undefined
+            rightElement={
+                showHelp === true ? (
+                    <Tooltip
+                        content={
+                            <>
+                                {translate("Use the format:")} 2w 4d 6h 45m
+                                <br />- w = {translate("weeks")}
+                                <br />- d = {translate("days")}
+                                <br />- h = {translate("hours")}
+                                <br />- m = {translate("minutes")}
+                            </>
+                        }
+                        placement={placement}
+                    >
+                        <Button
+                            variant="minimal"
+                            style={{ cursor: "help" }}
+                            icon={<Icon icon="help-circle" />}
+                        />
+                    </Tooltip>
+                ) : undefined
             }
         />
     );
-}
+};

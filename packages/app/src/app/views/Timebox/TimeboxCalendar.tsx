@@ -26,11 +26,11 @@ const tasksToEvents = (tasks: ITask[]) => {
                 task: task,
                 type: "task",
                 completed: task.done,
-                popoverContent: <TaskInfo taskId={task.id} />
-            }
-        }
+                popoverContent: <TaskInfo taskId={task.id} />,
+            },
+        };
     });
-}
+};
 
 interface TimeboxCalendarBaseProps {
     onShowPicker: (dates: Date[]) => void;
@@ -42,35 +42,36 @@ interface TimeboxCalendarProps extends TimeboxCalendarBaseProps {
 }
 
 export const TimeboxCalendar = (props: TimeboxCalendarBaseProps) => {
-    const range = MyTasksStore.use((state) => ({
-        start: state.start,
-        end: state.end,
-    }), shallowEqual);
+    const range = MyTasksStore.use(
+        state => ({
+            start: state.start,
+            end: state.end,
+        }),
+        shallowEqual
+    );
 
     if (!range) {
         return null;
     }
 
-    return (
-        <TimeboxCalendarWrapper {...props} {...range} />
-    )
-}
+    return <TimeboxCalendarWrapper {...props} {...range} />;
+};
 
 export const TimeboxCalendarWrapper = ({ start, end, onShowPicker }: TimeboxCalendarProps) => {
     const { tasks } = usePeriodFilteredMyTasks(start, end);
     const events = useMemo(() => tasksToEvents(tasks), [tasks]);
     const calendarRef = useRef<CalendarApi>();
-    const calendarView = MyTasksStore.use((state) => state.calendarView, shallowEqual);
+    const calendarView = MyTasksStore.use(state => state.calendarView, shallowEqual);
 
     const handleUpdateDates = async ({ event }: EventDropArg | EventResizeDoneArg) => {
         const { id, start, end } = event;
         await TasksActions.setDates(id, start, end);
-    }
+    };
 
     const handleShowAddTaskDialog = (arg: DateSelectArg) => {
         calendarRef.current = arg.view.calendar;
         onShowPicker([arg.start, arg.end]);
-    }
+    };
 
     const handleDatesChange = useCallback(({ start, end }: DatesSetArg) => {
         MyTasksActions.onDatesChanged(start, subDays(end, 1));

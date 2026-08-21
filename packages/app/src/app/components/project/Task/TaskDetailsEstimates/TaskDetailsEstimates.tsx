@@ -24,7 +24,12 @@ export const TaskEstimates: FunctionComponent<ITaskEstimatesProps> = ({
     };
 
     return (
-        <PopupTime value={value} disabled={disabled} labelKey={translate("Estimated time")} onChange={onChange}>
+        <PopupTime
+            value={value}
+            disabled={disabled}
+            labelKey={translate("Estimated time")}
+            onChange={onChange}
+        >
             <>
                 {!Boolean(value) && (
                     <RoundButton

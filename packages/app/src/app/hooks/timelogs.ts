@@ -7,6 +7,11 @@ import { shallowEqual } from "./store";
 import { TimelogsStore } from "app/store/timelogs";
 import { isSameDay } from "date-fns";
 
+/**
+ * Returns the timelogs belonging to a project.
+ * @param projectId The project id
+ * @returns The project's timelogs
+ */
 export const useProjectTimelogs = (projectId: string) => {
     return TimelogsStore.use(state => state.timelogs.filter(t => t.project === projectId), shallowEqual);
 };
@@ -24,6 +29,11 @@ export const useTaskTimelogs = (taskId: string): { timelogs: ITimeLog[]; isLoadi
     );
 };
 
+/**
+ * Returns the timelogs that fall on any of the given dates.
+ * @param interval The dates to match timelogs against
+ * @returns The matching timelogs and the store's loading state
+ */
 export const useTimelogsInterval = (interval: Date[]) => {
     return TimelogsStore.use(
         state => ({

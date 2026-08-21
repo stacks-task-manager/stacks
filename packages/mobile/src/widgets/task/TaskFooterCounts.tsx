@@ -6,13 +6,7 @@ import { Text } from "@/components/ui/text";
  * Tiny glyph+count badge. Used for comments and attachments counts in the
  * card footer. Hidden when `count` is 0.
  */
-export function TaskFooterCount({
-    glyph,
-    count,
-}: {
-    glyph: string;
-    count: number | null | undefined;
-}) {
+export function TaskFooterCount({ glyph, count }: { glyph: string; count: number | null | undefined }) {
     if (!count) return null;
     return (
         <HStack className="items-center" space="xs">

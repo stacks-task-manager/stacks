@@ -18,64 +18,62 @@ export const ProjectTemplateDialog: FunctionComponent<ProjectTemplateDialogPros>
     return (
         <Dialog
             isOpen={open}
-            title="Project template"
+            title={translate("Project template")}
             icon={<Icon icon="certificate-02" />}
             onClose={handleClose}
             onClosed={onClose}
         >
             <div className={Classes.DIALOG_BODY}>
-                <FormGroup label="Title" labelFor="title-input" labelInfo="*">
-                    <InputGroup id="title-input" placeholder="Template title" large />
+                <FormGroup label={translate("Title")} labelFor="title-input" labelInfo="*">
+                    <InputGroup id="title-input" placeholder={translate("Template title")} large />
                 </FormGroup>
 
                 <FormGroup
-                    helperText="Describe what does this template contain."
-                    label="Description"
+                    helperText={translate("Describe what does this template contain.")}
+                    label={translate("Description")}
                     labelFor="description-input"
                     labelInfo="*"
                 >
-                    <TextArea id="description-input" placeholder="Template description" fill />
+                    <TextArea id="description-input" placeholder={translate("Template description")} fill />
                 </FormGroup>
 
                 <FormGroup
-                    label="Project template options"
-                    helperText="Select which options should be included in the template."
+                    label={translate("Project template options")}
+                    helperText={translate("Select which options should be included in the template.")}
                 >
                     <Row>
                         <Col vertical>
-                            <Switch label="Tasks" checked />
-                            <Switch label="Automations" />
-                            <Switch label="Tags" />
-                            <Switch label="Statuses" /></Col>
+                            <Switch label={translate("Tasks")} checked />
+                            <Switch label={translate("Automations")} />
+                            <Switch label={translate("Tags")} />
+                            <Switch label={translate("Statuses")} />
+                        </Col>
                         <Col vertical>
-                            <Switch label="Project settings">
+                            <Switch label={translate("Project settings")}>
                                 &nbsp;
                                 <Icon icon="info-circle" />
                             </Switch>
-                            <Switch label="Project interface settings">
+                            <Switch label={translate("Project interface settings")}>
                                 &nbsp;
                                 <Icon icon="info-circle" />
                             </Switch>
-                            <Switch label="Tasks custom fields">
+                            <Switch label={translate("Tasks custom fields")}>
                                 &nbsp;
                                 <Icon icon="info-circle" />
                             </Switch>
-                            <Switch label="Project saved filters">
+                            <Switch label={translate("Project saved filters")}>
                                 &nbsp;
                                 <Icon icon="info-circle" />
                             </Switch>
                         </Col>
                     </Row>
-
                 </FormGroup>
             </div>
 
             <div className={Classes.DIALOG_FOOTER}>
                 <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-                    <Button onClick={handleClose}>
-                        {translate("Cancel")}
-                    </Button>
-                    <Button intent={Intent.PRIMARY}>Save template</Button>
+                    <Button onClick={handleClose}>{translate("Cancel")}</Button>
+                    <Button intent={Intent.PRIMARY}>{translate("Save template")}</Button>
                 </div>
             </div>
         </Dialog>

@@ -94,9 +94,7 @@ export const navigationAiTools = [
                 label: z
                     .string()
                     .optional()
-                    .describe(
-                        "Override the button label shown to the user (e.g. 'Open project Acme')."
-                    ),
+                    .describe("Override the button label shown to the user (e.g. 'Open project Acme')."),
             })
             .refine(d => !VIEWS_REQUIRING_ID.has(d.view) || (typeof d.id === "string" && d.id.length > 0), {
                 message:

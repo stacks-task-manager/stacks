@@ -407,7 +407,9 @@ const TableCellPure: FunctionComponent<TablePersistentCellProps<ITask>> = ({ row
         return <>{row.completed && formatDate(row.completed)}</>;
     } else if (column === "project") {
         const project = getDocument(row.project);
-        return <>{project ? <Link to={`/project/${row.project}`}>{project.title}</Link> : "Unkown project"}</>;
+        return (
+            <>{project ? <Link to={`/project/${row.project}`}>{project.title}</Link> : "Unkown project"}</>
+        );
     } else if (column === "created" && row.created != null) {
         return <>{formatDate(row.created)}</>;
     } else if (column === "updated" && row.updated != null) {

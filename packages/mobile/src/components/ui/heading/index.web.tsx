@@ -2,4 +2,4 @@
 // On web, uniwind interops `className` onto react-native-web's Text. The
 // native Heading already maps size → the right font-size classes, so it is
 // reused as-is.
-export { Heading } from './index';
+export { Heading } from "./index";

@@ -15,6 +15,10 @@ type ISubscriptions = {
 
 const subscriptions: ISubscriptions = {};
 
+/**
+ * Creates a generator that returns incrementing unique ids.
+ * @returns {() => number} A function returning the next unique id.
+ */
 const getIdGenerator = () => {
     let lastId = 0;
     const getNextUniqueId = () => {
@@ -25,6 +29,13 @@ const getIdGenerator = () => {
 };
 const getNextUniqueId = getIdGenerator();
 
+/**
+ * Subscribes a callback to an event type.
+ * @template T The type of the argument passed to the callback.
+ * @param {string} eventType The type of event to subscribe to.
+ * @param {(args: T) => void} callback The callback invoked when the event is published.
+ * @returns {object} An object with an `unsubscribe` function to remove the subscription.
+ */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const subscribe = <T>(eventType: string, callback: (args: T) => void) => {
     const id = getNextUniqueId();
@@ -41,12 +52,24 @@ export const subscribe = <T>(eventType: string, callback: (args: T) => void) => 
     };
 };
 
+/**
+ * Publishes an event of the given type, invoking every subscribed callback.
+ * @param {string} eventType The type of event to publish.
+ * @param {*} arg The argument to pass to the subscribed callbacks.
+ * @returns {void}
+ */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const publish = (eventType: string, arg?: any) => {
     if (!subscriptions[eventType]) return;
     Object.keys(subscriptions[eventType]).forEach(key => subscriptions[eventType][key](arg));
 };
 
+/**
+ * Custom hook that subscribes a callback to an event type for the lifetime of the component.
+ * @param {string} eventType The type of event to subscribe to.
+ * @param {(args: any) => void} callback The callback invoked when the event is published.
+ * @returns {void}
+ */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const useSubscribe = (eventType: string, callback: (args: any) => void) => {
     const callbackRef = useRef(callback);

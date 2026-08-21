@@ -1,5 +1,4 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
-import { translate } from "@stacks/translations";
 import {
     Button,
     Classes,
@@ -9,20 +8,19 @@ import {
     MenuDivider,
     MenuItem,
     Popover,
-    PopoverProps
-} from '@blueprintjs/core';
-import {
-    DatePicker as BlueprintDatePicker,
-    TimePicker
-} from '@blueprintjs/datetime';
-import { addDays, addMonths, addWeeks, format, setHours, setMinutes } from "date-fns";
-import React, { FunctionComponent, useMemo, useState } from 'react';
-import { usePreferences } from 'app/hooks';
-import { isAmPm } from 'app/utils/date';
-import { DateChip } from '../DateChip/DateChip';
-import { Col, Grid, Row } from '../Layout';
-import { CommonButtonProps, IDatePickerShortcutExtra } from './types';
-import { useDateIntent } from './utils';
+    PopoverProps,
+} from "@blueprintjs/core";
+import { DatePicker as BlueprintDatePicker, TimePicker } from "@blueprintjs/datetime";
+import { translate } from "@stacks/translations";
+import { setHours, setMinutes } from "date-fns";
+import React, { FunctionComponent, useState } from "react";
+
+import { usePreferences } from "app/hooks";
+import { isAmPm } from "app/utils/date";
+import { DateChip } from "../DateChip/DateChip";
+import { Col, Grid, Row } from "../Layout";
+import { CommonButtonProps, IDatePickerShortcutExtra } from "./types";
+import { getSingleDateShortcuts, useDateIntent } from "./utils";
 
 export const DateComponent: FunctionComponent<DatePickerProps> = ({
     value,
@@ -35,41 +33,11 @@ export const DateComponent: FunctionComponent<DatePickerProps> = ({
     const [date, setDate] = useState<Date | null>(value ?? null);
     const useAmPm = isAmPm();
 
-    const shortcuts: IDatePickerShortcutExtra[] = useMemo(() => {
-        const now = setHours(setMinutes(new Date(), 0), 12);
-        const shorcutsList = [
-            {
-                title: translate("Today"),
-                label: format(now, "eee"),
-                date: now,
-            },
-            {
-                title: translate("Tomorrow"),
-                label: format(addDays(now, 1), "eee"),
-                date: addDays(now, 1),
-            },
-            {
-                title: translate("1 week"),
-                label: format(addWeeks(now, 1), "MMM d"),
-                date: addWeeks(now, 1),
-            },
-            {
-                title: translate("2 weeks"),
-                label: format(addWeeks(now, 2), "MMM d"),
-                date: addWeeks(now, 2),
-            },
-            {
-                title: translate("1 month"),
-                label: format(addMonths(now, 1), "MMM d"),
-                date: addMonths(now, 1),
-            },
-        ];
-        return shorcutsList;
-    }, []);
+    const shortcuts = getSingleDateShortcuts(setHours(setMinutes(new Date(), 0), 12));
 
     const handleShortcutSingleSelection = (date: Date) => {
         setDate(date);
-    }
+    };
 
     const handleApply = () => {
         onChange(date);
@@ -104,11 +72,13 @@ export const DateComponent: FunctionComponent<DatePickerProps> = ({
                     shortcuts={false}
                     minDate={minDate ?? undefined}
                     maxDate={maxDate ?? undefined}
-                    footerElement={(
+                    footerElement={
                         <Grid>
                             {enableTimePicker && (
                                 <Row>
-                                    <Col justify="center"><TimePicker onChange={setDate} value={date} useAmPm={useAmPm} /></Col>
+                                    <Col justify="center">
+                                        <TimePicker onChange={setDate} value={date} useAmPm={useAmPm} />
+                                    </Col>
                                 </Row>
                             )}
 
@@ -147,12 +117,12 @@ export const DateComponent: FunctionComponent<DatePickerProps> = ({
                                 </Col>
                             </Row>
                         </Grid>
-                    )}
+                    }
                 />
             </Col>
         </Row>
-    )
-}
+    );
+};
 
 export interface DatePickerProps {
     value: Date | null;
@@ -216,5 +186,5 @@ export const DatePickerButton: FunctionComponent<DatePickerProps & CommonButtonP
                 onRemove={() => props.onChange(null)}
             />
         </DatePicker>
-    )
-}
+    );
+};

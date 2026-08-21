@@ -19,7 +19,7 @@ describe("Documents", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect(res.status).toBe(200);
         const body = await res.json();
         expect(body).toHaveProperty("data");
@@ -45,7 +45,7 @@ describe("Documents", () => {
             },
             body: JSON.stringify(documentData),
         });
-        
+
         expect(res.status).toBe(200);
         const body = await res.json();
         expect(body).toHaveProperty("data");
@@ -69,7 +69,7 @@ describe("Documents", () => {
             },
             body: JSON.stringify(updateData),
         });
-        
+
         expect([200, 404]).toContain(res.status);
         if (res.status === 200) {
             const body = await res.json();
@@ -85,7 +85,7 @@ describe("Documents", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect([200, 404]).toContain(res.status);
     });
 
@@ -103,7 +103,7 @@ describe("Documents", () => {
             },
             body: JSON.stringify(documentData),
         });
-        
+
         // Should fail with validation error
         expect(res.status).toBe(400);
     });
@@ -122,7 +122,7 @@ describe("Documents", () => {
             },
             body: JSON.stringify(updateData),
         });
-        
+
         expect([400, 404, 500]).toContain(res.status);
     });
 
@@ -134,7 +134,7 @@ describe("Documents", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect([400, 404, 500]).toContain(res.status);
     });
 
@@ -146,7 +146,7 @@ describe("Documents", () => {
                 // No Authorization header
             },
         });
-        
+
         // Should fail without authentication
         expect(res.status).toBe(401);
     });
@@ -165,7 +165,7 @@ describe("Documents", () => {
             },
             body: JSON.stringify(documentData),
         });
-        
+
         // Should fail with validation error
         expect(res.status).toBe(400);
     });

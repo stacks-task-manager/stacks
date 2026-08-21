@@ -11,7 +11,7 @@ describe("Timelogs", () => {
 
     beforeAll(async () => {
         token = await getAuthToken();
-        
+
         // Create a project first
         const projectRes = await app.request("/api/projects", {
             method: "POST",
@@ -63,7 +63,7 @@ describe("Timelogs", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect([200, 400, 404]).toContain(res.status);
         if (res.status === 200) {
             const body = await res.json();
@@ -80,7 +80,7 @@ describe("Timelogs", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect([200, 400, 404]).toContain(res.status);
         if (res.status === 200) {
             const body = await res.json();
@@ -107,7 +107,7 @@ describe("Timelogs", () => {
             },
             body: JSON.stringify(timelogData),
         });
-        
+
         expect([200, 400, 404]).toContain(res.status);
         if (res.status === 200) {
             const body = await res.json();
@@ -127,7 +127,7 @@ describe("Timelogs", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect([200, 404]).toContain(res.status);
         if (res.status === 200) {
             const body = await res.json();
@@ -152,7 +152,7 @@ describe("Timelogs", () => {
             },
             body: JSON.stringify(updateData),
         });
-        
+
         expect([200, 404]).toContain(res.status);
         if (res.status === 200) {
             const body = await res.json();
@@ -168,7 +168,7 @@ describe("Timelogs", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect([200, 404]).toContain(res.status);
         if (res.status === 200) {
             const body = await res.json();
@@ -184,7 +184,7 @@ describe("Timelogs", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect([200, 404]).toContain(res.status);
         if (res.status === 200) {
             const body = await res.json();
@@ -194,9 +194,9 @@ describe("Timelogs", () => {
     });
 
     test("Get timelogs summary with date range", async () => {
-        const startDate = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]; // 7 days ago
-        const endDate = new Date().toISOString().split('T')[0]; // today
-        
+        const startDate = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0]; // 7 days ago
+        const endDate = new Date().toISOString().split("T")[0]; // today
+
         const res = await app.request(`/api/timelogs/summary?startDate=${startDate}&endDate=${endDate}`, {
             method: "GET",
             headers: {
@@ -204,7 +204,7 @@ describe("Timelogs", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect([200, 404]).toContain(res.status);
         if (res.status === 200) {
             const body = await res.json();
@@ -228,7 +228,7 @@ describe("Timelogs", () => {
             },
             body: JSON.stringify(timelogData),
         });
-        
+
         expect([400, 404, 500]).toContain(res.status);
     });
 
@@ -248,7 +248,7 @@ describe("Timelogs", () => {
             },
             body: JSON.stringify(timelogData),
         });
-        
+
         expect([400, 404, 500]).toContain(res.status);
     });
 
@@ -268,7 +268,7 @@ describe("Timelogs", () => {
             },
             body: JSON.stringify(timelogData),
         });
-        
+
         expect([400, 404, 500]).toContain(res.status);
     });
 
@@ -280,7 +280,7 @@ describe("Timelogs", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect([400, 404, 500]).toContain(res.status);
         if (res.status === 200) {
             const body = await res.json();
@@ -302,7 +302,7 @@ describe("Timelogs", () => {
             },
             body: JSON.stringify(updateData),
         });
-        
+
         expect([400, 404, 500]).toContain(res.status);
         const body = await res.json();
         expect(body.success).toBe(false);
@@ -317,7 +317,7 @@ describe("Timelogs", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect(res.status).toBe(500);
     });
 
@@ -329,7 +329,7 @@ describe("Timelogs", () => {
                 // No Authorization header
             },
         });
-        
+
         // Should fail without authentication
         expect(res.status).toBe(401);
         const body = await res.json();

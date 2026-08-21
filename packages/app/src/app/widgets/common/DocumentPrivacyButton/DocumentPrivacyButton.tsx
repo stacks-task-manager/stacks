@@ -3,7 +3,6 @@ import { FunctionComponent } from "react";
 
 import { useDocument } from "app/hooks";
 import { Colors } from "@blueprintjs/core";
-import React from "react";
 import { ToolbarButton } from "app/components/common";
 
 interface DocumentPrivacyButtonProps {

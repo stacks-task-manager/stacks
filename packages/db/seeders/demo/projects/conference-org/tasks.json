@@ -4,10 +4,7 @@
         "description": "Description for Book Convention Center",
         "id": "d31a9cb2-8fda-47fd-a9f7-2ed570c48aec",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "fc56be03-c314-40af-9e52-2fc6c2bb2b17",
-            "19aa41f3-0edc-4c1c-9a51-43bbff5b41d6"
-        ],
+        "tags": ["fc56be03-c314-40af-9e52-2fc6c2bb2b17", "19aa41f3-0edc-4c1c-9a51-43bbff5b41d6"],
         "tint": "#06B6D4",
         "stack": "5f6a8b31-edf4-4f2e-8be9-fc9ad9d0acc5",
         "estimate": 32400,
@@ -84,10 +81,7 @@
         "description": "Description for Setup Ticketing",
         "id": "c476814a-aa6c-4abb-98b4-5eacad392b18",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "9bc2409b-9aee-47d3-a8ec-fd6efd4c4657",
-            "fe6cdad0-7945-4c7e-b294-83c80e3e98b9"
-        ],
+        "tags": ["9bc2409b-9aee-47d3-a8ec-fd6efd4c4657", "fe6cdad0-7945-4c7e-b294-83c80e3e98b9"],
         "tint": "#EF4444",
         "stack": "5f6a8b31-edf4-4f2e-8be9-fc9ad9d0acc5",
         "estimate": 14400,
@@ -100,10 +94,7 @@
         "description": "Description for Order Swag",
         "id": "f42fdbb8-c292-49eb-a199-d27bfa9451b6",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "19aa41f3-0edc-4c1c-9a51-43bbff5b41d6",
-            "54eb38d5-69e7-46f8-a39e-d571070b113e"
-        ],
+        "tags": ["19aa41f3-0edc-4c1c-9a51-43bbff5b41d6", "54eb38d5-69e7-46f8-a39e-d571070b113e"],
         "tint": "#8B5CF6",
         "stack": "5f6a8b31-edf4-4f2e-8be9-fc9ad9d0acc5",
         "estimate": 7200,
@@ -116,9 +107,7 @@
         "description": "Description for Arrange Catering",
         "id": "7e3308c3-04ed-45d5-ba6b-ebd9f78ecaca",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "54eb38d5-69e7-46f8-a39e-d571070b113e"
-        ],
+        "tags": ["54eb38d5-69e7-46f8-a39e-d571070b113e"],
         "tint": "#F59E0B",
         "stack": "5f6a8b31-edf4-4f2e-8be9-fc9ad9d0acc5",
         "estimate": 21600,
@@ -131,10 +120,7 @@
         "description": "Description for Hire AV Team",
         "id": "006ef81b-7f86-45e1-a3d0-2bf4a96d4ba6",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "9bc2409b-9aee-47d3-a8ec-fd6efd4c4657",
-            "6ab119d8-4700-4872-aa14-8ca75bb88a49"
-        ],
+        "tags": ["9bc2409b-9aee-47d3-a8ec-fd6efd4c4657", "6ab119d8-4700-4872-aa14-8ca75bb88a49"],
         "tint": "#3B82F6",
         "stack": "5f6a8b31-edf4-4f2e-8be9-fc9ad9d0acc5",
         "estimate": 32400,
@@ -147,10 +133,7 @@
         "description": "Description for Create Schedule",
         "id": "62126572-2a09-4aa1-8d05-a2f36cf60784",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "6ab119d8-4700-4872-aa14-8ca75bb88a49",
-            "4a5e482c-9b2b-4678-b5e3-e7aedff407f2"
-        ],
+        "tags": ["6ab119d8-4700-4872-aa14-8ca75bb88a49", "4a5e482c-9b2b-4678-b5e3-e7aedff407f2"],
         "tint": null,
         "stack": "5f6a8b31-edf4-4f2e-8be9-fc9ad9d0acc5",
         "estimate": 25200,
@@ -163,10 +146,7 @@
         "description": "Description for Promote on Twitter",
         "id": "cfb3ece2-400a-4e26-8105-97e33016162a",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "9bc2409b-9aee-47d3-a8ec-fd6efd4c4657",
-            "19aa41f3-0edc-4c1c-9a51-43bbff5b41d6"
-        ],
+        "tags": ["9bc2409b-9aee-47d3-a8ec-fd6efd4c4657", "19aa41f3-0edc-4c1c-9a51-43bbff5b41d6"],
         "tint": null,
         "stack": "5f6a8b31-edf4-4f2e-8be9-fc9ad9d0acc5",
         "estimate": 7200,
@@ -179,9 +159,7 @@
         "description": "Description for Manage Volunteers",
         "id": "0763e116-238b-4557-990d-23f02e2d2c40",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "54eb38d5-69e7-46f8-a39e-d571070b113e"
-        ],
+        "tags": ["54eb38d5-69e7-46f8-a39e-d571070b113e"],
         "tint": null,
         "stack": "5f6a8b31-edf4-4f2e-8be9-fc9ad9d0acc5",
         "estimate": 18000,
@@ -194,9 +172,7 @@
         "description": "Description for Coordinate Travel",
         "id": "0d11c75f-4a29-486f-9ae0-0264869474f6",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "fbe6d5b6-5522-489f-8e74-08d210906351"
-        ],
+        "tags": ["fbe6d5b6-5522-489f-8e74-08d210906351"],
         "tint": "#10B981",
         "stack": "5f6a8b31-edf4-4f2e-8be9-fc9ad9d0acc5",
         "estimate": 25200,
@@ -209,10 +185,7 @@
         "description": "Description for Book Hotels",
         "id": "6c5fbed8-1560-4ef4-81d7-fc086f7367a4",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "fc56be03-c314-40af-9e52-2fc6c2bb2b17",
-            "fe6cdad0-7945-4c7e-b294-83c80e3e98b9"
-        ],
+        "tags": ["fc56be03-c314-40af-9e52-2fc6c2bb2b17", "fe6cdad0-7945-4c7e-b294-83c80e3e98b9"],
         "tint": "#EC4899",
         "stack": "09bf7ac7-096a-4d40-8d12-c8b460ca205e",
         "estimate": 32400,
@@ -225,10 +198,7 @@
         "description": "Description for Post-event Survey",
         "id": "0d918313-959c-4e2e-b7f0-5b01d0233a6a",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "19aa41f3-0edc-4c1c-9a51-43bbff5b41d6",
-            "9bc2409b-9aee-47d3-a8ec-fd6efd4c4657"
-        ],
+        "tags": ["19aa41f3-0edc-4c1c-9a51-43bbff5b41d6", "9bc2409b-9aee-47d3-a8ec-fd6efd4c4657"],
         "tint": null,
         "stack": "09bf7ac7-096a-4d40-8d12-c8b460ca205e",
         "estimate": 7200,
@@ -241,10 +211,7 @@
         "description": "Description for Book Convention Center (2)",
         "id": "f8a9eed6-1b7d-4fd8-b55b-2be034914293",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "fc56be03-c314-40af-9e52-2fc6c2bb2b17",
-            "fe6cdad0-7945-4c7e-b294-83c80e3e98b9"
-        ],
+        "tags": ["fc56be03-c314-40af-9e52-2fc6c2bb2b17", "fe6cdad0-7945-4c7e-b294-83c80e3e98b9"],
         "tint": "#06B6D4",
         "stack": "09bf7ac7-096a-4d40-8d12-c8b460ca205e",
         "estimate": 32400,
@@ -257,9 +224,7 @@
         "description": "Description for Call for Papers (2)",
         "id": "48b3ddaf-ba06-4b55-b72a-d46462e41269",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "9bc2409b-9aee-47d3-a8ec-fd6efd4c4657"
-        ],
+        "tags": ["9bc2409b-9aee-47d3-a8ec-fd6efd4c4657"],
         "tint": null,
         "stack": "09bf7ac7-096a-4d40-8d12-c8b460ca205e",
         "estimate": 28800,
@@ -272,10 +237,7 @@
         "description": "Description for Select Keynote Speaker (2)",
         "id": "43cbbd51-3597-40ef-b0e9-0e696beecf22",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "fc56be03-c314-40af-9e52-2fc6c2bb2b17",
-            "4a5e482c-9b2b-4678-b5e3-e7aedff407f2"
-        ],
+        "tags": ["fc56be03-c314-40af-9e52-2fc6c2bb2b17", "4a5e482c-9b2b-4678-b5e3-e7aedff407f2"],
         "tint": null,
         "stack": "09bf7ac7-096a-4d40-8d12-c8b460ca205e",
         "estimate": 3600,
@@ -318,9 +280,7 @@
         "description": "Description for Setup Ticketing (2)",
         "id": "27f87c6a-0256-4507-8d33-3a904f857211",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "54eb38d5-69e7-46f8-a39e-d571070b113e"
-        ],
+        "tags": ["54eb38d5-69e7-46f8-a39e-d571070b113e"],
         "tint": "#F59E0B",
         "stack": "09bf7ac7-096a-4d40-8d12-c8b460ca205e",
         "estimate": 14400,
@@ -333,9 +293,7 @@
         "description": "Description for Order Swag (2)",
         "id": "6ac14334-3290-46b3-b5dc-45d74276462c",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "fe6cdad0-7945-4c7e-b294-83c80e3e98b9"
-        ],
+        "tags": ["fe6cdad0-7945-4c7e-b294-83c80e3e98b9"],
         "tint": "#64748B",
         "stack": "09bf7ac7-096a-4d40-8d12-c8b460ca205e",
         "estimate": 28800,
@@ -348,10 +306,7 @@
         "description": "Description for Arrange Catering (2)",
         "id": "ff668d75-ad59-4315-9adb-beb407bbed8e",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "19aa41f3-0edc-4c1c-9a51-43bbff5b41d6",
-            "fbe6d5b6-5522-489f-8e74-08d210906351"
-        ],
+        "tags": ["19aa41f3-0edc-4c1c-9a51-43bbff5b41d6", "fbe6d5b6-5522-489f-8e74-08d210906351"],
         "tint": "#EF4444",
         "stack": "09bf7ac7-096a-4d40-8d12-c8b460ca205e",
         "estimate": 36000,
@@ -364,9 +319,7 @@
         "description": "Description for Hire AV Team (2)",
         "id": "8007c72a-01ac-4dab-94e1-c7d1bfcacb4d",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "fe6cdad0-7945-4c7e-b294-83c80e3e98b9"
-        ],
+        "tags": ["fe6cdad0-7945-4c7e-b294-83c80e3e98b9"],
         "tint": null,
         "stack": "09bf7ac7-096a-4d40-8d12-c8b460ca205e",
         "estimate": 28800,
@@ -379,10 +332,7 @@
         "description": "Description for Create Schedule (2)",
         "id": "be7664ce-1cd3-46b9-9db0-e7b68a7c1281",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "6ab119d8-4700-4872-aa14-8ca75bb88a49",
-            "fbe6d5b6-5522-489f-8e74-08d210906351"
-        ],
+        "tags": ["6ab119d8-4700-4872-aa14-8ca75bb88a49", "fbe6d5b6-5522-489f-8e74-08d210906351"],
         "tint": "#F97316",
         "stack": "09bf7ac7-096a-4d40-8d12-c8b460ca205e",
         "estimate": 18000,
@@ -395,10 +345,7 @@
         "description": "Description for Promote on Twitter (2)",
         "id": "9fe1531f-129a-4537-87b4-626f01f2136d",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "19aa41f3-0edc-4c1c-9a51-43bbff5b41d6",
-            "fe6cdad0-7945-4c7e-b294-83c80e3e98b9"
-        ],
+        "tags": ["19aa41f3-0edc-4c1c-9a51-43bbff5b41d6", "fe6cdad0-7945-4c7e-b294-83c80e3e98b9"],
         "tint": "#F97316",
         "stack": "a689153b-9beb-48a4-8e43-1e48888bc8c8",
         "estimate": 36000,
@@ -411,10 +358,7 @@
         "description": "Description for Manage Volunteers (2)",
         "id": "9204aeb6-22e1-4654-929b-0b12bc5168d8",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "6ab119d8-4700-4872-aa14-8ca75bb88a49",
-            "fe6cdad0-7945-4c7e-b294-83c80e3e98b9"
-        ],
+        "tags": ["6ab119d8-4700-4872-aa14-8ca75bb88a49", "fe6cdad0-7945-4c7e-b294-83c80e3e98b9"],
         "tint": null,
         "stack": "a689153b-9beb-48a4-8e43-1e48888bc8c8",
         "estimate": 21600,
@@ -427,10 +371,7 @@
         "description": "Description for Coordinate Travel (2)",
         "id": "1eb3c1a1-2c66-446c-b105-2cce1a392dba",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "9bc2409b-9aee-47d3-a8ec-fd6efd4c4657",
-            "54eb38d5-69e7-46f8-a39e-d571070b113e"
-        ],
+        "tags": ["9bc2409b-9aee-47d3-a8ec-fd6efd4c4657", "54eb38d5-69e7-46f8-a39e-d571070b113e"],
         "tint": "#06B6D4",
         "stack": "a689153b-9beb-48a4-8e43-1e48888bc8c8",
         "estimate": 21600,
@@ -443,10 +384,7 @@
         "description": "Description for Book Hotels (2)",
         "id": "16e3337b-0636-4f3b-b650-cdbdaf55cca9",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "fbe6d5b6-5522-489f-8e74-08d210906351",
-            "54eb38d5-69e7-46f8-a39e-d571070b113e"
-        ],
+        "tags": ["fbe6d5b6-5522-489f-8e74-08d210906351", "54eb38d5-69e7-46f8-a39e-d571070b113e"],
         "tint": null,
         "stack": "a689153b-9beb-48a4-8e43-1e48888bc8c8",
         "estimate": 32400,
@@ -485,9 +423,7 @@
         "description": "Description for Call for Papers (3)",
         "id": "2775862d-a9d0-45a3-b12e-a5ca66b4e84f",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "54eb38d5-69e7-46f8-a39e-d571070b113e"
-        ],
+        "tags": ["54eb38d5-69e7-46f8-a39e-d571070b113e"],
         "tint": "#EC4899",
         "stack": "a689153b-9beb-48a4-8e43-1e48888bc8c8",
         "estimate": 32400,
@@ -526,9 +462,7 @@
         "description": "Description for Design Badge (3)",
         "id": "baeb303c-14b2-4427-92a5-b9d4a1c65d13",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "9bc2409b-9aee-47d3-a8ec-fd6efd4c4657"
-        ],
+        "tags": ["9bc2409b-9aee-47d3-a8ec-fd6efd4c4657"],
         "tint": "#F59E0B",
         "stack": "a689153b-9beb-48a4-8e43-1e48888bc8c8",
         "estimate": 36000,
@@ -571,10 +505,7 @@
         "description": "Description for Arrange Catering (3)",
         "id": "7590cc9a-3dda-455a-8796-1948967c42ca",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "fbe6d5b6-5522-489f-8e74-08d210906351",
-            "4a5e482c-9b2b-4678-b5e3-e7aedff407f2"
-        ],
+        "tags": ["fbe6d5b6-5522-489f-8e74-08d210906351", "4a5e482c-9b2b-4678-b5e3-e7aedff407f2"],
         "tint": null,
         "stack": "a689153b-9beb-48a4-8e43-1e48888bc8c8",
         "estimate": 14400,
@@ -600,10 +531,7 @@
         "description": "Description for Create Schedule (3)",
         "id": "a17d9865-65eb-482c-8fb7-285211235ffc",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "19aa41f3-0edc-4c1c-9a51-43bbff5b41d6",
-            "54eb38d5-69e7-46f8-a39e-d571070b113e"
-        ],
+        "tags": ["19aa41f3-0edc-4c1c-9a51-43bbff5b41d6", "54eb38d5-69e7-46f8-a39e-d571070b113e"],
         "tint": "#EF4444",
         "stack": "506b4657-acc2-4767-9564-7600abb406f7",
         "estimate": 21600,
@@ -616,9 +544,7 @@
         "description": "Description for Promote on Twitter (3)",
         "id": "3cda830c-8626-45d4-ba41-96eb67a35e55",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "fe6cdad0-7945-4c7e-b294-83c80e3e98b9"
-        ],
+        "tags": ["fe6cdad0-7945-4c7e-b294-83c80e3e98b9"],
         "tint": null,
         "stack": "506b4657-acc2-4767-9564-7600abb406f7",
         "estimate": 36000,
@@ -631,10 +557,7 @@
         "description": "Description for Manage Volunteers (3)",
         "id": "ad47ee07-97cb-4094-8636-617db4dbb909",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "fbe6d5b6-5522-489f-8e74-08d210906351",
-            "19aa41f3-0edc-4c1c-9a51-43bbff5b41d6"
-        ],
+        "tags": ["fbe6d5b6-5522-489f-8e74-08d210906351", "19aa41f3-0edc-4c1c-9a51-43bbff5b41d6"],
         "tint": "#10B981",
         "stack": "506b4657-acc2-4767-9564-7600abb406f7",
         "estimate": 14400,
@@ -647,10 +570,7 @@
         "description": "Description for Coordinate Travel (3)",
         "id": "ae9a5c33-3c57-4df8-9890-5b2266a07f02",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "fc56be03-c314-40af-9e52-2fc6c2bb2b17",
-            "9bc2409b-9aee-47d3-a8ec-fd6efd4c4657"
-        ],
+        "tags": ["fc56be03-c314-40af-9e52-2fc6c2bb2b17", "9bc2409b-9aee-47d3-a8ec-fd6efd4c4657"],
         "tint": null,
         "stack": "506b4657-acc2-4767-9564-7600abb406f7",
         "estimate": 25200,
@@ -663,9 +583,7 @@
         "description": "Description for Book Hotels (3)",
         "id": "8bbac956-7ba4-4cd5-8e1b-e190fbbeb437",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "19aa41f3-0edc-4c1c-9a51-43bbff5b41d6"
-        ],
+        "tags": ["19aa41f3-0edc-4c1c-9a51-43bbff5b41d6"],
         "tint": null,
         "stack": "506b4657-acc2-4767-9564-7600abb406f7",
         "estimate": 10800,
@@ -678,10 +596,7 @@
         "description": "Description for Post-event Survey (3)",
         "id": "962fede1-463b-4349-a7a7-09e82620ff83",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "fc56be03-c314-40af-9e52-2fc6c2bb2b17",
-            "4a5e482c-9b2b-4678-b5e3-e7aedff407f2"
-        ],
+        "tags": ["fc56be03-c314-40af-9e52-2fc6c2bb2b17", "4a5e482c-9b2b-4678-b5e3-e7aedff407f2"],
         "tint": null,
         "stack": "506b4657-acc2-4767-9564-7600abb406f7",
         "estimate": 7200,
@@ -694,10 +609,7 @@
         "description": "Description for Book Convention Center (4)",
         "id": "3e30de7a-db57-4cfc-89bb-8baad3add621",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "9bc2409b-9aee-47d3-a8ec-fd6efd4c4657",
-            "54eb38d5-69e7-46f8-a39e-d571070b113e"
-        ],
+        "tags": ["9bc2409b-9aee-47d3-a8ec-fd6efd4c4657", "54eb38d5-69e7-46f8-a39e-d571070b113e"],
         "tint": "#64748B",
         "stack": "506b4657-acc2-4767-9564-7600abb406f7",
         "estimate": 28800,
@@ -710,9 +622,7 @@
         "description": "Description for Call for Papers (4)",
         "id": "5c72b9db-3eab-43b4-93b8-31a52b08f1af",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "6ab119d8-4700-4872-aa14-8ca75bb88a49"
-        ],
+        "tags": ["6ab119d8-4700-4872-aa14-8ca75bb88a49"],
         "tint": "#10B981",
         "stack": "506b4657-acc2-4767-9564-7600abb406f7",
         "estimate": 28800,
@@ -725,10 +635,7 @@
         "description": "Description for Select Keynote Speaker (4)",
         "id": "67cf93e9-8468-49f8-9c7f-601083cd919e",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "19aa41f3-0edc-4c1c-9a51-43bbff5b41d6",
-            "54eb38d5-69e7-46f8-a39e-d571070b113e"
-        ],
+        "tags": ["19aa41f3-0edc-4c1c-9a51-43bbff5b41d6", "54eb38d5-69e7-46f8-a39e-d571070b113e"],
         "tint": "#64748B",
         "stack": "506b4657-acc2-4767-9564-7600abb406f7",
         "estimate": 28800,
@@ -741,10 +648,7 @@
         "description": "Description for Secure Platinum Sponsor (4)",
         "id": "ddf87e0d-c601-463a-8351-f65c4ef620e9",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "9bc2409b-9aee-47d3-a8ec-fd6efd4c4657",
-            "54eb38d5-69e7-46f8-a39e-d571070b113e"
-        ],
+        "tags": ["9bc2409b-9aee-47d3-a8ec-fd6efd4c4657", "54eb38d5-69e7-46f8-a39e-d571070b113e"],
         "tint": null,
         "stack": "506b4657-acc2-4767-9564-7600abb406f7",
         "estimate": 3600,
@@ -757,10 +661,7 @@
         "description": "Description for Design Badge (4)",
         "id": "602ec391-23a0-4428-a849-652f40e67719",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "fbe6d5b6-5522-489f-8e74-08d210906351",
-            "fe6cdad0-7945-4c7e-b294-83c80e3e98b9"
-        ],
+        "tags": ["fbe6d5b6-5522-489f-8e74-08d210906351", "fe6cdad0-7945-4c7e-b294-83c80e3e98b9"],
         "tint": null,
         "stack": "506b4657-acc2-4767-9564-7600abb406f7",
         "estimate": 25200,
@@ -773,9 +674,7 @@
         "description": "Description for Setup Ticketing (4)",
         "id": "27851566-4910-429f-b807-ff3c4ebeea61",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "4a5e482c-9b2b-4678-b5e3-e7aedff407f2"
-        ],
+        "tags": ["4a5e482c-9b2b-4678-b5e3-e7aedff407f2"],
         "tint": "#64748B",
         "stack": "506b4657-acc2-4767-9564-7600abb406f7",
         "estimate": 7200,
@@ -788,10 +687,7 @@
         "description": "Description for Order Swag (4)",
         "id": "844fb454-7511-439a-9ab0-8ea9b77ccb4a",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "9bc2409b-9aee-47d3-a8ec-fd6efd4c4657",
-            "54eb38d5-69e7-46f8-a39e-d571070b113e"
-        ],
+        "tags": ["9bc2409b-9aee-47d3-a8ec-fd6efd4c4657", "54eb38d5-69e7-46f8-a39e-d571070b113e"],
         "tint": "#F59E0B",
         "stack": "2e0c947e-dee6-4ec3-90b2-21753cc702e8",
         "estimate": 14400,
@@ -804,9 +700,7 @@
         "description": "Description for Arrange Catering (4)",
         "id": "1ff3b516-92bb-4506-9f5a-0563798a0fbc",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "6ab119d8-4700-4872-aa14-8ca75bb88a49"
-        ],
+        "tags": ["6ab119d8-4700-4872-aa14-8ca75bb88a49"],
         "tint": "#F59E0B",
         "stack": "2e0c947e-dee6-4ec3-90b2-21753cc702e8",
         "estimate": 3600,
@@ -819,10 +713,7 @@
         "description": "Description for Hire AV Team (4)",
         "id": "e30f7fdb-0c80-4eda-a7e8-537d2f30ecc4",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "6ab119d8-4700-4872-aa14-8ca75bb88a49",
-            "fbe6d5b6-5522-489f-8e74-08d210906351"
-        ],
+        "tags": ["6ab119d8-4700-4872-aa14-8ca75bb88a49", "fbe6d5b6-5522-489f-8e74-08d210906351"],
         "tint": "#EC4899",
         "stack": "2e0c947e-dee6-4ec3-90b2-21753cc702e8",
         "estimate": 25200,
@@ -835,10 +726,7 @@
         "description": "Description for Create Schedule (4)",
         "id": "df7db312-b9b9-4c3c-8086-ffcd36dd0f42",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "6ab119d8-4700-4872-aa14-8ca75bb88a49",
-            "19aa41f3-0edc-4c1c-9a51-43bbff5b41d6"
-        ],
+        "tags": ["6ab119d8-4700-4872-aa14-8ca75bb88a49", "19aa41f3-0edc-4c1c-9a51-43bbff5b41d6"],
         "tint": null,
         "stack": "2e0c947e-dee6-4ec3-90b2-21753cc702e8",
         "estimate": 3600,
@@ -851,9 +739,7 @@
         "description": "Description for Promote on Twitter (4)",
         "id": "c0d2d066-a962-4f8a-8710-80cc7322f0c5",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "fc56be03-c314-40af-9e52-2fc6c2bb2b17"
-        ],
+        "tags": ["fc56be03-c314-40af-9e52-2fc6c2bb2b17"],
         "tint": null,
         "stack": "2e0c947e-dee6-4ec3-90b2-21753cc702e8",
         "estimate": 7200,
@@ -866,9 +752,7 @@
         "description": "Description for Manage Volunteers (4)",
         "id": "c20cb7d7-bce3-4c31-821b-bfcbcc570f90",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "54eb38d5-69e7-46f8-a39e-d571070b113e"
-        ],
+        "tags": ["54eb38d5-69e7-46f8-a39e-d571070b113e"],
         "tint": "#EF4444",
         "stack": "2e0c947e-dee6-4ec3-90b2-21753cc702e8",
         "estimate": 21600,
@@ -881,10 +765,7 @@
         "description": "Description for Coordinate Travel (4)",
         "id": "d854769d-55b9-4868-9a69-ff9b85145e32",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "19aa41f3-0edc-4c1c-9a51-43bbff5b41d6",
-            "9bc2409b-9aee-47d3-a8ec-fd6efd4c4657"
-        ],
+        "tags": ["19aa41f3-0edc-4c1c-9a51-43bbff5b41d6", "9bc2409b-9aee-47d3-a8ec-fd6efd4c4657"],
         "tint": null,
         "stack": "2e0c947e-dee6-4ec3-90b2-21753cc702e8",
         "estimate": 25200,
@@ -910,10 +791,7 @@
         "description": "Description for Post-event Survey (4)",
         "id": "cbc2df6d-2ec2-4420-9726-97d6e4427989",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "6ab119d8-4700-4872-aa14-8ca75bb88a49",
-            "54eb38d5-69e7-46f8-a39e-d571070b113e"
-        ],
+        "tags": ["6ab119d8-4700-4872-aa14-8ca75bb88a49", "54eb38d5-69e7-46f8-a39e-d571070b113e"],
         "tint": null,
         "stack": "2e0c947e-dee6-4ec3-90b2-21753cc702e8",
         "estimate": 7200,
@@ -926,10 +804,7 @@
         "description": "Description for Book Convention Center (5)",
         "id": "9f9e2227-5004-4128-a33f-ce0c38f6632d",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "6ab119d8-4700-4872-aa14-8ca75bb88a49",
-            "fe6cdad0-7945-4c7e-b294-83c80e3e98b9"
-        ],
+        "tags": ["6ab119d8-4700-4872-aa14-8ca75bb88a49", "fe6cdad0-7945-4c7e-b294-83c80e3e98b9"],
         "tint": "#6366F1",
         "stack": "2e0c947e-dee6-4ec3-90b2-21753cc702e8",
         "estimate": 25200,
@@ -942,9 +817,7 @@
         "description": "Description for Call for Papers (5)",
         "id": "b15f8870-7574-4e8e-b940-53ff0b617835",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "19aa41f3-0edc-4c1c-9a51-43bbff5b41d6"
-        ],
+        "tags": ["19aa41f3-0edc-4c1c-9a51-43bbff5b41d6"],
         "tint": null,
         "stack": "2e0c947e-dee6-4ec3-90b2-21753cc702e8",
         "estimate": 3600,
@@ -970,9 +843,7 @@
         "description": "Description for Secure Platinum Sponsor (5)",
         "id": "51f5474c-461a-411a-84a8-451473cc63ee",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "4a5e482c-9b2b-4678-b5e3-e7aedff407f2"
-        ],
+        "tags": ["4a5e482c-9b2b-4678-b5e3-e7aedff407f2"],
         "tint": null,
         "stack": "2e0c947e-dee6-4ec3-90b2-21753cc702e8",
         "estimate": 28800,
@@ -985,9 +856,7 @@
         "description": "Description for Design Badge (5)",
         "id": "3901ee1e-12e8-4f9a-a4e1-5ac2807d8266",
         "project": "f7bb4c41-4d6c-4ca8-b401-3730d6b2c215",
-        "tags": [
-            "6ab119d8-4700-4872-aa14-8ca75bb88a49"
-        ],
+        "tags": ["6ab119d8-4700-4872-aa14-8ca75bb88a49"],
         "tint": "#F59E0B",
         "stack": "2e0c947e-dee6-4ec3-90b2-21753cc702e8",
         "estimate": 10800,

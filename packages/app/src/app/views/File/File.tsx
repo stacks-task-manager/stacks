@@ -1,7 +1,8 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { Button, Classes, Intent, Popover } from "@blueprintjs/core";
+import { translate } from "@stacks/translations";
 import classNames from "classnames";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 
 import { FILES_TYPE, IAttachment } from "@stacks/types";
@@ -28,14 +29,13 @@ export const File = () => {
         navigate("/");
     };
 
-    const loadFile = async () => {
+    const loadFile = useCallback(async () => {
         const files = await FilesActions.load(params.id!, FILES_TYPE.FILE);
         const file = files.at(0);
 
         if (!file) {
             window.toaster.show({
-                message:
-                    "The requested file was not found.",
+                message: translate("The requested file was not found."),
                 icon: "paperclip",
                 intent: Intent.WARNING,
             });
@@ -45,13 +45,13 @@ export const File = () => {
 
         setFile(file);
         setLoading(false);
-    };
+    }, [params.id, navigate]);
 
     useEffect(() => {
         if (params.id) {
             loadFile();
         }
-    }, [params.id]);
+    }, [params.id, loadFile]);
 
     if (loading || !file)
         return (
@@ -69,10 +69,10 @@ export const File = () => {
 
                     <div className="file-footer">
                         <div className="file-size">
-                            <span className={Classes.SKELETON}>Filesize:</span>
+                            <span className={Classes.SKELETON}>{translate("Filesize:")}</span>
                             <span className={Classes.SKELETON}>123MB</span>
                         </div>
-                        <Button className={Classes.SKELETON}>Open file...</Button>
+                        <Button className={Classes.SKELETON}>{translate("Open file...")}</Button>
                     </div>
                 </div>
             </div>
@@ -100,12 +100,15 @@ export const File = () => {
 
                         <div className="file-footer">
                             <div className="file-size">
-                                <span>Filesize:</span>
+                                <span>{translate("Filesize:")}</span>
                                 <span>{humanFileSize(file.size)}</span>
                             </div>
 
-                            <Button onClick={() => alert("Open online file")} icon="cloud-download">
-                                Download file...
+                            <Button
+                                onClick={() => alert(translate("Open online file"))}
+                                icon="cloud-download"
+                            >
+                                {translate("Download file...")}
                             </Button>
                         </div>
                     </div>

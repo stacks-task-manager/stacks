@@ -5,6 +5,11 @@
 import { BookmarksStore } from "app/store/bookmarks";
 import { useMemo } from "react";
 
+/**
+ * Returns the bookmark with the given id.
+ * @param bookmarkId The id of the bookmark to find
+ * @returns The matching bookmark, or undefined if not found
+ */
 export const useBookmark = (bookmarkId: string) => {
     const bookmarks = BookmarksStore.use(state => state.bookmarks);
 

@@ -1,9 +1,5 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
-import {
-    Avatar,
-    AvatarFallbackText,
-    AvatarImage,
-} from "@/components/ui/avatar";
+import { Avatar, AvatarFallbackText, AvatarImage } from "@/components/ui/avatar";
 
 /** Deterministic subtle colour per id; used for avatar bg when no image. */
 export function colorForId(id: string): string {
@@ -30,9 +26,7 @@ export function UserAvatar({
             style={{ width: size, height: size, backgroundColor: bg }}
             className="overflow-hidden rounded-full items-center justify-center"
         >
-            <AvatarFallbackText className="text-white font-bold text-xs">
-                {initials}
-            </AvatarFallbackText>
+            <AvatarFallbackText className="text-white font-bold text-xs">{initials}</AvatarFallbackText>
             {avatar ? <AvatarImage source={{ uri: avatar }} alt="" /> : null}
         </Avatar>
     );

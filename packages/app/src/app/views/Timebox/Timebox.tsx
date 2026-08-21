@@ -16,18 +16,23 @@ const filterTasks = (tasks: ITask[]) => {
 };
 
 export const Timebox = () => {
-    const view = MyTasksStore.use((state) => state.scheduleView, shallowEqual);
+    const view = MyTasksStore.use(state => state.scheduleView, shallowEqual);
     const [showAddTaskDialog, setShowAddTaskDialog] = useState(false);
     const datesRef = useRef<Date[]>([]);
 
-    const handleAddTask = useCallback((taskId?: string) => {
-        setShowAddTaskDialog(false)
-        if (taskId && datesRef.current.length) {
-            TasksActions.setDates(taskId, datesRef.current[0], datesRef.current[1] ?? addMinutes(datesRef.current[0], 30));
-        }
-    }, [datesRef.current]);
-
-
+    const handleAddTask = useCallback(
+        (taskId?: string) => {
+            setShowAddTaskDialog(false);
+            if (taskId && datesRef.current.length) {
+                TasksActions.setDates(
+                    taskId,
+                    datesRef.current[0],
+                    datesRef.current[1] ?? addMinutes(datesRef.current[0], 30)
+                );
+            }
+        },
+        [datesRef.current]
+    );
 
     const handleShowPicker = useCallback((dates: Date[]) => {
         datesRef.current = dates;
@@ -37,33 +42,23 @@ export const Timebox = () => {
     return (
         <>
             <AppViewContent padded={view === TIMEBOXVIEWS.CALENDAR} id="timebox2">
-                {TIMEBOXVIEWS.BOARD === view && (
-                    <TimeboxBoard
-                        onShowPicker={handleShowPicker}
-                    />
-                )}
-                {TIMEBOXVIEWS.CALENDAR === view && (
-                    <TimeboxCalendar
-                        onShowPicker={handleShowPicker}
-                    />
-                )}
+                {TIMEBOXVIEWS.BOARD === view && <TimeboxBoard onShowPicker={handleShowPicker} />}
+                {TIMEBOXVIEWS.CALENDAR === view && <TimeboxCalendar onShowPicker={handleShowPicker} />}
             </AppViewContent>
-            {showAddTaskDialog && (
-                <TaskPicker2Dialog
-                    onClose={handleAddTask}
-                    onFilter={filterTasks}
-                />
-            )}
+            {showAddTaskDialog && <TaskPicker2Dialog onClose={handleAddTask} onFilter={filterTasks} />}
             <TimeboxTasksLoader />
         </>
     );
-}
+};
 
 const TimeboxTasksLoader = React.memo(() => {
-    const range = MyTasksStore.use((state) => ({
-        start: state.start,
-        end: state.end,
-    }), shallowEqual);
+    const range = MyTasksStore.use(
+        state => ({
+            start: state.start,
+            end: state.end,
+        }),
+        shallowEqual
+    );
 
     useEffect(() => {
         if (range) {

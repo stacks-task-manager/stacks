@@ -1,5 +1,6 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { Classes, Dialog } from "@blueprintjs/core";
+import { translate } from "@stacks/translations";
 
 import React, { FunctionComponent, useRef, useState } from "react";
 
@@ -35,7 +36,7 @@ export const QuickTimeLogDialog: FunctionComponent<IQuickTimeLogProps> = ({ onSa
 
     return (
         <Dialog
-            title="Log time"
+            title={translate("Log time")}
             isOpen={open}
             style={{ width: 300, paddingBottom: 0 }}
             onClose={handleCloseDialog}

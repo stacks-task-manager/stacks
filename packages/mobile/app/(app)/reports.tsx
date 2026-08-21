@@ -88,13 +88,7 @@ function summarizePayload(payload: unknown): string[] {
     return lines;
 }
 
-function ReportModal({
-    report,
-    onClose,
-}: {
-    report: IReport | null;
-    onClose: () => void;
-}) {
+function ReportModal({ report, onClose }: { report: IReport | null; onClose: () => void }) {
     const { data: payload, isFetching: loading } = useQuery({
         queryKey: ["report", report?.type],
         queryFn: () => fetchReport(report?.type as REPORT_TYPE),
@@ -125,18 +119,12 @@ function ReportModal({
                         </Box>
                     ) : summaryLines.length === 0 ? (
                         <Box className="py-10 items-center">
-                            <Text className="text-typography-600">
-                                No data for this report.
-                            </Text>
+                            <Text className="text-typography-600">No data for this report.</Text>
                         </Box>
                     ) : (
                         <Box className="bg-background-100 border border-outline-200 rounded-md p-3">
                             {summaryLines.map((line, idx) => (
-                                <Text
-                                    key={idx}
-                                    size="sm"
-                                    className="text-typography-700 py-1"
-                                >
+                                <Text key={idx} size="sm" className="text-typography-700 py-1">
                                     {line}
                                 </Text>
                             ))}
@@ -198,7 +186,11 @@ export default function ReportsScreen() {
                                 className="w-1.5 rounded-sm mr-3 self-stretch"
                             />
                             <VStack className="flex-1" space="xs">
-                                <Text size="sm" className="font-semibold text-typography-900" numberOfLines={1}>
+                                <Text
+                                    size="sm"
+                                    className="font-semibold text-typography-900"
+                                    numberOfLines={1}
+                                >
                                     {report.title}
                                 </Text>
                                 {report.description ? (

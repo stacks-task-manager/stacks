@@ -43,17 +43,15 @@ export const TaskDetailsLocations: FunctionComponent<ITaskDetailsLocationsProps>
                     <BlankSlate
                         icon={APPICONS.LOCATION}
                         title={translate("No locations")}
-                        description={translate("This task does not have any locations yet Click the button bellow to add the first one")}
+                        description={translate(
+                            "This task does not have any locations yet Click the button bellow to add the first one"
+                        )}
                         small
                         maxWidth={250}
                     >
                         {disabled ? null : (
                             <LocationPicker onSelect={handleSaveLocation}>
-                                <RoundButton
-                                    minimal
-                                    title={translate("Add location")}
-                                    icon="globe-05"
-                                />
+                                <RoundButton minimal title={translate("Add location")} icon="globe-05" />
                             </LocationPicker>
                         )}
                     </BlankSlate>

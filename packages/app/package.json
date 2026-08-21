@@ -180,6 +180,7 @@
             "unused-imports/no-unused-imports": "warn",
             "no-console": "warn",
             "react/prop-types": "off",
+            "react/react-in-jsx-scope": "off",
             "semi": "off",
             "prefer-promise-reject-errors": 0,
             "@typescript-eslint/explicit-function-return-type": "off",

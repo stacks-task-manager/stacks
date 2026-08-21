@@ -80,14 +80,7 @@ export const TagsPickerPopupSync: FunctionComponent<TagsPickerPopupSyncProps> = 
     return (
         <span onClick={handleClick}>
             <Popover
-                content={
-                    <TagsPicker
-                        value={tags}
-                        section={section}
-                        onToggle={handleToggleTag}
-                        type={type}
-                    />
-                }
+                content={<TagsPicker value={tags} section={section} onToggle={handleToggleTag} type={type} />}
                 placement={placement || "auto"}
                 disabled={disabled}
                 lazy

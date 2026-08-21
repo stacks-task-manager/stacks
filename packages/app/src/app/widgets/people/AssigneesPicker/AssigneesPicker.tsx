@@ -19,12 +19,7 @@ export const AssigneesPicker: FunctionComponent<IAssigneesPickerProps> = ({
     onClear,
 }) => {
     return (
-        <AssigneesPopover
-            value={assignees}
-            dismissable={dismissable}
-            onToggle={onToggle}
-            onClear={onClear}
-        >
+        <AssigneesPopover value={assignees} dismissable={dismissable} onToggle={onToggle} onClear={onClear}>
             {children}
         </AssigneesPopover>
     );

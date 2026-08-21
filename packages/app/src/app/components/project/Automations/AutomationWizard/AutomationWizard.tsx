@@ -205,13 +205,8 @@ const AutomationButton: FunctionComponent<IAutomationButtonProps> = ({
                 <Icon icon={iconRight} size={18} color={iconRightColor} />
             </div>
             <div className="automation-wizard__description">
-                <span className="automation-wizard__action">
-                    {translate("when")}
-                </span>{" "}
-                {when}
-                <span className="automation-wizard__action">
-                    {translate("then")}
-                </span>
+                <span className="automation-wizard__action">{translate("when")}</span> {when}
+                <span className="automation-wizard__action">{translate("then")}</span>
                 {then}
             </div>
         </button>

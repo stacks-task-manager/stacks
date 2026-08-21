@@ -14,13 +14,9 @@ export const ToolbarReports = () => {
             <div className="section-toolbar">
                 <div className="section-toolbar-side side">
                     <div className="section-toolbar-title">
-                        <h1>
-                            {translate("Reports")}
-                        </h1>
+                        <h1>{translate("Reports")}</h1>
                     </div>
-                    <div className="section-toolbar-options">
-                        &nbsp;
-                    </div>
+                    <div className="section-toolbar-options">&nbsp;</div>
                 </div>
                 <div className="section-toolbar-side fixed">
                     {/* <ReloadButton
@@ -28,7 +24,6 @@ export const ToolbarReports = () => {
                         placement="bottom-end"
                         onClick={ReportsActions.load}
                     /> */}
-
                 </div>
             </div>
             <div className="section-toolbar">
@@ -55,8 +50,7 @@ export const ToolbarReports = () => {
                         {translate("Overview")}
                     </button> */}
                 </div>
-                <div className="section-toolbar-side">
-                </div>
+                <div className="section-toolbar-side"></div>
             </div>
         </div>
     );
@@ -70,18 +64,23 @@ const ReportFilterSpan = [
     {
         label: "Year",
         value: "year",
-    }, {
+    },
+    {
         label: "Month",
         value: "month",
     },
     {
         label: "Week",
         value: "week",
-    }];
+    },
+];
 
 export const ToolbarReport = () => {
     const params = useParams();
-    const { span, reports } = ReportsStore.use(state => ({ span: state.span, reports: state.reports }), shallowEqual);
+    const { span, reports } = ReportsStore.use(
+        state => ({ span: state.span, reports: state.reports }),
+        shallowEqual
+    );
 
     const navigate = useNavigate();
 
@@ -94,22 +93,29 @@ export const ToolbarReport = () => {
             <div className="section-toolbar">
                 <div className="section-toolbar-side side">
                     <div className="section-toolbar-title">
-                        <Button icon="chevron-left" onClick={() => navigate("/reports")} size="small" variant="minimal" />
-                        <h1>
-                            {report?.title ?? "Unknown report"}
-                        </h1>
+                        <Button
+                            icon="chevron-left"
+                            onClick={() => navigate("/reports")}
+                            size="small"
+                            variant="minimal"
+                        />
+                        <h1>{report?.title ?? "Unknown report"}</h1>
 
-                        {report && <Tooltip content={report.description}><Icon icon="info-circle" cursor="help" /></Tooltip>}
+                        {report && (
+                            <Tooltip content={report.description}>
+                                <Icon icon="info-circle" cursor="help" />
+                            </Tooltip>
+                        )}
                     </div>
                 </div>
                 <div className="section-toolbar-side fixed">
                     <SegmentedControl
                         options={ReportFilterSpan}
-                        value={span} onValueChange={(newSpan) => ReportsActions.setSpan(newSpan as ReportSpan)} />
+                        value={span}
+                        onValueChange={newSpan => ReportsActions.setSpan(newSpan as ReportSpan)}
+                    />
                 </div>
             </div>
-
         </div>
-    )
-}
-
+    );
+};

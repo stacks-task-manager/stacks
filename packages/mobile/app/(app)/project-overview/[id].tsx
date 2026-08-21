@@ -13,15 +13,7 @@ import { VStack } from "@/components/ui/vstack";
 
 import { fetchProjectOverview } from "../../../src/api/endpoints";
 
-function StatCard({
-    label,
-    value,
-    hint,
-}: {
-    label: string;
-    value: string | number;
-    hint?: string;
-}) {
+function StatCard({ label, value, hint }: { label: string; value: string | number; hint?: string }) {
     return (
         <Box className="bg-background-0 border border-outline-200 rounded-md p-3 flex-1">
             <Text size="xs" className="text-typography-500">
@@ -41,7 +33,11 @@ function StatCard({
 
 export default function ProjectOverviewScreen() {
     const { id } = useLocalSearchParams<{ id: string }>();
-    const { data: overview, isLoading, isError } = useQuery<IProjectOverview>({
+    const {
+        data: overview,
+        isLoading,
+        isError,
+    } = useQuery<IProjectOverview>({
         queryKey: ["project-overview", id],
         queryFn: () => fetchProjectOverview(id),
     });
@@ -65,8 +61,7 @@ export default function ProjectOverviewScreen() {
     }
 
     const completion = Math.round(overview.tasksCompletionPercentage ?? 0);
-    const priorityTotal =
-        overview.critical + overview.high + overview.medium + overview.low;
+    const priorityTotal = overview.critical + overview.high + overview.medium + overview.low;
     const criticalPct = priorityTotal ? Math.round((overview.critical / priorityTotal) * 100) : 0;
     const highPct = priorityTotal ? Math.round((overview.high / priorityTotal) * 100) : 0;
     const mediumPct = priorityTotal ? Math.round((overview.medium / priorityTotal) * 100) : 0;

@@ -6,5 +6,19 @@
     "singleQuote": false,
     "trailingComma": "es5",
     "tabWidth": 4,
-    "printWidth": 110
+    "printWidth": 110,
+    "overrides": [
+        {
+            "files": "*.md",
+            "options": {
+                "tabWidth": 2
+            }
+        },
+        {
+            "files": ["*.yml", "*.yaml"],
+            "options": {
+                "tabWidth": 2
+            }
+        }
+    ]
 }

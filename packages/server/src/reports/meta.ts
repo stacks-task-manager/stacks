@@ -10,7 +10,10 @@ export interface ReportResponseMeta {
 }
 
 /** Merges `meta` describing the active span into a builder result. */
-export function attachReportMeta<T extends object>(report: T, ctx: ReportLoadContext): T & { meta: ReportResponseMeta } {
+export function attachReportMeta<T extends object>(
+    report: T,
+    ctx: ReportLoadContext
+): T & { meta: ReportResponseMeta } {
     const range = ctx.span ? getSpanRange(ctx.span) : null;
     return {
         ...report,

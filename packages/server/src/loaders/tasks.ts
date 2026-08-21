@@ -4,7 +4,13 @@ import uniq from "lodash/uniq";
 import { Op, Transaction } from "sequelize";
 
 import { AttachmentEntity, DocumentEntity, PermissionEntity, sequelize, TaskEntity } from "@stacks/db";
-import { AUTOMATION_EVENT, NOTIFICATION_RECORD_TYPE, POLLINGACTIONS, POLLINGTYPE, type ITask } from "@stacks/types";
+import {
+    AUTOMATION_EVENT,
+    NOTIFICATION_RECORD_TYPE,
+    POLLINGACTIONS,
+    POLLINGTYPE,
+    type ITask,
+} from "@stacks/types";
 
 import { Errors } from "../errors";
 import { AutomationsService } from "../services/automations";
@@ -253,16 +259,10 @@ function buildTaskListFilter(filters: GetAllFilters): object {
         andClauses.push({
             [Op.and]: [
                 {
-                    [Op.or]: [
-                        { startdate: { [Op.lte]: toDate } },
-                        { startdate: null },
-                    ],
+                    [Op.or]: [{ startdate: { [Op.lte]: toDate } }, { startdate: null }],
                 },
                 {
-                    [Op.or]: [
-                        { duedate: { [Op.gte]: fromDate } },
-                        { duedate: null },
-                    ],
+                    [Op.or]: [{ duedate: { [Op.gte]: fromDate } }, { duedate: null }],
                 },
             ],
         });

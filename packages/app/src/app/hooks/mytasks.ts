@@ -12,8 +12,8 @@ import { defaultFilters } from "app/store/projectFilters";
 import { useMemo } from "react";
 
 /**
- * Returns an array of tasks for my tasks
- * @returns
+ * Returns the current user's tasks filtered by the "my tasks" filters.
+ * @returns An object containing the filtered tasks and the loading state
  */
 export const useFilteredMyTasks = () => {
     const { filters } = useMyTasksFilters();
@@ -31,6 +31,12 @@ export const useFilteredMyTasks = () => {
     );
 };
 
+/**
+ * Returns the current user's tasks that fall within the given date range and match the "my tasks" filters.
+ * @param dateFrom The start of the date range (inclusive)
+ * @param dateTo The end of the date range (inclusive)
+ * @returns An object containing the filtered tasks and the loading state
+ */
 export const usePeriodFilteredMyTasks = (dateFrom: Date, dateTo: Date) => {
     const { filters } = useMyTasksFilters();
     const meId = PeopleStore.use(state => state.me, shallowEqual);
@@ -48,6 +54,10 @@ export const usePeriodFilteredMyTasks = (dateFrom: Date, dateTo: Date) => {
     }, shallowEqual);
 };
 
+/**
+ * Returns the tasks shown on the home screen, filtered by the persisted home filter (due, do, or start within a period).
+ * @returns An object containing the filtered tasks, the loading state, the current filter, and a setter for it
+ */
 export const useHomeMyTasks = () => {
     const meId = PeopleStore.use(state => state.me, shallowEqual);
     const [filter, setFilter] = useStorage<string>("home-my-tasks-filter", false, "due-thisWeek");

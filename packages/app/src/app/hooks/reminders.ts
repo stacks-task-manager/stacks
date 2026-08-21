@@ -8,6 +8,11 @@ import Notifications from "app/utils/reminders";
 import { useSubscribe } from "./event";
 import { IReminder } from "@stacks/types";
 
+/**
+ * Loads and subscribes to the reminders for a given record, reloading them whenever a reminder event arrives.
+ * @param {string} recordId - The id of the record whose reminders should be loaded.
+ * @returns The list of reminders and a reload function that re-fetches them.
+ */
 export const useReminder = (recordId: string) => {
     const [reminders, setReminders] = useState<IReminder[]>([]);
 

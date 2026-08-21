@@ -58,38 +58,35 @@ class TableStoreSingleton {
                     },
                     set:
                         (origSet, entity) =>
-                            (...args) => {
-                                const prev = entity.get();
-                                origSet(...args);
+                        (...args) => {
+                            const prev = entity.get();
+                            origSet(...args);
 
-                                // saving visible columns
-                                if (!isEqual(prev.visibleColumns, entity.get().visibleColumns)) {
-                                    Storage.set(
-                                        `table-${id}-visible-columns`,
-                                        entity.get().visibleColumns
-                                    );
-                                }
+                            // saving visible columns
+                            if (!isEqual(prev.visibleColumns, entity.get().visibleColumns)) {
+                                Storage.set(`table-${id}-visible-columns`, entity.get().visibleColumns);
+                            }
 
-                                // saving columns widths
-                                if (!isEqual(prev.columnWidths, entity.get().columnWidths)) {
-                                    Storage.set(`table-${id}-columns-widths`, entity.get().columnWidths);
-                                }
+                            // saving columns widths
+                            if (!isEqual(prev.columnWidths, entity.get().columnWidths)) {
+                                Storage.set(`table-${id}-columns-widths`, entity.get().columnWidths);
+                            }
 
-                                // saving columns order
-                                if (!isEqual(prev.columnsOrder, entity.get().columnsOrder)) {
-                                    Storage.set(`table-${id}-columns-order`, entity.get().columnsOrder);
-                                }
+                            // saving columns order
+                            if (!isEqual(prev.columnsOrder, entity.get().columnsOrder)) {
+                                Storage.set(`table-${id}-columns-order`, entity.get().columnsOrder);
+                            }
 
-                                // saving sort by
-                                if (prev.sortBy !== entity.get().sortBy) {
-                                    Storage.set(`table-${id}-sort-by`, entity.get().sortBy);
-                                }
+                            // saving sort by
+                            if (prev.sortBy !== entity.get().sortBy) {
+                                Storage.set(`table-${id}-sort-by`, entity.get().sortBy);
+                            }
 
-                                // saving sort desc
-                                if (prev.sortDesc !== entity.get().sortDesc) {
-                                    Storage.set(`table-${id}-sort-desc`, entity.get().sortDesc);
-                                }
-                            },
+                            // saving sort desc
+                            if (prev.sortDesc !== entity.get().sortDesc) {
+                                Storage.set(`table-${id}-sort-desc`, entity.get().sortDesc);
+                            }
+                        },
                 },
             ]
         );

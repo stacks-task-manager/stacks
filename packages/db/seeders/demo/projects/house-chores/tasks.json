@@ -17,10 +17,7 @@
         "description": "Detailed description for \"Buy groceries\". This task involves several steps and requires attention to detail.",
         "id": "49757d59-99f2-43cb-aeb1-41d49fa1eeb5",
         "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
-        "tags": [
-            "488e29b7-add0-4492-b8ff-6cfa8922a892",
-            "981f5764-66c7-4a33-977b-de8af1ae46e2"
-        ],
+        "tags": ["488e29b7-add0-4492-b8ff-6cfa8922a892", "981f5764-66c7-4a33-977b-de8af1ae46e2"],
         "tint": "#94A3B8",
         "stack": "ae7bea91-bede-4a1f-a55e-49421022a9f9",
         "estimate": 32400,
@@ -98,9 +95,7 @@
         "description": "Detailed description for \"Change air filters\". This task involves several steps and requires attention to detail.",
         "id": "e12bf0c3-c9cc-4f3f-b7b3-72b41b9be137",
         "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
-        "tags": [
-            "488e29b7-add0-4492-b8ff-6cfa8922a892"
-        ],
+        "tags": ["488e29b7-add0-4492-b8ff-6cfa8922a892"],
         "tint": "#94A3B8",
         "stack": "ae7bea91-bede-4a1f-a55e-49421022a9f9",
         "estimate": 21600,
@@ -113,9 +108,7 @@
         "description": "Detailed description for \"Deep clean kitchen\". This task involves several steps and requires attention to detail.",
         "id": "4190ca8c-d087-4a2a-9986-acaae0122d67",
         "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
-        "tags": [
-            "981f5764-66c7-4a33-977b-de8af1ae46e2"
-        ],
+        "tags": ["981f5764-66c7-4a33-977b-de8af1ae46e2"],
         "tint": "#94A3B8",
         "stack": "ae7bea91-bede-4a1f-a55e-49421022a9f9",
         "estimate": 54000,
@@ -141,10 +134,7 @@
         "description": "Detailed description for \"Wash duvet covers\". This task involves several steps and requires attention to detail.",
         "id": "ab018c2e-be15-4048-9acd-39daa3880bed",
         "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
-        "tags": [
-            "488e29b7-add0-4492-b8ff-6cfa8922a892",
-            "cc14c1cb-2b09-4dc7-86b6-dbdec8c3ec71"
-        ],
+        "tags": ["488e29b7-add0-4492-b8ff-6cfa8922a892", "cc14c1cb-2b09-4dc7-86b6-dbdec8c3ec71"],
         "tint": "#94A3B8",
         "stack": "ae7bea91-bede-4a1f-a55e-49421022a9f9",
         "estimate": 61200,
@@ -183,10 +173,7 @@
         "description": "Detailed description for \"Water indoor plants\". This task involves several steps and requires attention to detail.",
         "id": "b29fc3b2-a6ce-4062-9f61-5561b1800582",
         "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
-        "tags": [
-            "b8687dbe-5aa2-4958-a2a1-31d99c141ef3",
-            "981f5764-66c7-4a33-977b-de8af1ae46e2"
-        ],
+        "tags": ["b8687dbe-5aa2-4958-a2a1-31d99c141ef3", "981f5764-66c7-4a33-977b-de8af1ae46e2"],
         "tint": "#F59E0B",
         "stack": "0716a9eb-fef6-431b-96d5-1748fcb3ed34",
         "estimate": 72000,
@@ -199,9 +186,7 @@
         "description": "Detailed description for \"Dust ceiling fans\". This task involves several steps and requires attention to detail.",
         "id": "5786f494-b40c-400f-a0c9-f1fa57c514a6",
         "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
-        "tags": [
-            "cc14c1cb-2b09-4dc7-86b6-dbdec8c3ec71"
-        ],
+        "tags": ["cc14c1cb-2b09-4dc7-86b6-dbdec8c3ec71"],
         "tint": "#F59E0B",
         "stack": "0716a9eb-fef6-431b-96d5-1748fcb3ed34",
         "estimate": 10800,
@@ -227,9 +212,7 @@
         "description": "Detailed description for \"Clean oven\". This task involves several steps and requires attention to detail.",
         "id": "00c1e7c5-b259-456a-8c45-36532b03fd48",
         "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
-        "tags": [
-            "cc14c1cb-2b09-4dc7-86b6-dbdec8c3ec71"
-        ],
+        "tags": ["cc14c1cb-2b09-4dc7-86b6-dbdec8c3ec71"],
         "tint": "#F59E0B",
         "stack": "0716a9eb-fef6-431b-96d5-1748fcb3ed34",
         "estimate": 57600,
@@ -255,10 +238,7 @@
         "description": "Detailed description for \"Organize closet\". This task involves several steps and requires attention to detail.",
         "id": "9f2a4fcc-3edb-464f-97ef-a07c68f43071",
         "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
-        "tags": [
-            "cc14c1cb-2b09-4dc7-86b6-dbdec8c3ec71",
-            "488e29b7-add0-4492-b8ff-6cfa8922a892"
-        ],
+        "tags": ["cc14c1cb-2b09-4dc7-86b6-dbdec8c3ec71", "488e29b7-add0-4492-b8ff-6cfa8922a892"],
         "tint": "#F59E0B",
         "stack": "0716a9eb-fef6-431b-96d5-1748fcb3ed34",
         "estimate": 46800,
@@ -271,9 +251,7 @@
         "description": "Detailed description for \"Donate old clothes\". This task involves several steps and requires attention to detail.",
         "id": "8c2261c6-78ad-45d4-8248-d312f6212174",
         "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
-        "tags": [
-            "981f5764-66c7-4a33-977b-de8af1ae46e2"
-        ],
+        "tags": ["981f5764-66c7-4a33-977b-de8af1ae46e2"],
         "tint": "#F59E0B",
         "stack": "0716a9eb-fef6-431b-96d5-1748fcb3ed34",
         "estimate": 57600,
@@ -286,10 +264,7 @@
         "description": "Detailed description for \"Sweep porch\". This task involves several steps and requires attention to detail.",
         "id": "b66464d4-d44f-493b-b012-13e0569d7e37",
         "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
-        "tags": [
-            "cc14c1cb-2b09-4dc7-86b6-dbdec8c3ec71",
-            "488e29b7-add0-4492-b8ff-6cfa8922a892"
-        ],
+        "tags": ["cc14c1cb-2b09-4dc7-86b6-dbdec8c3ec71", "488e29b7-add0-4492-b8ff-6cfa8922a892"],
         "tint": "#F59E0B",
         "stack": "0716a9eb-fef6-431b-96d5-1748fcb3ed34",
         "estimate": 7200,
@@ -328,10 +303,7 @@
         "description": "Detailed description for \"Replace lightbulbs\". This task involves several steps and requires attention to detail.",
         "id": "f431805d-d231-445c-9060-cbc6c573eea2",
         "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
-        "tags": [
-            "b8687dbe-5aa2-4958-a2a1-31d99c141ef3",
-            "488e29b7-add0-4492-b8ff-6cfa8922a892"
-        ],
+        "tags": ["b8687dbe-5aa2-4958-a2a1-31d99c141ef3", "488e29b7-add0-4492-b8ff-6cfa8922a892"],
         "tint": "#3B82F6",
         "stack": "26c740ae-9d25-48a9-ae15-e2b076f1ff83",
         "estimate": 54000,
@@ -370,9 +342,7 @@
         "description": "Detailed description for \"Mop hardwood floors\". This task involves several steps and requires attention to detail.",
         "id": "33935e25-bb5f-4b64-8e8f-ed169618db4d",
         "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
-        "tags": [
-            "cc14c1cb-2b09-4dc7-86b6-dbdec8c3ec71"
-        ],
+        "tags": ["cc14c1cb-2b09-4dc7-86b6-dbdec8c3ec71"],
         "tint": "#3B82F6",
         "stack": "26c740ae-9d25-48a9-ae15-e2b076f1ff83",
         "estimate": 28800,
@@ -385,9 +355,7 @@
         "description": "Detailed description for \"Clean baseboards\". This task involves several steps and requires attention to detail.",
         "id": "cb6bd850-f90f-4946-9f99-3cc38064b52c",
         "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
-        "tags": [
-            "cc14c1cb-2b09-4dc7-86b6-dbdec8c3ec71"
-        ],
+        "tags": ["cc14c1cb-2b09-4dc7-86b6-dbdec8c3ec71"],
         "tint": "#3B82F6",
         "stack": "26c740ae-9d25-48a9-ae15-e2b076f1ff83",
         "estimate": 7200,
@@ -400,9 +368,7 @@
         "description": "Detailed description for \"Wipe down cabinets\". This task involves several steps and requires attention to detail.",
         "id": "3733de59-f0a6-465b-b9c0-c8aecc9a4488",
         "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
-        "tags": [
-            "488e29b7-add0-4492-b8ff-6cfa8922a892"
-        ],
+        "tags": ["488e29b7-add0-4492-b8ff-6cfa8922a892"],
         "tint": "#3B82F6",
         "stack": "26c740ae-9d25-48a9-ae15-e2b076f1ff83",
         "estimate": 61200,
@@ -428,10 +394,7 @@
         "description": "Detailed description for \"Clean refrigerator coils\". This task involves several steps and requires attention to detail.",
         "id": "3d966c92-d660-4742-a137-0aec3eb4b7b1",
         "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
-        "tags": [
-            "b8687dbe-5aa2-4958-a2a1-31d99c141ef3",
-            "cc14c1cb-2b09-4dc7-86b6-dbdec8c3ec71"
-        ],
+        "tags": ["b8687dbe-5aa2-4958-a2a1-31d99c141ef3", "cc14c1cb-2b09-4dc7-86b6-dbdec8c3ec71"],
         "tint": "#3B82F6",
         "stack": "26c740ae-9d25-48a9-ae15-e2b076f1ff83",
         "estimate": 32400,
@@ -444,10 +407,7 @@
         "description": "Detailed description for \"Descale coffee maker\". This task involves several steps and requires attention to detail.",
         "id": "8640dd75-a266-4ffd-8eea-f39f401b9714",
         "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
-        "tags": [
-            "981f5764-66c7-4a33-977b-de8af1ae46e2",
-            "488e29b7-add0-4492-b8ff-6cfa8922a892"
-        ],
+        "tags": ["981f5764-66c7-4a33-977b-de8af1ae46e2", "488e29b7-add0-4492-b8ff-6cfa8922a892"],
         "tint": "#3B82F6",
         "stack": "26c740ae-9d25-48a9-ae15-e2b076f1ff83",
         "estimate": 39600,
@@ -473,9 +433,7 @@
         "description": "Detailed description for \"Clean blinds\". This task involves several steps and requires attention to detail.",
         "id": "22604402-376d-4ff2-9e21-42416fe40b35",
         "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
-        "tags": [
-            "981f5764-66c7-4a33-977b-de8af1ae46e2"
-        ],
+        "tags": ["981f5764-66c7-4a33-977b-de8af1ae46e2"],
         "tint": "#3B82F6",
         "stack": "26c740ae-9d25-48a9-ae15-e2b076f1ff83",
         "estimate": 3600,
@@ -488,9 +446,7 @@
         "description": "Detailed description for \"Wash curtains\". This task involves several steps and requires attention to detail.",
         "id": "7ea87386-3691-4dcb-ad0b-8d4c678bab5a",
         "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
-        "tags": [
-            "981f5764-66c7-4a33-977b-de8af1ae46e2"
-        ],
+        "tags": ["981f5764-66c7-4a33-977b-de8af1ae46e2"],
         "tint": "#3B82F6",
         "stack": "26c740ae-9d25-48a9-ae15-e2b076f1ff83",
         "estimate": 68400,
@@ -503,10 +459,7 @@
         "description": "Detailed description for \"Flip mattress\". This task involves several steps and requires attention to detail.",
         "id": "c671ce61-2e9f-4e64-9766-5bc932004233",
         "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
-        "tags": [
-            "cc14c1cb-2b09-4dc7-86b6-dbdec8c3ec71",
-            "488e29b7-add0-4492-b8ff-6cfa8922a892"
-        ],
+        "tags": ["cc14c1cb-2b09-4dc7-86b6-dbdec8c3ec71", "488e29b7-add0-4492-b8ff-6cfa8922a892"],
         "tint": "#3B82F6",
         "stack": "26c740ae-9d25-48a9-ae15-e2b076f1ff83",
         "estimate": 68400,
@@ -532,9 +485,7 @@
         "description": "Detailed description for \"Organize tool shed\". This task involves several steps and requires attention to detail.",
         "id": "244cd49e-ec1c-42ae-9af8-537eaf0a4057",
         "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
-        "tags": [
-            "b8687dbe-5aa2-4958-a2a1-31d99c141ef3"
-        ],
+        "tags": ["b8687dbe-5aa2-4958-a2a1-31d99c141ef3"],
         "tint": "#10B981",
         "stack": "a3798ce7-285b-4708-a19d-7b75dbc6124f",
         "estimate": 61200,
@@ -547,10 +498,7 @@
         "description": "Detailed description for \"Pressure wash driveway\". This task involves several steps and requires attention to detail.",
         "id": "ce01d929-b094-4521-9d6f-23c6b8e7c7e2",
         "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
-        "tags": [
-            "981f5764-66c7-4a33-977b-de8af1ae46e2",
-            "488e29b7-add0-4492-b8ff-6cfa8922a892"
-        ],
+        "tags": ["981f5764-66c7-4a33-977b-de8af1ae46e2", "488e29b7-add0-4492-b8ff-6cfa8922a892"],
         "tint": "#10B981",
         "stack": "a3798ce7-285b-4708-a19d-7b75dbc6124f",
         "estimate": 18000,
@@ -563,9 +511,7 @@
         "description": "Detailed description for \"Paint touch-ups\". This task involves several steps and requires attention to detail.",
         "id": "77fabe82-0298-44b8-8b6d-934b913c2821",
         "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
-        "tags": [
-            "981f5764-66c7-4a33-977b-de8af1ae46e2"
-        ],
+        "tags": ["981f5764-66c7-4a33-977b-de8af1ae46e2"],
         "tint": "#10B981",
         "stack": "a3798ce7-285b-4708-a19d-7b75dbc6124f",
         "estimate": 32400,
@@ -617,9 +563,7 @@
         "description": "Detailed description for \"Sanitize trash cans\". This task involves several steps and requires attention to detail.",
         "id": "5bc3254e-7917-4816-b578-a1418e815f6b",
         "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
-        "tags": [
-            "981f5764-66c7-4a33-977b-de8af1ae46e2"
-        ],
+        "tags": ["981f5764-66c7-4a33-977b-de8af1ae46e2"],
         "tint": "#10B981",
         "stack": "a3798ce7-285b-4708-a19d-7b75dbc6124f",
         "estimate": 18000,
@@ -632,9 +576,7 @@
         "description": "Detailed description for \"Clean makeup brushes\". This task involves several steps and requires attention to detail.",
         "id": "a0bf4f26-4def-4fab-8695-2cbdb9bd9116",
         "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
-        "tags": [
-            "488e29b7-add0-4492-b8ff-6cfa8922a892"
-        ],
+        "tags": ["488e29b7-add0-4492-b8ff-6cfa8922a892"],
         "tint": "#10B981",
         "stack": "a3798ce7-285b-4708-a19d-7b75dbc6124f",
         "estimate": 54000,
@@ -647,9 +589,7 @@
         "description": "Detailed description for \"Organize digital photos\". This task involves several steps and requires attention to detail.",
         "id": "d562687e-0dc4-4bca-82b2-dc9eb0cb14d9",
         "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
-        "tags": [
-            "488e29b7-add0-4492-b8ff-6cfa8922a892"
-        ],
+        "tags": ["488e29b7-add0-4492-b8ff-6cfa8922a892"],
         "tint": "#10B981",
         "stack": "a3798ce7-285b-4708-a19d-7b75dbc6124f",
         "estimate": 46800,
@@ -662,9 +602,7 @@
         "description": "Detailed description for \"Back up computer\". This task involves several steps and requires attention to detail.",
         "id": "54b1add7-71c2-4d82-924f-dcbeab98e08e",
         "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
-        "tags": [
-            "cc14c1cb-2b09-4dc7-86b6-dbdec8c3ec71"
-        ],
+        "tags": ["cc14c1cb-2b09-4dc7-86b6-dbdec8c3ec71"],
         "tint": "#10B981",
         "stack": "a3798ce7-285b-4708-a19d-7b75dbc6124f",
         "estimate": 57600,
@@ -703,10 +641,7 @@
         "description": "Detailed description for \"Plan dinner menu\". This task involves several steps and requires attention to detail.",
         "id": "60736040-f3c7-43b1-9038-3e1fe1c747e2",
         "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
-        "tags": [
-            "cc14c1cb-2b09-4dc7-86b6-dbdec8c3ec71",
-            "b8687dbe-5aa2-4958-a2a1-31d99c141ef3"
-        ],
+        "tags": ["cc14c1cb-2b09-4dc7-86b6-dbdec8c3ec71", "b8687dbe-5aa2-4958-a2a1-31d99c141ef3"],
         "tint": "#10B981",
         "stack": "a3798ce7-285b-4708-a19d-7b75dbc6124f",
         "estimate": 3600,
@@ -719,9 +654,7 @@
         "description": "Detailed description for \"Clean dishwasher filter\". This task involves several steps and requires attention to detail.",
         "id": "8683c8e2-cef2-4097-9a94-a08ebc9be460",
         "project": "be8adfd8-f0bb-471d-be6a-132527e6f34d",
-        "tags": [
-            "981f5764-66c7-4a33-977b-de8af1ae46e2"
-        ],
+        "tags": ["981f5764-66c7-4a33-977b-de8af1ae46e2"],
         "tint": "#10B981",
         "stack": "a3798ce7-285b-4708-a19d-7b75dbc6124f",
         "estimate": 46800,

@@ -5,8 +5,6 @@
 import { IProject } from "@stacks/types";
 import { Model } from "sequelize";
 
-
-
 export interface IProjectWithDocument extends IProject {
     DocumentEntity: Model;
 }

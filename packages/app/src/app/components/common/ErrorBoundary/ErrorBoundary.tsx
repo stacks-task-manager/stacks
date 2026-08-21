@@ -1,19 +1,21 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { translate } from "@stacks/translations";
-import { AnchorButton, Button, Intent, NonIdealState } from "@blueprintjs/core";
+import { AnchorButton, Button, Classes, Intent, NonIdealState } from "@blueprintjs/core";
 import { Reset } from "@blueprintjs/icons";
-import React from "react";
+import React, { ErrorInfo } from "react";
 import axios from "axios";
+import classNames from "classnames";
 
 import Config from "config";
+import { openInNewTab } from "app/utils/browser";
 import Storage from "app/utils/storage";
 
 interface IErrorBoundaryProps {
     children?: React.ReactNode;
 }
 interface IErrorBoundaryState {
-    error: any;
-    errorInfo: any;
+    error: Error | null;
+    errorInfo: ErrorInfo | null;
 }
 export class ErrorBoundary extends React.Component<IErrorBoundaryProps, IErrorBoundaryState> {
     constructor(props: object) {
@@ -21,7 +23,7 @@ export class ErrorBoundary extends React.Component<IErrorBoundaryProps, IErrorBo
         this.state = { error: null, errorInfo: null };
     }
 
-    componentDidCatch(error: any, errorInfo: any) {
+    componentDidCatch(error: Error, errorInfo: ErrorInfo) {
         // Catch errors in any components below and re-render with error message
         this.setState(
             {
@@ -44,16 +46,20 @@ export class ErrorBoundary extends React.Component<IErrorBoundaryProps, IErrorBo
                         description={
                             <div className="error-description">
                                 <p>
-                                    {translate("The app encountered a problem Please use the Send Report button below to assist us in resolving this matter")}
+                                    {translate(
+                                        "The app encountered a problem Please use the Send Report button below to assist us in resolving this matter"
+                                    )}
                                 </p>
-                                <p className="bp4-text-small bp4-text-muted">
-                                    {translate("Please keep in mind that none of your data has been compromised or lost")}
+                                <p className={classNames(Classes.TEXT_SMALL, Classes.TEXT_MUTED)}>
+                                    {translate(
+                                        "Please keep in mind that none of your data has been compromised or lost"
+                                    )}
                                 </p>
                             </div>
                         }
                         action={
                             <Button intent={Intent.PRIMARY} onClick={this.handleSendError}>
-                                Send report
+                                {translate("Send report")}
                             </Button>
                         }
                     >
@@ -64,7 +70,7 @@ export class ErrorBoundary extends React.Component<IErrorBoundaryProps, IErrorBo
                             icon={<Reset size={10} />}
                             onClick={this.handleRestart}
                         >
-                            Relaunch Stacks
+                            {translate("Relaunch Stacks")}
                         </AnchorButton>
                     </NonIdealState>
                 </div>
@@ -77,6 +83,7 @@ export class ErrorBoundary extends React.Component<IErrorBoundaryProps, IErrorBo
 
     private handleSendError = () => {
         if (Config.debug) return;
+        if (!this.state.error) return;
 
         const errorData = {
             message: this.state.error.message,
@@ -84,12 +91,15 @@ export class ErrorBoundary extends React.Component<IErrorBoundaryProps, IErrorBo
             os: navigator.userAgent,
         };
 
-        const mailtoUrl = `mailto:info@getstacksapp.com?subject=App Error&body=${encodeURIComponent(JSON.stringify(errorData))}`;
-        window.open(mailtoUrl, '_blank');
+        const mailtoUrl = `mailto:info@getstacksapp.com?subject=${encodeURIComponent(
+            "App Error"
+        )}&body=${encodeURIComponent(JSON.stringify(errorData))}`;
+        openInNewTab(mailtoUrl);
     };
 
     private handleSendCrashLog = () => {
         if (Config.debug) return;
+        if (!this.state.error) return;
         axios.post(
             "https://getstacksapp.com/crashes/",
             JSON.stringify({
@@ -111,8 +121,4 @@ export class ErrorBoundary extends React.Component<IErrorBoundaryProps, IErrorBo
 
         window.location.reload();
     };
-
-    // private handleDevTools = () => {
-    //     remote.getCurrentWindow().openDevTools();
-    // };
 }

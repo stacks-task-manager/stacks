@@ -43,45 +43,52 @@ const DEFAULT_FILTERS: ICalendarFilters = {
 
 export const CALENDAR_FILTERS_STORAGE_KEY = "calendar-filters";
 
-export const CalendarStore = entity<ICalendarStore>({
-    view: (PreferencesStore.get().calendarDefaultView as ICalendarStore["view"]) || "month",
-    date: new Date(),
-    isLoading: false,
-    events: [],
-    showFilters: false,
-    todaysCount: {
-        events: 0,
-        tasks: 0,
-        birthdays: 0,
-    },
-    tokens: {
-        google: null,
-    },
-    filters: { ...DEFAULT_FILTERS },
-    loadingCalendars: false,
-    calendars: [],
-}, [
+export const CalendarStore = entity<ICalendarStore>(
     {
-        init: (origInit, entityInstance) => () => {
-            origInit();
-
-            const storedFilters = getStorage<ICalendarFilters | null>(CALENDAR_FILTERS_STORAGE_KEY, true, null);
-            if (storedFilters == null) return;
-
-            entityInstance.set(
-                produce((state: ICalendarStore) => {
-                    state.filters = {
-                        ...DEFAULT_FILTERS,
-                        ...storedFilters,
-                        showCalendars: Array.isArray(storedFilters.showCalendars)
-                            ? storedFilters.showCalendars
-                            : DEFAULT_FILTERS.showCalendars,
-                        showProjects: Array.isArray(storedFilters.showProjects)
-                            ? storedFilters.showProjects
-                            : DEFAULT_FILTERS.showProjects,
-                    };
-                })
-            );
+        view: (PreferencesStore.get().calendarDefaultView as ICalendarStore["view"]) || "month",
+        date: new Date(),
+        isLoading: false,
+        events: [],
+        showFilters: false,
+        todaysCount: {
+            events: 0,
+            tasks: 0,
+            birthdays: 0,
         },
+        tokens: {
+            google: null,
+        },
+        filters: { ...DEFAULT_FILTERS },
+        loadingCalendars: false,
+        calendars: [],
     },
-]);
+    [
+        {
+            init: (origInit, entityInstance) => () => {
+                origInit();
+
+                const storedFilters = getStorage<ICalendarFilters | null>(
+                    CALENDAR_FILTERS_STORAGE_KEY,
+                    true,
+                    null
+                );
+                if (storedFilters == null) return;
+
+                entityInstance.set(
+                    produce((state: ICalendarStore) => {
+                        state.filters = {
+                            ...DEFAULT_FILTERS,
+                            ...storedFilters,
+                            showCalendars: Array.isArray(storedFilters.showCalendars)
+                                ? storedFilters.showCalendars
+                                : DEFAULT_FILTERS.showCalendars,
+                            showProjects: Array.isArray(storedFilters.showProjects)
+                                ? storedFilters.showProjects
+                                : DEFAULT_FILTERS.showProjects,
+                        };
+                    })
+                );
+            },
+        },
+    ]
+);

@@ -13,7 +13,7 @@ const IconSize = {
     small: 12,
     medium: 14,
     large: 18,
-}
+};
 
 const DEFAULT_SIZE = "medium";
 const DEFAULT_BACKGROUND = "aquamarine";
@@ -25,8 +25,9 @@ export const IconPill: FunctionComponent<IconPillProps> = ({ size, color, ...pro
     return (
         <div
             className={`icon-pill icon-pill--${size ?? DEFAULT_SIZE}`}
-            style={{ backgroundColor: color ?? DEFAULT_BACKGROUND }}>
+            style={{ backgroundColor: color ?? DEFAULT_BACKGROUND }}
+        >
             <Icon {...props} size={IconSize[size ?? DEFAULT_SIZE]} color={textColor} />
         </div>
     );
-}
+};

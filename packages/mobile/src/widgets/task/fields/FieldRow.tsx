@@ -21,11 +21,7 @@ export function FieldRow({
     return (
         <VStack className="mb-4" space="xs">
             <HStack className="items-center justify-between">
-                <Text
-                    size="xs"
-                    className="font-semibold text-typography-500"
-                    style={{ letterSpacing: 0.5 }}
-                >
+                <Text size="xs" className="font-semibold text-typography-500" style={{ letterSpacing: 0.5 }}>
                     {label.toUpperCase()}
                 </Text>
                 {right}

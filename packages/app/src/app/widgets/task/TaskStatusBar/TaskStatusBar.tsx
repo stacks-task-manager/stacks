@@ -23,7 +23,6 @@ export const TaskStatusBar: FunctionComponent<TaskStatusBarProps> = ({
 }) => {
     const status: ITag | undefined = value ? getTag(value) : undefined;
 
-
     if (status == null) return null;
 
     const handleToggleStatus = (tag: ITag) => {

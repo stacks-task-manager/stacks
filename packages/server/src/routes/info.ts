@@ -18,9 +18,7 @@ import packageJson from "../../package.json";
 
 const info = new Hono();
 
-const SOURCE_URL =
-    process.env.STACKS_SOURCE_URL ??
-    "https://github.com/stacks-task-manager/stacks";
+const SOURCE_URL = process.env.STACKS_SOURCE_URL ?? "https://github.com/stacks-task-manager/stacks";
 
 const COMMIT_SHA = process.env.STACKS_COMMIT_SHA ?? null;
 

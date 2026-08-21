@@ -4,6 +4,7 @@
  */
 import { FilesAPI } from "app/api";
 import { FILES_TYPE, IAttachment } from "@stacks/types";
+import { openInNewTab } from "app/utils/browser";
 
 const load = async (resourceId: string, type: FILES_TYPE): Promise<IAttachment[]> => {
     return await FilesAPI.load(resourceId, type);
@@ -14,11 +15,11 @@ const remove = async (attachmentId: string) => {
 };
 
 const download = (attachmentId: string) => {
-    window.open("/api/files/download/" + attachmentId, "_blank");
+    openInNewTab("/api/files/download/" + attachmentId);
 };
 
 const preview = (attachmentId: string) => {
-    window.open("/api/files/preview/" + attachmentId + "?size=preview", "_blank");
+    openInNewTab("/api/files/preview/" + attachmentId + "?size=preview");
 };
 
 const removeByRecord = async (recordId: string, type?: FILES_TYPE) => {

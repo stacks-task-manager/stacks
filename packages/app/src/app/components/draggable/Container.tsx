@@ -41,7 +41,7 @@ export function Container({
     const { dragState, placeholderSlot, registerContainer, unregisterContainer } = useDragDrop();
     const containerRef = useRef<HTMLElement | null>(null);
 
-    const acceptedTypes = acceptsTypes || [type];
+    const acceptedTypes = useMemo(() => acceptsTypes || [type], [acceptsTypes, type]);
 
     useEffect(() => {
         registerContainer(id, acceptedTypes, direction, containerRef.current, onReorder, onItemMove);
@@ -68,9 +68,7 @@ export function Container({
             height: slot.height,
             margin: slot.margin,
         };
-        const ph = (
-            <div key="__dnd-placeholder" className={DND_PLACEHOLDER_CLASS} style={phStyle} />
-        );
+        const ph = <div key="__dnd-placeholder" className={DND_PLACEHOLDER_CLASS} style={phStyle} />;
 
         const withLeading = childArray.flatMap((child, i) => {
             if (slot.beforeChildIndex === i) {
@@ -80,7 +78,10 @@ export function Container({
         });
 
         if (slot.beforeChildIndex === childArray.length) {
-            return [...withLeading, <div key="__dnd-placeholder-end" className={DND_PLACEHOLDER_CLASS} style={phStyle} />];
+            return [
+                ...withLeading,
+                <div key="__dnd-placeholder-end" className={DND_PLACEHOLDER_CLASS} style={phStyle} />,
+            ];
         }
 
         return withLeading;

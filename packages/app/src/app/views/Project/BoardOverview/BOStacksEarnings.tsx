@@ -43,11 +43,7 @@ export default class BOStacksEarnings extends React.PureComponent<IBOStacksEarni
         }
 
         if (!total) {
-            return (
-                <p>
-                    {translate("There is not enough data to render this report")}
-                </p>
-            );
+            return <p>{translate("There is not enough data to render this report")}</p>;
         }
 
         const currency = window.currencies[this.props.currency || "USD"];

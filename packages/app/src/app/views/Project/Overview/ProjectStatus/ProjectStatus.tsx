@@ -84,9 +84,7 @@ export const ProjectStatus = () => {
                 <Grid gap={5}>
                     <Row>
                         <Col>
-                            <strong>
-                                {translate("Project health")}
-                            </strong>
+                            <strong>{translate("Project health")}</strong>
                         </Col>
                         <Col>
                             <ProjectHealth value={project.health} onChange={handleSetHealth} />

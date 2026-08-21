@@ -101,7 +101,11 @@ export const ToolbarCalendar = () => {
 
                     <span className="section-toolbar-divider" />
 
-                    <Button size="small" onClick={CalendarActions.setToday} data-testid="calendar-today-button">
+                    <Button
+                        size="small"
+                        onClick={CalendarActions.setToday}
+                        data-testid="calendar-today-button"
+                    >
                         {translate("Today")}
                     </Button>
 

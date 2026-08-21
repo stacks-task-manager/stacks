@@ -48,9 +48,7 @@ export const DateTimePicker: FunctionComponent<DateTimePickerProps> = ({
     };
 
     const items = useMemo(() => {
-        const hours = generateTimeSlots(
-            Boolean(is24Hour)
-        );
+        const hours = generateTimeSlots(Boolean(is24Hour));
         const isValid = isValidTimeSlot(time, Boolean(is24Hour));
 
         return hours.filter(t => {

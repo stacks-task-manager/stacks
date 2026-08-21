@@ -6,13 +6,13 @@ something looks stale.
 
 ## Table of Contents
 
--   [1. Stack in one paragraph](#1-stack-in-one-paragraph)
--   [2. Bootstrap order](#2-bootstrap-order)
--   [3. Request lifecycle](#3-request-lifecycle)
--   [4. Platform subsystems (read before touching)](#4-platform-subsystems-read-before-touching)
--   [5. How to add a route](#5-how-to-add-a-route)
--   [6. Useful commands](#6-useful-commands)
--   [7. FAQ](#7-faq)
+- [1. Stack in one paragraph](#1-stack-in-one-paragraph)
+- [2. Bootstrap order](#2-bootstrap-order)
+- [3. Request lifecycle](#3-request-lifecycle)
+- [4. Platform subsystems (read before touching)](#4-platform-subsystems-read-before-touching)
+- [5. How to add a route](#5-how-to-add-a-route)
+- [6. Useful commands](#6-useful-commands)
+- [7. FAQ](#7-faq)
 
 ## 1. Stack in one paragraph
 
@@ -47,6 +47,7 @@ Anything before `bootstrap()` must be synchronous or wrapped so it cannot
 delay the Hono app object being exported (tests import `app` directly).
 
 Skip conditions:
+
 - `NODE_ENV=test` skips integrity check, secret assertions, and the whole
   `bootstrap()` DB/license sequence. Tests use `test/globalSetup.ts` instead.
 - `NODE_ENV=development` skips integrity unless `FORCE_INTEGRITY_CHECK=1`.
@@ -69,6 +70,7 @@ flowchart LR
 ```
 
 Key points:
+
 - `requireAuth` decodes the JWT, loads the `User` + `Role` from the DB, and
   sets `user`, `userRole`, `userId`, `userTenant`, `instanceId` on `c`.
 - `withRequestContext` copies those into an `AsyncLocalStorage`. From there
@@ -119,19 +121,22 @@ why they exist; the doc-comments inside each file repeat the contract.
 
    const widgets = new Hono();
 
-   widgets.get("/", asyncHandler(async c => {
+   widgets.get(
+     "/",
+     asyncHandler(async c => {
        const rows = await WidgetsLoader.getAll();
        return c.replySuccess(rows);
-   }));
+     })
+   );
 
    widgets.post(
-       "/",
-       validator("json", WidgetCreateSchema),
-       asyncHandler(async c => {
-           const body = c.req.valid("json");
-           const created = await WidgetsLoader.create(body);
-           return c.replySuccess(created, "Created");
-       })
+     "/",
+     validator("json", WidgetCreateSchema),
+     asyncHandler(async c => {
+       const body = c.req.valid("json");
+       const created = await WidgetsLoader.create(body);
+       return c.replySuccess(created, "Created");
+     })
    );
 
    export default widgets;
@@ -149,7 +154,7 @@ why they exist; the doc-comments inside each file repeat the contract.
    app.route("/api/widgets", widgets);
    ```
 
-   Picking `app.route("/api/...", router)` for a route that *should* be
+   Picking `app.route("/api/...", router)` for a route that _should_ be
    authenticated will silently mount it unauthenticated — there is no longer
    a global `app.use("/api/*", requireAuth)` to catch the omission. When in
    doubt, default to `mountAuthenticated`.

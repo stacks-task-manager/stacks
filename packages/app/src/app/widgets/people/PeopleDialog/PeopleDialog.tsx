@@ -9,7 +9,7 @@ import {
     Menu,
     MenuDivider,
     MenuItem,
-    Popover
+    Popover,
 } from "@blueprintjs/core";
 import Mousetrap from "mousetrap";
 import React, { FunctionComponent, useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -321,7 +321,12 @@ export const PeopleDialog: FunctionComponent<IPeopleDialogProps> = ({ value, sin
     };
 
     return (
-        <Dialog isOpen={open} onClose={handleClose} onClosed={handleClosed} lazy className="people-dialog"
+        <Dialog
+            isOpen={open}
+            onClose={handleClose}
+            onClosed={handleClosed}
+            lazy
+            className="people-dialog"
             aria-labelledby="people-dialog"
         >
             <Row padding={10}>

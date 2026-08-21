@@ -17,7 +17,7 @@ export const ConnectionStatus = () => {
     const timerRef = useRef<NodeJS.Timeout | null>(null);
 
     useEffect(() => {
-        const unsubscribe = window.updatePoller.onChange((connectionStatus) => {
+        const unsubscribe = window.updatePoller.onChange(connectionStatus => {
             if (connectionStatus.isConnected) {
                 if (isConnected) {
                     return;
@@ -47,33 +47,33 @@ export const ConnectionStatus = () => {
 
         return () => {
             unsubscribe();
-        }
+        };
     }, []);
 
     const browserState = useBrowserState();
 
     const updateUserStatus = async (browserState: BrowserState) => {
-        let status = 'online';
-        if (browserState === 'idle') {
-            status = 'idle';
-        } else if (browserState === 'closed') {
-            status = 'offline';
+        let status = "online";
+        if (browserState === "idle") {
+            status = "idle";
+        } else if (browserState === "closed") {
+            status = "offline";
         }
 
         try {
             await window.updatePoller.sendMessage({
-                type: 'user_status',
+                type: "user_status",
                 status,
-                timestamp: Date.now()
+                timestamp: Date.now(),
             });
         } catch (e) {
             //
         }
-    }
+    };
 
     useEffect(() => {
         updateUserStatus(browserState);
-    }, [browserState])
+    }, [browserState]);
 
     const connectionStatus = useMemo(() => {
         const status: IConnectionStatus = {
@@ -94,16 +94,25 @@ export const ConnectionStatus = () => {
             <Tooltip content={connectionStatus.label} placement="right">
                 <Dot color={connectionStatus.color} />
             </Tooltip>
-            {showAlert && (<Portal>
-                <div id="connection-status-alert">
-                    <BlankSlate
-                        icon="wifi-off" title="Server not connected"
-                        description="Please check your internet connection and try again. If this problem persists, please contact support."
-                    >
-                        <Button icon={<Icon icon="refresh-cw-01" />} intent={Intent.PRIMARY} onClick={() => window.location.reload()}>Click to refresh</Button>
-                    </BlankSlate>
-                </div>
-            </Portal>)}
+            {showAlert && (
+                <Portal>
+                    <div id="connection-status-alert">
+                        <BlankSlate
+                            icon="wifi-off"
+                            title="Server not connected"
+                            description="Please check your internet connection and try again. If this problem persists, please contact support."
+                        >
+                            <Button
+                                icon={<Icon icon="refresh-cw-01" />}
+                                intent={Intent.PRIMARY}
+                                onClick={() => window.location.reload()}
+                            >
+                                Click to refresh
+                            </Button>
+                        </BlankSlate>
+                    </div>
+                </Portal>
+            )}
         </>
     );
 };

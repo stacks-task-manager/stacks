@@ -21,12 +21,11 @@ const noop = () => undefined;
 module.exports = {
     createPortal: noop,
     findDOMNode: noop,
-    flushSync: (fn) => (typeof fn === "function" ? fn() : undefined),
+    flushSync: fn => (typeof fn === "function" ? fn() : undefined),
     hydrate: noop,
     render: noop,
     unmountComponentAtNode: noop,
-    unstable_batchedUpdates: (fn, arg) =>
-        typeof fn === "function" ? fn(arg) : undefined,
+    unstable_batchedUpdates: (fn, arg) => (typeof fn === "function" ? fn(arg) : undefined),
     version: "shim",
 };
 module.exports.default = module.exports;

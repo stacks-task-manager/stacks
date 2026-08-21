@@ -1,6 +1,5 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { shallowEqual } from "app/hooks/store";
-import React from "react";
 import { Outlet } from "react-router-dom";
 
 import { PeopleStore } from "app/store/people";
@@ -32,11 +31,31 @@ export const People = () => {
                 </>
             }
         >
-            {viewType === "contacts" && <AccessGate section={ROLE_SECTIONS.PEOPLE}><PeopleList /></AccessGate>}
-            {viewType === "companies" && <AccessGate section={ROLE_SECTIONS.COMPANIES}><Companies /></AccessGate>}
-            {viewType === "timesheet" && <AccessGate section={ROLE_SECTIONS.TIMELOGS}><PeopleTimesheet /></AccessGate>}
-            {viewType === "approvals" && <AccessGate section={ROLE_SECTIONS.TIMELOGS}><PeopleApprovals /></AccessGate>}
-            {viewType === "roles" && <AccessGate section={ROLE_SECTIONS.ROLES}><PeopleRoles /></AccessGate>}
-        </AppView >
+            {viewType === "contacts" && (
+                <AccessGate section={ROLE_SECTIONS.PEOPLE}>
+                    <PeopleList />
+                </AccessGate>
+            )}
+            {viewType === "companies" && (
+                <AccessGate section={ROLE_SECTIONS.COMPANIES}>
+                    <Companies />
+                </AccessGate>
+            )}
+            {viewType === "timesheet" && (
+                <AccessGate section={ROLE_SECTIONS.TIMELOGS}>
+                    <PeopleTimesheet />
+                </AccessGate>
+            )}
+            {viewType === "approvals" && (
+                <AccessGate section={ROLE_SECTIONS.TIMELOGS}>
+                    <PeopleApprovals />
+                </AccessGate>
+            )}
+            {viewType === "roles" && (
+                <AccessGate section={ROLE_SECTIONS.ROLES}>
+                    <PeopleRoles />
+                </AccessGate>
+            )}
+        </AppView>
     );
 };

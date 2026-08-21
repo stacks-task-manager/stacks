@@ -8,19 +8,19 @@ import { scrollIntoView } from "app/utils/dom";
 function dateToTimeString(date: Date, is24Hour: boolean): string {
     const hours = date.getHours();
     const minutes = date.getMinutes();
-    
+
     if (is24Hour) {
-        return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+        return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
     } else {
-        const period = hours < 12 ? 'AM' : 'PM';
+        const period = hours < 12 ? "AM" : "PM";
         const displayHours = hours % 12 || 12;
-        return `${displayHours}:${minutes.toString().padStart(2, '0')} ${period}`;
+        return `${displayHours}:${minutes.toString().padStart(2, "0")} ${period}`;
     }
 }
 
 function timeStringToDate(timeString: string, baseDate: Date = new Date()): Date {
     const date = new Date(baseDate);
-    
+
     // Handle 24-hour format
     const time24Match = timeString.match(/^(\d{1,2}):(\d{2})$/);
     if (time24Match) {
@@ -28,23 +28,23 @@ function timeStringToDate(timeString: string, baseDate: Date = new Date()): Date
         date.setHours(parseInt(hours), parseInt(minutes), 0, 0);
         return date;
     }
-    
+
     // Handle 12-hour format
     const time12Match = timeString.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
     if (time12Match) {
         const [, hours, minutes, period] = time12Match;
         let hour24 = parseInt(hours);
-        
-        if (period.toUpperCase() === 'PM' && hour24 !== 12) {
+
+        if (period.toUpperCase() === "PM" && hour24 !== 12) {
             hour24 += 12;
-        } else if (period.toUpperCase() === 'AM' && hour24 === 12) {
+        } else if (period.toUpperCase() === "AM" && hour24 === 12) {
             hour24 = 0;
         }
-        
+
         date.setHours(hour24, parseInt(minutes), 0, 0);
         return date;
     }
-    
+
     return date;
 }
 
@@ -82,7 +82,10 @@ export const TimePicker: FunctionComponent<TimePickerProps> = ({
         const validTimeSlotPattern = /[^0-9:\sampm]/gi;
         let inputValue = "";
         if (event.currentTarget.value.length) {
-            inputValue = event.currentTarget.value.replace(validTimeSlotPattern, "").replace("  ", " ").toUpperCase();
+            inputValue = event.currentTarget.value
+                .replace(validTimeSlotPattern, "")
+                .replace("  ", " ")
+                .toUpperCase();
             setTime(inputValue);
         } else {
             setTime("");
@@ -99,7 +102,7 @@ export const TimePicker: FunctionComponent<TimePickerProps> = ({
     const items = useMemo(() => {
         const minTimeString = min ? dateToTimeString(min, is24Hour) : undefined;
         const maxTimeString = max ? dateToTimeString(max, is24Hour) : undefined;
-        
+
         const hours = generateTimeSlots(
             Boolean(is24Hour),
             span || 15,
@@ -218,7 +221,11 @@ export const TimePicker: FunctionComponent<TimePickerProps> = ({
                                 key={time}
                                 onClick={() => handleSetTime(time)}
                                 active={i === selected}
-                                intent={dateToTimeString(value, Boolean(is24Hour)) === time ? Intent.PRIMARY : Intent.NONE}
+                                intent={
+                                    dateToTimeString(value, Boolean(is24Hour)) === time
+                                        ? Intent.PRIMARY
+                                        : Intent.NONE
+                                }
                                 id={`time-${i}`}
                             />
                         ))}

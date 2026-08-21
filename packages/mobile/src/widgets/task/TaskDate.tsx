@@ -31,14 +31,9 @@ export function TaskDate({
     const overdue = !done && duedate ? new Date(duedate).getTime() < Date.now() : false;
 
     return (
-        <Box
-            className={`px-1.5 py-0.5 rounded-full ${overdue ? "bg-error-100" : "bg-background-100"}`}
-        >
-            <Text
-                size="xs"
-                className={`font-medium ${overdue ? "text-error-700" : "text-typography-700"}`}
-            >
-                {start && due ? `${start} → ${due}` : (due ?? start ?? "")}
+        <Box className={`px-1.5 py-0.5 rounded-full ${overdue ? "bg-error-100" : "bg-background-100"}`}>
+            <Text size="xs" className={`font-medium ${overdue ? "text-error-700" : "text-typography-700"}`}>
+                {start && due ? `${start} → ${due}` : due ?? start ?? ""}
             </Text>
         </Box>
     );

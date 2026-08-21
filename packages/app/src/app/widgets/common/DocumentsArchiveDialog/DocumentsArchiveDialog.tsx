@@ -19,12 +19,15 @@ export const DocumentsArchiveDialog = ({ onClose }: { onClose: () => void }) => 
     }, []);
 
     const handleLoadArchived = useCallback(async () => {
-        await RecordActions.loadArchived()
+        await RecordActions.loadArchived();
     }, []);
 
-    const handleSelectTask = useCallback((document: TreeNode) => {
-        setSelected(xor(selected, [document.id]));
-    }, [setSelected, selected]);
+    const handleSelectTask = useCallback(
+        (document: TreeNode) => {
+            setSelected(xor(selected, [document.id]));
+        },
+        [setSelected, selected]
+    );
 
     const handleUnarchive = useCallback(async () => {
         if (selected.length === 0) return;
@@ -103,7 +106,8 @@ export const DocumentsArchiveDialog = ({ onClose }: { onClose: () => void }) => 
     );
 
     return (
-        <Dialog title="Archived Documents"
+        <Dialog
+            title="Archived Documents"
             isOpen={isOpen}
             onOpened={handleLoadArchived}
             onClose={handleClose}
@@ -172,5 +176,5 @@ export const DocumentsArchiveDialog = ({ onClose }: { onClose: () => void }) => 
                 </div>
             </div>
         </Dialog>
-    )
-}
+    );
+};

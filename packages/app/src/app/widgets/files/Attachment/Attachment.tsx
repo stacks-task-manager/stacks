@@ -15,11 +15,16 @@ interface IAttachmentProps {
     onOpenTask?: () => void;
     onDeleted?: (file: IAttachment) => void;
 }
-export const Attachment: FunctionComponent<IAttachmentProps> = ({ file, canDelete, onOpenTask, onDeleted }) => {
+export const Attachment: FunctionComponent<IAttachmentProps> = ({
+    file,
+    canDelete,
+    onOpenTask,
+    onDeleted,
+}) => {
     const handleDelete = useCallback(() => {
         if (!onDeleted) return;
         onDeleted(file);
-    }, [file, onDeleted])
+    }, [file, onDeleted]);
 
     return (
         <div className="attachment">
@@ -29,12 +34,10 @@ export const Attachment: FunctionComponent<IAttachmentProps> = ({ file, canDelet
                     content={
                         <div className={Classes.TEXT_MUTED}>
                             <div>
-                                {translate("Created on")}{" "}
-                                <strong>{formatDate(file.created)}</strong>
+                                {translate("Created on")} <strong>{formatDate(file.created)}</strong>
                             </div>
                             <div>
-                                {translate("Updated on")}{" "}
-                                <strong>{formatDate(file.updated)}</strong>
+                                {translate("Updated on")} <strong>{formatDate(file.updated)}</strong>
                             </div>
                         </div>
                     }
@@ -81,7 +84,11 @@ export const Attachment: FunctionComponent<IAttachmentProps> = ({ file, canDelet
                     hoverOpenDelay={1000}
                     // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     renderTarget={({ isOpen, ...props }) => (
-                        <div {...props} className="attachment__title" onClick={() => FilesActions.preview(file.id)}>
+                        <div
+                            {...props}
+                            className="attachment__title"
+                            onClick={() => FilesActions.preview(file.id)}
+                        >
                             {truncateCenter(file.originalName, 50)}
                         </div>
                     )}
@@ -91,7 +98,12 @@ export const Attachment: FunctionComponent<IAttachmentProps> = ({ file, canDelet
                 <div className="attachment__size">{file.humanSize}</div>
                 <div className="attachment__actions">
                     <Tooltip content={translate("Download")} placement="top">
-                        <Button size="small" variant="minimal" icon={<Icon icon="save-02" />} onClick={() => FilesActions.download(file.id)} />
+                        <Button
+                            size="small"
+                            variant="minimal"
+                            icon={<Icon icon="save-02" />}
+                            onClick={() => FilesActions.download(file.id)}
+                        />
                     </Tooltip>
                 </div>
             </div>

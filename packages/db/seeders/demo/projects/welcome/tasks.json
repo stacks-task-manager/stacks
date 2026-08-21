@@ -47,9 +47,7 @@
         "title": "Trip to Yosemite with my friends? 🏕 Create a notepad with your itineraries, things to see and the adventures you want to share with your friends and love ones.",
         "description": "",
         "id": "0c6b1b00-4316-449f-b812-7ff6ae262011",
-        "tags": [
-            "bd9f2ff1-e20a-46f2-a08c-ce4d94c32d7d"
-        ],
+        "tags": ["bd9f2ff1-e20a-46f2-a08c-ce4d94c32d7d"],
         "cover": true,
         "project": "d1ba6c8b-a3b4-4b39-8ec2-add4f35b17ab",
         "stack": "b2c61f67-dc58-41e8-9b61-d9846a125180",
@@ -265,9 +263,7 @@
         "title": "Sync your library over DropBox, iCloud Drive or any file syncing service ☁️",
         "description": "",
         "id": "fc2b9c2b-6c66-4d52-9cf4-8706bc9c8b89",
-        "tags": [
-            "9676ed89-c501-474a-8753-e8ab5edc8eff"
-        ],
+        "tags": ["9676ed89-c501-474a-8753-e8ab5edc8eff"],
         "cover": true,
         "project": "d1ba6c8b-a3b4-4b39-8ec2-add4f35b17ab",
         "stack": "c74c9aba-ca59-4818-ad87-741c72bdf58b",
@@ -279,9 +275,7 @@
         "description": "",
         "id": "93e4b6f7-54b7-4bd4-8a3a-e7939156be0c",
         "duedate": "2022-03-07T23:00:00.000Z",
-        "tags": [
-            "a1cea300-ce87-4cd4-bba9-970597dd218a"
-        ],
+        "tags": ["a1cea300-ce87-4cd4-bba9-970597dd218a"],
         "project": "d1ba6c8b-a3b4-4b39-8ec2-add4f35b17ab",
         "progress": 30,
         "done": false,
@@ -305,10 +299,7 @@
         "description": "",
         "id": "183cc2ea-4d62-426a-a979-306ff46ba269",
         "project": "d1ba6c8b-a3b4-4b39-8ec2-add4f35b17ab",
-        "tags": [
-            "8851a9d0-dfbe-4fdd-a227-605806457650",
-            "9676ed89-c501-474a-8753-e8ab5edc8eff"
-        ],
+        "tags": ["8851a9d0-dfbe-4fdd-a227-605806457650", "9676ed89-c501-474a-8753-e8ab5edc8eff"],
         "stack": "ed08aaa5-011d-4b99-b723-3580c97f6b02",
         "estimate": 121188,
         "position": 6
@@ -318,9 +309,7 @@
         "description": "",
         "id": "45173543-a1a2-4f44-8051-f3b69faee325",
         "project": "d1ba6c8b-a3b4-4b39-8ec2-add4f35b17ab",
-        "tags": [
-            "c15d8759-126e-44cc-bcc6-5421efe57056"
-        ],
+        "tags": ["c15d8759-126e-44cc-bcc6-5421efe57056"],
         "stack": "c74c9aba-ca59-4818-ad87-741c72bdf58b",
         "estimate": 50318,
         "position": 5
@@ -330,9 +319,7 @@
         "description": "",
         "id": "0af8a91f-ab1c-416f-b017-b304cf7126d6",
         "project": "d1ba6c8b-a3b4-4b39-8ec2-add4f35b17ab",
-        "tags": [
-            "bd9f2ff1-e20a-46f2-a08c-ce4d94c32d7d"
-        ],
+        "tags": ["bd9f2ff1-e20a-46f2-a08c-ce4d94c32d7d"],
         "tint": "#ff006e",
         "stack": "30871531-6526-4053-be9c-a6717100e48a",
         "estimate": 79431,
@@ -353,9 +340,7 @@
         "description": "",
         "id": "6db53442-aade-4dd0-9525-65a32c126b8a",
         "project": "d1ba6c8b-a3b4-4b39-8ec2-add4f35b17ab",
-        "tags": [
-            "bd9f2ff1-e20a-46f2-a08c-ce4d94c32d7d"
-        ],
+        "tags": ["bd9f2ff1-e20a-46f2-a08c-ce4d94c32d7d"],
         "priority": "low",
         "stack": "ed08aaa5-011d-4b99-b723-3580c97f6b02",
         "estimate": 85922,

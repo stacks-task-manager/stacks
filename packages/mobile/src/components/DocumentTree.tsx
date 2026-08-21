@@ -95,11 +95,7 @@ function DocumentRowBase({
                     <Box className="w-5 items-center">
                         <Icon icon={iconFor(node.type, expanded)} size={18} color="#64748b" />
                     </Box>
-                    <Text
-                        size="md"
-                        numberOfLines={1}
-                        className="flex-1 text-typography-900"
-                    >
+                    <Text size="md" numberOfLines={1} className="flex-1 text-typography-900">
                         {node.title}
                     </Text>
                 </HStack>

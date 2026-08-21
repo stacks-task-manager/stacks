@@ -17,10 +17,7 @@
         "description": "Detailed description for \"Meal Prep Sunday\". This task involves several steps and requires attention to detail.",
         "id": "d7ba0dd4-14a6-4515-87ea-cd8152cbdff5",
         "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
-        "tags": [
-            "2c17159e-f3df-483f-9e80-3804956fdefb",
-            "3792e91d-acb9-462a-a092-bfc4feb67605"
-        ],
+        "tags": ["2c17159e-f3df-483f-9e80-3804956fdefb", "3792e91d-acb9-462a-a092-bfc4feb67605"],
         "tint": "#94A3B8",
         "stack": "2de37c35-b841-422d-9018-85582971b678",
         "estimate": 28800,
@@ -46,10 +43,7 @@
         "description": "Detailed description for \"10 min meditation\". This task involves several steps and requires attention to detail.",
         "id": "fd41e785-7086-426d-aa48-a3fb622690ad",
         "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
-        "tags": [
-            "3792e91d-acb9-462a-a092-bfc4feb67605",
-            "e513a8c5-5326-45d1-a746-fce99f28be58"
-        ],
+        "tags": ["3792e91d-acb9-462a-a092-bfc4feb67605", "e513a8c5-5326-45d1-a746-fce99f28be58"],
         "tint": "#94A3B8",
         "stack": "2de37c35-b841-422d-9018-85582971b678",
         "estimate": 50400,
@@ -88,10 +82,7 @@
         "description": "Detailed description for \"No Sugar Day\". This task involves several steps and requires attention to detail.",
         "id": "f4056d78-a169-4fda-84e0-8b1c5de051ca",
         "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
-        "tags": [
-            "3792e91d-acb9-462a-a092-bfc4feb67605",
-            "e513a8c5-5326-45d1-a746-fce99f28be58"
-        ],
+        "tags": ["3792e91d-acb9-462a-a092-bfc4feb67605", "e513a8c5-5326-45d1-a746-fce99f28be58"],
         "tint": "#94A3B8",
         "stack": "2de37c35-b841-422d-9018-85582971b678",
         "estimate": 39600,
@@ -104,9 +95,7 @@
         "description": "Detailed description for \"Sleep 8 Hours\". This task involves several steps and requires attention to detail.",
         "id": "b968e014-ac15-4a23-850c-9b2643218ffe",
         "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
-        "tags": [
-            "3792e91d-acb9-462a-a092-bfc4feb67605"
-        ],
+        "tags": ["3792e91d-acb9-462a-a092-bfc4feb67605"],
         "tint": "#94A3B8",
         "stack": "2de37c35-b841-422d-9018-85582971b678",
         "estimate": 61200,
@@ -119,10 +108,7 @@
         "description": "Detailed description for \"Morning stretching\". This task involves several steps and requires attention to detail.",
         "id": "813b1d17-8de3-4657-8346-90baf67a3927",
         "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
-        "tags": [
-            "77b1bfe2-107d-4023-bec8-e2fc31f5cdd6",
-            "e513a8c5-5326-45d1-a746-fce99f28be58"
-        ],
+        "tags": ["77b1bfe2-107d-4023-bec8-e2fc31f5cdd6", "e513a8c5-5326-45d1-a746-fce99f28be58"],
         "tint": "#94A3B8",
         "stack": "2de37c35-b841-422d-9018-85582971b678",
         "estimate": 72000,
@@ -135,9 +121,7 @@
         "description": "Detailed description for \"Take vitamins\". This task involves several steps and requires attention to detail.",
         "id": "19705466-f23d-46b6-aef8-75767b4dee9c",
         "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
-        "tags": [
-            "e513a8c5-5326-45d1-a746-fce99f28be58"
-        ],
+        "tags": ["e513a8c5-5326-45d1-a746-fce99f28be58"],
         "tint": "#94A3B8",
         "stack": "2de37c35-b841-422d-9018-85582971b678",
         "estimate": 46800,
@@ -150,10 +134,7 @@
         "description": "Detailed description for \"Journaling\". This task involves several steps and requires attention to detail.",
         "id": "32cc22ff-7d1a-4402-a563-e2e967ca5604",
         "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
-        "tags": [
-            "e513a8c5-5326-45d1-a746-fce99f28be58",
-            "77b1bfe2-107d-4023-bec8-e2fc31f5cdd6"
-        ],
+        "tags": ["e513a8c5-5326-45d1-a746-fce99f28be58", "77b1bfe2-107d-4023-bec8-e2fc31f5cdd6"],
         "tint": "#94A3B8",
         "stack": "2de37c35-b841-422d-9018-85582971b678",
         "estimate": 39600,
@@ -166,9 +147,7 @@
         "description": "Detailed description for \"Practice gratitude\". This task involves several steps and requires attention to detail.",
         "id": "d885c1e9-16c0-4a94-b1f7-7c307bb26ee4",
         "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
-        "tags": [
-            "e513a8c5-5326-45d1-a746-fce99f28be58"
-        ],
+        "tags": ["e513a8c5-5326-45d1-a746-fce99f28be58"],
         "tint": "#94A3B8",
         "stack": "2de37c35-b841-422d-9018-85582971b678",
         "estimate": 21600,
@@ -207,10 +186,7 @@
         "description": "Detailed description for \"Core workout\". This task involves several steps and requires attention to detail.",
         "id": "006340ac-d823-4ec7-a587-5d28d26429fa",
         "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
-        "tags": [
-            "3792e91d-acb9-462a-a092-bfc4feb67605",
-            "77b1bfe2-107d-4023-bec8-e2fc31f5cdd6"
-        ],
+        "tags": ["3792e91d-acb9-462a-a092-bfc4feb67605", "77b1bfe2-107d-4023-bec8-e2fc31f5cdd6"],
         "tint": "#3B82F6",
         "stack": "23afea0b-2e17-46a2-bed8-f43968c5ad42",
         "estimate": 7200,
@@ -223,10 +199,7 @@
         "description": "Detailed description for \"Upper body training\". This task involves several steps and requires attention to detail.",
         "id": "a6a39ee9-1c23-478c-8114-d3f9c1fdd5bf",
         "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
-        "tags": [
-            "3792e91d-acb9-462a-a092-bfc4feb67605",
-            "77b1bfe2-107d-4023-bec8-e2fc31f5cdd6"
-        ],
+        "tags": ["3792e91d-acb9-462a-a092-bfc4feb67605", "77b1bfe2-107d-4023-bec8-e2fc31f5cdd6"],
         "tint": "#3B82F6",
         "stack": "23afea0b-2e17-46a2-bed8-f43968c5ad42",
         "estimate": 72000,
@@ -239,9 +212,7 @@
         "description": "Detailed description for \"Leg day workout\". This task involves several steps and requires attention to detail.",
         "id": "0a4c9501-e4c7-4739-8b10-f46c4e75be69",
         "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
-        "tags": [
-            "2c17159e-f3df-483f-9e80-3804956fdefb"
-        ],
+        "tags": ["2c17159e-f3df-483f-9e80-3804956fdefb"],
         "tint": "#3B82F6",
         "stack": "23afea0b-2e17-46a2-bed8-f43968c5ad42",
         "estimate": 72000,
@@ -254,9 +225,7 @@
         "description": "Detailed description for \"HIIT session\". This task involves several steps and requires attention to detail.",
         "id": "6e95aa69-e89f-4b4b-92fe-7b43d1f75dc0",
         "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
-        "tags": [
-            "77b1bfe2-107d-4023-bec8-e2fc31f5cdd6"
-        ],
+        "tags": ["77b1bfe2-107d-4023-bec8-e2fc31f5cdd6"],
         "tint": "#3B82F6",
         "stack": "23afea0b-2e17-46a2-bed8-f43968c5ad42",
         "estimate": 28800,
@@ -269,10 +238,7 @@
         "description": "Detailed description for \"Swimming laps\". This task involves several steps and requires attention to detail.",
         "id": "ef60b1bd-5bec-40ad-938f-7410bc92ab69",
         "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
-        "tags": [
-            "2c17159e-f3df-483f-9e80-3804956fdefb",
-            "e513a8c5-5326-45d1-a746-fce99f28be58"
-        ],
+        "tags": ["2c17159e-f3df-483f-9e80-3804956fdefb", "e513a8c5-5326-45d1-a746-fce99f28be58"],
         "tint": "#3B82F6",
         "stack": "23afea0b-2e17-46a2-bed8-f43968c5ad42",
         "estimate": 54000,
@@ -285,9 +251,7 @@
         "description": "Detailed description for \"Cycling\". This task involves several steps and requires attention to detail.",
         "id": "7d6caa61-b1f1-4051-a468-de069c13a36d",
         "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
-        "tags": [
-            "2c17159e-f3df-483f-9e80-3804956fdefb"
-        ],
+        "tags": ["2c17159e-f3df-483f-9e80-3804956fdefb"],
         "tint": "#3B82F6",
         "stack": "23afea0b-2e17-46a2-bed8-f43968c5ad42",
         "estimate": 18000,
@@ -300,9 +264,7 @@
         "description": "Detailed description for \"Hiking\". This task involves several steps and requires attention to detail.",
         "id": "84d7d215-3c78-4b0c-9ef8-cb60554c83aa",
         "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
-        "tags": [
-            "3792e91d-acb9-462a-a092-bfc4feb67605"
-        ],
+        "tags": ["3792e91d-acb9-462a-a092-bfc4feb67605"],
         "tint": "#3B82F6",
         "stack": "23afea0b-2e17-46a2-bed8-f43968c5ad42",
         "estimate": 64800,
@@ -315,10 +277,7 @@
         "description": "Detailed description for \"Mindfulness practice\". This task involves several steps and requires attention to detail.",
         "id": "d6438443-17e7-4d47-819e-e8e6a3de557b",
         "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
-        "tags": [
-            "e513a8c5-5326-45d1-a746-fce99f28be58",
-            "3792e91d-acb9-462a-a092-bfc4feb67605"
-        ],
+        "tags": ["e513a8c5-5326-45d1-a746-fce99f28be58", "3792e91d-acb9-462a-a092-bfc4feb67605"],
         "tint": "#3B82F6",
         "stack": "23afea0b-2e17-46a2-bed8-f43968c5ad42",
         "estimate": 61200,
@@ -331,10 +290,7 @@
         "description": "Detailed description for \"Breathing exercises\". This task involves several steps and requires attention to detail.",
         "id": "397a3123-d236-4566-ae9f-56285245958c",
         "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
-        "tags": [
-            "e513a8c5-5326-45d1-a746-fce99f28be58",
-            "2c17159e-f3df-483f-9e80-3804956fdefb"
-        ],
+        "tags": ["e513a8c5-5326-45d1-a746-fce99f28be58", "2c17159e-f3df-483f-9e80-3804956fdefb"],
         "tint": "#10B981",
         "stack": "1d5fad03-6495-4fd5-a775-36e34c89c621",
         "estimate": 39600,
@@ -347,10 +303,7 @@
         "description": "Detailed description for \"Cold shower\". This task involves several steps and requires attention to detail.",
         "id": "612556c2-9274-499a-91d2-3b1a5f5f3ee0",
         "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
-        "tags": [
-            "77b1bfe2-107d-4023-bec8-e2fc31f5cdd6",
-            "3792e91d-acb9-462a-a092-bfc4feb67605"
-        ],
+        "tags": ["77b1bfe2-107d-4023-bec8-e2fc31f5cdd6", "3792e91d-acb9-462a-a092-bfc4feb67605"],
         "tint": "#10B981",
         "stack": "1d5fad03-6495-4fd5-a775-36e34c89c621",
         "estimate": 32400,
@@ -389,9 +342,7 @@
         "description": "Detailed description for \"Limit caffeine\". This task involves several steps and requires attention to detail.",
         "id": "ee370564-62d3-4d77-993b-438e824962ad",
         "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
-        "tags": [
-            "3792e91d-acb9-462a-a092-bfc4feb67605"
-        ],
+        "tags": ["3792e91d-acb9-462a-a092-bfc4feb67605"],
         "tint": "#10B981",
         "stack": "1d5fad03-6495-4fd5-a775-36e34c89c621",
         "estimate": 28800,
@@ -404,10 +355,7 @@
         "description": "Detailed description for \"No alcohol\". This task involves several steps and requires attention to detail.",
         "id": "88776466-8ba0-4360-a500-c45776d52293",
         "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
-        "tags": [
-            "3792e91d-acb9-462a-a092-bfc4feb67605",
-            "77b1bfe2-107d-4023-bec8-e2fc31f5cdd6"
-        ],
+        "tags": ["3792e91d-acb9-462a-a092-bfc4feb67605", "77b1bfe2-107d-4023-bec8-e2fc31f5cdd6"],
         "tint": "#10B981",
         "stack": "1d5fad03-6495-4fd5-a775-36e34c89c621",
         "estimate": 28800,
@@ -420,10 +368,7 @@
         "description": "Detailed description for \"Read non-fiction\". This task involves several steps and requires attention to detail.",
         "id": "b297ef8b-ada8-438c-894a-8606e980e5fb",
         "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
-        "tags": [
-            "3792e91d-acb9-462a-a092-bfc4feb67605",
-            "2c17159e-f3df-483f-9e80-3804956fdefb"
-        ],
+        "tags": ["3792e91d-acb9-462a-a092-bfc4feb67605", "2c17159e-f3df-483f-9e80-3804956fdefb"],
         "tint": "#10B981",
         "stack": "1d5fad03-6495-4fd5-a775-36e34c89c621",
         "estimate": 3600,
@@ -436,9 +381,7 @@
         "description": "Detailed description for \"Listen to educational podcast\". This task involves several steps and requires attention to detail.",
         "id": "98f779ae-9bd1-4500-b3db-a0aa38ec45bb",
         "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
-        "tags": [
-            "2c17159e-f3df-483f-9e80-3804956fdefb"
-        ],
+        "tags": ["2c17159e-f3df-483f-9e80-3804956fdefb"],
         "tint": "#10B981",
         "stack": "1d5fad03-6495-4fd5-a775-36e34c89c621",
         "estimate": 14400,
@@ -464,9 +407,7 @@
         "description": "Detailed description for \"Practice a language\". This task involves several steps and requires attention to detail.",
         "id": "45421e2c-8577-418f-bec5-a86850cf17e5",
         "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
-        "tags": [
-            "e513a8c5-5326-45d1-a746-fce99f28be58"
-        ],
+        "tags": ["e513a8c5-5326-45d1-a746-fce99f28be58"],
         "tint": "#10B981",
         "stack": "1d5fad03-6495-4fd5-a775-36e34c89c621",
         "estimate": 39600,
@@ -479,9 +420,7 @@
         "description": "Detailed description for \"Play instrument\". This task involves several steps and requires attention to detail.",
         "id": "2363c5e0-59d6-4257-a02b-867c22dbada7",
         "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
-        "tags": [
-            "2c17159e-f3df-483f-9e80-3804956fdefb"
-        ],
+        "tags": ["2c17159e-f3df-483f-9e80-3804956fdefb"],
         "tint": "#10B981",
         "stack": "1d5fad03-6495-4fd5-a775-36e34c89c621",
         "estimate": 43200,
@@ -507,10 +446,7 @@
         "description": "Detailed description for \"Quality time with family\". This task involves several steps and requires attention to detail.",
         "id": "69fc2141-c94b-40fb-ac62-81336d6efd53",
         "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
-        "tags": [
-            "3792e91d-acb9-462a-a092-bfc4feb67605",
-            "77b1bfe2-107d-4023-bec8-e2fc31f5cdd6"
-        ],
+        "tags": ["3792e91d-acb9-462a-a092-bfc4feb67605", "77b1bfe2-107d-4023-bec8-e2fc31f5cdd6"],
         "tint": "#EF4444",
         "stack": "791b7b6e-bd25-493b-a0aa-ce269049dd9b",
         "estimate": 28800,
@@ -523,10 +459,7 @@
         "description": "Detailed description for \"Volunteer work\". This task involves several steps and requires attention to detail.",
         "id": "66cd1a14-6605-4b1d-b3dc-e078d189cfec",
         "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
-        "tags": [
-            "e513a8c5-5326-45d1-a746-fce99f28be58",
-            "77b1bfe2-107d-4023-bec8-e2fc31f5cdd6"
-        ],
+        "tags": ["e513a8c5-5326-45d1-a746-fce99f28be58", "77b1bfe2-107d-4023-bec8-e2fc31f5cdd6"],
         "tint": "#EF4444",
         "stack": "791b7b6e-bd25-493b-a0aa-ce269049dd9b",
         "estimate": 21600,
@@ -539,9 +472,7 @@
         "description": "Detailed description for \"Random act of kindness\". This task involves several steps and requires attention to detail.",
         "id": "13a21ebe-941a-4104-97fa-a736854fefe9",
         "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
-        "tags": [
-            "77b1bfe2-107d-4023-bec8-e2fc31f5cdd6"
-        ],
+        "tags": ["77b1bfe2-107d-4023-bec8-e2fc31f5cdd6"],
         "tint": "#EF4444",
         "stack": "791b7b6e-bd25-493b-a0aa-ce269049dd9b",
         "estimate": 46800,
@@ -593,9 +524,7 @@
         "description": "Detailed description for \"Update vision board\". This task involves several steps and requires attention to detail.",
         "id": "e87ca604-ac41-4800-b873-965b96d9b484",
         "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
-        "tags": [
-            "e513a8c5-5326-45d1-a746-fce99f28be58"
-        ],
+        "tags": ["e513a8c5-5326-45d1-a746-fce99f28be58"],
         "tint": "#EF4444",
         "stack": "791b7b6e-bd25-493b-a0aa-ce269049dd9b",
         "estimate": 54000,
@@ -634,9 +563,7 @@
         "description": "Detailed description for \"Clean workspace\". This task involves several steps and requires attention to detail.",
         "id": "6f4264b0-5491-4f1c-aa29-7f2061385eb6",
         "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
-        "tags": [
-            "2c17159e-f3df-483f-9e80-3804956fdefb"
-        ],
+        "tags": ["2c17159e-f3df-483f-9e80-3804956fdefb"],
         "tint": "#EF4444",
         "stack": "791b7b6e-bd25-493b-a0aa-ce269049dd9b",
         "estimate": 3600,
@@ -662,10 +589,7 @@
         "description": "Detailed description for \"Unsubscribe from junk mail\". This task involves several steps and requires attention to detail.",
         "id": "dfbadc62-412a-4654-9934-7fae06d5aafa",
         "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
-        "tags": [
-            "2c17159e-f3df-483f-9e80-3804956fdefb",
-            "e513a8c5-5326-45d1-a746-fce99f28be58"
-        ],
+        "tags": ["2c17159e-f3df-483f-9e80-3804956fdefb", "e513a8c5-5326-45d1-a746-fce99f28be58"],
         "tint": "#EF4444",
         "stack": "791b7b6e-bd25-493b-a0aa-ce269049dd9b",
         "estimate": 64800,
@@ -678,9 +602,7 @@
         "description": "Detailed description for \"Update resume\". This task involves several steps and requires attention to detail.",
         "id": "cb69bcad-d9e3-4322-8892-5c88335e2f5c",
         "project": "0f0e6e67-2420-4963-8667-60d9d5981f87",
-        "tags": [
-            "77b1bfe2-107d-4023-bec8-e2fc31f5cdd6"
-        ],
+        "tags": ["77b1bfe2-107d-4023-bec8-e2fc31f5cdd6"],
         "tint": "#EF4444",
         "stack": "791b7b6e-bd25-493b-a0aa-ce269049dd9b",
         "estimate": 36000,

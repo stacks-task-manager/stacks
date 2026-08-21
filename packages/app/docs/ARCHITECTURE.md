@@ -4,18 +4,18 @@ A reference for _how_ `@stacks/app` is wired together. Read [ONBOARDING.md](ONBO
 
 ## Table of Contents
 
--   [App shell](#app-shell)
--   [Routing](#routing)
--   [State management](#state-management)
--   [Client-side persistence](#client-side-persistence)
--   [API layer](#api-layer)
--   [Real-time updates](#real-time-updates)
--   [Drag-and-drop](#drag-and-drop)
--   [Theming](#theming)
--   [User feedback surface](#user-feedback-surface)
--   [Error handling](#error-handling)
--   [Build](#build)
--   [Where to go next](#where-to-go-next)
+- [App shell](#app-shell)
+- [Routing](#routing)
+- [State management](#state-management)
+- [Client-side persistence](#client-side-persistence)
+- [API layer](#api-layer)
+- [Real-time updates](#real-time-updates)
+- [Drag-and-drop](#drag-and-drop)
+- [Theming](#theming)
+- [User feedback surface](#user-feedback-surface)
+- [Error handling](#error-handling)
+- [Build](#build)
+- [Where to go next](#where-to-go-next)
 
 ## App shell
 
@@ -93,25 +93,25 @@ An entity has four methods that matter:
 
 One slice per domain under [`src/app/store/`](../src/app/store/). Each slice file:
 
--   Declares a `interface IXStore { ... }`
--   Exports an `entity<IXStore>({ ...defaults })` named `XStore`
--   Contains **no actions and no React** — pure state shape
+- Declares a `interface IXStore { ... }`
+- Exports an `entity<IXStore>({ ...defaults })` named `XStore`
+- Contains **no actions and no React** — pure state shape
 
 ### Actions shape
 
 One file per slice under [`src/app/store/actions/`](../src/app/store/actions/), exporting an `XActions` object. Actions:
 
--   Mutate the corresponding store with `XStore.set(produce(draft => { ... }))`
--   Call the API client
--   May call other actions or read other stores via cross-store getters (`getCurrentProjectId()`, `getMe()`, `getStack()`, etc.)
--   Surface user feedback via `window.toaster.show(...)` when appropriate
+- Mutate the corresponding store with `XStore.set(produce(draft => { ... }))`
+- Call the API client
+- May call other actions or read other stores via cross-store getters (`getCurrentProjectId()`, `getMe()`, `getStack()`, etc.)
+- Surface user feedback via `window.toaster.show(...)` when appropriate
 
 Common helpers in [`src/app/store/actionHelpers.ts`](../src/app/store/actionHelpers.ts):
 
--   `upsertById(existing, incoming)` — replace-or-append items in a normalized list
--   `runStoreLoad({ set, onStart, load, onSuccess })` — the standard "set loading → fetch → set data" sequence
--   `createDebouncedCallback(ms)` — debounces store-driven query inputs (500 ms is the app default)
--   `patchFilterField(filters, key, value)` — `Object.assign` inside an Immer draft
+- `upsertById(existing, incoming)` — replace-or-append items in a normalized list
+- `runStoreLoad({ set, onStart, load, onSuccess })` — the standard "set loading → fetch → set data" sequence
+- `createDebouncedCallback(ms)` — debounces store-driven query inputs (500 ms is the app default)
+- `patchFilterField(filters, key, value)` — `Object.assign` inside an Immer draft
 
 ### Hooks shape
 
@@ -119,7 +119,7 @@ Common helpers in [`src/app/store/actionHelpers.ts`](../src/app/store/actionHelp
 
 ```ts
 export const useTask = (taskId: string) =>
-    TasksStore.use(s => s.tasks.find(t => t.id === taskId), shallowEqual);
+  TasksStore.use(s => s.tasks.find(t => t.id === taskId), shallowEqual);
 ```
 
 Cross-store getters (synchronous, _not_ hooks) also live here so actions can compose:
@@ -143,10 +143,10 @@ import { useStorage } from "app/hooks/storage";
 const [filter, setFilter] = useStorage<string>("home-my-tasks-filter", false, "due-thisWeek");
 ```
 
--   `key`: storage key
--   `parse`: `false` (string), `true` (JSON), or a custom parser `(raw: string) => T`
--   `defaultValue`: returned when nothing is stored yet
--   `prefix` (optional): adds an extra prefix segment for organization
+- `key`: storage key
+- `parse`: `false` (string), `true` (JSON), or a custom parser `(raw: string) => T`
+- `defaultValue`: returned when nothing is stored yet
+- `prefix` (optional): adds an extra prefix segment for organization
 
 ### 2) Persist store state explicitly: `app/utils/storage`
 
@@ -156,8 +156,8 @@ This helper automatically scopes keys to the active workspace/tenant (based on t
 
 Examples:
 
--   Store init reads cached data: [`OverviewStore`](../src/app/store/overview.ts)
--   Calendar filters persist to localStorage and hydrate on init: [`CalendarStore`](../src/app/store/calendar.ts)
+- Store init reads cached data: [`OverviewStore`](../src/app/store/overview.ts)
+- Calendar filters persist to localStorage and hydrate on init: [`CalendarStore`](../src/app/store/calendar.ts)
 
 ### 3) Persist an entire entity automatically: store plug-ins
 
@@ -174,9 +174,9 @@ This loads the stored value on entity init, and writes the new value on every `e
 
 Important notes:
 
--   Prefer `app/utils/storage` for app-facing persistence because it is tenant/workspace aware.
--   If you use `persistence(...)`, choose a key that cannot collide across workspaces, or pass a custom storage implementation that handles scoping.
--   Never persist secrets or tokens in localStorage.
+- Prefer `app/utils/storage` for app-facing persistence because it is tenant/workspace aware.
+- If you use `persistence(...)`, choose a key that cannot collide across workspaces, or pass a custom storage implementation that handles scoping.
+- Never persist secrets or tokens in localStorage.
 
 ## API layer
 
@@ -192,10 +192,10 @@ The app maintains a persistent WebSocket connection to the server's `/ws` endpoi
 
 [`src/app/utils/polling.ts`](../src/app/utils/polling.ts) exports the `UpdatePoller` class, instantiated once in [`src/index.tsx`](../src/index.tsx) and assigned to `window.updatePoller`. It owns:
 
--   **The WebSocket connection** to `ws[s]://{host}:{port}/ws[?token=...]`, with auto-reconnect (5 attempts, exponential backoff) and a heartbeat.
--   **`instanceId`** — a per-tab UUID. The Axios request interceptor reads it and sends it as `X-Instance-ID` on every request, so the server can distinguish "this client made the change" from "another client did" when broadcasting updates back over WS.
--   **`on(section, callback)`** — subscribes a callback to updates for a polling section (e.g. `POLLINGTYPE.TASK`, `POLLINGTYPE.PROJECT`). Callbacks are debounced 100 ms so a flurry of WS messages of the same type collapses into a single store reload.
--   **AI chat streaming** — the same WS carries `delta` / `done` / `error` payloads for the AI assistant.
+- **The WebSocket connection** to `ws[s]://{host}:{port}/ws[?token=...]`, with auto-reconnect (5 attempts, exponential backoff) and a heartbeat.
+- **`instanceId`** — a per-tab UUID. The Axios request interceptor reads it and sends it as `X-Instance-ID` on every request, so the server can distinguish "this client made the change" from "another client did" when broadcasting updates back over WS.
+- **`on(section, callback)`** — subscribes a callback to updates for a polling section (e.g. `POLLINGTYPE.TASK`, `POLLINGTYPE.PROJECT`). Callbacks are debounced 100 ms so a flurry of WS messages of the same type collapses into a single store reload.
+- **AI chat streaming** — the same WS carries `delta` / `done` / `error` payloads for the AI assistant.
 
 ### `useUpdates()`
 
@@ -217,8 +217,8 @@ Each action receives `(update, hasPermissions)` and decides what to do — usual
 
 Two libraries, one provider:
 
--   **[`@hello-pangea/dnd`](https://github.com/hello-pangea/dnd)** — used for the project board (drag cards between stacks, reorder stacks), the task list, and other linear lists.
--   **[`@minoru/react-dnd-treeview`](https://github.com/minop1205/react-dnd-treeview)** — used for the sidebar document tree (drag folders and files into folders).
+- **[`@hello-pangea/dnd`](https://github.com/hello-pangea/dnd)** — used for the project board (drag cards between stacks, reorder stacks), the task list, and other linear lists.
+- **[`@minoru/react-dnd-treeview`](https://github.com/minop1205/react-dnd-treeview)** — used for the sidebar document tree (drag folders and files into folders).
 
 Both sit under a single [`<DragDropProvider>`](../src/app/components/draggable/context/DragDropContext.tsx) in `App.tsx` that brokers cross-library drags (e.g. drag a task card onto a sidebar folder). Drag _intent_ and _result_ state lives in the provider's context; the consumer components subscribe and dispatch the relevant action (`TasksActions.move`, `StacksActions.reorder`, etc.).
 
@@ -233,14 +233,14 @@ To make a component theme-aware:
 ```scss
 /* light is the default */
 .my-block {
-    background: var(--color-surface);
-    color: var(--color-text);
+  background: var(--color-surface);
+  color: var(--color-text);
 }
 
 /* dark override */
 :global(.bp6-dark) .my-block {
-    background: var(--color-surface-dark);
-    color: var(--color-text-dark);
+  background: var(--color-surface-dark);
+  color: var(--color-text-dark);
 }
 ```
 
@@ -248,10 +248,10 @@ Color tokens are in [`src/app/_vars.scss`](../src/app/_vars.scss). Reach for tok
 
 ## User feedback surface
 
--   **Toasts**: `window.toaster.show({ message, intent, icon, timeout })` — a Blueprint `OverlayToaster` instantiated in `index.tsx`. Use `Intent.SUCCESS`/`WARNING`/`DANGER`/`PRIMARY`. The Axios layer auto-toasts errors (see [API_CLIENT.md](API_CLIENT.md#error-handling)) so don't double-toast a failed request.
--   **Dialogs**: [`src/app/utils/dialog.ts`](../src/app/utils/dialog.ts) wraps Blueprint's `<Dialog>` so you can imperatively call `Dialog.confirm("Delete?")` from inside an action without rendering a dialog component. Returns a Promise.
--   **Sounds**: [`src/app/utils/sound.ts`](../src/app/utils/sound.ts) exposes named sound effects (e.g. `sound.play("complete")`). Used sparingly — most flows are silent.
--   **Mousetrap**: [`src/app/utils/`](../src/app/utils/) wraps [Mousetrap](https://craig.is/killing/mice) for keyboard shortcuts. `Mousetrap.bind(["command+k", "ctrl+k"], handler)` is the canonical form. Register and unregister inside `useEffect`.
+- **Toasts**: `window.toaster.show({ message, intent, icon, timeout })` — a Blueprint `OverlayToaster` instantiated in `index.tsx`. Use `Intent.SUCCESS`/`WARNING`/`DANGER`/`PRIMARY`. The Axios layer auto-toasts errors (see [API_CLIENT.md](API_CLIENT.md#error-handling)) so don't double-toast a failed request.
+- **Dialogs**: [`src/app/utils/dialog.ts`](../src/app/utils/dialog.ts) wraps Blueprint's `<Dialog>` so you can imperatively call `Dialog.confirm("Delete?")` from inside an action without rendering a dialog component. Returns a Promise.
+- **Sounds**: [`src/app/utils/sound.ts`](../src/app/utils/sound.ts) exposes named sound effects (e.g. `sound.play("complete")`). Used sparingly — most flows are silent.
+- **Mousetrap**: [`src/app/utils/`](../src/app/utils/) wraps [Mousetrap](https://craig.is/killing/mice) for keyboard shortcuts. `Mousetrap.bind(["command+k", "ctrl+k"], handler)` is the canonical form. Register and unregister inside `useEffect`.
 
 ## Error handling
 
@@ -275,16 +275,16 @@ packages/app/build/
 
 Important config details:
 
--   **`resolve.modules: [src/, node_modules/]`** — this is why imports use `app/…` rather than relative paths.
--   **`resolve.alias`** — `@stacks/types` and `@stacks/translations` are aliased straight into the workspace sources for fast dev rebuilds. `lodash` is aliased to `lodash-es` for tree-shaking.
--   **`devServer.port`** — `process.env.PORT || 3001`. The server (`:3000`) proxies `/app/*` and `/static/*` to this port in development.
--   **`publicPath`** — `"./"` in production (so the bundle is portable under any URL prefix), `"/"` in development.
+- **`resolve.modules: [src/, node_modules/]`** — this is why imports use `app/…` rather than relative paths.
+- **`resolve.alias`** — `@stacks/types` and `@stacks/translations` are aliased straight into the workspace sources for fast dev rebuilds. `lodash` is aliased to `lodash-es` for tree-shaking.
+- **`devServer.port`** — `process.env.PORT || 3001`. The server (`:3000`) proxies `/app/*` and `/static/*` to this port in development.
+- **`publicPath`** — `"./"` in production (so the bundle is portable under any URL prefix), `"/"` in development.
 
 `yarn release` from the repo root copies `build/` into `releases/server/app/` so the production server bundle serves the static files directly.
 
 ## Where to go next
 
--   [API_CLIENT.md](API_CLIENT.md) — the Axios instance in detail (the most-asked-about piece for new contributors)
--   [ONBOARDING.md](ONBOARDING.md) — back to the worked "add a feature" example with a concrete checklist
--   [`docs/E2E.md`](../../../docs/E2E.md) — Playwright conventions; required reading before adding an interactive element without a `data-testid`
--   [`docs/packages/translations.md`](../../../docs/packages/translations.md) — how user-visible strings flow through `@stacks/translations`
+- [API_CLIENT.md](API_CLIENT.md) — the Axios instance in detail (the most-asked-about piece for new contributors)
+- [ONBOARDING.md](ONBOARDING.md) — back to the worked "add a feature" example with a concrete checklist
+- [`docs/E2E.md`](../../../docs/E2E.md) — Playwright conventions; required reading before adding an interactive element without a `data-testid`
+- [`docs/packages/translations.md`](../../../docs/packages/translations.md) — how user-visible strings flow through `@stacks/translations`

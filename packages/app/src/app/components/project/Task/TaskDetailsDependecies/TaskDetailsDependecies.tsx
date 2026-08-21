@@ -47,28 +47,13 @@ export const TaskDetailsDependencies: FunctionComponent<TaskDetailsDependenciesP
                         <BlankSlate
                             icon={APPICONS.TASK}
                             title={translate("No dependencies")}
-                            description={translate("This task does not have any dependencies yet Click the button below to add the first one")}
+                            description={translate(
+                                "This task does not have any dependencies yet Click the button below to add the first one"
+                            )}
                             small
                             maxWidth={250}
                         >
-                            {!disabled && (<RoundButton
-                                id="td-dependencies"
-                                minimal
-                                title={translate("Add dependencies")}
-                                icon="plus"
-                                disabled={disabled}
-                                onClick={() => setIsOpen(true)}
-                            />)}
-                        </BlankSlate>
-                    </Col>
-                </Row>
-            ) : (
-                <Grid padding={[0, 20]}>
-                    {isLoading ? <Spinner /> :
-                        <>
-                            <TaskItems parentId={taskId} tasks={tasks} showProject={true} />
-
-                            {!disabled && (<div>
+                            {!disabled && (
                                 <RoundButton
                                     id="td-dependencies"
                                     minimal
@@ -77,8 +62,32 @@ export const TaskDetailsDependencies: FunctionComponent<TaskDetailsDependenciesP
                                     disabled={disabled}
                                     onClick={() => setIsOpen(true)}
                                 />
-                            </div>)}
-                        </>}
+                            )}
+                        </BlankSlate>
+                    </Col>
+                </Row>
+            ) : (
+                <Grid padding={[0, 20]}>
+                    {isLoading ? (
+                        <Spinner />
+                    ) : (
+                        <>
+                            <TaskItems parentId={taskId} tasks={tasks} showProject={true} />
+
+                            {!disabled && (
+                                <div>
+                                    <RoundButton
+                                        id="td-dependencies"
+                                        minimal
+                                        title={translate("Add dependencies")}
+                                        icon="plus"
+                                        disabled={disabled}
+                                        onClick={() => setIsOpen(true)}
+                                    />
+                                </div>
+                            )}
+                        </>
+                    )}
                 </Grid>
             )}
         </>

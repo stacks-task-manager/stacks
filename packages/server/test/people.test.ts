@@ -30,7 +30,7 @@ describe("People", () => {
     });
 
     test("Get people birthdays for today", async () => {
-        const today = new Date().toISOString().split('T')[0];
+        const today = new Date().toISOString().split("T")[0];
         const res = await app.request(`/api/people/birthdays?date=${today}&span=day`, {
             method: "GET",
             headers: {
@@ -133,7 +133,7 @@ describe("People", () => {
     });
 
     test("Get people birthdays with invalid span", async () => {
-        const today = new Date().toISOString().split('T')[0];
+        const today = new Date().toISOString().split("T")[0];
         const res = await app.request(`/api/people/birthdays?date=${today}&span=invalid`, {
             method: "GET",
             headers: {

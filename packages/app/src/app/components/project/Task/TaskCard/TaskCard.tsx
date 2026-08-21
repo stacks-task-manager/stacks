@@ -4,7 +4,7 @@ import { Classes, Collapse, Colors, Popover, Tooltip } from "@blueprintjs/core";
 import { default as classNames, default as classnames } from "classnames";
 import noop from "lodash/noop";
 import React, { FunctionComponent, useCallback, useEffect, useMemo, useState } from "react";
-import { DropEvent, FileWithPath, useDropzone } from "react-dropzone";
+import { FileWithPath, useDropzone } from "react-dropzone";
 import { IReminder, IRepeats, ITask, PRIORITY, TAGSECTION, TAGTYPE } from "@stacks/types";
 import { Draggable } from "app/components/draggable";
 import { ClickStop, Col, DropZone, Grid, Icon, LazyLoad, RoundButton, Row } from "app/components/common";
@@ -25,6 +25,7 @@ import { PreferencesStore } from "app/store/preferences";
 import { colorToRGBA } from "app/utils/colors";
 import { scrollIntoView } from "app/utils/dom";
 import { stripHTML, truncateEnd } from "app/utils/string";
+import { getFilesFromEvent } from "app/utils/drop";
 
 /** Survives TaskCard remounts (e.g. after DnD list reconciliation). */
 const taskCardSubtasksExpanded = new Map<string, boolean>();
@@ -129,6 +130,7 @@ export const TaskCardComponent: FunctionComponent<TaskCardComponentProps> = prop
     const isComplete = task.done;
     const navigate = useNav();
     const selected = useTaskNavigation(taskId);
+    const { subtasks } = useSubtasks(taskId, false);
     const [isSubtasksVisible, setIsSubtasksVisible] = useState(
         () => taskCardSubtasksExpanded.get(taskId) ?? false
     );
@@ -145,17 +147,6 @@ export const TaskCardComponent: FunctionComponent<TaskCardComponentProps> = prop
         // Drop-to-attach is wired up in TaskDetails. The card-level drop handler is
         // a no-op until file-on-card uploads are implemented.
     }, []);
-
-    const getFilesFromEvent = async (event: DropEvent) => {
-        const { dataTransfer } = event as React.DragEvent<HTMLElement>;
-
-        const files = Array.from(dataTransfer.files).map(file => ({
-            ...file,
-            path: window.getPathForFile(file),
-        }));
-
-        return files as File[];
-    };
 
     const { getRootProps, isDragActive } = useDropzone({
         onDrop,
@@ -265,13 +256,14 @@ export const TaskCardComponent: FunctionComponent<TaskCardComponentProps> = prop
                                 disabled={disabled || isComplete}
                                 isSubtasksVisible={isSubtasksVisible}
                                 onToggleSubtaskVisibility={setSubtasksVisible}
+                                subtasks={subtasks}
                             />
                         </Grid>
                     </div>
 
                     <ClickStop className="task-card-footer">
                         <Collapse isOpen={isSubtasksVisible}>
-                            <TaskSubtasks parentId={taskId} />
+                            <TaskSubtasks parentId={taskId} subtasks={subtasks} />
                         </Collapse>
                     </ClickStop>
                 </div>
@@ -280,8 +272,7 @@ export const TaskCardComponent: FunctionComponent<TaskCardComponentProps> = prop
     );
 };
 
-const TaskSubtasks = ({ parentId }: { parentId: string }) => {
-    const { subtasks } = useSubtasks(parentId, false);
+const TaskSubtasks = ({ parentId, subtasks }: { parentId: string; subtasks: ITask[] }) => {
     return <TaskItems parentId={parentId} tasks={subtasks} max={10} />;
 };
 
@@ -290,11 +281,13 @@ const TaskFooter = ({
     disabled,
     isSubtasksVisible,
     onToggleSubtaskVisibility,
+    subtasks,
 }: {
     task: ITask;
     disabled?: boolean;
     isSubtasksVisible: boolean;
     onToggleSubtaskVisibility: (visible: boolean) => void;
+    subtasks: ITask[];
 }) => {
     const { showAssignees, showDates, showComments, showSubtasks } = usePreferences([
         "showAssignees",
@@ -302,7 +295,6 @@ const TaskFooter = ({
         "showComments",
         "showSubtasks",
     ]);
-    const { subtasks } = useSubtasks(task.id, false);
     const commentsCount = task.comments;
 
     const showLeft = showAssignees || showDates;
@@ -370,6 +362,7 @@ const TaskFooter = ({
                         taskId={task.id}
                         isVisible={isSubtasksVisible}
                         onClick={handleToggleSubtaskVisibility}
+                        count={subtasks.length}
                     />
                 ) : null}
             </Col>

@@ -47,6 +47,7 @@ import { shallowEqual } from "app/hooks/store";
 import { EVENTTYPE, ICalendarEvent, ICalendarSource, ITimeLogExtended, TAGSECTION } from "@stacks/types";
 import { CalendarActions } from "app/store/actions";
 import { CalendarStore } from "app/store/calendar";
+import { openInNewTab } from "app/utils/browser";
 import { DateTimePicker } from "app/widgets/date";
 import { CalendarPicker } from "../CalendarPicker/CalendarPicker";
 import { formatDuration } from "app/utils/date";
@@ -383,7 +384,7 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew, isAl
 
     const handleOpenEventLink = () => {
         if (event.original && event.original.htmlLink) {
-            window.open(event.original.htmlLink, "_blank");
+            openInNewTab(event.original.htmlLink);
         }
     };
 

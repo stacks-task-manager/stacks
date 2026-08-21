@@ -30,4 +30,7 @@ export * from "./updates";
 export * from "./useBrowserState";
 export * from "./useFilterQuerySync";
 export * from "./useLoadWhen";
+export * from "./useMenuKeyboardNavigation";
+export * from "./useTaskMenuActions";
+export * from "./useTaskDetailsShell";
 export * from "./utils";

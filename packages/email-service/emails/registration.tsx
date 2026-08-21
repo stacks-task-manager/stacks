@@ -13,8 +13,8 @@ export const RegistrationEn: React.FC<RegistrationTemplateProps> = ({ appName })
         <Section>
             <Text style={Styles.text}>Hi %userName%,</Text>
             <Text style={Styles.text}>
-                Thanks for signing up to {appName}. Please confirm your email address to finish
-                creating your account.
+                Thanks for signing up to {appName}. Please confirm your email address to finish creating your
+                account.
             </Text>
         </Section>
         <Section style={Styles.centered}>
@@ -24,8 +24,7 @@ export const RegistrationEn: React.FC<RegistrationTemplateProps> = ({ appName })
         </Section>
         <Section>
             <Text style={Styles.text}>
-                This link will expire in %expirationTime%. If you didn't sign up you can ignore
-                this message.
+                This link will expire in %expirationTime%. If you didn't sign up you can ignore this message.
             </Text>
         </Section>
     </Email>

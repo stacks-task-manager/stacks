@@ -2,7 +2,7 @@
 /**
  * Resets all registered stores (tests/dev).
  */
-import { getStore, isStoreEnabled } from './store'
+import { getStore, isStoreEnabled } from "./store";
 
 /**
  * Resets all entities to initial value.
@@ -14,10 +14,8 @@ import { getStore, isStoreEnabled } from './store'
  * @throws if entity store is not enabled
  */
 export function resetAll() {
-  if (!isStoreEnabled())
-    throw new Error(
-      'resetAll() requires the entity store. Call enableStore() at startup.',
-    )
+    if (!isStoreEnabled())
+        throw new Error("resetAll() requires the entity store. Call enableStore() at startup.");
 
-  getStore().forEach(entity => entity.init())
+    getStore().forEach(entity => entity.init());
 }

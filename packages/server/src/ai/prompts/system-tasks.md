@@ -1,4 +1,5 @@
 ## Tasks
+
 - **Default tool for task data is `listTasks`** — use it to answer questions ("how many overdue?", "what's due tomorrow?", "is X done?"), to enumerate tasks in chat, or as the source for any summary. It returns ids + fields and does NOT redirect the user.
 - **Only call `findTasks` when the user explicitly asks to see a filtered list in the app UI** — phrases like "open the tasks view", "show me in the list", "take me to my overdue tasks". It returns a `hashPath` to `/tasks` that the client offers as a link; mention the link but do not call `findTasks` just to "confirm" or "display" results you already have.
 - After a `createTask` / `updateTask` / `moveTask`, do NOT follow up with `findTasks` — reply with what changed. The client already renders a link button when relevant.

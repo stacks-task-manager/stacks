@@ -21,6 +21,15 @@ import { CopyMoveActions } from "app/store/actions/copymove";
 import { CopyMoveStore } from "app/store/copymove";
 import { Col, Icon, Row } from "../common";
 
+/** Field-name → store action for the copy-scope checkboxes. */
+const COPY_FIELDS = {
+    cover: CopyMoveActions.setCover,
+    attachments: CopyMoveActions.setAttachments,
+    timelogs: CopyMoveActions.setTimelogs,
+    comments: CopyMoveActions.setComments,
+    subtasks: CopyMoveActions.setSubtasks,
+};
+
 export const CopyMoveWrapper = () => {
     const { isVisible } = CopyMoveStore.use();
     if (!isVisible) return null;
@@ -66,7 +75,7 @@ const CopyMove = () => {
                 setStacks(loadedStacks);
             })();
         }
-    }, [project]);
+    }, [project, type]);
 
     const handleChangeProject = (event: React.ChangeEvent<HTMLSelectElement>) => {
         CopyMoveActions.setProject(
@@ -84,24 +93,10 @@ const CopyMove = () => {
         CopyMoveActions.setPosition(event.currentTarget.checked);
     };
 
-    const handleChangeCover = (event: React.ChangeEvent<HTMLInputElement>) => {
-        CopyMoveActions.setCover(event.currentTarget.checked);
-    };
-
-    const handleChangeAttachments = (event: React.ChangeEvent<HTMLInputElement>) => {
-        CopyMoveActions.setAttachments(event.currentTarget.checked);
-    };
-
-    const handleChangeTimelogs = (event: React.ChangeEvent<HTMLInputElement>) => {
-        CopyMoveActions.setTimelogs(event.currentTarget.checked);
-    };
-
-    const handleChangeComments = (event: React.ChangeEvent<HTMLInputElement>) => {
-        CopyMoveActions.setComments(event.currentTarget.checked);
-    };
-
-    const handleChangeSubtasks = (event: React.ChangeEvent<HTMLInputElement>) => {
-        CopyMoveActions.setSubtasks(event.currentTarget.checked);
+    const handleChangeCheckbox = (field: keyof typeof COPY_FIELDS) => {
+        return (event: React.ChangeEvent<HTMLInputElement>) => {
+            COPY_FIELDS[field](event.currentTarget.checked);
+        };
     };
 
     const handleChangeKeepSettings = () => {
@@ -116,7 +111,7 @@ const CopyMove = () => {
         }
 
         return action != null && stack != null && project != null;
-    }, [action, stack, tasks, project]);
+    }, [action, stack, tasks, project, type]);
 
     const handleCopyOrMove = async () => {
         if (!canProceed) return;
@@ -171,7 +166,7 @@ const CopyMove = () => {
             style={{ width: 300 }}
         >
             <div className={Classes.DIALOG_BODY}>
-                <FormGroup label="Select action">
+                <FormGroup label={translate("Select action")}>
                     <Row gutter={15}>
                         <Col>
                             <Button
@@ -181,6 +176,7 @@ const CopyMove = () => {
                                 intent={action === COPYMOVEACTION.COPY ? Intent.PRIMARY : Intent.NONE}
                                 onClick={() => CopyMoveActions.setAction(COPYMOVEACTION.COPY)}
                                 disabled
+                                data-testid="copymove-action-copy"
                             >
                                 <Icon icon="copy" />
                                 {translate("Copy")}
@@ -193,6 +189,7 @@ const CopyMove = () => {
                                 outlined={action === COPYMOVEACTION.MOVE ? false : true}
                                 intent={action === COPYMOVEACTION.MOVE ? Intent.PRIMARY : Intent.NONE}
                                 onClick={() => CopyMoveActions.setAction(COPYMOVEACTION.MOVE)}
+                                data-testid="copymove-action-move"
                             >
                                 <Icon icon="move" />
                                 {translate("Move")}
@@ -202,8 +199,13 @@ const CopyMove = () => {
                 </FormGroup>
 
                 <Collapse isOpen={action != null}>
-                    <FormGroup label="Destination Project" labelFor="text-input">
-                        <HTMLSelect className={Classes.FILL} onChange={handleChangeProject} value={project}>
+                    <FormGroup label={translate("Destination Project")} labelFor="text-input">
+                        <HTMLSelect
+                            className={Classes.FILL}
+                            onChange={handleChangeProject}
+                            value={project}
+                            data-testid="copymove-project-select"
+                        >
                             <option></option>
 
                             {projects.map((record: TreeNode) => {
@@ -225,8 +227,13 @@ const CopyMove = () => {
 
                 <Collapse isOpen={project != null}>
                     {type === COPYMOVETYPE.TASK && (
-                        <FormGroup label="Destination Stack" labelFor="text-input">
-                            <HTMLSelect className={Classes.FILL} onChange={handleChangeStack} value={stack}>
+                        <FormGroup label={translate("Destination Stack")} labelFor="text-input">
+                            <HTMLSelect
+                                className={Classes.FILL}
+                                onChange={handleChangeStack}
+                                value={stack}
+                                data-testid="copymove-stack-select"
+                            >
                                 {stacks.map((stack: IStack) => {
                                     return (
                                         <option key={stack.id} value={stack.id}>
@@ -245,14 +252,16 @@ const CopyMove = () => {
                                     <Checkbox
                                         label={translate("Cover image")}
                                         checked={cover}
-                                        onChange={handleChangeCover}
+                                        onChange={handleChangeCheckbox("cover")}
+                                        data-testid="copymove-cover"
                                     />
                                 </Col>
                                 <Col>
                                     <Checkbox
                                         label={translate("Attachments")}
                                         checked={attachments}
-                                        onChange={handleChangeAttachments}
+                                        onChange={handleChangeCheckbox("attachments")}
+                                        data-testid="copymove-attachments"
                                     />
                                 </Col>
                             </Row>
@@ -261,14 +270,16 @@ const CopyMove = () => {
                                     <Checkbox
                                         label={translate("Timelogs")}
                                         checked={timelogs}
-                                        onChange={handleChangeTimelogs}
+                                        onChange={handleChangeCheckbox("timelogs")}
+                                        data-testid="copymove-timelogs"
                                     />
                                 </Col>
                                 <Col>
                                     <Checkbox
                                         label={translate("Comments")}
                                         checked={comments}
-                                        onChange={handleChangeComments}
+                                        onChange={handleChangeCheckbox("comments")}
+                                        data-testid="copymove-comments"
                                     />
                                 </Col>
                             </Row>
@@ -276,7 +287,8 @@ const CopyMove = () => {
                             <Checkbox
                                 label={translate("Subtasks")}
                                 checked={subtasks}
-                                onChange={handleChangeSubtasks}
+                                onChange={handleChangeCheckbox("subtasks")}
+                                data-testid="copymove-subtasks"
                             />
 
                             {/* {subtasks ? (
@@ -329,6 +341,7 @@ const CopyMove = () => {
                             disabled={!canProceed}
                             loading={processing}
                             onClick={handleCopyOrMove}
+                            data-testid="copymove-confirm-button"
                         >
                             {action === COPYMOVEACTION.COPY ? translate("Copy") : translate("Move")}
                         </Button>

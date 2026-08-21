@@ -2,7 +2,7 @@
 
 This folder holds the **release-signing keypair** used to verify that a built `releases/server.js` bundle hasn't been tampered with between build and deploy. It is **not** the keypair used to issue Stacks license files — that's a separate concern.
 
-> Cleanup history: this folder used to be called `scripts/license_keys/`. The name was misleading — it confused bundle integrity with license issuance, and the `release:server` step in the root `package.json` was accidentally copying the bundle-signing public key into `releases/server/public.pem` where the license verifier expected the *license-verify* public key. Both have been separated; see [`packages/server/docs/EMBEDDED_INTEGRITY.md`](../../packages/server/docs/EMBEDDED_INTEGRITY.md) for the full model.
+> Cleanup history: this folder used to be called `scripts/license_keys/`. The name was misleading — it confused bundle integrity with license issuance, and the `release:server` step in the root `package.json` was accidentally copying the bundle-signing public key into `releases/server/public.pem` where the license verifier expected the _license-verify_ public key. Both have been separated; see [`packages/server/docs/EMBEDDED_INTEGRITY.md`](../../packages/server/docs/EMBEDDED_INTEGRITY.md) for the full model.
 
 ## When you need a keypair here
 
@@ -38,10 +38,10 @@ yarn release      # or `yarn build:server` for just the bundle
 
 Two things use this passphrase:
 
-| Step | Where | What it signs |
-| --- | --- | --- |
-| `yarn build:server` (esbuild integrity plugin) | [`packages/server/esbuild-integrity-plugin.js`](../../packages/server/esbuild-integrity-plugin.js) | Embeds hash + signature + public key into `dist/server.js` |
-| `node scripts/sign-and-verify.js` (legacy / standalone) | [`../sign-and-verify.js`](../sign-and-verify.js) | Produces detached `releases/server.hash` + `releases/server.sig` |
+| Step                                                    | Where                                                                                              | What it signs                                                    |
+| ------------------------------------------------------- | -------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `yarn build:server` (esbuild integrity plugin)          | [`packages/server/esbuild-integrity-plugin.js`](../../packages/server/esbuild-integrity-plugin.js) | Embeds hash + signature + public key into `dist/server.js`       |
+| `node scripts/sign-and-verify.js` (legacy / standalone) | [`../sign-and-verify.js`](../sign-and-verify.js)                                                   | Produces detached `releases/server.hash` + `releases/server.sig` |
 
 Both honour `RELEASE_SIGNING_PASSPHRASE`. The esbuild plugin treats it as optional (an unencrypted key still works); the standalone script requires it.
 

@@ -2,11 +2,12 @@
 import { Colors, Menu, MenuDivider, MenuItem } from "@blueprintjs/core";
 import { SymbolSquare } from "@blueprintjs/icons";
 import xor from "lodash/xor";
-import React, { FunctionComponent } from "react";
+import React from "react";
 
 import { IStack } from "@stacks/types";
 import { Icon } from "app/components/common";
 import { useStacks } from "app/hooks";
+import { translate } from "@stacks/translations";
 
 export interface IStacksMenuProps {
     value?: string[];
@@ -15,13 +16,13 @@ export interface IStacksMenuProps {
     singleSelection?: boolean;
     onChange: (stacksId: string[]) => void;
 }
-export const StacksMenu: FunctionComponent<IStacksMenuProps> = ({
+export const StacksMenu = React.memo(function StacksMenu({
     value,
     canClear,
     showTitle,
     singleSelection,
     onChange,
-}) => {
+}: IStacksMenuProps) {
     const stacks = useStacks();
 
     const handleToggleStackId = (stackId: string) => {
@@ -30,7 +31,7 @@ export const StacksMenu: FunctionComponent<IStacksMenuProps> = ({
 
     return (
         <Menu>
-            {showTitle !== false && <MenuDivider title="Select stack" />}
+            {showTitle !== false && <MenuDivider title={translate("Select stack")} />}
             {stacks.map((stack: IStack) => {
                 return (
                     <MenuItem
@@ -40,6 +41,7 @@ export const StacksMenu: FunctionComponent<IStacksMenuProps> = ({
                         labelElement={<Icon icon={value?.includes(stack.id) ? "check" : undefined} />}
                         onClick={() => handleToggleStackId(stack.id)}
                         shouldDismissPopover={singleSelection ? true : false}
+                        data-testid={`stacks-menu-stack-${stack.id}`}
                     />
                 );
             })}
@@ -47,13 +49,14 @@ export const StacksMenu: FunctionComponent<IStacksMenuProps> = ({
                 <>
                     <MenuDivider />
                     <MenuItem
-                        text="All stacks"
+                        text={translate("All stacks")}
                         icon="small-square"
                         onClick={() => onChange([])}
                         shouldDismissPopover={true}
+                        data-testid="stacks-menu-all-stacks"
                     />
                 </>
             )}
         </Menu>
     );
-};
+});

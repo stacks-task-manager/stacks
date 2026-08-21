@@ -116,14 +116,14 @@ main
 hotfix/critical-bug-description  (branches from main)
 ```
 
-| Branch | Purpose |
-|---|---|
-| `main` | Always production-ready. Protected. Never commit directly. |
-| `dev` | Integration branch. All features and fixes land here first. |
-| `feature/*` | New features. Branch from `dev`, merge back into `dev`. |
-| `fix/*` | Bug fixes. Branch from `dev`, merge back into `dev`. |
-| `hotfix/*` | Critical production bugs only. Branch from `main`, merge into both `main` and `dev`. |
-| `docs/*` | Documentation-only changes. Branch from `dev`. |
+| Branch      | Purpose                                                                              |
+| ----------- | ------------------------------------------------------------------------------------ |
+| `main`      | Always production-ready. Protected. Never commit directly.                           |
+| `dev`       | Integration branch. All features and fixes land here first.                          |
+| `feature/*` | New features. Branch from `dev`, merge back into `dev`.                              |
+| `fix/*`     | Bug fixes. Branch from `dev`, merge back into `dev`.                                 |
+| `hotfix/*`  | Critical production bugs only. Branch from `main`, merge into both `main` and `dev`. |
+| `docs/*`    | Documentation-only changes. Branch from `dev`.                                       |
 
 **The golden rule:** `main` only ever receives merges from `dev` or `hotfix/*`
 branches. Never push directly to `main`.
@@ -133,17 +133,20 @@ branches. Never push directly to `main`.
 ## How to Submit a Pull Request
 
 1. **Fork the repository** and clone your fork locally:
+
    ```bash
    git clone https://github.com/YOUR-USERNAME/stacks.git
    cd stacks
    ```
 
 2. **Set the upstream remote** so you can stay up to date:
+
    ```bash
    git remote add upstream https://github.com/stacks-task-manager/stacks.git
    ```
 
 3. **Sync with the latest `dev`** before starting work:
+
    ```bash
    git fetch upstream
    git checkout dev
@@ -151,6 +154,7 @@ branches. Never push directly to `main`.
    ```
 
 4. **Create a branch** from `dev` for your change:
+
    ```bash
    git checkout -b feature/your-feature-name
    # or
@@ -162,10 +166,12 @@ branches. Never push directly to `main`.
 5. **Make your changes.** Keep your PR focused — one bug fix or one feature
    per PR. Large, unfocused PRs are hard to review and slow to merge.
 
-6. **Test your changes** before submitting. Make sure existing tests pass and
-   add new tests where appropriate. **Update the relevant documentation in the
-   same PR** — if you change behavior described in `README.md`, `docs/`, a
-   package README, or any `docs/`/`*.md` next to the code you touched, keep
+6. **Test and format your changes** before submitting. Make sure existing tests
+   pass and add new tests where appropriate. **Run `yarn format`** after your
+   edits so your changes match the project's Prettier style and stay
+   consistently formatted across the repo. **Update the relevant documentation
+   in the same PR** — if you change behavior described in `README.md`, `docs/`,
+   a package README, or any `docs/`/`*.md` next to the code you touched, keep
    those files in sync. Docs-only PRs are welcome; behavior-only PRs that leave
    docs stale are not.
 
@@ -173,6 +179,7 @@ branches. Never push directly to `main`.
    [commit message guidelines](#commit-message-guidelines) below.
 
 8. **Push to your fork:**
+
    ```bash
    git push origin feature/your-feature-name
    ```
@@ -240,15 +247,15 @@ Reference issues or PRs at the bottom: Closes #42
 
 **Types:**
 
-| Type | Use for |
-|---|---|
-| `feat` | A new feature |
-| `fix` | A bug fix |
-| `docs` | Documentation changes only |
+| Type       | Use for                                 |
+| ---------- | --------------------------------------- |
+| `feat`     | A new feature                           |
+| `fix`      | A bug fix                               |
+| `docs`     | Documentation changes only              |
 | `refactor` | Code restructuring, no behaviour change |
-| `test` | Adding or fixing tests |
-| `chore` | Build process, dependencies, tooling |
-| `hotfix` | Critical production bug fix |
+| `test`     | Adding or fixing tests                  |
+| `chore`    | Build process, dependencies, tooling    |
+| `hotfix`   | Critical production bug fix             |
 
 **Examples:**
 
@@ -274,6 +281,6 @@ hotfix: resolve data loss on concurrent task updates
 
 ---
 
-*Stacks is built and maintained by
+_Stacks is built and maintained by
 [Cristian Barlutiu](https://github.com/cristianbarlutiu).
-Commercial licensing available at customers@getstacksapp.com.*
+Commercial licensing available at customers@getstacksapp.com._

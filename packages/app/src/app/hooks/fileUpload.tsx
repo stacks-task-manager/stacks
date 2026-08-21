@@ -3,11 +3,11 @@
  * FileUpload hooks and selectors.
  */
 import React, { useCallback, useRef, useEffect } from "react";
-import { sha256 } from 'hash-wasm';
-import { FilesAPI } from '../api/files';
-import { FILES_TYPE, IAttachment } from '@stacks/types';
-import { OverlayToaster, ProgressBar, Toaster, ToastProps } from '@blueprintjs/core';
-import { Grid } from 'app/components/common';
+import { sha256 } from "hash-wasm";
+import { FilesAPI } from "../api/files";
+import { FILES_TYPE, IAttachment } from "@stacks/types";
+import { OverlayToaster, ProgressBar, Toaster, ToastProps } from "@blueprintjs/core";
+import { Grid } from "app/components/common";
 
 /**
  * Calculate file hash for resumable uploads using sha.js (works in all environments)
@@ -47,13 +47,13 @@ export interface IPickFilesOptions {
      * ```typescript
      * // Only allow image files
      * { acceptedFileTypes: 'image/*' }
-     * 
+     *
      * // Only allow specific extensions
      * { acceptedFileTypes: '.pdf,.doc,.docx' }
-     * 
+     *
      * // Allow multiple MIME types
      * { acceptedFileTypes: 'image/jpeg,image/png,application/pdf' }
-     * 
+     *
      * // Allow all files (default behavior)
      * { acceptedFileTypes: '*\/*' } // or omit this property
      * ```
@@ -101,20 +101,20 @@ export const useUpload = (config?: IUploadConfig): IUploadHook => {
 
     // Create hidden file input on mount
     useEffect(() => {
-        const input = document.createElement('input');
-        input.type = 'file';
+        const input = document.createElement("input");
+        input.type = "file";
         input.multiple = allowMultiple;
-        input.style.display = 'none';
-        input.accept = '*/*'; // Will be updated when pickFiles is called
+        input.style.display = "none";
+        input.accept = "*/*"; // Will be updated when pickFiles is called
 
-        input.addEventListener('change', async (event) => {
+        input.addEventListener("change", async event => {
             const target = event.target as HTMLInputElement;
             const files = target.files;
             if (files && files.length > 0) {
                 await upload(Array.from(files));
             }
             // Reset input value to allow selecting the same file again
-            target.value = '';
+            target.value = "";
         });
 
         document.body.appendChild(input);
@@ -131,11 +131,11 @@ export const useUpload = (config?: IUploadConfig): IUploadHook => {
      * Opens a file picker dialog for selecting files to upload
      * @param options - Configuration options for file picking
      * @returns Controls for handling upload progress and cancellation
-     * 
+     *
      * @example
      * // Basic usage
      * const controls = pickFiles({ recordId: 'record123' });
-     * 
+     *
      * @example
      * // With file type restrictions and callback
      * const controls = pickFiles({
@@ -144,7 +144,7 @@ export const useUpload = (config?: IUploadConfig): IUploadHook => {
      *   acceptedFileTypes: '.pdf,.doc,.docx',
      *   onUploaded: (files) => console.log('Uploaded:', files)
      * });
-     * 
+     *
      * @example
      * // Only allow images
      * const controls = pickFiles({
@@ -154,7 +154,7 @@ export const useUpload = (config?: IUploadConfig): IUploadHook => {
      */
     const pickFiles = useCallback((options: IPickFilesOptions): IFilePickerControls => {
         if (!fileInputRef.current) {
-            throw new Error('File input not initialized');
+            throw new Error("File input not initialized");
         }
 
         const { recordId, type, onUploaded, onBeforeUpload, acceptedFileTypes } = options;
@@ -168,7 +168,7 @@ export const useUpload = (config?: IUploadConfig): IUploadHook => {
         if (acceptedFileTypes) {
             fileInputRef.current.accept = acceptedFileTypes;
         } else {
-            fileInputRef.current.accept = '*/*'; // Allow all file types by default
+            fileInputRef.current.accept = "*/*"; // Allow all file types by default
         }
 
         fileInputRef.current.click();
@@ -182,12 +182,16 @@ export const useUpload = (config?: IUploadConfig): IUploadHook => {
                     cancelUpload();
                     callback();
                 };
-            }
+            },
         };
     }, []);
 
     // Helper functions
-    const checkExistingFile = async (hash: string, recordId: string, fileName: string): Promise<IAttachment | null> => {
+    const checkExistingFile = async (
+        hash: string,
+        recordId: string,
+        fileName: string
+    ): Promise<IAttachment | null> => {
         try {
             const existingAttachment = await FilesAPI.checkExistingFile(
                 hash,
@@ -220,15 +224,10 @@ export const useUpload = (config?: IUploadConfig): IUploadHook => {
         totalFiles: number
     ): Promise<IAttachment> => {
         // Use streaming upload for all files for consistency and better performance
-        return await FilesAPI.upload(
-            file,
-            recordId,
-            uploadType.current ?? FILES_TYPE.FILE,
-            (fileProgress) => {
-                const overallProgress = ((fileIndex / totalFiles) + (fileProgress / 100 / totalFiles)) * 100;
-                updateProgress(overallProgress, file.name);
-            }
-        );
+        return await FilesAPI.upload(file, recordId, uploadType.current ?? FILES_TYPE.FILE, fileProgress => {
+            const overallProgress = (fileIndex / totalFiles + fileProgress / 100 / totalFiles) * 100;
+            updateProgress(overallProgress, file.name);
+        });
     };
 
     const updateCompletedProgress = (fileIndex: number, totalFiles: number, fileName?: string): void => {
@@ -249,15 +248,15 @@ export const useUpload = (config?: IUploadConfig): IUploadHook => {
                 !didTimeoutExpire && cancelUpload();
             },
             timeout: progress < 100 ? 0 : 2000,
-        }
-    }
+        };
+    };
 
     const upload = useCallback(async (files: File[]) => {
         if (files.length === 0) return;
 
         const currentRecordId = recordIdRef.current;
         if (!currentRecordId) {
-            throw new Error('No recordId provided for upload');
+            throw new Error("No recordId provided for upload");
         }
 
         // Call onBeforeUpload callback with file names and wait for completion
@@ -276,7 +275,7 @@ export const useUpload = (config?: IUploadConfig): IUploadHook => {
 
             for (let i = 0; i < files.length; i++) {
                 if (abortControllerRef.current?.signal.aborted) {
-                    throw new Error('Upload cancelled');
+                    throw new Error("Upload cancelled");
                 }
 
                 const file = files[i];
@@ -289,8 +288,6 @@ export const useUpload = (config?: IUploadConfig): IUploadHook => {
                     updateCompletedProgress(i, totalFiles, file.name);
                     continue;
                 }
-
-
 
                 // Upload file using streaming (works for all file sizes)
                 const result = await uploadSingleFile(file, currentRecordId, i, totalFiles);
@@ -305,7 +302,6 @@ export const useUpload = (config?: IUploadConfig): IUploadHook => {
             const callbackToUse = onUploadedRef.current;
             callbackToUse?.(uploadedFiles);
             onUploadedRef.current = null;
-
         } catch (error) {
             progressRef.current = 0;
             onProgressRef.current?.(0);

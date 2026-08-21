@@ -54,7 +54,11 @@ export default function ProjectNotesScreen() {
     const [editing, setEditing] = useState(false);
     const [draft, setDraft] = useState("");
 
-    const { data: project, isLoading, isError } = useQuery<IProject>({
+    const {
+        data: project,
+        isLoading,
+        isError,
+    } = useQuery<IProject>({
         queryKey: ["project", id],
         queryFn: () => fetchProject(id),
     });

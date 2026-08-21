@@ -3,17 +3,16 @@ import { translate } from "@stacks/translations";
 import { Classes, Dialog, Intent, Tag } from "@blueprintjs/core";
 import axios, { AxiosResponse } from "axios";
 import classNames from "classnames";
-import React, { FunctionComponent, useEffect, useState } from "react";
+import { FunctionComponent, useEffect, useState } from "react";
 import { Grid, HotkeyTooltip, Icon, Scroller } from "app/components/common";
 import { useStorage } from "app/hooks";
 import toast from "app/utils/toast";
-
-import { remote } from "electron";
+import { APP_PACKAGE_VERSION } from "appPackageVersion";
 
 export const WhatsNewButton = () => {
     const [open, setOpen] = useState(false);
     const [lastVersion, setLastVersion] = useStorage("last-version", false, "0");
-    const [newVersion, setNewVersion] = useState(lastVersion !== remote.app.getVersion());
+    const [newVersion, setNewVersion] = useState(lastVersion !== APP_PACKAGE_VERSION);
 
     if (!newVersion) return null;
 
@@ -33,7 +32,7 @@ export const WhatsNewButton = () => {
     );
 
     function handleOpenChangelog() {
-        setLastVersion(remote.app.getVersion());
+        setLastVersion(APP_PACKAGE_VERSION);
         setOpen(true);
     }
 
@@ -61,7 +60,7 @@ const ChangelogDialog: FunctionComponent<ChangelogDialogProps> = ({ onClose }) =
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const version = remote.app.getVersion().split("-");
+        const version = APP_PACKAGE_VERSION.split("-");
         axios
             .get(`https://getstacksapp.com/updates/version-${version.at(0)}/json`, {
                 // .get(`https://getstacksapp.com/updates/version-2.4.3/json`, {

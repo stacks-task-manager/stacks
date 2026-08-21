@@ -22,15 +22,12 @@ export function TagsSelect({
     const [open, setOpen] = useState(false);
     const { data: tags } = useTags();
 
-    const tagOptions = useMemo(
-        () => (tags ?? []).filter(t => t.type === TAGTYPE.TAG),
-        [tags]
-    );
+    const tagOptions = useMemo(() => (tags ?? []).filter(t => t.type === TAGTYPE.TAG), [tags]);
     const selected = useMemo(
         () =>
-            value
-                .map(id => tagOptions.find(t => t.id === id))
-                .filter(Boolean) as NonNullable<(typeof tagOptions)[number]>[],
+            value.map(id => tagOptions.find(t => t.id === id)).filter(Boolean) as NonNullable<
+                (typeof tagOptions)[number]
+            >[],
         [tagOptions, value]
     );
 
@@ -40,11 +37,7 @@ export function TagsSelect({
 
     return (
         <>
-            <Pressable
-                onPress={() => setOpen(true)}
-                disabled={disabled}
-                className="py-1 active:opacity-75"
-            >
+            <Pressable onPress={() => setOpen(true)} disabled={disabled} className="py-1 active:opacity-75">
                 <HStack space="xs" className="flex-wrap items-center">
                     {selected.length === 0 ? (
                         <Text size="sm" className="text-typography-400">

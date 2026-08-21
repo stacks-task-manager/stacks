@@ -69,7 +69,7 @@ describe("Admin Routes", () => {
 
     test("DELETE /admin/api/users/:id - should delete user", async () => {
         const headers = await getAuthenticatedHeaders();
-        
+
         // Create a test user first
         const createRes = await app.request("/auth/register", {
             method: "POST",
@@ -85,11 +85,11 @@ describe("Admin Routes", () => {
                 tenant: "646427b6-8b0b-4ccd-ae00-8a4680d90fbf",
             }),
         });
-        
+
         if (createRes.status === 200 || createRes.status === 201) {
             const userData = await createRes.json();
             const userId = userData.data?.id;
-            
+
             if (userId) {
                 const deleteRes = await app.request(`/admin/api/users/${userId}`, {
                     method: "DELETE",

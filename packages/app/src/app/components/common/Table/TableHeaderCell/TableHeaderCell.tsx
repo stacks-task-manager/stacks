@@ -61,7 +61,7 @@ export const TableHeaderCell: FunctionComponent<ITableHeaderCellProps> = ({
 
     // Initialize currentWidthRef with the provided width
     useEffect(() => {
-        if (typeof width === 'number') {
+        if (typeof width === "number") {
             currentWidthRef.current = width;
         }
     }, [width]);
@@ -92,13 +92,10 @@ export const TableHeaderCell: FunctionComponent<ITableHeaderCellProps> = ({
         }, 300);
     };
 
-    const handleMouseDown = useCallback(
-        (event: MouseEvent) => {
-            posRef.current = event.x;
-            document.addEventListener("mousemove", resize, false);
-        },
-        []
-    );
+    const handleMouseDown = useCallback((event: MouseEvent) => {
+        posRef.current = event.x;
+        document.addEventListener("mousemove", resize, false);
+    }, []);
 
     const handleMouseUp = () => {
         document.removeEventListener("mousemove", resize, false);
@@ -118,7 +115,8 @@ export const TableHeaderCell: FunctionComponent<ITableHeaderCellProps> = ({
                 posRef.current = e.x;
                 if (parent) {
                     // Use tracked width if available, otherwise get from DOM
-                    const currentWidth = currentWidthRef.current ?? parseInt(getComputedStyle(parent, "").width);
+                    const currentWidth =
+                        currentWidthRef.current ?? parseInt(getComputedStyle(parent, "").width);
                     let width = currentWidth + dx;
 
                     if (minWidth && width <= minWidth) {
@@ -165,14 +163,20 @@ export const TableHeaderCell: FunctionComponent<ITableHeaderCellProps> = ({
 
     const handleClear = () => {
         onSortClear && onSortClear();
-    }
+    };
 
     return (
         <th style={{ width, minWidth }}>
             {!empty && (
-                <div className={classNames("table-header-cell", align ? `table-header-cell__align-${align}` : "", {
-                    "table-header-cell__secondary": secondary
-                })}>
+                <div
+                    className={classNames(
+                        "table-header-cell",
+                        align ? `table-header-cell__align-${align}` : "",
+                        {
+                            "table-header-cell__secondary": secondary,
+                        }
+                    )}
+                >
                     <div className="table-header-cell__title">
                         {hasCheckbox && (
                             <Tooltip
@@ -199,7 +203,16 @@ export const TableHeaderCell: FunctionComponent<ITableHeaderCellProps> = ({
                                 content={help}
                                 placement="top"
                                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                                renderTarget={({ isOpen, ...props }) => <Icon icon="help-circle" size={14} {...props} style={{ marginLeft: 5 }} cursor="help" />} />
+                                renderTarget={({ isOpen, ...props }) => (
+                                    <Icon
+                                        icon="help-circle"
+                                        size={14}
+                                        {...props}
+                                        style={{ marginLeft: 5 }}
+                                        cursor="help"
+                                    />
+                                )}
+                            />
                         )}
                     </div>
                     {sortable && (

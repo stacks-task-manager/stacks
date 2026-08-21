@@ -79,7 +79,10 @@ function injectBaseHref(html: string): string {
 /**
  * Compiles Handlebars HTML and prints to PDF with headless Chromium (Puppeteer).
  */
-export async function generatePdfFromHtml(templatePath: string, context: PdfTemplateContext): Promise<Buffer> {
+export async function generatePdfFromHtml(
+    templatePath: string,
+    context: PdfTemplateContext
+): Promise<Buffer> {
     const templateSource = readFileSync(templatePath, "utf-8");
     const hb = createHandlebars();
     const template = hb.compile(templateSource);

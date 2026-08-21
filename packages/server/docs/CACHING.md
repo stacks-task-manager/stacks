@@ -43,10 +43,10 @@ The system provides pre-configured cache instances for different use cases:
 
 ```typescript
 export const cacheInstances = {
-    api: new MemoryCache({ ttl: 5 * 60 * 1000, maxSize: 500 }),      // 5 minutes
-    database: new MemoryCache({ ttl: 15 * 60 * 1000, maxSize: 1000 }), // 15 minutes
-    static: new MemoryCache({ ttl: 60 * 60 * 1000, maxSize: 200 }),    // 1 hour
-    session: new MemoryCache({ ttl: 30 * 60 * 1000, maxSize: 1000 }),  // 30 minutes
+  api: new MemoryCache({ ttl: 5 * 60 * 1000, maxSize: 500 }), // 5 minutes
+  database: new MemoryCache({ ttl: 15 * 60 * 1000, maxSize: 1000 }), // 15 minutes
+  static: new MemoryCache({ ttl: 60 * 60 * 1000, maxSize: 200 }), // 1 hour
+  session: new MemoryCache({ ttl: 30 * 60 * 1000, maxSize: 1000 }), // 30 minutes
 };
 ```
 
@@ -58,20 +58,22 @@ The caching system **requires** a tenant ID for all cache operations. This ensur
 
 ```typescript
 if (!userTenant) {
-    throw new Error(
-        "Cache middleware requires tenant ID to be set in request context (userTenant). This is required for data isolation."
-    );
+  throw new Error(
+    "Cache middleware requires tenant ID to be set in request context (userTenant). This is required for data isolation."
+  );
 }
 ```
 
 ### Cache Key Structure
 
 Every cache key follows this format:
+
 ```
 {tenant}:{userId}:{method}:{path}:{query}:{headerHash}
 ```
 
 Example:
+
 ```
 tenant-123:user-456:GET:/api/data:{"filter":"active"}:a1b2c3d4
 ```
@@ -88,19 +90,22 @@ tenant-123:user-456:GET:/api/data:{"filter":"active"}:a1b2c3d4
 ### Basic Middleware Setup
 
 ```typescript
-import { cacheMiddleware } from './utils/cache';
+import { cacheMiddleware } from "./utils/cache";
 
 // Basic usage with default settings
-app.use('/api/*', cacheMiddleware());
+app.use("/api/*", cacheMiddleware());
 
 // Custom configuration (ttl is in seconds when CACHE=true)
-app.use('/api/*', cacheMiddleware({
-    ttl: 600,                   // 10 minutes
+app.use(
+  "/api/*",
+  cacheMiddleware({
+    ttl: 600, // 10 minutes
     maxResponseSize: 2 * 1024 * 1024, // 2MB
     enableETag: true,
     logCacheEvents: true,
-    requireTenant: true
-}));
+    requireTenant: true,
+  })
+);
 ```
 
 ### Setting Request Context
@@ -108,44 +113,44 @@ app.use('/api/*', cacheMiddleware({
 Before using the cache middleware, ensure the request context contains tenant and user information:
 
 ```typescript
-app.use('*', async (c, next) => {
-    // Extract from JWT, session, or headers
-    const userTenant = extractTenantFromRequest(c);
-    const userId = extractUserFromRequest(c);
-    
-    c.set('userTenant', userTenant);
-    c.set('userId', userId);
-    
-    await next();
+app.use("*", async (c, next) => {
+  // Extract from JWT, session, or headers
+  const userTenant = extractTenantFromRequest(c);
+  const userId = extractUserFromRequest(c);
+
+  c.set("userTenant", userTenant);
+  c.set("userId", userId);
+
+  await next();
 });
 ```
 
 ### Manual Cache Operations
 
 ```typescript
-import { cacheInstances, CacheUtils } from './utils/cache';
+import { cacheInstances, CacheUtils } from "./utils/cache";
 
 // Get cached data
-const cachedData = cacheInstances.api.get('cache-key');
+const cachedData = cacheInstances.api.get("cache-key");
 
 // Set cached data
-cacheInstances.api.set('cache-key', data, 300000); // 5 minutes TTL
+cacheInstances.api.set("cache-key", data, 300000); // 5 minutes TTL
 
 // Generate cache key
 const key = CacheUtils.generateKey(
-    'tenant-123',
-    'user-456', 
-    'GET',
-    '/api/data',
-    { filter: 'active' },
-    { 'accept-language': 'en-US' }
+  "tenant-123",
+  "user-456",
+  "GET",
+  "/api/data",
+  { filter: "active" },
+  { "accept-language": "en-US" }
 );
 
 // Invalidate tenant data (API response cache)
-CacheUtils.invalidateTenant('tenant-123');
+CacheUtils.invalidateTenant("tenant-123");
 
 // Invalidate user data
-CacheUtils.invalidateUser('tenant-123', 'user-456');
+CacheUtils.invalidateUser("tenant-123", "user-456");
 ```
 
 After mutations, the server calls `invalidateApiCacheForCurrentRequest()` from loaders (tenant-scoped invalidation on `cacheInstances.api`) when `CACHE=true`.
@@ -160,18 +165,18 @@ After mutations, the server calls `invalidateApiCacheForCurrentRequest()` from l
 
 ```typescript
 interface CacheMiddlewareOptions {
-    cache?: MemoryCache<CachedResponseData>;  // Custom cache instance
-    ttl?: number;                             // Time to live in seconds (for cached HTTP responses)
-    keyGenerator?: (c: Context) => string;    // Custom key generation function
-    skipIf?: (c: Context) => boolean;         // Skip caching condition
-    maxResponseSize?: number;                 // Maximum response size to cache
-    addCacheHeaders?: boolean;                // Add cache-related headers
-    enableETag?: boolean;                     // Enable ETag generation
-    logCacheEvents?: boolean;                 // Enable cache event logging
-    deduplicateRequests?: boolean;            // Enable request deduplication
-    requireTenant?: boolean;                  // Require valid tenant context
-    anonymousTenant?: string;                 // Fallback tenant (not recommended)
-    anonymousUser?: string;                   // Fallback user (not recommended)
+  cache?: MemoryCache<CachedResponseData>; // Custom cache instance
+  ttl?: number; // Time to live in seconds (for cached HTTP responses)
+  keyGenerator?: (c: Context) => string; // Custom key generation function
+  skipIf?: (c: Context) => boolean; // Skip caching condition
+  maxResponseSize?: number; // Maximum response size to cache
+  addCacheHeaders?: boolean; // Add cache-related headers
+  enableETag?: boolean; // Enable ETag generation
+  logCacheEvents?: boolean; // Enable cache event logging
+  deduplicateRequests?: boolean; // Enable request deduplication
+  requireTenant?: boolean; // Require valid tenant context
+  anonymousTenant?: string; // Fallback tenant (not recommended)
+  anonymousUser?: string; // Fallback user (not recommended)
 }
 ```
 
@@ -179,9 +184,9 @@ interface CacheMiddlewareOptions {
 
 ```typescript
 interface CacheOptions {
-    ttl?: number;         // Default TTL in milliseconds
-    maxSize?: number;     // Maximum number of entries
-    checkPeriod?: number; // Cleanup interval in milliseconds
+  ttl?: number; // Default TTL in milliseconds
+  maxSize?: number; // Maximum number of entries
+  checkPeriod?: number; // Cleanup interval in milliseconds
 }
 ```
 
@@ -199,25 +204,25 @@ CACHE=true
 
 ```typescript
 // Generate cache key
-CacheUtils.generateKey(tenant, userId, method, path, query, headers)
+CacheUtils.generateKey(tenant, userId, method, path, query, headers);
 
 // Invalidate by pattern
-CacheUtils.invalidatePattern(/^tenant-123:.*/, cacheInstances.api)
+CacheUtils.invalidatePattern(/^tenant-123:.*/, cacheInstances.api);
 
 // Invalidate all tenant data
-CacheUtils.invalidateTenant('tenant-123')
+CacheUtils.invalidateTenant("tenant-123");
 
 // Invalidate specific user data
-CacheUtils.invalidateUser('tenant-123', 'user-456')
+CacheUtils.invalidateUser("tenant-123", "user-456");
 
 // Get statistics for all cache instances
-CacheUtils.getAllStats()
+CacheUtils.getAllStats();
 
 // Clear all cache instances
-CacheUtils.clearAll()
+CacheUtils.clearAll();
 
 // Cleanup expired entries in all instances
-CacheUtils.cleanupAll()
+CacheUtils.cleanupAll();
 ```
 
 ### MemoryCache Methods
@@ -226,21 +231,21 @@ CacheUtils.cleanupAll()
 const cache = new MemoryCache({ ttl: 300000, maxSize: 1000 });
 
 // Basic operations
-cache.get(key)           // Get value
-cache.set(key, value)    // Set value with default TTL
-cache.set(key, value, ttl) // Set value with custom TTL
-cache.delete(key)        // Delete specific key
-cache.clear()            // Clear all entries
-cache.has(key)           // Check if key exists
+cache.get(key); // Get value
+cache.set(key, value); // Set value with default TTL
+cache.set(key, value, ttl); // Set value with custom TTL
+cache.delete(key); // Delete specific key
+cache.clear(); // Clear all entries
+cache.has(key); // Check if key exists
 
 // Information
-cache.keys()             // Get all keys
-cache.size()             // Get current size
-cache.getStats()         // Get cache statistics
+cache.keys(); // Get all keys
+cache.size(); // Get current size
+cache.getStats(); // Get cache statistics
 
 // Maintenance
-cache.cleanup()          // Remove expired entries
-cache.destroy()          // Cleanup and stop timers
+cache.cleanup(); // Remove expired entries
+cache.destroy(); // Cleanup and stop timers
 ```
 
 ## Performance Considerations
@@ -268,10 +273,12 @@ cache.destroy()          // Cleanup and stop timers
 ### Common Issues
 
 1. **"Cache middleware requires tenant ID" Error**
+
    - Ensure `userTenant` is set in request context before cache middleware
    - Check authentication middleware is running before cache middleware
 
 2. **Cache Not Working**
+
    - Set `CACHE=true` exactly (opt-in; unset means off)
    - Check if response has `Cache-Control: no-cache` header
    - Ensure response status is < 400
@@ -286,9 +293,12 @@ cache.destroy()          // Cleanup and stop timers
 Enable cache event logging:
 
 ```typescript
-app.use('/api/*', cacheMiddleware({
-    logCacheEvents: true
-}));
+app.use(
+  "/api/*",
+  cacheMiddleware({
+    logCacheEvents: true,
+  })
+);
 ```
 
 ### Cache Statistics
@@ -296,11 +306,11 @@ app.use('/api/*', cacheMiddleware({
 ```typescript
 // Get detailed statistics
 const stats = CacheUtils.getAllStats();
-console.log('Cache Stats:', stats);
+console.log("Cache Stats:", stats);
 
 // Individual cache stats
 const apiStats = cacheInstances.api.getStats();
-console.log('API Cache:', apiStats);
+console.log("API Cache:", apiStats);
 ```
 
 ## Best Practices
@@ -327,15 +337,15 @@ console.log('API Cache:', apiStats);
 
 ```typescript
 // Invalidate after data updates
-app.post('/api/data', async (c) => {
-    const result = await updateData(c.req.json());
-    
-    // Invalidate related cache entries
-    const userTenant = c.get('userTenant');
-    const userId = c.get('userId');
-    CacheUtils.invalidateUser(userTenant, userId);
-    
-    return c.json(result);
+app.post("/api/data", async c => {
+  const result = await updateData(c.req.json());
+
+  // Invalidate related cache entries
+  const userTenant = c.get("userTenant");
+  const userId = c.get("userId");
+  CacheUtils.invalidateUser(userTenant, userId);
+
+  return c.json(result);
 });
 ```
 
@@ -344,26 +354,29 @@ app.post('/api/data', async (c) => {
 ```typescript
 // Custom key generator for specific routes
 const customKeyGenerator = (c: Context): string => {
-    const userTenant = c.get('userTenant');
-    const userId = c.get('userId');
-    const route = c.req.path;
-    
-    // Include specific headers or query params
-    const relevantData = {
-        route,
-        filter: c.req.query('filter'),
-        sort: c.req.query('sort')
-    };
-    
-    return `${userTenant}:${userId}:${createHash('sha256')
-        .update(JSON.stringify(relevantData))
-        .digest('hex')
-        .slice(0, 16)}`;
+  const userTenant = c.get("userTenant");
+  const userId = c.get("userId");
+  const route = c.req.path;
+
+  // Include specific headers or query params
+  const relevantData = {
+    route,
+    filter: c.req.query("filter"),
+    sort: c.req.query("sort"),
+  };
+
+  return `${userTenant}:${userId}:${createHash("sha256")
+    .update(JSON.stringify(relevantData))
+    .digest("hex")
+    .slice(0, 16)}`;
 };
 
-app.use('/api/search/*', cacheMiddleware({
-    keyGenerator: customKeyGenerator
-}));
+app.use(
+  "/api/search/*",
+  cacheMiddleware({
+    keyGenerator: customKeyGenerator,
+  })
+);
 ```
 
 ---

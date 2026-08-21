@@ -6,9 +6,7 @@ import {
     ButtonGroup,
     Colors,
     FormGroup,
-    InputGroup,
     Intent,
-    Keys,
     Menu,
     MenuDivider,
     MenuItem,
@@ -16,8 +14,9 @@ import {
     Tag,
 } from "@blueprintjs/core";
 import { xor } from "lodash";
-import React, { createRef, useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 import { StatusesMenu, TagsMenu } from "app/components/project";
+import { QueryFilter } from "app/components/project/filters/QueryFilter";
 import { usePeopleHasFilters, usePeopleStatuses, usePeopleTags } from "app/hooks";
 import { shallowEqual } from "app/hooks/store";
 import { ICompany, ITag, PEOPLE_GENDER, TAGSECTION } from "@stacks/types";
@@ -27,9 +26,10 @@ import { FiltersSidebar, StatusChip, Tags, TagsWrapper } from "app/widgets/commo
 import { Icon } from "app/components/common";
 
 export const PeopleFilter = () => {
-    const { filtersVisible, viewType } = PeopleStore.use(
+    const { filtersVisible, query, viewType } = PeopleStore.use(
         state => ({
             filtersVisible: state.filtersVisible,
+            query: state.query,
             viewType: state.viewType,
         }),
         shallowEqual
@@ -55,58 +55,21 @@ export const PeopleFilter = () => {
                 ) : null
             }
         >
-            <QueryFilter />
+            <QueryFilter
+                term={query}
+                onChange={query => PeopleActions.setQuery(query)}
+                onHide={() => PeopleActions.toggleFilters()}
+                placeholder={
+                    viewType === "contacts" ? translate("Search person") : translate("Search company")
+                }
+                label={translate("Search task")}
+                helperText={translate("Search in task title or description")}
+            />
             <TagsFilter />
             <StatusesFilter />
             <CompanyFilter />
             <GenderFilter />
         </FiltersSidebar>
-    );
-};
-
-const QueryFilter = () => {
-    const { viewType, query } = PeopleStore.use(
-        state => ({
-            viewType: state.viewType,
-            query: state.query,
-        }),
-        shallowEqual
-    );
-    const queryInputRef = createRef<HTMLInputElement>();
-
-    useEffect(() => {
-        if (queryInputRef.current) {
-            queryInputRef.current.focus();
-        }
-    }, []);
-
-    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.keyCode === Keys.ESCAPE || ((event.metaKey || event.ctrlKey) && event.key === "f")) {
-            if (query.length) {
-                PeopleActions.setQuery("");
-            } else {
-                PeopleActions.toggleFilters();
-            }
-        }
-    };
-
-    const handleChangeQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
-        PeopleActions.setQuery(event.currentTarget.value);
-    };
-
-    return (
-        <FormGroup label="Search task" helperText="Search in task title or description">
-            <InputGroup
-                defaultValue={query}
-                placeholder={viewType === "contacts" ? translate("Search person") : "Search company"}
-                leftIcon={<Icon icon="search" />}
-                round
-                type="search"
-                onChange={handleChangeQuery}
-                inputRef={queryInputRef}
-                onKeyDown={handleKeyDown}
-            />
-        </FormGroup>
     );
 };
 
@@ -143,7 +106,7 @@ const TagsFilter = () => {
     };
 
     return (
-        <FormGroup label="Tags">
+        <FormGroup label={translate("Tags")}>
             <Popover
                 content={
                     <TagsMenu
@@ -203,7 +166,7 @@ const StatusesFilter = () => {
     };
 
     return (
-        <FormGroup label="Status">
+        <FormGroup label={translate("Status")}>
             <Popover
                 content={
                     <StatusesMenu
@@ -244,14 +207,14 @@ const CompanyFilter = () => {
 
     const selectedCompany = useMemo(() => {
         return companies.find(c => c.id === company);
-    }, [company]);
+    }, [companies, company]);
 
     const icon = useMemo(() => {
         return company != null ? "building-05" : "building-07";
     }, [company]);
 
     return (
-        <FormGroup label="Status">
+        <FormGroup label={translate("Company")}>
             <Popover
                 content={
                     <Menu>
@@ -312,7 +275,7 @@ const CompanyFilter = () => {
 const GenderFilter = () => {
     const genders = PeopleStore.use(state => state.filters.genders, shallowEqual);
     return (
-        <FormGroup label="Gender">
+        <FormGroup label={translate("Gender")}>
             <ButtonGroup fill>
                 <Button
                     intent={genders.includes(PEOPLE_GENDER.MALE) ? Intent.PRIMARY : Intent.NONE}

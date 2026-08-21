@@ -2,19 +2,19 @@
 
 How `@stacks/app` talks to the API server. Everything HTTP-related funnels through one Axios instance with a handful of behaviors that are easy to miss if you're skimming.
 
-The actual implementation is [`src/app/api/request.ts`](../src/app/api/request.ts) (~150 lines). This page documents *why* it's shaped the way it is, plus the conventions for the per-domain modules that wrap it.
+The actual implementation is [`src/app/api/request.ts`](../src/app/api/request.ts) (~150 lines). This page documents _why_ it's shaped the way it is, plus the conventions for the per-domain modules that wrap it.
 
 ## Table of Contents
 
--   [At a glance](#at-a-glance)
--   [The per-domain module pattern](#the-per-domain-module-pattern)
--   [The shared Axios instance](#the-shared-axios-instance)
--   [Request interceptor](#request-interceptor)
--   [Response interceptor](#response-interceptor)
--   [Error handling](#error-handling)
--   [Adding a new endpoint](#adding-a-new-endpoint)
--   [Gotchas](#gotchas)
--   [Related](#related)
+- [At a glance](#at-a-glance)
+- [The per-domain module pattern](#the-per-domain-module-pattern)
+- [The shared Axios instance](#the-shared-axios-instance)
+- [Request interceptor](#request-interceptor)
+- [Response interceptor](#response-interceptor)
+- [Error handling](#error-handling)
+- [Adding a new endpoint](#adding-a-new-endpoint)
+- [Gotchas](#gotchas)
+- [Related](#related)
 
 ## At a glance
 
@@ -43,18 +43,18 @@ import { ITask } from "@stacks/types";
 import request from "./request";
 
 export const TasksAPI = {
-    list(params: TaskLoadParams): Promise<ITask[]> {
-        return request.get("/api/tasks", { params });
-    },
-    create(task: Partial<ITask>): Promise<ITask> {
-        return request.post("/api/tasks", { task });
-    },
-    update(taskId: string, data: Partial<ITask>): Promise<ITask> {
-        return request.patch(`/api/tasks/${taskId}`, data);
-    },
-    delete(taskId: string): Promise<boolean> {
-        return request.delete(`/api/tasks/${taskId}`);
-    },
+  list(params: TaskLoadParams): Promise<ITask[]> {
+    return request.get("/api/tasks", { params });
+  },
+  create(task: Partial<ITask>): Promise<ITask> {
+    return request.post("/api/tasks", { task });
+  },
+  update(taskId: string, data: Partial<ITask>): Promise<ITask> {
+    return request.patch(`/api/tasks/${taskId}`, data);
+  },
+  delete(taskId: string): Promise<boolean> {
+    return request.delete(`/api/tasks/${taskId}`);
+  },
 };
 ```
 
@@ -70,7 +70,7 @@ Re-export each `XAPI` from the [`api/index.ts`](../src/app/api/index.ts) barrel.
 
 ```ts
 const instance = axios.create({
-    paramsSerializer: params => qs.stringify(params, { arrayFormat: "repeat" }),
+  paramsSerializer: params => qs.stringify(params, { arrayFormat: "repeat" }),
 });
 ```
 
@@ -82,18 +82,21 @@ There are no other options on the instance — base URL is implicit (same-origin
 
 ```ts
 instance.interceptors.request.use(config => {
-    // 1. X-Instance-ID
-    if (window.updatePoller?.instanceId) {
-        config.headers["X-Instance-ID"] = window.updatePoller.instanceId;
-    }
+  // 1. X-Instance-ID
+  if (window.updatePoller?.instanceId) {
+    config.headers["X-Instance-ID"] = window.updatePoller.instanceId;
+  }
 
-    // 2. Date → ISO on POST/PATCH bodies (skipped for FormData)
-    if ((config.method === "post" || config.method === "patch")
-        && config.data && !(config.data instanceof FormData)) {
-        config.data = transformRequestData(config.data);  // recursive, mutates a clone
-    }
+  // 2. Date → ISO on POST/PATCH bodies (skipped for FormData)
+  if (
+    (config.method === "post" || config.method === "patch") &&
+    config.data &&
+    !(config.data instanceof FormData)
+  ) {
+    config.data = transformRequestData(config.data); // recursive, mutates a clone
+  }
 
-    return config;
+  return config;
 });
 ```
 
@@ -125,12 +128,14 @@ GET/DELETE requests are not touched — query params don't carry `Date` objects 
 
 ```ts
 instance.interceptors.response.use(
-    response => {
-        if (response.config.responseType === "blob") return response.data;
-        const { data } = response.data;                  // unwrap server envelope
-        return transformDates(data) ?? null;             // ISO → Date
-    },
-    async error => { /* error handling, see below */ },
+  response => {
+    if (response.config.responseType === "blob") return response.data;
+    const { data } = response.data; // unwrap server envelope
+    return transformDates(data) ?? null; // ISO → Date
+  },
+  async error => {
+    /* error handling, see below */
+  }
 );
 ```
 
@@ -145,7 +150,7 @@ The server wraps every JSON response in an envelope:
 The interceptor returns just `response.data.data` — so your call site receives the bare payload:
 
 ```ts
-const tasks: ITask[] = await request.get("/api/tasks");  // not { data: { data: ... } }
+const tasks: ITask[] = await request.get("/api/tasks"); // not { data: { data: ... } }
 ```
 
 `null` is returned if the server response has no `data` field (e.g. some 204-shaped endpoints that still send a body).
@@ -184,10 +189,10 @@ The error branch of the response interceptor:
 
 Toast intent and timeout depend on the status:
 
-| Status | Intent | Timeout |
-| --- | --- | --- |
-| 404 | `WARNING` | 3 s |
-| Everything else | `DANGER` | 30 s |
+| Status          | Intent    | Timeout |
+| --------------- | --------- | ------- |
+| 404             | `WARNING` | 3 s     |
+| Everything else | `DANGER`  | 30 s    |
 
 The message comes from `response.data.message`, falling back to `statusText`, then `error.message`, then `"Unknown error"`. Blob error payloads are read with `.text()` and parsed as JSON when possible — handy for download endpoints that fail.
 
@@ -199,9 +204,9 @@ Pass `silent: true` in the request config when you want to handle the error your
 import request, { SilencedAxiosRequestConfig } from "app/api/request";
 
 try {
-    await request.get("/api/some-thing", { silent: true } as SilencedAxiosRequestConfig);
+  await request.get("/api/some-thing", { silent: true } as SilencedAxiosRequestConfig);
 } catch (err) {
-    // surface a custom error UI; no toast was shown by the interceptor
+  // surface a custom error UI; no toast was shown by the interceptor
 }
 ```
 
@@ -209,7 +214,7 @@ Typical uses: probing endpoints (where a 404 isn't really an error), background 
 
 The `SilencedAxiosRequestConfig` type is exported from `request.ts` for convenience.
 
-### When *not* to use `silent`
+### When _not_ to use `silent`
 
 If the action genuinely failed and the user should know about it, let the toast fire. Adding a `try`/`catch` that re-toasts the same message is a common antipattern in PRs — the interceptor already did it.
 

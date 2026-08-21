@@ -52,8 +52,10 @@ export const TagsPicker: FunctionComponent<TagsPickerProps> = ({
             return items.filter((tag: ITag) => !tag.parent || tag.parent === projectId);
         }
         return items.filter((tag: ITag) => {
-            return tag.title.toLowerCase().includes(query.toLowerCase().trim()) &&
-                (!tag.parent || tag.parent === projectId);
+            return (
+                tag.title.toLowerCase().includes(query.toLowerCase().trim()) &&
+                (!tag.parent || tag.parent === projectId)
+            );
         });
     }, [query, items, projectId]);
 
@@ -167,21 +169,31 @@ export const TagsPicker: FunctionComponent<TagsPickerProps> = ({
                                                 id={`tag-${tag.id}`}
                                                 icon={
                                                     <Icon
-                                                        icon={type === TAGTYPE.STATUS ? "circle-filled" : "tag-filled"}
+                                                        icon={
+                                                            type === TAGTYPE.STATUS
+                                                                ? "circle-filled"
+                                                                : "tag-filled"
+                                                        }
                                                         color={tag.color}
                                                     />
                                                 }
                                                 text={tag.title}
                                                 active={selected === i}
                                                 shouldDismissPopover={shouldDismissPopover || false}
-                                                labelElement={(<>
-                                                    {tag.section === TAGSECTION.PROJECTS && tag.parent == null && (
-                                                        <Tooltip content="Global tag" placement="right">
-                                                            <Icon icon="globe-03" />
-                                                        </Tooltip>
-                                                    )}
-                                                    <Icon icon={isActive ? "check" : undefined} />
-                                                </>)}
+                                                labelElement={
+                                                    <>
+                                                        {tag.section === TAGSECTION.PROJECTS &&
+                                                            tag.parent == null && (
+                                                                <Tooltip
+                                                                    content="Global tag"
+                                                                    placement="right"
+                                                                >
+                                                                    <Icon icon="globe-03" />
+                                                                </Tooltip>
+                                                            )}
+                                                        <Icon icon={isActive ? "check" : undefined} />
+                                                    </>
+                                                }
                                                 onClick={(event: React.MouseEvent) =>
                                                     handleToggleTag(tag, event)
                                                 }
@@ -206,8 +218,9 @@ export const TagsPicker: FunctionComponent<TagsPickerProps> = ({
                         <BlankSlate
                             small
                             title={`No ${type === TAGTYPE.STATUS ? "statuses" : "tags"} found`}
-                            description={`There are ${type === TAGTYPE.STATUS ? "statuses" : "tags"
-                                } matching the current search query`}
+                            description={`There are ${
+                                type === TAGTYPE.STATUS ? "statuses" : "tags"
+                            } matching the current search query`}
                             icon="search"
                         >
                             <Button

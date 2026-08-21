@@ -3,8 +3,7 @@
  * Marketing/announcement endpoints.
  */
 import { IAnnouncement } from "app/components/common";
-import request from "./request"
-
+import request from "./request";
 
 export const WebsiteAPI = {
     /** Lists announcements. */
@@ -15,4 +14,4 @@ export const WebsiteAPI = {
     async sendAnnouncementAnswer(id: number, answer: any): Promise<IAnnouncement> {
         return request.post(`/api/website/announcements/${id}`, answer);
     },
-}
+};

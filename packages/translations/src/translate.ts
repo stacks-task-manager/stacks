@@ -36,9 +36,7 @@ export type ActiveTranslationContext = {
  */
 let readActiveContext: (() => ActiveTranslationContext | undefined) | undefined;
 
-export function registerTranslationContext(
-    getActive: () => ActiveTranslationContext | undefined
-): void {
+export function registerTranslationContext(getActive: () => ActiveTranslationContext | undefined): void {
     readActiveContext = getActive;
 }
 
@@ -151,4 +149,3 @@ export function translate(key: string, params?: ParamValues): string {
 
     return resolveTemplateString(key, template, params);
 }
-

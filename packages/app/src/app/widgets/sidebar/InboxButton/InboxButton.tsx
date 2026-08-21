@@ -1,5 +1,4 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
-import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { MenuItem } from "@blueprintjs/core";
@@ -34,10 +33,7 @@ export const InboxButton = () => {
             onClick={handleGotoPage}
             data-testid="inbox-button"
         >
-            <Counter
-                danger={unread}
-                dangerTooltip={`${unread} unread notifications`}
-            />
+            <Counter danger={unread} dangerTooltip={`${unread} unread notifications`} />
         </SidebarButton>
     );
 };

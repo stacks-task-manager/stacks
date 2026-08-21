@@ -1,6 +1,5 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { Button, HTMLTable, Popover } from "@blueprintjs/core";
-import React from "react";
 
 import { Icon, Scroller } from "app/components/common";
 

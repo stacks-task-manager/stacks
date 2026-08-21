@@ -9,12 +9,7 @@ import { VStack } from "@/components/ui/vstack";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
-import {
-    BackHandler,
-    KeyboardAvoidingView,
-    Platform,
-    Pressable as RNPressable,
-} from "react-native";
+import { BackHandler, KeyboardAvoidingView, Platform, Pressable as RNPressable } from "react-native";
 import { useHeaderHeight } from "expo-router/react-navigation";
 
 import { REMINDER_RECORD_TYPE, type PRIORITY, type IReminder } from "@stacks/types";
@@ -231,9 +226,7 @@ export default function TaskDetailScreen() {
                         className="bg-warning-100 border-warning-300 border rounded-md p-3 mb-4"
                         space="sm"
                     >
-                        <Text className="text-warning-700">
-                            This task is archived.
-                        </Text>
+                        <Text className="text-warning-700">This task is archived.</Text>
                         <HStack space="sm" className="flex-wrap">
                             <QuickAction
                                 label="Unarchive"
@@ -413,11 +406,7 @@ export default function TaskDetailScreen() {
                     ) : (
                         <VStack space="sm">
                             {(reminders ?? []).map((r: IReminder) => (
-                                <HStack
-                                    key={r.id}
-                                    space="sm"
-                                    className="items-center justify-between"
-                                >
+                                <HStack key={r.id} space="sm" className="items-center justify-between">
                                     <Text size="sm" className="text-typography-600">
                                         {new Date(r.date).toLocaleString(undefined, {
                                             day: "numeric",

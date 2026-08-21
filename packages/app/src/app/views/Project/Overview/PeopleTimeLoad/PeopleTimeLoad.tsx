@@ -18,13 +18,11 @@ export const PeopleTimeLoad: FunctionComponent<IPeopleTimeLoadProps> = ({ assign
         return people.filter(
             (person: IPerson) => Boolean(counter[person.id]) && assignees.includes(person.id)
         );
-    }, [counter]);
+    }, [assignees, counter]);
 
     return (
         <Card>
-            <h6 className={Classes.HEADING}>
-                {translate("People timeload")}
-            </h6>
+            <h6 className={Classes.HEADING}>{translate("People timeload")}</h6>
 
             {people.length > 0 ? (
                 <Grid gap={5}>

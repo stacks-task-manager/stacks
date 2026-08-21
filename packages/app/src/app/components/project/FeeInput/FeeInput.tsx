@@ -19,13 +19,13 @@ interface FeeInputPopupProps extends FeeInputProps {
     children: React.ReactElement;
 }
 
-export const FeeInputPopup: React.FC<FeeInputPopupProps> = ({
-    children,
-    disabled,
-    ...inputProps
-}) => {
+export const FeeInputPopup: React.FC<FeeInputPopupProps> = ({ children, disabled, ...inputProps }) => {
     return (
-        <Popover disabled={disabled} popoverClassName="popover-padded-medium" content={<FeeInput {...inputProps} />}>
+        <Popover
+            disabled={disabled}
+            popoverClassName="popover-padded-medium"
+            content={<FeeInput {...inputProps} />}
+        >
             {children}
         </Popover>
     );
@@ -58,17 +58,21 @@ const CurrencySelector: FunctionComponent<CurrencySelectorProps> = ({ value, rea
             }
             disabled={readonly}
         >
-            <Button
-                variant="minimal"
-                disabled={readonly}
-            >
+            <Button variant="minimal" disabled={readonly}>
                 {window.currencies[value].symbol}
             </Button>
         </Popover>
     );
-}
+};
 
-export const FeeInput: FunctionComponent<FeeInputProps> = ({ value, currency = Config.defaultCurrency, label, readonly, placeholder, onChange }) => {
+export const FeeInput: FunctionComponent<FeeInputProps> = ({
+    value,
+    currency = Config.defaultCurrency,
+    label,
+    readonly,
+    placeholder,
+    onChange,
+}) => {
     const [currentValue, setCurrentValue] = useState(value);
     const [currentCurrency, setCurrentCurrency] = useState(currency);
 
@@ -79,7 +83,7 @@ export const FeeInput: FunctionComponent<FeeInputProps> = ({ value, currency = C
         if (currency !== currentCurrency) {
             setCurrentCurrency(currency);
         }
-    }, [currency, value])
+    }, [currency, value]);
 
     const handleCurrencySelect = (selectedCurrency: string) => {
         setCurrentCurrency(selectedCurrency);
@@ -98,13 +102,19 @@ export const FeeInput: FunctionComponent<FeeInputProps> = ({ value, currency = C
             return;
         }
         onChange(currentValue, currentCurrency);
-    }
+    };
 
     return (
         <FormGroup label={label} style={{ marginBottom: 0, width: 120 }}>
             <NumericInput
                 value={currentValue}
-                rightElement={<CurrencySelector value={currentCurrency} readonly={readonly} onSelect={handleCurrencySelect} />}
+                rightElement={
+                    <CurrencySelector
+                        value={currentCurrency}
+                        readonly={readonly}
+                        onSelect={handleCurrencySelect}
+                    />
+                }
                 placeholder={placeholder?.toString() || translate("Hourly fee")}
                 buttonPosition="none"
                 min={0}
@@ -119,5 +129,5 @@ export const FeeInput: FunctionComponent<FeeInputProps> = ({ value, currency = C
                 }}
             />
         </FormGroup>
-    )
-}
+    );
+};

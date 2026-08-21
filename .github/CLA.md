@@ -37,9 +37,9 @@ copyright license to:
 - Relicense your Contributions under any license, including proprietary
   licenses, without further consent from you.
 
-*This grant specifically enables the Maintainer to distribute the Software under
+_This grant specifically enables the Maintainer to distribute the Software under
 a dual-license model (AGPL v3 open source and a separate Commercial License)
-without requiring additional permission from contributors.*
+without requiring additional permission from contributors._
 
 ## 3. Grant of Patent License
 
@@ -120,12 +120,12 @@ On your first pull request, post the following comment:
 
 **Option B — Written signature:**
 
-Full Legal Name: ___________________________________
-GitHub Username: ___________________________________
-Email Address: ___________________________________
-Signature: ___________________________________
-Date: ___________________________________
+Full Legal Name: **\*\***\*\*\*\***\*\***\_\_\_**\*\***\*\*\*\***\*\***
+GitHub Username: **\*\***\*\*\*\***\*\***\_\_\_**\*\***\*\*\*\***\*\***
+Email Address: **\*\***\*\*\*\***\*\***\_\_\_**\*\***\*\*\*\***\*\***
+Signature: **\*\***\*\*\*\***\*\***\_\_\_**\*\***\*\*\*\***\*\***
+Date: **\*\***\*\*\*\***\*\***\_\_\_**\*\***\*\*\*\***\*\***
 
 ---
 
-*Accepted on behalf of the Maintainer by Cristian Barlutiu*
+_Accepted on behalf of the Maintainer by Cristian Barlutiu_

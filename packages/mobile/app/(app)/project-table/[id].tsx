@@ -37,7 +37,11 @@ function formatDueDate(due: ITask["duedate"]): string {
 export default function ProjectTableScreen() {
     const router = useRouter();
     const { id } = useLocalSearchParams<{ id: string }>();
-    const { data: tasks = [], isLoading, isError } = useQuery<ITask[]>({
+    const {
+        data: tasks = [],
+        isLoading,
+        isError,
+    } = useQuery<ITask[]>({
         queryKey: ["tasks", id],
         queryFn: () => fetchTasks({ project: id }),
     });
@@ -81,13 +85,15 @@ export default function ProjectTableScreen() {
                     return (
                         <Pressable
                             key={task.id}
-                            onPress={() =>
-                                router.push(`/(modals)/task/${task.id}` as never)
-                            }
+                            onPress={() => router.push(`/(modals)/task/${task.id}` as never)}
                             className="bg-background-0 border border-outline-200 rounded-md p-3 active:bg-background-100"
                         >
                             <VStack space="xs">
-                                <Text size="sm" className="font-semibold text-typography-900" numberOfLines={1}>
+                                <Text
+                                    size="sm"
+                                    className="font-semibold text-typography-900"
+                                    numberOfLines={1}
+                                >
                                     {task.title}
                                 </Text>
                                 <HStack className="items-center justify-between">

@@ -57,10 +57,13 @@ export const DateChip: React.FC<IDateChipProps> = ({
         let label = "";
 
         if (startDate != null && dueDate != null) {
-            sameYear = !!(startDate && dueDate &&
+            sameYear = !!(
+                startDate &&
+                dueDate &&
                 startDate.getFullYear() === dueDate.getFullYear() &&
                 isThisYear(startDate) &&
-                isThisYear(dueDate));
+                isThisYear(dueDate)
+            );
 
             sameMonth = !!(startDate && dueDate && startDate.getMonth() === dueDate.getMonth());
 

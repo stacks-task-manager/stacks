@@ -2,13 +2,13 @@
 /**
  * Liveness probe returning a static JSON payload.
  */
-import { Hono } from 'hono';
+import { Hono } from "hono";
 
 const ping = new Hono();
 
 /** GET `/` — Returns `{ message: "pong" }`. */
-ping.get('/', async (c) => {
-    return c.json({ message: 'pong' });
+ping.get("/", async c => {
+    return c.json({ message: "pong" });
 });
 
 export default ping;

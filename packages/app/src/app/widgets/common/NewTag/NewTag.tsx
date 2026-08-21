@@ -16,7 +16,14 @@ interface NewTagProps {
 export const NewTag: FunctionComponent<NewTagProps> = ({ label, isStatus, hasParent, onAdd }) => {
     return (
         <Popover
-            content={<TagEdit onChange={onAdd} previewStatus={isStatus} hasParent={hasParent} shouldDismissPopover />}
+            content={
+                <TagEdit
+                    onChange={onAdd}
+                    previewStatus={isStatus}
+                    hasParent={hasParent}
+                    shouldDismissPopover
+                />
+            }
             popoverClassName="tag-popover"
             placement="top"
         >

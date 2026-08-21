@@ -7,7 +7,7 @@ export enum TAGSECTION {
 
 export enum TAGTYPE {
     TAG = "tag",
-    STATUS = "status"
+    STATUS = "status",
 }
 
 export interface ITag {

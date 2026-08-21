@@ -15,10 +15,9 @@ import {
     usePreferences,
     useSortTaskIds,
     useStackInfo,
-    useSubscribe
+    useSubscribe,
 } from "app/hooks";
 import { StacksActions, TasksActions } from "app/store/actions";
-import { PreferencesStore } from "app/store/preferences";
 import { NewTaskPopup } from "app/widgets";
 import { StackHeader } from "./StackHeader/StackHeader";
 import { StackSelected } from "./StackSelected";
@@ -70,20 +69,20 @@ const TasksPure: FunctionComponent<ITasksProps> = ({ tasks, stackId, hasBackgrou
         // tasks are added via the normal action flow which already handles sorting.
     });
 
-    const memoizedTasks = useMemo(() => {
-        const lazyLoadTasks = PreferencesStore.get().taskLazyLoad;
+    const { taskLazyLoad } = usePreferences(["taskLazyLoad"]);
 
+    const memoizedTasks = useMemo(() => {
         return filteredTasks.map((taskId, i) => {
             return (
                 <TaskCard
                     key={taskId}
                     taskId={taskId}
                     stackId={stackId}
-                    initialVisible={i < 10 || !lazyLoadTasks}
+                    initialVisible={i < 10 || !taskLazyLoad}
                 />
             );
         });
-    }, [filteredTasks, stackId]);
+    }, [filteredTasks, stackId, taskLazyLoad]);
 
     const handleReorder = ({
         itemId,
@@ -144,68 +143,6 @@ const TasksPure: FunctionComponent<ITasksProps> = ({ tasks, stackId, hasBackgrou
 };
 export const Tasks = React.memo(TasksPure);
 
-// interface IEmptyFilteredStackProps {
-//     isDraggingOver: boolean;
-// }
-// const EmptyFilteredStack: FunctionComponent<IEmptyFilteredStackProps> = ({ isDraggingOver }) => {
-//     return (
-//         <div className="stack-empty">
-//             {!isDraggingOver && <img src={FilteredTaskIcon} alt="" />}
-//             {isDraggingOver && <img src={DropTaskIcon} alt="" />}
-//             {!isDraggingOver && (
-//                 <p>
-//                     The applied filters do not
-//                     <br />
-//                     match any task in this stack
-//                 </p>
-//             )}
-//             {isDraggingOver && <p>Drop the task here</p>}
-//         </div>
-//     );
-// };
-
-// interface IEmptyStackProps {
-//     isDraggingOver: boolean;
-//     canAdd: boolean;
-//     onClick: () => void;
-// }
-
-// const EmptyStack: FunctionComponent<IEmptyStackProps> = ({ isDraggingOver, canAdd, onClick }) => {
-//     return (
-//         <div className="stack-empty interractive" onClick={canAdd ? onClick : undefined}>
-//             {!isDraggingOver && <img src={NoTasksIcon} alt="" />}
-//             {isDraggingOver && <img src={DropTaskIcon} alt="" />}
-//             {!isDraggingOver && (
-//                 <p>
-//                     {translate("This stack is empty")}
-//                     <br />
-//                     {canAdd && {translate("Click here to add a task now")}}
-//                 </p>
-//             )}
-//             {isDraggingOver && <p>Drop the task here</p>}
-//         </div>
-//     );
-// };
-
-// interface IAddListProps {
-//     stackIndex: number;
-//     type: "column";
-// }
-
-// const AddList: FunctionComponent<IAddListProps> = ({ stackIndex, type }) => {
-//     if (type === "column") {
-//         return null;
-//     }
-
-//     return (
-//         <div className="stack-add-here" onClick={() => StacksActions.addNew(stackIndex + 1)}>
-//             <div>
-//                 {translate("Add tasklist here")}
-//             </div>
-//         </div>
-//     );
-// };
-
 export interface IStackProps {
     stackId: string;
     stackIndex: number;
@@ -220,11 +157,11 @@ const StackPure: FunctionComponent<IStackProps> = ({ stackIndex, stackId }) => {
         "stacksBackground",
     ]);
     const stackInfo = useStackInfo(stackId);
+    const taskIds = useMemo(() => (stackInfo ? stackInfo.tasks.map(task => task.id) : []), [stackInfo]);
 
     if (!stackInfo) return null;
 
     const { collapsed, empty, tasks } = stackInfo;
-    const taskIds = tasks.map(task => task.id);
 
     const handleShowNewTask = (top: boolean) => {
         if (showNewTop !== top) {
@@ -232,12 +169,6 @@ const StackPure: FunctionComponent<IStackProps> = ({ stackIndex, stackId }) => {
         }
         setShowNew(true);
     };
-
-    // const handleSelect = (event: React.MouseEvent) => {
-    //     if (event.defaultPrevented) return;
-    //     event.stopPropagation();
-    //     setSelection(stackId, undefined);
-    // };
 
     const handleHideNewTask = (newTasks?: ITask[]) => {
         setShowNew(false);
@@ -261,7 +192,7 @@ const StackPure: FunctionComponent<IStackProps> = ({ stackIndex, stackId }) => {
             })}
             id={`stack-${stackId}`}
             data-testid="board-column"
-        // onClick={handleSelect}
+            // onClick={handleSelect}
         >
             <StackSelected stackId={stackId} />
             <StackHeader
@@ -271,9 +202,7 @@ const StackPure: FunctionComponent<IStackProps> = ({ stackIndex, stackId }) => {
                 onShowNew={() => handleShowNewTask(true)}
             />
 
-            {collapsed ? null : (
-                <Tasks tasks={taskIds} stackId={stackId} hasBackground={stacksBackground} />
-            )}
+            {collapsed ? null : <Tasks tasks={taskIds} stackId={stackId} hasBackground={stacksBackground} />}
 
             <div className="new-task">
                 <Button
@@ -288,9 +217,7 @@ const StackPure: FunctionComponent<IStackProps> = ({ stackIndex, stackId }) => {
                     {translate("Add task")}
                 </Button>
             </div>
-            {showNew && (
-                <NewTaskPopup defaultStack={stackId} top={showNewTop} onClose={handleHideNewTask} />
-            )}
+            {showNew && <NewTaskPopup defaultStack={stackId} top={showNewTop} onClose={handleHideNewTask} />}
         </LazyLoad>
     );
 

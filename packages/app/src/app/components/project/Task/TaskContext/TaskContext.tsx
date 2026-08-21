@@ -22,6 +22,7 @@ import { useUpload } from "app/hooks/fileUpload";
 import { AttachmentsActions, TasksActions } from "app/store/actions";
 import { CopyMoveActions } from "app/store/actions/copymove";
 import { NavigationStore, cancelSelection } from "app/store/navigation";
+import { shallowEqual } from "app/hooks/store";
 import { stripMd } from "app/utils/string";
 import { StacksMenu } from "app/widgets";
 
@@ -30,14 +31,14 @@ interface ITaskContextMenuProps {
 }
 export const TaskContextMenu: FunctionComponent<ITaskContextMenuProps> = ({ task }) => {
     const navigate = useNavigate();
-    const { tasks } = NavigationStore.get();
+    const tasks = NavigationStore.use(state => state.tasks, shallowEqual);
     const { pickFiles, removeByRecord } = useUpload({
         allowMultiple: true,
     });
 
     const isSingle = useMemo(() => {
         return (tasks.length > 1 && !tasks.includes(task.id)) || tasks.length <= 1;
-    }, [tasks]);
+    }, [tasks, task.id]);
 
     const tagCounter = useMemo(
         () =>
@@ -204,6 +205,7 @@ export const TaskContextMenu: FunctionComponent<ITaskContextMenuProps> = ({ task
                         icon={<Icon icon="edit-05" />}
                         text={translate("Edit task")}
                         onClick={openTask}
+                        data-testid="taskcontext-edit"
                     />
                     <MenuDivider />
                 </React.Fragment>
@@ -214,6 +216,7 @@ export const TaskContextMenu: FunctionComponent<ITaskContextMenuProps> = ({ task
                     text={taskToggleDoneLabel(task.done)}
                     intent={task.done ? Intent.NONE : Intent.SUCCESS}
                     onClick={() => TasksActions.toggleDone(task.id)}
+                    data-testid="taskcontext-toggle-done"
                 />
             )}
             {!isSingle && (
@@ -224,12 +227,14 @@ export const TaskContextMenu: FunctionComponent<ITaskContextMenuProps> = ({ task
                         intent={Intent.SUCCESS}
                         labelElement={tagCounter}
                         onClick={handleMarkDone}
+                        data-testid="taskcontext-mark-done"
                     />
                     <MenuItem
                         icon="circle"
                         text={translate("Mark selected as todo")}
                         labelElement={tagCounter}
                         onClick={handleMarkTodo}
+                        data-testid="taskcontext-mark-todo"
                     />
                 </React.Fragment>
             )}
@@ -241,6 +246,7 @@ export const TaskContextMenu: FunctionComponent<ITaskContextMenuProps> = ({ task
                     text={translate("Tags")}
                     shouldDismissPopover={false}
                     className={Classes.POPOVER_DISMISS}
+                    data-testid="taskcontext-tags"
                 >
                     <TagsPicker
                         value={task.tags ? task.tags : []}
@@ -255,6 +261,7 @@ export const TaskContextMenu: FunctionComponent<ITaskContextMenuProps> = ({ task
                     text={translate("Status")}
                     shouldDismissPopover={false}
                     className={Classes.POPOVER_DISMISS}
+                    data-testid="taskcontext-status"
                 >
                     <TagsPicker
                         value={task.status ? [task.status] : []}
@@ -269,6 +276,7 @@ export const TaskContextMenu: FunctionComponent<ITaskContextMenuProps> = ({ task
                     text={translate("Progress")}
                     shouldDismissPopover={false}
                     className={Classes.POPOVER_DISMISS}
+                    data-testid="taskcontext-progress"
                 >
                     <ProgressMenu
                         value={task.progress || 0}
@@ -283,6 +291,7 @@ export const TaskContextMenu: FunctionComponent<ITaskContextMenuProps> = ({ task
                     shouldDismissPopover={false}
                     className={Classes.POPOVER_DISMISS}
                     submenuProps={{ style: { padding: 0 } }}
+                    data-testid="taskcontext-priority"
                 >
                     <PriorityMenu
                         value={task.priority || PRIORITY.NONE}
@@ -295,6 +304,7 @@ export const TaskContextMenu: FunctionComponent<ITaskContextMenuProps> = ({ task
                     text={translate("Tint")}
                     shouldDismissPopover={false}
                     className={Classes.POPOVER_DISMISS}
+                    data-testid="taskcontext-tint"
                 >
                     <TintPicker value={task.tint ?? undefined} canClear onChange={handleSetTint} />
                 </MenuItem>
@@ -306,6 +316,7 @@ export const TaskContextMenu: FunctionComponent<ITaskContextMenuProps> = ({ task
                     text={translate(task.cover ? "Remove cover" : "Add cover")}
                     intent={task.cover ? Intent.WARNING : Intent.NONE}
                     onClick={handleToggleCoverImage}
+                    data-testid="taskcontext-cover"
                 />
             ) : null}
 
@@ -314,6 +325,7 @@ export const TaskContextMenu: FunctionComponent<ITaskContextMenuProps> = ({ task
                     icon={<Icon icon="file-plus-02" />}
                     text={translate("Add attachments")}
                     onClick={handleAttachFiles}
+                    data-testid="taskcontext-attach"
                 />
             ) : null}
             {task.project !== "inbox" ? (
@@ -325,6 +337,7 @@ export const TaskContextMenu: FunctionComponent<ITaskContextMenuProps> = ({ task
                         labelElement={tagCounter}
                         className={Classes.POPOVER_DISMISS}
                         onClick={handleCopyMove}
+                        data-testid="taskcontext-copymove"
                     />
 
                     <MenuItem
@@ -333,6 +346,7 @@ export const TaskContextMenu: FunctionComponent<ITaskContextMenuProps> = ({ task
                         labelElement={tagCounter}
                         submenuProps={{ style: { padding: 0 } }}
                         popoverProps={{ lazy: true }}
+                        data-testid="taskcontext-quick-move"
                     >
                         <StacksMenuItem task={task} onMove={handleQuickMove} />
                     </MenuItem>
@@ -346,6 +360,7 @@ export const TaskContextMenu: FunctionComponent<ITaskContextMenuProps> = ({ task
                         text={`${translate("Privacy")}...`}
                         icon={<Icon icon="lock-01" />}
                         onClick={() => TasksActions.togglePrivacy(task.id)}
+                        data-testid="taskcontext-privacy"
                     />
                 </>
             )}
@@ -358,6 +373,7 @@ export const TaskContextMenu: FunctionComponent<ITaskContextMenuProps> = ({ task
                 onClick={handleArchive}
                 labelElement={tagCounter}
                 intent={Intent.WARNING}
+                data-testid="taskcontext-archive"
             />
             <MenuItem
                 icon={<Icon icon="trash" />}
@@ -366,6 +382,7 @@ export const TaskContextMenu: FunctionComponent<ITaskContextMenuProps> = ({ task
                 labelElement={tagCounter}
                 onClick={handleDeleteTask}
                 shouldDismissPopover={true}
+                data-testid="taskcontext-delete"
             />
         </Menu>
     );

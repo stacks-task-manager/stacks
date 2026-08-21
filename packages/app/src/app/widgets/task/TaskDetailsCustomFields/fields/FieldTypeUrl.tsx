@@ -5,6 +5,7 @@ import React, { FunctionComponent, useCallback, useMemo, useState } from "react"
 import { Icon } from "app/components/common";
 import { TaskDetailsSection } from "app/components/project";
 import { FIELDTYPEICON } from "@stacks/types";
+import { openInNewTab } from "app/utils/browser";
 import { FieldTooltip } from "./FieldTooltip";
 import { CustomFieldProps } from "./fieldsModel";
 
@@ -27,6 +28,7 @@ export const FieldTypeUrl: FunctionComponent<CustomFieldProps> = props => {
         (event: React.ChangeEvent<HTMLInputElement>) => {
             setFieldValue(event.currentTarget.value);
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [id]
     );
 
@@ -54,7 +56,7 @@ export const FieldTypeUrl: FunctionComponent<CustomFieldProps> = props => {
                         <Button
                             variant="minimal"
                             icon={<Icon icon="link-external-01" />}
-                            onClick={() => window.open(fieldValue, "_blank")}
+                            onClick={() => openInNewTab(fieldValue)}
                         />
                     )
                 }

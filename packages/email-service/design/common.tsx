@@ -1,15 +1,6 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import React from "react";
-import {
-    Body,
-    Container,
-    Head,
-    Html,
-    Img,
-    Preview,
-    Section,
-    Text,
-} from "@react-email/components";
+import { Body, Container, Head, Html, Img, Preview, Section, Text } from "@react-email/components";
 import Styles from "./styles";
 
 const Logo: React.FC = () => (

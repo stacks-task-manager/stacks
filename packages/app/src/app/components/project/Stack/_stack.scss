@@ -99,7 +99,6 @@
     }
 
     &.collapsed {
-
         .stack-content,
         .new-task {
             display: none;
@@ -283,7 +282,7 @@
         opacity: 1;
     }
 
-    >div {
+    > div {
         background-color: $light-gray4;
         padding: 0 20px;
     }
@@ -417,7 +416,7 @@
             background-color: $gray2;
         }
 
-        >div {
+        > div {
             background-color: $dark-gray5;
             color: $gray2;
         }

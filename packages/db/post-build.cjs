@@ -41,7 +41,7 @@ async function postBuild() {
         if (deps["@stacks/types"] && String(deps["@stacks/types"]).startsWith("workspace:")) {
             if (!fs.existsSync(typesDistSrc)) {
                 throw new Error(
-                    `Cannot vendor @stacks/types: ${typesDistSrc} not found. Run yarn build:types before db build.`,
+                    `Cannot vendor @stacks/types: ${typesDistSrc} not found. Run yarn build:types before db build.`
                 );
             }
             const vendorRoot = path.join(distDir, "vendor", "stacks-types");
@@ -61,7 +61,7 @@ async function postBuild() {
             fs.writeFileSync(
                 path.join(vendorRoot, "package.json"),
                 JSON.stringify(vendorPkg, null, 2) + "\n",
-                "utf8",
+                "utf8"
             );
             productionPackageJson.dependencies["@stacks/types"] = "file:./vendor/stacks-types";
             console.log(`📁 Vendored @stacks/types → ${vendorRoot} (file: dependency for release)`);

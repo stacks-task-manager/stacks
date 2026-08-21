@@ -3,7 +3,17 @@ import { translate } from "@stacks/translations";
 import { format, isToday, isWithinInterval } from "date-fns";
 import mousetrap from "mousetrap";
 import React, { useEffect, useMemo } from "react";
-import { Button, ButtonGroup, H4, Intent, Menu, MenuDivider, MenuItem, Popover, Tooltip } from "@blueprintjs/core";
+import {
+    Button,
+    ButtonGroup,
+    H4,
+    Intent,
+    Menu,
+    MenuDivider,
+    MenuItem,
+    Popover,
+    Tooltip,
+} from "@blueprintjs/core";
 import { TIMEBOXVIEWS } from "@stacks/types";
 import { Icon, ReloadButton, ToolbarButton } from "app/components/common";
 import { useHasFilters } from "app/hooks";
@@ -41,9 +51,7 @@ export const ToolbarMyTasks = () => {
             <div className="section-toolbar">
                 <div className="section-toolbar-side side">
                     <div className="section-toolbar-title">
-                        <h1>
-                            {translate("My tasks")}
-                        </h1>
+                        <h1>{translate("My tasks")}</h1>
                     </div>
                 </div>
                 <div className="section-toolbar-side fixed">
@@ -85,7 +93,6 @@ export const ToolbarMyTasks = () => {
                         <Icon icon="calendar-check-01" />
                         Schedule
                     </button>
-
                 </div>
                 <div className="section-toolbar-side">
                     <TimeboxViewButton />
@@ -134,7 +141,7 @@ const FilterButton = () => {
                 keys={["meta", "F"]}
                 placement="bottom-end"
                 onClick={handleToggleFilter}
-            // active={isActive}
+                // active={isActive}
             />
         </>
     );
@@ -149,14 +156,17 @@ const BTN_LABELS = {
         label: "Calendar",
         icon: "calendar-check-01",
     },
-}
+};
 
 const TimeboxViewButton = () => {
-    const { view, scheduledView, calendarView } = MyTasksStore.use(state => ({
-        view: state.view,
-        scheduledView: state.scheduleView,
-        calendarView: state.calendarView
-    }), shallowEqual);
+    const { view, scheduledView, calendarView } = MyTasksStore.use(
+        state => ({
+            view: state.view,
+            scheduledView: state.scheduleView,
+            calendarView: state.calendarView,
+        }),
+        shallowEqual
+    );
     if (view === "list") return null;
 
     const isBoardView = scheduledView === TIMEBOXVIEWS.BOARD;
@@ -178,39 +188,50 @@ const TimeboxViewButton = () => {
                         <MenuItem
                             text="One day"
                             icon={<Icon icon="rows-03" />}
-                            labelElement={isCalendarView && calendarView === "one" ? <Icon icon="check" /> : null}
+                            labelElement={
+                                isCalendarView && calendarView === "one" ? <Icon icon="check" /> : null
+                            }
                             onClick={() => MyTasksActions.setCalendarView("one")}
                         />
 
                         <MenuItem
                             text="Three days"
                             icon={<Icon icon="columns-03" />}
-                            labelElement={isCalendarView && calendarView === "three" ? <Icon icon="check" /> : null}
+                            labelElement={
+                                isCalendarView && calendarView === "three" ? <Icon icon="check" /> : null
+                            }
                             onClick={() => MyTasksActions.setCalendarView("three")}
                         />
                         <MenuItem
                             text="Weekdays"
                             icon={<Icon icon="columns-03" />}
-                            labelElement={isCalendarView && calendarView === "weekdays" ? <Icon icon="check" /> : null}
+                            labelElement={
+                                isCalendarView && calendarView === "weekdays" ? <Icon icon="check" /> : null
+                            }
                             onClick={() => MyTasksActions.setCalendarView("weekdays")}
                         />
                         <MenuItem
                             text="Full week"
                             icon={<Icon icon="columns-03" />}
-                            labelElement={isCalendarView && calendarView === "week" ? <Icon icon="check" /> : null}
+                            labelElement={
+                                isCalendarView && calendarView === "week" ? <Icon icon="check" /> : null
+                            }
                             onClick={() => MyTasksActions.setCalendarView("week")}
                         />
                         <MenuItem
                             text="Month"
                             icon={<Icon icon="layout-grid-01" />}
-                            labelElement={isCalendarView && calendarView === "month" ? <Icon icon="check" /> : null}
+                            labelElement={
+                                isCalendarView && calendarView === "month" ? <Icon icon="check" /> : null
+                            }
                             onClick={() => MyTasksActions.setCalendarView("month")}
                         />
                     </Menu>
                 }
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 renderTarget={({ isOpen, ...props }) => (
-                    <Button {...props}
+                    <Button
+                        {...props}
                         icon={<Icon icon={BTN_LABELS[scheduledView].icon} />}
                         size="small"
                         variant="minimal"
@@ -222,21 +243,27 @@ const TimeboxViewButton = () => {
             />
             <span className="section-toolbar-divider" />
         </>
-    )
-}
+    );
+};
 
 const TimeboxDate = () => {
-    const { start, end, view, calendarView, scheduledView } = MyTasksStore.use(state => ({
-        start: state.start,
-        end: state.end,
-        view: state.view,
-        calendarView: state.calendarView,
-        scheduledView: state.scheduleView,
-    }), shallowEqual);
+    const { start, end, view, calendarView, scheduledView } = MyTasksStore.use(
+        state => ({
+            start: state.start,
+            end: state.end,
+            view: state.view,
+            calendarView: state.calendarView,
+            scheduledView: state.scheduleView,
+        }),
+        shallowEqual
+    );
 
     const dateLabel = useMemo(() => {
-        if (scheduledView === TIMEBOXVIEWS.BOARD || (scheduledView === TIMEBOXVIEWS.CALENDAR && calendarView === "three")) {
-            return `${format(start, "PP")}${end ? ` - ${format(end, "PP")}` : ""}`
+        if (
+            scheduledView === TIMEBOXVIEWS.BOARD ||
+            (scheduledView === TIMEBOXVIEWS.CALENDAR && calendarView === "three")
+        ) {
+            return `${format(start, "PP")}${end ? ` - ${format(end, "PP")}` : ""}`;
         }
 
         if (calendarView === "month") {
@@ -255,17 +282,15 @@ const TimeboxDate = () => {
 
         return !isWithinInterval(new Date(), {
             start,
-            end
-        })
+            end,
+        });
     }, [scheduledView, calendarView, start, end]);
 
     if (view === "list") return null;
 
     return (
         <>
-            <H4 style={{ margin: 0 }}>
-                {dateLabel}
-            </H4>
+            <H4 style={{ margin: 0 }}>{dateLabel}</H4>
 
             {shouldShowTodayButton && (
                 <Tooltip content={translate("Go to Today")} placement="bottom" hoverOpenDelay={500}>
@@ -318,4 +343,4 @@ const TimeboxDate = () => {
             <span className="section-toolbar-divider" />
         </>
     );
-}
+};

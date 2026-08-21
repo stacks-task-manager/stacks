@@ -75,12 +75,7 @@ export function DateField({
 
     const pill = (
         <HStack className="items-center" space="sm">
-            <ValuePill
-                label={label}
-                placeholder={placeholder}
-                onPress={openPicker}
-                disabled={disabled}
-            />
+            <ValuePill label={label} placeholder={placeholder} onPress={openPicker} disabled={disabled} />
             {value ? (
                 <Pressable onPress={() => onChange(null)} hitSlop={8}>
                     <Text size="sm" className="text-error-600">
@@ -112,12 +107,7 @@ export function DateField({
     return (
         <>
             {pill}
-            <RNModal
-                visible={open}
-                animationType="fade"
-                transparent
-                onRequestClose={() => setOpen(false)}
-            >
+            <RNModal visible={open} animationType="fade" transparent onRequestClose={() => setOpen(false)}>
                 <Pressable
                     className="flex-1 justify-end"
                     style={{ backgroundColor: "#00000066" }}
@@ -129,13 +119,9 @@ export function DateField({
                         }}
                         className="bg-background-0 rounded-t-xl pb-5"
                     >
-                        <HStack
-                            className="justify-between items-center p-3 border-b border-outline-200"
-                        >
+                        <HStack className="justify-between items-center p-3 border-b border-outline-200">
                             <Pressable onPress={() => setOpen(false)} hitSlop={8}>
-                                <Text className="text-typography-500">
-                                    Cancel
-                                </Text>
+                                <Text className="text-typography-500">Cancel</Text>
                             </Pressable>
                             <Text className="font-bold">Pick a date</Text>
                             <Pressable
@@ -145,9 +131,7 @@ export function DateField({
                                 }}
                                 hitSlop={8}
                             >
-                                <Text className="text-primary-600 font-semibold">
-                                    Done
-                                </Text>
+                                <Text className="text-primary-600 font-semibold">Done</Text>
                             </Pressable>
                         </HStack>
                         <Box className="bg-background-0">

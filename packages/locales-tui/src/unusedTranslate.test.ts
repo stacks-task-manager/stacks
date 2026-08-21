@@ -29,7 +29,7 @@ const b = translate(
 const c = translate(x ? "three" : "four");
 const d = translate(missing);
 `,
-            "utf8",
+            "utf8"
         );
 
         const { staticKeys, dynamicSites } = collectTranslateStaticKeys([tmp]);

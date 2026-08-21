@@ -28,14 +28,10 @@ export default function InboxScreen() {
     if (!inboxId) {
         return (
             <Box className="flex-1 justify-center items-center p-6">
-                <Text className="text-typography-700">
-                    No inbox project found in this workspace.
-                </Text>
+                <Text className="text-typography-700">No inbox project found in this workspace.</Text>
             </Box>
         );
     }
 
-    return (
-        <ProjectView projectId={inboxId} title="Inbox" allowDelete={false} />
-    );
+    return <ProjectView projectId={inboxId} title="Inbox" allowDelete={false} />;
 }

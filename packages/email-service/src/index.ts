@@ -36,7 +36,9 @@ class EmailServiceApp {
 
         if (!this.emailService.enabled) {
             logger.error(
-                `⛔ Email service is starting in IDLE mode because SMTP is not configured. Missing: ${this.emailService.missingConfig.join(", ")}`
+                `⛔ Email service is starting in IDLE mode because SMTP is not configured. Missing: ${this.emailService.missingConfig.join(
+                    ", "
+                )}`
             );
             logger.error("💡 Set the missing variables in your environment and restart the service.");
             return;

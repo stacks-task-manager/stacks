@@ -2,7 +2,9 @@
 /**
  * Normalise the JSONB / string data column into a plain object.
  */
-export function parseEmailData(data: string | Record<string, unknown> | null | undefined): Record<string, unknown> {
+export function parseEmailData(
+    data: string | Record<string, unknown> | null | undefined
+): Record<string, unknown> {
     if (typeof data === "string") {
         try {
             return JSON.parse(data) as Record<string, unknown>;

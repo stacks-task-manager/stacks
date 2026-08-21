@@ -68,7 +68,13 @@ function parseTranslationValue(s: string): TranslationValue {
 const LANG_MENU_SEPARATOR_VALUE = "__lang_menu_sep__";
 const LANG_MENU_SEPARATOR_LABEL = " ─── languages ─── ";
 
-function LanguagePickItem({ isSelected, label }: { isSelected?: boolean; label: string }): React.ReactElement {
+function LanguagePickItem({
+    isSelected,
+    label,
+}: {
+    isSelected?: boolean;
+    label: string;
+}): React.ReactElement {
     if (label === LANG_MENU_SEPARATOR_LABEL) {
         return (
             <Text dimColor color={tuiTheme.colors.separator}>
@@ -112,7 +118,14 @@ type Screen =
           searchQuery: string;
           untranslatedOnly: boolean;
       }
-    | { name: "add"; section: TranslationSection; step: "key" | "value" | "similar"; key: string; value: string; hits?: SimilarityHit[] }
+    | {
+          name: "add";
+          section: TranslationSection;
+          step: "key" | "value" | "similar";
+          key: string;
+          value: string;
+          hits?: SimilarityHit[];
+      }
     | {
           name: "edit_rename";
           section: TranslationSection;
@@ -168,7 +181,10 @@ export function App(): React.ReactElement {
 
     const ld = (section: TranslationSection) => sectionLocalesAbsPath(repoRoot, section);
 
-    const readLocaleMap = (section: TranslationSection, localeId: string): Record<string, TranslationValue> => {
+    const readLocaleMap = (
+        section: TranslationSection,
+        localeId: string
+    ): Record<string, TranslationValue> => {
         void refresh;
         const map = indexLocaleFilesById(ld(section));
         const p = map.get(localeId.toLowerCase());
@@ -176,7 +192,8 @@ export function App(): React.ReactElement {
         return readLocaleJson(p) ?? {};
     };
 
-    const readEn = (section: TranslationSection): Record<string, TranslationValue> => readLocaleMap(section, "en");
+    const readEn = (section: TranslationSection): Record<string, TranslationValue> =>
+        readLocaleMap(section, "en");
 
     const keysList = (section: TranslationSection, localeId: string): string[] =>
         Object.keys(readLocaleMap(section, localeId)).sort((a, b) => a.localeCompare(b));
@@ -210,7 +227,13 @@ export function App(): React.ReactElement {
             else if (screen.name === "add" && screen.step === "value")
                 setScreen({ name: "add", section: screen.section, step: "key", key: screen.key, value: "" });
             else if (screen.name === "add" && screen.step === "similar")
-                setScreen({ name: "add", section: screen.section, step: "value", key: screen.key, value: screen.value });
+                setScreen({
+                    name: "add",
+                    section: screen.section,
+                    step: "value",
+                    key: screen.key,
+                    value: screen.value,
+                });
             else if (screen.name === "edit_rename")
                 setScreen({
                     name: "browse",
@@ -253,8 +276,7 @@ export function App(): React.ReactElement {
                     dynamicSites: screen.dynamicSites,
                     index: screen.unusedIndex,
                 });
-            else if (screen.name === "unused")
-                setScreen({ name: "language_pick", section: screen.section });
+            else if (screen.name === "unused") setScreen({ name: "language_pick", section: screen.section });
             else if (screen.name === "hub") setScreen({ name: "language_pick", section: screen.section });
             else if (screen.name === "language_pick") setScreen({ name: "sections" });
             return;
@@ -291,13 +313,7 @@ export function App(): React.ReactElement {
                 });
                 return;
             }
-            if (
-                localeId === "en" &&
-                input === "d" &&
-                !key.ctrl &&
-                !key.meta &&
-                filtered.length > 0
-            ) {
+            if (localeId === "en" && input === "d" && !key.ctrl && !key.meta && filtered.length > 0) {
                 const si = Math.min(screen.index, filtered.length - 1);
                 const sel = filtered[si];
                 if (!sel) return;
@@ -311,13 +327,7 @@ export function App(): React.ReactElement {
                 });
                 return;
             }
-            if (
-                localeId === "en" &&
-                input === "r" &&
-                !key.ctrl &&
-                !key.meta &&
-                filtered.length > 0
-            ) {
+            if (localeId === "en" && input === "r" && !key.ctrl && !key.meta && filtered.length > 0) {
                 const si = Math.min(screen.index, filtered.length - 1);
                 const sel = filtered[si];
                 if (!sel) return;
@@ -398,13 +408,20 @@ export function App(): React.ReactElement {
             }
             return;
         }
-        if (input === "q" && (screen.name === "hub" || screen.name === "sections" || screen.name === "language_pick"))
+        if (
+            input === "q" &&
+            (screen.name === "hub" || screen.name === "sections" || screen.name === "language_pick")
+        )
             exit();
     });
 
     if (screen.name === "sections") {
         return (
-            <ScreenShell title="Choose domain" subtitle="Server vs app locale JSON bundles" footer="Esc back · q quit">
+            <ScreenShell
+                title="Choose domain"
+                subtitle="Server vs app locale JSON bundles"
+                footer="Esc back · q quit"
+            >
                 <Label>Translation domain</Label>
                 <SelectInput
                     {...tuiSelectInputProps}
@@ -471,7 +488,9 @@ export function App(): React.ReactElement {
                             </Text>
                         </Box>
                     ) : null}
-                    <Text color={tuiTheme.colors.semantic.note}>No .json locale files in this folder yet.</Text>
+                    <Text color={tuiTheme.colors.semantic.note}>
+                        No .json locale files in this folder yet.
+                    </Text>
                     <Label>Actions</Label>
                     <SelectInput
                         {...tuiSelectInputProps}
@@ -486,20 +505,20 @@ export function App(): React.ReactElement {
 
         return (
             <ScreenShell title={section.label} subtitle={ld(section)} footer="Esc domain list · q quit">
-                    {note ? (
-                        <Box
-                            borderStyle="round"
-                            borderColor={tuiTheme.colors.border.warning}
-                            paddingX={1}
-                            paddingY={1}
-                            marginBottom={1}
-                        >
-                            <Text color={tuiTheme.colors.semantic.note} wrap="wrap">
-                                {note}
-                            </Text>
-                        </Box>
-                    ) : null}
-                    <Label>Workspace & languages</Label>
+                {note ? (
+                    <Box
+                        borderStyle="round"
+                        borderColor={tuiTheme.colors.border.warning}
+                        paddingX={1}
+                        paddingY={1}
+                        marginBottom={1}
+                    >
+                        <Text color={tuiTheme.colors.semantic.note} wrap="wrap">
+                            {note}
+                        </Text>
+                    </Box>
+                ) : null}
+                <Label>Workspace & languages</Label>
                 <SelectInput
                     {...tuiSelectInputProps}
                     itemComponent={LanguagePickItem}
@@ -620,9 +639,14 @@ export function App(): React.ReactElement {
         const innerCols = Math.max(48, columns - 8);
         const focusedPreviewLines =
             filtered.length > 0 && key
-                ? 4 + estimatedWrappedLines(key, innerCols) + estimatedWrappedLines(displayValue(map[key]!), innerCols)
+                ? 4 +
+                  estimatedWrappedLines(key, innerCols) +
+                  estimatedWrappedLines(displayValue(map[key]!), innerCols)
                 : 0;
-        const browseListLines = Math.max(4, rows - tuiTheme.layout.browseListRowsReserved - focusedPreviewLines);
+        const browseListLines = Math.max(
+            4,
+            rows - tuiTheme.layout.browseListRowsReserved - focusedPreviewLines
+        );
         const page = Math.max(4, browseListLines);
         const start =
             filtered.length === 0
@@ -690,7 +714,9 @@ export function App(): React.ReactElement {
         const pos =
             filtered.length === 0
                 ? "0 / 0"
-                : `${safeIdx + 1} / ${filtered.length}${allKeys.length !== filtered.length ? ` (${allKeys.length} total)` : ""}`;
+                : `${safeIdx + 1} / ${filtered.length}${
+                      allKeys.length !== filtered.length ? ` (${allKeys.length} total)` : ""
+                  }`;
 
         return (
             <ScreenShell
@@ -772,17 +798,25 @@ export function App(): React.ReactElement {
                         ) : (
                             slice.map(k => {
                                 const sel = k === key;
-                                const line = `${sel ? " ▸ " : "   "}${trunc(k, keyW)} · ${trunc(displayValue(map[k]!), valW)}`;
+                                const line = `${sel ? " ▸ " : "   "}${trunc(k, keyW)} · ${trunc(
+                                    displayValue(map[k]!),
+                                    valW
+                                )}`;
                                 if (sel) {
                                     return (
-                                        <Text key={k} bold color={tuiTheme.colors.selection.fg} backgroundColor={tuiTheme.colors.selection.bg}>
+                                        <Text
+                                            key={k}
+                                            bold
+                                            color={tuiTheme.colors.selection.fg}
+                                            backgroundColor={tuiTheme.colors.selection.bg}
+                                        >
                                             {line}
                                         </Text>
                                     );
                                 }
                                 return (
                                     <Text key={k}>
-                                        <Text color={tuiTheme.colors.list.bulletIdle}>   </Text>
+                                        <Text color={tuiTheme.colors.list.bulletIdle}> </Text>
                                         <Text color={tuiTheme.colors.list.keyIdle}>{trunc(k, keyW)}</Text>
                                         <Text dimColor> · </Text>
                                         <Text dimColor italic={tuiTheme.typography.listValueItalicWhenIdle}>
@@ -810,14 +844,20 @@ export function App(): React.ReactElement {
                     tone="warning"
                     footer="Choose an option below"
                 >
-                    <Box flexDirection="column" borderStyle="single" borderDimColor paddingX={1} paddingY={1} marginBottom={1}>
+                    <Box
+                        flexDirection="column"
+                        borderStyle="single"
+                        borderDimColor
+                        paddingX={1}
+                        paddingY={1}
+                        marginBottom={1}
+                    >
                         {screen.hits.slice(0, Math.max(6, rows - 18)).map(h => (
                             <Text key={`${h.entryKey}-${h.matched}-${h.candidate}-${h.similarity}`} dimColor>
                                 <Text color={tuiTheme.colors.semantic.note}>{h.similarity}%</Text>
                                 {" · "}
-                                <Text color={tuiTheme.colors.semantic.body}>"{trunc(h.entryKey, 34)}"</Text>
-                                {" "}
-                                ({h.matched}) → {h.candidate}
+                                <Text color={tuiTheme.colors.semantic.body}>"{trunc(h.entryKey, 34)}"</Text> (
+                                {h.matched}) → {h.candidate}
                             </Text>
                         ))}
                     </Box>
@@ -833,7 +873,12 @@ export function App(): React.ReactElement {
                                 try {
                                     addEnglishEntry(ld(section), k, v);
                                     bump();
-                                    setScreen({ name: "hub", section, localeId: "en", note: `Added "${trunc(k, 40)}".` });
+                                    setScreen({
+                                        name: "hub",
+                                        section,
+                                        localeId: "en",
+                                        note: `Added "${trunc(k, 40)}".`,
+                                    });
                                 } catch (e) {
                                     setScreen({
                                         name: "hub",
@@ -855,7 +900,9 @@ export function App(): React.ReactElement {
                     <Label>New English key</Label>
                     <TextInput
                         value={k}
-                        onChange={val => setScreen({ name: "add", section, step: "key", key: val, value: "" })}
+                        onChange={val =>
+                            setScreen({ name: "add", section, step: "key", key: val, value: "" })
+                        }
                         onSubmit={() => {
                             const keyTrim = k.trim();
                             if (!isValidLocaleKey(keyTrim)) {
@@ -900,12 +947,18 @@ export function App(): React.ReactElement {
                     onChange={val => setScreen({ name: "add", section, step: "value", key: k, value: val })}
                     onSubmit={() => {
                         const hits = findSimilarEntries(en, k, v);
-                        if (hits.length > 0) setScreen({ name: "add", section, step: "similar", key: k, value: v, hits });
+                        if (hits.length > 0)
+                            setScreen({ name: "add", section, step: "similar", key: k, value: v, hits });
                         else {
                             try {
                                 addEnglishEntry(ld(section), k, v);
                                 bump();
-                                setScreen({ name: "hub", section, localeId: "en", note: `Added "${trunc(k, 40)}".` });
+                                setScreen({
+                                    name: "hub",
+                                    section,
+                                    localeId: "en",
+                                    note: `Added "${trunc(k, 40)}".`,
+                                });
                             } catch (e) {
                                 setScreen({
                                     name: "hub",
@@ -1037,16 +1090,13 @@ export function App(): React.ReactElement {
                                     allKeys,
                                     map,
                                     searchQuery,
-                                    untranslatedOnly,
+                                    untranslatedOnly
                                 );
                                 const newIdx = filtered.indexOf(newKey);
                                 const nextIdx =
                                     newIdx >= 0
                                         ? newIdx
-                                        : Math.min(
-                                              browseIndex,
-                                              Math.max(0, filtered.length - 1),
-                                          );
+                                        : Math.min(browseIndex, Math.max(0, filtered.length - 1));
                                 setScreen({
                                     name: "browse",
                                     section,
@@ -1110,7 +1160,7 @@ export function App(): React.ReactElement {
                                     allKeys,
                                     map,
                                     searchQuery,
-                                    untranslatedOnly,
+                                    untranslatedOnly
                                 );
                                 const nextLen = filtered.length;
                                 const nextIdx =
@@ -1154,8 +1204,8 @@ export function App(): React.ReactElement {
         return (
             <ScreenShell title="Sync from English" subtitle={section.label} footer="Esc cancel">
                 <BodyText>
-                    Fill missing, empty, or *…* placeholders from English into every other locale. Real translations stay as
-                    they are.
+                    Fill missing, empty, or *…* placeholders from English into every other locale. Real
+                    translations stay as they are.
                 </BodyText>
                 <SelectInput
                     {...tuiSelectInputProps}
@@ -1168,10 +1218,14 @@ export function App(): React.ReactElement {
                         if (item.value === "yes") {
                             const { results, errors } = syncMissingKeysFromEn(ld(section));
                             bump();
-                            const parts = results.filter(r => r.keysFilled > 0).map(r => `${r.keysFilled} in ${r.file}`);
+                            const parts = results
+                                .filter(r => r.keysFilled > 0)
+                                .map(r => `${r.keysFilled} in ${r.file}`);
                             const msg = [
                                 errors.length ? `Errors: ${errors.join("; ")}` : "",
-                                parts.length ? `Filled: ${parts.join(", ")}` : "Nothing to fill (all keys translated or non-empty).",
+                                parts.length
+                                    ? `Filled: ${parts.join(", ")}`
+                                    : "Nothing to fill (all keys translated or non-empty).",
                             ]
                                 .filter(Boolean)
                                 .join(" ");
@@ -1186,7 +1240,11 @@ export function App(): React.ReactElement {
     if (screen.name === "add_lang") {
         const { section, draft } = screen;
         return (
-            <ScreenShell title="New language file" subtitle={section.label} footer="Enter create · Esc cancel">
+            <ScreenShell
+                title="New language file"
+                subtitle={section.label}
+                footer="Enter create · Esc cancel"
+            >
                 <Label>Locale id (de, fr, pt-br …)</Label>
                 <TextInput
                     value={draft}
@@ -1212,7 +1270,10 @@ export function App(): React.ReactElement {
         const unusedKeyCol = Math.max(40, columns - 10);
         const unusedPreviewLines =
             uList.length > 0 && uKey ? 3 + estimatedWrappedLines(uKey, unusedKeyCol) : 0;
-        const page = Math.max(4, Math.max(unusedListMinVisible, rows - unusedListRowsReserved) - unusedPreviewLines);
+        const page = Math.max(
+            4,
+            Math.max(unusedListMinVisible, rows - unusedListRowsReserved) - unusedPreviewLines
+        );
         const start =
             uList.length === 0
                 ? 0
@@ -1220,7 +1281,11 @@ export function App(): React.ReactElement {
         const slice = uList.slice(start, start + page);
         const keyCol = unusedKeyCol;
         const pos =
-            uList.length === 0 ? "0 / 0" : `${safeIdx + 1} / ${uList.length}${uList.length > page ? ` (view ${start + 1}–${start + slice.length})` : ""}`;
+            uList.length === 0
+                ? "0 / 0"
+                : `${safeIdx + 1} / ${uList.length}${
+                      uList.length > page ? ` (view ${start + 1}–${start + slice.length})` : ""
+                  }`;
         const dynCap = Math.min(8, Math.max(4, rows - page - 14));
         return (
             <ScreenShell
@@ -1231,7 +1296,8 @@ export function App(): React.ReactElement {
                 <Box flexDirection="column" width="100%" flexGrow={1} minHeight={0} height="100%">
                     <Box flexShrink={0} flexDirection="column">
                         <Text dimColor wrap="wrap">
-                            Dynamic translate() sites: {dynamicSites.length} — listed keys may still be used at runtime.
+                            Dynamic translate() sites: {dynamicSites.length} — listed keys may still be used
+                            at runtime.
                         </Text>
                         <Text>
                             <Text color={tuiTheme.colors.label}>Position </Text>
@@ -1314,7 +1380,8 @@ export function App(): React.ReactElement {
                         Remove “{trunc(key, 58)}” from English and every locale file?
                     </Text>
                     <Text dimColor wrap="wrap">
-                        Remove from JSON now; then remove or change translate("…") in code if it is truly unused.
+                        Remove from JSON now; then remove or change translate("…") in code if it is truly
+                        unused.
                     </Text>
                 </Box>
                 <SelectInput
@@ -1331,7 +1398,11 @@ export function App(): React.ReactElement {
                                 bump();
                                 const roots = sectionScanAbsPaths(repoRoot, section);
                                 const enKeys = Object.keys(readEn(section));
-                                const { unused: nu, dynamicSites: nd } = findUnusedEnglishKeys(enKeys, roots, repoRoot);
+                                const { unused: nu, dynamicSites: nd } = findUnusedEnglishKeys(
+                                    enKeys,
+                                    roots,
+                                    repoRoot
+                                );
                                 const nextIdx =
                                     nu.length === 0 ? 0 : Math.min(unusedIndex, Math.max(0, nu.length - 1));
                                 setScreen({

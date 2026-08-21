@@ -4,13 +4,7 @@ import { useRouter } from "expo-router";
 import { useMemo, useState } from "react";
 import { FlatList, ScrollView } from "react-native";
 
-import type {
-    ICompany,
-    IPerson,
-    IRole,
-    IRoleAccess,
-    ITimeLog,
-} from "@stacks/types";
+import type { ICompany, IPerson, IRole, IRoleAccess, ITimeLog } from "@stacks/types";
 import { TIMELOG_STATUS, ROLE_ACTIONS, ROLE_SECTIONS } from "@stacks/types";
 
 import { Box } from "@/components/ui/box";
@@ -111,7 +105,9 @@ function TabBar({ active, onChange }: { active: PeopleTab; onChange: (t: PeopleT
                         accessibilityRole="tab"
                         accessibilityLabel={label}
                         accessibilityState={{ selected }}
-                        className={`flex-1 py-2 rounded-md items-center justify-center ${selected ? "bg-background-0 shadow-sm" : ""}`}
+                        className={`flex-1 py-2 rounded-md items-center justify-center ${
+                            selected ? "bg-background-0 shadow-sm" : ""
+                        }`}
                     >
                         <Icon icon={icon} size={18} color={selected ? "#334155" : "#94a3b8"} />
                     </Pressable>
@@ -121,13 +117,7 @@ function TabBar({ active, onChange }: { active: PeopleTab; onChange: (t: PeopleT
     );
 }
 
-function PeopleTabContent({
-    people,
-    loading,
-}: {
-    people: IPerson[];
-    loading: boolean;
-}) {
+function PeopleTabContent({ people, loading }: { people: IPerson[]; loading: boolean }) {
     const router = useRouter();
     if (loading) {
         return (
@@ -172,13 +162,7 @@ function PeopleTabContent({
     );
 }
 
-function CompaniesTabContent({
-    companies,
-    loading,
-}: {
-    companies: ICompany[];
-    loading: boolean;
-}) {
+function CompaniesTabContent({ companies, loading }: { companies: ICompany[]; loading: boolean }) {
     const router = useRouter();
     if (loading) {
         return (
@@ -223,9 +207,7 @@ function CompaniesTabContent({
                     </Pressable>
                 );
             }}
-            ListEmptyComponent={
-                <Text className="p-4 text-typography-500">No companies</Text>
-            }
+            ListEmptyComponent={<Text className="p-4 text-typography-500">No companies</Text>}
         />
     );
 }
@@ -270,10 +252,7 @@ function RolesTabContent() {
                     <ButtonText>+ New role</ButtonText>
                 </Button>
             </HStack>
-            <ScrollView
-                className="flex-1"
-                contentContainerStyle={{ padding: 12, paddingBottom: 40 }}
-            >
+            <ScrollView className="flex-1" contentContainerStyle={{ padding: 12, paddingBottom: 40 }}>
                 {isLoading ? (
                     <Box className="flex-1 justify-center items-center py-16">
                         <Spinner />
@@ -292,18 +271,11 @@ function RolesTabContent() {
                             >
                                 <HStack className="items-center justify-between">
                                     <VStack className="flex-1 mr-2" space="xs">
-                                        <Text
-                                            size="sm"
-                                            className="font-semibold text-typography-900"
-                                        >
+                                        <Text size="sm" className="font-semibold text-typography-900">
                                             {role.title}
                                         </Text>
                                         {role.description ? (
-                                            <Text
-                                                size="sm"
-                                                className="text-typography-700"
-                                                numberOfLines={2}
-                                            >
+                                            <Text size="sm" className="text-typography-700" numberOfLines={2}>
                                                 {role.description}
                                             </Text>
                                         ) : null}
@@ -430,10 +402,7 @@ function RoleEditorModal({
                                         className="items-center justify-between py-1.5 border-b border-outline-100"
                                         space="sm"
                                     >
-                                        <Text
-                                            size="sm"
-                                            className="flex-1 text-typography-800 capitalize"
-                                        >
+                                        <Text size="sm" className="flex-1 text-typography-800 capitalize">
                                             {section.replace(/_/g, " ")}
                                         </Text>
                                         <HStack className="items-center" space="sm">
@@ -511,10 +480,7 @@ function ApprovalsTabContent() {
     }
 
     return (
-        <ScrollView
-            className="flex-1"
-            contentContainerStyle={{ padding: 12, paddingBottom: 40 }}
-        >
+        <ScrollView className="flex-1" contentContainerStyle={{ padding: 12, paddingBottom: 40 }}>
             <VStack space="xs" className="mb-5">
                 <Heading size="sm" className="px-1 mb-1 text-typography-700">
                     Pending approvals
@@ -607,10 +573,7 @@ function TimesheetTabContent() {
     }
 
     return (
-        <ScrollView
-            className="flex-1"
-            contentContainerStyle={{ padding: 12, paddingBottom: 40 }}
-        >
+        <ScrollView className="flex-1" contentContainerStyle={{ padding: 12, paddingBottom: 40 }}>
             {groups.map(({ date, dayLogs, total }) => (
                 <VStack key={date} space="xs" className="mb-5">
                     <HStack className="items-baseline justify-between px-1 mb-1">

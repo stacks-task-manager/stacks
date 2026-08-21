@@ -79,14 +79,18 @@ export const RepeatPicker: FunctionComponent<IRepeatPickerProps> = ({ value, onC
     return (
         <div className="repeat-picker">
             <div className="row">
-                <div className="col col-align-center col-auto">Repeats</div>
+                <div className="col col-align-center col-auto">{translate("Repeats")}</div>
                 <div className="col col-align-center col-justify-end">
-                    <HTMLSelect value={repeats.type} onChange={handleSetType}>
-                        <option value={REPEATTYPE.DAILY}>Daily</option>
-                        <option value={REPEATTYPE.WEEKLY}>Weekly</option>
-                        <option value={REPEATTYPE.MONTHLY}>Monthly</option>
-                        <option value={REPEATTYPE.YEARLY}>Yearly</option>
-                        <option value={REPEATTYPE.PERIODICALLY}>Periodically</option>
+                    <HTMLSelect
+                        value={repeats.type}
+                        onChange={handleSetType}
+                        data-testid="repeat-type-select"
+                    >
+                        <option value={REPEATTYPE.DAILY}>{translate("Daily")}</option>
+                        <option value={REPEATTYPE.WEEKLY}>{translate("Weekly")}</option>
+                        <option value={REPEATTYPE.MONTHLY}>{translate("Monthly")}</option>
+                        <option value={REPEATTYPE.YEARLY}>{translate("Yearly")}</option>
+                        <option value={REPEATTYPE.PERIODICALLY}>{translate("Periodically")}</option>
                     </HTMLSelect>
                 </div>
             </div>
@@ -99,12 +103,9 @@ export const RepeatPicker: FunctionComponent<IRepeatPickerProps> = ({ value, onC
                             className="week-day"
                             checked={isDayChecked(day)}
                             onClick={() => handleSetDayOfWeek(day)}
+                            data-testid={`repeat-day-${day}`}
                         >
-                            <div>
-                                {format(setDay(new Date(), day), "eee")
-                                    .substring(0, 1)
-                                    .toUpperCase()}
-                            </div>
+                            <div>{format(setDay(new Date(), day), "eee").substring(0, 1).toUpperCase()}</div>
                         </Checkbox>
                     ))}
                 </div>
@@ -112,15 +113,19 @@ export const RepeatPicker: FunctionComponent<IRepeatPickerProps> = ({ value, onC
 
             {repeats.type === REPEATTYPE.MONTHLY && (
                 <div className="row repeater-section">
-                    <div className="col col-align-center">On day</div>
+                    <div className="col col-align-center">{translate("On day")}</div>
                     <div className="col col-align-center col-justify-end">
-                        <HTMLSelect value={repeats.value} onChange={handleSetValue}>
+                        <HTMLSelect
+                            value={repeats.value}
+                            onChange={handleSetValue}
+                            data-testid="repeat-month-day-select"
+                        >
                             {[...Array(28).keys()].map((day: number) => (
                                 <option value={day + 1} key={day}>
                                     {day + 1}
                                 </option>
                             ))}
-                            <option value="last">Last</option>
+                            <option value="last">{translate("Last")}</option>
                         </HTMLSelect>
                     </div>
                 </div>
@@ -128,7 +133,7 @@ export const RepeatPicker: FunctionComponent<IRepeatPickerProps> = ({ value, onC
 
             {repeats.type === REPEATTYPE.PERIODICALLY && (
                 <div className="row repeater-section">
-                    <div className="col col-align-center">Days after completion</div>
+                    <div className="col col-align-center">{translate("Days after completion")}</div>
                     <div className="col col-align-center col-justify-end col-60">
                         <NumericInput
                             min={1}
@@ -137,6 +142,7 @@ export const RepeatPicker: FunctionComponent<IRepeatPickerProps> = ({ value, onC
                             value={repeats.value}
                             selectAllOnFocus
                             onValueChange={handleSetMumericValue}
+                            data-testid="repeat-period-input"
                         />
                     </div>
                 </div>
@@ -144,13 +150,20 @@ export const RepeatPicker: FunctionComponent<IRepeatPickerProps> = ({ value, onC
 
             <Divider />
             <div className="repeat-footer">
-                <Checkbox label="Reopen task" checked={repeats.reopen} onClick={handleOpenAsNew} inline />
+                <Checkbox
+                    label={translate("Reopen task")}
+                    checked={repeats.reopen}
+                    onClick={handleOpenAsNew}
+                    inline
+                    data-testid="repeat-reopen-checkbox"
+                />
                 <Button
                     minimal
                     small
                     intent={Intent.WARNING}
                     onClick={() => onChange()}
                     className={Classes.POPOVER_DISMISS}
+                    data-testid="repeat-clear-button"
                 >
                     {translate("Clear")}
                 </Button>

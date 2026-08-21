@@ -31,7 +31,9 @@ export const Folder: FunctionComponent<IFolder2Props> = ({ folder, depth, isOpen
         setTimeout(async () => {
             const { answer } = await Confirm({
                 title: "Delete folder",
-                description: translate("Are you sure you want to delete this folder All boards stacks and tasks will also be deleted This action cannot be undone"),
+                description: translate(
+                    "Are you sure you want to delete this folder All boards stacks and tasks will also be deleted This action cannot be undone"
+                ),
                 intent: Intent.DANGER,
             });
 

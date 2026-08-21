@@ -52,9 +52,7 @@ export async function fetchTimelogs(options: {
     if (options.dateRange) {
         where.date = { [Op.between]: [options.dateRange.start, options.dateRange.end] };
     }
-    const timelogsEntities = await TimelogEntity.findAll(
-        Object.keys(where).length ? { where } : undefined
-    );
+    const timelogsEntities = await TimelogEntity.findAll(Object.keys(where).length ? { where } : undefined);
     return timelogsEntities.map(timelog => timelog.toJSON()) as ITimeLog[];
 }
 

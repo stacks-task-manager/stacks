@@ -5,7 +5,6 @@ import Mention from "@tiptap/extension-mention";
 import { PluginKey } from "@tiptap/pm/state";
 import { NodeViewWrapper, ReactNodeViewRenderer, ReactRenderer } from "@tiptap/react";
 import { SuggestionOptions, SuggestionProps } from "@tiptap/suggestion";
-import React from "react";
 import tippy, { GetReferenceClientRect, Instance as TippyInstance } from "tippy.js";
 
 import { IPerson } from "@stacks/types";

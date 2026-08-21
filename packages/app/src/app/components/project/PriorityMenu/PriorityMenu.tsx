@@ -1,8 +1,9 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { translate } from "@stacks/translations";
 import { Classes, Menu, MenuDivider, MenuItem } from "@blueprintjs/core";
-import React, { FunctionComponent, useCallback, useRef, useState } from "react";
+import React, { FunctionComponent, useCallback } from "react";
 import { PRIORITY } from "@stacks/types";
+import { useMenuKeyboardNavigation } from "app/hooks";
 import { PriorityMenuItems } from "app/widgets";
 
 const Priorities = [PRIORITY.NONE, PRIORITY.CRITICAL, PRIORITY.HIGH, PRIORITY.MEDIUM, PRIORITY.LOW];
@@ -19,43 +20,18 @@ export const PriorityMenu: FunctionComponent<IPriorityMenuProps> = ({
     shouldDismiss,
     onChange,
 }) => {
-    const [selected, setSelected] = useState<number | undefined>(undefined);
-    const btnRef = useRef<HTMLButtonElement | null>(null);
+    const { selected, btnRef, handleOnKeyDown } = useMenuKeyboardNavigation({
+        maxIndex: 4,
+        onEnter: selected => {
+            document.getElementById(`priority-${Priorities[selected]}`)?.click();
+        },
+    });
 
     const handleFocus = useCallback((spanRef: HTMLSpanElement | null) => {
         if (spanRef) {
             spanRef.focus();
         }
     }, []);
-
-    const handleOnKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        event.stopPropagation();
-        if (event.key === "ArrowDown" || event.key === "ArrowUp" || event.key === "Enter") {
-            event.preventDefault();
-        }
-
-        if (event.key === "ArrowDown") {
-            if (selected == null || selected + 1 > 4) {
-                setSelected(0);
-            } else {
-                setSelected(selected + 1);
-            }
-        } else if (event.key === "ArrowUp") {
-            if (selected == null || selected - 1 < 0) {
-                setSelected(4);
-            } else {
-                setSelected(selected - 1);
-            }
-        } else if (event.key === "Enter") {
-            if (selected != null) {
-                document.getElementById(`priority-${Priorities[selected]}`)?.click();
-            }
-        } else if (event.key === "Escape") {
-            if (btnRef.current) {
-                btnRef.current.click();
-            }
-        }
-    };
 
     return (
         <span tabIndex={0} ref={handleFocus} style={{ outline: "none" }} onKeyDown={handleOnKeyDown}>

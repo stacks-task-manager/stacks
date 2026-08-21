@@ -20,7 +20,13 @@ type AuthContextValue = {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-export function AuthProvider({ children, onUnauthorized }: { children: React.ReactNode; onUnauthorized: () => void }) {
+export function AuthProvider({
+    children,
+    onUnauthorized,
+}: {
+    children: React.ReactNode;
+    onUnauthorized: () => void;
+}) {
     const [isReady, setIsReady] = useState(false);
     const [serverUrl, setServerUrlState] = useState<string | null>(null);
     const [token, setToken] = useState<string | null>(null);
@@ -75,16 +81,13 @@ export function AuthProvider({ children, onUnauthorized }: { children: React.Rea
         setServerUrlState(n);
     }, []);
 
-    const login = useCallback(
-        async (email: string, password: string) => {
-            const res = await loginRequest(email, password);
-            await SecureStore.setItemAsync(SECURE_KEYS.authToken, res.token);
-            await SecureStore.setItemAsync(SECURE_KEYS.userId, res.user);
-            setToken(res.token);
-            setUserId(res.user);
-        },
-        []
-    );
+    const login = useCallback(async (email: string, password: string) => {
+        const res = await loginRequest(email, password);
+        await SecureStore.setItemAsync(SECURE_KEYS.authToken, res.token);
+        await SecureStore.setItemAsync(SECURE_KEYS.userId, res.user);
+        setToken(res.token);
+        setUserId(res.user);
+    }, []);
 
     const value = useMemo(
         () => ({

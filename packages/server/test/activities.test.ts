@@ -19,7 +19,7 @@ describe("Activities", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect([200, 404]).toContain(res.status);
         if (res.status === 200) {
             const body = await res.json();
@@ -36,7 +36,7 @@ describe("Activities", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect([200, 404]).toContain(res.status);
         if (res.status === 200) {
             const body = await res.json();
@@ -52,8 +52,8 @@ describe("Activities", () => {
             description: "Test activity created",
             metadata: {
                 taskId: "test-task-id",
-                taskTitle: "Test Task"
-            }
+                taskTitle: "Test Task",
+            },
         };
 
         const res = await app.request("/api/activities", {
@@ -64,7 +64,7 @@ describe("Activities", () => {
             },
             body: JSON.stringify(activityData),
         });
-        
+
         expect([200, 400, 500]).toContain(res.status);
         if (res.status === 200) {
             const body = await res.json();
@@ -82,7 +82,7 @@ describe("Activities", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect([200, 404]).toContain(res.status);
         if (res.status === 200) {
             const body = await res.json();
@@ -104,7 +104,7 @@ describe("Activities", () => {
             },
             body: JSON.stringify(updateData),
         });
-        
+
         expect([200, 404]).toContain(res.status);
     });
 
@@ -116,7 +116,7 @@ describe("Activities", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect([200, 404]).toContain(res.status);
     });
 
@@ -134,7 +134,7 @@ describe("Activities", () => {
             },
             body: JSON.stringify(activityData),
         });
-        
+
         // Accept validator or server error
         expect([200, 400, 500]).toContain(res.status);
         if (res.status === 200) {
@@ -158,7 +158,7 @@ describe("Activities", () => {
             },
             body: JSON.stringify(activityData),
         });
-        
+
         // Accept validator or server error
         expect([200, 400, 500]).toContain(res.status);
         if (res.status === 200) {
@@ -175,7 +175,7 @@ describe("Activities", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect([200, 404, 500]).toContain(res.status);
         if (res.status === 200) {
             const bodyInvalidIdGet = await res.json();
@@ -196,7 +196,7 @@ describe("Activities", () => {
             },
             body: JSON.stringify(updateData),
         });
-        
+
         expect([200, 404]).toContain(res.status);
         if (res.status === 200) {
             const bodyInvalidIdPatch = await res.json();
@@ -212,7 +212,7 @@ describe("Activities", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect([200, 404]).toContain(res.status);
         if (res.status === 200) {
             const bodyInvalidIdDelete = await res.json();
@@ -228,7 +228,7 @@ describe("Activities", () => {
                 // No Authorization header
             },
         });
-        
+
         // Should fail without authentication or route missing
         expect([401, 404]).toContain(res.status);
     });

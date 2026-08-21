@@ -221,29 +221,17 @@ export const Dashboard = () => {
         <div id="board-overview">
             <div className="board-overview-wrapper">
                 <div className="board-overview-sidebar">
-                    <h3>
-                        {translate("Board Overview")}
-                    </h3>
+                    <h3>{translate("Board Overview")}</h3>
 
-                    {time.total === 0 && (
-                        <p>
-                            {translate("There is not enough data to render this report")}
-                        </p>
-                    )}
+                    {time.total === 0 && <p>{translate("There is not enough data to render this report")}</p>}
 
                     {time.total > 0 && <BOPie count={count} />}
 
                     <div className="board-overview-separator negative" />
 
-                    <h3>
-                        {translate("Estimates Overview")}
-                    </h3>
+                    <h3>{translate("Estimates Overview")}</h3>
 
-                    {time.total === 0 && (
-                        <p>
-                            {translate("There is not enough data to render this report")}
-                        </p>
-                    )}
+                    {time.total === 0 && <p>{translate("There is not enough data to render this report")}</p>}
 
                     {time.total > 0 && (
                         <React.Fragment>
@@ -268,14 +256,10 @@ export const Dashboard = () => {
 
                     <div className="board-overview-separator negative" />
 
-                    <h3>
-                        {translate("Earnings Overview")}
-                    </h3>
+                    <h3>{translate("Earnings Overview")}</h3>
 
                     {earnings.total === 0 && (
-                        <p>
-                            {translate("There is not enough data to render this report")}
-                        </p>
+                        <p>{translate("There is not enough data to render this report")}</p>
                     )}
                     {earnings.total > 0 && (
                         <div className="board-overview-estimates">
@@ -301,15 +285,9 @@ export const Dashboard = () => {
 
                     <div className="board-overview-separator negative" />
 
-                    <h3>
-                        {translate("Tags Overview")}
-                    </h3>
+                    <h3>{translate("Tags Overview")}</h3>
 
-                    {tags.length === 0 && (
-                        <p>
-                            {translate("This board does not have any tags")}
-                        </p>
-                    )}
+                    {tags.length === 0 && <p>{translate("This board does not have any tags")}</p>}
 
                     <div className="board-overview-tags">
                         {tags.map((tag: ITag) => {
@@ -327,59 +305,27 @@ export const Dashboard = () => {
                     </div>
                 </div>
                 <div className="board-overview-main">
-                    <h3>
-                        {translate("Tasks Overview")}
-                    </h3>
+                    <h3>{translate("Tasks Overview")}</h3>
 
                     <div className="board-overview-boxes">
-                        <BOBox
-                            title={translate("Total")}
-                            value={count.total}
-                            intent="total"
-                        />
+                        <BOBox title={translate("Total")} value={count.total} intent="total" />
 
-                        <BOBox
-                            title={translate("Idle")}
-                            value={count.idle}
-                            intent="idle"
-                        />
+                        <BOBox title={translate("Idle")} value={count.idle} intent="idle" />
 
-                        <BOBox
-                            title={translate("Doing")}
-                            value={count.doing}
-                            intent="doing"
-                        />
+                        <BOBox title={translate("Doing")} value={count.doing} intent="doing" />
 
-                        <BOBox
-                            title={translate("Done")}
-                            value={count.done}
-                            intent="done"
-                        />
+                        <BOBox title={translate("Done")} value={count.done} intent="done" />
 
-                        <BOBox
-                            title={translate("Upcoming")}
-                            value={count.upcoming}
-                            intent="upcoming"
-                        />
+                        <BOBox title={translate("Upcoming")} value={count.upcoming} intent="upcoming" />
 
-                        <BOBox
-                            title={translate("Overdue")}
-                            value={count.overdue}
-                            intent="overdue"
-                        />
+                        <BOBox title={translate("Overdue")} value={count.overdue} intent="overdue" />
 
-                        <BOBox
-                            title={translate("Archived")}
-                            value={count.archived}
-                            intent="archived"
-                        />
+                        <BOBox title={translate("Archived")} value={count.archived} intent="archived" />
                     </div>
 
                     <div className="board-overview-separator" />
 
-                    <h3>
-                        {translate("Stacks Overview")}
-                    </h3>
+                    <h3>{translate("Stacks Overview")}</h3>
 
                     <BOStacks count={stackCount} />
 
@@ -395,9 +341,7 @@ export const Dashboard = () => {
 
                     <div className="board-overview-separator" />
 
-                    <h3>
-                        {translate("Earnings by Stacks")}
-                    </h3>
+                    <h3>{translate("Earnings by Stacks")}</h3>
 
                     {/* <BOStacksEarnings
                         stacks={project.stacks}

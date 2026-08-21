@@ -4,9 +4,7 @@
         "title": "Define Event Objectives and Theme",
         "description": "Establish clear goals, target audience, and overall theme for the annual corporate conference",
         "project": "30403245-6874-4789-84fc-96250233b96d",
-        "tags": [
-            "ep-milestone"
-        ],
+        "tags": ["ep-milestone"],
         "tint": "blue",
         "stack": "c19d2fda-c5e3-4927-b994-2c04f88ead26",
         "estimate": 8,
@@ -19,10 +17,7 @@
         "title": "Set Event Budget and Financial Framework",
         "description": "Create comprehensive budget breakdown including venue, catering, speakers, marketing, and contingency funds",
         "project": "30403245-6874-4789-84fc-96250233b96d",
-        "tags": [
-            "ep-budget",
-            "ep-milestone"
-        ],
+        "tags": ["ep-budget", "ep-milestone"],
         "tint": "blue",
         "stack": "c19d2fda-c5e3-4927-b994-2c04f88ead26",
         "estimate": 6,
@@ -35,9 +30,7 @@
         "title": "Research and Shortlist Venues",
         "description": "Identify potential venues that meet capacity, location, and technical requirements for the conference",
         "project": "30403245-6874-4789-84fc-96250233b96d",
-        "tags": [
-            "ep-venue"
-        ],
+        "tags": ["ep-venue"],
         "tint": "green",
         "stack": "1e7ea9af-50be-4c7a-82f4-e8ee55a1de70",
         "estimate": 12,
@@ -50,10 +43,7 @@
         "title": "Book Venue and Negotiate Contract",
         "description": "Finalize venue selection, negotiate terms, and secure booking with signed contract",
         "project": "30403245-6874-4789-84fc-96250233b96d",
-        "tags": [
-            "ep-venue",
-            "ep-milestone"
-        ],
+        "tags": ["ep-venue", "ep-milestone"],
         "tint": "green",
         "stack": "1e7ea9af-50be-4c7a-82f4-e8ee55a1de70",
         "estimate": 8,
@@ -66,9 +56,7 @@
         "title": "Identify and Contact Keynote Speakers",
         "description": "Research industry experts, reach out to potential keynote speakers, and secure commitments",
         "project": "30403245-6874-4789-84fc-96250233b96d",
-        "tags": [
-            "ep-speakers"
-        ],
+        "tags": ["ep-speakers"],
         "tint": "blue",
         "stack": "c19d2fda-c5e3-4927-b994-2c04f88ead26",
         "estimate": 16,
@@ -81,9 +69,7 @@
         "title": "Design Event Branding and Materials",
         "description": "Create visual identity, logos, banners, signage, and promotional materials for the conference",
         "project": "30403245-6874-4789-84fc-96250233b96d",
-        "tags": [
-            "ep-marketing"
-        ],
+        "tags": ["ep-marketing"],
         "tint": "purple",
         "stack": "108f00fa-b231-487d-8d56-a9dc7225b6b8",
         "estimate": 20,
@@ -96,9 +82,7 @@
         "title": "Set Up Registration System",
         "description": "Implement online registration platform with payment processing and attendee management",
         "project": "30403245-6874-4789-84fc-96250233b96d",
-        "tags": [
-            "ep-registration"
-        ],
+        "tags": ["ep-registration"],
         "tint": "purple",
         "stack": "108f00fa-b231-487d-8d56-a9dc7225b6b8",
         "estimate": 12,
@@ -111,10 +95,7 @@
         "title": "Plan Catering and Menu Selection",
         "description": "Coordinate with catering vendors, finalize menu options, and arrange for dietary restrictions",
         "project": "30403245-6874-4789-84fc-96250233b96d",
-        "tags": [
-            "ep-catering",
-            "ep-vendor"
-        ],
+        "tags": ["ep-catering", "ep-vendor"],
         "tint": "green",
         "stack": "1e7ea9af-50be-4c7a-82f4-e8ee55a1de70",
         "estimate": 10,
@@ -127,10 +108,7 @@
         "title": "Coordinate AV and Technical Requirements",
         "description": "Plan audio-visual setup, lighting, microphones, projectors, and live streaming capabilities",
         "project": "30403245-6874-4789-84fc-96250233b96d",
-        "tags": [
-            "ep-av-tech",
-            "ep-vendor"
-        ],
+        "tags": ["ep-av-tech", "ep-vendor"],
         "tint": "green",
         "stack": "1e7ea9af-50be-4c7a-82f4-e8ee55a1de70",
         "estimate": 14,
@@ -143,9 +121,7 @@
         "title": "Launch Marketing Campaign",
         "description": "Execute multi-channel marketing strategy including social media, email, and industry partnerships",
         "project": "30403245-6874-4789-84fc-96250233b96d",
-        "tags": [
-            "ep-marketing"
-        ],
+        "tags": ["ep-marketing"],
         "tint": "purple",
         "stack": "108f00fa-b231-487d-8d56-a9dc7225b6b8",
         "estimate": 25,
@@ -158,9 +134,7 @@
         "title": "Manage Speaker Logistics",
         "description": "Coordinate travel, accommodation, and technical requirements for all speakers",
         "project": "30403245-6874-4789-84fc-96250233b96d",
-        "tags": [
-            "ep-speakers"
-        ],
+        "tags": ["ep-speakers"],
         "tint": "green",
         "stack": "1e7ea9af-50be-4c7a-82f4-e8ee55a1de70",
         "estimate": 18,
@@ -173,9 +147,7 @@
         "title": "Finalize Event Schedule and Agenda",
         "description": "Create detailed timeline, session schedules, and coordinate with all stakeholders",
         "project": "30403245-6874-4789-84fc-96250233b96d",
-        "tags": [
-            "ep-milestone"
-        ],
+        "tags": ["ep-milestone"],
         "tint": "blue",
         "stack": "c19d2fda-c5e3-4927-b994-2c04f88ead26",
         "estimate": 8,
@@ -188,9 +160,7 @@
         "title": "Conduct Pre-Event Setup",
         "description": "Oversee venue setup, test all technical equipment, and coordinate vendor arrivals",
         "project": "30403245-6874-4789-84fc-96250233b96d",
-        "tags": [
-            "ep-urgent"
-        ],
+        "tags": ["ep-urgent"],
         "tint": "orange",
         "stack": "927e9fa0-7b9f-4e89-93df-28c6adcd9353",
         "estimate": 16,
@@ -203,10 +173,7 @@
         "title": "Execute Event Day Operations",
         "description": "Manage all aspects of event execution including registration, sessions, and troubleshooting",
         "project": "30403245-6874-4789-84fc-96250233b96d",
-        "tags": [
-            "ep-urgent",
-            "ep-milestone"
-        ],
+        "tags": ["ep-urgent", "ep-milestone"],
         "tint": "orange",
         "stack": "927e9fa0-7b9f-4e89-93df-28c6adcd9353",
         "estimate": 12,
@@ -219,9 +186,7 @@
         "title": "Coordinate Event Breakdown",
         "description": "Oversee venue cleanup, equipment return, and final vendor settlements",
         "project": "30403245-6874-4789-84fc-96250233b96d",
-        "tags": [
-            "ep-vendor"
-        ],
+        "tags": ["ep-vendor"],
         "tint": "orange",
         "stack": "927e9fa0-7b9f-4e89-93df-28c6adcd9353",
         "estimate": 6,
@@ -247,9 +212,7 @@
         "title": "Prepare Event ROI Analysis",
         "description": "Analyze event success metrics, budget performance, and return on investment",
         "project": "30403245-6874-4789-84fc-96250233b96d",
-        "tags": [
-            "ep-budget"
-        ],
+        "tags": ["ep-budget"],
         "tint": "pink",
         "stack": "76fac388-d5f9-432a-b6d9-a8307c999d39",
         "estimate": 10,

@@ -9,10 +9,10 @@ If you want to **add a Tiptap Pro extension** (for example `@tiptap-pro/extensio
 
 ## Table of Contents
 
--   [How to wire it up locally](#how-to-wire-it-up-locally)
--   [CI / production](#ci-production)
--   [If you accidentally commit the token](#if-you-accidentally-commit-the-token)
--   [Why we don't ship the registry block by default](#why-we-dont-ship-the-registry-block-by-default)
+- [How to wire it up locally](#how-to-wire-it-up-locally)
+- [CI / production](#ci-production)
+- [If you accidentally commit the token](#if-you-accidentally-commit-the-token)
+- [Why we don't ship the registry block by default](#why-we-dont-ship-the-registry-block-by-default)
 
 ## How to wire it up locally
 
@@ -36,10 +36,10 @@ The repo ships `.yarnrc.yml` without a Tiptap registry block — add it back whe
 
 ```yaml
 npmScopes:
-    tiptap-pro:
-        npmAlwaysAuth: true
-        npmAuthToken: "${TIPTAP_NPM_TOKEN}"
-        npmRegistryServer: "https://registry.tiptap.dev/"
+  tiptap-pro:
+    npmAlwaysAuth: true
+    npmAuthToken: "${TIPTAP_NPM_TOKEN}"
+    npmRegistryServer: "https://registry.tiptap.dev/"
 ```
 
 > **⚠ Never paste the token literal here.** Always use the `${TIPTAP_NPM_TOKEN}` form so the secret stays in your environment and out of git.
@@ -59,7 +59,7 @@ In CI, set `TIPTAP_NPM_TOKEN` as a GitHub Actions secret and expose it to the in
 ```yaml
 - name: Install
   env:
-      TIPTAP_NPM_TOKEN: ${{ secrets.TIPTAP_NPM_TOKEN }}
+    TIPTAP_NPM_TOKEN: ${{ secrets.TIPTAP_NPM_TOKEN }}
   run: yarn install --immutable
 ```
 

@@ -10,5 +10,5 @@ export const TagSchema = z.object({
     color: z.string(),
     section: z.enum(["projects", "people", "timebox"]),
     parent: z.union([z.uuid(), z.null()]).optional(),
-    type: z.enum(["tag", "status"])
+    type: z.enum(["tag", "status"]),
 });

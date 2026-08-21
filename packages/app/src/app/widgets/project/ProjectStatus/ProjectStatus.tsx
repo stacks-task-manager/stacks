@@ -23,7 +23,6 @@ export const ProjectStatus: FunctionComponent<ProjectStatusProps> = ({
         return getTag(status);
     }, [status]);
 
-
     if (!currentStatus) return null;
 
     return (

@@ -1,6 +1,5 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import Markdown, { type MarkdownToJSX } from "markdown-to-jsx";
-import React from "react";
 
 const options: MarkdownToJSX.Options = {
     disableParsingRawHTML: true,

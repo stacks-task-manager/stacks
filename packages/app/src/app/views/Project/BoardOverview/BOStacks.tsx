@@ -1,14 +1,7 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { translate } from "@stacks/translations";
 import React from "react";
-import {
-    Tooltip,
-    ResponsiveContainer,
-    Bar,
-    BarChart,
-    XAxis,
-    YAxis,
-} from "recharts";
+import { Tooltip, ResponsiveContainer, Bar, BarChart, XAxis, YAxis } from "recharts";
 import { IStackCount } from "./BoardOverview";
 
 interface IBOStacksProps {
@@ -20,11 +13,7 @@ export default class BOStacks extends React.PureComponent<IBOStacksProps> {
         const { count } = this.props;
 
         if (!Object.keys(count).length) {
-            return (
-                <p>
-                    {translate("There is not enough data to render this report")}
-                </p>
-            );
+            return <p>{translate("There is not enough data to render this report")}</p>;
         }
 
         const data = [];

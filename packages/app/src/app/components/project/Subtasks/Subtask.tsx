@@ -6,13 +6,7 @@ import React, { FunctionComponent, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { ITask } from "@stacks/types";
-import {
-    DateRangePickerButton,
-    Icon,
-    RoundButton,
-    Textarea,
-    TextareaHandle
-} from "app/components/common";
+import { DateRangePickerButton, Icon, RoundButton, Textarea, TextareaHandle } from "app/components/common";
 import { getTaskModalListBackgroundFromHistory } from "app/hooks/router";
 import { TasksActions } from "app/store/actions";
 import { PreferencesStore } from "app/store/preferences";
@@ -112,11 +106,7 @@ export const Subtask: FunctionComponent<ISubtaskProps> = ({ subtask, disabled, s
     };
 
     const handleDatesChange = (sDate: Date | null, dDate: Date | null) => {
-        TasksActions.setDates(
-            subtask.id,
-            sDate,
-            dDate
-        );
+        TasksActions.setDates(subtask.id, sDate, dDate);
     };
 
     const handleToggleAssignees = (personId: string) => {
@@ -173,7 +163,11 @@ export const Subtask: FunctionComponent<ISubtaskProps> = ({ subtask, disabled, s
                         />
                     )}
                     {!editing && (
-                        <div className="subtask-content" onClick={handleToggleEdit} data-testid="subtask-title">
+                        <div
+                            className="subtask-content"
+                            onClick={handleToggleEdit}
+                            data-testid="subtask-title"
+                        >
                             {subtask.title}
                         </div>
                     )}
@@ -228,11 +222,7 @@ const SubtaskMenu: FunctionComponent<SubtaskMenuProps> = ({ onEdit, onOpen, onDe
         <Popover
             content={
                 <Menu>
-                    <MenuItem
-                        icon={<Icon icon="edit-05" />}
-                        text={translate("Edit task")}
-                        onClick={onOpen}
-                    />
+                    <MenuItem icon={<Icon icon="edit-05" />} text={translate("Edit task")} onClick={onOpen} />
                     <MenuItem
                         icon={<Icon icon="edit-04" />}
                         text={`${translate("Edit inline")}...`}

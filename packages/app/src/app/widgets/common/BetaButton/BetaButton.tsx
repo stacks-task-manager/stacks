@@ -10,7 +10,9 @@ interface BetaButtonProps {
 export const BetaButton: FunctionComponent<BetaButtonProps> = ({ ml, mr }) => {
     return (
         <Tooltip
-            content={translate("This feature is in beta which means it is intended for testing purposes only and things might not work as planned just yet")}
+            content={translate(
+                "This feature is in beta which means it is intended for testing purposes only and things might not work as planned just yet"
+            )}
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             renderTarget={({ isOpen, className, ...props }) => (
                 <span className={classNames("beta-button", className, { ml, mr })} {...props}>

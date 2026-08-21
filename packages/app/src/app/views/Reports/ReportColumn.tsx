@@ -2,5 +2,5 @@
 import React, { FunctionComponent } from "react";
 
 export const ReportColumn: FunctionComponent = () => {
-    return (<div></div>);
-}
+    return <div></div>;
+};

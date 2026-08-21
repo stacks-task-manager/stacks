@@ -35,14 +35,13 @@ export function ValuePill({
                 ...(bg ? { backgroundColor: bg } : null),
                 ...(borderColor ? { borderColor } : null),
             }}
-            className={`border rounded-full px-3 py-1.5 active:opacity-75 ${bg ? "" : "bg-background-100"} ${borderColor ? "" : "border-outline-300"}`}
+            className={`border rounded-full px-3 py-1.5 active:opacity-75 ${bg ? "" : "bg-background-100"} ${
+                borderColor ? "" : "border-outline-300"
+            }`}
         >
             <HStack className="items-center" space="xs">
                 {color ? (
-                    <Box
-                        style={{ width: 8, height: 8, backgroundColor: color }}
-                        className="rounded-full"
-                    />
+                    <Box style={{ width: 8, height: 8, backgroundColor: color }} className="rounded-full" />
                 ) : null}
                 <Text
                     size="sm"

@@ -1,8 +1,9 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { translate } from "@stacks/translations";
-import React, { FunctionComponent, useCallback, useMemo, useRef, useState } from "react";
+import React, { FunctionComponent, useCallback, useMemo, useRef } from "react";
 import { Classes, Menu, MenuDivider, MenuItem } from "@blueprintjs/core";
 import { Blank, Tick } from "@blueprintjs/icons";
+import { useMenuKeyboardNavigation } from "app/hooks";
 
 interface IProgressMenuProps {
     value: number;
@@ -18,8 +19,13 @@ export const ProgressMenu: FunctionComponent<IProgressMenuProps> = ({
     onChange,
 }) => {
     const progressRef = useRef<HTMLSpanElement | null>(null);
-    const [selected, setSelected] = useState<number | undefined>(undefined);
-    const btnRef = useRef<HTMLButtonElement | null>(null);
+
+    const { selected, btnRef, handleOnKeyDown } = useMenuKeyboardNavigation({
+        maxIndex: 10,
+        onEnter: (selected, event) => {
+            onChange(selected * 10, event as unknown as React.MouseEvent);
+        },
+    });
 
     const handleFocus = useCallback((spanRef: HTMLSpanElement | null) => {
         if (spanRef) {
@@ -29,123 +35,36 @@ export const ProgressMenu: FunctionComponent<IProgressMenuProps> = ({
         progressRef.current = spanRef;
     }, []);
 
-    const handleOnKeyDown = (event: React.KeyboardEvent) => {
-        event.stopPropagation();
-        if (event.key === "ArrowDown" || event.key === "ArrowUp" || event.key === "Enter") {
-            event.preventDefault();
-        }
-
-        if (event.key === "ArrowDown") {
-            if (selected == null || selected + 1 > 10) {
-                setSelected(0);
-            } else {
-                setSelected(selected + 1);
-            }
-        } else if (event.key === "ArrowUp") {
-            if (selected == null || selected - 1 < 0) {
-                setSelected(10);
-            } else {
-                setSelected(selected - 1);
-            }
-        } else if (event.key === "Enter") {
-            if (selected != null && progressRef.current) {
-                onChange(selected * 10, event as unknown as React.MouseEvent);
-            }
-        } else if (event.key === "Escape") {
-            if (btnRef.current) {
-                btnRef.current.click();
-            }
-        }
-    };
-
     const progressItems = useMemo(() => {
+        const groups: Array<{ divider: string; values: number[] }> = [
+            { divider: "Idle", values: [0, 10] },
+            { divider: "Analysis", values: [20, 30] },
+            { divider: "Doing", values: [40, 50, 60, 70] },
+            { divider: "Finalizing", values: [80, 90] },
+            { divider: "Done", values: [100] },
+        ];
+
         return (
             <>
-                <MenuDivider title={translate("Idle")} />
-                <MenuItem
-                    text="0%"
-                    labelElement={!value || value === 0 ? <Tick /> : <Blank />}
-                    onClick={(event: React.MouseEvent) => onChange(0, event)}
-                    shouldDismissPopover={shouldDismiss}
-                    active={selected === 0}
-                />
-                <MenuItem
-                    text="10%"
-                    labelElement={value === 10 ? <Tick /> : <Blank />}
-                    onClick={(event: React.MouseEvent) => onChange(10, event)}
-                    shouldDismissPopover={shouldDismiss}
-                    active={selected === 1}
-                />
-                <MenuDivider title={translate("Analysis")} />
-                <MenuItem
-                    text="20%"
-                    labelElement={value === 20 ? <Tick /> : <Blank />}
-                    onClick={(event: React.MouseEvent) => onChange(20, event)}
-                    shouldDismissPopover={shouldDismiss}
-                    active={selected === 2}
-                />
-                <MenuItem
-                    text="30%"
-                    labelElement={value === 30 ? <Tick /> : <Blank />}
-                    onClick={(event: React.MouseEvent) => onChange(30, event)}
-                    shouldDismissPopover={shouldDismiss}
-                    active={selected === 3}
-                />
-                <MenuDivider title={translate("Doing")} />
-                <MenuItem
-                    text="40%"
-                    labelElement={value === 40 ? <Tick /> : <Blank />}
-                    onClick={(event: React.MouseEvent) => onChange(40, event)}
-                    shouldDismissPopover={shouldDismiss}
-                    active={selected === 4}
-                />
-                <MenuItem
-                    text="50%"
-                    labelElement={value === 50 ? <Tick /> : <Blank />}
-                    onClick={(event: React.MouseEvent) => onChange(50, event)}
-                    shouldDismissPopover={shouldDismiss}
-                    active={selected === 5}
-                />
-                <MenuItem
-                    text="60%"
-                    labelElement={value === 60 ? <Tick /> : <Blank />}
-                    onClick={(event: React.MouseEvent) => onChange(60, event)}
-                    shouldDismissPopover={shouldDismiss}
-                    active={selected === 6}
-                />
-                <MenuItem
-                    text="70%"
-                    labelElement={value === 70 ? <Tick /> : <Blank />}
-                    onClick={(event: React.MouseEvent) => onChange(70, event)}
-                    shouldDismissPopover={shouldDismiss}
-                    active={selected === 7}
-                />
-                <MenuDivider title={translate("Finalizing")} />
-                <MenuItem
-                    text="80%"
-                    labelElement={value === 80 ? <Tick /> : <Blank />}
-                    onClick={(event: React.MouseEvent) => onChange(80, event)}
-                    shouldDismissPopover={shouldDismiss}
-                    active={selected === 8}
-                />
-                <MenuItem
-                    text="90%"
-                    labelElement={value === 90 ? <Tick /> : <Blank />}
-                    onClick={(event: React.MouseEvent) => onChange(90, event)}
-                    shouldDismissPopover={shouldDismiss}
-                    active={selected === 9}
-                />
-                <MenuDivider title={translate("Done")} />
-                <MenuItem
-                    text="100%"
-                    labelElement={value === 100 ? <Tick /> : <Blank />}
-                    onClick={(event: React.MouseEvent) => onChange(100, event)}
-                    shouldDismissPopover={shouldDismiss}
-                    active={selected === 10}
-                />
+                {groups.map(group => (
+                    <React.Fragment key={group.divider}>
+                        <MenuDivider title={translate(group.divider)} />
+                        {group.values.map(p => (
+                            <MenuItem
+                                key={p}
+                                text={`${p}%`}
+                                labelElement={value === p ? <Tick /> : <Blank />}
+                                onClick={(event: React.MouseEvent) => onChange(p, event)}
+                                shouldDismissPopover={shouldDismiss}
+                                active={selected === p / 10}
+                                data-testid={`progress-menu-item-${p}`}
+                            />
+                        ))}
+                    </React.Fragment>
+                ))}
             </>
         );
-    }, [value, selected]);
+    }, [value, selected, shouldDismiss, onChange]);
 
     if (menu === false) {
         return progressItems;
@@ -154,7 +73,7 @@ export const ProgressMenu: FunctionComponent<IProgressMenuProps> = ({
     return (
         <span tabIndex={0} ref={handleFocus} style={{ outline: "none" }} onKeyDown={handleOnKeyDown}>
             <button style={{ display: "none" }} className={Classes.POPOVER_DISMISS} ref={btnRef} />
-            <Menu>{progressItems}</Menu>
+            <Menu data-testid="progress-menu">{progressItems}</Menu>
         </span>
     );
 };

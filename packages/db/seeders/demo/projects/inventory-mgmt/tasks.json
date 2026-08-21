@@ -4,10 +4,7 @@
         "description": "Description for Order iPhone Cases",
         "id": "e0f40b0e-650b-47dc-95d9-98e4761c7828",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "61d62921-9a0b-40ef-8e47-11340a42251f",
-            "da1267f6-b317-4ce8-858a-65e5ea962806"
-        ],
+        "tags": ["61d62921-9a0b-40ef-8e47-11340a42251f", "da1267f6-b317-4ce8-858a-65e5ea962806"],
         "tint": null,
         "stack": "e70f806d-6fe2-47c9-a5e4-c4752af9821f",
         "estimate": 28800,
@@ -20,9 +17,7 @@
         "description": "Description for Restock T-Shirts",
         "id": "ed79ec58-07e4-47b3-a994-ae07ae212ff6",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "caa6e214-f167-4dbc-802a-0e1a1ea5a8fc"
-        ],
+        "tags": ["caa6e214-f167-4dbc-802a-0e1a1ea5a8fc"],
         "tint": null,
         "stack": "e70f806d-6fe2-47c9-a5e4-c4752af9821f",
         "estimate": 10800,
@@ -35,10 +30,7 @@
         "description": "Description for Inventory Count",
         "id": "60d94e5c-084c-4885-900f-4d17692f698f",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "79ccb757-eb22-45b1-911b-a2ef4703ab6f",
-            "deaa3e38-fe03-42c8-b445-8d953e876d7d"
-        ],
+        "tags": ["79ccb757-eb22-45b1-911b-a2ef4703ab6f", "deaa3e38-fe03-42c8-b445-8d953e876d7d"],
         "tint": "#8B5CF6",
         "stack": "e70f806d-6fe2-47c9-a5e4-c4752af9821f",
         "estimate": 25200,
@@ -51,9 +43,7 @@
         "description": "Description for Mark Down Clearance",
         "id": "f5d58d1d-58f1-44ed-a7d2-d3dfaf8740ac",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "61d62921-9a0b-40ef-8e47-11340a42251f"
-        ],
+        "tags": ["61d62921-9a0b-40ef-8e47-11340a42251f"],
         "tint": null,
         "stack": "e70f806d-6fe2-47c9-a5e4-c4752af9821f",
         "estimate": 18000,
@@ -66,9 +56,7 @@
         "description": "Description for Return Defective Items",
         "id": "9881a1b5-1907-468a-b4a6-584dac11db4f",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "79ccb757-eb22-45b1-911b-a2ef4703ab6f"
-        ],
+        "tags": ["79ccb757-eb22-45b1-911b-a2ef4703ab6f"],
         "tint": null,
         "stack": "e70f806d-6fe2-47c9-a5e4-c4752af9821f",
         "estimate": 7200,
@@ -81,10 +69,7 @@
         "description": "Description for Update POS System",
         "id": "085cffc2-69ca-4408-bb43-1b7ea029fe98",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "79ccb757-eb22-45b1-911b-a2ef4703ab6f",
-            "deaa3e38-fe03-42c8-b445-8d953e876d7d"
-        ],
+        "tags": ["79ccb757-eb22-45b1-911b-a2ef4703ab6f", "deaa3e38-fe03-42c8-b445-8d953e876d7d"],
         "tint": "#3B82F6",
         "stack": "e70f806d-6fe2-47c9-a5e4-c4752af9821f",
         "estimate": 21600,
@@ -97,10 +82,7 @@
         "description": "Description for Organize Warehouse",
         "id": "bd1a1146-d720-4035-b532-545ca0471814",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "61d62921-9a0b-40ef-8e47-11340a42251f",
-            "ba252c19-a0c9-40d0-b03e-8c55e88aab56"
-        ],
+        "tags": ["61d62921-9a0b-40ef-8e47-11340a42251f", "ba252c19-a0c9-40d0-b03e-8c55e88aab56"],
         "tint": "#EF4444",
         "stack": "e70f806d-6fe2-47c9-a5e4-c4752af9821f",
         "estimate": 36000,
@@ -113,10 +95,7 @@
         "description": "Description for Label Shelves",
         "id": "f55dc1bb-14d4-4da1-9784-6931d043fe1d",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "caa6e214-f167-4dbc-802a-0e1a1ea5a8fc",
-            "da1267f6-b317-4ce8-858a-65e5ea962806"
-        ],
+        "tags": ["caa6e214-f167-4dbc-802a-0e1a1ea5a8fc", "da1267f6-b317-4ce8-858a-65e5ea962806"],
         "tint": null,
         "stack": "e70f806d-6fe2-47c9-a5e4-c4752af9821f",
         "estimate": 21600,
@@ -129,9 +108,7 @@
         "description": "Description for Order Packaging",
         "id": "74b74132-92f5-4b47-aae6-2ec5d1caf84e",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "deaa3e38-fe03-42c8-b445-8d953e876d7d"
-        ],
+        "tags": ["deaa3e38-fe03-42c8-b445-8d953e876d7d"],
         "tint": "#10B981",
         "stack": "e70f806d-6fe2-47c9-a5e4-c4752af9821f",
         "estimate": 32400,
@@ -144,10 +121,7 @@
         "description": "Description for Ship Online Orders",
         "id": "2fda26bd-894e-4215-b93e-094e37e020c2",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "79ccb757-eb22-45b1-911b-a2ef4703ab6f",
-            "deaa3e38-fe03-42c8-b445-8d953e876d7d"
-        ],
+        "tags": ["79ccb757-eb22-45b1-911b-a2ef4703ab6f", "deaa3e38-fe03-42c8-b445-8d953e876d7d"],
         "tint": null,
         "stack": "e70f806d-6fe2-47c9-a5e4-c4752af9821f",
         "estimate": 18000,
@@ -160,9 +134,7 @@
         "description": "Description for Review Supplier Contracts",
         "id": "a9774b87-f2bd-45df-ae0f-9e6eb7fa18ff",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "21edea1f-33db-4831-a7f1-10811d9289bd"
-        ],
+        "tags": ["21edea1f-33db-4831-a7f1-10811d9289bd"],
         "tint": "#3B82F6",
         "stack": "e70f806d-6fe2-47c9-a5e4-c4752af9821f",
         "estimate": 28800,
@@ -175,10 +147,7 @@
         "description": "Description for Forecast Demand",
         "id": "cbb7d892-e3b0-4cd0-abe6-f4613506f052",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "61d62921-9a0b-40ef-8e47-11340a42251f",
-            "caa6e214-f167-4dbc-802a-0e1a1ea5a8fc"
-        ],
+        "tags": ["61d62921-9a0b-40ef-8e47-11340a42251f", "caa6e214-f167-4dbc-802a-0e1a1ea5a8fc"],
         "tint": "#06B6D4",
         "stack": "e70f806d-6fe2-47c9-a5e4-c4752af9821f",
         "estimate": 10800,
@@ -204,10 +173,7 @@
         "description": "Description for Security Audit",
         "id": "e02f1e96-ef4b-4a3f-ac30-b7ab070a6000",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "79ccb757-eb22-45b1-911b-a2ef4703ab6f",
-            "da1267f6-b317-4ce8-858a-65e5ea962806"
-        ],
+        "tags": ["79ccb757-eb22-45b1-911b-a2ef4703ab6f", "da1267f6-b317-4ce8-858a-65e5ea962806"],
         "tint": "#8B5CF6",
         "stack": "e70f806d-6fe2-47c9-a5e4-c4752af9821f",
         "estimate": 28800,
@@ -237,10 +203,7 @@
         "description": "Description for Order iPhone Cases (2)",
         "id": "d1e97473-23c7-4f44-a487-cc255ca9e830",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "61d62921-9a0b-40ef-8e47-11340a42251f",
-            "deaa3e38-fe03-42c8-b445-8d953e876d7d"
-        ],
+        "tags": ["61d62921-9a0b-40ef-8e47-11340a42251f", "deaa3e38-fe03-42c8-b445-8d953e876d7d"],
         "tint": "#8B5CF6",
         "stack": "f87221b0-7888-46b2-911c-80febbff2350",
         "estimate": 18000,
@@ -266,10 +229,7 @@
         "description": "Description for Inventory Count (2)",
         "id": "05a197ed-f208-4bd5-b19a-92993ef2491f",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "caa6e214-f167-4dbc-802a-0e1a1ea5a8fc",
-            "61d62921-9a0b-40ef-8e47-11340a42251f"
-        ],
+        "tags": ["caa6e214-f167-4dbc-802a-0e1a1ea5a8fc", "61d62921-9a0b-40ef-8e47-11340a42251f"],
         "tint": "#3B82F6",
         "stack": "f87221b0-7888-46b2-911c-80febbff2350",
         "estimate": 21600,
@@ -282,9 +242,7 @@
         "description": "Description for Mark Down Clearance (2)",
         "id": "469e97a3-0eff-4cc1-92ad-e8d4b4a6f2d6",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "ba252c19-a0c9-40d0-b03e-8c55e88aab56"
-        ],
+        "tags": ["ba252c19-a0c9-40d0-b03e-8c55e88aab56"],
         "tint": null,
         "stack": "f87221b0-7888-46b2-911c-80febbff2350",
         "estimate": 32400,
@@ -310,9 +268,7 @@
         "description": "Description for Update POS System (2)",
         "id": "6a138c80-2d03-424e-9b34-7f37ff4f8fa1",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "caa6e214-f167-4dbc-802a-0e1a1ea5a8fc"
-        ],
+        "tags": ["caa6e214-f167-4dbc-802a-0e1a1ea5a8fc"],
         "tint": null,
         "stack": "f87221b0-7888-46b2-911c-80febbff2350",
         "estimate": 7200,
@@ -325,10 +281,7 @@
         "description": "Description for Organize Warehouse (2)",
         "id": "c43906ca-c5de-41e9-bc91-547a49b13cd2",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "21edea1f-33db-4831-a7f1-10811d9289bd",
-            "da1267f6-b317-4ce8-858a-65e5ea962806"
-        ],
+        "tags": ["21edea1f-33db-4831-a7f1-10811d9289bd", "da1267f6-b317-4ce8-858a-65e5ea962806"],
         "tint": "#F59E0B",
         "stack": "f87221b0-7888-46b2-911c-80febbff2350",
         "estimate": 14400,
@@ -354,10 +307,7 @@
         "description": "Description for Order Packaging (2)",
         "id": "53f010a1-9ae3-4d36-b38f-ce198cc54581",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "ba252c19-a0c9-40d0-b03e-8c55e88aab56",
-            "deaa3e38-fe03-42c8-b445-8d953e876d7d"
-        ],
+        "tags": ["ba252c19-a0c9-40d0-b03e-8c55e88aab56", "deaa3e38-fe03-42c8-b445-8d953e876d7d"],
         "tint": "#F97316",
         "stack": "f87221b0-7888-46b2-911c-80febbff2350",
         "estimate": 14400,
@@ -370,9 +320,7 @@
         "description": "Description for Ship Online Orders (2)",
         "id": "628c45d6-6ff2-4c4c-a04f-ec13a0902c90",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "caa6e214-f167-4dbc-802a-0e1a1ea5a8fc"
-        ],
+        "tags": ["caa6e214-f167-4dbc-802a-0e1a1ea5a8fc"],
         "tint": "#8B5CF6",
         "stack": "f87221b0-7888-46b2-911c-80febbff2350",
         "estimate": 10800,
@@ -385,10 +333,7 @@
         "description": "Description for Review Supplier Contracts (2)",
         "id": "f0a628e3-6fb1-4be2-badc-c7f4fa47eb4e",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "ba252c19-a0c9-40d0-b03e-8c55e88aab56",
-            "caa6e214-f167-4dbc-802a-0e1a1ea5a8fc"
-        ],
+        "tags": ["ba252c19-a0c9-40d0-b03e-8c55e88aab56", "caa6e214-f167-4dbc-802a-0e1a1ea5a8fc"],
         "tint": null,
         "stack": "95be6366-cb34-4992-b7a0-15168d291af6",
         "estimate": 21600,
@@ -401,9 +346,7 @@
         "description": "Description for Forecast Demand (2)",
         "id": "e27ee602-aa5b-41c8-87e0-300fb6d2ffba",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "61d62921-9a0b-40ef-8e47-11340a42251f"
-        ],
+        "tags": ["61d62921-9a0b-40ef-8e47-11340a42251f"],
         "tint": "#64748B",
         "stack": "95be6366-cb34-4992-b7a0-15168d291af6",
         "estimate": 25200,
@@ -416,9 +359,7 @@
         "description": "Description for Train Staff (2)",
         "id": "2163cbc2-451f-4695-aab8-f8e07f5a4c29",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "2278cf06-13bc-465b-a64b-a27740fa0bfc"
-        ],
+        "tags": ["2278cf06-13bc-465b-a64b-a27740fa0bfc"],
         "tint": "#10B981",
         "stack": "95be6366-cb34-4992-b7a0-15168d291af6",
         "estimate": 14400,
@@ -431,9 +372,7 @@
         "description": "Description for Security Audit (2)",
         "id": "b1d465e2-03db-4f13-92f0-a49dc8f21178",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "21edea1f-33db-4831-a7f1-10811d9289bd"
-        ],
+        "tags": ["21edea1f-33db-4831-a7f1-10811d9289bd"],
         "tint": "#64748B",
         "stack": "95be6366-cb34-4992-b7a0-15168d291af6",
         "estimate": 14400,
@@ -446,10 +385,7 @@
         "description": "Description for Display Setup (2)",
         "id": "123b67d0-d33e-42b6-ad54-0da9cc14cc2e",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "ba252c19-a0c9-40d0-b03e-8c55e88aab56",
-            "2278cf06-13bc-465b-a64b-a27740fa0bfc"
-        ],
+        "tags": ["ba252c19-a0c9-40d0-b03e-8c55e88aab56", "2278cf06-13bc-465b-a64b-a27740fa0bfc"],
         "tint": "#64748B",
         "stack": "95be6366-cb34-4992-b7a0-15168d291af6",
         "estimate": 3600,
@@ -462,9 +398,7 @@
         "description": "Description for Order iPhone Cases (3)",
         "id": "efdc0d55-e031-4074-9265-5392ba24a6f1",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "ba252c19-a0c9-40d0-b03e-8c55e88aab56"
-        ],
+        "tags": ["ba252c19-a0c9-40d0-b03e-8c55e88aab56"],
         "tint": "#64748B",
         "stack": "95be6366-cb34-4992-b7a0-15168d291af6",
         "estimate": 28800,
@@ -477,9 +411,7 @@
         "description": "Description for Restock T-Shirts (3)",
         "id": "6b65f260-f5a9-447c-9587-45ee3ddb146c",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "da1267f6-b317-4ce8-858a-65e5ea962806"
-        ],
+        "tags": ["da1267f6-b317-4ce8-858a-65e5ea962806"],
         "tint": null,
         "stack": "95be6366-cb34-4992-b7a0-15168d291af6",
         "estimate": 32400,
@@ -492,10 +424,7 @@
         "description": "Description for Inventory Count (3)",
         "id": "646e7364-737c-41e4-98e3-56eac728b81e",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "79ccb757-eb22-45b1-911b-a2ef4703ab6f",
-            "da1267f6-b317-4ce8-858a-65e5ea962806"
-        ],
+        "tags": ["79ccb757-eb22-45b1-911b-a2ef4703ab6f", "da1267f6-b317-4ce8-858a-65e5ea962806"],
         "tint": "#EF4444",
         "stack": "95be6366-cb34-4992-b7a0-15168d291af6",
         "estimate": 14400,
@@ -508,10 +437,7 @@
         "description": "Description for Mark Down Clearance (3)",
         "id": "0d36aaa8-0bc3-4747-a351-685fcd2add11",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "caa6e214-f167-4dbc-802a-0e1a1ea5a8fc",
-            "ba252c19-a0c9-40d0-b03e-8c55e88aab56"
-        ],
+        "tags": ["caa6e214-f167-4dbc-802a-0e1a1ea5a8fc", "ba252c19-a0c9-40d0-b03e-8c55e88aab56"],
         "tint": "#10B981",
         "stack": "95be6366-cb34-4992-b7a0-15168d291af6",
         "estimate": 18000,
@@ -524,10 +450,7 @@
         "description": "Description for Return Defective Items (3)",
         "id": "15a28d71-2166-4db6-9a8e-bbc15a63feb2",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "21edea1f-33db-4831-a7f1-10811d9289bd",
-            "deaa3e38-fe03-42c8-b445-8d953e876d7d"
-        ],
+        "tags": ["21edea1f-33db-4831-a7f1-10811d9289bd", "deaa3e38-fe03-42c8-b445-8d953e876d7d"],
         "tint": null,
         "stack": "95be6366-cb34-4992-b7a0-15168d291af6",
         "estimate": 28800,
@@ -540,10 +463,7 @@
         "description": "Description for Update POS System (3)",
         "id": "6c14e3f2-66ac-4e7f-8186-d4dd2f18210e",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "ba252c19-a0c9-40d0-b03e-8c55e88aab56",
-            "da1267f6-b317-4ce8-858a-65e5ea962806"
-        ],
+        "tags": ["ba252c19-a0c9-40d0-b03e-8c55e88aab56", "da1267f6-b317-4ce8-858a-65e5ea962806"],
         "tint": null,
         "stack": "95be6366-cb34-4992-b7a0-15168d291af6",
         "estimate": 25200,
@@ -573,9 +493,7 @@
         "description": "Description for Label Shelves (3)",
         "id": "780dde05-ee93-4ab3-8af9-dc45f17f404f",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "ba252c19-a0c9-40d0-b03e-8c55e88aab56"
-        ],
+        "tags": ["ba252c19-a0c9-40d0-b03e-8c55e88aab56"],
         "tint": "#64748B",
         "stack": "95be6366-cb34-4992-b7a0-15168d291af6",
         "estimate": 18000,
@@ -588,9 +506,7 @@
         "description": "Description for Order Packaging (3)",
         "id": "47b1e26f-483a-4ff5-baa8-d11ec8e53a0e",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "79ccb757-eb22-45b1-911b-a2ef4703ab6f"
-        ],
+        "tags": ["79ccb757-eb22-45b1-911b-a2ef4703ab6f"],
         "tint": "#3B82F6",
         "stack": "95be6366-cb34-4992-b7a0-15168d291af6",
         "estimate": 18000,
@@ -603,10 +519,7 @@
         "description": "Description for Ship Online Orders (3)",
         "id": "3e718f1a-c867-48da-bc1f-26da5d24591f",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "caa6e214-f167-4dbc-802a-0e1a1ea5a8fc",
-            "2278cf06-13bc-465b-a64b-a27740fa0bfc"
-        ],
+        "tags": ["caa6e214-f167-4dbc-802a-0e1a1ea5a8fc", "2278cf06-13bc-465b-a64b-a27740fa0bfc"],
         "tint": "#F59E0B",
         "stack": "aa1c27a2-248b-44e6-bc64-c55d3b769d30",
         "estimate": 18000,
@@ -619,9 +532,7 @@
         "description": "Description for Review Supplier Contracts (3)",
         "id": "a5a5f683-4d53-4529-b7d4-b709a101ddff",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "2278cf06-13bc-465b-a64b-a27740fa0bfc"
-        ],
+        "tags": ["2278cf06-13bc-465b-a64b-a27740fa0bfc"],
         "tint": "#3B82F6",
         "stack": "aa1c27a2-248b-44e6-bc64-c55d3b769d30",
         "estimate": 14400,
@@ -634,10 +545,7 @@
         "description": "Description for Forecast Demand (3)",
         "id": "0ea01cfe-4e53-429a-8f20-382d03d0a166",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "79ccb757-eb22-45b1-911b-a2ef4703ab6f",
-            "2278cf06-13bc-465b-a64b-a27740fa0bfc"
-        ],
+        "tags": ["79ccb757-eb22-45b1-911b-a2ef4703ab6f", "2278cf06-13bc-465b-a64b-a27740fa0bfc"],
         "tint": null,
         "stack": "aa1c27a2-248b-44e6-bc64-c55d3b769d30",
         "estimate": 32400,
@@ -650,10 +558,7 @@
         "description": "Description for Train Staff (3)",
         "id": "0cfacfdb-8394-40f5-a4d7-954970484bbc",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "ba252c19-a0c9-40d0-b03e-8c55e88aab56",
-            "deaa3e38-fe03-42c8-b445-8d953e876d7d"
-        ],
+        "tags": ["ba252c19-a0c9-40d0-b03e-8c55e88aab56", "deaa3e38-fe03-42c8-b445-8d953e876d7d"],
         "tint": null,
         "stack": "aa1c27a2-248b-44e6-bc64-c55d3b769d30",
         "estimate": 10800,
@@ -666,10 +571,7 @@
         "description": "Description for Security Audit (3)",
         "id": "55666c9e-a908-4ccb-ab06-50b2f5abf4d8",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "21edea1f-33db-4831-a7f1-10811d9289bd",
-            "61d62921-9a0b-40ef-8e47-11340a42251f"
-        ],
+        "tags": ["21edea1f-33db-4831-a7f1-10811d9289bd", "61d62921-9a0b-40ef-8e47-11340a42251f"],
         "tint": "#6366F1",
         "stack": "aa1c27a2-248b-44e6-bc64-c55d3b769d30",
         "estimate": 3600,
@@ -682,10 +584,7 @@
         "description": "Description for Display Setup (3)",
         "id": "35b0db37-7ad4-4e6d-905c-4fcf60e6f048",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "61d62921-9a0b-40ef-8e47-11340a42251f",
-            "2278cf06-13bc-465b-a64b-a27740fa0bfc"
-        ],
+        "tags": ["61d62921-9a0b-40ef-8e47-11340a42251f", "2278cf06-13bc-465b-a64b-a27740fa0bfc"],
         "tint": "#EF4444",
         "stack": "aa1c27a2-248b-44e6-bc64-c55d3b769d30",
         "estimate": 7200,
@@ -724,9 +623,7 @@
         "description": "Description for Inventory Count (4)",
         "id": "0aa7189c-c81d-4d64-b9a1-197ab561e0f5",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "21edea1f-33db-4831-a7f1-10811d9289bd"
-        ],
+        "tags": ["21edea1f-33db-4831-a7f1-10811d9289bd"],
         "tint": "#EF4444",
         "stack": "aa1c27a2-248b-44e6-bc64-c55d3b769d30",
         "estimate": 7200,
@@ -739,10 +636,7 @@
         "description": "Description for Mark Down Clearance (4)",
         "id": "9c6cc1cf-b0cd-4d68-8aa3-26e56a550b3f",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "79ccb757-eb22-45b1-911b-a2ef4703ab6f",
-            "2278cf06-13bc-465b-a64b-a27740fa0bfc"
-        ],
+        "tags": ["79ccb757-eb22-45b1-911b-a2ef4703ab6f", "2278cf06-13bc-465b-a64b-a27740fa0bfc"],
         "tint": "#3B82F6",
         "stack": "aa1c27a2-248b-44e6-bc64-c55d3b769d30",
         "estimate": 3600,
@@ -785,10 +679,7 @@
         "description": "Description for Organize Warehouse (4)",
         "id": "8e89a47d-1117-47aa-9ab3-d3b3785c2687",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "caa6e214-f167-4dbc-802a-0e1a1ea5a8fc",
-            "ba252c19-a0c9-40d0-b03e-8c55e88aab56"
-        ],
+        "tags": ["caa6e214-f167-4dbc-802a-0e1a1ea5a8fc", "ba252c19-a0c9-40d0-b03e-8c55e88aab56"],
         "tint": "#EC4899",
         "stack": "aa1c27a2-248b-44e6-bc64-c55d3b769d30",
         "estimate": 7200,
@@ -831,10 +722,7 @@
         "description": "Description for Ship Online Orders (4)",
         "id": "301e21d4-bdad-4c0f-a305-da685cc0392b",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "caa6e214-f167-4dbc-802a-0e1a1ea5a8fc",
-            "2278cf06-13bc-465b-a64b-a27740fa0bfc"
-        ],
+        "tags": ["caa6e214-f167-4dbc-802a-0e1a1ea5a8fc", "2278cf06-13bc-465b-a64b-a27740fa0bfc"],
         "tint": null,
         "stack": "b72684f9-ddc4-47d1-9dd0-1f8869576e50",
         "estimate": 14400,
@@ -847,9 +735,7 @@
         "description": "Description for Review Supplier Contracts (4)",
         "id": "9e0afb22-0cd3-4295-87af-ec535271d228",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "deaa3e38-fe03-42c8-b445-8d953e876d7d"
-        ],
+        "tags": ["deaa3e38-fe03-42c8-b445-8d953e876d7d"],
         "tint": null,
         "stack": "b72684f9-ddc4-47d1-9dd0-1f8869576e50",
         "estimate": 28800,
@@ -892,9 +778,7 @@
         "description": "Description for Security Audit (4)",
         "id": "0a04dd4f-cc54-4a90-a53d-13bdbb884a7b",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "da1267f6-b317-4ce8-858a-65e5ea962806"
-        ],
+        "tags": ["da1267f6-b317-4ce8-858a-65e5ea962806"],
         "tint": null,
         "stack": "b72684f9-ddc4-47d1-9dd0-1f8869576e50",
         "estimate": 18000,
@@ -907,9 +791,7 @@
         "description": "Description for Display Setup (4)",
         "id": "40b8549e-652e-484b-b2b4-98240da74e0d",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "61d62921-9a0b-40ef-8e47-11340a42251f"
-        ],
+        "tags": ["61d62921-9a0b-40ef-8e47-11340a42251f"],
         "tint": null,
         "stack": "b72684f9-ddc4-47d1-9dd0-1f8869576e50",
         "estimate": 14400,
@@ -922,10 +804,7 @@
         "description": "Description for Order iPhone Cases (5)",
         "id": "7a25f745-427e-4611-a7d2-5bd6ed5b7223",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "79ccb757-eb22-45b1-911b-a2ef4703ab6f",
-            "2278cf06-13bc-465b-a64b-a27740fa0bfc"
-        ],
+        "tags": ["79ccb757-eb22-45b1-911b-a2ef4703ab6f", "2278cf06-13bc-465b-a64b-a27740fa0bfc"],
         "tint": "#64748B",
         "stack": "b72684f9-ddc4-47d1-9dd0-1f8869576e50",
         "estimate": 10800,
@@ -938,9 +817,7 @@
         "description": "Description for Restock T-Shirts (5)",
         "id": "0bb18017-ed5b-4b5b-a765-9837334bb187",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "da1267f6-b317-4ce8-858a-65e5ea962806"
-        ],
+        "tags": ["da1267f6-b317-4ce8-858a-65e5ea962806"],
         "tint": "#06B6D4",
         "stack": "b72684f9-ddc4-47d1-9dd0-1f8869576e50",
         "estimate": 10800,
@@ -953,10 +830,7 @@
         "description": "Description for Inventory Count (5)",
         "id": "2ada4438-bba8-4730-910d-99f475f84eab",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "ba252c19-a0c9-40d0-b03e-8c55e88aab56",
-            "21edea1f-33db-4831-a7f1-10811d9289bd"
-        ],
+        "tags": ["ba252c19-a0c9-40d0-b03e-8c55e88aab56", "21edea1f-33db-4831-a7f1-10811d9289bd"],
         "tint": "#8B5CF6",
         "stack": "b72684f9-ddc4-47d1-9dd0-1f8869576e50",
         "estimate": 28800,
@@ -969,10 +843,7 @@
         "description": "Description for Mark Down Clearance (5)",
         "id": "f5bc0654-15da-4195-9233-94a664e51a5f",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "79ccb757-eb22-45b1-911b-a2ef4703ab6f",
-            "deaa3e38-fe03-42c8-b445-8d953e876d7d"
-        ],
+        "tags": ["79ccb757-eb22-45b1-911b-a2ef4703ab6f", "deaa3e38-fe03-42c8-b445-8d953e876d7d"],
         "tint": "#64748B",
         "stack": "b72684f9-ddc4-47d1-9dd0-1f8869576e50",
         "estimate": 28800,
@@ -985,9 +856,7 @@
         "description": "Description for Return Defective Items (5)",
         "id": "84b1e3d9-556d-4816-9190-f3d0cab98c02",
         "project": "de0b5bca-3d12-4986-9d91-01a7fdce1d48",
-        "tags": [
-            "ba252c19-a0c9-40d0-b03e-8c55e88aab56"
-        ],
+        "tags": ["ba252c19-a0c9-40d0-b03e-8c55e88aab56"],
         "tint": null,
         "stack": "b72684f9-ddc4-47d1-9dd0-1f8869576e50",
         "estimate": 3600,

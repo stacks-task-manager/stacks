@@ -1,12 +1,13 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { translate } from "@stacks/translations";
-import React, { FunctionComponent, useMemo, useState } from "react";
+import React, { FunctionComponent, useState } from "react";
 import { RoundButton } from "app/components/common";
 import { TasksActions } from "app/store/actions";
 import { PeopleStore } from "app/store/people";
 import { IPerson } from "@stacks/types";
 import { Assignees, PeopleDialog } from "app/widgets";
 import { useElementHotkey } from "app/hooks";
+import { shallowEqual } from "app/hooks/store";
 
 interface ITaskDetailsAssigneesProps {
     taskId: string;
@@ -26,10 +27,11 @@ export const TaskDetailsAssignees: FunctionComponent<ITaskDetailsAssigneesProps>
 }) => {
     useElementHotkey("shift+a", "td-assignees");
 
-    const people = useMemo(() => {
-        const { people } = PeopleStore.get();
-        return people ? people.filter((person: IPerson) => assignees.includes(person.id)) : [];
-    }, [assignees]);
+    const people = PeopleStore.use(
+        state =>
+            state.people ? state.people.filter((person: IPerson) => assignees.includes(person.id)) : [],
+        shallowEqual
+    );
     const [open, setOpen] = useState(false);
 
     const handleClose = (peopleIds: string[]) => {

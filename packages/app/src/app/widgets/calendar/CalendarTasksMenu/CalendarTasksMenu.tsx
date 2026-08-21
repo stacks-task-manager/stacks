@@ -4,7 +4,7 @@ import { Classes, InputGroup, Intent, Menu, MenuDivider, MenuItem } from "@bluep
 import React, { FunctionComponent, useEffect, useMemo, useRef, useState } from "react";
 import type { CalendarSlotInfo } from "app/utils/calendarSlot";
 import { Icon, Scroller } from "app/components/common";
-import { useOnClickOutside, useProjectDocuments } from "app/hooks";
+import { useOnClickOutside } from "app/hooks";
 import { APPICONS, ITask } from "@stacks/types";
 import { CalendarActions } from "app/store/actions";
 import { scrollIntoView } from "app/utils/dom";
@@ -21,14 +21,13 @@ interface TaskExtended extends ITask {
 export const CalendarTasksMenu: FunctionComponent<CalendarTasksMenuProps> = ({ slot, onCancel }) => {
     const [query, setQuery] = useState("");
     const [selected, setSelected] = useState<number | undefined>();
-    const projects = useProjectDocuments();
     const menuRef = useRef<HTMLDivElement | null>(null);
 
     useOnClickOutside(menuRef, onCancel);
 
     const filteredTasks: TaskExtended[] = useMemo(() => {
-        return []
-    }, [query]);
+        return [];
+    }, []);
 
     useEffect(() => {
         if (selected == null) return;

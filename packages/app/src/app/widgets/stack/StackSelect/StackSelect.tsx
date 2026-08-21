@@ -12,7 +12,12 @@ interface IStackSelectProps {
     disabled?: boolean;
     onChange: (stackId: string) => void;
 }
-export const StackSelect: FunctionComponent<IStackSelectProps> = ({ stackId, projectId, disabled, onChange }) => {
+export const StackSelect: FunctionComponent<IStackSelectProps> = ({
+    stackId,
+    projectId,
+    disabled,
+    onChange,
+}) => {
     const stack = useStack(stackId);
 
     const isDisabled = useMemo(() => {
@@ -49,7 +54,5 @@ export const StackSelect: FunctionComponent<IStackSelectProps> = ({ stackId, pro
                 </Tag>
             )}
         />
-
     );
 };
-

@@ -31,6 +31,7 @@ export const StateMenu: FunctionComponent<IStateMenuProps> = ({ value, shouldDis
                 onClick={handleIncompleted}
                 labelElement={<Icon icon={value === "todo" ? "check" : undefined} />}
                 shouldDismissPopover={shouldDismiss}
+                data-testid="statemenu-incomplete"
             />
 
             <MenuDivider />
@@ -40,6 +41,7 @@ export const StateMenu: FunctionComponent<IStateMenuProps> = ({ value, shouldDis
                 onClick={handleCompleted}
                 labelElement={<Icon icon={value === "done" ? "check" : undefined} />}
                 shouldDismissPopover={shouldDismiss}
+                data-testid="statemenu-completed"
             />
             <MenuItem
                 text={translate("All tasks")}
@@ -47,6 +49,7 @@ export const StateMenu: FunctionComponent<IStateMenuProps> = ({ value, shouldDis
                 onClick={handleAll}
                 labelElement={<Icon icon={value === "all" ? "check" : undefined} />}
                 shouldDismissPopover={shouldDismiss}
+                data-testid="statemenu-all"
             />
         </Menu>
     );

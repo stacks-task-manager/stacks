@@ -96,10 +96,7 @@ export async function fetchStacks(projectId: string): Promise<IStack[]> {
     return unwrap(res);
 }
 
-export async function updateProjectStacksOrder(
-    projectId: string,
-    stacksOrder: string[]
-): Promise<void> {
+export async function updateProjectStacksOrder(projectId: string, stacksOrder: string[]): Promise<void> {
     await api.patch(`/api/projects/${projectId}`, { stacksOrder });
 }
 
@@ -107,10 +104,7 @@ export async function updateProjectStacksOrder(
  * Partial update of a project record. The server merges the fields we send,
  * so callers can pass only the properties they're actually changing.
  */
-export async function updateProject(
-    projectId: string,
-    patch: Partial<IProject>
-): Promise<void> {
+export async function updateProject(projectId: string, patch: Partial<IProject>): Promise<void> {
     await api.patch(`/api/projects/${projectId}`, patch);
 }
 
@@ -476,10 +470,7 @@ export async function updateRole(
     await api.patch(`/api/roles/${id}`, payload);
 }
 
-export async function fetchAttachments(
-    recordId: string,
-    type?: string
-): Promise<IAttachment[]> {
+export async function fetchAttachments(recordId: string, type?: string): Promise<IAttachment[]> {
     const params = type ? { type } : undefined;
     const res = await api.get<ApiSuccess<IAttachment[]>>(
         `/api/files/attachments/${recordId}`,

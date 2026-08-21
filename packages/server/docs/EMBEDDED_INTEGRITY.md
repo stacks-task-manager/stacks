@@ -4,23 +4,23 @@ The production Node bundle can include an embedded SHA-256 hash and RSA signatur
 
 ## Table of Contents
 
--   [Two keypairs, two jobs — don't conflate them](#two-keypairs-two-jobs--dont-conflate-them)
--   [Generating a release-signing keypair](#generating-a-release-signing-keypair)
--   [Behavior](#behavior)
--   [Threat model](#threat-model)
--   [Operations](#operations)
--   [Sentinels vs. canonical placeholders](#sentinels-vs-canonical-placeholders)
--   [Testing helpers](#testing-helpers)
--   [CI](#ci)
+- [Two keypairs, two jobs — don't conflate them](#two-keypairs-two-jobs--dont-conflate-them)
+- [Generating a release-signing keypair](#generating-a-release-signing-keypair)
+- [Behavior](#behavior)
+- [Threat model](#threat-model)
+- [Operations](#operations)
+- [Sentinels vs. canonical placeholders](#sentinels-vs-canonical-placeholders)
+- [Testing helpers](#testing-helpers)
+- [CI](#ci)
 
 ## Two keypairs, two jobs — don't conflate them
 
 Stacks uses **two independent RSA keypairs**:
 
-| Keypair | Used for | Public key location | Private key holder |
-| --- | --- | --- | --- |
-| **License-verify** | Decrypting + verifying `license.key` at server boot ([`@stacks/license`](../../license/src/index.ts)) | [`packages/server/public.pem`](../public.pem) — committed to the repo and copied into `releases/server/public.pem` by `yarn release:server` | The maintainer (only). Used to sign each `license.key` distributed via [getstacksapp.com/dev-program](https://getstacksapp.com/dev-program/). |
-| **Release-signing** | Signing the built `releases/server.js` bundle so the server can verify it hasn't been tampered with at boot | Embedded **into the bundle** at build time by the esbuild integrity plugin (no shipped file) | Whoever cuts a release (you, CI, a fork maintainer). See [`scripts/release-signing/`](../../../scripts/release-signing/). |
+| Keypair             | Used for                                                                                                    | Public key location                                                                                                                         | Private key holder                                                                                                                            |
+| ------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| **License-verify**  | Decrypting + verifying `license.key` at server boot ([`@stacks/license`](../../license/src/index.ts))       | [`packages/server/public.pem`](../public.pem) — committed to the repo and copied into `releases/server/public.pem` by `yarn release:server` | The maintainer (only). Used to sign each `license.key` distributed via [getstacksapp.com/dev-program](https://getstacksapp.com/dev-program/). |
+| **Release-signing** | Signing the built `releases/server.js` bundle so the server can verify it hasn't been tampered with at boot | Embedded **into the bundle** at build time by the esbuild integrity plugin (no shipped file)                                                | Whoever cuts a release (you, CI, a fork maintainer). See [`scripts/release-signing/`](../../../scripts/release-signing/).                     |
 
 These keys are deliberately separate:
 
@@ -43,11 +43,11 @@ See [`scripts/release-signing/README.md`](../../../scripts/release-signing/READM
 
 ## Behavior
 
-| Condition | Verification |
-|-----------|----------------|
-| `NODE_ENV=test` | Skipped in `index.ts` (tests may import helpers directly). |
+| Condition                                                       | Verification                                                                                                                                         |
+| --------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `NODE_ENV=test`                                                 | Skipped in `index.ts` (tests may import helpers directly).                                                                                           |
 | Entry file ends in `.ts`/`.tsx` (e.g. `tsx watch src/index.ts`) | Skipped unless `FORCE_INTEGRITY_CHECK=1`. Placeholders are only replaced by the esbuild integrity plugin, so a TS entry can never be a built bundle. |
-| Built bundle (`dist/index.js` or similar) | Runs at startup; exits the process on failure. |
+| Built bundle (`dist/index.js` or similar)                       | Runs at startup; exits the process on failure.                                                                                                       |
 
 `NODE_ENV` is intentionally **not** an override on a built bundle: a production server must not be
 downgradable by editing `.env`. The only ways to skip the check on a built bundle are running tests
@@ -67,10 +67,10 @@ downgradable by editing `.env`. The only ways to skip the check on a built bundl
 
 The build plugin and the runtime use **two distinct sets of placeholder strings**:
 
-| Purpose | Strings | Where they live in source | Touched by build plugin? |
-|---------|---------|---------------------------|--------------------------|
-| Embedded constants (replaced at build) | `__INTEGRITY_EMBED_HASH__`, `__INTEGRITY_EMBED_SIG__`, `__INTEGRITY_EMBED_PUB__` | `const EMBEDDED_*` declarations only | **Yes** — replaced with the actual hash, signature, and PEM. |
-| Canonical normalizer placeholders | `__BUNDLE_HASH__`, `__BUNDLE_SIGNATURE__`, `__PUBLIC_KEY__` | Inside `computeNormalizedBundleHash` body | **No** — must remain as literals so the runtime can normalize the on-disk bundle and recompute the same hash that the plugin computed. |
+| Purpose                                | Strings                                                                          | Where they live in source                 | Touched by build plugin?                                                                                                               |
+| -------------------------------------- | -------------------------------------------------------------------------------- | ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| Embedded constants (replaced at build) | `__INTEGRITY_EMBED_HASH__`, `__INTEGRITY_EMBED_SIG__`, `__INTEGRITY_EMBED_PUB__` | `const EMBEDDED_*` declarations only      | **Yes** — replaced with the actual hash, signature, and PEM.                                                                           |
+| Canonical normalizer placeholders      | `__BUNDLE_HASH__`, `__BUNDLE_SIGNATURE__`, `__PUBLIC_KEY__`                      | Inside `computeNormalizedBundleHash` body | **No** — must remain as literals so the runtime can normalize the on-disk bundle and recompute the same hash that the plugin computed. |
 
 Earlier versions used the canonical placeholders for both jobs. After minification the `computeNormalizedBundleHash` body literals appeared **before** the constant declarations in the bundle, so a single-occurrence `replace()` in the plugin overwrote the wrong copy and left the constants un-substituted. Using two distinct sets makes the plugin's target unambiguous.
 

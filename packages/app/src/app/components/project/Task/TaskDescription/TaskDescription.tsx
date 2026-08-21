@@ -56,10 +56,12 @@ export const TaskDescription: FunctionComponent<ITaskDescriptionProps> = ({
 
     const handleAddAttachments = async (cb: (files: IAttachment[]) => void) => {
         await pickFiles({
-            recordId: taskId, type: FILES_TYPE.TASK_ATTACHMENT, onUploaded: async (attachments: IAttachment[]) => {
+            recordId: taskId,
+            type: FILES_TYPE.TASK_ATTACHMENT,
+            onUploaded: async (attachments: IAttachment[]) => {
                 cb(attachments);
                 AttachmentsActions.appendAttachments(taskId, attachments);
-            }
+            },
         });
     };
 

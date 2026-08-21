@@ -4,26 +4,26 @@ This guide provides comprehensive instructions for installing Stacks and running
 
 ## Table of Contents
 
--   [Prerequisites](#prerequisites)
--   [Development license required](#development-license-required)
--   [Installing dependencies](#installing-dependencies)
--   [Setting up environment variables](#setting-up-environment-variables)
--   [Setting up the database](#setting-up-the-database)
--   [Running the application](#running-the-application)
--   [Ports](#ports)
--   [Scripts](#scripts)
--   [Troubleshooting](#troubleshooting)
+- [Prerequisites](#prerequisites)
+- [Development license required](#development-license-required)
+- [Installing dependencies](#installing-dependencies)
+- [Setting up environment variables](#setting-up-environment-variables)
+- [Setting up the database](#setting-up-the-database)
+- [Running the application](#running-the-application)
+- [Ports](#ports)
+- [Scripts](#scripts)
+- [Troubleshooting](#troubleshooting)
 
 ## Prerequisites
 
-| Requirement | Version / Notes |
-| --- | --- |
-| **Node.js** | 18.0.0 or higher (20 recommended) |
-| **Yarn** | 3.6.4 — activated via `corepack enable` (ships with Node) |
-| **PostgreSQL** | 15 — running locally or reachable from your machine |
-| **SMTP server** | *(optional)* only needed for outbound email features (password reset, verification). `yarn dev` does **not** start the email worker, so you can run Stacks without configuring SMTP first. [MailHog](https://github.com/mailhog/MailHog) or [Mailpit](https://github.com/axllent/mailpit) work great when you do want it |
-| **OpenAI-compatible API** | *(optional)* for the chat assistant — e.g., [LM Studio](https://lmstudio.ai/) or [llama.cpp](https://github.com/ggerganov/llama.cpp) exposing an OpenAI-compatible endpoint |
-| **Disk / RAM** | 5 GB free disk, 2 GB free RAM minimum |
+| Requirement               | Version / Notes                                                                                                                                                                                                                                                                                                          |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Node.js**               | 18.0.0 or higher (20 recommended)                                                                                                                                                                                                                                                                                        |
+| **Yarn**                  | 3.6.4 — activated via `corepack enable` (ships with Node)                                                                                                                                                                                                                                                                |
+| **PostgreSQL**            | 15 — running locally or reachable from your machine                                                                                                                                                                                                                                                                      |
+| **SMTP server**           | _(optional)_ only needed for outbound email features (password reset, verification). `yarn dev` does **not** start the email worker, so you can run Stacks without configuring SMTP first. [MailHog](https://github.com/mailhog/MailHog) or [Mailpit](https://github.com/axllent/mailpit) work great when you do want it |
+| **OpenAI-compatible API** | _(optional)_ for the chat assistant — e.g., [LM Studio](https://lmstudio.ai/) or [llama.cpp](https://github.com/ggerganov/llama.cpp) exposing an OpenAI-compatible endpoint                                                                                                                                              |
+| **Disk / RAM**            | 5 GB free disk, 2 GB free RAM minimum                                                                                                                                                                                                                                                                                    |
 
 ## ⚠️ Development license required
 
@@ -47,7 +47,7 @@ To obtain a key:
 >
 > The script writes directly to the `users` table using `packages/db/.env` and is excluded from release bundles. See [`docs/packages/db.md`](packages/db.md#migrations).
 
-The license check gates *server startup only*; it does not phone home at runtime.
+The license check gates _server startup only_; it does not phone home at runtime.
 
 ## Installing dependencies
 
@@ -82,12 +82,12 @@ Keep the `POSTGRES_*` values consistent across every `.env` that has them — th
 
 - **`packages/email-service/.env`** — only needed if you want outbound email features (password reset, verification). `yarn dev` does **not** start the email worker, so you can skip this for first run. When you do want it:
 
-    ```bash
-    cp packages/email-service/env.example packages/email-service/.env
-    # SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD, SMTP_FROM_EMAIL, EMAIL_PROCESS_INTERVAL
-    ```
+  ```bash
+  cp packages/email-service/env.example packages/email-service/.env
+  # SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD, SMTP_FROM_EMAIL, EMAIL_PROCESS_INTERVAL
+  ```
 
-    The defaults in `env.example` point at `smtp.example.com:587` — the worker will idle until you replace them. See the [local SMTP capture](#setting-up-the-database) section below for a Mailpit recipe.
+  The defaults in `env.example` point at `smtp.example.com:587` — the worker will idle until you replace them. See the [local SMTP capture](#setting-up-the-database) section below for a Mailpit recipe.
 
 - **`packages/app/.env`** — there is no checked-in `env.example`; create it manually only if you need to override the Webpack dev server defaults (e.g. `BROWSER=none`, `GENERATE_SOURCEMAP=false`). Do **not** change `PORT` — the server's proxy target is hardcoded to `3001`. Full key list in [`docs/packages/app.md`](packages/app.md#environment).
 
@@ -154,7 +154,7 @@ Visit **<http://localhost:3000/login>** — this is the API server (port `3000`)
 
 Sign in with the email you used to register for the dev program and the default password `$Pa$$w0rd` (see [Development license required](#%EF%B8%8F-development-license-required)).
 
-> **Port `3001` is hardcoded.** The server's proxy target is `localhost:3001` (see [`packages/server/src/api.ts`](../packages/server/src/api.ts)). You can change the *server* port via `APP_PORT` in `packages/server/.env` (then visit `http://localhost:<APP_PORT>/login`), but the Webpack dev server must still run on `3001` or the app shell won't load. Free up `3001` rather than reassigning it.
+> **Port `3001` is hardcoded.** The server's proxy target is `localhost:3001` (see [`packages/server/src/api.ts`](../packages/server/src/api.ts)). You can change the _server_ port via `APP_PORT` in `packages/server/.env` (then visit `http://localhost:<APP_PORT>/login`), but the Webpack dev server must still run on `3001` or the app shell won't load. Free up `3001` rather than reassigning it.
 
 ### 3. Mobile (optional)
 
@@ -162,12 +162,12 @@ Sign in with the email you used to register for the dev program and the default 
 
 ## Ports
 
-| Service | Default port |
-| --- | --- |
-| Web app (Webpack dev server) | `3001` (hardcoded — the server proxy target in `packages/server/src/api.ts`) |
-| API server (Hono) | `3000` — configurable via `APP_PORT`; also serves the built app in production |
-| Email service preview | `3005` (only when running `yarn workspace @stacks/email-service dev:email`) |
-| PostgreSQL | `5432` (or whatever you configure) |
+| Service                      | Default port                                                                  |
+| ---------------------------- | ----------------------------------------------------------------------------- |
+| Web app (Webpack dev server) | `3001` (hardcoded — the server proxy target in `packages/server/src/api.ts`)  |
+| API server (Hono)            | `3000` — configurable via `APP_PORT`; also serves the built app in production |
+| Email service preview        | `3005` (only when running `yarn workspace @stacks/email-service dev:email`)   |
+| PostgreSQL                   | `5432` (or whatever you configure)                                            |
 
 ## Scripts
 

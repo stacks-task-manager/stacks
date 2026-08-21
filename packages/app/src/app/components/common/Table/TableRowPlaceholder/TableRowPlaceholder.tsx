@@ -4,7 +4,6 @@ import { DraggableProvided } from "@hello-pangea/dnd";
 import React from "react";
 import { FunctionComponent } from "react";
 
-
 interface ITableRowPlaceholderProps {
     cols: number;
     provided: DraggableProvided;

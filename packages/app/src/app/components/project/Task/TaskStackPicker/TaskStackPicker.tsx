@@ -29,14 +29,7 @@ export const TaskStackPicker: FunctionComponent<ITaskStackPickerProps> = ({
 
     return (
         <Popover
-            content={
-                <StacksMenu
-                    projectId={projectId}
-                    showAdd
-                    selected={stackId}
-                    onClick={handleMoveTask}
-                />
-            }
+            content={<StacksMenu projectId={projectId} showAdd selected={stackId} onClick={handleMoveTask} />}
             disabled={disabled}
             lazy
         >

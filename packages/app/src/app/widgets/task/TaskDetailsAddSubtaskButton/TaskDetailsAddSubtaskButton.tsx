@@ -1,7 +1,6 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { translate } from "@stacks/translations";
 import { AnchorButton } from "@blueprintjs/core";
-import React from "react";
 import { HotkeyTooltip, Icon } from "app/components/common";
 import { useElementHotkey } from "app/hooks";
 

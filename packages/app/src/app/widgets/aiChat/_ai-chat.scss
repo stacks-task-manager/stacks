@@ -62,7 +62,7 @@
         background: rgba(17, 20, 24, 0.06);
     }
 
-    .bp6-dark & code {
+    .#{$ns}-dark & code {
         background: rgba(255, 255, 255, 0.08);
     }
 
@@ -80,7 +80,7 @@
         }
     }
 
-    .bp6-dark & pre {
+    .#{$ns}-dark & pre {
         background: rgba(255, 255, 255, 0.06);
     }
 

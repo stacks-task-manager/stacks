@@ -40,15 +40,7 @@ function useDebouncedValue<T>(value: T, delay: number): T {
     return debounced;
 }
 
-function Chip({
-    label,
-    active,
-    onPress,
-}: {
-    label: string;
-    active: boolean;
-    onPress: () => void;
-}) {
+function Chip({ label, active, onPress }: { label: string; active: boolean; onPress: () => void }) {
     return (
         <Pressable
             onPress={onPress}

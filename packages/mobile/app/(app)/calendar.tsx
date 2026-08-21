@@ -25,13 +25,7 @@ import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import type { ICalendar, ICalendarEvent } from "@stacks/types";
 
-import {
-    createEvent,
-    deleteEvent,
-    fetchCalendars,
-    fetchEvents,
-    updateEvent,
-} from "../../src/api/endpoints";
+import { createEvent, deleteEvent, fetchCalendars, fetchEvents, updateEvent } from "../../src/api/endpoints";
 import { Icon } from "../../src/components/Icon/Icon";
 import { queryClient } from "../../src/state/queryClient";
 
@@ -53,9 +47,7 @@ function addDays(d: Date, n: number): Date {
 }
 function sameDay(a: Date, b: Date): boolean {
     return (
-        a.getFullYear() === b.getFullYear() &&
-        a.getMonth() === b.getMonth() &&
-        a.getDate() === b.getDate()
+        a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate()
     );
 }
 function formatMonth(d: Date): string {
@@ -196,7 +188,11 @@ export default function CalendarScreen() {
                                                     key={ev.id}
                                                     className="rounded-sm px-1 py-0.5 bg-primary-100 overflow-hidden"
                                                 >
-                                                    <Text size="xs" numberOfLines={1} className="text-primary-800">
+                                                    <Text
+                                                        size="xs"
+                                                        numberOfLines={1}
+                                                        className="text-primary-800"
+                                                    >
                                                         {ev.title}
                                                     </Text>
                                                 </Box>
@@ -276,11 +272,18 @@ function DaySheet({
 }) {
     return (
         <RNModal visible={!!day} animationType="slide" transparent onRequestClose={onClose}>
-            <Pressable className="flex-1 justify-end" style={{ backgroundColor: "#00000066" }} onPress={onClose}>
+            <Pressable
+                className="flex-1 justify-end"
+                style={{ backgroundColor: "#00000066" }}
+                onPress={onClose}
+            >
                 <Pressable onPress={() => {}} className="bg-background-0 rounded-t-2xl p-4 pb-8 max-h-[70%]">
                     <HStack className="items-center justify-between mb-2">
                         <Heading size="md">{day ? fmtDate(day) : ""}</Heading>
-                        <Pressable onPress={onAdd} className="flex-row items-center bg-primary-600 rounded-md px-3 py-1.5">
+                        <Pressable
+                            onPress={onAdd}
+                            className="flex-row items-center bg-primary-600 rounded-md px-3 py-1.5"
+                        >
                             <Icon icon="plus" size={14} color="#ffffff" />
                             <Text size="sm" className="text-white ml-1">
                                 Add
@@ -301,7 +304,11 @@ function DaySheet({
                                         {ev.title}
                                     </Text>
                                     <Text size="xs" className="text-typography-500">
-                                        {ev.allDay ? "All day" : `${formatTime(new Date(ev.start))} – ${formatTime(new Date(ev.end))}`}
+                                        {ev.allDay
+                                            ? "All day"
+                                            : `${formatTime(new Date(ev.start))} – ${formatTime(
+                                                  new Date(ev.end)
+                                              )}`}
                                     </Text>
                                 </Pressable>
                             ))
@@ -336,7 +343,9 @@ function EventEditor({
     const [title, setTitle] = useState(base?.title ?? "");
     const [description, setDescription] = useState(base?.description ?? "");
     const [allDay, setAllDay] = useState(base?.allDay ?? true);
-    const [calendar, setCalendar] = useState(base?.calendar ?? calendars.find(c => c.primary)?.id ?? calendars[0]?.id ?? "");
+    const [calendar, setCalendar] = useState(
+        base?.calendar ?? calendars.find(c => c.primary)?.id ?? calendars[0]?.id ?? ""
+    );
     const [start, setStart] = useState<Date>(() =>
         base ? new Date(base.start) : defaultDate ? startOfDay(defaultDate) : new Date()
     );
@@ -344,8 +353,8 @@ function EventEditor({
         base
             ? new Date(base.end)
             : defaultDate
-              ? startOfDay(addDays(defaultDate, 1))
-              : new Date(Date.now() + DAY_MS)
+            ? startOfDay(addDays(defaultDate, 1))
+            : new Date(Date.now() + DAY_MS)
     );
 
     const canSave = title.trim().length > 0 && start <= end;
@@ -375,12 +384,7 @@ function EventEditor({
                 <ModalBody>
                     <VStack space="sm">
                         <Input variant="outline">
-                            <InputField
-                                placeholder="Title"
-                                value={title}
-                                onChangeText={setTitle}
-                                autoFocus
-                            />
+                            <InputField placeholder="Title" value={title} onChangeText={setTitle} autoFocus />
                         </Input>
                         <Input variant="outline">
                             <InputField
@@ -394,10 +398,18 @@ function EventEditor({
                             <Switch value={allDay} onValueChange={setAllDay} />
                         </Field>
                         <Field label="Start">
-                            <DateTimeField value={start} onChange={setStart} mode={allDay ? "date" : "datetime"} />
+                            <DateTimeField
+                                value={start}
+                                onChange={setStart}
+                                mode={allDay ? "date" : "datetime"}
+                            />
                         </Field>
                         <Field label="End">
-                            <DateTimeField value={end} onChange={setEnd} mode={allDay ? "date" : "datetime"} />
+                            <DateTimeField
+                                value={end}
+                                onChange={setEnd}
+                                mode={allDay ? "date" : "datetime"}
+                            />
                         </Field>
                         {calendars.length > 0 ? (
                             <Field label="Calendar">
@@ -409,7 +421,10 @@ function EventEditor({
                                             className="flex-row items-center justify-between py-1.5"
                                         >
                                             <HStack space="sm" className="items-center">
-                                                <Box className="w-3 h-3 rounded-full" style={{ backgroundColor: c.color ?? "#6366f1" }} />
+                                                <Box
+                                                    className="w-3 h-3 rounded-full"
+                                                    style={{ backgroundColor: c.color ?? "#6366f1" }}
+                                                />
                                                 <Text size="sm" className="text-typography-800">
                                                     {c.title}
                                                 </Text>
@@ -487,9 +502,7 @@ function DateTimeField({
         >
             <Icon icon="calendar" size={16} color="#64748b" />
             <Text size="sm" className="ml-2 text-typography-800">
-                {mode === "date"
-                    ? fmtDate(value)
-                    : `${fmtDate(value)} ${formatTime(value)}`}
+                {mode === "date" ? fmtDate(value) : `${fmtDate(value)} ${formatTime(value)}`}
             </Text>
         </Pressable>
     );
@@ -538,7 +551,9 @@ function DateTimeField({
                             <Pressable onPress={() => setOpen(false)} hitSlop={8}>
                                 <Text className="text-typography-500">Cancel</Text>
                             </Pressable>
-                            <Text className="font-bold">{pickerMode === "date" ? "Pick a date" : "Pick a time"}</Text>
+                            <Text className="font-bold">
+                                {pickerMode === "date" ? "Pick a date" : "Pick a time"}
+                            </Text>
                             <Pressable
                                 onPress={() => {
                                     if (mode === "datetime" && pickerMode === "date") {

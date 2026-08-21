@@ -9,12 +9,7 @@ import { Image } from "@/components/ui/image";
 export function TaskCover({ url, height = 120 }: { url: string; height?: number }) {
     return (
         <Box style={{ height }} className="w-full overflow-hidden">
-            <Image
-                source={{ uri: url }}
-                alt="Task cover"
-                resizeMode="cover"
-                className="w-full h-full"
-            />
+            <Image source={{ uri: url }} alt="Task cover" resizeMode="cover" className="w-full h-full" />
         </Box>
     );
 }

@@ -47,9 +47,7 @@ export function TaskAssignees({ assignees, max = 3 }: { assignees: string[]; max
     const { data: people } = usePeople();
     if (!assignees.length) return null;
 
-    const resolved = assignees
-        .map(id => findPerson(people, id))
-        .filter((p): p is IPerson => Boolean(p));
+    const resolved = assignees.map(id => findPerson(people, id)).filter((p): p is IPerson => Boolean(p));
     const visible = resolved.slice(0, max);
     const extra = Math.max(0, resolved.length - visible.length);
 

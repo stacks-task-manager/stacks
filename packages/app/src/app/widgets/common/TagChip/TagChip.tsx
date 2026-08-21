@@ -49,7 +49,9 @@ export const TagChip: FunctionComponent<TagChipProps> = ({
         if (confirmRemove) {
             const confirm: boolean = await Dialog.confirm(
                 translate("Delete tag"),
-                translate("Are you sure you want to delete this tag You will also lose any reference were it was assigned")
+                translate(
+                    "Are you sure you want to delete this tag You will also lose any reference were it was assigned"
+                )
             );
             if (confirm && onRemove) {
                 onRemove(tagId);
@@ -85,9 +87,14 @@ export const TagChip: FunctionComponent<TagChipProps> = ({
                     onRemove ? (e: React.MouseEvent<HTMLButtonElement>) => handleRemove(e, tag.id) : undefined
                 }
                 ref={handleOverflow}
-                icon={showParent && tag.parent != null && (<Tooltip content="Global tag" placement="top">
-                    <Icon icon="globe-03" />
-                </Tooltip>)}
+                icon={
+                    showParent &&
+                    tag.parent != null && (
+                        <Tooltip content="Global tag" placement="top">
+                            <Icon icon="globe-03" />
+                        </Tooltip>
+                    )
+                }
             >
                 {tag.title}
             </Tag>

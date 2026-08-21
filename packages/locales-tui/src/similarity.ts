@@ -51,7 +51,7 @@ export function findSimilarEntries(
     en: Record<string, TranslationValue>,
     candidateKey: string,
     candidateValue: string,
-    threshold: number = DEFAULT_THRESHOLD,
+    threshold: number = DEFAULT_THRESHOLD
 ): SimilarityHit[] {
     const flat = flattenEnStringValues(en);
     const hits: SimilarityHit[] = [];

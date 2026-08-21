@@ -143,7 +143,11 @@ export function verifyEmbeddedIntegrity(): boolean {
         // the sentinel in the bundle, including any literal we'd put in this check, which
         // would make a string-equality test trivially true. Shape checks also catch corrupt
         // or partial substitutions that would otherwise pass an "is sentinel?" test.
-        if (!isHexHash(EMBEDDED_HASH) || !isHexSignature(EMBEDDED_SIGNATURE) || !isPemPublicKey(EMBEDDED_PUBLIC_KEY)) {
+        if (
+            !isHexHash(EMBEDDED_HASH) ||
+            !isHexSignature(EMBEDDED_SIGNATURE) ||
+            !isPemPublicKey(EMBEDDED_PUBLIC_KEY)
+        ) {
             console.error("🚨 Integrity data not properly embedded in bundle");
             return false;
         }

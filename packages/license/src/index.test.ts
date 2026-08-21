@@ -280,7 +280,9 @@ describe("License Utility", () => {
             license.tenants.forEach(t => {
                 expect(t.expiry).toBe("2100-06-30T12:00:00.000Z");
             });
-            expect(mockConsoleLog).toHaveBeenCalledWith("🌐 Expiry refreshed from server: 2100-06-30T12:00:00.000Z");
+            expect(mockConsoleLog).toHaveBeenCalledWith(
+                "🌐 Expiry refreshed from server: 2100-06-30T12:00:00.000Z"
+            );
         });
 
         it("should exit when server reports valid: false", async () => {

@@ -15,45 +15,51 @@ async function query(query: string) {
 
     // People
     const people: IPerson[] = await PeopleLoader.getAll({ query });
-    results.push(...people.map(person => ({
-        id: person.id,
-        type: RECORDTYPE.PERSON,
-        title: `${person.firstName} ${person.lastName}`,
-        parentId: "people",
-        parentTitle: "People",
-        parentType: RECORDTYPE.PERSON,
-        data: person,
-        url: "",
-        thumbnail: person.avatar ?? ""
-    })));
+    results.push(
+        ...people.map(person => ({
+            id: person.id,
+            type: RECORDTYPE.PERSON,
+            title: `${person.firstName} ${person.lastName}`,
+            parentId: "people",
+            parentTitle: "People",
+            parentType: RECORDTYPE.PERSON,
+            data: person,
+            url: "",
+            thumbnail: person.avatar ?? "",
+        }))
+    );
 
     // Tasks
     const tasks: ITask[] = await TasksLoader.getAll({ query, limit: 20 });
-    results.push(...tasks.map(task => ({
-        id: task.id,
-        type: RECORDTYPE.TASK,
-        title: task.title,
-        parentId: task.project,
-        parentTitle: task.projectInfo?.title ?? "-",
-        parentType: RECORDTYPE.PROJECT,
-        data: task,
-        url: "",
-        thumbnail: ""
-    })));
+    results.push(
+        ...tasks.map(task => ({
+            id: task.id,
+            type: RECORDTYPE.TASK,
+            title: task.title,
+            parentId: task.project,
+            parentTitle: task.projectInfo?.title ?? "-",
+            parentType: RECORDTYPE.PROJECT,
+            data: task,
+            url: "",
+            thumbnail: "",
+        }))
+    );
 
     // Notepads
     const notepads: INotepad[] = await NotepadsLoader.getAll({ query });
-    results.push(...notepads.map(notepad => ({
-        id: notepad.id,
-        type: RECORDTYPE.NOTEPAD,
-        title: notepad.document?.title ?? "",
-        parentId: "",
-        parentTitle: "",
-        parentType: RECORDTYPE.NOTEPAD,
-        data: notepad,
-        url: "",
-        thumbnail: ""
-    })));
+    results.push(
+        ...notepads.map(notepad => ({
+            id: notepad.id,
+            type: RECORDTYPE.NOTEPAD,
+            title: notepad.document?.title ?? "",
+            parentId: "",
+            parentTitle: "",
+            parentType: RECORDTYPE.NOTEPAD,
+            data: notepad,
+            url: "",
+            thumbnail: "",
+        }))
+    );
 
     return results;
 }

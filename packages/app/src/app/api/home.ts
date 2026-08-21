@@ -3,8 +3,7 @@
  * Home dashboard todos stub API.
  */
 import { IHomeStoreBase, IHomeTodoItem } from "app/store/home";
-import request from "./request"
-
+import request from "./request";
 
 export const HomeAPI = {
     /** Loads home payload. */
@@ -18,5 +17,5 @@ export const HomeAPI = {
     /** Deletes a todo by id. */
     async removeTodo(todoId: string): Promise<boolean> {
         return request.delete(`/api/home/todo/${todoId}`);
-    }
-}
+    },
+};

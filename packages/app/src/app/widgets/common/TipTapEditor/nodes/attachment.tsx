@@ -5,7 +5,6 @@ import { Intent, Menu, MenuDivider, MenuItem, Popover } from "@blueprintjs/core"
 import { mergeAttributes, Node, NodeViewProps, NodeViewRenderer } from "@tiptap/core";
 import { NodeViewWrapper, ReactNodeViewRenderer } from "@tiptap/react";
 import noop from "lodash/noop";
-import React from "react";
 import { Icon } from "app/components/common";
 import { APPICONS } from "@stacks/types";
 import Dialog from "app/utils/dialog";
@@ -29,8 +28,16 @@ const AttachmentWrapper = ({ HTMLAttributes, extension, deleteNode }: NodeViewPr
             <Popover
                 content={
                     <Menu>
-                        <MenuItem icon={<Icon icon="eye" />} text="Preview..." onClick={() => FilesActions.preview(HTMLAttributes.id)} />
-                        <MenuItem icon={<Icon icon="download-04" />} text="Download..." onClick={() => FilesActions.download(HTMLAttributes.id)} />
+                        <MenuItem
+                            icon={<Icon icon="eye" />}
+                            text="Preview..."
+                            onClick={() => FilesActions.preview(HTMLAttributes.id)}
+                        />
+                        <MenuItem
+                            icon={<Icon icon="download-04" />}
+                            text="Download..."
+                            onClick={() => FilesActions.download(HTMLAttributes.id)}
+                        />
                         <MenuDivider />
                         <MenuItem
                             text={translate("Delete")}
@@ -133,12 +140,12 @@ export const Attachment = Node.create<AttachmentOptions>({
         return {
             setAttachment:
                 options =>
-                    ({ commands }) => {
-                        return commands.insertContent({
-                            type: this.name,
-                            attrs: options,
-                        });
-                    },
+                ({ commands }) => {
+                    return commands.insertContent({
+                        type: this.name,
+                        attrs: options,
+                    });
+                },
         };
     },
 

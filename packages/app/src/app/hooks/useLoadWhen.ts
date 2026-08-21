@@ -5,7 +5,12 @@
 import { DependencyList, useEffect } from "react";
 
 /**
- * Runs `load` once when `when` is true (e.g. hydrate entity if missing from store).
+ * Runs `load` once when `when` is true (e.g. hydrate an entity if missing from
+ * the store). `load` may return a promise, which is fired asynchronously.
+ * @param when When true, runs `load` on effect runs.
+ * @param load The load function to invoke.
+ * @param deps Dependency list that controls when the effect re-runs.
+ * @returns void No return value.
  */
 export function useLoadWhen(when: boolean, load: () => void | Promise<void>, deps: DependencyList): void {
     useEffect(() => {

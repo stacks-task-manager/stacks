@@ -83,7 +83,13 @@ type ScreenShellProps = {
     tone?: "default" | "warning" | "danger";
 };
 
-export function ScreenShell({ title, subtitle, children, footer, tone = "default" }: ScreenShellProps): React.ReactElement {
+export function ScreenShell({
+    title,
+    subtitle,
+    children,
+    footer,
+    tone = "default",
+}: ScreenShellProps): React.ReactElement {
     const b = tuiTheme.colors.border;
     const borderColor = tone === "warning" ? b.warning : tone === "danger" ? b.danger : b.default;
     return (

@@ -12,14 +12,13 @@ import { sendMessageToUser } from "./routes/socket";
 import { requestContext } from "./services/requestContext";
 
 /** Derives `userId`/`instanceId` for outbound realtime payloads from request context or payload fallbacks. */
-function resolveRealtimeEmitUserAndInstance(
-    payload: Omit<IUpdate, "timestamp" | "user">
-): { instanceId: string | undefined; userId: string } {
+function resolveRealtimeEmitUserAndInstance(payload: Omit<IUpdate, "timestamp" | "user">): {
+    instanceId: string | undefined;
+    userId: string;
+} {
     const ctx = requestContext.getContext();
     const p = payload as Partial<IUpdate>;
-    const userId =
-        ctx?.user?.id ??
-        (typeof p.user === "string" && p.user.length > 0 ? p.user : "system");
+    const userId = ctx?.user?.id ?? (typeof p.user === "string" && p.user.length > 0 ? p.user : "system");
     const instanceId = ctx?.instanceId ?? p.instanceId;
     return { instanceId, userId };
 }

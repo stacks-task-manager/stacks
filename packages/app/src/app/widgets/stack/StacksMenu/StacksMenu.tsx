@@ -96,7 +96,10 @@ export const StacksMenu: FunctionComponent<IStacksMenuProps> = ({
             <button style={{ display: "none" }} className={Classes.POPOVER_DISMISS} ref={btnRef} />
 
             <Scroller maxHeight={400} vertical thin>
-                <Menu className={classNames("stacks-menu", { "has-new": showAdd, nested })} data-testid="stack-select-menu">
+                <Menu
+                    className={classNames("stacks-menu", { "has-new": showAdd, nested })}
+                    data-testid="stack-select-menu"
+                >
                     {!stacks.length && (
                         <BlankSlate
                             title="No stacks"
@@ -106,8 +109,20 @@ export const StacksMenu: FunctionComponent<IStacksMenuProps> = ({
                             width={200}
                             testId="stack-select-blank-slate"
                         >
-                            <Popover popoverClassName="popover-padded-small" content={<NewGeneric placeholder={translate("Untitled stack")} onAdd={handleCreateStack} />}>
-                                <Button text="Add stack" intent={Intent.PRIMARY} data-testid="stack-select-add-button" />
+                            <Popover
+                                popoverClassName="popover-padded-small"
+                                content={
+                                    <NewGeneric
+                                        placeholder={translate("Untitled stack")}
+                                        onAdd={handleCreateStack}
+                                    />
+                                }
+                            >
+                                <Button
+                                    text="Add stack"
+                                    intent={Intent.PRIMARY}
+                                    data-testid="stack-select-add-button"
+                                />
                             </Popover>
                         </BlankSlate>
                     )}
@@ -121,9 +136,7 @@ export const StacksMenu: FunctionComponent<IStacksMenuProps> = ({
                                 text={stack.title}
                                 icon={
                                     <Icon
-                                        icon={
-                                            selected === stack.id ? "check-square-filled" : "stop-filled"
-                                        }
+                                        icon={selected === stack.id ? "check-square-filled" : "stop-filled"}
                                         color={stack.tint || Colors.GRAY5}
                                     />
                                 }
@@ -131,7 +144,7 @@ export const StacksMenu: FunctionComponent<IStacksMenuProps> = ({
                                 active={i + 1 === selectedStack}
                                 onClick={() => handleSelectStack(stack.id)}
                             />
-                        )
+                        );
                     })}
                 </Menu>
             </Scroller>

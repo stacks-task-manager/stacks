@@ -12,6 +12,10 @@ import { useTasksByPeriod } from "./tasks";
 import { EVENTTYPE, type ICalendarEvent } from "@stacks/types";
 import { usePeopleWithBirthdayInRange } from "./people";
 
+/**
+ * Custom hook to get the calendars, Google auth status, loading state, and a helper to load calendars.
+ * @returns {object} An object with `isGoogleAuthenticated`, `calendars`, `loading`, and `loadCalendars`.
+ */
 export const useCalendars = () => {
     const { tokens, calendars, loading } = CalendarStore.use(
         state => ({
@@ -32,17 +36,26 @@ export const useCalendars = () => {
     return { isGoogleAuthenticated, calendars, loading, loadCalendars };
 };
 
+/**
+ * Custom hook to get the current calendar filters.
+ * @returns {ICalendarFilters} The current calendar filters.
+ */
 export const useCalendarsFilters = () => {
     return CalendarStore.use(state => state.filters, shallowEqual);
 };
 
+/**
+ * Custom hook to get the currently selected calendar event.
+ * @returns {[string, EVENTTYPE] | undefined} The selected event, or `undefined` if none is selected.
+ */
 export const useSelectedEvent = () => {
-    return CalendarStore.use(
-        state => state.selected,
-        shallowEqual
-    );
+    return CalendarStore.use(state => state.selected, shallowEqual);
 };
 
+/**
+ * Returns the date span (from/to) covering the current calendar view.
+ * @returns {object} An object with `from` and `to` `Date` values for the visible view.
+ */
 export const getDatesSpan = () => {
     const { date, view } = CalendarStore.get();
 
@@ -63,13 +76,20 @@ export const getDatesSpan = () => {
         to = endOfDay(date);
     }
     return { from, to };
-}
+};
 
+/**
+ * Custom hook to get the date span (from/to) covering the current calendar view.
+ * @returns {object} An object with `from` and `to` `Date` values for the visible view.
+ */
 export const useDatesSpan = () => {
-    const { date, view } = CalendarStore.use(state => ({
-        date: state.date,
-        view: state.view,
-    }), shallowEqual);
+    const { date, view } = CalendarStore.use(
+        state => ({
+            date: state.date,
+            view: state.view,
+        }),
+        shallowEqual
+    );
 
     // get events
     let from = new Date();
@@ -88,14 +108,22 @@ export const useDatesSpan = () => {
         to = endOfDay(date);
     }
     return { from, to };
-}
+};
 
+/**
+ * Custom hook to get the calendar events for the current view, including tasks and birthdays
+ * when the corresponding filters are enabled.
+ * @returns {IEvent[]} The events to render for the current view.
+ */
 export const useEvents = () => {
     const { from, to } = useDatesSpan();
-    const { events, filters } = CalendarStore.use(state => ({
-        events: state.events,
-        filters: state.filters
-    }), shallowEqual);
+    const { events, filters } = CalendarStore.use(
+        state => ({
+            events: state.events,
+            filters: state.filters,
+        }),
+        shallowEqual
+    );
 
     // Track last loaded dates to avoid redundant API calls
     const lastFromRef = useRef<string | null>(null);
@@ -149,7 +177,7 @@ export const useEvents = () => {
                 allDay: false,
                 resource: {
                     data: task,
-                    type: EVENTTYPE.TASK
+                    type: EVENTTYPE.TASK,
                 },
             });
         }
@@ -181,4 +209,4 @@ export const useEvents = () => {
     }
 
     return allEvents;
-}
+};

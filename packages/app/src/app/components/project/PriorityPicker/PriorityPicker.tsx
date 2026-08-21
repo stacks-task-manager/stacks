@@ -1,6 +1,6 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { translate } from "@stacks/translations";
-import React, { FunctionComponent } from "react";
+import React from "react";
 import { PRIORITY } from "@stacks/types";
 import { RoundButton } from "app/components/common";
 import { PriorityMenu, PriorityChip } from "app/components/project";
@@ -18,7 +18,7 @@ interface IPriorityPickerProps {
     tooltip?: string | JSX.Element;
     onChange?: (priority: PRIORITY | null) => void;
 }
-export const PriorityPicker: FunctionComponent<IPriorityPickerProps> = ({
+export const PriorityPicker = React.memo(function PriorityPicker({
     value,
     taskId,
     disabled,
@@ -28,7 +28,7 @@ export const PriorityPicker: FunctionComponent<IPriorityPickerProps> = ({
     short,
     tooltip,
     onChange,
-}) => {
+}: IPriorityPickerProps) {
     const handlePriorityChange = (priority: PRIORITY | null) => {
         if (taskId) {
             TasksActions.setPriority(taskId, priority);
@@ -69,4 +69,4 @@ export const PriorityPicker: FunctionComponent<IPriorityPickerProps> = ({
             </>
         </Popover>
     );
-};
+});

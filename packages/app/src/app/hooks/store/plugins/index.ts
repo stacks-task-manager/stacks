@@ -2,5 +2,5 @@
 /**
  * Store plugin barrel (alias, persistence).
  */
-export * from './alias'
-export * from './persistence'
+export * from "./alias";
+export * from "./persistence";

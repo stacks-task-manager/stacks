@@ -4,15 +4,15 @@ A background worker that compiles React Email templates and drains an outbound e
 
 ## Table of Contents
 
--   [Environment](#environment)
--   [Development](#development)
--   [Local SMTP testing](#local-smtp-testing)
--   [Overview](#overview)
--   [Multilanguage templates](#multilanguage-templates)
--   [How to add a new template](#how-to-add-a-new-template)
--   [How to add a new language](#how-to-add-a-new-language)
--   [Editing templates with the React Email preview server](#editing-templates-with-the-react-email-preview-server)
--   [Related](#related)
+- [Environment](#environment)
+- [Development](#development)
+- [Local SMTP testing](#local-smtp-testing)
+- [Overview](#overview)
+- [Multilanguage templates](#multilanguage-templates)
+- [How to add a new template](#how-to-add-a-new-template)
+- [How to add a new language](#how-to-add-a-new-language)
+- [Editing templates with the React Email preview server](#editing-templates-with-the-react-email-preview-server)
+- [Related](#related)
 
 ## Environment
 
@@ -87,10 +87,10 @@ packages/email-service/
 
 The service has two responsibilities, kept in separate files on purpose:
 
-| Responsibility | Where | When it runs |
-| --- | --- | --- |
+| Responsibility             | Where                                    | When it runs                                                                                                                                                                                                                     |
+| -------------------------- | ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Compile templates → DB** | `TemplateCompiler.compileAllTemplates()` | Once at boot. For every (tenant × templateType × locale) it renders the React component to HTML, looks up the subject, and upserts a row into `email_templates`. Stale rows are deactivated (`isActive = false`), never deleted. |
-| **Drain the queue** | `EmailService.processQueuedEmails()` | Every `EMAIL_PROCESS_INTERVAL` ms. Claims up to 50 pending rows with `FOR UPDATE … SKIP LOCKED`, fetches the matching compiled template, substitutes `%placeholders%`, and sends. |
+| **Drain the queue**        | `EmailService.processQueuedEmails()`     | Every `EMAIL_PROCESS_INTERVAL` ms. Claims up to 50 pending rows with `FOR UPDATE … SKIP LOCKED`, fetches the matching compiled template, substitutes `%placeholders%`, and sends.                                                |
 
 Queue rows are picked from `email_queue` (see [`@stacks/db`](db.md)). The recipient address is joined in from `users.email` at processing time — the queue itself only stores `userId`.
 
@@ -115,11 +115,11 @@ component name = PascalCase(templateType) + PascalCase(locale)
 
 Examples:
 
-| File | Locale in `emails.json` | Expected export |
-| --- | --- | --- |
-| `emails/welcome.tsx` | `en` | `export const WelcomeEn` |
-| `emails/welcome.tsx` | `de` | `export const WelcomeDe` |
-| `emails/password-reset.tsx` | `fr` | `export const PasswordResetFr` |
+| File                        | Locale in `emails.json` | Expected export                |
+| --------------------------- | ----------------------- | ------------------------------ |
+| `emails/welcome.tsx`        | `en`                    | `export const WelcomeEn`       |
+| `emails/welcome.tsx`        | `de`                    | `export const WelcomeDe`       |
+| `emails/password-reset.tsx` | `fr`                    | `export const PasswordResetFr` |
 
 If the expected export is missing the compiler logs `No export 'XxxXx' found in <file>` and skips that (template, locale) pair without aborting the rest of the run.
 
@@ -129,15 +129,15 @@ If the expected export is missing the compiler logs `No export 'XxxXx' found in 
 
 ```json
 {
-    "default": {
-        "welcome":        { "en": "Welcome to %appName%!", "de": "Willkommen bei %appName%!" },
-        "password-reset": { "en": "Reset your %appName% password" },
-        "registration":   { "en": "Confirm your %appName% account" },
-        "notification":   { "en": "%title%" }
-    },
-    "acme-tenant-id": {
-        "welcome": { "en": "Welcome aboard the Acme platform" }
-    }
+  "default": {
+    "welcome": { "en": "Welcome to %appName%!", "de": "Willkommen bei %appName%!" },
+    "password-reset": { "en": "Reset your %appName% password" },
+    "registration": { "en": "Confirm your %appName% account" },
+    "notification": { "en": "%title%" }
+  },
+  "acme-tenant-id": {
+    "welcome": { "en": "Welcome aboard the Acme platform" }
+  }
 }
 ```
 
@@ -171,13 +171,13 @@ The same substitution is applied to the **subject** loaded from `emails.json` �
 
    ```ts
    export enum EMAIL_TEMPLATES {
-       // ...existing
-       INVOICE_READY = "invoice-ready",
+     // ...existing
+     INVOICE_READY = "invoice-ready",
    }
 
    export interface InvoiceReadyEmailTemplate extends BaseEmailTemplate {
-       template: EMAIL_TEMPLATES.INVOICE_READY;
-       data: { invoiceNumber: string; downloadLink: string };
+     template: EMAIL_TEMPLATES.INVOICE_READY;
+     data: { invoiceNumber: string; downloadLink: string };
    }
    ```
 
@@ -190,17 +190,21 @@ The same substitution is applied to the **subject** loaded from `emails.json` �
    import Email from "../design/common";
    import Styles from "../design/styles";
 
-   interface Props { appName: string; }
+   interface Props {
+     appName: string;
+   }
 
    export const InvoiceReadyEn: React.FC<Props> = ({ appName }) => (
-       <Email preview={`Your ${appName} invoice is ready`}>
-           <Section>
-               <Text style={Styles.text}>Invoice #%invoiceNumber% is ready.</Text>
-           </Section>
-           <Section style={Styles.centered}>
-               <Button style={Styles.button} href="%publicUrl%%downloadLink%">Download</Button>
-           </Section>
-       </Email>
+     <Email preview={`Your ${appName} invoice is ready`}>
+       <Section>
+         <Text style={Styles.text}>Invoice #%invoiceNumber% is ready.</Text>
+       </Section>
+       <Section style={Styles.centered}>
+         <Button style={Styles.button} href="%publicUrl%%downloadLink%">
+           Download
+         </Button>
+       </Section>
+     </Email>
    );
 
    export default InvoiceReadyEn;
@@ -233,9 +237,7 @@ The same substitution is applied to the **subject** loaded from `emails.json` �
 
    ```tsx
    export const WelcomeDe: React.FC<{ appName: string }> = ({ appName }) => (
-       <Email preview={`Willkommen bei ${appName}`}>
-           {/* German body */}
-       </Email>
+     <Email preview={`Willkommen bei ${appName}`}>{/* German body */}</Email>
    );
    ```
 

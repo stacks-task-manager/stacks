@@ -2,9 +2,9 @@
 /**
  * Store hook barrel: entity hooks and plugins.
  */
-export * from './entity'
-export * from './equality'
-export * from './useEntity'
+export * from "./entity";
+export * from "./equality";
+export * from "./useEntity";
 
-export * from './plugins'
-export * from './tools'
+export * from "./plugins";
+export * from "./tools";

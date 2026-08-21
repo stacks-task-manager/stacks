@@ -13,11 +13,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 
-import {
-    deleteNotification,
-    fetchNotifications,
-    readNotification,
-} from "../../src/api/endpoints";
+import { deleteNotification, fetchNotifications, readNotification } from "../../src/api/endpoints";
 import { Icon } from "../../src/components/Icon/Icon";
 import { queryClient } from "../../src/state/queryClient";
 
@@ -102,7 +98,11 @@ export default function NotificationsScreen() {
                                 ) : null}
                                 <VStack className="flex-1" space="xs">
                                     <HStack space="sm" className="items-center justify-between">
-                                        <Text size="sm" className="font-semibold text-typography-900 flex-1" numberOfLines={1}>
+                                        <Text
+                                            size="sm"
+                                            className="font-semibold text-typography-900 flex-1"
+                                            numberOfLines={1}
+                                        >
                                             {item.subject}
                                         </Text>
                                         <Text size="xs" className="text-typography-500">

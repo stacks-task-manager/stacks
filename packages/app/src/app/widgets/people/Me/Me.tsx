@@ -44,7 +44,7 @@ export const Me = () => {
 
         // Redirect to login page
         window.location.href = "/login";
-    }
+    };
 
     if (isLoading || !person) {
         return (
@@ -87,7 +87,11 @@ export const Me = () => {
                             onClick={openProfile}
                         />
                         <MenuDivider />
-                        <MenuItem text={translate("Log out")} icon={<Icon icon="user-add" />} onClick={handleLogout} />
+                        <MenuItem
+                            text={translate("Log out")}
+                            icon={<Icon icon="user-add" />}
+                            onClick={handleLogout}
+                        />
                     </Menu>
                 }
                 placement="right-end"

@@ -10,30 +10,30 @@ At its core, Stacks organizes work into **projects**, and each project contains 
 
 ## What Stacks includes
 
--   **Projects & tasks**: create tasks, subtasks, set priorities and due dates, and track progress.
--   **Kanban stacks**: organize tasks into columns per project; reorder tasks and manage per-stack settings like sorting and limits.
--   **People & companies**: keep contacts and collaborators connected to your projects.
--   **Docs, files & notes**: attach documents/files and maintain rich-text notes (notepads) alongside your work.
--   **Calendar, reminders & activity**: schedule events, set reminders, and see what changed.
--   **Time tracking & reports**: log time and generate reports for visibility and accountability.
--   **Teams & permissions**: supports multi-tenant data modeling with roles/permissions for controlled access.
+- **Projects & tasks**: create tasks, subtasks, set priorities and due dates, and track progress.
+- **Kanban stacks**: organize tasks into columns per project; reorder tasks and manage per-stack settings like sorting and limits.
+- **People & companies**: keep contacts and collaborators connected to your projects.
+- **Docs, files & notes**: attach documents/files and maintain rich-text notes (notepads) alongside your work.
+- **Calendar, reminders & activity**: schedule events, set reminders, and see what changed.
+- **Time tracking & reports**: log time and generate reports for visibility and accountability.
+- **Teams & permissions**: supports multi-tenant data modeling with roles/permissions for controlled access.
 
 ## Table of Contents
 
--   [Prerequisites](#prerequisites)
--   [Quick start](#quick-start)
--   [Structure](#structure)
--   [Documentation](#documentation)
--   [License](#license)
--   [Contributing](#contributing)
+- [Prerequisites](#prerequisites)
+- [Quick start](#quick-start)
+- [Structure](#structure)
+- [Documentation](#documentation)
+- [License](#license)
+- [Contributing](#contributing)
 
 ## Prerequisites
 
--   **Node.js** 18+ (20 recommended)
--   **Yarn** 3.6.4 — enable via `corepack enable` (ships with Node)
--   **PostgreSQL** 15
--   _(Optional)_ an **SMTP server** for outbound email features like password reset (MailHog / Mailpit works locally — `yarn dev` does not start the email worker, so this isn't needed for first run)
--   _(Optional)_ an OpenAI-compatible API endpoint for the chat assistant (e.g., LM Studio or llama.cpp)
+- **Node.js** 18+ (20 recommended)
+- **Yarn** 3.6.4 — enable via `corepack enable` (ships with Node)
+- **PostgreSQL** 15
+- _(Optional)_ an **SMTP server** for outbound email features like password reset (MailHog / Mailpit works locally — `yarn dev` does not start the email worker, so this isn't needed for first run)
+- _(Optional)_ an OpenAI-compatible API endpoint for the chat assistant (e.g., LM Studio or llama.cpp)
 
 > **Development license required.** The server will `process.exit(1)` on startup unless `packages/server/license.key` exists. Request a free development key at [getstacksapp.com/dev-program](https://getstacksapp.com/dev-program/). The key gates startup only; see [docs/packages/license.md](docs/packages/license.md) for details.
 
@@ -111,15 +111,15 @@ Open <http://localhost:3000/login> — this is the API server, which serves the 
 
 This repository is a Yarn workspaces monorepo that ships Stacks as a set of services and clients:
 
--   **Web app** — React UI written in TypeScript: [packages/app](packages/app)
--   **API server** — Hono-based Node server: [packages/server](packages/server)
--   **Database layer** — Sequelize/Postgres models and migrations: [packages/db](packages/db)
--   **Mobile app** — Expo/React Native client: [packages/mobile](packages/mobile)
--   **Email service** — background email processing: [packages/email-service](packages/email-service)
--   **Shared types** — TypeScript types shared across packages: [packages/types](packages/types)
--   **Translations** — i18n runtime: [packages/translations](packages/translations)
--   **License** — dev license verification: [packages/license](packages/license)
--   **Locales TUI** — terminal tool for editing locale JSON: [packages/locales-tui](packages/locales-tui)
+- **Web app** — React UI written in TypeScript: [packages/app](packages/app)
+- **API server** — Hono-based Node server: [packages/server](packages/server)
+- **Database layer** — Sequelize/Postgres models and migrations: [packages/db](packages/db)
+- **Mobile app** — Expo/React Native client: [packages/mobile](packages/mobile)
+- **Email service** — background email processing: [packages/email-service](packages/email-service)
+- **Shared types** — TypeScript types shared across packages: [packages/types](packages/types)
+- **Translations** — i18n runtime: [packages/translations](packages/translations)
+- **License** — dev license verification: [packages/license](packages/license)
+- **Locales TUI** — terminal tool for editing locale JSON: [packages/locales-tui](packages/locales-tui)
 
 ## Documentation
 
@@ -127,16 +127,16 @@ The full documentation index lives at **[docs/README.md](docs/README.md)** — s
 
 Most-reached-for pages:
 
--   [Installation & local development](docs/INSTALLATION.md)
--   [Contributing](CONTRIBUTING.md)
--   [Docker / production deployment](docs/DOCKER.md)
+- [Installation & local development](docs/INSTALLATION.md)
+- [Contributing](CONTRIBUTING.md)
+- [Docker / production deployment](docs/DOCKER.md)
 
 ## License
 
 Stacks code is dual-licensed:
 
--   **Personal & open-source use**: [GNU AGPL v3](LICENSE)
--   **Commercial use**: contact [customers@getstacksapp.com](mailto:customers@getstacksapp.com)
+- **Personal & open-source use**: [GNU AGPL v3](LICENSE)
+- **Commercial use**: contact [customers@getstacksapp.com](mailto:customers@getstacksapp.com)
 
 Stacks documentation (this README, `docs/`, and other Markdown in the repo) is licensed under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
 

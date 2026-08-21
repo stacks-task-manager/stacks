@@ -4,10 +4,7 @@
         "description": "Description for Book Flight to Paris",
         "id": "43ce9b29-90ed-40dd-8193-9e7eff5b979c",
         "project": "440c5238-af5c-4321-b7da-5439ea4981d3",
-        "tags": [
-            "80c44cde-840d-4797-8f2d-d410e74bcacb",
-            "680cd9d5-9557-4105-8598-0b5cab8d35ae"
-        ],
+        "tags": ["80c44cde-840d-4797-8f2d-d410e74bcacb", "680cd9d5-9557-4105-8598-0b5cab8d35ae"],
         "tint": null,
         "stack": "22a18d7c-f88f-43b7-b5cf-3da87b76974a",
         "estimate": 7200,
@@ -20,9 +17,7 @@
         "description": "Description for Reserve Airbnb in Rome",
         "id": "0dac4a7b-dc42-45b0-a3fc-7b970e0fa3eb",
         "project": "440c5238-af5c-4321-b7da-5439ea4981d3",
-        "tags": [
-            "80c44cde-840d-4797-8f2d-d410e74bcacb"
-        ],
+        "tags": ["80c44cde-840d-4797-8f2d-d410e74bcacb"],
         "tint": null,
         "stack": "22a18d7c-f88f-43b7-b5cf-3da87b76974a",
         "estimate": 18000,
@@ -35,9 +30,7 @@
         "description": "Description for Buy Train Pass",
         "id": "3a41b35a-ad7b-4981-a85b-9cf945d745d6",
         "project": "440c5238-af5c-4321-b7da-5439ea4981d3",
-        "tags": [
-            "1178395a-fe53-413a-a649-e9efb5608e5e"
-        ],
+        "tags": ["1178395a-fe53-413a-a649-e9efb5608e5e"],
         "tint": null,
         "stack": "22a18d7c-f88f-43b7-b5cf-3da87b76974a",
         "estimate": 36000,
@@ -50,10 +43,7 @@
         "description": "Description for Research Museums",
         "id": "090d6a67-cc85-495e-881e-5217dd743457",
         "project": "440c5238-af5c-4321-b7da-5439ea4981d3",
-        "tags": [
-            "680cd9d5-9557-4105-8598-0b5cab8d35ae",
-            "d62d14c2-ea87-4f06-b6d3-09b1be8e3ad0"
-        ],
+        "tags": ["680cd9d5-9557-4105-8598-0b5cab8d35ae", "d62d14c2-ea87-4f06-b6d3-09b1be8e3ad0"],
         "tint": null,
         "stack": "22a18d7c-f88f-43b7-b5cf-3da87b76974a",
         "estimate": 3600,
@@ -66,10 +56,7 @@
         "description": "Description for Book Food Tour",
         "id": "53ee6fef-18a2-4086-994a-bd97ba908387",
         "project": "440c5238-af5c-4321-b7da-5439ea4981d3",
-        "tags": [
-            "80c44cde-840d-4797-8f2d-d410e74bcacb",
-            "a852093a-cbf3-482d-9e93-008b43022ad5"
-        ],
+        "tags": ["80c44cde-840d-4797-8f2d-d410e74bcacb", "a852093a-cbf3-482d-9e93-008b43022ad5"],
         "tint": null,
         "stack": "22a18d7c-f88f-43b7-b5cf-3da87b76974a",
         "estimate": 3600,
@@ -82,10 +69,7 @@
         "description": "Description for Renew Passport",
         "id": "7f1c159f-ace9-4781-a23f-901670efa26d",
         "project": "440c5238-af5c-4321-b7da-5439ea4981d3",
-        "tags": [
-            "80c44cde-840d-4797-8f2d-d410e74bcacb",
-            "c9eb0d75-fc7d-48e5-982d-0387c34eb912"
-        ],
+        "tags": ["80c44cde-840d-4797-8f2d-d410e74bcacb", "c9eb0d75-fc7d-48e5-982d-0387c34eb912"],
         "tint": null,
         "stack": "22a18d7c-f88f-43b7-b5cf-3da87b76974a",
         "estimate": 21600,
@@ -98,9 +82,7 @@
         "description": "Description for Buy Travel Insurance",
         "id": "27f077ab-c9c6-4ddd-9989-87ec737618b9",
         "project": "440c5238-af5c-4321-b7da-5439ea4981d3",
-        "tags": [
-            "1409f13e-68f0-4c35-8d0d-7acd33d39190"
-        ],
+        "tags": ["1409f13e-68f0-4c35-8d0d-7acd33d39190"],
         "tint": null,
         "stack": "22a18d7c-f88f-43b7-b5cf-3da87b76974a",
         "estimate": 14400,
@@ -113,10 +95,7 @@
         "description": "Description for Pack Suitcase",
         "id": "b11271a0-f47c-4504-933b-d60869b206d0",
         "project": "440c5238-af5c-4321-b7da-5439ea4981d3",
-        "tags": [
-            "d62d14c2-ea87-4f06-b6d3-09b1be8e3ad0",
-            "c9eb0d75-fc7d-48e5-982d-0387c34eb912"
-        ],
+        "tags": ["d62d14c2-ea87-4f06-b6d3-09b1be8e3ad0", "c9eb0d75-fc7d-48e5-982d-0387c34eb912"],
         "tint": null,
         "stack": "22a18d7c-f88f-43b7-b5cf-3da87b76974a",
         "estimate": 21600,
@@ -129,10 +108,7 @@
         "description": "Description for Exchange Currency",
         "id": "aad044d9-9986-4231-975b-da933a2d4918",
         "project": "440c5238-af5c-4321-b7da-5439ea4981d3",
-        "tags": [
-            "680cd9d5-9557-4105-8598-0b5cab8d35ae",
-            "c9eb0d75-fc7d-48e5-982d-0387c34eb912"
-        ],
+        "tags": ["680cd9d5-9557-4105-8598-0b5cab8d35ae", "c9eb0d75-fc7d-48e5-982d-0387c34eb912"],
         "tint": "#F97316",
         "stack": "22a18d7c-f88f-43b7-b5cf-3da87b76974a",
         "estimate": 36000,
@@ -145,10 +121,7 @@
         "description": "Description for Download Maps",
         "id": "4243ab68-4c99-43d3-b76a-d783417c2add",
         "project": "440c5238-af5c-4321-b7da-5439ea4981d3",
-        "tags": [
-            "1409f13e-68f0-4c35-8d0d-7acd33d39190",
-            "c9eb0d75-fc7d-48e5-982d-0387c34eb912"
-        ],
+        "tags": ["1409f13e-68f0-4c35-8d0d-7acd33d39190", "c9eb0d75-fc7d-48e5-982d-0387c34eb912"],
         "tint": "#3B82F6",
         "stack": "22a18d7c-f88f-43b7-b5cf-3da87b76974a",
         "estimate": 28800,
@@ -178,9 +151,7 @@
         "description": "Description for Book Louvre Tickets",
         "id": "b80809b2-bd4a-4179-87e9-21570266055b",
         "project": "440c5238-af5c-4321-b7da-5439ea4981d3",
-        "tags": [
-            "d62d14c2-ea87-4f06-b6d3-09b1be8e3ad0"
-        ],
+        "tags": ["d62d14c2-ea87-4f06-b6d3-09b1be8e3ad0"],
         "tint": "#6366F1",
         "stack": "22a18d7c-f88f-43b7-b5cf-3da87b76974a",
         "estimate": 32400,
@@ -210,10 +181,7 @@
         "description": "Description for Canal Cruise Amsterdam",
         "id": "bebd01c1-30d0-49b2-ad6e-aac11d66c275",
         "project": "440c5238-af5c-4321-b7da-5439ea4981d3",
-        "tags": [
-            "680cd9d5-9557-4105-8598-0b5cab8d35ae",
-            "da41bf52-1cdd-4411-9b55-3492b3785e79"
-        ],
+        "tags": ["680cd9d5-9557-4105-8598-0b5cab8d35ae", "da41bf52-1cdd-4411-9b55-3492b3785e79"],
         "tint": "#64748B",
         "stack": "f6bc1166-ee8c-4a28-aea8-e16ac4a4bc9d",
         "estimate": 14400,
@@ -243,10 +211,7 @@
         "description": "Description for Book Flight to Paris (2)",
         "id": "77563703-eb6e-4041-9a45-b0cc8a4709e8",
         "project": "440c5238-af5c-4321-b7da-5439ea4981d3",
-        "tags": [
-            "1409f13e-68f0-4c35-8d0d-7acd33d39190",
-            "c9eb0d75-fc7d-48e5-982d-0387c34eb912"
-        ],
+        "tags": ["1409f13e-68f0-4c35-8d0d-7acd33d39190", "c9eb0d75-fc7d-48e5-982d-0387c34eb912"],
         "tint": null,
         "stack": "f6bc1166-ee8c-4a28-aea8-e16ac4a4bc9d",
         "estimate": 28800,
@@ -259,9 +224,7 @@
         "description": "Description for Reserve Airbnb in Rome (2)",
         "id": "04611aaa-756b-4444-9474-7081dbe7f192",
         "project": "440c5238-af5c-4321-b7da-5439ea4981d3",
-        "tags": [
-            "da41bf52-1cdd-4411-9b55-3492b3785e79"
-        ],
+        "tags": ["da41bf52-1cdd-4411-9b55-3492b3785e79"],
         "tint": null,
         "stack": "f6bc1166-ee8c-4a28-aea8-e16ac4a4bc9d",
         "estimate": 25200,
@@ -287,10 +250,7 @@
         "description": "Description for Research Museums (2)",
         "id": "e69bc209-6eaa-4018-858e-2f94ce9721e9",
         "project": "440c5238-af5c-4321-b7da-5439ea4981d3",
-        "tags": [
-            "1409f13e-68f0-4c35-8d0d-7acd33d39190",
-            "a852093a-cbf3-482d-9e93-008b43022ad5"
-        ],
+        "tags": ["1409f13e-68f0-4c35-8d0d-7acd33d39190", "a852093a-cbf3-482d-9e93-008b43022ad5"],
         "tint": null,
         "stack": "f6bc1166-ee8c-4a28-aea8-e16ac4a4bc9d",
         "estimate": 10800,
@@ -316,10 +276,7 @@
         "description": "Description for Renew Passport (2)",
         "id": "72689085-7c5c-4fb3-a71e-7630c3c76095",
         "project": "440c5238-af5c-4321-b7da-5439ea4981d3",
-        "tags": [
-            "680cd9d5-9557-4105-8598-0b5cab8d35ae",
-            "a852093a-cbf3-482d-9e93-008b43022ad5"
-        ],
+        "tags": ["680cd9d5-9557-4105-8598-0b5cab8d35ae", "a852093a-cbf3-482d-9e93-008b43022ad5"],
         "tint": "#8B5CF6",
         "stack": "f6bc1166-ee8c-4a28-aea8-e16ac4a4bc9d",
         "estimate": 28800,
@@ -332,10 +289,7 @@
         "description": "Description for Buy Travel Insurance (2)",
         "id": "c79e5e24-d1e4-4235-9f50-387711d3925e",
         "project": "440c5238-af5c-4321-b7da-5439ea4981d3",
-        "tags": [
-            "1409f13e-68f0-4c35-8d0d-7acd33d39190",
-            "a852093a-cbf3-482d-9e93-008b43022ad5"
-        ],
+        "tags": ["1409f13e-68f0-4c35-8d0d-7acd33d39190", "a852093a-cbf3-482d-9e93-008b43022ad5"],
         "tint": "#EC4899",
         "stack": "f6bc1166-ee8c-4a28-aea8-e16ac4a4bc9d",
         "estimate": 21600,
@@ -348,10 +302,7 @@
         "description": "Description for Pack Suitcase (2)",
         "id": "f8f208c7-5fe3-4fb2-8793-9445932315ee",
         "project": "440c5238-af5c-4321-b7da-5439ea4981d3",
-        "tags": [
-            "80c44cde-840d-4797-8f2d-d410e74bcacb",
-            "1409f13e-68f0-4c35-8d0d-7acd33d39190"
-        ],
+        "tags": ["80c44cde-840d-4797-8f2d-d410e74bcacb", "1409f13e-68f0-4c35-8d0d-7acd33d39190"],
         "tint": null,
         "stack": "f6bc1166-ee8c-4a28-aea8-e16ac4a4bc9d",
         "estimate": 14400,
@@ -364,10 +315,7 @@
         "description": "Description for Exchange Currency (2)",
         "id": "a2e8dc69-f396-4fed-aeab-e60bc6a12f9e",
         "project": "440c5238-af5c-4321-b7da-5439ea4981d3",
-        "tags": [
-            "80c44cde-840d-4797-8f2d-d410e74bcacb",
-            "da41bf52-1cdd-4411-9b55-3492b3785e79"
-        ],
+        "tags": ["80c44cde-840d-4797-8f2d-d410e74bcacb", "da41bf52-1cdd-4411-9b55-3492b3785e79"],
         "tint": null,
         "stack": "5e3069de-9f35-4de8-aafe-57f42e0c41a2",
         "estimate": 36000,
@@ -380,10 +328,7 @@
         "description": "Description for Download Maps (2)",
         "id": "188a5357-fa88-4f2d-b910-03a3978823d4",
         "project": "440c5238-af5c-4321-b7da-5439ea4981d3",
-        "tags": [
-            "1178395a-fe53-413a-a649-e9efb5608e5e",
-            "da41bf52-1cdd-4411-9b55-3492b3785e79"
-        ],
+        "tags": ["1178395a-fe53-413a-a649-e9efb5608e5e", "da41bf52-1cdd-4411-9b55-3492b3785e79"],
         "tint": null,
         "stack": "5e3069de-9f35-4de8-aafe-57f42e0c41a2",
         "estimate": 32400,
@@ -426,9 +371,7 @@
         "description": "Description for Colosseum Tour (2)",
         "id": "cc598a0b-5610-4385-a7ac-fed6f82e34ed",
         "project": "440c5238-af5c-4321-b7da-5439ea4981d3",
-        "tags": [
-            "a852093a-cbf3-482d-9e93-008b43022ad5"
-        ],
+        "tags": ["a852093a-cbf3-482d-9e93-008b43022ad5"],
         "tint": "#F59E0B",
         "stack": "5e3069de-9f35-4de8-aafe-57f42e0c41a2",
         "estimate": 28800,
@@ -458,10 +401,7 @@
         "description": "Description for Swiss Alps Hike (2)",
         "id": "c1ec4e5e-4550-4a44-95ac-a026403b70e4",
         "project": "440c5238-af5c-4321-b7da-5439ea4981d3",
-        "tags": [
-            "d62d14c2-ea87-4f06-b6d3-09b1be8e3ad0",
-            "c9eb0d75-fc7d-48e5-982d-0387c34eb912"
-        ],
+        "tags": ["d62d14c2-ea87-4f06-b6d3-09b1be8e3ad0", "c9eb0d75-fc7d-48e5-982d-0387c34eb912"],
         "tint": null,
         "stack": "5e3069de-9f35-4de8-aafe-57f42e0c41a2",
         "estimate": 28800,
@@ -491,9 +431,7 @@
         "description": "Description for Reserve Airbnb in Rome (3)",
         "id": "9cd06b13-a260-4f1e-bd56-75fe025142ba",
         "project": "440c5238-af5c-4321-b7da-5439ea4981d3",
-        "tags": [
-            "1409f13e-68f0-4c35-8d0d-7acd33d39190"
-        ],
+        "tags": ["1409f13e-68f0-4c35-8d0d-7acd33d39190"],
         "tint": "#10B981",
         "stack": "5e3069de-9f35-4de8-aafe-57f42e0c41a2",
         "estimate": 28800,
@@ -506,10 +444,7 @@
         "description": "Description for Buy Train Pass (3)",
         "id": "85566496-f8be-4a7a-a393-a6eda18835d8",
         "project": "440c5238-af5c-4321-b7da-5439ea4981d3",
-        "tags": [
-            "680cd9d5-9557-4105-8598-0b5cab8d35ae",
-            "a852093a-cbf3-482d-9e93-008b43022ad5"
-        ],
+        "tags": ["680cd9d5-9557-4105-8598-0b5cab8d35ae", "a852093a-cbf3-482d-9e93-008b43022ad5"],
         "tint": "#06B6D4",
         "stack": "5e3069de-9f35-4de8-aafe-57f42e0c41a2",
         "estimate": 32400,
@@ -539,10 +474,7 @@
         "description": "Description for Book Food Tour (3)",
         "id": "d3387a31-8e32-462b-bc96-6954475bdea9",
         "project": "440c5238-af5c-4321-b7da-5439ea4981d3",
-        "tags": [
-            "d62d14c2-ea87-4f06-b6d3-09b1be8e3ad0",
-            "a852093a-cbf3-482d-9e93-008b43022ad5"
-        ],
+        "tags": ["d62d14c2-ea87-4f06-b6d3-09b1be8e3ad0", "a852093a-cbf3-482d-9e93-008b43022ad5"],
         "tint": null,
         "stack": "5e3069de-9f35-4de8-aafe-57f42e0c41a2",
         "estimate": 32400,
@@ -555,10 +487,7 @@
         "description": "Description for Renew Passport (3)",
         "id": "b6e2f30c-b1f7-46c9-ab53-a087b8edaba0",
         "project": "440c5238-af5c-4321-b7da-5439ea4981d3",
-        "tags": [
-            "1409f13e-68f0-4c35-8d0d-7acd33d39190",
-            "a852093a-cbf3-482d-9e93-008b43022ad5"
-        ],
+        "tags": ["1409f13e-68f0-4c35-8d0d-7acd33d39190", "a852093a-cbf3-482d-9e93-008b43022ad5"],
         "tint": null,
         "stack": "5e3069de-9f35-4de8-aafe-57f42e0c41a2",
         "estimate": 25200,
@@ -571,10 +500,7 @@
         "description": "Description for Buy Travel Insurance (3)",
         "id": "20ec9085-3ef6-4adc-aa3e-16cabdc731c0",
         "project": "440c5238-af5c-4321-b7da-5439ea4981d3",
-        "tags": [
-            "1178395a-fe53-413a-a649-e9efb5608e5e",
-            "c9eb0d75-fc7d-48e5-982d-0387c34eb912"
-        ],
+        "tags": ["1178395a-fe53-413a-a649-e9efb5608e5e", "c9eb0d75-fc7d-48e5-982d-0387c34eb912"],
         "tint": null,
         "stack": "5e3069de-9f35-4de8-aafe-57f42e0c41a2",
         "estimate": 10800,
@@ -600,10 +526,7 @@
         "description": "Description for Exchange Currency (3)",
         "id": "fb6ae00e-3d09-46e0-86d5-70e62bbb34cc",
         "project": "440c5238-af5c-4321-b7da-5439ea4981d3",
-        "tags": [
-            "d62d14c2-ea87-4f06-b6d3-09b1be8e3ad0",
-            "da41bf52-1cdd-4411-9b55-3492b3785e79"
-        ],
+        "tags": ["d62d14c2-ea87-4f06-b6d3-09b1be8e3ad0", "da41bf52-1cdd-4411-9b55-3492b3785e79"],
         "tint": null,
         "stack": "68ae9afe-997d-4c29-8f59-facc1ac87f97",
         "estimate": 7200,
@@ -616,9 +539,7 @@
         "description": "Description for Download Maps (3)",
         "id": "a0e2c9c4-a7a5-4290-91bb-7bf4fa73e893",
         "project": "440c5238-af5c-4321-b7da-5439ea4981d3",
-        "tags": [
-            "d62d14c2-ea87-4f06-b6d3-09b1be8e3ad0"
-        ],
+        "tags": ["d62d14c2-ea87-4f06-b6d3-09b1be8e3ad0"],
         "tint": null,
         "stack": "68ae9afe-997d-4c29-8f59-facc1ac87f97",
         "estimate": 7200,
@@ -631,10 +552,7 @@
         "description": "Description for Check Visa Requirements (3)",
         "id": "17c3df32-6f71-4e38-92ae-4b3d3c01590e",
         "project": "440c5238-af5c-4321-b7da-5439ea4981d3",
-        "tags": [
-            "680cd9d5-9557-4105-8598-0b5cab8d35ae",
-            "da41bf52-1cdd-4411-9b55-3492b3785e79"
-        ],
+        "tags": ["680cd9d5-9557-4105-8598-0b5cab8d35ae", "da41bf52-1cdd-4411-9b55-3492b3785e79"],
         "tint": null,
         "stack": "68ae9afe-997d-4c29-8f59-facc1ac87f97",
         "estimate": 21600,
@@ -694,9 +612,7 @@
         "description": "Description for Swiss Alps Hike (3)",
         "id": "5a965f3c-fb0e-4a45-a126-f04b20d9c43c",
         "project": "440c5238-af5c-4321-b7da-5439ea4981d3",
-        "tags": [
-            "a852093a-cbf3-482d-9e93-008b43022ad5"
-        ],
+        "tags": ["a852093a-cbf3-482d-9e93-008b43022ad5"],
         "tint": "#10B981",
         "stack": "68ae9afe-997d-4c29-8f59-facc1ac87f97",
         "estimate": 7200,
@@ -709,10 +625,7 @@
         "description": "Description for Book Flight to Paris (4)",
         "id": "a78cb006-b642-4491-adbb-0ff03e9becd4",
         "project": "440c5238-af5c-4321-b7da-5439ea4981d3",
-        "tags": [
-            "680cd9d5-9557-4105-8598-0b5cab8d35ae",
-            "1178395a-fe53-413a-a649-e9efb5608e5e"
-        ],
+        "tags": ["680cd9d5-9557-4105-8598-0b5cab8d35ae", "1178395a-fe53-413a-a649-e9efb5608e5e"],
         "tint": "#F59E0B",
         "stack": "68ae9afe-997d-4c29-8f59-facc1ac87f97",
         "estimate": 21600,
@@ -725,9 +638,7 @@
         "description": "Description for Reserve Airbnb in Rome (4)",
         "id": "74bc5c0a-b0d6-46f3-abf9-294f6645ee96",
         "project": "440c5238-af5c-4321-b7da-5439ea4981d3",
-        "tags": [
-            "1409f13e-68f0-4c35-8d0d-7acd33d39190"
-        ],
+        "tags": ["1409f13e-68f0-4c35-8d0d-7acd33d39190"],
         "tint": "#F97316",
         "stack": "68ae9afe-997d-4c29-8f59-facc1ac87f97",
         "estimate": 14400,
@@ -757,10 +668,7 @@
         "description": "Description for Research Museums (4)",
         "id": "99f9de97-b802-48c8-be2f-53d4ad3d2776",
         "project": "440c5238-af5c-4321-b7da-5439ea4981d3",
-        "tags": [
-            "680cd9d5-9557-4105-8598-0b5cab8d35ae",
-            "da41bf52-1cdd-4411-9b55-3492b3785e79"
-        ],
+        "tags": ["680cd9d5-9557-4105-8598-0b5cab8d35ae", "da41bf52-1cdd-4411-9b55-3492b3785e79"],
         "tint": null,
         "stack": "68ae9afe-997d-4c29-8f59-facc1ac87f97",
         "estimate": 21600,
@@ -803,10 +711,7 @@
         "description": "Description for Buy Travel Insurance (4)",
         "id": "f2e07e37-02a0-4a0f-a134-c8626c42932b",
         "project": "440c5238-af5c-4321-b7da-5439ea4981d3",
-        "tags": [
-            "80c44cde-840d-4797-8f2d-d410e74bcacb",
-            "c9eb0d75-fc7d-48e5-982d-0387c34eb912"
-        ],
+        "tags": ["80c44cde-840d-4797-8f2d-d410e74bcacb", "c9eb0d75-fc7d-48e5-982d-0387c34eb912"],
         "tint": "#06B6D4",
         "stack": "11838321-ff39-48d3-844a-ebdf742bddde",
         "estimate": 14400,
@@ -819,9 +724,7 @@
         "description": "Description for Pack Suitcase (4)",
         "id": "8739354e-e610-4c43-9245-a5cc5f09ffe7",
         "project": "440c5238-af5c-4321-b7da-5439ea4981d3",
-        "tags": [
-            "1178395a-fe53-413a-a649-e9efb5608e5e"
-        ],
+        "tags": ["1178395a-fe53-413a-a649-e9efb5608e5e"],
         "tint": "#EF4444",
         "stack": "11838321-ff39-48d3-844a-ebdf742bddde",
         "estimate": 32400,
@@ -834,10 +737,7 @@
         "description": "Description for Exchange Currency (4)",
         "id": "c02caeaa-5a00-47a1-bbc6-370c6e404be4",
         "project": "440c5238-af5c-4321-b7da-5439ea4981d3",
-        "tags": [
-            "1178395a-fe53-413a-a649-e9efb5608e5e",
-            "da41bf52-1cdd-4411-9b55-3492b3785e79"
-        ],
+        "tags": ["1178395a-fe53-413a-a649-e9efb5608e5e", "da41bf52-1cdd-4411-9b55-3492b3785e79"],
         "tint": null,
         "stack": "11838321-ff39-48d3-844a-ebdf742bddde",
         "estimate": 21600,
@@ -863,10 +763,7 @@
         "description": "Description for Check Visa Requirements (4)",
         "id": "a802a402-e864-4963-af7f-a5b308b31bb1",
         "project": "440c5238-af5c-4321-b7da-5439ea4981d3",
-        "tags": [
-            "80c44cde-840d-4797-8f2d-d410e74bcacb",
-            "680cd9d5-9557-4105-8598-0b5cab8d35ae"
-        ],
+        "tags": ["80c44cde-840d-4797-8f2d-d410e74bcacb", "680cd9d5-9557-4105-8598-0b5cab8d35ae"],
         "tint": "#6366F1",
         "stack": "11838321-ff39-48d3-844a-ebdf742bddde",
         "estimate": 18000,
@@ -913,9 +810,7 @@
         "description": "Description for Canal Cruise Amsterdam (4)",
         "id": "415d350e-edca-4b08-962b-9bdaeaa4496b",
         "project": "440c5238-af5c-4321-b7da-5439ea4981d3",
-        "tags": [
-            "80c44cde-840d-4797-8f2d-d410e74bcacb"
-        ],
+        "tags": ["80c44cde-840d-4797-8f2d-d410e74bcacb"],
         "tint": "#EC4899",
         "stack": "11838321-ff39-48d3-844a-ebdf742bddde",
         "estimate": 18000,
@@ -928,9 +823,7 @@
         "description": "Description for Swiss Alps Hike (4)",
         "id": "f9503f51-5f6e-4307-a28a-7b5ef4e593a2",
         "project": "440c5238-af5c-4321-b7da-5439ea4981d3",
-        "tags": [
-            "d62d14c2-ea87-4f06-b6d3-09b1be8e3ad0"
-        ],
+        "tags": ["d62d14c2-ea87-4f06-b6d3-09b1be8e3ad0"],
         "tint": "#F97316",
         "stack": "11838321-ff39-48d3-844a-ebdf742bddde",
         "estimate": 10800,

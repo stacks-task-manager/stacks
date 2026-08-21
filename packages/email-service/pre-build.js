@@ -22,7 +22,7 @@ function isVersionBumpEnabled() {
 async function preBuild() {
     if (!isVersionBumpEnabled()) {
         console.log(
-            "pre-build: skipped package.json version bump (set STACKS_BUMP_PACKAGE_VERSION=1 to enable, or run `node pre-build.js patch`)",
+            "pre-build: skipped package.json version bump (set STACKS_BUMP_PACKAGE_VERSION=1 to enable, or run `node pre-build.js patch`)"
         );
         return;
     }

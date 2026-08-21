@@ -17,7 +17,7 @@ const load = async (resourceId: string) => {
             state.activities = activities;
         })
     );
-}
+};
 
 const addActivity = async (newActivity: Omit<IActivity, "id" | "created">) => {
     const activity = await ActivitiesAPI.add(newActivity);
@@ -44,7 +44,10 @@ const remove = async (resourceId: string, activityId: string) => {
 };
 
 const removeAlert = async (resourceId: string, activityId: string) => {
-    const response = await Dialog.confirm(translate("Delete comment"), translate("Are you sure you want to delete your comment"));
+    const response = await Dialog.confirm(
+        translate("Delete comment"),
+        translate("Are you sure you want to delete your comment")
+    );
 
     if (response) {
         await remove(resourceId, activityId);

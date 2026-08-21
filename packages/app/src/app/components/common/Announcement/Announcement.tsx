@@ -40,8 +40,7 @@ export const Announcement = () => {
                     .filter((a: IAnnouncement) => viewedAnnouncements.indexOf(a.id) === -1)
                     .filter(
                         (a: IAnnouncement) =>
-                            (a.question.length > 0 && showAnnouncements) ||
-                            a.question.length === 0
+                            (a.question.length > 0 && showAnnouncements) || a.question.length === 0
                     );
 
                 setAnnouncements(downloadedAnnouncements);
@@ -160,8 +159,8 @@ export const Announcement = () => {
                                     {translate("Yes")}{" "}
                                     {announcement.yes != null && announcement.no != null
                                         ? `${Math.round(
-                                            (announcement.yes * 100) / (announcement.yes + announcement.no)
-                                        )}%`
+                                              (announcement.yes * 100) / (announcement.yes + announcement.no)
+                                          )}%`
                                         : ""}
                                 </Button>{" "}
                                 &nbsp;
@@ -173,8 +172,8 @@ export const Announcement = () => {
                                     {translate("No")}{" "}
                                     {announcement.yes != null && announcement.no != null
                                         ? `${Math.round(
-                                            (announcement.no * 100) / (announcement.yes + announcement.no)
-                                        )}%`
+                                              (announcement.no * 100) / (announcement.yes + announcement.no)
+                                          )}%`
                                         : ""}
                                 </Button>
                             </div>

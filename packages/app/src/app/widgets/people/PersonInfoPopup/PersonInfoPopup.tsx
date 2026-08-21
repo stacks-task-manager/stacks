@@ -72,27 +72,15 @@ export const PersonInfo: FunctionComponent<PersonInfoProps> = ({ personId }) => 
                             </TaskDetailsSection>
                         ) : null}
 
-                        <TaskDetailsSection
-                            title={translate("Office phone")}
-                            centered
-                            width={100}
-                        >
+                        <TaskDetailsSection title={translate("Office phone")} centered width={100}>
                             {person.officePhone || "-"}
                         </TaskDetailsSection>
 
-                        <TaskDetailsSection
-                            title={translate("Cell phone")}
-                            centered
-                            width={100}
-                        >
+                        <TaskDetailsSection title={translate("Cell phone")} centered width={100}>
                             {person.cellPhone || "-"}
                         </TaskDetailsSection>
 
-                        <TaskDetailsSection
-                            title={translate("Home phone")}
-                            centered
-                            width={100}
-                        >
+                        <TaskDetailsSection title={translate("Home phone")} centered width={100}>
                             {person.homePhone || "-"}
                         </TaskDetailsSection>
                     </Grid>

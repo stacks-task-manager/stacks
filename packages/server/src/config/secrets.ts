@@ -63,7 +63,9 @@ export function getJwtSecret(): string {
     }
     if (mustEnforceStrictSecrets(process.env)) {
         if (!s || isWeak(s)) {
-            throw new Error("JWT_SECRET is missing or invalid; assertProductionSecretsAtStartup should run first.");
+            throw new Error(
+                "JWT_SECRET is missing or invalid; assertProductionSecretsAtStartup should run first."
+            );
         }
         return s;
     }
@@ -77,7 +79,9 @@ export function getCookieSecret(): string {
     }
     if (mustEnforceStrictSecrets(process.env)) {
         if (!s || isWeak(s)) {
-            throw new Error("COOKIE_SECRET is missing or invalid; assertProductionSecretsAtStartup should run first.");
+            throw new Error(
+                "COOKIE_SECRET is missing or invalid; assertProductionSecretsAtStartup should run first."
+            );
         }
         return s;
     }

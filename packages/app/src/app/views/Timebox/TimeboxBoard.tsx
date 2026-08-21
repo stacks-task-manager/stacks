@@ -1,14 +1,14 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
-import { Button } from '@blueprintjs/core';
-import { endOfDay, format, isSameDay, setDate, startOfDay } from 'date-fns';
-import React, { useCallback, useMemo } from 'react';
+import { Button } from "@blueprintjs/core";
+import { endOfDay, format, isSameDay, setDate, startOfDay } from "date-fns";
+import React, { useCallback, useMemo } from "react";
 
-import { Icon } from 'app/components/common';
-import { Container } from 'app/components/draggable';
-import { TaskCard } from 'app/components/project';
-import { getTask, usePeriodFilteredMyTasks } from 'app/hooks';
-import { MyTasksActions, TasksActions } from 'app/store/actions';
-import { InfiniteDateBoard } from 'app/widgets';
+import { Icon } from "app/components/common";
+import { Container } from "app/components/draggable";
+import { TaskCard } from "app/components/project";
+import { getTask, usePeriodFilteredMyTasks } from "app/hooks";
+import { MyTasksActions, TasksActions } from "app/store/actions";
+import { InfiniteDateBoard } from "app/widgets";
 
 interface TimeboxBoardProps {
     onShowPicker: (dates: Date[]) => void;
@@ -28,7 +28,7 @@ export const TimeboxBoard = ({ onShowPicker }: TimeboxBoardProps) => {
 
         const taskCardEl = document.getElementById(`task-${taskId}`);
         if (taskCardEl) {
-            taskCardEl.scrollIntoView({ behavior: 'smooth' });
+            taskCardEl.scrollIntoView({ behavior: "smooth" });
             taskCardEl.classList.add("highlight");
             setTimeout(() => {
                 taskCardEl.classList.remove("highlight");
@@ -36,46 +36,49 @@ export const TimeboxBoard = ({ onShowPicker }: TimeboxBoardProps) => {
         }
     }, []);
 
-    const columnRenderer = useCallback((date: Date) => {
-        const containerId = `timebox-${format(date, 'yyyy-MM-dd')}`;
-        const handleReorder = ({
-            itemId,
-            fromIndex,
-            toIndex,
-        }: {
-            itemId: string;
-            fromIndex: number;
-            toIndex: number;
-        }) => {
-            if (fromIndex === toIndex) return;
-            void applyTaskToDay(itemId, date);
-        };
-        const handleItemMove = ({ itemId }: { itemId: string }) => {
-            void applyTaskToDay(itemId, date);
-        };
-        return (
-            <>
-                <div className="stack-header">
-                    <div className="stack-header-title-wrapper">
-                        <div className="day-date">{format(date, 'MMM d')}</div>
-                        <div className="day-name">{format(date, 'EEEE')}</div>
+    const columnRenderer = useCallback(
+        (date: Date) => {
+            const containerId = `timebox-${format(date, "yyyy-MM-dd")}`;
+            const handleReorder = ({
+                itemId,
+                fromIndex,
+                toIndex,
+            }: {
+                itemId: string;
+                fromIndex: number;
+                toIndex: number;
+            }) => {
+                if (fromIndex === toIndex) return;
+                void applyTaskToDay(itemId, date);
+            };
+            const handleItemMove = ({ itemId }: { itemId: string }) => {
+                void applyTaskToDay(itemId, date);
+            };
+            return (
+                <>
+                    <div className="stack-header">
+                        <div className="stack-header-title-wrapper">
+                            <div className="day-date">{format(date, "MMM d")}</div>
+                            <div className="day-name">{format(date, "EEEE")}</div>
+                        </div>
+                        <Button
+                            icon={<Icon icon="plus" />}
+                            variant="minimal"
+                            size="small"
+                            onClick={() => onShowPicker([date])}
+                        />
                     </div>
-                    <Button
-                        icon={<Icon icon="plus" />}
-                        variant="minimal"
-                        size="small"
-                        onClick={() => onShowPicker([date])}
+                    <DayTasksColumn
+                        day={date}
+                        containerId={containerId}
+                        onReorder={handleReorder}
+                        onItemMove={handleItemMove}
                     />
-                </div>
-                <DayTasksColumn
-                    day={date}
-                    containerId={containerId}
-                    onReorder={handleReorder}
-                    onItemMove={handleItemMove}
-                />
-            </>
-        );
-    }, [applyTaskToDay, onShowPicker]);
+                </>
+            );
+        },
+        [applyTaskToDay, onShowPicker]
+    );
 
     return (
         <InfiniteDateBoard

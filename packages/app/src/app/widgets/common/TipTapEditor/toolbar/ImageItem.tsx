@@ -148,8 +148,8 @@ const ImageHistory: FunctionComponent<ImageHistoryProps> = ({ loading, images, o
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 5, width: 250 }}>
                     {images.length > 0 ? (
                         images.map((image: IAttachment, i: number) => {
-                            return (
-                                image.thumbnailUrl ? <Popover
+                            return image.thumbnailUrl ? (
+                                <Popover
                                     key={i}
                                     interactionKind="hover"
                                     placement="top"
@@ -189,8 +189,8 @@ const ImageHistory: FunctionComponent<ImageHistoryProps> = ({ loading, images, o
                                             />
                                         </div>
                                     )}
-                                /> : null
-                            );
+                                />
+                            ) : null;
                         })
                     ) : (
                         <BlankSlate

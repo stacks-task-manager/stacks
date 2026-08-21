@@ -89,7 +89,12 @@ export const TableItem: FunctionComponent<TipTapToolbarItem> = ({ editor, isTabl
             }
         >
             <Tooltip content="Table options" placement="top">
-                <Button variant="minimal" size={small ? "small" : undefined} icon={<Icon icon="table" />} intent={Intent.PRIMARY} />
+                <Button
+                    variant="minimal"
+                    size={small ? "small" : undefined}
+                    icon={<Icon icon="table" />}
+                    intent={Intent.PRIMARY}
+                />
             </Tooltip>
         </Popover>
     );

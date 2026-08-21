@@ -120,9 +120,7 @@ async function buildWhereClause(filters: PeopleFilters): Promise<WhereOptions | 
         // keeps the main SQL simple (no JOIN or correlated subquery).
         const needle = filters.roleTitle.toLowerCase();
         const matchingRoles = await RolesLoader.getAll();
-        const roleIds = matchingRoles
-            .filter(r => r.title.toLowerCase().includes(needle))
-            .map(r => r.id);
+        const roleIds = matchingRoles.filter(r => r.title.toLowerCase().includes(needle)).map(r => r.id);
         if (roleIds.length === 0) {
             return null;
         }

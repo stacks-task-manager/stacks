@@ -9,7 +9,7 @@ import { useCurrentProject, useProjectTimelogs } from "app/hooks";
 export const Earnings = () => {
     const { project } = useCurrentProject();
     const { tasks } = TasksStore.use();
-    const timelogs = useProjectTimelogs(project!.id)
+    const timelogs = useProjectTimelogs(project!.id);
 
     const data = useMemo(() => {
         if (!tasks || !project) return { estimatedEarnings: 0, spentEarnings: 0 };
@@ -28,7 +28,7 @@ export const Earnings = () => {
             spentEarnings,
             profitAmount: estimatedEarnings - spentEarnings,
         };
-    }, [tasks, project]);
+    }, [tasks, project, timelogs]);
 
     const hasData = useMemo(() => {
         return (
@@ -40,9 +40,7 @@ export const Earnings = () => {
 
     return (
         <Card>
-            <h6 className={Classes.HEADING}>
-                {translate("Earnings")}
-            </h6>
+            <h6 className={Classes.HEADING}>{translate("Earnings")}</h6>
 
             {hasData && project != null ? (
                 <div className="overview-legend">

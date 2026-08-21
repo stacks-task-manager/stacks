@@ -57,12 +57,12 @@
     }
 
     .is-past {
-        opacity: .5;
+        opacity: 0.5;
     }
 
     .task-card-outer {
         &.done {
-            opacity: .7;
+            opacity: 0.7;
         }
 
         &.highlight .task-card {

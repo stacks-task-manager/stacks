@@ -1,7 +1,6 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { translate } from "@stacks/translations";
 import {
-    Alignment,
     Button,
     ButtonGroup,
     Classes,
@@ -9,22 +8,21 @@ import {
     FormGroup,
     InputGroup,
     Intent,
-    Keys,
     Menu,
     MenuItem,
     Popover,
     Switch,
 } from "@blueprintjs/core";
-import { produce } from "immer";
-import React, { createRef, FunctionComponent, useEffect, useMemo, useState } from "react";
-import { AvatarChip, Icon, ToolbarDropdownButton } from "app/components/common";
+import React, { FunctionComponent, useEffect, useMemo } from "react";
+import { Icon, ToolbarDropdownButton } from "app/components/common";
 import { ProjectsActions, TimelogsActions } from "app/store/actions";
 import { PeopleStore } from "app/store/people";
 import { ITimelogsFilters, TimelogsStore } from "app/store/timelogs";
 import { uuidv4 } from "app/utils/uuid";
-import { FiltersSidebar, PeopleDialog } from "app/widgets";
-import { TagsWrapper } from "../../../widgets/common/TagsWrapper/TagsWrapper";
-import { DateMenu, formatDates } from "./DateMenu";
+import { FiltersSidebar } from "app/widgets";
+import { AssigneesFilter } from "./AssigneesFilter";
+import { DateFilter } from "./DateFilter";
+import { QueryFilter } from "./QueryFilter";
 import { shallowEqual } from "app/hooks/store";
 import { useProjectLastView } from "app/hooks";
 
@@ -37,7 +35,15 @@ export const TimeFilterDrawer = () => {
 
         const project = ProjectsActions.getCurrentProject();
         if (project) TimelogsActions.load({ project: project.id });
-    }, [filters.assignees, filters.date, filters.me, filters.query, filters.billable, filters.billed]);
+    }, [
+        filtersVisible,
+        filters.assignees,
+        filters.date,
+        filters.me,
+        filters.query,
+        filters.billable,
+        filters.billed,
+    ]);
 
     useEffect(() => {
         TimelogsActions.loadSaved();
@@ -103,7 +109,7 @@ export const TimeFilterDrawer = () => {
                         <Popover
                             content={
                                 <>
-                                    <FormGroup label="Filter name">
+                                    <FormGroup label={translate("Filter name")}>
                                         <InputGroup
                                             defaultValue={filters.title}
                                             onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
@@ -145,74 +151,44 @@ export const TimeFilterDrawer = () => {
                 ) : null
             }
         >
-            <QueryFilter term={filters.query} />
+            <QueryFilter
+                term={filters.query}
+                onChange={query => TimelogsActions.setQuery(query)}
+                onHide={() => TimelogsActions.toggleFilters()}
+                label={translate("Search task")}
+                helperText={translate("Search for time log description")}
+            />
             <MevsAnyoneFilter />
-            <AssigneesFilter assignees={filters.assignees} disabled={Boolean(filters.me)} />
-            <DateFilter date={filters.date} />
-            <FormGroup label="Quick filters">
+            <AssigneesFilter
+                assignees={filters.assignees}
+                disabled={Boolean(filters.me)}
+                onChange={people => TimelogsActions.setFilter("assignees", people)}
+                vertical
+            />
+            <DateFilter
+                date={filters.date}
+                emptyLabel={translate("Date")}
+                label={translate("Time logged date")}
+                onChange={date => TimelogsActions.setFilter("date", date)}
+                minimal={false}
+                matchTargetWidth={false}
+                placement={undefined}
+                highlightWhenSet={false}
+                data-testid="timelogs-date-filter"
+            />
+            <FormGroup label={translate("Quick filters")}>
                 <Switch
-                    label="Show billable time logs"
+                    label={translate("Show billable time logs")}
                     checked={filters.billable}
                     onChange={() => TimelogsActions.setFilter("billable", !filters.billable)}
                 />
                 <Switch
-                    label="Show billed time logs"
+                    label={translate("Show billed time logs")}
                     checked={filters.billed}
                     onChange={() => TimelogsActions.setFilter("billed", !filters.billed)}
                 />
             </FormGroup>
         </FiltersSidebar>
-    );
-};
-
-interface IQueryFilterProps {
-    term?: string;
-}
-const QueryFilter: FunctionComponent<IQueryFilterProps> = ({ term }) => {
-    const [query, setQuery] = useState(term);
-    const queryInputRef = createRef<HTMLInputElement>();
-
-    useEffect(() => {
-        if (queryInputRef.current) {
-            queryInputRef.current.focus();
-        }
-    }, []);
-
-    useEffect(() => {
-        if (term !== query) {
-            setQuery(term);
-        }
-    }, [term]);
-
-    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.keyCode === Keys.ESCAPE || ((event.metaKey || event.ctrlKey) && event.key === "f")) {
-            if (query?.length) {
-                setQuery("");
-                TimelogsActions.setQuery("");
-            } else {
-                TimelogsActions.toggleFilters();
-            }
-        }
-    };
-
-    const handleChangeQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setQuery(event.currentTarget.value);
-        TimelogsActions.setQuery(event.currentTarget.value);
-    };
-
-    return (
-        <FormGroup label="Search task" helperText="Search for time log description">
-            <InputGroup
-                value={query}
-                placeholder="Enter a keyword"
-                leftIcon={<Icon icon="search" />}
-                round
-                type="search"
-                onChange={handleChangeQuery}
-                inputRef={queryInputRef}
-                onKeyDown={handleKeyDown}
-            />
-        </FormGroup>
     );
 };
 
@@ -234,7 +210,7 @@ const MevsAnyoneFilter: FunctionComponent<IMevsAnyoneFilterProps> = ({ me }) => 
     };
 
     return (
-        <FormGroup label="Time logged by">
+        <FormGroup label={translate("Time logged by")}>
             <ButtonGroup fill>
                 <Button
                     fill
@@ -253,106 +229,6 @@ const MevsAnyoneFilter: FunctionComponent<IMevsAnyoneFilterProps> = ({ me }) => 
                     Anyone
                 </Button>
             </ButtonGroup>
-        </FormGroup>
-    );
-};
-
-interface IAssigneesFilterProps {
-    assignees: string[];
-    disabled?: boolean;
-}
-const AssigneesFilter: FunctionComponent<IAssigneesFilterProps> = ({ assignees, disabled }) => {
-    const [open, setOpen] = useState(false);
-
-    const people = useMemo(() => {
-        return PeopleStore.get().people.filter(person => assignees.includes(person.id));
-    }, [assignees]);
-
-    const handleSelectAssignees = (people: string[]) => {
-        TimelogsActions.setFilter("assignees", people);
-    };
-
-    const toggleAssignee = (personId: string) => {
-        TimelogsActions.setFilter(
-            "assignees",
-            produce(assignees, (draftAssignees: string[]) => {
-                const index = draftAssignees.findIndex(a => a === personId);
-                if (index > -1) {
-                    draftAssignees.splice(index, 1);
-                } else {
-                    draftAssignees.push(personId);
-                }
-            })
-        );
-    };
-
-    const handleTogglePeopleDialog = () => {
-        setOpen(!open);
-    };
-
-    return (
-        <FormGroup label="Assginees">
-            <Button
-                fill
-                icon={<Icon icon="user-add" />}
-                alignText={Alignment.LEFT}
-                disabled={disabled}
-                onClick={handleTogglePeopleDialog}
-            >
-                Add assignees
-            </Button>
-
-            {people.length > 0 && (
-                <div style={{ marginTop: 10 }}>
-                    <TagsWrapper gap={10} vertical>
-                        {people.map(person => (
-                            <AvatarChip
-                                key={person.id}
-                                person={person}
-                                small
-                                onRemove={() => toggleAssignee(person.id)}
-                            />
-                        ))}
-                    </TagsWrapper>
-                </div>
-            )}
-
-            {open && (
-                <PeopleDialog
-                    value={assignees}
-                    onClose={handleSelectAssignees}
-                    onClosed={handleTogglePeopleDialog}
-                />
-            )}
-        </FormGroup>
-    );
-};
-
-interface IDateFilterProps {
-    date?: string;
-}
-const DateFilter: FunctionComponent<IDateFilterProps> = ({ date }) => {
-    const label = useMemo(() => {
-        if (!date) return "Date";
-        return formatDates(date);
-    }, [date]);
-
-    const handleSetDate = (date?: string) => {
-        TimelogsActions.setFilter("date", date);
-    };
-
-    return (
-        <FormGroup label="Time logged date">
-            <Popover content={<DateMenu date={date} onChange={handleSetDate} />}>
-                <Button
-                    fill
-                    icon={<Icon icon="calendar-date" />}
-                    alignText={Alignment.LEFT}
-                    rightIcon={<Icon icon="chevron-down" />}
-                >
-                    {label}
-                </Button>
-            </Popover>
         </FormGroup>
     );
 };

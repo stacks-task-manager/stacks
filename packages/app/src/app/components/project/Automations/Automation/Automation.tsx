@@ -219,7 +219,7 @@ export const Automation: FunctionComponent<IAutomationsProps> = ({ automation, o
                     </TaskDetailsSection>
                     <Row>
                         <Col>
-                            <TaskDetailsSection title="Event" vertical>
+                            <TaskDetailsSection title={translate("Event")} vertical>
                                 <div className="automation-box-row automation-event">
                                     <span className={Classes.TEXT_DISABLED}>
                                         {translate("When a task is")}
@@ -242,7 +242,7 @@ export const Automation: FunctionComponent<IAutomationsProps> = ({ automation, o
                 <Grid gap={0} padding={[10, 10]}>
                     <Row>
                         <Col>
-                            <TaskDetailsSection title="Actions" vertical>
+                            <TaskDetailsSection title={translate("Actions")} vertical>
                                 <DragDropContext onDragEnd={handleDragEnd}>
                                     <Droppable droppableId="droppable">
                                         {provided => (

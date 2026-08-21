@@ -15,12 +15,7 @@ export const stackAiTools = [
         inputSchema: z.object({
             projectId: z.string().describe("Project UUID"),
             title: z.string().min(1).describe("Column title"),
-            insertIndex: z
-                .number()
-                .int()
-                .min(0)
-                .optional()
-                .describe("0-based position; omit to append"),
+            insertIndex: z.number().int().min(0).optional().describe("0-based position; omit to append"),
         }),
         execute: async ({ projectId, title, insertIndex }) => {
             const data = { title, project: projectId } as IStack;

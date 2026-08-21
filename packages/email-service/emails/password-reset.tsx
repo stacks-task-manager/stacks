@@ -13,8 +13,8 @@ export const PasswordResetEn: React.FC<PasswordResetTemplateProps> = ({ appName 
         <Section>
             <Text style={Styles.text}>Hi %userName%,</Text>
             <Text style={Styles.text}>
-                We received a request to reset your password for your {appName} account. Click the
-                button below to choose a new password.
+                We received a request to reset your password for your {appName} account. Click the button
+                below to choose a new password.
             </Text>
         </Section>
         <Section style={Styles.centered}>
@@ -23,12 +23,10 @@ export const PasswordResetEn: React.FC<PasswordResetTemplateProps> = ({ appName 
             </Button>
         </Section>
         <Section>
+            <Text style={Styles.text}>This link will expire in %expirationTime% for security reasons.</Text>
             <Text style={Styles.text}>
-                This link will expire in %expirationTime% for security reasons.
-            </Text>
-            <Text style={Styles.text}>
-                If you didn't request a password reset you can safely ignore this email; your
-                password will remain unchanged.
+                If you didn't request a password reset you can safely ignore this email; your password will
+                remain unchanged.
             </Text>
         </Section>
     </Email>

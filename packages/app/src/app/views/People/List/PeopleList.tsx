@@ -100,8 +100,7 @@ const tableColumns: ITableColumns<IPerson> = {
         minWidth: 100,
         maxWidth: 150,
         isSortable: true,
-        sortAccessor: row =>
-            row.birthday ? new Date().getFullYear() - row.birthday.getFullYear() : null,
+        sortAccessor: row => (row.birthday ? new Date().getFullYear() - row.birthday.getFullYear() : null),
         resizable: true,
     },
     company: {
@@ -424,7 +423,9 @@ const TableCell: FunctionComponent<TablePersistentCellProps<IPerson>> = ({ row, 
         // company
         const company = [];
         if (person.company != null) {
-            company.push(`${translate("Name")}: ${PeopleActions.getCompany(person.company)?.title || "Unknown"}`);
+            company.push(
+                `${translate("Name")}: ${PeopleActions.getCompany(person.company)?.title || "Unknown"}`
+            );
         }
         if (person.jobTitle != null && person.jobTitle.length > 0) {
             company.push(`${translate("Job title")}: ${person.jobTitle}`);
@@ -586,9 +587,11 @@ const TableCell: FunctionComponent<TablePersistentCellProps<IPerson>> = ({ row, 
     } else if (column === "gender") {
         return (
             <>
-                {
-                    row.gender === "male" ? translate("Male") : row.gender === "female" ? translate("Female") : translate("Other")
-                }
+                {row.gender === "male"
+                    ? translate("Male")
+                    : row.gender === "female"
+                    ? translate("Female")
+                    : translate("Other")}
             </>
         );
     } else if (column === "birthday" && row.birthday != null) {

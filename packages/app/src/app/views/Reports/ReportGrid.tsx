@@ -1,12 +1,13 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { translate } from "@stacks/translations";
 import { Classes, Colors, CompoundTag, Intent, Tag } from "@blueprintjs/core";
-import { APPICONS, ITableColumns, PRIORITYICON, PROJECTHEALTH, REPORT_TYPE } from "@stacks/types";
+import { APPICONS, ITableColumns, PRIORITYICON, PROJECTHEALTH } from "@stacks/types";
 import {
     BlankSlate,
     Icon,
     TablePersistent,
     TablePersistentCellProps,
+    TablePersistentGroupData,
     TablePersistentSectionCellProps,
 } from "app/components/common";
 import { BigNumberCell, OverflowTextCell } from "app/components/common/Table/Cells";
@@ -20,10 +21,61 @@ import { differenceInDays, isBefore } from "date-fns";
 import React, { CSSProperties, FunctionComponent } from "react";
 import { useLocation } from "react-router-dom";
 
+/** A single row in a report grid. Each report builder emits only the columns
+ *  it needs, but the cell renderers assume the fields they touch are present;
+ *  the index signature covers the dynamic cost/time columns accessed by name.
+ *
+ *  TODO(next phase): promote `ReportRow` (and the `ReportPayload` shape in
+ *  ReportType.tsx) to `@stacks/types` once the server returns a typed report
+ *  payload instead of `any[]` — then it becomes a genuine server↔client
+ *  contract alongside `IReport`/`REPORT_TYPE`/`ITableColumns`. */
+export interface ReportRow {
+    id: string;
+    groupId?: string;
+    title?: string;
+    project: { id: string; title?: string };
+    company: string;
+    owner: string;
+    health: PROJECTHEALTH | null;
+    stack: { id?: string; title?: string; tint?: string };
+    task: { id: string; title?: string; done?: boolean };
+    assignees: string[];
+    person: string;
+    projectsList: { id: string; title: string }[];
+    currency: string;
+    totalTasks: number;
+    doneTasks: number;
+    todoTasks: number;
+    inProgressTasks: number;
+    criticalTasks: number;
+    highTasks: number;
+    mediumTasks: number;
+    lowTasks: number;
+    dueTodayTasks: number;
+    overdueTasks: number;
+    openProjects: number;
+    timeEstimated: number;
+    timeLogged: number;
+    billableTime: number;
+    nonBillableTime: number;
+    estimate: number;
+    hourlyRate: number;
+    cost: number;
+    revenue: number;
+    profit: number;
+    updated: Date;
+    completed: Date;
+    duedate: Date;
+    [key: string]: unknown;
+}
+
+/** Report data is either a flat list of rows or a list of grouped rows. */
+export type ReportData = ReportRow[] | TablePersistentGroupData<ReportRow>[];
+
 interface ReportGridProps {
-    type: REPORT_TYPE;
-    columns: ITableColumns<any>;
-    data: any[];
+    type: string;
+    columns: ITableColumns<ReportRow>;
+    data: ReportData;
 }
 export const ReportGrid: FunctionComponent<ReportGridProps> = ({ type, columns, data }) => {
     if (!data.length) {
@@ -38,7 +90,7 @@ export const ReportGrid: FunctionComponent<ReportGridProps> = ({ type, columns, 
     }
 
     return (
-        <TablePersistent
+        <TablePersistent<ReportRow>
             id={type}
             sticky
             enableReorder={false}
@@ -59,9 +111,23 @@ function formatCurrency(value?: number) {
     );
 }
 
-const TableGroupCell: FunctionComponent<TablePersistentSectionCellProps<object>> = ({ column, section }) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const data: any = section;
+/** A grouped report row (e.g. profitability) carries the group metadata plus
+ *  the financial rollups rendered in the group header cells. */
+interface ReportGroupRow extends TablePersistentGroupData<ReportRow> {
+    currency?: string;
+    estimate?: number;
+    timeLogged?: number;
+    hourlyRate?: number;
+    cost?: number;
+    revenue?: number;
+    profit?: number;
+}
+
+const TableGroupCell: FunctionComponent<TablePersistentSectionCellProps<ReportRow>> = ({
+    column,
+    section,
+}) => {
+    const data = section as ReportGroupRow;
 
     const symbol = data.currency ? window.currencies[data.currency].symbol : "";
 
@@ -135,7 +201,7 @@ const TableGroupCell: FunctionComponent<TablePersistentSectionCellProps<object>>
     return null;
 };
 
-const TableCellPure: FunctionComponent<TablePersistentCellProps<any>> = ({ row, column }) => {
+const TableCellPure: FunctionComponent<TablePersistentCellProps<ReportRow>> = ({ row, column }) => {
     const nav = useNav();
     const location = useLocation();
 
@@ -190,7 +256,7 @@ const TableCellPure: FunctionComponent<TablePersistentCellProps<any>> = ({ row, 
     else if (["cost", "hourlyRate"].includes(column)) {
         const locale = getBrowserLocale();
         const symbol = row.currency ? window.currencies[row.currency].symbol : "";
-        const value = row[column as keyof any] ?? 0;
+        const value = Number(row[column] ?? 0);
 
         return (
             <CompoundTag leftContent={symbol} round minimal intent={Intent.PRIMARY}>
@@ -201,7 +267,7 @@ const TableCellPure: FunctionComponent<TablePersistentCellProps<any>> = ({ row, 
 
     // time estimation
     else if (["timeEstimated", "timeLogged", "billableTime", "nonBillableTime"].includes(column)) {
-        const value = row[column as keyof any];
+        const value = Number(row[column] ?? 0);
         const intent =
             column === "timeEstimated"
                 ? Intent.PRIMARY
@@ -267,7 +333,8 @@ const TableCellPure: FunctionComponent<TablePersistentCellProps<any>> = ({ row, 
         );
     }
 
-    return <>{row[column as keyof any]?.toString() ?? <span className={Classes.TEXT_DISABLED}>-</span>}</>;
+    const value = row[column];
+    return <>{value != null ? String(value) : <span className={Classes.TEXT_DISABLED}>-</span>}</>;
 };
 const TableCell = React.memo(TableCellPure);
 
@@ -304,11 +371,11 @@ const CounterCellIconsIntents = {
     lowTasks: "text-success",
 };
 
-const CounterCell = ({ row, column }: { row: any; column: string }) => {
+const CounterCell = ({ row, column }: { row: ReportRow; column: string }) => {
     const withPercentage = CounterCellWithPercentages.includes(column);
     const withIcon = CounterCellWithIcons.includes(column);
-    const value = row[column as keyof any];
-    const percentage = withPercentage ? Math.round(value * 100) / row.totalTasks : undefined;
+    const value = Number(row[column] ?? 0);
+    const percentage = withPercentage ? Math.round(value * 100) / (row.totalTasks ?? 0) : undefined;
 
     return (
         <>
@@ -360,7 +427,7 @@ const TaskCounter = ({
     );
 };
 
-const TaskStatus = ({ data }: { data: any }) => {
+const TaskStatus = ({ data }: { data: ReportRow }) => {
     const styles: CSSProperties = {
         borderRadius: 4,
         display: "flex",
@@ -380,7 +447,7 @@ const TaskStatus = ({ data }: { data: any }) => {
         );
     }
 
-    if (isBefore(data.duedate, new Date())) {
+    if (data.duedate && isBefore(data.duedate, new Date())) {
         return (
             <div style={{ ...styles, backgroundColor: Colors.RED5 }}>
                 <strong>Late</strong> <span>{differenceInDays(new Date(), data.duedate)} days</span>
@@ -390,7 +457,8 @@ const TaskStatus = ({ data }: { data: any }) => {
 
     return (
         <div style={{ ...styles, backgroundColor: Colors.GOLD5 }}>
-            <strong>Upcoming</strong> <span>{differenceInDays(data.duedate, new Date())} days left</span>
+            <strong>Upcoming</strong>{" "}
+            <span>{differenceInDays(data.duedate ?? new Date(), new Date())} days left</span>
         </div>
     );
 };

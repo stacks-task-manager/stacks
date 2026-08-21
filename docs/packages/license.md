@@ -6,13 +6,13 @@ License verification used by the server at startup. Reads a public key and a lic
 
 ## Table of Contents
 
--   [Developer program](#developer-program)
--   [Environment](#environment)
--   [How it's wired](#how-its-wired)
--   [License payload](#license-payload)
--   [Failure modes](#failure-modes)
--   [Overview](#overview)
--   [Related](#related)
+- [Developer program](#developer-program)
+- [Environment](#environment)
+- [How it's wired](#how-its-wired)
+- [License payload](#license-payload)
+- [Failure modes](#failure-modes)
+- [Overview](#overview)
+- [Related](#related)
 
 ## Developer program
 
@@ -24,10 +24,10 @@ When you receive a development license from [getstacksapp.com/dev-program](https
 
 That admin account is tied to your registration:
 
-| Field | Value |
-| --- | --- |
-| **Email** | Same address you used to register on the website |
-| **Default password** | `$Pa$$w0rd` |
+| Field                | Value                                            |
+| -------------------- | ------------------------------------------------ |
+| **Email**            | Same address you used to register on the website |
+| **Default password** | `$Pa$$w0rd`                                      |
 
 Sign in at `/login` with those credentials after `yarn dev` (or `yarn dev:server`) has started and finished seeding. Change the password once you are in.
 
@@ -43,10 +43,10 @@ This rewrites the bcrypt hash directly in the `users` table and clears any pendi
 
 No `.env` file. The package reads two artifacts from `process.cwd()` at the moment `initializeLicense()` runs:
 
-| File | Source path | Description |
-| --- | --- | --- |
-| `public.pem` | shipped at [`packages/server/public.pem`](../../packages/server/public.pem) | RSA-2048 public key. Copied into the server bundle by `yarn release:server`. |
-| `license.key` | obtained via the dev program | Encrypted license file. **Not** checked into git. |
+| File          | Source path                                                                 | Description                                                                  |
+| ------------- | --------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `public.pem`  | shipped at [`packages/server/public.pem`](../../packages/server/public.pem) | RSA-2048 public key. Copied into the server bundle by `yarn release:server`. |
+| `license.key` | obtained via the dev program                                                | Encrypted license file. **Not** checked into git.                            |
 
 Because the lookup is `process.cwd()`-relative, in development you typically run the server with the `packages/server/` directory as the cwd (which `yarn dev:server` does). In production releases both files sit next to the server bundle in `releases/server/`.
 
@@ -78,17 +78,17 @@ The server uses these fields to seed default tenants and to enforce seat limits.
 
 All failures exit with code `1` and a `❌`-prefixed message:
 
-| Trigger | Message (abbreviated) |
-| --- | --- |
-| `license.key` missing | `❌ No license file found, exiting at path: …` |
-| `license.key` empty | `⚠️ License file is empty, exiting at path: …` |
-| `public.pem` missing | `❌ Public key file not found` |
-| Decryption failure | `❌ License decryption failed: …` |
-| Server license: server unreachable | `❌ License server unreachable: …` |
-| Server license: response invalid | `❌ Failed to decrypt server license response: …` |
-| Server license: marked invalid | `❌ License server reported license as invalid` |
-| Server license: missing expiry | `❌ License server response missing expiry` |
-| `getLicense()` called before init | `❌ License not initialized, exiting…` |
+| Trigger                            | Message (abbreviated)                             |
+| ---------------------------------- | ------------------------------------------------- |
+| `license.key` missing              | `❌ No license file found, exiting at path: …`    |
+| `license.key` empty                | `⚠️ License file is empty, exiting at path: …`    |
+| `public.pem` missing               | `❌ Public key file not found`                    |
+| Decryption failure                 | `❌ License decryption failed: …`                 |
+| Server license: server unreachable | `❌ License server unreachable: …`                |
+| Server license: response invalid   | `❌ Failed to decrypt server license response: …` |
+| Server license: marked invalid     | `❌ License server reported license as invalid`   |
+| Server license: missing expiry     | `❌ License server response missing expiry`       |
+| `getLicense()` called before init  | `❌ License not initialized, exiting…`            |
 
 ## Overview
 

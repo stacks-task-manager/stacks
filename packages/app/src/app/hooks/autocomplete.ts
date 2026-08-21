@@ -6,7 +6,7 @@ import { translate } from "@stacks/translations";
 import { Classes, Colors, IconName } from "@blueprintjs/core";
 import { addDays, addMonths, addWeeks, endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns";
 import emoji, { Emoji } from "node-emoji";
-import { useMemo, useRef } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import Tribute, { TributeCollection, TributeItem } from "tributejs";
 
 import {
@@ -21,10 +21,11 @@ import {
 } from "@stacks/types";
 import { SearchAPI } from "app/api";
 import sprites from "app/icons/sprites.svg";
+import { RecordsStore } from "app/store/records";
 import { PeopleStore } from "app/store/people";
 import { PreferencesStore } from "app/store/preferences";
 import { stripMd } from "app/utils/string";
-import { getTags } from "./tags";
+import { shallowEqual } from "./store";
 
 interface ITributeItem<T> {
     icon?: IconName;
@@ -59,6 +60,11 @@ export interface IAutocompelteDate {
     date: Date;
 }
 
+/**
+ * Returns the shared autocomplete machinery for attaching a Tribute autocomplete to an input.
+ * Manages the tribute instance and refs, and wires up selection/is-selected callbacks.
+ * @returns An object with `show`, `hide`, `onSelect`, `setMenuItems`, and `isSelected` functions.
+ */
 export const useAutocompleteBase = <T extends object>() => {
     const darkMode = PreferencesStore.get().darkMode;
     const tributeRef = useRef<Tribute<ITributeItem<T>> | null>(null);
@@ -73,7 +79,7 @@ export const useAutocompleteBase = <T extends object>() => {
         isSelectedRef.current = callback;
     };
 
-    const handleSelect = (e: Event) => {
+    const handleSelect = useCallback((e: Event) => {
         const event = e as ITributeEvent<T>;
 
         const selectedItem: IAutocompleteSelectedItem<T> = {
@@ -84,7 +90,7 @@ export const useAutocompleteBase = <T extends object>() => {
         };
 
         if (onSelectRef.current) onSelectRef.current(selectedItem);
-    };
+    }, []);
 
     const checkIsSelected = (item: ITributeItem<T>) => {
         if (isSelectedRef.current) return isSelectedRef.current(item);
@@ -152,6 +158,12 @@ export const useAutocompleteBase = <T extends object>() => {
     return { show, hide, onSelect, setMenuItems, isSelected };
 };
 
+/**
+ * Builds a Tribute-based autocomplete for the given input, with collections enabled via `options`.
+ * Returns the same `show`, `hide`, and `onSelect` API as `useAutocompleteBase`.
+ * @param options Flags enabling each autocomplete collection (tags, assignees, emojis, documents, priority, statuses, dates) plus optional per-type select templates.
+ * @returns An object with `show`, `hide`, and `onSelect` functions.
+ */
 export const useAutocomplete = (options: {
     tags?: true;
     assignees?: true;
@@ -169,9 +181,12 @@ export const useAutocomplete = (options: {
     const emojiDebounce = useRef<NodeJS.Timeout | null>(null);
     const assigneesDebounce = useRef<NodeJS.Timeout | null>(null);
 
+    const projectTags = RecordsStore.use(
+        state => state.tags.filter(tag => tag.section === TAGSECTION.PROJECTS && tag.type === TAGTYPE.TAG),
+        shallowEqual
+    );
     const tagsItems = useMemo(() => {
-        const tags = getTags(TAGSECTION.PROJECTS, TAGTYPE.TAG);
-        return tags.map((tag: ITag) => ({
+        return projectTags.map((tag: ITag) => ({
             key: tag.title,
             value: tag.title.replace(/\s+/g, ""),
             color: tag.color,
@@ -180,22 +195,23 @@ export const useAutocomplete = (options: {
             trigger: "#",
             type: "tag",
         }));
-    }, []);
+    }, [projectTags]);
 
+    const projectStatuses = RecordsStore.use(
+        state => state.tags.filter(tag => tag.section === TAGSECTION.PROJECTS && tag.type === TAGTYPE.STATUS),
+        shallowEqual
+    );
     const statusesItems = useMemo(() => {
-        const statuses = getTags(TAGSECTION.PROJECTS, TAGTYPE.STATUS);
-        return statuses
-            .filter(tag => tag.type === TAGTYPE.STATUS)
-            .map((status: ITag) => ({
-                key: status.title,
-                value: status.title.replace(/\s+/g, ""),
-                color: status.color,
-                icon: "circle-filled",
-                item: status,
-                trigger: "%",
-                type: "status",
-            }));
-    }, []);
+        return projectStatuses.map((status: ITag) => ({
+            key: status.title,
+            value: status.title.replace(/\s+/g, ""),
+            color: status.color,
+            icon: "circle-filled",
+            item: status,
+            trigger: "%",
+            type: "status",
+        }));
+    }, [projectStatuses]);
 
     const { show: attach, hide, onSelect } = useAutocompleteBase<ITag>();
 

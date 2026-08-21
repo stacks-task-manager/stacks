@@ -1,6 +1,5 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { NodeViewContent, NodeViewProps, NodeViewWrapper } from "@tiptap/react";
-import React from "react";
 
 export const Code = ({
     node: {

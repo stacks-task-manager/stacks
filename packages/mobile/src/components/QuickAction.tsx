@@ -7,10 +7,7 @@ import { Icon, type IconName } from "./Icon";
 
 export type QuickActionTone = "primary" | "danger" | "warning" | "secondary";
 
-const TONE_CLASSES: Record<
-    QuickActionTone,
-    { bg: string; text: string; border?: string }
-> = {
+const TONE_CLASSES: Record<QuickActionTone, { bg: string; text: string; border?: string }> = {
     primary: {
         bg: "bg-primary-500",
         text: "text-white",
@@ -41,36 +38,20 @@ export interface QuickActionProps {
     fill?: boolean;
 }
 
-export function QuickAction({
-    label,
-    icon,
-    tone = "primary",
-    onPress,
-    disabled,
-    fill,
-}: QuickActionProps) {
+export function QuickAction({ label, icon, tone = "primary", onPress, disabled, fill }: QuickActionProps) {
     const classes = TONE_CLASSES[tone];
     const isOutlined = tone === "secondary";
     return (
         <Pressable
             onPress={disabled ? undefined : onPress}
             disabled={disabled}
-            className={`items-center justify-center px-4 py-2.5 rounded-full active:opacity-75 ${classes.bg} ${
-                fill ? "flex-1" : ""
-            } ${isOutlined ? `border ${classes.border ?? ""}` : ""}`}
+            className={`items-center justify-center px-4 py-2.5 rounded-full active:opacity-75 ${
+                classes.bg
+            } ${fill ? "flex-1" : ""} ${isOutlined ? `border ${classes.border ?? ""}` : ""}`}
         >
             <HStack space="xs" className="items-center">
-                {icon ? (
-                    <Icon
-                        icon={icon}
-                        size={16}
-                        color={isOutlined ? undefined : "white"}
-                    />
-                ) : null}
-                <Text
-                    size="sm"
-                    className={`font-semibold ${classes.text}`}
-                >
+                {icon ? <Icon icon={icon} size={16} color={isOutlined ? undefined : "white"} /> : null}
+                <Text size="sm" className={`font-semibold ${classes.text}`}>
                     {label}
                 </Text>
             </HStack>

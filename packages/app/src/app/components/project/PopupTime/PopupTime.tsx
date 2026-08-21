@@ -33,10 +33,7 @@ export const PopupTime: FunctionComponent<IPopupTimeProps> = ({
     return (
         <Popover
             content={
-                <FormGroup
-                    label={translate(labelKey)}
-                    style={{ marginBottom: 0, width: 120 }}
-                >
+                <FormGroup label={translate(labelKey)} style={{ marginBottom: 0, width: 120 }}>
                     <DurationInput value={value} onChange={onChange} />
                     <button
                         ref={closePopoverBtn}

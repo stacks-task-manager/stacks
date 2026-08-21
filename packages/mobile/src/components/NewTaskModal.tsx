@@ -49,12 +49,7 @@ export function NewTaskModal({
                 </ModalHeader>
                 <ModalBody>
                     <Input variant="outline">
-                        <InputField
-                            placeholder="Title"
-                            value={title}
-                            onChangeText={setTitle}
-                            autoFocus
-                        />
+                        <InputField placeholder="Title" value={title} onChangeText={setTitle} autoFocus />
                     </Input>
                 </ModalBody>
                 <ModalFooter>

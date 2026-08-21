@@ -19,7 +19,7 @@ describe("Bookmarks", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect(res.status).toBe(200);
         const body = await res.json();
         expect(body).toHaveProperty("data");
@@ -42,7 +42,7 @@ describe("Bookmarks", () => {
             },
             body: JSON.stringify(bookmarkData),
         });
-        
+
         expect(res.status).toBe(200);
         const body = await res.json();
         expect(body).toHaveProperty("data");
@@ -60,7 +60,7 @@ describe("Bookmarks", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect([200, 404]).toContain(res.status);
         if (res.status === 200) {
             const body = await res.json();
@@ -84,7 +84,7 @@ describe("Bookmarks", () => {
             },
             body: JSON.stringify(updateData),
         });
-        
+
         expect([200, 404]).toContain(res.status);
     });
 
@@ -96,7 +96,7 @@ describe("Bookmarks", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect([200, 404]).toContain(res.status);
     });
 
@@ -114,7 +114,7 @@ describe("Bookmarks", () => {
             },
             body: JSON.stringify(bookmarkData),
         });
-        
+
         // Should fail with validation error
         expect(res.status).toBe(400);
     });
@@ -135,7 +135,7 @@ describe("Bookmarks", () => {
             },
             body: JSON.stringify(bookmarkData),
         });
-        
+
         // Accept either validation failure or success depending on server validation
         expect([200, 400]).toContain(res.status);
     });
@@ -148,7 +148,7 @@ describe("Bookmarks", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect([400, 404, 500]).toContain(res.status);
     });
 
@@ -165,7 +165,7 @@ describe("Bookmarks", () => {
             },
             body: JSON.stringify(updateData),
         });
-        
+
         expect([400, 404, 500]).toContain(res.status);
     });
 
@@ -177,7 +177,7 @@ describe("Bookmarks", () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        
+
         expect([400, 404, 500]).toContain(res.status);
     });
 
@@ -189,7 +189,7 @@ describe("Bookmarks", () => {
                 // No Authorization header
             },
         });
-        
+
         // Should fail without authentication
         expect(res.status).toBe(401);
     });

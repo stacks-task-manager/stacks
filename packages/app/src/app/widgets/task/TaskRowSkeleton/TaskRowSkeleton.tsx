@@ -2,7 +2,6 @@
 import { Button, Classes } from "@blueprintjs/core";
 import { Col, Grid, Row } from "app/components/common";
 import { TagsWrapper } from "app/widgets/common";
-import React from "react";
 
 export const TaskRowSkeleton = () => {
     return (
@@ -19,11 +18,11 @@ export const TaskRowSkeleton = () => {
 
                     <TagsWrapper>
                         <Button size="small" className={Classes.SKELETON} />
-            <Button size="small" className={Classes.SKELETON} />
-            <Button size="small" className={Classes.SKELETON} />
-            <Button size="small" className={Classes.SKELETON} />
-            <Button size="small" className={Classes.SKELETON} />
-            <Button size="small" className={Classes.SKELETON} />
+                        <Button size="small" className={Classes.SKELETON} />
+                        <Button size="small" className={Classes.SKELETON} />
+                        <Button size="small" className={Classes.SKELETON} />
+                        <Button size="small" className={Classes.SKELETON} />
+                        <Button size="small" className={Classes.SKELETON} />
                     </TagsWrapper>
                 </Grid>
             </Col>

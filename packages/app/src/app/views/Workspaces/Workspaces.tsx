@@ -70,7 +70,11 @@ const PreferencesButton = () => {
             horizontal
             small
         >
-            <div className="workspace-button" onClick={handlePreferencesClick} data-testid="preferences-button">
+            <div
+                className="workspace-button"
+                onClick={handlePreferencesClick}
+                data-testid="preferences-button"
+            >
                 <AppIcon icon="settings-02" />
             </div>
         </HotkeyTooltip>

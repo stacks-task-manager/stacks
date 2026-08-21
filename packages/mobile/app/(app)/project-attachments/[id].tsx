@@ -27,7 +27,11 @@ function formatSize(bytes: number): string {
 
 export default function ProjectAttachmentsScreen() {
     const { id } = useLocalSearchParams<{ id: string }>();
-    const { data: attachments = [], isLoading, isError } = useQuery<IAttachment[]>({
+    const {
+        data: attachments = [],
+        isLoading,
+        isError,
+    } = useQuery<IAttachment[]>({
         queryKey: ["attachments", id],
         queryFn: () => fetchAttachments(id),
     });
@@ -69,7 +73,11 @@ export default function ProjectAttachmentsScreen() {
                     >
                         <HStack className="items-center justify-between">
                             <VStack className="flex-1 mr-2" space="xs">
-                                <Text size="sm" className="font-semibold text-typography-900" numberOfLines={1}>
+                                <Text
+                                    size="sm"
+                                    className="font-semibold text-typography-900"
+                                    numberOfLines={1}
+                                >
                                     {file.originalName}
                                 </Text>
                                 <Text size="xs" className="text-typography-500">

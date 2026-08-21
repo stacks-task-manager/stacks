@@ -17,7 +17,7 @@ describe("useStorage", () => {
     it("should initialize with the stored value if it exists", () => {
         (Storage.get as jest.Mock).mockReturnValue("stored-value");
         const { result } = renderHook(() => useStorage("test-key", false, "default-value"));
-        
+
         expect(result.current[0]).toBe("stored-value");
         expect(Storage.get).toHaveBeenCalledWith("test-key", false, "default-value", undefined);
     });
@@ -25,9 +25,9 @@ describe("useStorage", () => {
     it("should initialize with the default value if storage returns null/undefined", () => {
         // Simulating Storage.get returning null (or whatever default behavior when not found)
         (Storage.get as jest.Mock).mockReturnValue(null);
-        
+
         const { result } = renderHook(() => useStorage("test-key", false, "default-value"));
-        
+
         expect(result.current[0]).toBe("default-value");
     });
 
@@ -59,7 +59,7 @@ describe("useStorage", () => {
     it("should handle parsing function", () => {
         const parseFn = (val: string) => JSON.parse(val);
         (Storage.get as jest.Mock).mockReturnValue({ foo: "bar" });
-        
+
         const { result } = renderHook(() => useStorage("test-key", parseFn, { foo: "default" }));
 
         expect(Storage.get).toHaveBeenCalledWith("test-key", parseFn, { foo: "default" }, undefined);

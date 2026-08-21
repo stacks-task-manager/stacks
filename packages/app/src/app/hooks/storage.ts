@@ -6,6 +6,15 @@ import { useCallback, useState } from "react";
 
 import Storage from "app/utils/storage";
 
+/**
+ * Reads a value from storage and keeps it in local state, persisting changes back to storage.
+ * @template T - The type of the stored value.
+ * @param {string} key - The storage key to read and write.
+ * @param {boolean | ((value: string) => T)} parse - Whether to JSON-parse the raw value, or a parser function that converts it to T.
+ * @param {T} defaultValue - The fallback value when nothing is stored.
+ * @param {string} [prefix] - An optional namespace prefix for the storage key.
+ * @returns A tuple of the current value and a setter that updates state and storage.
+ */
 export const useStorage = <T>(
     key: string,
     parse: boolean | ((value: string) => T),

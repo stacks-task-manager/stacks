@@ -1,5 +1,6 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { Button, Menu, MenuDivider, MenuItem, Popover } from "@blueprintjs/core";
+import { translate } from "@stacks/translations";
 import React, { FunctionComponent, useMemo } from "react";
 import { PROJECT_VIEWS_LABELS } from "app/locale/dynamic-messages";
 
@@ -31,7 +32,7 @@ export const ProjectViewPicker: FunctionComponent<IProjectViewPickerProps> = ({
             content={
                 <Menu>
                     <MenuItem
-                        text="Last used view - Default"
+                        text={translate("Last used view - Default")}
                         labelElement={
                             !selectedValue || selectedValue.id === PROJECTVIEW.DEFAULT ? (
                                 <Icon icon="check" size={14} />

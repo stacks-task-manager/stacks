@@ -10,8 +10,8 @@ import { PROJECT_DEFAULT_VIEWS, PROJECTVIEW } from "@stacks/types";
 import { getProjectStacks } from "./stacks";
 
 /**
- * Returns the current project's active views
- * @returns
+ * Returns the current project's active views.
+ * @returns {PROJECTVIEW[]} The active views for the current project.
  */
 export const useProjectActiveViews = () => {
     const { id } = useParams();
@@ -32,17 +32,27 @@ export const useProjectActiveViews = () => {
 };
 
 /**
- * Returns wether the settings should be visible or not
- * @returns
+ * Returns whether the settings should be visible or not.
+ * @returns {boolean} Whether the project settings panel is showing.
  */
 export const useProjectShowingSettings = () => {
     return ProjectsStatusStore.use(state => state.isShowingSettings, shallowEqual);
 };
 
+/**
+ * Returns the default stack id set for a project.
+ * @param {string} [projectId] The id of the project.
+ * @returns {string | undefined} The default stack id, or undefined when not set.
+ */
 export const useDefaultStackForProject = (projectId?: string) => {
     return ProjectsStatusStore.use(state => state.defaultStack[projectId ?? ""], shallowEqual);
 };
 
+/**
+ * Returns the default stack for a project, falling back to its first stack.
+ * @param {string} projectId The id of the project.
+ * @returns {string | undefined} The default stack id, or undefined when the project has no stacks.
+ */
 export const getDefaultStackForProject = (projectId: string): string | undefined => {
     const defaultStack = ProjectsStatusStore.get().defaultStack[projectId];
     if (defaultStack) {
@@ -58,8 +68,8 @@ export const getDefaultStackForProject = (projectId: string): string | undefined
 };
 
 /**
- * Returns the current project's loading state
- * @returns
+ * Returns the current project's loading state.
+ * @returns {{ isLoading: boolean; isLoaded: boolean; projectId: string | undefined }} The project's loading state and id.
  */
 export const useProjectStatus = (): {
     isLoading: boolean;
@@ -82,8 +92,8 @@ export const useProjectStatus = (): {
 };
 
 /**
- * Returns the current project's default view
- * @returns
+ * Returns the current project's default view.
+ * @returns {PROJECTVIEW} The default view for the current project.
  */
 export const useProjectDefaultView = () => {
     const { id } = useParams();
@@ -91,8 +101,8 @@ export const useProjectDefaultView = () => {
 };
 
 /**
- * Returns the current project's last used view type
- * @returns
+ * Returns the current project's last used view type.
+ * @returns {PROJECTVIEW} The last used view for the current project.
  */
 export const useProjectLastView = () => {
     const { id } = useParams();
@@ -100,19 +110,28 @@ export const useProjectLastView = () => {
     return ProjectsStatusStore.use(state => state.lastViewTypes[id!] ?? PROJECTVIEW.BOARD, shallowEqual);
 };
 
+/**
+ * Returns the last used view type for a project.
+ * @param {string} id The id of the project.
+ * @returns {PROJECTVIEW} The last used view, or the default board view.
+ */
 export const getProjectLastView = (id: string) => {
     return ProjectsStatusStore.get().lastViewTypes[id] ?? PROJECTVIEW.BOARD;
 };
 
 /**
- * Returns the default filtering state set in Project Settings
- * "" | "all" | "done" | "todo"
+ * Returns the default filtering state set in Project Settings.
+ * @returns {string} The default filter state, one of "" | "all" | "done" | "todo".
  */
 export const useProjectDefaultFilterState = () => {
     const { id } = useParams();
     return ProjectsStatusStore.use(state => state.defaultFilterState[id!], shallowEqual);
 };
 
+/**
+ * Returns whether subtasks should be shown for the current project.
+ * @returns {boolean | undefined} Whether subtasks are shown, or undefined when not set.
+ */
 export const useProjectShowSubtasks = () => {
     const { id } = useParams();
     return ProjectsStatusStore.use(state => state.showSubtasks[id!], shallowEqual);

@@ -84,9 +84,7 @@ export const TableSection: FunctionComponent<ITableHeadProps> = ({
 
                         {cells}
 
-                        {cells == null && (<TableSectionCell span={span - 1}>
-                            {rightElement}
-                        </TableSectionCell>)}
+                        {cells == null && <TableSectionCell span={span - 1}>{rightElement}</TableSectionCell>}
                     </>
                 )}
             </tr>
@@ -99,10 +97,16 @@ interface TableSectionCellProps {
     hasCheckbox?: boolean;
     span?: number;
 }
-export const TableSectionCell: FunctionComponent<TableSectionCellProps> = ({ children, hasCheckbox, span }) => {
+export const TableSectionCell: FunctionComponent<TableSectionCellProps> = ({
+    children,
+    hasCheckbox,
+    span,
+}) => {
     return (
         <td colSpan={span}>
-            <div className={classNames("table-section__cell", { "has-checkbox": hasCheckbox })}>{children}</div>
+            <div className={classNames("table-section__cell", { "has-checkbox": hasCheckbox })}>
+                {children}
+            </div>
         </td>
-    )
-}
+    );
+};

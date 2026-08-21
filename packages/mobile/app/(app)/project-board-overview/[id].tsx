@@ -51,7 +51,11 @@ function StatCard({
 
 export default function ProjectBoardOverviewScreen() {
     const { id } = useLocalSearchParams<{ id: string }>();
-    const { data: overview, isLoading, isError } = useQuery<IProjectOverview>({
+    const {
+        data: overview,
+        isLoading,
+        isError,
+    } = useQuery<IProjectOverview>({
         queryKey: ["project-board-overview", id],
         queryFn: () => fetchProjectOverview(id),
     });
@@ -143,8 +147,8 @@ export default function ProjectBoardOverviewScreen() {
                                 </Text>
                                 <VStack className="items-end">
                                     <Text size="xs" className="text-typography-500">
-                                        est {formatHours(s.estimated)} · spent {formatHours(s.spent)} ·
-                                        rem {formatHours(s.remaining)}
+                                        est {formatHours(s.estimated)} · spent {formatHours(s.spent)} · rem{" "}
+                                        {formatHours(s.remaining)}
                                     </Text>
                                 </VStack>
                             </HStack>
@@ -214,11 +218,7 @@ function StatRowLayout({
     return (
         <Box className="bg-background-0 border border-outline-200 rounded-md px-3 py-2">
             <HStack className="items-center justify-between">
-                <Text
-                    size="sm"
-                    className="font-semibold text-typography-900 flex-1 mr-2"
-                    numberOfLines={1}
-                >
+                <Text size="sm" className="font-semibold text-typography-900 flex-1 mr-2" numberOfLines={1}>
                     {name}
                 </Text>
                 <HStack className="items-center" space="md">

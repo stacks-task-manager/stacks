@@ -6,7 +6,6 @@ import { RoundButton } from "app/components/common";
 import { ProgressPicker } from "app/components/project";
 import { TasksActions } from "app/store/actions";
 
-
 interface ITaskProgressProps {
     taskId: string;
     progress?: number;
@@ -28,9 +27,12 @@ export const TaskProgress: FunctionComponent<ITaskProgressProps> = ({ taskId, pr
                         tooltip="Set percentage"
                     />
                 )}
-                {Boolean(progress) && progress! > 0 && <Tag minimal round intent={Intent.SUCCESS} interactive>{progress}%</Tag>}
+                {Boolean(progress) && progress! > 0 && (
+                    <Tag minimal round intent={Intent.SUCCESS} interactive>
+                        {progress}%
+                    </Tag>
+                )}
             </>
         </ProgressPicker>
-
-    )
-}
+    );
+};

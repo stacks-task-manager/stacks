@@ -15,6 +15,7 @@ import Dialog from "app/utils/dialog";
 import Log from "app/utils/log";
 import { getStorage, setStorage } from "app/utils/storage";
 import { cancelSelection } from "../navigation";
+import { updateById } from "../actionHelpers";
 import toast from "app/utils/toast";
 
 const ACTIVE_TIMERS = "active-timers";
@@ -260,12 +261,7 @@ const unarchiveById = async (documentId: string) => {
 const archiveDocument = async (documentId: string) => {
     RecordsStore.set(
         produce((state: IRecordsStore) => {
-            state.documents = state.documents.map((record: TreeNode) => {
-                if (record.id === documentId) {
-                    record.archived = new Date().toJSON();
-                }
-                return record;
-            });
+            state.documents = updateById(state.documents, documentId, { archived: new Date().toJSON() });
         })
     );
 
@@ -289,12 +285,7 @@ const archiveDocumentAlert = async (documentId: string) => {
 const unarchiveDocument = async (documentId: string) => {
     RecordsStore.set(
         produce((state: IRecordsStore) => {
-            state.documents = state.documents.map((record: TreeNode) => {
-                if (record.id === documentId) {
-                    record.archived = null;
-                }
-                return record;
-            });
+            state.documents = updateById(state.documents, documentId, { archived: null });
         })
     );
 
@@ -317,12 +308,7 @@ const unarchiveDocumentAlert = async (documentId: string) => {
 const setTitle = async (title: string, recordId: string) => {
     RecordsStore.set(
         produce((state: IRecordsStore) => {
-            state.documents = state.documents.map(document => {
-                if (document.id === recordId) {
-                    document.title = title;
-                }
-                return document;
-            });
+            state.documents = updateById(state.documents, recordId, { title });
         })
     );
 
@@ -435,12 +421,7 @@ const updatePermissions = async (documentId: string, permissions: IPermissions) 
     await PermissionsAPI.update(documentId, permissions);
     RecordsStore.set(
         produce((state: IRecordsStore) => {
-            state.documents = state.documents.map((record: TreeNode) => {
-                if (record.id === documentId) {
-                    return { ...record, permissions };
-                }
-                return record;
-            });
+            state.documents = updateById(state.documents, documentId, { permissions });
         })
     );
 };
@@ -475,12 +456,7 @@ const removeTimer = async (taskId: string) => {
 const setTint = async (documentId: string, tint?: string) => {
     RecordsStore.set(
         produce((state: IRecordsStore) => {
-            state.documents = state.documents.map(document => {
-                if (document.id === documentId) {
-                    document.tint = tint;
-                }
-                return document;
-            });
+            state.documents = updateById(state.documents, documentId, { tint });
         })
     );
 

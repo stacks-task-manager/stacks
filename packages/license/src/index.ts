@@ -293,7 +293,10 @@ const readAndDecryptLicense = async (): Promise<ILicense> => {
                 try {
                     console.log("🔍 Attempting RSA license format (v3.0)");
                     decryptedLicense = verifyAndDecryptRSALicense(licenseContent);
-                    console.log("🔍 RSA license format (v3.0) successfully decrypted", JSON.stringify(decryptedLicense, null, 2));
+                    console.log(
+                        "🔍 RSA license format (v3.0) successfully decrypted",
+                        JSON.stringify(decryptedLicense, null, 2)
+                    );
                 } catch (rsaError) {
                     // Fallback to v2.0 AES format
                     console.log("🔍 Falling back to signed license format (v2.0)");

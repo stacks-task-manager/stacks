@@ -7,7 +7,14 @@ vi.mock("@stacks/license", () => ({
 }));
 
 import { getLicense } from "@stacks/license";
-import { canRead, canWrite, getCurrentRole, getCurrentUser, getInstanceId, getTenantLicense } from "../context";
+import {
+    canRead,
+    canWrite,
+    getCurrentRole,
+    getCurrentUser,
+    getInstanceId,
+    getTenantLicense,
+} from "../context";
 import { requestContext } from "../../services/requestContext";
 import type { User } from "../../types";
 

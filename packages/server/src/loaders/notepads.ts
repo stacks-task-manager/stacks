@@ -10,13 +10,7 @@ import { Errors } from "../errors";
 import { sendRealtimeUpdate } from "../events";
 import { invalidateApiCacheForCurrentRequest } from "../utils/cache";
 import { getCurrentUser } from "./context";
-import {
-    deleteOne,
-    findAll,
-    findOne,
-    updateOne,
-    withTransaction
-} from "./utils";
+import { deleteOne, findAll, findOne, updateOne, withTransaction } from "./utils";
 
 NotepadEntity.hasOne(PermissionEntity, { foreignKey: "id", constraints: false });
 PermissionEntity.belongsTo(NotepadEntity, { foreignKey: "id", constraints: false });

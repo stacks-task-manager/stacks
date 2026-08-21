@@ -48,10 +48,24 @@ export function createDebouncedCallback(ms: number) {
 }
 
 /** `Object.assign` on a filter object inside Immer (shared by people, timelogs, calendar). */
-export function patchFilterField<T extends object, K extends keyof T>(
-    filters: T,
-    key: K,
-    value: T[K]
-): void {
+export function patchFilterField<T extends object, K extends keyof T>(filters: T, key: K, value: T[K]): void {
     Object.assign(filters, { [key]: value } as Pick<T, K>);
+}
+
+/**
+ * Replace the item with the given `id` in a list (returns a new array).
+ * `patch` may be a partial object (merged) or a full-item producer.
+ */
+export function updateById<T extends { id: string }>(
+    list: T[],
+    id: string,
+    patch: Partial<T> | ((item: T) => T)
+): T[] {
+    return list.map(item =>
+        item.id === id
+            ? typeof patch === "function"
+                ? (patch as (item: T) => T)(item)
+                : { ...item, ...patch }
+            : item
+    );
 }

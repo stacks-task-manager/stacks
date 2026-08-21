@@ -45,7 +45,7 @@ export function ProgressField({
     const valueFromX = useCallback((x: number): number => {
         const w = widthRef.current;
         if (w <= 0) return 0;
-        return snapToStep((Math.max(0, Math.min(100, (x / w) * 100))));
+        return snapToStep(Math.max(0, Math.min(100, (x / w) * 100)));
     }, []);
 
     const panResponder = useRef(
@@ -103,19 +103,13 @@ export function ProgressField({
                                 borderRadius: 4,
                                 marginBottom: 2,
                                 backgroundColor:
-                                    shown >= step
-                                        ? disabled
-                                            ? "#94a3b8"
-                                            : "#3b82f6"
-                                        : "#cbd5e1",
+                                    shown >= step ? (disabled ? "#94a3b8" : "#3b82f6") : "#cbd5e1",
                             }}
                         />
                         <Text
                             size="xs"
                             className={
-                                shown === step
-                                    ? "font-semibold text-primary-700"
-                                    : "text-typography-500"
+                                shown === step ? "font-semibold text-primary-700" : "text-typography-500"
                             }
                         >
                             {step}

@@ -51,10 +51,7 @@ export function InfoRow({
             >
                 {label.toUpperCase()}
             </Text>
-            <Text
-                size="sm"
-                className={`flex-1 ${onPress ? "text-primary-600" : "text-typography-900"}`}
-            >
+            <Text size="sm" className={`flex-1 ${onPress ? "text-primary-600" : "text-typography-900"}`}>
                 {value}
             </Text>
         </HStack>
@@ -69,13 +66,7 @@ export function InfoRow({
     return body;
 }
 
-export function Section({
-    title,
-    children,
-}: {
-    title: string;
-    children: ReactNode;
-}) {
+export function Section({ title, children }: { title: string; children: ReactNode }) {
     const hasContent = useMemo(() => {
         const arr = Array.isArray(children) ? children : [children];
         return arr.some(c => c != null && c !== false);
@@ -83,11 +74,7 @@ export function Section({
     if (!hasContent) return null;
     return (
         <VStack className="mt-5">
-            <Text
-                size="xs"
-                className="font-bold text-typography-500 mb-1"
-                style={{ letterSpacing: 1 }}
-            >
+            <Text size="xs" className="font-bold text-typography-500 mb-1" style={{ letterSpacing: 1 }}>
                 {title.toUpperCase()}
             </Text>
             <Divider className="mb-1" />
@@ -98,8 +85,6 @@ export function Section({
 
 /** Join non-empty address parts into display lines. */
 export function formatAddressLines(parts: (string | null | undefined)[]): string | null {
-    const lines = parts
-        .map(p => (typeof p === "string" ? p.trim() : ""))
-        .filter(Boolean);
+    const lines = parts.map(p => (typeof p === "string" ? p.trim() : "")).filter(Boolean);
     return lines.length ? lines.join("\n") : null;
 }

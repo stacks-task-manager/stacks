@@ -20,7 +20,9 @@ export const AvatarChip: FunctionComponent<IAvatarChipProps> = ({ person, small,
                 {person.firstName} {person.lastName}
             </div>
 
-            {onRemove && <Button variant="minimal" size="small" icon={<Icon icon="close" />} onClick={onRemove} />}
+            {onRemove && (
+                <Button variant="minimal" size="small" icon={<Icon icon="close" />} onClick={onRemove} />
+            )}
         </div>
     );
 };

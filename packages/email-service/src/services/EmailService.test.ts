@@ -109,7 +109,13 @@ describe("EmailService", () => {
             const { config, missing } = EmailService.loadSmtpConfig();
 
             expect(config).toBeNull();
-            expect(missing).toEqual(["SMTP_HOST", "SMTP_PORT", "SMTP_USER", "SMTP_PASSWORD", "SMTP_FROM_EMAIL"]);
+            expect(missing).toEqual([
+                "SMTP_HOST",
+                "SMTP_PORT",
+                "SMTP_USER",
+                "SMTP_PASSWORD",
+                "SMTP_FROM_EMAIL",
+            ]);
         });
 
         it("treats empty string as missing", () => {

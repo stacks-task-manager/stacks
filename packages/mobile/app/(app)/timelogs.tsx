@@ -79,13 +79,7 @@ const STATUS_OPTIONS: { value: string; label: string }[] = [
     { value: "rejected", label: "Rejected" },
 ];
 
-function TimelogEditorModal({
-    log,
-    onClose,
-}: {
-    log: ITimeLog | null;
-    onClose: () => void;
-}) {
+function TimelogEditorModal({ log, onClose }: { log: ITimeLog | null; onClose: () => void }) {
     const [description, setDescription] = useState("");
     const [hm, setHm] = useState("");
     const [billable, setBillable] = useState(false);
@@ -104,8 +98,7 @@ function TimelogEditorModal({
         setLastId(null);
     }
 
-    const invalidate = () =>
-        void queryClient.invalidateQueries({ queryKey: ["timelogs"] });
+    const invalidate = () => void queryClient.invalidateQueries({ queryKey: ["timelogs"] });
 
     const update = useMutation({
         mutationFn: (patch: Partial<ITimeLog>) => updateTimelog(log!.id, patch),
@@ -152,8 +145,7 @@ function TimelogEditorModal({
                                 {log?.taskInfo?.title ?? log?.task}
                             </Text>
                             <Text size="xs" className="text-typography-500">
-                                {log?.documentInfo?.title ?? log?.project} ·{" "}
-                                {log ? formatDate(log.date) : ""}
+                                {log?.documentInfo?.title ?? log?.project} · {log ? formatDate(log.date) : ""}
                             </Text>
                         </VStack>
 
@@ -221,9 +213,7 @@ function TimelogEditorModal({
                                             <Text
                                                 size="xs"
                                                 className={`font-semibold ${
-                                                    selected
-                                                        ? "text-primary-700"
-                                                        : "text-typography-600"
+                                                    selected ? "text-primary-700" : "text-typography-600"
                                                 }`}
                                             >
                                                 {opt.label}
@@ -254,11 +244,7 @@ function TimelogEditorModal({
                         <Button size="sm" variant="outline" onPress={onClose}>
                             <ButtonText>Cancel</ButtonText>
                         </Button>
-                        <Button
-                            size="sm"
-                            onPress={save}
-                            isDisabled={!canSave || update.isPending}
-                        >
+                        <Button size="sm" onPress={save} isDisabled={!canSave || update.isPending}>
                             <ButtonText>{update.isPending ? "Saving…" : "Save"}</ButtonText>
                         </Button>
                     </HStack>
@@ -304,7 +290,10 @@ export default function TimelogsScreen() {
     }
 
     return (
-        <ScrollView className="flex-1 bg-background-0" contentContainerStyle={{ padding: 12, paddingBottom: 40 }}>
+        <ScrollView
+            className="flex-1 bg-background-0"
+            contentContainerStyle={{ padding: 12, paddingBottom: 40 }}
+        >
             {groups.map(([date, dayLogs]) => (
                 <VStack key={date} space="xs" className="mb-5">
                     <Heading size="sm" className="px-1 mb-1 text-typography-700">
@@ -318,7 +307,11 @@ export default function TimelogsScreen() {
                         >
                             <HStack className="items-start justify-between">
                                 <VStack className="flex-1 mr-2" space="xs">
-                                    <Text size="sm" className="font-semibold text-typography-900" numberOfLines={1}>
+                                    <Text
+                                        size="sm"
+                                        className="font-semibold text-typography-900"
+                                        numberOfLines={1}
+                                    >
                                         {log.taskInfo?.title ?? log.task}
                                     </Text>
                                     <Text size="xs" className="text-typography-500">
@@ -334,7 +327,11 @@ export default function TimelogsScreen() {
                                     <Text size="sm" className="font-semibold text-typography-900">
                                         {formatDuration(log.duration)}
                                     </Text>
-                                    <Text size="xs" className="text-typography-500" style={{ color: statusColor(log.status) }}>
+                                    <Text
+                                        size="xs"
+                                        className="text-typography-500"
+                                        style={{ color: statusColor(log.status) }}
+                                    >
                                         {log.status}
                                     </Text>
                                 </VStack>

@@ -25,7 +25,8 @@ export const notepadAiTools = [
                     id: n.id,
                     title: n.document?.title ?? "",
                     documentId: n.document?.id ?? null,
-                    contentPreview: text.length > CONTENT_PREVIEW ? `${text.slice(0, CONTENT_PREVIEW)}…` : text,
+                    contentPreview:
+                        text.length > CONTENT_PREVIEW ? `${text.slice(0, CONTENT_PREVIEW)}…` : text,
                 };
             });
         },

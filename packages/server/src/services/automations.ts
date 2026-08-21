@@ -84,7 +84,10 @@ function subDays(date: Date, days: number): Date {
 /**
  * Fetch a project and its automations by ID.
  */
-async function getProjectAutomations(projectId: string, extTransaction?: Transaction): Promise<IAutomation[]> {
+async function getProjectAutomations(
+    projectId: string,
+    extTransaction?: Transaction
+): Promise<IAutomation[]> {
     const project = await findOne({
         entity: ProjectEntity,
         id: projectId,
@@ -107,10 +110,7 @@ function filterAutomations(
     eventValue?: string
 ): IAutomation[] {
     return automations.filter(
-        (a) =>
-            a.enabled &&
-            a.event === event &&
-            (eventValue == null || a.value === eventValue)
+        a => a.enabled && a.event === event && (eventValue == null || a.value === eventValue)
     );
 }
 
@@ -136,7 +136,7 @@ async function executeAction(
             await updateOne({
                 entity: TaskEntity,
                 id: taskId,
-                data: { assignees: (action.value as string[]) },
+                data: { assignees: action.value as string[] },
                 transaction: extTransaction,
             });
             break;
@@ -154,8 +154,20 @@ async function executeAction(
         case AUTOMATION_DO.DUEDATE:
         case AUTOMATION_DO.DODATE: {
             const dateValue = action.value as number;
-            const newDate = calculateDate(dateValue, action.do === AUTOMATION_DO.STARTDATE ? "startdate" : action.do === AUTOMATION_DO.DUEDATE ? "duedate" : "dodate");
-            const field = action.do === AUTOMATION_DO.STARTDATE ? "startdate" : action.do === AUTOMATION_DO.DUEDATE ? "duedate" : "dodate";
+            const newDate = calculateDate(
+                dateValue,
+                action.do === AUTOMATION_DO.STARTDATE
+                    ? "startdate"
+                    : action.do === AUTOMATION_DO.DUEDATE
+                    ? "duedate"
+                    : "dodate"
+            );
+            const field =
+                action.do === AUTOMATION_DO.STARTDATE
+                    ? "startdate"
+                    : action.do === AUTOMATION_DO.DUEDATE
+                    ? "duedate"
+                    : "dodate";
             await updateOne({
                 entity: TaskEntity,
                 id: taskId,
@@ -175,16 +187,18 @@ async function executeAction(
             break;
 
         case AUTOMATION_DO.REMOVETAG: {
-            const currentTags = (await findOne({
-                entity: TaskEntity,
-                id: taskId,
-                transaction: extTransaction,
-            }))?.tags as string[] | undefined;
-            const removed = (action.value as string[]);
+            const currentTags = (
+                await findOne({
+                    entity: TaskEntity,
+                    id: taskId,
+                    transaction: extTransaction,
+                })
+            )?.tags as string[] | undefined;
+            const removed = action.value as string[];
             await updateOne({
                 entity: TaskEntity,
                 id: taskId,
-                data: { tags: (currentTags ?? []).filter((t) => !removed.includes(t)) },
+                data: { tags: (currentTags ?? []).filter(t => !removed.includes(t)) },
                 transaction: extTransaction,
             });
             break;

@@ -50,10 +50,7 @@ export function RealtimeProvider({ children }: { children: React.ReactNode }) {
         };
     }, [serverUrl, token]);
 
-    const value = useMemo<RealtimeContextValue>(
-        () => ({ poller: pollerRef.current, status }),
-        [status]
-    );
+    const value = useMemo<RealtimeContextValue>(() => ({ poller: pollerRef.current, status }), [status]);
 
     return <RealtimeContext.Provider value={value}>{children}</RealtimeContext.Provider>;
 }

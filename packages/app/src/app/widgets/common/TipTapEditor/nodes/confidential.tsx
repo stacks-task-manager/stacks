@@ -93,12 +93,12 @@ export const Confidential = Node.create<ConfidentialOptions>({
         return {
             setConfidential:
                 options =>
-                    ({ commands }) => {
-                        return commands.insertContent({
-                            type: this.name,
-                            attrs: options,
-                        });
-                    },
+                ({ commands }) => {
+                    return commands.insertContent({
+                        type: this.name,
+                        attrs: options,
+                    });
+                },
         };
     },
 

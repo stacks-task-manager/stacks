@@ -17,6 +17,12 @@ import {
 } from "app/store/actions";
 import { useEffect } from "react";
 
+/**
+ * Subscribes a callback to realtime updates for a given section, unsubscribing on unmount.
+ * @template TSection - The polling section type.
+ * @param {TSection} section - The section to subscribe to.
+ * @param {(update: IUpdate, hasPermissions: boolean) => void} callback - Handler invoked with each update and whether the user has permissions.
+ */
 export const useRealtimeUpdates = <TSection extends string>(
     section: TSection,
     callback: (update: IUpdate, hasPermissions: boolean) => void
@@ -31,6 +37,9 @@ export const useRealtimeUpdates = <TSection extends string>(
     }, []);
 };
 
+/**
+ * Registers realtime update handlers for every polling section, reloading the related store data on each update.
+ */
 export const useUpdates = () => {
     useRealtimeUpdates(POLLINGTYPE.DOCUMENTS, RecordActions.reload);
     useRealtimeUpdates(POLLINGTYPE.PEOPLE, PeopleActions.reloadPeople);

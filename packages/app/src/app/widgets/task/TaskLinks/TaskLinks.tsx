@@ -1,9 +1,11 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { Menu, MenuItem, Popover, Tooltip } from "@blueprintjs/core";
+import { translate } from "@stacks/translations";
 import React, { FunctionComponent } from "react";
 
 import { Icon, RoundButton, Scroller } from "app/components/common";
 import { ILink } from "@stacks/types";
+import { openInNewTab } from "app/utils/browser";
 
 interface TaskLinksProps {
     links: ILink[];
@@ -13,7 +15,7 @@ export const TaskLinks: FunctionComponent<TaskLinksProps> = ({ links, asTag }) =
     if (!links) return null;
 
     const handleOpenLink = (link: ILink) => {
-        window.open(link.url, '_blank');
+        openInNewTab(link.url);
     };
 
     return (
@@ -46,7 +48,7 @@ export const TaskLinks: FunctionComponent<TaskLinksProps> = ({ links, asTag }) =
             }
             placement="bottom"
         >
-            <Tooltip content={`This task has ${links.length} links`} placement="top">
+            <Tooltip content={translate("Task links count", { count: links.length })} placement="top">
                 {!asTag && (
                     <button>
                         <Icon icon="link-01" /> {links.length}

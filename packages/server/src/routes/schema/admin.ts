@@ -6,7 +6,7 @@ import { z } from "zod";
 
 /** PATCH payload assigning a user to a role. */
 export const UpdateUserRoleSchema = z.object({
-    roleId: z.string().uuid("Role ID must be a valid UUID")
+    roleId: z.string().uuid("Role ID must be a valid UUID"),
 });
 
 /** Full profile fields for provisioning a workspace user. */
@@ -41,7 +41,7 @@ export const CreateUserSchema = z.object({
     userId: z.string().optional(),
     tags: z.array(z.string()).default([]),
     status: z.string().optional(),
-    birthday: z.string().datetime().optional()
+    birthday: z.string().datetime().optional(),
 });
 
 /** Partial role update from the admin UI. */
@@ -49,7 +49,7 @@ export const UpdateRoleSchema = z.object({
     title: z.string().min(1, "Title is required").optional(),
     description: z.string().optional(),
     admin: z.boolean().optional(),
-    disabled: z.boolean().optional()
+    disabled: z.boolean().optional(),
 });
 
 /** New custom role definition with default flags. */
@@ -57,5 +57,5 @@ export const CreateRoleSchema = z.object({
     title: z.string().min(1, "Title is required"),
     description: z.string().optional(),
     admin: z.boolean().default(false),
-    disabled: z.boolean().default(false)
+    disabled: z.boolean().default(false),
 });

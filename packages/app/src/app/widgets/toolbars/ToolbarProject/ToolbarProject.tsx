@@ -90,7 +90,7 @@ export const ProjectToolbar = () => {
 
     const handleToggleTagsMgr = useCallback(() => {
         setShowTagsMgr(!showTagsMgr);
-    }, []);
+    }, [showTagsMgr]);
 
     const handleToggleVisibility = useCallback(() => {
         const record = getDocument(projectId);
@@ -434,7 +434,7 @@ const ProjectViewTabs = ({ narrow }: { narrow: boolean }) => {
                 mousetrap.unbind([`meta+${index + 1}`, `ctrl+${index + 1}`])
             );
         };
-    }, []);
+    }, [activeViews]);
 
     const memoizedViews = useMemo(() => {
         const enabledView = PROJECT_VIEWS.filter((view: IProjectView) =>
@@ -495,7 +495,7 @@ const ProjectViewTabs = ({ narrow }: { narrow: boolean }) => {
                 )}
             />
         );
-    }, [lastViewType, activeViews]);
+    }, [activeViews]);
 
     return (
         <>
@@ -509,13 +509,13 @@ const ProjectSecondaryToolbar = ({ small }: { small: boolean }) => {
     const lastViewType = useProjectLastView();
     const projectId = getCurrentProjectId();
 
-    const handleReloadProject = async () => {
+    const handleReloadProject = useCallback(async () => {
         await ProjectsActions.loadOne(projectId, { force: true });
-    };
+    }, [projectId]);
 
-    const handleReloadTime = () => {
+    const handleReloadTime = useCallback(() => {
         TimelogsActions.load({ project: projectId });
-    };
+    }, [projectId]);
 
     const memoizedSecondaryToolbar = useMemo(() => {
         if (lastViewType === "attachments") return <AttachmentsSearch />;
@@ -526,7 +526,7 @@ const ProjectSecondaryToolbar = ({ small }: { small: boolean }) => {
                 <>
                     <ToolbarButton
                         icon="refresh"
-                        tooltip="Reload time"
+                        tooltip={translate("Reload time")}
                         placement="bottom-end"
                         onClick={handleReloadTime}
                     />
@@ -575,7 +575,7 @@ const ProjectSecondaryToolbar = ({ small }: { small: boolean }) => {
                 />
             </>
         );
-    }, [lastViewType, small]);
+    }, [handleReloadProject, handleReloadTime, lastViewType, projectId, small]);
 
     return <>{memoizedSecondaryToolbar}</>;
 };
@@ -589,7 +589,7 @@ export const ProjectSearch = () => {
         if (filters && filters.query !== query && !editing.current) {
             setQuery(filters.query);
         }
-    }, [filters]);
+    }, [filters, query]);
 
     const handleChangeQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.currentTarget.value;
@@ -673,7 +673,7 @@ const FavoriteProject = () => {
         if (favoriteProjects.includes(params.id)) {
             setIsFavorite(true);
         }
-    }, []);
+    }, [params.id]);
 
     const handleToggleFavorite = () => {
         ProjectsActions.toggleFavorite();
@@ -697,6 +697,15 @@ export const FilterButton = () => {
     const view = useProjectLastView();
     const timelogFiltersVisible = TimelogsStore.use(state => state.filtersVisible, shallowEqual);
 
+    const handleToggleFilter = useCallback(() => {
+        if (view === "time") {
+            TimelogsActions.toggleFilters();
+        } else {
+            const projectId = getCurrentProjectId();
+            ProjectFiltersActions.toggleShow(projectId);
+        }
+    }, [view]);
+
     useEffect(() => {
         // open filter
         mousetrap.bind(["ctrl+f", "command+f"], handleToggleFilter);
@@ -704,20 +713,11 @@ export const FilterButton = () => {
         return () => {
             mousetrap.unbind(["ctrl+f", "command+f"]);
         };
-    }, []);
+    }, [handleToggleFilter]);
 
     const isActive = useMemo(() => {
         return (view === "time" && timelogFiltersVisible) || (view !== "time" && projectFiltersVisible);
     }, [view, projectFiltersVisible, timelogFiltersVisible]);
-
-    const handleToggleFilter = () => {
-        if (view === "time") {
-            TimelogsActions.toggleFilters();
-        } else {
-            const projectId = getCurrentProjectId();
-            ProjectFiltersActions.toggleShow(projectId);
-        }
-    };
 
     return (
         <>
@@ -822,7 +822,7 @@ const ProjectExpirationIcon = () => {
     const diff = useMemo(() => {
         if (!project || (project && !project.endDate)) return null;
         return differenceInDays(new Date(project.endDate || new Date()), new Date());
-    }, [project?.endDate]);
+    }, [project]);
 
     if (!diff || diff > 10) return null;
 
@@ -864,9 +864,9 @@ const ProjectInfoContent = () => {
     useEffect(() => {
         if (!project || view === "overview") return;
         OverviewActions.load(project.id);
-    }, [project]);
+    }, [project, view]);
 
-    if (!project || !overview || isLoading) return <div>Loading...</div>;
+    if (!project || !overview || isLoading) return <div>{translate("Loading...")}</div>;
 
     const { projectOwner, health } = project;
 
@@ -882,10 +882,13 @@ const ProjectInfoContent = () => {
                 <h6 className={Classes.HEADING}>
                     {translate("Tasks summary")} ({overview.tasksTotal})
                 </h6>
-                <div className="bp4-progress-bar continuous bp4-no-stripes" style={{ width: 200 }}>
+                <div
+                    className={classNames(Classes.PROGRESS_BAR, "continuous", Classes.PROGRESS_NO_STRIPES)}
+                    style={{ width: 200 }}
+                >
                     <Tooltip
                         placement="top"
-                        content={`Idle tasks (${overview.tasksIdle})`}
+                        content={translate("Idle tasks count", { count: overview.tasksIdle })}
                         // eslint-disable-next-line @typescript-eslint/no-unused-vars
                         renderTarget={({ isOpen, ...tooltipProps }) => (
                             <div
@@ -901,7 +904,7 @@ const ProjectInfoContent = () => {
                     />
                     <Tooltip
                         placement="top"
-                        content={`Tasks in progress (${overview.tasksInProgress})`}
+                        content={translate("Tasks in progress count", { count: overview.tasksInProgress })}
                         // eslint-disable-next-line @typescript-eslint/no-unused-vars
                         renderTarget={({ isOpen, ...tooltipProps }) => (
                             <div
@@ -917,7 +920,7 @@ const ProjectInfoContent = () => {
                     />
                     <Tooltip
                         placement="top"
-                        content={`Completed tasks (${overview.tasksCompleted})`}
+                        content={translate("Completed tasks count", { count: overview.tasksCompleted })}
                         // eslint-disable-next-line @typescript-eslint/no-unused-vars
                         renderTarget={({ isOpen, ...tooltipProps }) => (
                             <div
@@ -935,7 +938,7 @@ const ProjectInfoContent = () => {
             </FormGroup>
 
             <FormGroup>
-                <h6 className={Classes.HEADING}>Estimated vs. Logged</h6>
+                <h6 className={Classes.HEADING}>{translate("Estimated vs. Logged")}</h6>
                 <div className="overview-legend">
                     <div className="overview-legend-row">
                         <div>
@@ -963,7 +966,7 @@ const ProjectInfoContent = () => {
 
             {owner && (
                 <FormGroup>
-                    <h6 className={Classes.HEADING}>Owner</h6>
+                    <h6 className={Classes.HEADING}>{translate("Owner")}</h6>
                     <Row>
                         <Col align="center" gap={5}>
                             <Avatar person={owner} small />

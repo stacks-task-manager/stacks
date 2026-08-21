@@ -23,7 +23,11 @@ export default function ProjectLinksScreen() {
     const { id } = useLocalSearchParams<{ id: string }>();
     const router = useRouter();
 
-    const { data: tasks = [], isLoading, isError } = useQuery<ITask[]>({
+    const {
+        data: tasks = [],
+        isLoading,
+        isError,
+    } = useQuery<ITask[]>({
         queryKey: ["tasks", id],
         queryFn: () => fetchTasksForProject(id),
     });
@@ -71,10 +75,7 @@ export default function ProjectLinksScreen() {
         >
             <VStack space="xs">
                 {links.map(link => (
-                    <Box
-                        key={link.id}
-                        className="bg-background-0 border border-outline-200 rounded-md p-3"
-                    >
+                    <Box key={link.id} className="bg-background-0 border border-outline-200 rounded-md p-3">
                         <Pressable
                             onPress={() => {
                                 if (link.url) void Linking.openURL(link.url);
@@ -82,10 +83,7 @@ export default function ProjectLinksScreen() {
                         >
                             <HStack className="items-center" space="sm">
                                 <Box className="bg-background-100 rounded-md items-center justify-center p-2">
-                                    <Icon
-                                        icon={link.url.startsWith("http") ? "link-01" : "file"}
-                                        size={16}
-                                    />
+                                    <Icon icon={link.url.startsWith("http") ? "link-01" : "file"} size={16} />
                                 </Box>
                                 <VStack className="flex-1" space="xs">
                                     <Text

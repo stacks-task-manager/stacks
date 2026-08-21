@@ -142,9 +142,11 @@ export async function buildProjectHealthReport(ctx: ReportLoadContext) {
             doneTasks: projectTasks[project.id]?.filter(task => task.done).length ?? 0,
             inProgressTasks: projectTasks[project.id]?.filter(task => task.progress > 0).length ?? 0,
             dueTodayTasks:
-                projectTasks[project.id]?.filter(task => task.duedate && isSameDay(task.duedate, today)).length ?? 0,
+                projectTasks[project.id]?.filter(task => task.duedate && isSameDay(task.duedate, today))
+                    .length ?? 0,
             overdueTasks:
-                projectTasks[project.id]?.filter(task => task.duedate && isBefore(task.duedate, today)).length ?? 0,
+                projectTasks[project.id]?.filter(task => task.duedate && isBefore(task.duedate, today))
+                    .length ?? 0,
             criticalTasks:
                 projectTasks[project.id]?.filter(task => task.priority === PRIORITY.CRITICAL).length ?? 0,
             highTasks: projectTasks[project.id]?.filter(task => task.priority === PRIORITY.HIGH).length ?? 0,
@@ -278,7 +280,9 @@ export async function buildPlannedVsActualReport(ctx: ReportLoadContext) {
     const tasks: ITask[] = await TasksLoader.getAll({ project: projectsIds, completed: "true" }, [
         ["updated", "DESC"],
     ]);
-    const tasksWithDueDates = tasks.filter(task => task.duedate != null).filter(t => taskAnchoredInSpan(t, ctx));
+    const tasksWithDueDates = tasks
+        .filter(task => task.duedate != null)
+        .filter(t => taskAnchoredInSpan(t, ctx));
     const stacks = await getStacks(projectsIds);
     const stackById = stacks.reduce((acc, stack) => {
         acc[stack.id] = stack;
