@@ -16,7 +16,6 @@ import {
 import { translate } from "@stacks/translations";
 import { shallowEqual } from "app/hooks/store";
 import classNames from "classnames";
-import mousetrap from "mousetrap";
 import React, { FunctionComponent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import {
@@ -29,7 +28,7 @@ import {
     TIMELOG_STATUS,
 } from "@stacks/types";
 import { Icon, PopupNewGeneric, ReloadButton, ToolbarButton } from "app/components/common";
-import { useCanAccess, usePeopleHasFilters, useViewType } from "app/hooks";
+import { useCanAccess, useMousetrap, usePeopleHasFilters, useViewType } from "app/hooks";
 import { PeopleActions, PersonTimesheetActions, TimesheetApprovalActions } from "app/store/actions";
 import { PeopleStore, PeopleViewType } from "app/store/people";
 import { PersonTimesheetStore } from "app/store/personTimesheet";
@@ -138,61 +137,44 @@ export const ToolbarPeople = () => {
     const [visibleImport, setVisibleImport] = useState(false);
     const [narrow, setNarrow] = useState(false);
 
-    useEffect(() => {
-        // PEOPLE_VIEWS.filter((view: IPeopleView) => {
-        //     if (!canViewCompanies && view.id === "companies") return false;
-        //     return true;
-        // }).forEach((view: IPeopleView, index: number) =>
-        //     mousetrap.bind([`ctrl+${index + 1}`], () => PeopleActions.changeViewType(view.id))
-        // );
+    // PEOPLE_VIEWS.filter((view: IPeopleView) => {
+    //     if (!canViewCompanies && view.id === "companies") return false;
+    //     return true;
+    // }).forEach((view: IPeopleView, index: number) =>
+    //     useMousetrap([`ctrl+${index + 1}`], () => PeopleActions.changeViewType(view.id))
+    // );
 
-        mousetrap.bind(["ctrl+f"], () => {
-            PeopleActions.toggleFilters();
-        });
-        mousetrap.bind(["ctrl+n", "command+n"], () => {
-            const btn = document.getElementById("add-new-people");
-            if (btn) btn.click();
-        });
+    useMousetrap(["ctrl+f"], () => {
+        PeopleActions.toggleFilters();
+    });
+    useMousetrap(["ctrl+n", "command+n"], () => {
+        const btn = document.getElementById("add-new-people");
+        if (btn) btn.click();
+    });
 
-        mousetrap.bind("left", () => {
-            if (viewType === "timesheet") {
-                PersonTimesheetActions.prevInterval();
-            } else if (viewType === "approvals") {
-                TimesheetApprovalActions.prevInterval();
-            }
-        });
+    useMousetrap("left", () => {
+        if (viewType === "timesheet") {
+            PersonTimesheetActions.prevInterval();
+        } else if (viewType === "approvals") {
+            TimesheetApprovalActions.prevInterval();
+        }
+    });
 
-        mousetrap.bind("right", () => {
-            if (viewType === "timesheet") {
-                PersonTimesheetActions.nextInterval();
-            } else if (viewType === "approvals") {
-                TimesheetApprovalActions.nextInterval();
-            }
-        });
+    useMousetrap("right", () => {
+        if (viewType === "timesheet") {
+            PersonTimesheetActions.nextInterval();
+        } else if (viewType === "approvals") {
+            TimesheetApprovalActions.nextInterval();
+        }
+    });
 
-        mousetrap.bind("down", () => {
-            if (viewType === "timesheet") {
-                PersonTimesheetActions.currentInterval();
-            } else if (viewType === "approvals") {
-                TimesheetApprovalActions.currentInterval();
-            }
-        });
-
-        return () => {
-            // PEOPLE_VIEWS.filter((view: IPeopleView) => {
-            //     if (!canViewCompanies && view.id === "companies") return false;
-            //     return true;
-            // }).forEach((view: IPeopleView, index: number) =>
-            //     mousetrap.unbind([`meta+${index + 1}`])
-            // );
-
-            mousetrap.unbind(["meta+f"]);
-            mousetrap.unbind(["ctrl+n", "command+n"]);
-            mousetrap.unbind("left");
-            mousetrap.unbind("right");
-            mousetrap.unbind("down");
-        };
-    }, []);
+    useMousetrap("down", () => {
+        if (viewType === "timesheet") {
+            PersonTimesheetActions.currentInterval();
+        } else if (viewType === "approvals") {
+            TimesheetApprovalActions.currentInterval();
+        }
+    });
 
     const handleResize = useCallback(
         (entries: ResizeObserverEntry[]) => {

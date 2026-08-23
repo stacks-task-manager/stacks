@@ -6,11 +6,10 @@ import FullCalendar from "@fullcalendar/react";
 import { translate } from "@stacks/translations";
 import { APPICONS, EVENTTYPE, ICalendar, ICalendarEvent, IEvent, IPerson, ITask } from "@stacks/types";
 import classNames from "classnames";
-import mousetrap from "mousetrap";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Icon } from "app/components/common";
-import { getDocument, useEvents, usePreferences, useRealtimeUpdates } from "app/hooks";
+import { getDocument, useEvents, useMousetrap, usePreferences, useRealtimeUpdates } from "app/hooks";
 import { shallowEqual } from "app/hooks/store";
 import { CalendarActions } from "app/store/actions";
 import { CalendarStore } from "app/store/calendar";
@@ -217,28 +216,15 @@ export const Calendar = () => {
         return () => cancelAnimationFrame(id);
     }, [view, date]);
 
-    useEffect(() => {
-        mousetrap.bind("left", CalendarActions.goPrev);
-        mousetrap.bind("right", CalendarActions.goNext);
+    useMousetrap("left", CalendarActions.goPrev);
+    useMousetrap("right", CalendarActions.goNext);
 
-        mousetrap.bind("meta+1", () => CalendarActions.setView("day"));
-        mousetrap.bind("meta+2", () => CalendarActions.setView("week"));
-        mousetrap.bind("meta+3", () => CalendarActions.setView("month"));
-        mousetrap.bind("meta+t", CalendarActions.setToday);
-        mousetrap.bind("down", CalendarActions.setToday);
-        mousetrap.bind("meta+u", () => toggleSidebar());
-
-        return () => {
-            mousetrap.unbind("right");
-            mousetrap.unbind("left");
-            mousetrap.unbind("meta+1");
-            mousetrap.unbind("meta+2");
-            mousetrap.unbind("meta+3");
-            mousetrap.unbind("meta+t");
-            mousetrap.unbind("down");
-            mousetrap.unbind("meta+u");
-        };
-    }, []);
+    useMousetrap("meta+1", () => CalendarActions.setView("day"));
+    useMousetrap("meta+2", () => CalendarActions.setView("week"));
+    useMousetrap("meta+3", () => CalendarActions.setView("month"));
+    useMousetrap("meta+t", CalendarActions.setToday);
+    useMousetrap("down", CalendarActions.setToday);
+    useMousetrap("meta+u", () => toggleSidebar());
 
     const fcEvents = useMemo(() => {
         return events.map(ev => {

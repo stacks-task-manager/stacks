@@ -17,14 +17,13 @@ import {
 import classNames from "classnames";
 import xor from "lodash/xor";
 import { format } from "date-fns";
-import Mousetrap from "mousetrap";
 import React, { FunctionComponent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { SearchAPI } from "app/api";
 import { Col, Grid, HotkeyChip, Icon, Row, Scroller } from "app/components/common";
 import { PriorityChip } from "app/components/project";
-import { useNav, useStorage } from "app/hooks";
+import { useMousetrap, useNav, useStorage } from "app/hooks";
 import { APPICONS, IBookmark, ISearchResult, ITask, RECORDTYPE, TAGSECTION } from "@stacks/types";
 import { openInNewTab } from "app/utils/browser";
 import { scrollIntoView } from "app/utils/dom";
@@ -84,16 +83,9 @@ export const Search: FunctionComponent<ISearchProps> = ({ onClose }) => {
         setIsLoading(false);
     }, [query]);
 
-    useEffect(() => {
-        // focus the search input
-        Mousetrap.bind(["up", "down"], () => {
-            if (inputRef.current) inputRef.current.focus();
-        });
-
-        return () => {
-            Mousetrap.unbind(["up", "down"]);
-        };
-    }, []);
+    useMousetrap(["up", "down"], () => {
+        if (inputRef.current) inputRef.current.focus();
+    });
 
     useEffect(() => {
         if (inputRef.current) inputRef.current.focus();

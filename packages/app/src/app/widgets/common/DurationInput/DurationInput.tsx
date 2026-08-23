@@ -69,7 +69,7 @@ export const DurationInput: FunctionComponent<DurationInputProps> = ({
                     <Tooltip
                         content={
                             <>
-                                {translate("Use the format:")} 2w 4d 6h 45m
+                                {translate("Use the format")} 2w 4d 6h 45m
                                 <br />- w = {translate("weeks")}
                                 <br />- d = {translate("days")}
                                 <br />- h = {translate("hours")}

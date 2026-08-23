@@ -10,5 +10,5 @@ export const StackSelected: FunctionComponent<IStackSelectedProps> = ({ stackId 
     const isSelected = useStackNavigation(stackId);
     if (!isSelected) return null;
 
-    return <div className="stack-selected" />;
+    return <div className="stack-selected" data-testid="selected-board-column" />;
 };

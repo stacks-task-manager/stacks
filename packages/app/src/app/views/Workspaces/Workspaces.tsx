@@ -1,6 +1,5 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { translate } from "@stacks/translations";
-import mousetrap from "mousetrap";
 import React, { useEffect } from "react";
 import {
     Icon as AppIcon,
@@ -10,6 +9,7 @@ import {
     PermissionsDialog,
 } from "app/components/common";
 
+import { useMousetrap } from "app/hooks";
 import { RecordActions } from "app/store/actions";
 import { togglePreferences, toggleSidebar } from "app/store/global";
 import {
@@ -26,15 +26,10 @@ export const Workspaces = () => {
         (async () => {
             await RecordActions.load();
         })();
-
-        mousetrap.bind("meta+,", () => togglePreferences());
-        mousetrap.bind("meta+b", () => toggleSidebar());
-
-        return () => {
-            mousetrap.unbind("meta+,");
-            mousetrap.unbind("meta+b");
-        };
     }, []);
+
+    useMousetrap("meta+,", () => togglePreferences());
+    useMousetrap("meta+b", () => toggleSidebar());
 
     return (
         <div id="workspaces">

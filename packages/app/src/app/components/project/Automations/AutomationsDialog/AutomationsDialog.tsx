@@ -254,7 +254,7 @@ const NewAutomationButton: FunctionComponent<NewAutomationButtonProps> = ({ onCl
             <Popover
                 content={
                     <Menu>
-                        <MenuItem text={translate("Copy from project...")} icon={<Icon icon="copy" />}>
+                        <MenuItem text={translate("Copy from project")} icon={<Icon icon="copy" />}>
                             <ProjectMenu onCopy={onCopy} />
                         </MenuItem>
                     </Menu>

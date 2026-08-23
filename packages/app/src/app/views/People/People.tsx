@@ -23,6 +23,7 @@ export const People = () => {
 
     return (
         <AppView
+            data-testid="people-view"
             toolbar={<ToolbarPeople />}
             append={
                 <>

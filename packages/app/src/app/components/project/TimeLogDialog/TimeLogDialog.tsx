@@ -144,7 +144,7 @@ export const TimeLogDialog: FunctionComponent<ITimeLogDialogProps> = ({ task, ti
                                         minorStepSize={0.5}
                                         buttonPosition="none"
                                         fill
-                                        placeholder={translate("1.5 hrs")}
+                                        placeholder={translate("Duration example")}
                                         onValueChange={handleChangeHours}
                                         data-testid="timelog-dialog-hours-input"
                                     />

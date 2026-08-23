@@ -46,6 +46,7 @@ const FilterDrawer: FunctionComponent<IProjectFilterDrawerProps> = ({ myTasks, f
 
     return (
         <FiltersSidebar
+            data-testid={myTasks ? "my-tasks-filters-sidebar" : "project-filters-sidebar"}
             header={
                 <>
                     <div>

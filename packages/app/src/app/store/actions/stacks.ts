@@ -133,7 +133,7 @@ const alertDelete = (stackId: string) => {
             description: translate(
                 "Are you sure you want to delete this stack All tasks and attachments will also be deleted This action cannot be undone"
             ),
-            checkboxLabel: translate("No, just delete all tasks"),
+            checkboxLabel: translate("No just delete all tasks"),
             intent: Intent.DANGER,
         });
 

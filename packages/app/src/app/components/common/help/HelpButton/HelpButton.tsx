@@ -1,9 +1,9 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { translate } from "@stacks/translations";
 import { Menu, MenuItem, Popover } from "@blueprintjs/core";
-import Mousetrap from "mousetrap";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { HotkeyTooltip, Icon } from "app/components/common";
+import { useMousetrap } from "app/hooks";
 import { HotkeysDialog } from "../HotkeysDialog/HotkeysDialog";
 
 export const HelpButton = () => {
@@ -14,13 +14,7 @@ export const HelpButton = () => {
         setHotkeysVisible(!hotkeysVisible);
     };
 
-    useEffect(() => {
-        Mousetrap.bind(["command+/", "ctrl+/"], toggleHetkeysDialog);
-
-        return () => {
-            Mousetrap.unbind(["command+/", "ctrl+/"]);
-        };
-    }, []);
+    useMousetrap(["command+/", "ctrl+/"], toggleHetkeysDialog);
 
     const handleGoToLink = (linkSegment: string) => {
         console.log("MISSING handle go to link", linkSegment);

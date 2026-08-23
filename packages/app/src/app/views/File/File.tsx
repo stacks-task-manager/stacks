@@ -35,7 +35,7 @@ export const File = () => {
 
         if (!file) {
             window.toaster.show({
-                message: translate("The requested file was not found."),
+                message: translate("The requested file was not found"),
                 icon: "paperclip",
                 intent: Intent.WARNING,
             });
@@ -69,10 +69,10 @@ export const File = () => {
 
                     <div className="file-footer">
                         <div className="file-size">
-                            <span className={Classes.SKELETON}>{translate("Filesize:")}</span>
+                            <span className={Classes.SKELETON}>{translate("Filesize")}</span>
                             <span className={Classes.SKELETON}>123MB</span>
                         </div>
-                        <Button className={Classes.SKELETON}>{translate("Open file...")}</Button>
+                        <Button className={Classes.SKELETON}>{translate("Open file")}</Button>
                     </div>
                 </div>
             </div>
@@ -100,7 +100,7 @@ export const File = () => {
 
                         <div className="file-footer">
                             <div className="file-size">
-                                <span>{translate("Filesize:")}</span>
+                                <span>{translate("Filesize")}</span>
                                 <span>{humanFileSize(file.size)}</span>
                             </div>
 
@@ -108,7 +108,7 @@ export const File = () => {
                                 onClick={() => alert(translate("Open online file"))}
                                 icon="cloud-download"
                             >
-                                {translate("Download file...")}
+                                {translate("Download file")}
                             </Button>
                         </div>
                     </div>

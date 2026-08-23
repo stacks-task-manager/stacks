@@ -18,19 +18,25 @@ export const useMousetrap = (
     evtType?: "keypress" | "keydown" | "keyup"
 ) => {
     const actionRef = useRef<(evt: ExtendedKeyboardEvent, combo: string) => void>(handlerCallback);
+    const handlerKeyRef = useRef(handlerKey);
+    const handlerKeySignature = JSON.stringify(handlerKey);
+
+    actionRef.current = handlerCallback;
+    handlerKeyRef.current = handlerKey;
 
     useEffect(() => {
+        const keys = handlerKeyRef.current;
         mousetrap.bind(
-            handlerKey,
+            keys,
             (evt: ExtendedKeyboardEvent, combo: string) => {
                 typeof actionRef.current === "function" && actionRef.current(evt, combo);
             },
             evtType
         );
         return () => {
-            mousetrap.unbind(handlerKey);
+            mousetrap.unbind(keys, evtType);
         };
-    }, [handlerKey]);
+    }, [evtType, handlerKeySignature]);
 };
 
 interface IHotkeyProps {

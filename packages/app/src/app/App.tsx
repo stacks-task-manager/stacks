@@ -1,6 +1,5 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { Classes, Spinner, SpinnerSize } from "@blueprintjs/core";
-import Mousetrap from "mousetrap";
 import React, { FunctionComponent, useEffect, useMemo } from "react";
 import { Location, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 
@@ -32,7 +31,7 @@ import {
     Workspaces,
 } from "app/views";
 import { AiChat } from "app/widgets/aiChat/AiChat";
-import { usePreferences, useSubscribe, useUpdates } from "./hooks";
+import { useMousetrap, usePreferences, useSubscribe, useUpdates } from "./hooks";
 import { shallowEqual } from "./hooks/store";
 import { NotificationsActions, PeopleActions } from "./store/actions";
 import { PeopleStore } from "./store/people";
@@ -56,16 +55,10 @@ const App = () => {
     useEffect(() => {
         PeopleActions.load();
         NotificationsActions.load();
-
-        Mousetrap.bind(["command+[", "ctrl+["], () => navigate(-1));
-        Mousetrap.bind(["command+]", "ctrl+]"], () => navigate(1));
-
-        return () => {
-            Mousetrap.unbind(["command+[", "ctrl+["]);
-            Mousetrap.unbind(["command+]", "ctrl+]"]);
-        };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    useMousetrap(["command+[", "ctrl+["], () => navigate(-1));
+    useMousetrap(["command+]", "ctrl+]"], () => navigate(1));
 
     useEffect(() => {
         document.body.classList.toggle(Classes.DARK, darkMode);

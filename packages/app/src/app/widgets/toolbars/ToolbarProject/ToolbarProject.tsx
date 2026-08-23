@@ -43,6 +43,7 @@ import {
     useCurrentProject,
     useHasFilters,
     useMe,
+    useMousetrap,
     useNav,
     useProject,
     useProjectActiveViews,
@@ -706,14 +707,8 @@ export const FilterButton = () => {
         }
     }, [view]);
 
-    useEffect(() => {
-        // open filter
-        mousetrap.bind(["ctrl+f", "command+f"], handleToggleFilter);
-
-        return () => {
-            mousetrap.unbind(["ctrl+f", "command+f"]);
-        };
-    }, [handleToggleFilter]);
+    // open filter
+    useMousetrap(["ctrl+f", "command+f"], handleToggleFilter);
 
     const isActive = useMemo(() => {
         return (view === "time" && timelogFiltersVisible) || (view !== "time" && projectFiltersVisible);
@@ -866,7 +861,7 @@ const ProjectInfoContent = () => {
         OverviewActions.load(project.id);
     }, [project, view]);
 
-    if (!project || !overview || isLoading) return <div>{translate("Loading...")}</div>;
+    if (!project || !overview || isLoading) return <div>{translate("Loading")}</div>;
 
     const { projectOwner, health } = project;
 
@@ -938,7 +933,7 @@ const ProjectInfoContent = () => {
             </FormGroup>
 
             <FormGroup>
-                <h6 className={Classes.HEADING}>{translate("Estimated vs. Logged")}</h6>
+                <h6 className={Classes.HEADING}>{translate("Estimated vs Logged")}</h6>
                 <div className="overview-legend">
                     <div className="overview-legend-row">
                         <div>

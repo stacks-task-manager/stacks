@@ -32,7 +32,7 @@ export const ProjectViewPicker: FunctionComponent<IProjectViewPickerProps> = ({
             content={
                 <Menu>
                     <MenuItem
-                        text={translate("Last used view - Default")}
+                        text={translate("Last used view Default")}
                         labelElement={
                             !selectedValue || selectedValue.id === PROJECTVIEW.DEFAULT ? (
                                 <Icon icon="check" size={14} />

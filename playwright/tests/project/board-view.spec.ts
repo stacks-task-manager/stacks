@@ -102,4 +102,14 @@ test.describe("Project - Board view", () => {
             await expect(board.columns).toHaveCount(3);
         });
     });
+
+    test("Board keyboard shortcuts", async () => {
+        await preferences.setPref("highlightStack", true);
+        await preferences.setPref("highlightTask", true);
+
+        await board.addTaskToColumnByIndex(0, "Keyboard task one");
+        await board.addTaskToColumnByIndex(0, "Keyboard task two");
+        await board.addTaskToColumnByIndex(1, "Keyboard task three");
+        await board.expectKeyboardShortcuts();
+    });
 });

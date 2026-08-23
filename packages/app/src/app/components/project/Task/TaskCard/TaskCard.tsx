@@ -216,6 +216,7 @@ export const TaskCardComponent: FunctionComponent<TaskCardComponentProps> = prop
                 }}
                 onClick={handleOpenTask}
                 data-testid="task-card-click-target"
+                data-selected={selected}
             >
                 <div
                     className={classnames("task-card-inner-wrapper", [Classes.POPOVER_DISMISS], {

@@ -105,6 +105,78 @@ class BoardView extends Base {
         await this.page.keyboard.press("Enter");
     }
 
+    public async addTaskToColumnByIndex(columnIndex: number, taskTitle: string): Promise<void> {
+        const column = this.getColumnByIndex(columnIndex);
+        const tasks = column.getByTestId("task-card-click-target");
+        const previousCount = await tasks.count();
+        await column.getByTestId("column-add-task-button").click();
+        await this.page.getByTestId("new-task-title-input").fill(taskTitle);
+        await this.page.keyboard.press("Enter");
+        await expect(tasks).toHaveCount(previousCount + 1);
+    }
+
+    public async expectKeyboardShortcuts() {
+        const firstColumn = this.getColumnByIndex(0);
+        const secondColumn = this.getColumnByIndex(1);
+        const firstColumnTasks = firstColumn.getByTestId("task-card-click-target");
+        const firstTask = firstColumnTasks.nth(0);
+        const secondTask = firstColumnTasks.nth(1);
+
+        await this.page.getByTestId("toggle-sidebar-button").focus();
+        await this.page.keyboard.press("ArrowRight");
+        await expect(firstColumn.getByTestId("selected-board-column")).toBeVisible();
+        await expect(firstTask).toHaveAttribute("data-selected", "true");
+
+        await this.page.keyboard.press("ArrowRight");
+        await expect(secondColumn.getByTestId("selected-board-column")).toBeVisible();
+        await this.page.keyboard.press("ArrowLeft");
+        await expect(firstColumn.getByTestId("selected-board-column")).toBeVisible();
+
+        await this.page.keyboard.press("ArrowDown");
+        await expect(secondTask).toHaveAttribute("data-selected", "true");
+        await this.page.keyboard.press("Shift+ArrowUp");
+        await expect(firstTask).toHaveAttribute("data-selected", "true");
+        await expect(secondTask).toHaveAttribute("data-selected", "true");
+        await this.page.keyboard.press("Escape");
+        await expect(firstColumn.getByTestId("selected-board-column")).toBeHidden();
+        await expect(firstTask).toHaveAttribute("data-selected", "false");
+
+        await this.page.keyboard.press("ArrowRight");
+        const toggleResponse = this.page.waitForResponse(
+            response => response.url().includes("/api/tasks/") && response.request().method() === "PATCH"
+        );
+        await this.page.keyboard.press("Space");
+        await toggleResponse;
+
+        await this.page.keyboard.press("Enter");
+        await expect(this.page.getByTestId("task-details")).toBeVisible();
+        await this.page.keyboard.press("Escape");
+        await expect(this.page.getByTestId("task-details")).toBeHidden();
+
+        await this.page.keyboard.press("ArrowRight");
+        await this.page.keyboard.press("Meta+N");
+        await expect(this.page.getByTestId("new-task-title-input")).toBeVisible();
+        await this.page.getByTestId("new-task-dialog-cancel-button").click();
+
+        await this.page.keyboard.press("Meta+Shift+N");
+        await expect(this.page.getByTestId("popup-new-generic-input")).toBeVisible();
+        await this.page.getByTestId("popup-new-generic-input").press("Escape");
+        await expect(this.page.getByTestId("popup-new-generic-input")).toBeHidden();
+
+        await this.page.keyboard.press("Escape");
+        await this.page.getByTestId("toggle-sidebar-button").focus();
+        await this.page.keyboard.press("ArrowRight");
+        await expect(firstColumn.getByTestId("selected-board-column")).toBeVisible();
+        await this.page.keyboard.press("Shift+ArrowLeft");
+        await expect(firstColumn).toHaveClass(/collapsed/);
+        await this.page.keyboard.press("Shift+ArrowRight");
+        await expect(firstColumn).not.toHaveClass(/collapsed/);
+
+        await this.page.getByTestId("toggle-sidebar-button").focus();
+        await this.page.keyboard.press("Control+F");
+        await expect(this.page.getByTestId("project-filters-sidebar")).toBeVisible();
+    }
+
     public async moveColumn(columnName: string, amount: number): Promise<void> {
         const column = await this.getColumnByName(columnName);
 

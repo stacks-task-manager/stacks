@@ -16,11 +16,11 @@ import {
 } from "@blueprintjs/core";
 import classNames from "classnames";
 import { format, getWeek } from "date-fns";
-import mousetrap from "mousetrap";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 
 import { Icon, ReloadButton, ToolbarButton } from "app/components/common";
 import { TintPicker } from "app/components/project";
+import { useMousetrap } from "app/hooks";
 import { shallowEqual } from "app/hooks/store";
 import { CalendarActions } from "app/store/actions";
 import { CalendarStore } from "app/store/calendar";
@@ -36,15 +36,8 @@ export const ToolbarCalendar = () => {
         }
     };
 
-    useEffect(() => {
-        // mousetrap.bind("meta+n", handleAddNewEvent);
-        mousetrap.bind("meta+f", handleForceOpenFilter);
-
-        return () => {
-            // mousetrap.unbind("meta+n");
-            mousetrap.unbind("meta+f");
-        };
-    }, []);
+    // useMousetrap("meta+n", handleAddNewEvent);
+    useMousetrap("meta+f", handleForceOpenFilter);
 
     const currentDate = useMemo(() => {
         if (view === "month") return formatDate(date, "LLLL y");
@@ -359,13 +352,7 @@ const NewLocalCalendarButton = () => {
 const FilterButton = () => {
     const showFilters = CalendarStore.use(state => state.showFilters, shallowEqual);
 
-    useEffect(() => {
-        mousetrap.bind(["ctrl+f", "command+f"], CalendarActions.toggleFilters);
-
-        return () => {
-            mousetrap.unbind(["ctrl+f", "command+f"]);
-        };
-    }, []);
+    useMousetrap(["ctrl+f", "command+f"], CalendarActions.toggleFilters);
 
     return (
         <ToolbarButton

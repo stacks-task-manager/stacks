@@ -146,7 +146,7 @@ export const CommentsInput: FunctionComponent<ICommentsInputProps> = ({ resource
                                         <span
                                             className={classNames([Classes.TEXT_MUTED, Classes.TEXT_SMALL])}
                                         >
-                                            {translate("Ctrl+enter to send")}
+                                            {translate("Ctrl enter to send")}
                                         </span>
                                         <Button
                                             intent={Intent.PRIMARY}

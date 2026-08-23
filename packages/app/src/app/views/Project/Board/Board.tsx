@@ -2,12 +2,18 @@
 import { translate } from "@stacks/translations";
 import { Button, Classes, Intent } from "@blueprintjs/core";
 import { Plus } from "@blueprintjs/icons";
-import mousetrap, { ExtendedKeyboardEvent } from "mousetrap";
-import React, { useEffect, useMemo, useRef } from "react";
+import type { ExtendedKeyboardEvent } from "mousetrap";
+import React, { useMemo, useRef } from "react";
 import { BlankSlate, Grid, PopupNewGeneric } from "app/components/common";
 import { Container } from "app/components/draggable";
 import { NewStack, Stack } from "app/components/project";
-import { getCurrentProjectId, getHashPathname, getProjectIdFromHashPath, useNav } from "app/hooks";
+import {
+    getCurrentProjectId,
+    getHashPathname,
+    getProjectIdFromHashPath,
+    useMousetrap,
+    useNav,
+} from "app/hooks";
 import { snapshotTaskModalBackground } from "app/hooks/router";
 import { useStacksIds } from "app/hooks/stacks";
 import { StacksActions, TasksActions } from "app/store/actions";
@@ -97,149 +103,116 @@ const BoardPure = () => {
         });
     };
 
-    useEffect(() => {
-        // used to navigate to the next stack
-        mousetrap.bind("right", (e: ExtendedKeyboardEvent) => {
-            if (!PreferencesStore.get().highlightStack) {
-                showToast(true);
-            }
+    // used to navigate to the next stack
+    useMousetrap("right", (e: ExtendedKeyboardEvent) => {
+        if (!PreferencesStore.get().highlightStack) {
+            showToast(true);
+        }
 
-            navigateNextStack(e);
+        navigateNextStack(e);
 
-            if (
-                getHashPathname().split("/").filter(Boolean).length > 2 &&
-                PreferencesStore.get().embeddedTask
-            ) {
-                openTask(e);
-            }
-        });
-        // used to navigate to the previous stack
-        mousetrap.bind("left", (e: ExtendedKeyboardEvent) => {
-            if (!PreferencesStore.get().highlightStack) {
-                showToast(true);
-            }
+        if (getHashPathname().split("/").filter(Boolean).length > 2 && PreferencesStore.get().embeddedTask) {
+            openTask(e);
+        }
+    });
+    // used to navigate to the previous stack
+    useMousetrap("left", (e: ExtendedKeyboardEvent) => {
+        if (!PreferencesStore.get().highlightStack) {
+            showToast(true);
+        }
 
-            navigatePrevStack(e);
+        navigatePrevStack(e);
 
-            if (
-                getHashPathname().split("/").filter(Boolean).length > 2 &&
-                PreferencesStore.get().embeddedTask
-            ) {
-                openTask(e);
-            }
-        });
-        // used to navigate to the next task
-        mousetrap.bind(["down", "shift+down"], (e: ExtendedKeyboardEvent) => {
-            if (!PreferencesStore.get().highlightTask) {
-                showToast();
-            }
+        if (getHashPathname().split("/").filter(Boolean).length > 2 && PreferencesStore.get().embeddedTask) {
+            openTask(e);
+        }
+    });
+    // used to navigate to the next task
+    useMousetrap(["down", "shift+down"], (e: ExtendedKeyboardEvent) => {
+        if (!PreferencesStore.get().highlightTask) {
+            showToast();
+        }
 
-            navigateNextTask(e);
+        navigateNextTask(e);
 
-            if (
-                getHashPathname().split("/").filter(Boolean).length > 2 &&
-                PreferencesStore.get().embeddedTask
-            ) {
-                openTask(e);
-            }
-        });
-        // used to navigate to the previous task
-        mousetrap.bind(["up", "shift+up"], (e: ExtendedKeyboardEvent) => {
-            if (!PreferencesStore.get().highlightTask) {
-                showToast();
-            }
+        if (getHashPathname().split("/").filter(Boolean).length > 2 && PreferencesStore.get().embeddedTask) {
+            openTask(e);
+        }
+    });
+    // used to navigate to the previous task
+    useMousetrap(["up", "shift+up"], (e: ExtendedKeyboardEvent) => {
+        if (!PreferencesStore.get().highlightTask) {
+            showToast();
+        }
 
-            navigatePrevTask(e);
+        navigatePrevTask(e);
 
-            if (
-                getHashPathname().split("/").filter(Boolean).length > 2 &&
-                PreferencesStore.get().embeddedTask
-            ) {
-                openTask(e);
-            }
-        });
-        // used to unselect the current task and stack
-        mousetrap.bind("escape", () => {
-            cancelSelection();
-            if (
-                getHashPathname().split("/").filter(Boolean).length > 2 &&
-                PreferencesStore.get().embeddedTask
-            ) {
-                nav(`/project/${getProjectIdFromHashPath()}`);
-            }
-        });
-        // copy selected tasks info to pasteboard
-        mousetrap.bind("meta+c", copySelection);
-        // used to open the selected task
-        mousetrap.bind("enter", openTask);
-        // used to toggle done on the selected task
-        mousetrap.bind("space", TasksActions.toggleSelected);
-        // used to add a new stack
-        mousetrap.bind("meta+shift+n", () => {
-            if (PreferencesStore.get().hideNewStack) {
-                const project = getCurrentProjectId();
+        if (getHashPathname().split("/").filter(Boolean).length > 2 && PreferencesStore.get().embeddedTask) {
+            openTask(e);
+        }
+    });
+    // used to unselect the current task and stack
+    useMousetrap("escape", () => {
+        cancelSelection();
+        if (getHashPathname().split("/").filter(Boolean).length > 2 && PreferencesStore.get().embeddedTask) {
+            nav(`/project/${getProjectIdFromHashPath()}`);
+        }
+    });
+    // copy selected tasks info to pasteboard
+    useMousetrap("meta+c", copySelection);
+    // used to open the selected task
+    useMousetrap("enter", openTask);
+    // used to toggle done on the selected task
+    useMousetrap("space", TasksActions.toggleSelected);
+    // used to add a new stack
+    useMousetrap("meta+shift+n", () => {
+        if (PreferencesStore.get().hideNewStack) {
+            const project = getCurrentProjectId();
 
-                StacksActions.add({
-                    title: translate("Untitled stack"),
-                    project,
-                }).then(newStack => {
-                    if (newStack) {
-                        setTimeout(() => {
-                            scrollIntoView(document.getElementById(`stack-${newStack.id}`), {
-                                behavior: "smooth",
-                            });
-                        }, 200);
-                    }
-                });
-            } else {
-                const stackNewEl = document.getElementById("stack-add-new");
-                scrollIntoView(stackNewEl);
-                stackNewEl?.click();
-            }
-        });
-        // used to add a new task
-        mousetrap.bind("meta+n", () => {
-            const selectedStack = StacksActions.getSelectedStack();
-
-            if (selectedStack) {
-                if (selectedStack.collapsed) {
-                    StacksActions.uncollapse(selectedStack.id);
+            StacksActions.add({
+                title: translate("Untitled stack"),
+                project,
+            }).then(newStack => {
+                if (newStack) {
+                    setTimeout(() => {
+                        scrollIntoView(document.getElementById(`stack-${newStack.id}`), {
+                            behavior: "smooth",
+                        });
+                    }, 200);
                 }
-                document.getElementById(`new-task-bottom-${selectedStack.id}`)?.click();
-            } else {
-                window.toaster.show({
-                    message:
-                        "Make sure you either select a default Stack in Project settings or select a stack using the hotkeys",
-                    icon: "warning-sign",
-                    intent: Intent.WARNING,
-                });
-            }
-        });
-        // used to collapse the stack
-        mousetrap.bind("shift+left", () => StacksActions.collapseSelected());
-        // used to uncollapse the stack
-        mousetrap.bind("shift+right", () => StacksActions.uncollapseSelected());
-        // used to delete a task
-        mousetrap.bind("meta+backspace", () => {
-            TasksActions.removeSelected();
-        });
+            });
+        } else {
+            const stackNewEl = document.getElementById("stack-add-new");
+            scrollIntoView(stackNewEl);
+            stackNewEl?.click();
+        }
+    });
+    // used to add a new task
+    useMousetrap("meta+n", () => {
+        const selectedStack = StacksActions.getSelectedStack();
 
-        return () => {
-            mousetrap.unbind("right");
-            mousetrap.unbind("left");
-            mousetrap.unbind(["down", "shift+down"]);
-            mousetrap.unbind(["up", "shift+up"]);
-            mousetrap.unbind("escape");
-            mousetrap.unbind("meta+c");
-            mousetrap.unbind("enter");
-            mousetrap.unbind("space");
-            mousetrap.unbind("meta+shift+n");
-            mousetrap.unbind("meta+n");
-            mousetrap.unbind("shift+left");
-            mousetrap.unbind("shift+right");
-            mousetrap.unbind("meta+backspace");
-        };
-    }, []);
+        if (selectedStack) {
+            if (selectedStack.collapsed) {
+                StacksActions.uncollapse(selectedStack.id);
+            }
+            document.getElementById(`new-task-bottom-${selectedStack.id}`)?.click();
+        } else {
+            window.toaster.show({
+                message:
+                    "Make sure you either select a default Stack in Project settings or select a stack using the hotkeys",
+                icon: "warning-sign",
+                intent: Intent.WARNING,
+            });
+        }
+    });
+    // used to collapse the stack
+    useMousetrap("shift+left", () => StacksActions.collapseSelected());
+    // used to uncollapse the stack
+    useMousetrap("shift+right", () => StacksActions.uncollapseSelected());
+    // used to delete a task
+    useMousetrap("meta+backspace", () => {
+        TasksActions.removeSelected();
+    });
 
     const mouseMoveHandler = (event: MouseEvent) => {
         // const element = event.target as HTMLElement;

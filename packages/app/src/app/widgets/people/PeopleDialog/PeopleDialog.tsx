@@ -11,12 +11,11 @@ import {
     MenuItem,
     Popover,
 } from "@blueprintjs/core";
-import Mousetrap from "mousetrap";
 import React, { FunctionComponent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { IPerson } from "@stacks/types";
 import { Col, Grid, HotkeyChip, Icon, Row, Scroller } from "app/components/common";
 import { TaskDetailsSection } from "app/components/project";
-import { useStorage } from "app/hooks";
+import { useMousetrap, useStorage } from "app/hooks";
 import { shallowEqual } from "app/hooks/store";
 import { PeopleActions } from "app/store/actions";
 import { PeopleStore } from "app/store/people";
@@ -75,7 +74,7 @@ export const PeopleDialog: FunctionComponent<IPeopleDialogProps> = ({ value, sin
                 if (pB.id === me) return 1;
                 return 0;
             });
-    }, [query, value, orderBy]);
+    }, [people, query, orderBy, me]);
 
     const orderGroup = useCallback(
         (groupA: IPeopleGroup, groupB: IPeopleGroup) => {
@@ -99,7 +98,7 @@ export const PeopleDialog: FunctionComponent<IPeopleDialogProps> = ({ value, sin
                 .sort(orderGroup);
 
             companies.push({
-                title: "No company",
+                title: translate("No company"),
                 people: PeopleActions.getNoCompanyPeople(),
             });
 
@@ -127,7 +126,7 @@ export const PeopleDialog: FunctionComponent<IPeopleDialogProps> = ({ value, sin
         // ungrouped
         return [
             {
-                title: "People",
+                title: translate("People"),
                 people: [...filteredPeople],
             },
         ];
@@ -141,21 +140,15 @@ export const PeopleDialog: FunctionComponent<IPeopleDialogProps> = ({ value, sin
     // key binding for focusing the search box
     useEffect(() => {
         handleSearch();
-        // focus the search input
-        Mousetrap.bind("meta+f", handleSearch);
-        Mousetrap.bind(["up", "down"], () => {
-            if (searchRef.current) searchRef.current.focus();
-        });
-
-        return () => {
-            Mousetrap.unbind("meta+f");
-            Mousetrap.unbind(["up", "down"]);
-        };
     }, []);
+
+    useMousetrap(["up", "down"], () => {
+        if (searchRef.current) searchRef.current.focus();
+    });
 
     useEffect(() => {
         handleSearch();
-    }, [searchRef.current]);
+    }, []);
 
     // scroll menu when activating a menu item
     useEffect(() => {
@@ -167,13 +160,15 @@ export const PeopleDialog: FunctionComponent<IPeopleDialogProps> = ({ value, sin
                 scrollIntoView(personMenuItem, { behavior: "smooth", block: "center" });
             }
         }
-    }, [selectedPerson, selectedGroup]);
+    }, [selectedPerson, selectedGroup, groupedPeople]);
 
     const handleSearch = () => {
         if (searchRef.current) {
             searchRef.current.focus();
         }
     };
+
+    useMousetrap("meta+f", handleSearch);
 
     const handleSave = (event: React.MouseEvent) => {
         event.stopPropagation();
@@ -332,14 +327,14 @@ export const PeopleDialog: FunctionComponent<IPeopleDialogProps> = ({ value, sin
             <Row padding={10}>
                 <Col>
                     <Grid gap={20}>
-                        <h2 className="text-center">Select people</h2>
+                        <h2 className="text-center">{translate("Select people")}</h2>
                         <Row padding={10}>
                             <Col justify="between" align="center" gap={5}>
                                 <InputGroup
                                     fill
                                     leftElement={<Icon icon="search" />}
                                     rightElement={<HotkeyChip keys={["meta", "F"]} />}
-                                    placeholder="Filter people by name, email or nickname"
+                                    placeholder={translate("Filter people by name email or nickname")}
                                     inputRef={searchRef}
                                     tabIndex={0}
                                     autoFocus
@@ -353,31 +348,31 @@ export const PeopleDialog: FunctionComponent<IPeopleDialogProps> = ({ value, sin
                                     content={
                                         <Menu>
                                             <MenuItem
-                                                text="Order asc."
+                                                text={translate("Order asc")}
                                                 onClick={() => setOrderBy("asc")}
                                                 labelElement={orderBy === "asc" && <Icon icon="check" />}
                                             />
                                             <MenuItem
-                                                text="Order desc."
+                                                text={translate("Order desc")}
                                                 onClick={() => setOrderBy("desc")}
                                                 labelElement={orderBy === "desc" && <Icon icon="check" />}
                                             />
                                             <MenuDivider />
                                             <MenuItem
-                                                text="Ungroupped"
+                                                text={translate("Ungroupped")}
                                                 onClick={() => setGroupBy("ungrouped")}
                                                 labelElement={
                                                     groupBy === "ungrouped" && <Icon icon="check" />
                                                 }
                                             />
                                             <MenuItem
-                                                text="Group by company"
+                                                text={translate("Group by company")}
                                                 onClick={() => setGroupBy("company")}
                                                 labelElement={groupBy === "company" && <Icon icon="check" />}
                                             />
 
                                             <MenuItem
-                                                text="Group by role"
+                                                text={translate("Group by role")}
                                                 onClick={() => setGroupBy("role")}
                                                 labelElement={groupBy === "role" && <Icon icon="check" />}
                                             />
@@ -418,7 +413,7 @@ export const PeopleDialog: FunctionComponent<IPeopleDialogProps> = ({ value, sin
                 <Row>
                     <Col justify="between" align="bottom">
                         {selectedPeople.length > 0 ? (
-                            <TaskDetailsSection title="Selected people" vertical>
+                            <TaskDetailsSection title={translate("Selected people")} vertical>
                                 {selectedPeople.length > 0 && (
                                     <Row>
                                         <Col gap={10}>
@@ -442,7 +437,7 @@ export const PeopleDialog: FunctionComponent<IPeopleDialogProps> = ({ value, sin
                                     </Row>
                                 )}
                                 {selectedPeople.length === 0 && (
-                                    <span className={Classes.TEXT_MUTED}>Nobody</span>
+                                    <span className={Classes.TEXT_MUTED}>{translate("Nobody")}</span>
                                 )}
                             </TaskDetailsSection>
                         ) : (

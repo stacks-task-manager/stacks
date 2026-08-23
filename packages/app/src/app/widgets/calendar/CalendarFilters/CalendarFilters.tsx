@@ -30,7 +30,7 @@ export const CalendarFilters = () => {
     const localCalendars = calendars.filter(c => c.source === "local");
 
     return (
-        <FiltersSidebar header={translate("Calendar filters")}>
+        <FiltersSidebar header={translate("Calendar filters")} data-testid="calendar-filters-sidebar">
             <FormGroup label={translate("Local calendars")} style={{ marginBottom: 20 }}>
                 {localCalendars.length === 0 ? (
                     <div className={Classes.TEXT_MUTED} style={{ fontSize: 13, padding: "8px 0" }}>

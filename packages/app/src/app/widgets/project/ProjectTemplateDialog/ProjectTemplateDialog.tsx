@@ -1,8 +1,8 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
-import { translate } from "@stacks/translations";
 import { Button, Classes, Dialog, FormGroup, InputGroup, Intent, Switch, TextArea } from "@blueprintjs/core";
-import React, { FunctionComponent, useState } from "react";
+import { translate } from "@stacks/translations";
 import { Col, Icon, Row } from "app/components/common";
+import { FunctionComponent, useState } from "react";
 
 interface ProjectTemplateDialogPros {
     onClose: () => void;
@@ -29,7 +29,7 @@ export const ProjectTemplateDialog: FunctionComponent<ProjectTemplateDialogPros>
                 </FormGroup>
 
                 <FormGroup
-                    helperText={translate("Describe what does this template contain.")}
+                    helperText={translate("Describe what this template contains")}
                     label={translate("Description")}
                     labelFor="description-input"
                     labelInfo="*"
@@ -39,7 +39,7 @@ export const ProjectTemplateDialog: FunctionComponent<ProjectTemplateDialogPros>
 
                 <FormGroup
                     label={translate("Project template options")}
-                    helperText={translate("Select which options should be included in the template.")}
+                    helperText={translate("Select which options should be included in the template")}
                 >
                     <Row>
                         <Col vertical>

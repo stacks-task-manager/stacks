@@ -1,20 +1,13 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { translate } from "@stacks/translations";
-import React, { useEffect } from "react";
 import { Button, Menu, InputGroup, Intent, Popover, MenuItem } from "@blueprintjs/core";
-import mousetrap from "mousetrap";
 import { Icon, ReloadButton, ToolbarButton } from "app/components/common";
+import { useMousetrap } from "app/hooks";
 import { toggleNewBookmark } from "app/store/global";
 import { BookmarksActions } from "app/store/actions";
 
 export const ToolbarBookmarks = () => {
-    useEffect(() => {
-        mousetrap.bind(["ctrl+n", "command+n"], toggleNewBookmark);
-
-        return () => {
-            mousetrap.unbind(["ctrl+n", "command+n"]);
-        };
-    }, []);
+    useMousetrap(["ctrl+n", "command+n"], toggleNewBookmark);
 
     const handleExport = (type: "excel" | "json") => {
         BookmarksActions.exportBookmarks(type);

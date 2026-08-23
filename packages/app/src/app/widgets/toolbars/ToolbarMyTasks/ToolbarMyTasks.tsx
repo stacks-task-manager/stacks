@@ -1,8 +1,7 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { translate } from "@stacks/translations";
 import { format, isToday, isWithinInterval } from "date-fns";
-import mousetrap from "mousetrap";
-import React, { useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 import {
     Button,
     ButtonGroup,
@@ -16,7 +15,7 @@ import {
 } from "@blueprintjs/core";
 import { TIMEBOXVIEWS } from "@stacks/types";
 import { Icon, ReloadButton, ToolbarButton } from "app/components/common";
-import { useHasFilters } from "app/hooks";
+import { useHasFilters, useMousetrap } from "app/hooks";
 import { shallowEqual } from "app/hooks/store";
 import { MyTasksActions, ProjectFiltersActions, TasksActions } from "app/store/actions";
 import { toggleNewTask } from "app/store/global";
@@ -27,24 +26,13 @@ import { ProjectSearch } from "../ToolbarProject/ToolbarProject";
 export const ToolbarMyTasks = () => {
     const view = MyTasksStore.use(state => state.view, shallowEqual);
 
-    useEffect(() => {
-        // open filter
-        mousetrap.bind("meta+n", toggleNewTask);
-        mousetrap.bind("left", MyTasksActions.prevSpan);
-        mousetrap.bind("right", MyTasksActions.nextSpan);
-        mousetrap.bind("up", MyTasksActions.today);
-        mousetrap.bind("ctrl+1", () => MyTasksActions.setView("list"));
-        mousetrap.bind("ctrl+2", () => MyTasksActions.setView("schedule"));
-
-        return () => {
-            mousetrap.unbind("meta+n");
-            mousetrap.unbind("left");
-            mousetrap.unbind("right");
-            mousetrap.unbind("up");
-            mousetrap.unbind("ctrl+1");
-            mousetrap.unbind("ctrl+2");
-        };
-    }, []);
+    // open filter
+    useMousetrap("meta+n", toggleNewTask);
+    useMousetrap("left", MyTasksActions.prevSpan);
+    useMousetrap("right", MyTasksActions.nextSpan);
+    useMousetrap("up", MyTasksActions.today);
+    useMousetrap("ctrl+1", () => MyTasksActions.setView("list"));
+    useMousetrap("ctrl+2", () => MyTasksActions.setView("schedule"));
 
     return (
         <div className="main-toolbar">
@@ -106,18 +94,12 @@ export const ToolbarMyTasks = () => {
 const FilterButton = () => {
     const hasFilters = useHasFilters();
 
-    useEffect(() => {
-        // open filter
-        mousetrap.bind(["ctrl+f", "command+f"], handleToggleFilter);
-
-        return () => {
-            mousetrap.unbind(["ctrl+f", "command+f"]);
-        };
-    }, []);
-
     const handleToggleFilter = () => {
         ProjectFiltersActions.toggleShow("mytasks");
     };
+
+    // open filter
+    useMousetrap(["ctrl+f", "command+f"], handleToggleFilter);
 
     return (
         <>

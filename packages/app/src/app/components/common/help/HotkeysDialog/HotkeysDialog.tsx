@@ -108,64 +108,66 @@ export const HotkeysDialog: FunctionComponent<IHotkeysDialogProps> = ({ onClose 
             onClose={handleClose}
             onClosed={onClose}
         >
-            <Scroller className={Classes.DIALOG_BODY} thin vertical shadows maxHeight={500}>
-                <div className={Classes.HOTKEY_COLUMN}>
-                    {shortcuts.map((shortcut: IHotkeySection, i: number) => {
-                        return (
-                            <React.Fragment key={i}>
-                                <>
-                                    <h4 className={Classes.HEADING}>{shortcut.title}</h4>
-                                    {(shortcut.kotkeys ?? []).map((hotkey: IHotkey, j: number) => {
-                                        return (
-                                            <div className={Classes.HOTKEY} key={`${i}${j}`}>
-                                                <div className={Classes.HOTKEY_LABEL}>
-                                                    {hotkey.title}
+            <div data-testid="hotkeys-dialog">
+                <Scroller className={Classes.DIALOG_BODY} thin vertical shadows maxHeight={500}>
+                    <div className={Classes.HOTKEY_COLUMN}>
+                        {shortcuts.map((shortcut: IHotkeySection, i: number) => {
+                            return (
+                                <React.Fragment key={i}>
+                                    <>
+                                        <h4 className={Classes.HEADING}>{shortcut.title}</h4>
+                                        {(shortcut.kotkeys ?? []).map((hotkey: IHotkey, j: number) => {
+                                            return (
+                                                <div className={Classes.HOTKEY} key={`${i}${j}`}>
+                                                    <div className={Classes.HOTKEY_LABEL}>
+                                                        {hotkey.title}
 
-                                                    {hotkey.tooltip && (
-                                                        <>
-                                                            {" "}
-                                                            <Tooltip content={hotkey.tooltip}>
-                                                                <Icon
-                                                                    icon="info-circle"
-                                                                    className={Classes.TEXT_DISABLED}
-                                                                />
-                                                            </Tooltip>
-                                                        </>
-                                                    )}
+                                                        {hotkey.tooltip && (
+                                                            <>
+                                                                {" "}
+                                                                <Tooltip content={hotkey.tooltip}>
+                                                                    <Icon
+                                                                        icon="info-circle"
+                                                                        className={Classes.TEXT_DISABLED}
+                                                                    />
+                                                                </Tooltip>
+                                                            </>
+                                                        )}
+                                                    </div>
+                                                    <div className={Classes.KEY_COMBO}>
+                                                        {(hotkey.combos[comboPlatform] ?? []).map(
+                                                            (key: string, x: number) => {
+                                                                if (key === "...")
+                                                                    return <small key={key}>{key}</small>;
+
+                                                                return (
+                                                                    <kbd
+                                                                        key={`${i}${j}${x}`}
+                                                                        className={classNames(Classes.KEY, {
+                                                                            [Classes.MODIFIER_KEY]: !x,
+                                                                        })}
+                                                                    >
+                                                                        {KEYSICONS[key] ?? null}
+                                                                        {KEYS.hasOwnProperty(key)
+                                                                            ? KEYS[key]
+                                                                            : key}
+                                                                    </kbd>
+                                                                );
+                                                            }
+                                                        )}
+                                                    </div>
                                                 </div>
-                                                <div className={Classes.KEY_COMBO}>
-                                                    {(hotkey.combos[comboPlatform] ?? []).map(
-                                                        (key: string, x: number) => {
-                                                            if (key === "...")
-                                                                return <small key={key}>{key}</small>;
+                                            );
+                                        })}
+                                    </>
+                                </React.Fragment>
+                            );
+                        })}
 
-                                                            return (
-                                                                <kbd
-                                                                    key={`${i}${j}${x}`}
-                                                                    className={classNames(Classes.KEY, {
-                                                                        [Classes.MODIFIER_KEY]: !x,
-                                                                    })}
-                                                                >
-                                                                    {KEYSICONS[key] ?? null}
-                                                                    {KEYS.hasOwnProperty(key)
-                                                                        ? KEYS[key]
-                                                                        : key}
-                                                                </kbd>
-                                                            );
-                                                        }
-                                                    )}
-                                                </div>
-                                            </div>
-                                        );
-                                    })}
-                                </>
-                            </React.Fragment>
-                        );
-                    })}
-
-                    <div style={{ height: 40 }} />
-                </div>
-            </Scroller>
+                        <div style={{ height: 40 }} />
+                    </div>
+                </Scroller>
+            </div>
         </Dialog>
     );
 };

@@ -4,7 +4,6 @@ import { DropOptions, NodeModel, Tree, TreeMethods } from "@minoru/react-dnd-tre
 import { translate } from "@stacks/translations";
 import { SIDEBAR_MENU_LABELS } from "app/locale/dynamic-messages";
 import classnames from "classnames";
-import Mousetrap from "mousetrap";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -14,7 +13,7 @@ import { ROLE_SECTIONS, SIDEBARICON, SIDEBARITEMS, TreeNode } from "@stacks/type
 import { Body, Content, Footer } from "app/components";
 import { BlankSlate, Icon, Scroller } from "app/components/common";
 import { TimeTracker } from "app/components/project";
-import { canRead, publish, useDocuments, usePreferences } from "app/hooks";
+import { canRead, publish, useDocuments, useMousetrap, usePreferences } from "app/hooks";
 import { shallowEqual, strictEqual } from "app/hooks/store";
 import { BookmarksActions, RecordActions } from "app/store/actions";
 import { RecentsActions } from "app/store/actions/recents";
@@ -275,82 +274,69 @@ const SidebarMenu = () => {
     const location = useLocation();
     const { pinnedItems, hideGeneral } = usePreferences(["pinnedItems", "hideGeneral"]);
 
-    useEffect(() => {
-        // home
-        Mousetrap.bind("meta+alt+h", () => {
-            navigate("/home");
-            RecentsActions.add({
-                title: translate("Home"),
-                icon: SIDEBARICON.home,
-                url: "/home",
-            });
+    // home
+    useMousetrap("meta+alt+h", () => {
+        navigate("/home");
+        RecentsActions.add({
+            title: translate("Home"),
+            icon: SIDEBARICON.home,
+            url: "/home",
         });
-        // people
-        Mousetrap.bind("meta+alt+p", () => {
-            navigate("/people");
-            RecentsActions.add({
-                title: translate("People"),
-                icon: SIDEBARICON.people,
-                url: "/people",
-            });
+    });
+    // people
+    useMousetrap("meta+alt+p", () => {
+        navigate("/people");
+        RecentsActions.add({
+            title: translate("People"),
+            icon: SIDEBARICON.people,
+            url: "/people",
         });
-        // calendar
-        Mousetrap.bind("meta+alt+c", () => {
-            navigate("/calendar");
-            RecentsActions.add({
-                title: translate("Calendar"),
-                icon: SIDEBARICON.calendar,
-                url: "/calendar",
-            });
+    });
+    // calendar
+    useMousetrap("meta+alt+c", () => {
+        navigate("/calendar");
+        RecentsActions.add({
+            title: translate("Calendar"),
+            icon: SIDEBARICON.calendar,
+            url: "/calendar",
         });
-        // my tasks
-        Mousetrap.bind("meta+alt+t", () => {
-            navigate("/mytasks");
-            RecentsActions.add({
-                title: translate("My tasks"),
-                icon: SIDEBARICON.mytasks,
-                url: "/mytasks",
-            });
+    });
+    // my tasks
+    useMousetrap("meta+alt+t", () => {
+        navigate("/mytasks");
+        RecentsActions.add({
+            title: translate("My tasks"),
+            icon: SIDEBARICON.mytasks,
+            url: "/mytasks",
         });
-        // reports
-        Mousetrap.bind("meta+alt+r", () => {
-            navigate("/reports");
-            RecentsActions.add({
-                title: translate("Reports"),
-                icon: SIDEBARICON.reports,
-                url: "/reports",
-            });
+    });
+    // reports
+    useMousetrap("meta+alt+r", () => {
+        navigate("/reports");
+        RecentsActions.add({
+            title: translate("Reports"),
+            icon: SIDEBARICON.reports,
+            url: "/reports",
         });
-        // bookmarks
-        Mousetrap.bind("meta+alt+b", () => {
-            navigate("/bookmarks");
-            RecentsActions.add({
-                title: translate("Bookmarks"),
-                icon: SIDEBARICON.bookmarks,
-                url: "/bookmarks",
-            });
+    });
+    // bookmarks
+    useMousetrap("meta+alt+b", () => {
+        navigate("/bookmarks");
+        RecentsActions.add({
+            title: translate("Bookmarks"),
+            icon: SIDEBARICON.bookmarks,
+            url: "/bookmarks",
         });
-        // inbox
-        Mousetrap.bind("meta+alt+i", () => {
-            navigate("/inbox");
-            RecentsActions.add({
-                title: translate("Inbox"),
-                icon: SIDEBARICON.inbox,
-                url: "/inbox",
-            });
+    });
+    // inbox
+    useMousetrap("meta+alt+i", () => {
+        navigate("/inbox");
+        RecentsActions.add({
+            title: translate("Inbox"),
+            icon: SIDEBARICON.inbox,
+            url: "/inbox",
         });
-
-        return () => {
-            Mousetrap.unbind("meta+alt+h");
-            Mousetrap.unbind("meta+alt+p");
-            Mousetrap.unbind("meta+alt+c");
-            Mousetrap.unbind("meta+alt+t");
-            Mousetrap.unbind("meta+alt+r");
-            Mousetrap.unbind("meta+alt+a");
-            Mousetrap.unbind("meta+alt+b");
-            Mousetrap.unbind("meta+alt+i");
-        };
-    }, []);
+    });
 
     const unpinned = useMemo(
         () => Object.keys(SidebarItems).filter(key => !pinnedItems?.includes(key as SIDEBARITEMS)),
