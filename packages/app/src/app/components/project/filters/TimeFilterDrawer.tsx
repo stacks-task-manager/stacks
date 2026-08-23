@@ -121,8 +121,8 @@ export const TimeFilterDrawer = () => {
                                         {!filters.id && <span />}
                                         {filters.id && (
                                             <Button
-                                                small
-                                                minimal
+                                                size="small"
+                                                variant="minimal"
                                                 intent={Intent.DANGER}
                                                 onClick={TimelogsActions.deleteFilter}
                                             >
@@ -131,7 +131,7 @@ export const TimeFilterDrawer = () => {
                                         )}
                                         <Button
                                             className={Classes.POPOVER_DISMISS}
-                                            small
+                                            size="small"
                                             intent={Intent.PRIMARY}
                                             onClick={handleSaveOrUpdateFilter}
                                         >

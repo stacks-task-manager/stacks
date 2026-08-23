@@ -29,29 +29,29 @@ export const AlignmentItem: FunctionComponent<TipTapToolbarItem> = ({ editor, te
                 content={
                     <TagsWrapper gap={0}>
                         <Button
-                            small
-                            minimal
+                            size="small"
+                            variant="minimal"
                             intent={textAlign === "left" ? Intent.PRIMARY : Intent.NONE}
                             onClick={() => getSelectionChain(editor).setTextAlign("left").run()}
                             icon={<Icon icon="align-left" />}
                         />
                         <Button
-                            small
-                            minimal
+                            size="small"
+                            variant="minimal"
                             intent={textAlign === "center" ? Intent.PRIMARY : Intent.NONE}
                             onClick={() => getSelectionChain(editor).setTextAlign("center").run()}
                             icon={<Icon icon="align-center" />}
                         />
                         <Button
-                            small
-                            minimal
+                            size="small"
+                            variant="minimal"
                             intent={textAlign === "right" ? Intent.PRIMARY : Intent.NONE}
                             onClick={() => getSelectionChain(editor).setTextAlign("right").run()}
                             icon={<Icon icon="align-right" />}
                         />
                         <Button
-                            small
-                            minimal
+                            size="small"
+                            variant="minimal"
                             intent={textAlign === "justify" ? Intent.PRIMARY : Intent.NONE}
                             onClick={() => getSelectionChain(editor).setTextAlign("justify").run()}
                             icon={<Icon icon="align-justify" />}
@@ -71,25 +71,25 @@ export const AlignmentItem: FunctionComponent<TipTapToolbarItem> = ({ editor, te
         <>
             <SeparatorItem />
             <Button
-                minimal
+                variant="minimal"
                 intent={textAlign === "left" ? Intent.PRIMARY : Intent.NONE}
                 onClick={() => getSelectionChain(editor).setTextAlign("left").run()}
                 icon={<Icon icon="align-left" />}
             />
             <Button
-                minimal
+                variant="minimal"
                 intent={textAlign === "center" ? Intent.PRIMARY : Intent.NONE}
                 onClick={() => getSelectionChain(editor).setTextAlign("center").run()}
                 icon={<Icon icon="align-center" />}
             />
             <Button
-                minimal
+                variant="minimal"
                 intent={textAlign === "right" ? Intent.PRIMARY : Intent.NONE}
                 onClick={() => getSelectionChain(editor).setTextAlign("right").run()}
                 icon={<Icon icon="align-right" />}
             />
             <Button
-                minimal
+                variant="minimal"
                 intent={textAlign === "justify" ? Intent.PRIMARY : Intent.NONE}
                 onClick={() => getSelectionChain(editor).setTextAlign("justify").run()}
                 icon={<Icon icon="align-justify" />}

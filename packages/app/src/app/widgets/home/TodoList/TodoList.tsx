@@ -90,11 +90,11 @@ export const TodoList: FunctionComponent = () => {
     };
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.keyCode === 13) {
+        if (event.key === "Enter") {
             addItem();
         }
 
-        if (event.keyCode === 13 || event.keyCode === 27) {
+        if (event.key === "Enter" || event.key === "Escape") {
             setText("");
             setDate(null);
         }
@@ -178,9 +178,9 @@ export const TodoList: FunctionComponent = () => {
                                 <Icon icon={sorting === "date-asc" ? "arrow-up" : "arrow-down"} size={12} />
                             ) : null
                         }
-                        small
-                        minimal
-                        rightIcon={<Icon icon="chevron-down" />}
+                        size="small"
+                        variant="minimal"
+                        endIcon={<Icon icon="chevron-down" />}
                     >
                         {sorting === "manual" ? "Manual" : "Date"}
                     </Button>
@@ -267,8 +267,8 @@ export const TodoList: FunctionComponent = () => {
                                     placement="top-end"
                                 >
                                     <Button
-                                        minimal={date == null}
-                                        small
+                                        variant={date == null ? "minimal" : undefined}
+                                        size="small"
                                         text={formatDate(date)}
                                         icon={<Icon icon="calendar" />}
                                     />
@@ -336,8 +336,8 @@ const TodoItem: FunctionComponent<ITodosProps> = ({
             </Grid>
 
             <Button
-                small
-                minimal
+                size="small"
+                variant="minimal"
                 intent={Intent.DANGER}
                 onClick={onRemove}
                 icon={<Icon icon="trash" size={14} />}

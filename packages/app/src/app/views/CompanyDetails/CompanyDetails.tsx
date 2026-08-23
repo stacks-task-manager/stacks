@@ -715,7 +715,7 @@ const CompanyEditing: FunctionComponent<ICompanyEditingProps> = ({ company, onCl
                                         <InputGroup
                                             defaultValue={updatedCompany?.vat ?? undefined}
                                             placeholder={translate("VAT")}
-                                            large
+                                            size="large"
                                             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                                                 update("vat", e.currentTarget.value)
                                             }
@@ -1114,8 +1114,8 @@ const FavoriteCompanyButton: FunctionComponent<IFavoriteCompanyButtonProps> = ({
             placement="bottom"
         >
             <Button
-                small
-                minimal
+                size="small"
+                variant="minimal"
                 id="cd-favorite"
                 icon={
                     <Icon

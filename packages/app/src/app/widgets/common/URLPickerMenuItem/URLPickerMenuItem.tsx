@@ -45,7 +45,7 @@ export const URLPickerMenuItem: FunctionComponent<URLPickerMenuItemProps> = ({ o
             style={{ width: 250 }}
             rightElement={
                 <Button
-                    small
+                    size="small"
                     intent={Intent.PRIMARY}
                     onClick={handleAddUrl}
                     disabled={url.length === 0 || !validUrl}

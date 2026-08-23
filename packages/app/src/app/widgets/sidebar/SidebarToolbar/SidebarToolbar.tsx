@@ -7,8 +7,8 @@ export const SidebarToolbar = () => (
     <div id="sidebar-toolbar">
         <Tooltip content={`${translate("Search")}...`} placement="bottom">
             <Button
-                minimal
-                small
+                variant="minimal"
+                size="small"
                 icon={
                     <span className={Classes.ICON}>
                         <Icon icon="search" />
@@ -17,8 +17,8 @@ export const SidebarToolbar = () => (
             />
         </Tooltip>
         <Button
-            minimal
-            small
+            variant="minimal"
+            size="small"
             icon={
                 <span className={Classes.ICON}>
                     <Icon icon="edit" />

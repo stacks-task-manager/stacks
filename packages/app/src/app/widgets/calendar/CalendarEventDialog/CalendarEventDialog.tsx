@@ -177,7 +177,7 @@ export const CalendarEventDialog: FunctionComponent<CalendarEventDialogProps> = 
                     <InputGroup
                         defaultValue={event.title as string}
                         placeholder="New event"
-                        large
+                        size="large"
                         onChange={handleSetTitle}
                         inputRef={handleFocus}
                         autoFocus

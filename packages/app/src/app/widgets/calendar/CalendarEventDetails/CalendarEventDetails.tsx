@@ -987,8 +987,8 @@ const EventHeader: FunctionComponent<EventHeaderProps> = ({ menus }) => {
                     placement="bottom-end"
                     renderTarget={({ isOpen, ...popoverProps }) => (
                         <Button
-                            small
-                            minimal
+                            size="small"
+                            variant="minimal"
                             icon={<Icon icon="dots-vertical" />}
                             active={isOpen}
                             data-testid="calendar-event-menu-button"

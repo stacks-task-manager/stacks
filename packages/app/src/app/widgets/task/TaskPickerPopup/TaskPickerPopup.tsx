@@ -1,6 +1,6 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { Alignment, Button, Popover } from "@blueprintjs/core";
-import React, { FunctionComponent, useEffect, useState } from "react";
+import React, { FunctionComponent, useCallback, useEffect, useState } from "react";
 
 import { Icon } from "app/components/common";
 import { ITask } from "@stacks/types";
@@ -22,18 +22,20 @@ export const TaskPickerPopup: FunctionComponent<ITaskPickerPopupProps> = ({
 }) => {
     const [task, setTask] = useState<ITask | undefined>();
 
-    const loadTask = async () => {
+    const loadTask = useCallback(async () => {
         if (!value) {
             setTask(undefined);
             return;
         }
         const loadedTask = await TasksActions.getTask(value);
         setTask(loadedTask);
-    };
+    }, [value]);
+
+
 
     useEffect(() => {
         loadTask();
-    }, [value]);
+    }, [loadTask, value]);
 
     return (
         <Popover
@@ -55,8 +57,8 @@ export const TaskPickerPopup: FunctionComponent<ITaskPickerPopupProps> = ({
         >
             <Button
                 fill
-                rightIcon={<Icon icon="chevron-selector-vertical" />}
-                alignText={Alignment.LEFT}
+                endIcon={<Icon icon="chevron-selector-vertical" />}
+                alignText={Alignment.END}
                 disabled={projectId == null}
             >
                 {task ? stripMd(task.title).substring(0, 29) : " "}

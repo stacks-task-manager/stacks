@@ -117,8 +117,8 @@ export const Bookmarks = () => {
                                                             placement="top-end"
                                                         >
                                                             <Button
-                                                                small
-                                                                minimal
+                                                                size="small"
+                                                                variant="minimal"
                                                                 icon={
                                                                     <Icon
                                                                         icon={
@@ -167,8 +167,8 @@ export const Bookmarks = () => {
                                                             placement="bottom-end"
                                                         >
                                                             <Button
-                                                                small
-                                                                minimal
+                                                                size="small"
+                                                                variant="minimal"
                                                                 icon={<Icon icon="dots-vertical" />}
                                                             />
                                                         </Popover>

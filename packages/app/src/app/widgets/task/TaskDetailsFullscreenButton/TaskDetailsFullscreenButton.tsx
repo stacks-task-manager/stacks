@@ -18,8 +18,8 @@ export const TaskDetailsFullscreenButton: FunctionComponent<TaskDetailsFullscree
     return (
         <HotkeyTooltip title={translate("Toggle fullscreen")} placement="bottom-end" keys={["shift", "X"]}>
             <Button
-                small
-                minimal
+                size="small"
+                variant="minimal"
                 icon={<Icon icon={isFullscreen ? "shrink" : "expand-01"} />}
                 id="td-fullscreen-button"
                 onClick={onToggle}

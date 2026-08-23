@@ -13,47 +13,47 @@ export const MarkItem: FunctionComponent<TipTapToolbarItem> = ({ editor, isHighl
             content={
                 <TagsWrapper gap={0}>
                     <Button
-                        minimal
-                        small={small}
+                        variant="minimal"
+                        size={small ? "small" : undefined}
                         icon={<Icon icon="circle-filled" color={Colors.GOLD5} />}
                         onClick={() => getSelectionChain(editor).toggleHighlight().run()}
                     />
 
                     <Button
-                        minimal
-                        small={small}
+                        variant="minimal"
+                        size={small ? "small" : undefined}
                         icon={<Icon icon="circle-filled" color={Colors.GREEN3} />}
                         onClick={() =>
                             getSelectionChain(editor).toggleHighlight({ color: Colors.GREEN5 }).run()
                         }
                     />
                     <Button
-                        minimal
-                        small={small}
+                        variant="minimal"
+                        size={small ? "small" : undefined}
                         icon={<Icon icon="circle-filled" color={Colors.BLUE3} />}
                         onClick={() =>
                             getSelectionChain(editor).toggleHighlight({ color: Colors.BLUE5 }).run()
                         }
                     />
                     <Button
-                        minimal
-                        small={small}
+                        variant="minimal"
+                        size={small ? "small" : undefined}
                         icon={<Icon icon="circle-filled" color={Colors.VERMILION3} />}
                         onClick={() =>
                             getSelectionChain(editor).toggleHighlight({ color: Colors.VERMILION5 }).run()
                         }
                     />
                     <Button
-                        minimal
-                        small={small}
+                        variant="minimal"
+                        size={small ? "small" : undefined}
                         icon={<Icon icon="circle-filled" color={Colors.INDIGO3} />}
                         onClick={() =>
                             getSelectionChain(editor).toggleHighlight({ color: Colors.INDIGO5 }).run()
                         }
                     />
                     <Button
-                        minimal
-                        small={small}
+                        variant="minimal"
+                        size={small ? "small" : undefined}
                         icon={<Icon icon="circle-filled" color={Colors.ORANGE3} />}
                         onClick={() =>
                             getSelectionChain(editor).toggleHighlight({ color: Colors.ORANGE5 }).run()
@@ -74,8 +74,8 @@ export const MarkItem: FunctionComponent<TipTapToolbarItem> = ({ editor, isHighl
                             {...tooltipProps}
                             active={isOpen}
                             ref={mergeRefs(popoverRef, tooltipRef)}
-                            small={small}
-                            minimal
+                            size={small ? "small" : undefined}
+                            variant="minimal"
                             intent={isHighlighted ? Intent.PRIMARY : Intent.NONE}
                             icon={<Icon icon="roller-brush" />}
                         />

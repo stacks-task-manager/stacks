@@ -25,7 +25,7 @@ export const ProjectTemplateDialog: FunctionComponent<ProjectTemplateDialogPros>
         >
             <div className={Classes.DIALOG_BODY}>
                 <FormGroup label={translate("Title")} labelFor="title-input" labelInfo="*">
-                    <InputGroup id="title-input" placeholder={translate("Template title")} large />
+                    <InputGroup id="title-input" placeholder={translate("Template title")} size="large" />
                 </FormGroup>
 
                 <FormGroup

@@ -30,8 +30,8 @@ export const TaskDetailsTint: FunctionComponent<TaskDetailsTintProps> = ({
         <TaskDetailsSection title={translate("Tint")} centered={centered} vertical={vertical}>
             <TaskColorButton tint={tint} onChange={handleTintChange}>
                 <Button
-                    minimal
-                    small
+                    variant="minimal"
+                    size="small"
                     icon={<Icon icon="stop-filled" color={tint ?? Colors.GRAY5} />}
                     disabled={disabled}
                 >

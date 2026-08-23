@@ -246,8 +246,8 @@ export const QuickTimeLog: FunctionComponent<IQuickTimeLogProps> = ({
                 {onClear && (
                     <Col>
                         <Button
-                            minimal
-                            small
+                            variant="minimal"
+                            size="small"
                             onClick={onClear}
                             intent={Intent.WARNING}
                             className={Classes.POPOVER_DISMISS}

@@ -123,8 +123,8 @@ const TagsFilter = () => {
                 <Button
                     fill
                     icon={<Icon icon={icon} color={color} />}
-                    rightIcon={<Icon icon="chevron-down" />}
-                    alignText={Alignment.LEFT}
+                    endIcon={<Icon icon="chevron-down" />}
+                    alignText={Alignment.END}
                     intent={tags.length > 0 ? Intent.PRIMARY : Intent.NONE}
                 >
                     {label}
@@ -182,8 +182,8 @@ const StatusesFilter = () => {
                 <Button
                     fill
                     icon={<Icon icon="circle-filled" color={color} />}
-                    rightIcon={<Icon icon="chevron-down" />}
-                    alignText={Alignment.LEFT}
+                    endIcon={<Icon icon="chevron-down" />}
+                    alignText={Alignment.END}
                     intent={status != null ? Intent.PRIMARY : Intent.NONE}
                 >
                     {label}
@@ -247,8 +247,8 @@ const CompanyFilter = () => {
                 <Button
                     fill
                     icon={<Icon icon={icon} />}
-                    rightIcon={<Icon icon="chevron-down" />}
-                    alignText={Alignment.LEFT}
+                    endIcon={<Icon icon="chevron-down" />}
+                    alignText={Alignment.END}
                     intent={company != null ? Intent.PRIMARY : Intent.NONE}
                 >
                     {selectedCompany ? selectedCompany.title : translate("All companies")}

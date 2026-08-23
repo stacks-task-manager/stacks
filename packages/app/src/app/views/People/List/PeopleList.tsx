@@ -509,7 +509,6 @@ const TableCell: FunctionComponent<TablePersistentCellProps<IPerson>> = ({ row, 
                         <Button
                             size="small"
                             variant="minimal"
-                            outlined
                             intent={Intent.SUCCESS}
                             icon={<Icon icon="award-01" />}
                         />

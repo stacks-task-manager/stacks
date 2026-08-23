@@ -52,8 +52,8 @@ const ToolbarDropdownButtonPure: ForwardRefRenderFunction<
                         <Button
                             {...popoverProps}
                             {...tooltipProps}
-                            minimal
-                            small
+                            variant="minimal"
+                            size="small"
                             icon={<Icon icon={icon} color={iconColor} />}
                             active={isPopoverOpen}
                             ref={mergeRefs(ref1, ref2, buttonRef)}
@@ -113,14 +113,13 @@ export const ToolbarButton: FunctionComponent<IToolbarButtonProps> = ({
             <HotkeyTooltip title={tooltip} placement={placement} keys={keys}>
                 <AnchorButton
                     id={id}
-                    minimal={minimal != null ? minimal : true}
-                    small
+                    size="small"
                     icon={
                         icon ? <Icon icon={icon} color={iconColor} size={iconSize} spin={spin} /> : undefined
                     }
                     text={title}
                     intent={intent || (active ? Intent.PRIMARY : Intent.NONE)}
-                    outlined={outlined}
+                    variant={outlined ? "outlined" : undefined}
                     disabled={disabled}
                     onClick={onClick}
                     loading={loading}
@@ -133,11 +132,10 @@ export const ToolbarButton: FunctionComponent<IToolbarButtonProps> = ({
     return (
         <AnchorButton
             id={id}
-            minimal={minimal != null ? minimal : true}
-            small
+            size="small"
             icon={icon ? <Icon icon={icon} size={iconSize} spin={spin} /> : undefined}
             text={title}
-            outlined={outlined}
+            variant={outlined ? "outlined" : undefined}
             intent={intent || (active ? Intent.PRIMARY : Intent.NONE)}
             disabled={disabled}
             loading={loading}

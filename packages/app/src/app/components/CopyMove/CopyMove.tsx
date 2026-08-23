@@ -171,8 +171,7 @@ const CopyMove = () => {
                         <Col>
                             <Button
                                 className="big"
-                                minimal={action === COPYMOVEACTION.COPY ? false : true}
-                                outlined={action === COPYMOVEACTION.COPY ? false : true}
+                                variant={action === COPYMOVEACTION.COPY ? "solid" : "outlined"}
                                 intent={action === COPYMOVEACTION.COPY ? Intent.PRIMARY : Intent.NONE}
                                 onClick={() => CopyMoveActions.setAction(COPYMOVEACTION.COPY)}
                                 disabled
@@ -185,8 +184,7 @@ const CopyMove = () => {
                         <Col>
                             <Button
                                 className="big"
-                                minimal={action === COPYMOVEACTION.MOVE ? false : true}
-                                outlined={action === COPYMOVEACTION.MOVE ? false : true}
+                                variant={action === COPYMOVEACTION.MOVE ? "solid" : "outlined"}
                                 intent={action === COPYMOVEACTION.MOVE ? Intent.PRIMARY : Intent.NONE}
                                 onClick={() => CopyMoveActions.setAction(COPYMOVEACTION.MOVE)}
                                 data-testid="copymove-action-move"

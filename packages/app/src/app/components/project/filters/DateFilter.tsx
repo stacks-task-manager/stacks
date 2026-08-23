@@ -56,8 +56,8 @@ export const DateFilter: FunctionComponent<IDateFilterProps> = ({
                 <Button
                     fill
                     icon={<Icon icon="calendar-date" />}
-                    alignText={Alignment.LEFT}
-                    rightIcon={<Icon icon="chevron-down" />}
+                    alignText={Alignment.END}
+                    endIcon={<Icon icon="chevron-down" />}
                     intent={date != null && highlightWhenSet ? Intent.PRIMARY : Intent.NONE}
                     data-testid={testId ? `${testId}-button` : undefined}
                 >

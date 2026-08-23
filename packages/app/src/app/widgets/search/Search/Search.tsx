@@ -316,7 +316,7 @@ export const Search: FunctionComponent<ISearchProps> = ({ onClose }) => {
                                 round
                                 interactive
                                 intent={type === "all" ? Intent.PRIMARY : Intent.NONE}
-                                rightIcon={<HotkeyChip keys={[filteredResults.length]} small />}
+                                endIcon={<HotkeyChip keys={[filteredResults.length]} small />}
                                 onClick={type === "all" ? undefined : () => toggleFilter("all")}
                             >
                                 {translate("Everything")}
@@ -331,7 +331,7 @@ export const Search: FunctionComponent<ISearchProps> = ({ onClose }) => {
                                             round
                                             interactive
                                             icon={<Icon icon={t.icon} size={12} />}
-                                            rightIcon={
+                                            endIcon={
                                                 counters[t.id] ? (
                                                     <HotkeyChip keys={[counters[t.id]]} small />
                                                 ) : null

@@ -184,8 +184,8 @@ export const AutomationsDialog: FunctionComponent<IAutomationsDialogProps> = ({ 
                                                                 renderTarget={({ isOpen, ref, ...props }) => (
                                                                     <Button
                                                                         {...props}
-                                                                        small
-                                                                        minimal
+                                                                        size="small"
+                                                                        variant="minimal"
                                                                         icon={<Icon icon="dots-vertical" />}
                                                                         active={isOpen}
                                                                         ref={ref}

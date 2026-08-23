@@ -110,7 +110,7 @@ export const TimelineDay: FunctionComponent<TimelineDayProps> = ({
                         // eslint-disable-next-line @typescript-eslint/no-unused-vars
                         renderTarget={({ isOpen, ref, ...props }) => (
                             <Button
-                                minimal
+                                variant="minimal"
                                 icon={<Icon icon="plus" />}
                                 intent={Intent.PRIMARY}
                                 ref={ref}

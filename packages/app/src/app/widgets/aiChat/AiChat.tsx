@@ -139,7 +139,7 @@ function MessageBubble({
                                 {w.options.map(option => (
                                     <Button
                                         key={option.id}
-                                        small
+                                        size="small"
                                         intent={Intent.PRIMARY}
                                         disabled={w.answered || !onChoice}
                                         data-testid={`ai-chat-choice-option-${option.id}`}
@@ -185,7 +185,7 @@ function MessageBubble({
                                     );
                                 })}
                                 <Button
-                                    small
+                                    size="small"
                                     intent={Intent.PRIMARY}
                                     disabled={w.answered || current.length === 0 || !onChoice}
                                     data-testid={`ai-chat-choice-next-${w.id}`}
@@ -298,7 +298,7 @@ export const AiChat: React.FC = () => {
     return (
         <>
             <Button
-                large
+                size="large"
                 intent={Intent.PRIMARY}
                 icon="chat"
                 style={fabStyle}
@@ -321,15 +321,20 @@ export const AiChat: React.FC = () => {
                         <div style={{ display: "flex", gap: 4 }}>
                             <Tooltip content="Clear conversation">
                                 <Button
-                                    small
-                                    minimal
+                                    size="small"
+                                    variant="minimal"
                                     icon="trash"
                                     onClick={() => AiChatActions.clearConversation()}
                                     disabled={isAwaitingReply}
                                 />
                             </Tooltip>
 
-                            <Button small minimal icon="cross" onClick={() => AiChatActions.closePanel()} />
+                            <Button
+                                size="small"
+                                variant="minimal"
+                                icon="cross"
+                                onClick={() => AiChatActions.closePanel()}
+                            />
                         </div>
                     </div>
 

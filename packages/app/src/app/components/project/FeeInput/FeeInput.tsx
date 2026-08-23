@@ -83,7 +83,7 @@ export const FeeInput: FunctionComponent<FeeInputProps> = ({
         if (currency !== currentCurrency) {
             setCurrentCurrency(currency);
         }
-    }, [currency, value]);
+    }, [currency, currentCurrency, currentValue, value]);
 
     const handleCurrencySelect = (selectedCurrency: string) => {
         setCurrentCurrency(selectedCurrency);
@@ -123,7 +123,7 @@ export const FeeInput: FunctionComponent<FeeInputProps> = ({
                 selectAllOnFocus
                 onBlur={handleSendChange}
                 onKeyUp={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                    if (e.keyCode === 13) {
+                    if (e.key === "Enter") {
                         handleSendChange();
                     }
                 }}

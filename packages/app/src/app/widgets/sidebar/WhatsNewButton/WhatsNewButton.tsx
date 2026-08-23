@@ -96,7 +96,7 @@ const ChangelogDialog: FunctionComponent<ChangelogDialogProps> = ({ onClose }) =
                 <div className={Classes.DIALOG_BODY}>
                     <Grid gap={10}>
                         <div>
-                            <Tag large className={Classes.SKELETON}>
+                            <Tag size="large" className={Classes.SKELETON}>
                                 Lorem
                             </Tag>
                         </div>
@@ -180,7 +180,7 @@ interface ChangelogProps {
 const Changelog: FunctionComponent<ChangelogProps> = ({ title, icon, logs, intent }) => {
     return (
         <div>
-            <Tag intent={intent} large icon={<Icon icon={icon} />}>
+            <Tag intent={intent} size="large" icon={<Icon icon={icon} />}>
                 {title}
             </Tag>
             <ul className={Classes.MENU} style={{ padding: 0 }}>

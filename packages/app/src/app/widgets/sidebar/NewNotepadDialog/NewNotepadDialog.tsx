@@ -23,9 +23,9 @@ export const NewNotepadDialog: FunctionComponent<INewNotepadDialogProps> = ({ on
     };
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.keyCode === 27) {
+        if (event.key === "Escape") {
             handleClose();
-        } else if (event.keyCode === 13) {
+        } else if (event.key === "Enter") {
             handleSaveNotebook();
         }
     };

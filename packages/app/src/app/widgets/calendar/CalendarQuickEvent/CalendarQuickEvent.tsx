@@ -41,11 +41,11 @@ export const CalendarQuickEvent: FunctionComponent<CalendarQuickEventProps> = ({
             return `${start ? format(start, "P") : ""} to ${end ? format(end, "P") : ""}`;
         }
         return start ? format(start, "PPPp") : "";
-    }, [start, end, sameDay]);
+    }, [start, end, slot.slots.length, sameDay]);
 
     const canSave = useMemo(() => {
         return title.trim().length > 0 && start != null;
-    }, [title, description, start]);
+    }, [title, start]);
 
     return (
         <div style={{ width: 300, padding: 10 }}>
@@ -58,7 +58,7 @@ export const CalendarQuickEvent: FunctionComponent<CalendarQuickEventProps> = ({
                         <InputGroup
                             placeholder="Event title"
                             autoFocus
-                            large
+                            size="large"
                             fill
                             value={title}
                             onChange={e => setTitle(e.currentTarget.value)}
@@ -113,7 +113,7 @@ export const CalendarQuickEvent: FunctionComponent<CalendarQuickEventProps> = ({
                                     ref={ref}
                                     variant="minimal"
                                     size="small"
-                                    rightIcon={<Icon icon="chevron-down" />}
+                                    endIcon={<Icon icon="chevron-down" />}
                                 >
                                     {dateLabel}
                                 </Button>

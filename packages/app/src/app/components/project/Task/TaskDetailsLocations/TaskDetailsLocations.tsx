@@ -75,8 +75,8 @@ export const TaskDetailsLocations: FunctionComponent<ITaskDetailsLocationsProps>
                                 <Col align="center" gap={5}>
                                     <small>{location.coordinates.join(", ")}</small>{" "}
                                     <Button
-                                        small
-                                        minimal
+                                        size="small"
+                                        variant="minimal"
                                         icon={<Icon icon="trash" />}
                                         intent={Intent.DANGER}
                                         onClick={event => handleRemoveLocation(event, location)}

@@ -100,8 +100,8 @@ const FilterDrawer: FunctionComponent<IProjectFilterDrawerProps> = ({ myTasks, f
                                         {!filters.id && <span />}
                                         {filters.id && (
                                             <Button
-                                                small
-                                                minimal
+                                                size="small"
+                                                variant="minimal"
                                                 intent={Intent.DANGER}
                                                 onClick={ProjectFiltersActions.deleteFilter}
                                             >
@@ -110,7 +110,7 @@ const FilterDrawer: FunctionComponent<IProjectFilterDrawerProps> = ({ myTasks, f
                                         )}
                                         <Button
                                             className={Classes.POPOVER_DISMISS}
-                                            small
+                                            size="small"
                                             intent={Intent.PRIMARY}
                                             onClick={handleSaveOrUpdateFilter}
                                         >

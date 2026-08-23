@@ -17,8 +17,8 @@ export const ButtonCheckbox: FunctionComponent<ButtonCheckboxProps> = ({
 }) => {
     return (
         <Button
-            small
-            minimal
+            size="small"
+            variant="minimal"
             active={checked}
             intent={checked ? intent ?? Intent.SUCCESS : Intent.NONE}
             icon={<Icon icon={icon} />}

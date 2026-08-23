@@ -109,8 +109,8 @@ export const TaskDetailsLinks: FunctionComponent<ITaskDetailsLinksProps> = ({ ta
                         </div>
                         <div style={{ alignSelf: "center" }} onClick={e => e.stopPropagation()}>
                             <Button
-                                small
-                                minimal
+                                size="small"
+                                variant="minimal"
                                 icon={<Icon icon="trash" />}
                                 intent={Intent.DANGER}
                                 onClick={event => handleRemoveLink(event, link)}
@@ -277,8 +277,8 @@ const LinkUpdateButton: FunctionComponent<LinkUpdateButtonProps> = ({ link, task
                             {...tooltipProps}
                             {...popoverProps}
                             ref={mergeRefs(popoverRef, tooltipRef)}
-                            small
-                            minimal
+                            size="small"
+                            variant="minimal"
                             active={isOpen}
                             icon={<Icon icon="text-input" />}
                         />

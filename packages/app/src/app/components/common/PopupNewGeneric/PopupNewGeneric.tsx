@@ -36,15 +36,15 @@ export const PopupNewGeneric: FunctionComponent<IPopupNewGenericProps> = ({
     };
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.keyCode === 27) {
+        if (event.key === "Escape") {
             setTitle("");
         }
 
-        if (event.keyCode === 13) {
+        if (event.key === "Enter") {
             handleAdd();
         }
 
-        if ((event.keyCode === 27 || event.keyCode === 13) && boxRef.current) {
+        if ((event.key === "Escape" || event.key === "Enter") && boxRef.current) {
             boxRef.current.click();
         }
     };

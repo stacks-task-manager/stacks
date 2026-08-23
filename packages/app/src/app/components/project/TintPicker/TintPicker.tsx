@@ -91,8 +91,8 @@ export const TintPicker: FunctionComponent<ITintPickerProps> = ({ value, canClea
                             data-testid="tint-hex-input"
                             rightElement={
                                 <Button
-                                    small
-                                    minimal
+                                    size="small"
+                                    variant="minimal"
                                     disabled
                                     icon={<Icon icon={validColor ? "check" : "x-close"} />}
                                     intent={Intent.SUCCESS}
@@ -121,8 +121,8 @@ export const TintPicker: FunctionComponent<ITintPickerProps> = ({ value, canClea
 
                 {value != null && canClear && (
                     <Button
-                        small
-                        minimal
+                        size="small"
+                        variant="minimal"
                         fill
                         intent={Intent.WARNING}
                         className={Classes.POPOVER_DISMISS}

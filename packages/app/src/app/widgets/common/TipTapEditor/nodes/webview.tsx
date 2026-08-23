@@ -52,15 +52,16 @@ const FrameWrapper = ({ HTMLAttributes, updateAttributes, deleteNode, selected }
     };
 
     useEffect(() => {
-        if (webviewRef.current) {
-            webviewRef.current.addEventListener("did-finish-load", getTitle);
-            webviewRef.current.addEventListener("did-navigate-in-page", handleNavigated);
+        const webview = webviewRef.current;
+        if (webview) {
+            webview.addEventListener("did-finish-load", getTitle);
+            webview.addEventListener("did-navigate-in-page", handleNavigated);
         }
 
         return () => {
-            if (webviewRef.current) {
-                webviewRef.current.removeEventListener("did-finish-load", getTitle);
-                webviewRef.current.removeEventListener("did-navigate-in-page", handleNavigated);
+            if (webview) {
+                webview.removeEventListener("did-finish-load", getTitle);
+                webview.removeEventListener("did-navigate-in-page", handleNavigated);
             }
         };
     }, [HTMLAttributes.src]);
@@ -160,7 +161,7 @@ const FrameWrapper = ({ HTMLAttributes, updateAttributes, deleteNode, selected }
                                 <Button
                                     {...props}
                                     active={isOpen}
-                                    minimal
+                                    variant="minimal"
                                     icon={<Icon icon="dots-vertical" />}
                                 />
                             )}
@@ -247,12 +248,12 @@ export const Webview = Node.create<WebviewOptions>({
         return {
             setWebview:
                 options =>
-                ({ commands }) => {
-                    return commands.insertContent({
-                        type: this.name,
-                        attrs: options,
-                    });
-                },
+                    ({ commands }) => {
+                        return commands.insertContent({
+                            type: this.name,
+                            attrs: options,
+                        });
+                    },
         };
     },
 

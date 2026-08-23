@@ -27,11 +27,11 @@ export const NewGeneric: FunctionComponent<INewGenericProps> = ({
     };
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.keyCode === 27) {
+        if (event.key === "Escape") {
             setTitle("");
         }
 
-        if (event.keyCode === 13) {
+        if (event.key === "Enter") {
             handleAdd();
         }
     };
@@ -42,7 +42,7 @@ export const NewGeneric: FunctionComponent<INewGenericProps> = ({
             value={title}
             onChange={handleTitleChange}
             onKeyDown={handleKeyDown}
-            large={large}
+            size={large ? "large" : undefined}
             className={Classes.POPOVER_DISMISS_OVERRIDE}
             rightElement={
                 <Button intent={Intent.PRIMARY} size={!large ? "small" : undefined} onClick={handleAdd}>

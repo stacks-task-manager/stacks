@@ -79,8 +79,8 @@ export const TaskDetailsNavigation: FunctionComponent<TaskDetailsNavigationProps
                 >
                     <AnchorButton
                         id="td-previous"
-                        minimal
-                        small
+                        variant="minimal"
+                        size="small"
                         icon={<Icon icon="chevron-up" />}
                         disabled={position === 0}
                         onClick={previousNext}
@@ -89,8 +89,8 @@ export const TaskDetailsNavigation: FunctionComponent<TaskDetailsNavigationProps
                 <HotkeyTooltip title="Next task" placement="bottom" keys={["J"]} disabled={disabled}>
                     <AnchorButton
                         id="td-next"
-                        minimal
-                        small
+                        variant="minimal"
+                        size="small"
                         icon={<Icon icon="chevron-down" />}
                         disabled={disabled}
                         onClick={handleNext}

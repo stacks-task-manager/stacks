@@ -153,7 +153,7 @@ export const AutomationAction: FunctionComponent<IAutomationActionProps> = ({ ac
         }
 
         return null;
-    }, [action.do]);
+    }, [action.do, action.value]);
 
     const handleRemoveAction = () => {
         if (!action.id) return;
@@ -182,8 +182,8 @@ export const AutomationAction: FunctionComponent<IAutomationActionProps> = ({ ac
 
                     <Button
                         className="automation-action-delete"
-                        minimal
-                        small
+                        variant="minimal"
+                        size="small"
                         icon={<Icon icon="trash" />}
                         intent={Intent.DANGER}
                         onClick={handleRemoveAction}

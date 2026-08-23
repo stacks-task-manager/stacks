@@ -77,8 +77,8 @@ export const Home = () => {
         >
             <AppViewContent transparent padded relative>
                 <Button
-                    minimal
-                    small
+                    variant="minimal"
+                    size="small"
                     style={{ position: "absolute", top: 10, right: 20 }}
                     icon={<Icon icon="palette" />}
                     className="home-customize-button"

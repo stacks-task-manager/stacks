@@ -194,14 +194,14 @@ const TagsFilter: FunctionComponent<ITagsFilterProps> = ({ tags, projectId }) =>
     const handleToggleTag = (tag?: ITag) => {
         const filteredTags = tag
             ? produce(tags, (draftTags: string[]) => {
-                  const index = tag && draftTags.length ? draftTags.findIndex(t => t === tag.id) : -1;
+                const index = tag && draftTags.length ? draftTags.findIndex(t => t === tag.id) : -1;
 
-                  if (index > -1) {
-                      draftTags.splice(index, 1);
-                  } else {
-                      draftTags.push(tag.id);
-                  }
-              })
+                if (index > -1) {
+                    draftTags.splice(index, 1);
+                } else {
+                    draftTags.push(tag.id);
+                }
+            })
             : [];
 
         ProjectFiltersActions.set("tags", filteredTags);
@@ -232,8 +232,8 @@ const TagsFilter: FunctionComponent<ITagsFilterProps> = ({ tags, projectId }) =>
                 <Button
                     fill
                     icon={<Icon icon={icon} color={color} />}
-                    rightIcon={<Icon icon="chevron-down" />}
-                    alignText={Alignment.LEFT}
+                    endIcon={<Icon icon="chevron-down" />}
+                    alignText={Alignment.END}
                     intent={tags.length > 0 ? Intent.PRIMARY : Intent.NONE}
                 >
                     {label}
@@ -290,8 +290,8 @@ const StatusesFilter: FunctionComponent<IStatusesFilterProps> = ({ status, proje
                 <Button
                     fill
                     icon={<Icon icon="circle-filled" color={color} />}
-                    rightIcon={<Icon icon="chevron-down" />}
-                    alignText={Alignment.LEFT}
+                    endIcon={<Icon icon="chevron-down" />}
+                    alignText={Alignment.END}
                     intent={status != null ? Intent.PRIMARY : Intent.NONE}
                 >
                     {label}
@@ -371,8 +371,8 @@ const PriorityFilter: FunctionComponent<IPriorityFilterProps> = ({ priority }) =
                 <Button
                     fill
                     icon={<Icon icon={icon} color={color} />}
-                    rightIcon={<Icon icon="chevron-down" />}
-                    alignText={Alignment.LEFT}
+                    endIcon={<Icon icon="chevron-down" />}
+                    alignText={Alignment.END}
                     intent={priority != null ? Intent.PRIMARY : Intent.NONE}
                 >
                     {label}
@@ -540,7 +540,7 @@ const ProjectsFilter: FunctionComponent<IProjectsFilterProps> = ({ project }) =>
                     <Button
                         fill
                         icon={<Icon icon="check-circle-broken" />}
-                        alignText={Alignment.LEFT}
+                        alignText={Alignment.END}
                         rightIcon={<Icon icon="chevron-down" />}
                     >
                         Project

@@ -155,7 +155,7 @@ export const NewPersonPopover: FunctionComponent<INewPersonPopoverProps> = ({ ch
 
                     <div className={Classes.DIALOG_FOOTER_ACTIONS}>
                         <Button
-                            minimal
+                            variant="minimal"
                             className={Classes.POPOVER_DISMISS}
                             ref={cancelRef}
                             onClick={handleClear}

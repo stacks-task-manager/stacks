@@ -89,8 +89,8 @@ export const Automation: FunctionComponent<IAutomationsProps> = ({ automation, o
                     onChange={(stacksIds: string[]) => setValue(stacksIds.at(-1))}
                 >
                     <Button
-                        minimal
-                        small
+                        variant="minimal"
+                        size="small"
                         icon={stack && <SymbolSquare color={stack ? stack.tint : Colors.GRAY3} />}
                     >
                         {value ? stack?.title : "select stack"}
@@ -212,7 +212,7 @@ export const Automation: FunctionComponent<IAutomationsProps> = ({ automation, o
                         <InputGroup
                             placeholder={translate("Automation name")}
                             fill
-                            large
+                            size="large"
                             defaultValue={title}
                             onChange={handleChangeTitle}
                         />

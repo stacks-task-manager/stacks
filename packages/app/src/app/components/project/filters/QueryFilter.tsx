@@ -1,5 +1,5 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
-import { FormGroup, InputGroup, Keys } from "@blueprintjs/core";
+import { FormGroup, InputGroup } from "@blueprintjs/core";
 import { translate } from "@stacks/translations";
 import { Icon } from "app/components/common";
 import React, { FunctionComponent, useEffect, useRef, useState } from "react";
@@ -38,7 +38,7 @@ export const QueryFilter: FunctionComponent<IQueryFilterProps> = ({
     }, [term]);
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.keyCode === Keys.ESCAPE || ((event.metaKey || event.ctrlKey) && event.key === "f")) {
+        if (event.key === "Escape" || ((event.metaKey || event.ctrlKey) && event.key === "f")) {
             if (query?.length) {
                 setQuery("");
                 onChange("");

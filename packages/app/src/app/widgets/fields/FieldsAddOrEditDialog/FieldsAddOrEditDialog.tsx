@@ -210,7 +210,7 @@ export const FieldsAddOrEditDialog: FunctionComponent<FieldsAddOrEditDialogProps
                                         }
                                         fill
                                         alignText="left"
-                                        rightIcon={<Icon icon="chevron-down" />}
+                                        endIcon={<Icon icon="chevron-down" />}
                                     >
                                         {FIELD_TYPE_LABELS[type]}
                                     </Button>
@@ -353,7 +353,7 @@ export const FieldsAddOrEditDialog: FunctionComponent<FieldsAddOrEditDialogProps
                             {translate("Cancel")}
                         </Button>
                         <Button
-                            small
+                            size="small"
                             intent={Intent.PRIMARY}
                             disabled={!canSave}
                             loading={saving}

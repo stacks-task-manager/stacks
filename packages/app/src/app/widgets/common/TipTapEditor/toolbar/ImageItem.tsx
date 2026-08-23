@@ -120,8 +120,8 @@ export const ImageItem: FunctionComponent<ImageItemProps> = ({
                             {...tooltipProps}
                             ref={mergeRefs(popoverRef, tooltipRef)}
                             active={isOpen}
-                            small={small}
-                            minimal
+                            size={small ? "small" : undefined}
+                            variant="minimal"
                             icon={<Icon icon="image-01" />}
                         />
                     )}

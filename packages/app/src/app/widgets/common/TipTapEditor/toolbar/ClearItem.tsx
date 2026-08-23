@@ -15,8 +15,8 @@ export const ClearItem: FunctionComponent<TipTapToolbarItem> = ({ editor, isCall
             <SeparatorItem />
             <Tooltip content="Clear callout" placement="top">
                 <Button
-                    minimal
-                    small={small}
+                    variant="minimal"
+                    size={small ? "small" : undefined}
                     icon={<Icon icon="eraser" />}
                     intent={Intent.PRIMARY}
                     onClick={() => getSelectionChain(editor).clearNodes().unsetAllMarks().run()}

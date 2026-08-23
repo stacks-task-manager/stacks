@@ -57,7 +57,7 @@ export const ReminderButton: FunctionComponent<ReminderButtonProps> = ({
         (selectedDate: Date | null, isUserChange: boolean) => {
             if (isUserChange) setSelectedDate(selectedDate ?? undefined);
         },
-        [verbose]
+        []
     );
 
     const date = useMemo(() => {
@@ -119,7 +119,7 @@ export const ReminderButton: FunctionComponent<ReminderButtonProps> = ({
                                     footerElement={
                                         <Row justify="center" gutter={20}>
                                             <Button
-                                                small
+                                                size="small"
                                                 intent={Intent.PRIMARY}
                                                 disabled={!selectedDate}
                                                 icon={<Icon icon="bell" />}

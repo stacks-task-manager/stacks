@@ -158,8 +158,8 @@ export const RepeatPicker: FunctionComponent<IRepeatPickerProps> = ({ value, onC
                     data-testid="repeat-reopen-checkbox"
                 />
                 <Button
-                    minimal
-                    small
+                    variant="minimal"
+                    size="small"
                     intent={Intent.WARNING}
                     onClick={() => onChange()}
                     className={Classes.POPOVER_DISMISS}

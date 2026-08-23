@@ -205,7 +205,7 @@ const ImageWrapper = ({ HTMLAttributes, updateAttributes, extension, deleteNode 
                             <Button
                                 {...props}
                                 active={isOpen}
-                                small
+                                size="small"
                                 icon={<Icon icon="info-circle" />}
                                 className="tiptap-info-button"
                             />

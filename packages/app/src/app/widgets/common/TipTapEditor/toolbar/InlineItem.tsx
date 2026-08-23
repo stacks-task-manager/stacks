@@ -122,8 +122,8 @@ export const InlineItem: FunctionComponent<InlineItemProps> = ({
                                 {...tooltipProps}
                                 active={isOpen}
                                 ref={mergeRefs(popoverRef, tooltipRef)}
-                                minimal
-                                small={small}
+                                variant="minimal"
+                                size={small ? "small" : undefined}
                                 icon={<Icon icon="dots-vertical" />}
                             />
                         )}

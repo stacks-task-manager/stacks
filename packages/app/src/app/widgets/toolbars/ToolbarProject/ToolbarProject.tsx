@@ -718,8 +718,8 @@ export const FilterButton = () => {
         <>
             {hasFilters ? (
                 <Button
-                    minimal
-                    small
+                    variant="minimal"
+                    size="small"
                     icon={<Icon icon="trash" />}
                     intent={Intent.WARNING}
                     onClick={ProjectFiltersActions.reset}
@@ -790,8 +790,8 @@ const TableGroupingToggle = () => {
             placement="bottom-end"
         >
             <Button
-                small
-                minimal
+                size="small"
+                variant="minimal"
                 icon={
                     <Icon
                         icon={
@@ -801,7 +801,7 @@ const TableGroupingToggle = () => {
                         }
                     />
                 }
-                rightIcon={<Icon icon="chevron-down" />}
+                endIcon={<Icon icon="chevron-down" />}
             >
                 {translate("Group by")}
                 &nbsp;

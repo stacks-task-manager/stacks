@@ -29,8 +29,8 @@ export const ColorItem: FunctionComponent<TipTapToolbarItem> = ({ editor, isColo
                         <Button
                             {...popoverProps}
                             {...tooltipProps}
-                            minimal
-                            small={small}
+                            variant="minimal"
+                            size={small ? "small" : undefined}
                             active={isColored}
                             intent={isColored ? Intent.PRIMARY : Intent.NONE}
                             icon={<Icon icon="paint-pour" />}

@@ -93,7 +93,7 @@ export const HomeMyTasks = () => {
                                 </Menu>
                             }
                         >
-                            <Button size="small" variant="minimal" rightIcon={<Icon icon="chevron-down" />}>
+                            <Button size="small" variant="minimal" endIcon={<Icon icon="chevron-down" />}>
                                 {filterDate === "start" ? translate("Start date") : null}
                                 {filterDate === "do" ? translate("Do date") : null}
                                 {filterDate === "due" ? translate("Due date") : null}
@@ -121,7 +121,7 @@ export const HomeMyTasks = () => {
                                 </Menu>
                             }
                         >
-                            <Button size="small" variant="minimal" rightIcon={<Icon icon="chevron-down" />}>
+                            <Button size="small" variant="minimal" endIcon={<Icon icon="chevron-down" />}>
                                 {filterRange === "today" ? translate("Today") : translate("This week")}
                             </Button>
                         </Popover>

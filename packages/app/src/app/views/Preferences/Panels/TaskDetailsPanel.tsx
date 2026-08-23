@@ -98,7 +98,7 @@ export class TaskDetailsPanel extends React.Component<IPanelInterface> {
                                                 {this.renderAssigned(item)}
                                                 {item && (
                                                     <Button
-                                                        small
+                                                        size="small"
                                                         icon={<Icon icon="trash" />}
                                                         intent={Intent.DANGER}
                                                         onClick={() => this.handleRemoveGrid(itemIndex)}
@@ -141,7 +141,7 @@ export class TaskDetailsPanel extends React.Component<IPanelInterface> {
                                                         >
                                                             {this.renderAssigned(row)}{" "}
                                                             <Button
-                                                                small
+                                                                size="small"
                                                                 icon={<Icon icon="trash" />}
                                                                 intent={Intent.DANGER}
                                                                 onClick={() => this.handleRemoveRow(rowIndex)}

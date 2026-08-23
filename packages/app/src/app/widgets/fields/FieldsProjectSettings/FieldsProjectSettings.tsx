@@ -94,8 +94,8 @@ export const FieldsProjectSettings = ({ disabled }: { disabled?: boolean }) => {
                                                 placement="bottom-end"
                                             >
                                                 <Button
-                                                    small
-                                                    minimal
+                                                    size="small"
+                                                    variant="minimal"
                                                     className="tiny"
                                                     icon={<Icon icon="dots-vertical" size={14} />}
                                                 />

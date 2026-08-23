@@ -217,7 +217,7 @@ const TimeboxViewButton = () => {
                         icon={<Icon icon={BTN_LABELS[scheduledView].icon} />}
                         size="small"
                         variant="minimal"
-                        rightIcon={<Icon icon="chevron-down" />}
+                        endIcon={<Icon icon="chevron-down" />}
                     >
                         {BTN_LABELS[scheduledView].label}
                     </Button>

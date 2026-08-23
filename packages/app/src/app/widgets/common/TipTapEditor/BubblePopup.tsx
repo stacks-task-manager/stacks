@@ -120,16 +120,16 @@ export const BubblePopup = ({ editor }: { editor: Editor }) => {
                             <ButtonGroup>
                                 <Tooltip content="Edit link" placement="top">
                                     <Button
-                                        small
-                                        minimal
+                                        size="small"
+                                        variant="minimal"
                                         icon={<Icon icon="edit-04" />}
                                         onClick={() => setEdit(true)}
                                     />
                                 </Tooltip>
                                 <Tooltip content="Remove link" placement="top">
                                     <Button
-                                        small
-                                        minimal
+                                        size="small"
+                                        variant="minimal"
                                         icon={<Icon icon="trash" />}
                                         onClick={handleRemoveUrl}
                                     />
@@ -140,32 +140,32 @@ export const BubblePopup = ({ editor }: { editor: Editor }) => {
                 ) : (
                     <ButtonGroup>
                         <Button
-                            small
-                            minimal
+                            size="small"
+                            variant="minimal"
                             active={isBold}
                             intent={isBold ? Intent.PRIMARY : Intent.NONE}
                             onClick={() => getSelectionChain(editor).toggleBold().run()}
                             icon={<Icon icon="bold-01" />}
                         />
                         <Button
-                            small
-                            minimal
+                            size="small"
+                            variant="minimal"
                             active={isUnderline}
                             intent={isUnderline ? Intent.PRIMARY : Intent.NONE}
                             onClick={() => getSelectionChain(editor).toggleUnderline().run()}
                             icon={<Icon icon="underline-01" />}
                         />
                         <Button
-                            small
-                            minimal
+                            size="small"
+                            variant="minimal"
                             active={isItalic}
                             intent={isItalic ? Intent.PRIMARY : Intent.NONE}
                             onClick={() => getSelectionChain(editor).toggleItalic().run()}
                             icon={<Icon icon="italic-01" />}
                         />
                         <Button
-                            small
-                            minimal
+                            size="small"
+                            variant="minimal"
                             active={isStrike}
                             intent={isStrike ? Intent.PRIMARY : Intent.NONE}
                             onClick={() => getSelectionChain(editor).toggleStrike().run()}
@@ -176,15 +176,15 @@ export const BubblePopup = ({ editor }: { editor: Editor }) => {
                         {showMark ? (
                             <>
                                 <Button
-                                    minimal
-                                    small
+                                    variant="minimal"
+                                    size="small"
                                     icon={<Icon icon="circle-filled" color={Colors.GOLD5} />}
                                     onClick={() => getSelectionChain(editor).toggleHighlight().run()}
                                 />
 
                                 <Button
-                                    minimal
-                                    small
+                                    variant="minimal"
+                                    size="small"
                                     icon={<Icon icon="circle-filled" color={Colors.GREEN3} />}
                                     onClick={() =>
                                         getSelectionChain(editor)
@@ -193,8 +193,8 @@ export const BubblePopup = ({ editor }: { editor: Editor }) => {
                                     }
                                 />
                                 <Button
-                                    minimal
-                                    small
+                                    variant="minimal"
+                                    size="small"
                                     icon={<Icon icon="circle-filled" color={Colors.BLUE3} />}
                                     onClick={() =>
                                         getSelectionChain(editor)
@@ -203,8 +203,8 @@ export const BubblePopup = ({ editor }: { editor: Editor }) => {
                                     }
                                 />
                                 <Button
-                                    minimal
-                                    small
+                                    variant="minimal"
+                                    size="small"
                                     icon={<Icon icon="circle-filled" color={Colors.VERMILION3} />}
                                     onClick={() =>
                                         getSelectionChain(editor)
@@ -213,8 +213,8 @@ export const BubblePopup = ({ editor }: { editor: Editor }) => {
                                     }
                                 />
                                 <Button
-                                    minimal
-                                    small
+                                    variant="minimal"
+                                    size="small"
                                     icon={<Icon icon="circle-filled" color={Colors.INDIGO3} />}
                                     onClick={() =>
                                         getSelectionChain(editor)
@@ -223,8 +223,8 @@ export const BubblePopup = ({ editor }: { editor: Editor }) => {
                                     }
                                 />
                                 <Button
-                                    minimal
-                                    small
+                                    variant="minimal"
+                                    size="small"
                                     icon={<Icon icon="circle-filled" color={Colors.ORANGE3} />}
                                     onClick={() =>
                                         getSelectionChain(editor)
@@ -233,16 +233,16 @@ export const BubblePopup = ({ editor }: { editor: Editor }) => {
                                     }
                                 />
                                 <Button
-                                    small
-                                    minimal
+                                    size="small"
+                                    variant="minimal"
                                     icon={<Icon icon="x-close" />}
                                     onClick={() => setShowMark(false)}
                                 />
                             </>
                         ) : (
                             <Button
-                                small
-                                minimal
+                                size="small"
+                                variant="minimal"
                                 icon={<Icon icon="roller-brush" />}
                                 onClick={() => setShowMark(true)}
                             />

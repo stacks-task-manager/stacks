@@ -19,8 +19,8 @@ export const TaskDetailsCommentsButton = ({ taskId, count }: { taskId: string; c
                 <AnchorButton
                     {...props}
                     className="has-badge"
-                    small
-                    minimal
+                    size="small"
+                    variant="minimal"
                     icon={<Icon icon="message-chat-square" />}
                     onClick={handleScrollToComments}
                     data-testid="task-details-comments-button"

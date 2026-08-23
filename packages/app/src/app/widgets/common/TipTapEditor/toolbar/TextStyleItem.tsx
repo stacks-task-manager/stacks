@@ -52,8 +52,8 @@ export const TextStyleItem: FunctionComponent<TipTapToolbarItem> = ({
                     minimal
                 >
                     <Button
-                        small
-                        minimal
+                        size="small"
+                        variant="minimal"
                         icon={<Icon icon="type-01" />}
                         intent={isActive ? Intent.PRIMARY : Intent.NONE}
                     />
@@ -65,25 +65,25 @@ export const TextStyleItem: FunctionComponent<TipTapToolbarItem> = ({
     return (
         <>
             <Button
-                minimal
+                variant="minimal"
                 icon={<Icon icon="bold-01" />}
                 intent={isBold ? Intent.PRIMARY : Intent.NONE}
                 onClick={() => getSelectionChain(editor).toggleBold().run()}
             />
             <Button
-                minimal
+                variant="minimal"
                 onClick={() => getSelectionChain(editor).toggleUnderline().run()}
                 intent={isItalic ? Intent.PRIMARY : Intent.NONE}
                 icon={<Icon icon="underline-01" />}
             />
             <Button
-                minimal
+                variant="minimal"
                 onClick={() => getSelectionChain(editor).toggleItalic().run()}
                 intent={isUnderline ? Intent.PRIMARY : Intent.NONE}
                 icon={<Icon icon="italic-01" />}
             />
             <Button
-                minimal
+                variant="minimal"
                 onClick={() => getSelectionChain(editor).toggleStrike().run()}
                 intent={isStrike ? Intent.PRIMARY : Intent.NONE}
                 icon={<Icon icon="strikethrough-01" />}

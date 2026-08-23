@@ -40,8 +40,8 @@ export function TableColumnPicker<T>({
                     renderTarget={({ isOpen, ref, ...tooltipProps }) => (
                         <Button
                             {...tooltipProps}
-                            minimal
-                            small
+                            variant="minimal"
+                            size="small"
                             icon={<Icon icon="settings-04" size={14} />}
                             ref={ref}
                             className="table-menu-button"

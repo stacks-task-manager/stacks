@@ -221,8 +221,8 @@ export const TimeTracker: FunctionComponent<ITimeTrackerProps> = React.memo(
                         {...props}
                         ref={ref}
                         id={id}
-                        minimal
-                        small
+                        variant="minimal"
+                        size="small"
                         icon={<Icon icon="play" />}
                         disabled={disabled}
                         onClick={handleStartTimer}

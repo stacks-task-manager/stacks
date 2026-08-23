@@ -53,7 +53,7 @@ export const AssigneesFilter: FunctionComponent<IAssigneesFilterProps> = ({
             <Button
                 fill
                 icon={<Icon icon="user-add" />}
-                alignText={Alignment.LEFT}
+                alignText={Alignment.END}
                 disabled={disabled}
                 onClick={handleTogglePeopleDialog}
                 data-testid="assignees-filter-button"

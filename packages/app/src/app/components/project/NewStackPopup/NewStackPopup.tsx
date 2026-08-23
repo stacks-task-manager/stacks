@@ -112,7 +112,7 @@ export class NewStackPopup extends React.PureComponent<INewStackPopupProps, INew
             >
                 <Button
                     variant="minimal"
-                    rightIcon="caret-down"
+                    endIcon="caret-down"
                     icon={buttonIcon}
                     data-testid="new-stack-tint-button"
                 >
@@ -136,7 +136,7 @@ export class NewStackPopup extends React.PureComponent<INewStackPopupProps, INew
     };
 
     private handleSaveEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.keyCode === 13 && this.buttonRef) {
+        if (event.key === "Enter" && this.buttonRef) {
             this.buttonRef.click();
         }
     };

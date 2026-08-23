@@ -102,7 +102,7 @@ export const NewTask: FunctionComponent<INewTaskProps> = ({ stackId, isEditing, 
                 <TextArea
                     value={value}
                     autoResize
-                    small
+                    size="small"
                     fill
                     placeholder={translate("Add task")}
                     inputRef={inputRef}
@@ -116,8 +116,8 @@ export const NewTask: FunctionComponent<INewTaskProps> = ({ stackId, isEditing, 
             {!editing && !minimal && (
                 <Button
                     icon={<Icon icon="plus" />}
-                    minimal
-                    small
+                    variant="minimal"
+                    size="small"
                     onClick={() => setEditing(true)}
                     id={stackId}
                     data-testid="new-task-add-button"

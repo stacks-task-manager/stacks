@@ -323,7 +323,7 @@ const PersonEditing: FunctionComponent<IPersonEditingProps> = ({ person, onClose
                                         defaultValue={updatedPerson?.firstName ?? undefined}
                                         id="first-name"
                                         placeholder={translate("First name")}
-                                        large
+                                        size="large"
                                         data-testid="person-details-first-name-input"
                                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                                             update("firstName", e.currentTarget.value)
@@ -339,7 +339,7 @@ const PersonEditing: FunctionComponent<IPersonEditingProps> = ({ person, onClose
                                         defaultValue={updatedPerson?.lastName ?? undefined}
                                         id="last-name"
                                         placeholder={translate("Last name")}
-                                        large
+                                        size="large"
                                         data-testid="person-details-last-name-input"
                                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                                             update("lastName", e.currentTarget.value)
@@ -367,11 +367,10 @@ const PersonEditing: FunctionComponent<IPersonEditingProps> = ({ person, onClose
                         <Row padding={20} gutter={20}>
                             <Col>
                                 <FormGroup
-                                    label={`${translate("Birthday")} (${
-                                        updatedPerson && updatedPerson.birthday
+                                    label={`${translate("Birthday")} (${updatedPerson && updatedPerson.birthday
                                             ? formatDateDiff(updatedPerson.birthday)
                                             : "-"
-                                    })`}
+                                        })`}
                                     labelFor="nickname"
                                     style={{ width: "auto" }}
                                 >
@@ -912,11 +911,11 @@ const PersonRead: FunctionComponent<IPersonProps> = ({ person, onClose, onEdit }
         location.state && location.state.backgroundLocation
             ? location.state.backgroundLocation
             : {
-                  pathname: `/people/person/${person.id}`,
-                  search: "",
-                  hash: "",
-                  state: null,
-              };
+                pathname: `/people/person/${person.id}`,
+                search: "",
+                hash: "",
+                state: null,
+            };
 
     const isAdmin = Boolean(currentUser.admin);
 
@@ -1204,7 +1203,7 @@ const FavoritePersonButton: FunctionComponent<IFavoritePersonButtonProps> = ({ p
 
     const isFavorite = useMemo(() => {
         return favorites.includes(personId);
-    }, [favorites]);
+    }, [favorites, personId]);
 
     return (
         <Tooltip
@@ -1212,8 +1211,8 @@ const FavoritePersonButton: FunctionComponent<IFavoritePersonButtonProps> = ({ p
             placement="bottom"
         >
             <Button
-                small
-                minimal
+                size="small"
+                variant="minimal"
                 id="pd-favorite"
                 icon={
                     <Icon

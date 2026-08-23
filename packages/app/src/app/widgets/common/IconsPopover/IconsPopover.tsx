@@ -17,7 +17,7 @@ export const IconsPopover: FunctionComponent<IIconsPopoverProps> = ({ icon, chil
                 <Tooltip content="No icon">
                     <Button
                         icon="blank"
-                        minimal
+                        variant="minimal"
                         className={Classes.POPOVER_DISMISS}
                         onClick={() => onChange()}
                     />
@@ -25,7 +25,7 @@ export const IconsPopover: FunctionComponent<IIconsPopoverProps> = ({ icon, chil
                 {Object.keys(ICONS).map((i, index) => (
                     <Button
                         icon={ICONS[i as keyof typeof ICONS]}
-                        minimal={icon !== ICONS[i as keyof typeof ICONS]}
+                        variant={icon !== ICONS[i as keyof typeof ICONS] ? "minimal" : undefined}
                         key={index}
                         className={Classes.POPOVER_DISMISS}
                         onClick={() => onChange(ICONS[i as keyof typeof ICONS])}
