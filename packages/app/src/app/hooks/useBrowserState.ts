@@ -86,7 +86,7 @@ export const useBrowserState = (options: UseBrowserStateOptions = {}): BrowserSt
                 onIdleCallbackRef.current?.();
             }
         }, idleTimeout);
-    }, [clearIdleTimer, idleTimeout]);
+    }, [clearIdleTimer, debouncedSetState, idleTimeout]);
 
     /**
      * Records user activity and resumes from the idle state if needed,
@@ -103,7 +103,7 @@ export const useBrowserState = (options: UseBrowserStateOptions = {}): BrowserSt
         }
 
         startIdleTimer();
-    }, [startIdleTimer]);
+    }, [debouncedSetState, startIdleTimer]);
 
     /**
      * Handles tab visibility changes (switch/minimize): marks the user idle when
@@ -128,7 +128,7 @@ export const useBrowserState = (options: UseBrowserStateOptions = {}): BrowserSt
             }
             startIdleTimer();
         }
-    }, [clearIdleTimer, startIdleTimer]);
+    }, [clearIdleTimer, debouncedSetState, startIdleTimer]);
 
     /**
      * Handles window focus, treating it as user activity.
@@ -148,7 +148,7 @@ export const useBrowserState = (options: UseBrowserStateOptions = {}): BrowserSt
             debouncedSetState("idle");
             onIdleCallbackRef.current?.();
         }
-    }, [clearIdleTimer]);
+    }, [clearIdleTimer, debouncedSetState]);
 
     /**
      * Handles page unload/close, immediately setting the state to 'closed'.
@@ -199,16 +199,8 @@ export const useBrowserState = (options: UseBrowserStateOptions = {}): BrowserSt
         handleBeforeUnload,
         startIdleTimer,
         clearIdleTimer,
+        clearDebounceTimer,
     ]);
-
-    // Cleanup on unmount
-    useEffect(() => {
-        return () => {
-            clearDebounceTimer(); // Clear debounce for immediate close state
-            setState("closed");
-            onCloseCallbackRef.current?.();
-        };
-    }, [clearDebounceTimer]);
 
     return state;
 };

@@ -48,7 +48,7 @@ export const ConnectionStatus = () => {
         return () => {
             unsubscribe();
         };
-    }, []);
+    }, [isConnected]);
 
     const browserState = useBrowserState();
 

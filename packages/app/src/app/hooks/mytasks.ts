@@ -61,22 +61,24 @@ export const usePeriodFilteredMyTasks = (dateFrom: Date, dateTo: Date) => {
 export const useHomeMyTasks = () => {
     const meId = PeopleStore.use(state => state.me, shallowEqual);
     const [filter, setFilter] = useStorage<string>("home-my-tasks-filter", false, "due-thisWeek");
-    const filters = { ...defaultFilters, me: true };
+    const filters = useMemo(() => {
+        const nextFilters = { ...defaultFilters, me: true };
+        const [filterDate, filterRange] = filter.split("-");
 
-    const filterDate = filter.split("-").at(0);
-    const filterRange = filter.split("-").at(1);
+        switch (filterDate) {
+            case "start":
+                nextFilters.startDate = filterRange;
+                break;
+            case "do":
+                nextFilters.doDate = filterRange;
+                break;
+            case "due":
+                nextFilters.dueDate = filterRange;
+                break;
+        }
 
-    switch (filterDate) {
-        case "start":
-            filters.startDate = filterRange;
-            break;
-        case "do":
-            filters.doDate = filterRange;
-            break;
-        case "due":
-            filters.dueDate = filterRange;
-            break;
-    }
+        return nextFilters;
+    }, [filter]);
 
     const preds = useMemo(() => buildTaskPredicates(filters, meId), [filters, meId]);
 

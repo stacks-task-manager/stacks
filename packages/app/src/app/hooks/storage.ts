@@ -24,10 +24,13 @@ export const useStorage = <T>(
     const storedValue = Storage.get(key, parse, defaultValue, prefix);
     const [value, setValue] = useState<T>(storedValue ?? defaultValue);
 
-    const setTheValue = useCallback((newValue: T) => {
-        setValue(newValue);
-        Storage.set(key, newValue, prefix);
-    }, []);
+    const setTheValue = useCallback(
+        (newValue: T) => {
+            setValue(newValue);
+            Storage.set(key, newValue, prefix);
+        },
+        [key, prefix]
+    );
 
     return [value, setTheValue];
 };

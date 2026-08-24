@@ -2,73 +2,15 @@
 import { translate } from "@stacks/translations";
 import { Classes, Colors, Tag } from "@blueprintjs/core";
 import classNames from "classnames";
-import { endOfDay, startOfDay } from "date-fns";
 import RcGantt from "rc-gantt";
 import React, { useMemo } from "react";
 import { useLocation } from "react-router-dom";
 
-import { IStack, ITask } from "@stacks/types";
 import { BlankSlate, Grid, Icon, Row } from "app/components/common";
 import { useFilteredProjectTasks, useNav, useProjectStacks } from "app/hooks";
 import { TasksActions } from "app/store/actions";
 import { PreferencesStore } from "app/store/preferences";
-
-interface GanttTask {
-    id: string;
-    name: string;
-    startDate: Date | null;
-    endDate: Date | null;
-    content?: string;
-    parent: string | null;
-    stack?: IStack;
-    project: string;
-    subtasksCount?: number;
-    children: GanttTask[];
-    collapsed?: boolean;
-}
-
-function convertToGantt(tasks: ITask[], stacks: IStack[], parent?: string): GanttTask[] {
-    const stacksById: Record<string, IStack> = {};
-    for (const stack of stacks) {
-        stacksById[stack.id] = stack;
-    }
-
-    const root: GanttTask[] = [];
-
-    for (const task of tasks) {
-        if (parent && task.parent !== parent) continue;
-        if (!parent && task.parent) continue;
-
-        const startDate = task.startdate ? task.startdate : task.duedate ? startOfDay(task.duedate) : null;
-        const endDate = task.duedate
-            ? task.duedate
-            : task.startdate
-            ? endOfDay(new Date(task.startdate))
-            : null;
-
-        const item: GanttTask = {
-            name: task.title,
-            id: task.id,
-            startDate,
-            endDate,
-            parent: task.parent,
-            stack: stacksById[task.stack],
-            project: task.project,
-            children: convertToGantt(tasks, stacks, task.id),
-            collapsed: false,
-        };
-
-        if (item.children.length) {
-            item.children = item.children.sort(
-                (a, b) => task.subtasksOrder.indexOf(a.id) - task.subtasksOrder.indexOf(b.id)
-            );
-        }
-
-        root.push(item);
-    }
-
-    return root.sort((a, b) => a.name.localeCompare(b.name));
-}
+import { convertToGantt, GanttTask } from "./ganttTasks";
 
 export const Gantt = () => {
     const tasks = useFilteredProjectTasks();

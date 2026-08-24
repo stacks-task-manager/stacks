@@ -31,6 +31,7 @@ import { PeopleStore } from "app/store/people";
 import { IFilters } from "app/store/projectFilters";
 import { TasksStore } from "app/store/tasks";
 import { isAfterToday, isOverdue } from "app/utils/date";
+import { sortByIdOrder } from "app/utils/taskOrder";
 import { TableStore } from "app/views/Project/Table/store";
 import { useCurrentProject } from "./project";
 import { useProjectFilters } from "./projectFilters";
@@ -276,7 +277,7 @@ export const useSortTaskIds = (tasks: string[], stackId: string) => {
     const stack = useStack(stackId);
     return useMemo(() => {
         const tasksOrder = stack?.tasksOrder || [];
-        return [...tasks].sort((a, b) => tasksOrder.indexOf(a) - tasksOrder.indexOf(b));
+        return sortByIdOrder(tasks, tasksOrder, taskId => taskId);
     }, [tasks, stack?.tasksOrder]);
 };
 
@@ -290,7 +291,7 @@ export const useSortTask = (tasks: ITask[], stackId: string) => {
     const stack = useStack(stackId);
     return useMemo(() => {
         const tasksOrder = stack?.tasksOrder || [];
-        return [...tasks].sort((a, b) => tasksOrder.indexOf(a.id) - tasksOrder.indexOf(b.id));
+        return sortByIdOrder(tasks, tasksOrder, task => task.id);
     }, [tasks, stack?.tasksOrder]);
 };
 
@@ -692,9 +693,11 @@ export const useGrouppedProjectTasks = () => {
             let index = 0;
             for (const stack of stacks) {
                 const tasksOrder = stack?.tasksOrder || [];
-                const stackTasks = tasks
-                    .filter(task => task.stack === stack.id)
-                    .sort((a, b) => tasksOrder.indexOf(a.id) - tasksOrder.indexOf(b.id));
+                const stackTasks = sortByIdOrder(
+                    tasks.filter(task => task.stack === stack.id),
+                    tasksOrder,
+                    task => task.id
+                );
 
                 group.push({
                     groupId: stack.id,

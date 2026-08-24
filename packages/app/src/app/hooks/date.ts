@@ -2,7 +2,6 @@
 /**
  * Date hooks and selectors.
  */
-import { useMemo } from "react";
 import { usePreferences } from "./preferences";
 import { is24Hours } from "../utils/date";
 
@@ -11,9 +10,6 @@ import { is24Hours } from "../utils/date";
  * @returns True if 24-hour time format is active, otherwise false.
  */
 export const use24Hours = () => {
-    const { dateLocale } = usePreferences(["dateLocale"]);
-
-    return useMemo(() => {
-        return is24Hours();
-    }, [dateLocale]);
+    usePreferences(["dateLocale"]);
+    return is24Hours();
 };

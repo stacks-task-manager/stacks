@@ -8,8 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 import { APPICONS, INotification, NOTIFICATION_RECORD_TYPE } from "@stacks/types";
 import { BlankSlate, Col, Grid, Icon, IconPill, Row, Scroller } from "app/components/common";
-import { useFilterQuerySync, useHasFilters, useInboxFilterMerge, useNotifications } from "app/hooks";
-import { defaultFilters } from "app/store/projectFilters";
+import { useHasFilters, useNotifications } from "app/hooks";
 import { NotificationsActions } from "app/store/actions";
 import { toggleNewTask } from "app/store/global";
 import { AppView, AppViewContent, InboxToolbar, TaskRowSkeleton } from "app/widgets";
