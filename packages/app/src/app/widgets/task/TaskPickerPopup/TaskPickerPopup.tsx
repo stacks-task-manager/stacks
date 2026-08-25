@@ -58,7 +58,7 @@ export const TaskPickerPopup: FunctionComponent<ITaskPickerPopupProps> = ({
             <Button
                 fill
                 endIcon={<Icon icon="chevron-selector-vertical" />}
-                alignText={Alignment.END}
+                alignText={Alignment.START}
                 disabled={projectId == null}
             >
                 {task ? stripMd(task.title).substring(0, 29) : " "}

@@ -114,7 +114,7 @@ export const PersonTimesheet = () => {
             if (!acc[projectId]) {
                 acc[projectId] = {
                     id: projectId,
-                    title: timelog.documentInfo.title,
+                    title: timelog.documentInfo?.title ?? projectId,
                     tasks: {},
                     total: 0,
                     status: TIMELOG_STATUS.PENDING,
@@ -124,7 +124,7 @@ export const PersonTimesheet = () => {
             if (!acc[projectId].tasks[taskId]) {
                 acc[projectId].tasks[taskId] = {
                     id: taskId,
-                    title: timelog.taskInfo.title,
+                    title: timelog.taskInfo?.title ?? taskId,
                     timelogs: [],
                     total: 0,
                     status: TIMELOG_STATUS.PENDING,
