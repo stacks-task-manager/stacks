@@ -61,6 +61,16 @@ test.describe("People and Companies", () => {
         await people.openContacts();
     });
 
+    test("Should switch approval grouping", async () => {
+        await people.openApprovals();
+
+        await people.selectApprovalGrouping("project");
+        await expect(people.approvalsProjectGroupingButton).toHaveClass(/bp6-active/);
+
+        await people.selectApprovalGrouping("person");
+        await expect(people.approvalsPersonGroupingButton).toHaveClass(/bp6-active/);
+    });
+
     test("Should create and update a person", async () => {
         const suffix = Date.now();
         const firstName = `E2E${suffix}`;

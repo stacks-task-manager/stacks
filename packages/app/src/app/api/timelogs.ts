@@ -7,6 +7,7 @@ import request from "./request";
 
 /** Shared filter fields for timelog queries and actions. */
 interface TimelogsFilterBaseParams {
+    person?: string;
     project?: string;
     task?: string;
     start?: string;

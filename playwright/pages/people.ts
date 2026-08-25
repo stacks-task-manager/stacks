@@ -21,6 +21,12 @@ class People extends Base {
     public approvalsPreviousMonthButton: Locator;
     public approvalsNextMonthButton: Locator;
     public approvalsCurrentMonthButton: Locator;
+    public approvalsPersonGroupingButton: Locator;
+    public approvalsProjectGroupingButton: Locator;
+    public approvalPersonGroups: Locator;
+    public approvalProjectGroups: Locator;
+    public approvalPersonToggles: Locator;
+    public approvalProjectToggles: Locator;
     public searchInput: Locator;
     public groupingButton: Locator;
     public groupingMenu: Locator;
@@ -61,6 +67,12 @@ class People extends Base {
         this.approvalsPreviousMonthButton = page.getByTestId("people-approvals-previous-month-button");
         this.approvalsNextMonthButton = page.getByTestId("people-approvals-next-month-button");
         this.approvalsCurrentMonthButton = page.getByTestId("people-approvals-current-month-button");
+        this.approvalsPersonGroupingButton = page.getByTestId("people-approvals-grouping-person");
+        this.approvalsProjectGroupingButton = page.getByTestId("people-approvals-grouping-project");
+        this.approvalPersonGroups = page.getByTestId("people-approvals-person-group");
+        this.approvalProjectGroups = page.getByTestId("people-approvals-project-group");
+        this.approvalPersonToggles = page.getByTestId("people-approvals-person-toggle");
+        this.approvalProjectToggles = page.getByTestId("people-approvals-project-toggle");
         this.searchInput = page.getByTestId("people-search-input");
         this.groupingButton = page.getByTestId("people-grouping-button");
         this.groupingMenu = page.getByTestId("people-grouping-menu");
@@ -163,6 +175,12 @@ class People extends Base {
         await this.approvalsCurrentMonthButton.click();
         await this.approvalsNextMonthButton.click();
         await this.approvalsCurrentMonthButton.click();
+    }
+
+    public async selectApprovalGrouping(grouping: "person" | "project") {
+        const button =
+            grouping === "person" ? this.approvalsPersonGroupingButton : this.approvalsProjectGroupingButton;
+        await button.click();
     }
 
     public async search(term: string) {

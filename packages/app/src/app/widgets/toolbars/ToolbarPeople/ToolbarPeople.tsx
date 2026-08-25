@@ -10,7 +10,6 @@ import {
     MenuItem,
     Popover,
     ResizeSensor,
-    SegmentedControl,
     Tooltip,
 } from "@blueprintjs/core";
 import { translate } from "@stacks/translations";
@@ -32,7 +31,7 @@ import { useCanAccess, useMousetrap, usePeopleHasFilters, useViewType } from "ap
 import { PeopleActions, PersonTimesheetActions, TimesheetApprovalActions } from "app/store/actions";
 import { PeopleStore, PeopleViewType } from "app/store/people";
 import { PersonTimesheetStore } from "app/store/personTimesheet";
-import { ApprovalGroupBy, TimesheetApprovalStore } from "app/store/timesheetApprovals";
+import { TimesheetApprovalStore } from "app/store/timesheetApprovals";
 import dialog from "app/utils/dialog";
 import { BetaButton, ImportDialog, ImportSelectedFields, TagsStatusesManager } from "app/widgets/common";
 import { NewPersonPopover, TIMELOG_STATUS_MAP } from "app/widgets/people";
@@ -500,22 +499,24 @@ const ApprovalFilters = () => {
 
     return (
         <>
-            <SegmentedControl
-                options={[
-                    {
-                        label: "Person",
-                        value: "person",
-                        icon: <Icon icon={APPICONS.PERSON} />,
-                    },
-                    {
-                        label: "Project",
-                        value: "project",
-                        icon: <Icon icon={APPICONS.PROJECT} />,
-                    },
-                ]}
-                value={groupBy}
-                onValueChange={group => TimesheetApprovalActions.setGroupBy(group as ApprovalGroupBy)}
-            />
+            <ButtonGroup data-testid="people-approvals-grouping">
+                <Button
+                    data-testid="people-approvals-grouping-person"
+                    active={groupBy === "person"}
+                    icon={<Icon icon={APPICONS.PERSON} />}
+                    onClick={() => TimesheetApprovalActions.setGroupBy("person")}
+                >
+                    {translate("Person")}
+                </Button>
+                <Button
+                    data-testid="people-approvals-grouping-project"
+                    active={groupBy === "project"}
+                    icon={<Icon icon={APPICONS.PROJECT} />}
+                    onClick={() => TimesheetApprovalActions.setGroupBy("project")}
+                >
+                    {translate("Project")}
+                </Button>
+            </ButtonGroup>
 
             <span className="section-toolbar-divider" />
 

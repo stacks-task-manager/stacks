@@ -171,7 +171,7 @@ export const PersonTimesheet = () => {
         });
 
         return groupedTimelogs;
-    }, [timelogs, interval]);
+    }, [timelogs]);
 
     useEffect(() => {
         (async () => {
@@ -598,7 +598,7 @@ const DayPopupContent: FunctionComponent<DayPopupContent> = ({ project, task, da
                                 <Grid gap={0}>
                                     <Row justify="left" gutter={5}>
                                         {detailed
-                                            ? stripMd(timelog.taskInfo.title)
+                                            ? stripMd(timelog.taskInfo?.title ?? timelog.task)
                                             : format(timelog.date, "LLL d, yyyy")}
                                         {timelog.status === TIMELOG_STATUS.REJECTED &&
                                             timelog.rejectReason?.length && (

@@ -1,6 +1,5 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { translate } from "@stacks/translations";
-import xor from "lodash/xor";
 import React, { FunctionComponent, useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
 
@@ -33,43 +32,57 @@ import {
     TableSection,
     TableSectionCell,
 } from "app/components/common";
+import { TaskSpentProgress } from "app/components/project";
 import { usePerson, useTimelogsInterval } from "app/hooks";
+import { shallowEqual } from "app/hooks/store";
+import { TimesheetApprovalActions } from "app/store/actions";
+import { TimesheetApprovalStore } from "app/store/timesheetApprovals";
 import { durationToHours, durationToWorkingDays, formatStringDuration } from "app/utils/date";
 import { AppViewContent, TIMELOG_STATUS_MAP, TimelogStatusIcon } from "app/widgets";
-import { TimesheetApprovalStore } from "app/store/timesheetApprovals";
-import { TimesheetApprovalActions } from "app/store/actions";
-import uniq from "lodash/uniq";
-import { TaskSpentProgress } from "app/components/project";
-import { shallowEqual } from "app/hooks/store";
 
-interface GroupedTimelogs {
-    [personId: string]: {
-        totals: number;
-        projects: {
-            [projectId: string]: {
-                title: string;
-                estimate: number;
-                tasks: {
-                    [taskId: string]: {
-                        title: string;
-                        timelogs: ITimeLog[];
-                        total: number;
-                        estimate: number;
-                        done: boolean;
-                    };
-                };
-                total: number;
-            };
-        };
-    };
+interface TaskGroup {
+    title: string;
+    timelogs: ITimeLog[];
+    total: number;
+    estimate: number;
 }
+
+interface PersonGroup {
+    total: number;
+    projects: Record<string, ProjectGroup>;
+    tasks: Record<string, TaskGroup>;
+}
+
+interface ProjectGroup {
+    title: string;
+    total: number;
+    estimate: number;
+    tasks: Record<string, TaskGroup>;
+    people: Record<string, PersonGroup>;
+}
+
+type GroupedByPerson = Record<string, PersonGroup>;
+type GroupedByProject = Record<string, ProjectGroup>;
+
+const toggle = (ids: string[], id: string) =>
+    ids.includes(id) ? ids.filter(value => value !== id) : [...ids, id];
+
+const addTimelogToTask = (tasks: Record<string, TaskGroup>, timelog: ITimeLog) => {
+    if (!tasks[timelog.task]) {
+        tasks[timelog.task] = {
+            title: timelog.taskInfo?.title ?? timelog.task,
+            timelogs: [],
+            total: 0,
+            estimate: timelog.taskInfo?.estimate ?? 0,
+        };
+    }
+    tasks[timelog.task].timelogs.push(timelog);
+    tasks[timelog.task].total += timelog.duration;
+};
 
 export const PeopleApprovals = () => {
     const { interval, groupBy } = TimesheetApprovalStore.use(
-        state => ({
-            interval: state.interval,
-            groupBy: state.groupBy,
-        }),
+        state => ({ interval: state.interval, groupBy: state.groupBy }),
         shallowEqual
     );
     const [visiblePeople, setVisiblePeople] = useState<string[]>([]);
@@ -81,60 +94,55 @@ export const PeopleApprovals = () => {
         TimesheetApprovalActions.load();
     }, []);
 
-    const groupByPerson = useMemo(() => {
-        return timelogs.reduce((acc, cur) => {
-            if (!acc[cur.person]) {
-                acc[cur.person] = {
-                    totals: 0,
-                    projects: {},
-                };
-            }
-            if (!acc[cur.person].projects[cur.project]) {
-                acc[cur.person].projects[cur.project] = {
-                    title: cur.documentInfo.title,
-                    tasks: {},
-                    total: 0,
-                    estimate: cur.projectInfo.estimate ?? 0,
-                };
-            }
-            if (!acc[cur.person].projects[cur.project].tasks[cur.task]) {
-                acc[cur.person].projects[cur.project].tasks[cur.task] = {
-                    title: cur.taskInfo.title,
-                    timelogs: [],
-                    total: 0,
-                    estimate: cur.taskInfo.estimate ?? 0,
-                    done: false,
-                };
-            }
-            acc[cur.person].projects[cur.project].tasks[cur.task].timelogs.push(cur);
-            acc[cur.person].totals += cur.duration;
-            acc[cur.person].projects[cur.project].total += cur.duration;
-            acc[cur.person].projects[cur.project].tasks[cur.task].total += cur.duration;
+    const groupedByPerson = useMemo(
+        () =>
+            timelogs.reduce((groups, timelog) => {
+                if (!groups[timelog.person]) groups[timelog.person] = { total: 0, projects: {}, tasks: {} };
+                const person = groups[timelog.person];
+                if (!person.projects[timelog.project]) {
+                    person.projects[timelog.project] = {
+                        title: timelog.documentInfo?.title ?? timelog.project,
+                        total: 0,
+                        estimate: timelog.projectInfo?.estimate ?? 0,
+                        tasks: {},
+                        people: {},
+                    };
+                }
+                person.total += timelog.duration;
+                person.projects[timelog.project].total += timelog.duration;
+                addTimelogToTask(person.projects[timelog.project].tasks, timelog);
+                return groups;
+            }, {} as GroupedByPerson),
+        [timelogs]
+    );
 
-            return acc;
-        }, {} as GroupedTimelogs);
-    }, [timelogs]);
+    const groupedByProject = useMemo(
+        () =>
+            timelogs.reduce((groups, timelog) => {
+                if (!groups[timelog.project]) {
+                    groups[timelog.project] = {
+                        title: timelog.documentInfo?.title ?? timelog.project,
+                        total: 0,
+                        estimate: timelog.projectInfo?.estimate ?? 0,
+                        tasks: {},
+                        people: {},
+                    };
+                }
+                const project = groups[timelog.project];
+                if (!project.people[timelog.person]) {
+                    project.people[timelog.person] = { total: 0, projects: {}, tasks: {} };
+                }
+                project.total += timelog.duration;
+                project.people[timelog.person].total += timelog.duration;
+                addTimelogToTask(project.people[timelog.person].tasks, timelog);
+                return groups;
+            }, {} as GroupedByProject),
+        [timelogs]
+    );
 
-    const handleTogglePerson = (personId: string) => {
-        setVisiblePeople(xor(visiblePeople, [personId]));
-    };
-    const handleToggleAllProjects = (personId: string) => {
-        const projects = Object.keys(groupByPerson[personId].projects);
-        // if (visibleProjects.some(projectId => projects.includes(projectId))) {
-        //     setVisibleProjects(visibleProjects.filter(projectId => !projects.includes(projectId)));
-        // } else {
-        //     setVisibleProjects(visibleProjects.concat(projects));
-        // }
-
-        setVisibleProjects(uniq(visibleProjects.concat(projects)));
-        setVisiblePeople(uniq(visiblePeople.concat([personId])));
-    };
-    const handleToggleProject = (projectId: string) => {
-        setVisibleProjects(xor(visibleProjects, [projectId]));
-    };
-    const handleToggleTask = (taskId: string) => {
-        setVisibleTasks(xor(visibleTasks, [taskId]));
-    };
+    const handleTogglePerson = (personId: string) => setVisiblePeople(ids => toggle(ids, personId));
+    const handleToggleProject = (projectId: string) => setVisibleProjects(ids => toggle(ids, projectId));
+    const handleToggleTask = (taskId: string) => setVisibleTasks(ids => toggle(ids, taskId));
 
     return (
         <AppViewContent padded relative data-testid="people-approvals-view">
@@ -142,77 +150,73 @@ export const PeopleApprovals = () => {
                 {!isLoading && timelogs.length > 0 && (
                     <Table sticky>
                         <ApprovalHeader />
-                        {Object.keys(groupByPerson).map(personId => (
-                            <React.Fragment key={personId}>
-                                <PersonSection
-                                    userId={personId}
-                                    total={groupByPerson[personId].totals}
-                                    isOpen={visiblePeople.includes(personId)}
-                                    onToggle={() => handleTogglePerson(personId)}
-                                    onToggleAll={() => handleToggleAllProjects(personId)}
-                                />
-                                <TableBody>
-                                    {visiblePeople.includes(personId) &&
-                                        Object.keys(groupByPerson[personId].projects).map(projectId => (
-                                            <React.Fragment key={`project-${projectId}`}>
-                                                {/* Project Header Row */}
-                                                <ProjectHeaderRow
-                                                    project={projectId}
-                                                    title={groupByPerson[personId].projects[projectId].title}
-                                                    total={groupByPerson[personId].projects[projectId].total}
-                                                    estimate={
-                                                        groupByPerson[personId].projects[projectId].estimate
-                                                    }
-                                                    isOpen={visibleProjects.includes(projectId)}
-                                                    onToggle={handleToggleProject}
-                                                />
-
-                                                {visibleProjects.includes(projectId) &&
-                                                    Object.keys(
-                                                        groupByPerson[personId].projects[projectId].tasks
-                                                    ).map(taskId => (
-                                                        <React.Fragment key={`task-${taskId}`}>
-                                                            {/* Task Header Row */}
-                                                            <TaskHeaderRow
-                                                                task={taskId}
-                                                                title={
-                                                                    groupByPerson[personId].projects[
-                                                                        projectId
-                                                                    ].tasks[taskId].title
-                                                                }
-                                                                total={
-                                                                    groupByPerson[personId].projects[
-                                                                        projectId
-                                                                    ].tasks[taskId].total
-                                                                }
-                                                                estimate={
-                                                                    groupByPerson[personId].projects[
-                                                                        projectId
-                                                                    ].tasks[taskId].estimate
-                                                                }
-                                                                isOpen={visibleTasks.includes(taskId)}
-                                                                onToggle={handleToggleTask}
-                                                            />
-
-                                                            {/* Timelog Rows */}
-                                                            {visibleTasks.includes(taskId) &&
-                                                                groupByPerson[personId].projects[
-                                                                    projectId
-                                                                ].tasks[taskId].timelogs.map(
-                                                                    (timelog: ITimeLog) => (
-                                                                        <TimelogRow
-                                                                            key={timelog.id}
-                                                                            timelog={timelog}
-                                                                        />
-                                                                    )
-                                                                )}
-                                                        </React.Fragment>
-                                                    ))}
-                                            </React.Fragment>
-                                        ))}
-                                </TableBody>
-                            </React.Fragment>
-                        ))}
+                        {groupBy === "person"
+                            ? Object.entries(groupedByPerson).map(([personId, person]) => (
+                                  <React.Fragment key={personId}>
+                                      <PersonSection
+                                          userId={personId}
+                                          total={person.total}
+                                          isOpen={visiblePeople.includes(personId)}
+                                          onToggle={() => handleTogglePerson(personId)}
+                                      />
+                                      <TableBody>
+                                          {visiblePeople.includes(personId) &&
+                                              Object.entries(person.projects).map(([projectId, project]) => (
+                                                  <React.Fragment key={projectId}>
+                                                      <ProjectHeaderRow
+                                                          project={projectId}
+                                                          title={project.title}
+                                                          total={project.total}
+                                                          estimate={project.estimate}
+                                                          isOpen={visibleProjects.includes(projectId)}
+                                                          onToggle={handleToggleProject}
+                                                      />
+                                                      {visibleProjects.includes(projectId) && (
+                                                          <TaskRows
+                                                              tasks={project.tasks}
+                                                              visibleTasks={visibleTasks}
+                                                              onToggleTask={handleToggleTask}
+                                                          />
+                                                      )}
+                                                  </React.Fragment>
+                                              ))}
+                                      </TableBody>
+                                  </React.Fragment>
+                              ))
+                            : Object.entries(groupedByProject).map(([projectId, project]) => (
+                                  <TableBody key={projectId}>
+                                      <ProjectHeaderRow
+                                          project={projectId}
+                                          title={project.title}
+                                          total={project.total}
+                                          estimate={project.estimate}
+                                          isOpen={visibleProjects.includes(projectId)}
+                                          onToggle={handleToggleProject}
+                                      />
+                                      {visibleProjects.includes(projectId) &&
+                                          Object.entries(project.people).map(([personId, person]) => {
+                                              const personKey = `${projectId}:${personId}`;
+                                              return (
+                                                  <React.Fragment key={personKey}>
+                                                      <PersonHeaderRow
+                                                          personId={personId}
+                                                          projectId={projectId}
+                                                          total={person.total}
+                                                          isOpen={visiblePeople.includes(personKey)}
+                                                          onToggle={() => handleTogglePerson(personKey)}
+                                                      />
+                                                      {visiblePeople.includes(personKey) && (
+                                                          <TaskRows
+                                                              tasks={person.tasks}
+                                                              visibleTasks={visibleTasks}
+                                                              onToggleTask={handleToggleTask}
+                                                          />
+                                                      )}
+                                                  </React.Fragment>
+                                              );
+                                          })}
+                                  </TableBody>
+                              ))}
                     </Table>
                 )}
 
@@ -222,22 +226,22 @@ export const PeopleApprovals = () => {
                             icon="calendar-view"
                             title={
                                 <Grid gap={10} align="center">
-                                    <div>No timelogs need review in the current interval:</div>
+                                    <div>{translate("No timelogs for the current interval")}</div>
                                     <Tag minimal size="large">
                                         {format(interval.at(0) ?? new Date(), "PP")}
                                     </Tag>
                                 </Grid>
                             }
-                            description="Once people will submit their timelogs for approval, they will appear here."
+                            description={translate("Timelogs awaiting approval will appear here")}
                         />
                     </Grid>
                 )}
 
                 {isLoading && (
                     <Grid vertical gap={10}>
-                        {Array.from({ length: 10 }, (v, i) => i).map((a, i) => {
-                            return <div key={i} className={Classes.SKELETON} style={{ height: 50 }} />;
-                        })}
+                        {Array.from({ length: 10 }, (_, index) => (
+                            <div key={index} className={Classes.SKELETON} style={{ height: 50 }} />
+                        ))}
                     </Grid>
                 )}
             </div>
@@ -245,19 +249,17 @@ export const PeopleApprovals = () => {
     );
 };
 
-const ApprovalHeader = () => {
-    return (
-        <TableHead>
-            <TableHeaderCell name="project" title="Project/Task/Date" resizable />
-            <TableHeaderCell name="description" title="Description" />
-            <TableHeaderCell name="billable" title="Billable" width={100} />
-            <TableHeaderCell name="billed" title="Billed" width={100} />
-            <TableHeaderCell name="status" title="Status" width={100} />
-            <TableHeaderCell name="time" title="Time" align="right" />
-            <TableHeaderCell name="actions" title="Actions" align="right" width={100} />
-        </TableHead>
-    );
-};
+const ApprovalHeader = () => (
+    <TableHead>
+        <TableHeaderCell name="project" title={translate("Project Task Date")} resizable />
+        <TableHeaderCell name="description" title={translate("Description")} />
+        <TableHeaderCell name="billable" title={translate("Billable")} width={100} />
+        <TableHeaderCell name="billed" title={translate("Billed")} width={100} />
+        <TableHeaderCell name="status" title={translate("Status")} width={100} />
+        <TableHeaderCell name="time" title={translate("Time")} align="right" />
+        <TableHeaderCell name="actions" title={translate("Actions")} align="right" width={100} />
+    </TableHead>
+);
 
 interface ProjectHeaderRowProps {
     project: string;
@@ -267,6 +269,7 @@ interface ProjectHeaderRowProps {
     isOpen?: boolean;
     onToggle: (projectId: string) => void;
 }
+
 const ProjectHeaderRow: FunctionComponent<ProjectHeaderRowProps> = ({
     project,
     title,
@@ -274,34 +277,108 @@ const ProjectHeaderRow: FunctionComponent<ProjectHeaderRowProps> = ({
     estimate,
     isOpen,
     onToggle,
+}) => (
+    <tr data-testid="people-approvals-project-group">
+        <TableBodyCell span={2}>
+            <Icon icon={APPICONS.PROJECT} />
+            <strong>{title}</strong>
+            <Button
+                data-testid="people-approvals-project-toggle"
+                icon={<Icon icon={isOpen ? "chevron-up" : "chevron-down"} />}
+                variant="minimal"
+                size="small"
+                onClick={() => onToggle(project)}
+            />
+        </TableBodyCell>
+        <TableBodyCell span={3}>
+            <TaskSpentProgress estimated={estimate} spent={total} fill />
+        </TableBodyCell>
+        <TableBodyCell align="right">
+            <TotalTag total={total} intent={Intent.SUCCESS} />
+        </TableBodyCell>
+        <TableBodyCell align="right" paddingLeft={0}>
+            <ApproveButtons
+                onApprove={() => TimesheetApprovalActions.approve({ project })}
+                onReject={reason => TimesheetApprovalActions.reject({ project }, reason)}
+            />
+        </TableBodyCell>
+    </tr>
+);
+
+const PersonHeaderRow = ({
+    personId,
+    projectId,
+    total,
+    isOpen,
+    onToggle,
+}: {
+    personId: string;
+    projectId: string;
+    total: number;
+    isOpen: boolean;
+    onToggle: () => void;
 }) => {
+    const { person } = usePerson(personId);
     return (
-        <tr>
+        <tr data-testid="people-approvals-person-group">
             <TableBodyCell span={2}>
-                <Icon icon={APPICONS.PROJECT} />
-                <strong>{title}</strong>
-                <Button
-                    icon={<Icon icon={isOpen ? "chevron-up" : "chevron-down"} />}
-                    variant="minimal"
-                    size="small"
-                    onClick={() => onToggle(project)}
-                />
+                <Row style={{ marginLeft: 8 }} align="center" gutter={5} justify="left">
+                    <Icon icon="corner-down-right" />
+                    {person && <Avatar person={person} />}
+                    <strong>{person ? `${person.firstName} ${person.lastName}` : personId}</strong>
+                    <Button
+                        data-testid="people-approvals-person-toggle"
+                        icon={<Icon icon={isOpen ? "chevron-up" : "chevron-down"} />}
+                        variant="minimal"
+                        size="small"
+                        onClick={onToggle}
+                    />
+                </Row>
             </TableBodyCell>
-            <TableBodyCell span={3}>
-                <TaskSpentProgress estimated={estimate} spent={total} fill />
-            </TableBodyCell>
+            <TableBodyCell span={3} />
             <TableBodyCell align="right">
-                <TotalTag total={total} intent={Intent.SUCCESS} />
+                <TotalTag total={total} />
             </TableBodyCell>
             <TableBodyCell align="right" paddingLeft={0}>
                 <ApproveButtons
-                    onApprove={() => TimesheetApprovalActions.approve({ project })}
-                    onReject={reason => TimesheetApprovalActions.reject({ project }, reason)}
+                    onApprove={() =>
+                        TimesheetApprovalActions.approve({ project: projectId, person: personId })
+                    }
+                    onReject={reason =>
+                        TimesheetApprovalActions.reject({ project: projectId, person: personId }, reason)
+                    }
                 />
             </TableBodyCell>
         </tr>
     );
 };
+
+const TaskRows = ({
+    tasks,
+    visibleTasks,
+    onToggleTask,
+}: {
+    tasks: Record<string, TaskGroup>;
+    visibleTasks: string[];
+    onToggleTask: (taskId: string) => void;
+}) => (
+    <>
+        {Object.entries(tasks).map(([taskId, task]) => (
+            <React.Fragment key={taskId}>
+                <TaskHeaderRow
+                    task={taskId}
+                    title={task.title}
+                    total={task.total}
+                    estimate={task.estimate}
+                    isOpen={visibleTasks.includes(taskId)}
+                    onToggle={onToggleTask}
+                />
+                {visibleTasks.includes(taskId) &&
+                    task.timelogs.map(timelog => <TimelogRow key={timelog.id} timelog={timelog} />)}
+            </React.Fragment>
+        ))}
+    </>
+);
 
 interface TaskHeaderRowProps {
     task: string;
@@ -311,6 +388,7 @@ interface TaskHeaderRowProps {
     isOpen?: boolean;
     onToggle: (taskId: string) => void;
 }
+
 const TaskHeaderRow: FunctionComponent<TaskHeaderRowProps> = ({
     task,
     title,
@@ -318,94 +396,88 @@ const TaskHeaderRow: FunctionComponent<TaskHeaderRowProps> = ({
     estimate,
     isOpen,
     onToggle,
-}) => {
-    return (
-        <tr>
-            <TableBodyCell span={2}>
-                <Row style={{ marginLeft: 8 }} align="center" gutter={5} justify="left">
-                    <Icon icon="corner-down-right" />
-                    <Icon icon={APPICONS.TASK} />
-                    {title}
-                    <Button
-                        icon={<Icon icon={isOpen ? "chevron-up" : "chevron-down"} />}
-                        variant="minimal"
-                        size="small"
-                        onClick={() => onToggle(task)}
-                    />
-                </Row>
-            </TableBodyCell>
-            <TableBodyCell span={3}>
-                <TaskSpentProgress estimated={estimate} spent={total} fill />
-            </TableBodyCell>
-            <TableBodyCell align="right">
-                <TotalTag total={total} />
-            </TableBodyCell>
-            <TableBodyCell align="right" paddingLeft={0}>
-                <ApproveButtons
-                    onApprove={() => TimesheetApprovalActions.approve({ task })}
-                    onReject={reason => TimesheetApprovalActions.reject({ task }, reason)}
+}) => (
+    <tr>
+        <TableBodyCell span={2}>
+            <Row style={{ marginLeft: 8 }} align="center" gutter={5} justify="left">
+                <Icon icon="corner-down-right" />
+                <Icon icon={APPICONS.TASK} />
+                {title}
+                <Button
+                    icon={<Icon icon={isOpen ? "chevron-up" : "chevron-down"} />}
+                    variant="minimal"
+                    size="small"
+                    onClick={() => onToggle(task)}
                 />
-            </TableBodyCell>
-        </tr>
-    );
-};
+            </Row>
+        </TableBodyCell>
+        <TableBodyCell span={3}>
+            <TaskSpentProgress estimated={estimate} spent={total} fill />
+        </TableBodyCell>
+        <TableBodyCell align="right">
+            <TotalTag total={total} />
+        </TableBodyCell>
+        <TableBodyCell align="right" paddingLeft={0}>
+            <ApproveButtons
+                onApprove={() => TimesheetApprovalActions.approve({ task })}
+                onReject={reason => TimesheetApprovalActions.reject({ task }, reason)}
+            />
+        </TableBodyCell>
+    </tr>
+);
 
-const TimelogRow = ({ timelog }: { timelog: ITimeLog }) => {
-    return (
-        <tr key={timelog.id}>
-            <TableBodyCell>
-                <Row style={{ marginLeft: 36 }} align="center" gutter={5} justify="left">
-                    <Icon icon="corner-down-right" />
-                    <Icon icon={APPICONS.CALENDAR} /> {format(timelog.date, "PP")}
-                </Row>
-            </TableBodyCell>
-            <TableBodyCell>{timelog.description || "No description"}</TableBodyCell>
-            <TableBodyCell>
-                <Icon icon={timelog.billable ? "check-square" : "square"} />
-            </TableBodyCell>
-            <TableBodyCell>
-                <Icon icon={timelog.billed ? "check-square" : "square"} />
-            </TableBodyCell>
-            <TableBodyCell>
-                <TimelogStatusIcon status={timelog.status} />
-                {timelog.status === TIMELOG_STATUS.REJECTED && timelog.rejectReason && (
-                    <Tooltip content={timelog.rejectReason} placement="top">
-                        <Icon icon="message-alert-square" color={TIMELOG_STATUS_MAP[timelog.status].color} />
-                    </Tooltip>
-                )}
-            </TableBodyCell>
-            <TableBodyCell align="right">
-                <TotalTag total={timelog.duration} />
-            </TableBodyCell>
-            <TableBodyCell align="right" paddingLeft={0}>
-                <ApproveButtons
-                    onApprove={() => TimesheetApprovalActions.approve({ timelog: timelog.id })}
-                    onReject={reason => TimesheetApprovalActions.reject({ timelog: timelog.id }, reason)}
-                />
-            </TableBodyCell>
-        </tr>
-    );
-};
+const TimelogRow = ({ timelog }: { timelog: ITimeLog }) => (
+    <tr>
+        <TableBodyCell>
+            <Row style={{ marginLeft: 36 }} align="center" gutter={5} justify="left">
+                <Icon icon="corner-down-right" />
+                <Icon icon={APPICONS.CALENDAR} /> {format(timelog.date, "PP")}
+            </Row>
+        </TableBodyCell>
+        <TableBodyCell>{timelog.description || translate("No description")}</TableBodyCell>
+        <TableBodyCell>
+            <Icon icon={timelog.billable ? "check-square" : "square"} />
+        </TableBodyCell>
+        <TableBodyCell>
+            <Icon icon={timelog.billed ? "check-square" : "square"} />
+        </TableBodyCell>
+        <TableBodyCell>
+            <TimelogStatusIcon status={timelog.status} />
+            {timelog.status === TIMELOG_STATUS.REJECTED && timelog.rejectReason && (
+                <Tooltip content={timelog.rejectReason} placement="top">
+                    <Icon icon="message-alert-square" color={TIMELOG_STATUS_MAP[timelog.status].color} />
+                </Tooltip>
+            )}
+        </TableBodyCell>
+        <TableBodyCell align="right">
+            <TotalTag total={timelog.duration} />
+        </TableBodyCell>
+        <TableBodyCell align="right" paddingLeft={0}>
+            <ApproveButtons
+                onApprove={() => TimesheetApprovalActions.approve({ timelog: timelog.id })}
+                onReject={reason => TimesheetApprovalActions.reject({ timelog: timelog.id }, reason)}
+            />
+        </TableBodyCell>
+    </tr>
+);
 
 const PersonSection = ({
     userId,
     total,
     isOpen,
     onToggle,
-    onToggleAll,
 }: {
     userId: string;
     total: number;
     isOpen: boolean;
     onToggle: () => void;
-    onToggleAll: () => void;
 }) => {
     const { person } = usePerson(userId);
     return (
-        <TableSection span={7}>
+        <TableSection span={7} data-testid="people-approvals-person-group">
             <TableSectionCell span={2}>
-                {person && (
-                    <Row align="center">
+                <Row align="center">
+                    {person && (
                         <Col gap={10} align="center">
                             <Avatar person={person} />
                             <div>
@@ -415,33 +487,22 @@ const PersonSection = ({
                                 <div className={Classes.TEXT_MUTED}>{person.email}</div>
                             </div>
                         </Col>
-                        <Col align="center">
-                            <Button
-                                icon={<Icon icon={isOpen ? "chevron-up" : "chevron-down"} />}
-                                variant="minimal"
-                                onClick={onToggle}
-                            />
-
-                            <Tooltip content="Expand all projects" placement="top">
-                                <Button
-                                    icon={<Icon icon="plus-square" />}
-                                    variant="minimal"
-                                    onClick={onToggleAll}
-                                />
-                            </Tooltip>
-                        </Col>
-                    </Row>
-                )}
+                    )}
+                    <Button
+                        data-testid="people-approvals-person-toggle"
+                        icon={<Icon icon={isOpen ? "chevron-up" : "chevron-down"} />}
+                        variant="minimal"
+                        onClick={onToggle}
+                    />
+                </Row>
             </TableSectionCell>
             <TableSectionCell span={5}>
                 <Row>
                     <Col justify="right" align="center" gap={15}>
                         <Row justify="right" align="center" gutter={5}>
-                            <strong>Person total:</strong>
-
+                            <strong>{`${translate("Person")} ${translate("Total")}`}</strong>
                             <TotalTag total={total} intent={Intent.PRIMARY} size="large" />
                         </Row>
-
                         <ApproveButtons
                             hiddable={false}
                             onApprove={() => TimesheetApprovalActions.approve({ person: userId })}
@@ -457,24 +518,25 @@ const PersonSection = ({
 interface TotalTagProps extends TagProps {
     total: number;
 }
-const TotalTag = ({ total, ...props }: TotalTagProps) => {
-    return (
-        <Tooltip
-            content={
-                <div style={{ textAlign: "center" }}>
-                    <div>{`${durationToHours(total).toFixed(1)} hours`}</div>
-                    <small>or</small>
-                    <div>{`${durationToWorkingDays(total).toFixed(1)} working days`}</div>
+
+const TotalTag = ({ total, ...props }: TotalTagProps) => (
+    <Tooltip
+        content={
+            <div style={{ textAlign: "center" }}>
+                <div>
+                    {durationToHours(total).toFixed(1)} {translate("hours")}
                 </div>
-            }
-            placement="top"
-        >
-            <Tag minimal {...props}>
-                {formatStringDuration(total)}
-            </Tag>
-        </Tooltip>
-    );
-};
+                <small>{translate("or")}</small>
+                <div>{`${durationToWorkingDays(total).toFixed(1)} ${translate("working days")}`}</div>
+            </div>
+        }
+        placement="top"
+    >
+        <Tag minimal {...props}>
+            {formatStringDuration(total)}
+        </Tag>
+    </Tooltip>
+);
 
 interface ApproveButtonsProps {
     hiddable?: boolean;
@@ -484,12 +546,9 @@ interface ApproveButtonsProps {
 
 const ApproveButtons: FunctionComponent<ApproveButtonsProps> = ({ hiddable = true, onApprove, onReject }) => {
     const [reason, setReason] = useState("");
-    const handleReject = () => {
-        onReject(reason);
-    };
     return (
         <ButtonGroup className={hiddable ? "timelogs-approve-buttons" : ""}>
-            <Tooltip content="Approve" placement="top-end">
+            <Tooltip content={translate("Approve")} placement="top-end">
                 <Button
                     icon={<Icon icon="check" />}
                     size="small"
@@ -498,15 +557,14 @@ const ApproveButtons: FunctionComponent<ApproveButtonsProps> = ({ hiddable = tru
                     onClick={onApprove}
                 />
             </Tooltip>
-
             <Popover
                 content={
                     <Grid>
                         <FormGroup
-                            helperText="Write a reason for rejecting the timelog"
-                            label="Reject motive"
+                            helperText={translate("Write a reason for rejecting the timelog")}
+                            label={translate("Reject motive")}
                         >
-                            <TextArea value={reason} onChange={e => setReason(e.target.value)} fill />
+                            <TextArea value={reason} onChange={event => setReason(event.target.value)} fill />
                         </FormGroup>
                         <Row align="center" justify="right">
                             <Button variant="minimal" size="small" className={Classes.POPOVER_DISMISS}>
@@ -517,9 +575,9 @@ const ApproveButtons: FunctionComponent<ApproveButtonsProps> = ({ hiddable = tru
                                 intent={Intent.DANGER}
                                 size="small"
                                 className={Classes.POPOVER_DISMISS}
-                                onClick={handleReject}
+                                onClick={() => onReject(reason)}
                             >
-                                Reject
+                                {translate("Reject")}
                             </Button>
                         </Row>
                     </Grid>
@@ -528,12 +586,11 @@ const ApproveButtons: FunctionComponent<ApproveButtonsProps> = ({ hiddable = tru
                 popoverClassName="popover-padded-medium"
                 renderTarget={({ isOpen: isPopoverOpen, ref: ref1, ...popoverProps }) => (
                     <Tooltip
-                        content="Reject"
+                        content={translate("Reject")}
                         placement="top-end"
                         disabled={isPopoverOpen}
                         openOnTargetFocus={false}
-                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                        renderTarget={({ isOpen, ref: ref2, ...tooltipProps }) => (
+                        renderTarget={({ isOpen: _isOpen, ref: ref2, ...tooltipProps }) => (
                             <Button
                                 {...popoverProps}
                                 {...tooltipProps}
