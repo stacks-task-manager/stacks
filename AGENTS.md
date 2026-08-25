@@ -133,6 +133,7 @@ packages/
 - **AI assistant** — Vercel AI SDK (`ai`, `@ai-sdk/openai`) with streaming over WebSocket. See [AI.md](packages/server/docs/AI.md).
 - **Embedded bundle integrity** — SHA-256 + RSA signature of the built server bundle. Verified at boot (`embedded-integrity.ts`), skipped in dev/test. See [EMBEDDED_INTEGRITY.md](packages/server/docs/EMBEDDED_INTEGRITY.md).
 - **Realtime updates** — WebSocket at `/ws` pushes lightweight "polling updates" (`IUpdate`) to clients after writes. See [REALTIME_UPDATES.md](packages/server/docs/REALTIME_UPDATES.md) and [LOADERS.md](packages/server/docs/LOADERS.md#side-effects-from-loaders).
+- **In-app notifications** — Persist notifications through `NotificationsLoader.add`, pass through any outer transaction, and emit realtime invalidation only after commit. See [NOTIFICATIONS.md](packages/server/docs/NOTIFICATIONS.md).
 - **Permissions** — Two-layer auth: ACL (per-record visibility via `permissions` table) + RBAC (per-role section/action flags). See [PERMISSIONS.md](packages/server/docs/PERMISSIONS.md).
 
 ### Web app (`packages/app`)
@@ -163,7 +164,7 @@ packages/
 - Dark mode: body class `.bp6-dark`
 - No CSS-in-JS — use SCSS modules (`_X.scss`) next to components
 - Use `@stacks/types` for all shared type imports
-- **Adding / checking a translation**: use `@stacks/locales-tui` (`yarn dev:locales`), which already implements all locale operations — don't hand-edit locale JSON. Before adding a new key, search for an existing key that already conveys the same meaning (e.g. reuse `"URL"` instead of adding `"Url"`); `findSimilarEntries` (programmatic) or the TUI's similar-key suggestion does this. To add one, use `addEnglishEntry(dir, key, value)` (or the TUI). `en.json` is the source of truth and is required — a key present in `en.json` covers all locales via English fallback; `syncMissingKeysFromEn` can backfill the other files. A key absent from `en.json` renders as `translate()` returning the uppercased key (e.g. `"Pinned"` → `"PINNED"`), so always verify the key exists. When translating a value, preserve any `{...}` placeholder tokens **verbatim** (e.g. `{day}`, `{days}`, `{duration}`, `[{days}]`) — components substitute them after `translate()` via `.replace("{days}", value)`, so changing or dropping the token breaks the label. Keep other literal tokens (e.g. `Ctrl+enter`) and separators (e.g. `-`) as-is too. Locale files live under `packages/server/locales/app/` (UI) and `packages/server/locales/server/` (API).
+- **Adding / checking a translation**: use `@stacks/locales-tui` (`yarn dev:locales`), which already implements all locale operations — don't hand-edit locale JSON. Before adding a new key, search for an existing key that already conveys the same meaning (e.g. reuse `"URL"` instead of adding `"Url"`); `findSimilarEntries` (programmatic) or the TUI's similar-key suggestion does this. To add one, use `addEnglishEntry(dir, key, value)` (or the TUI). Translation keys may contain only ASCII letters, digits, underscores, and spaces; put interpolation tokens in the value, never the key. `en.json` is the source of truth and is required — a key present in `en.json` covers all locales via English fallback; `syncMissingKeysFromEn` can backfill the other files. A key absent from `en.json` renders as `translate()` returning the uppercased key (e.g. `"Pinned"` → `"PINNED"`), so always verify the key exists. When translating a value, preserve any `%{...}` placeholder tokens **verbatim** (e.g. `%{day}`, `%{days}`, `%{duration}`, `[%{days}]`) — `translate("Key", { days: value })` substitutes them, so changing or dropping the token breaks the label. Keep other literal tokens (e.g. `Ctrl+enter`) and separators (e.g. `-`) as-is too. Locale files live under `packages/server/locales/app/` (UI) and `packages/server/locales/server/` (API). See `docs/packages/translations.md` and `docs/packages/locales-tui.md` before changing translations.
 
 ### Database (`packages/db`)
 
@@ -271,6 +272,19 @@ Types: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`, `hotfix`
 - Don't import from relative paths in the app — use `app/…` prefix
 
 ## Documentation
+
+### Required reading by task
+
+Use the documentation index at `docs/README.md`, then read the task-specific sources before editing:
+
+| Task                              | Required sources                                                                                                                |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| Add or edit E2E coverage          | `docs/E2E.md`, the nearest existing spec and POM, and the React component under test                                            |
+| Change the web app                | `docs/packages/app.md` and `packages/app/docs/ONBOARDING.md`; add `ARCHITECTURE.md` or `API_CLIENT.md` when relevant            |
+| Change server routes/loaders      | `docs/packages/server.md`, `packages/server/docs/ONBOARDING.md`, and the relevant subsystem guide under `packages/server/docs/` |
+| Change translations/locales       | `docs/packages/translations.md` and `docs/packages/locales-tui.md`                                                              |
+| Change database models/migrations | `docs/packages/db.md` and the database section above                                                                            |
+| Change another workspace          | Its guide under `docs/packages/` plus its package README/scripts                                                                |
 
 Per-package deep dives live in:
 

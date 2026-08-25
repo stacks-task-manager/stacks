@@ -27,15 +27,16 @@ import {
     TIMELOG_STATUS,
 } from "@stacks/types";
 import { Icon, PopupNewGeneric, ReloadButton, ToolbarButton } from "app/components/common";
-import { useCanAccess, useMousetrap, usePeopleHasFilters, useViewType } from "app/hooks";
+import { useCanAccess, useMousetrap, usePeopleHasFilters, useTimelogsInterval, useViewType } from "app/hooks";
 import { PeopleActions, PersonTimesheetActions, TimesheetApprovalActions } from "app/store/actions";
 import { PeopleStore, PeopleViewType } from "app/store/people";
 import { PersonTimesheetStore } from "app/store/personTimesheet";
 import { TimesheetApprovalStore } from "app/store/timesheetApprovals";
 import dialog from "app/utils/dialog";
+import Toast from "app/utils/toast";
 import { BetaButton, ImportDialog, ImportSelectedFields, TagsStatusesManager } from "app/widgets/common";
 import { NewPersonPopover, TIMELOG_STATUS_MAP } from "app/widgets/people";
-import { format, isThisMonth, isThisWeek } from "date-fns";
+import { eachDayOfInterval, endOfWeek, format, isThisMonth, isThisWeek, startOfWeek } from "date-fns";
 import { PEOPLE_VIEW_TYPE_LABELS } from "app/locale/dynamic-messages";
 
 interface IPeopleView {
@@ -453,17 +454,37 @@ const ApprovalNavigation = () => {
 };
 
 const ShowWeekendsButton = () => {
-    const { showWeekends } = PersonTimesheetStore.use();
+    const { interval, showWeekends } = PersonTimesheetStore.use();
+    const [submitting, setSubmitting] = useState(false);
+    const fullWeek = useMemo(
+        () =>
+            interval.length > 0
+                ? eachDayOfInterval({ start: startOfWeek(interval[0]), end: endOfWeek(interval[0]) })
+                : [],
+        [interval]
+    );
+    const { timelogs } = useTimelogsInterval(fullWeek);
+    const hasPendingTimelogs = timelogs.some(timelog => timelog.status === TIMELOG_STATUS.PENDING);
 
     const handleSubmit = async () => {
         const confirmed = await dialog.confirm(
-            "Submit for review",
-            "Are you sure you want to submit the weekly timesheet for review?"
+            translate("Submit for review"),
+            translate("Confirm weekly timesheet submission")
         );
 
         if (!confirmed) return;
 
-        await PersonTimesheetActions.submitReview();
+        setSubmitting(true);
+        try {
+            const submitted = await PersonTimesheetActions.submitReview();
+            if (submitted) {
+                Toast.success(translate("Timesheet submitted for review"));
+            } else {
+                Toast.info(translate("No pending timelogs to submit"));
+            }
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     return (
@@ -474,15 +495,17 @@ const ShowWeekendsButton = () => {
                 variant="minimal"
                 onClick={PersonTimesheetActions.toggleWeekendVisibility}
             >
-                {showWeekends ? "Hide weekends" : "Show weekends"}
+                {showWeekends ? translate("Hide weekends") : translate("Show weekends")}
             </Button>
             <span className="section-toolbar-divider" />
             <Button
                 data-testid="people-timesheet-submit-review-button"
                 intent={Intent.SUCCESS}
                 onClick={handleSubmit}
+                loading={submitting}
+                disabled={!hasPendingTimelogs || submitting}
             >
-                Submit for review
+                {translate("Submit for review")}
             </Button>
         </>
     );
@@ -590,7 +613,7 @@ const ApprovalFilters = () => {
                         }
                         endIcon={<Icon icon="chevron-down" />}
                     >
-                        {TIMELOG_STATUS_MAP[status].label}
+                        {translate(TIMELOG_STATUS_MAP[status].label)}
                     </Button>
                 </Tooltip>
             </Popover>

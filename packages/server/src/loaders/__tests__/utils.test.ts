@@ -3,6 +3,7 @@ import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import { Op } from "sequelize";
 import { PermissionEntity, sequelize } from "@stacks/db";
 import {
+    afterTransactionCommit,
     attachPermissionsToRow,
     createOne,
     deleteAll,
@@ -697,6 +698,24 @@ describe("loader CRUD helpers", () => {
 });
 
 describe("loader transaction helper", () => {
+    it("runs side effects immediately without a transaction", () => {
+        const callback = vi.fn();
+
+        afterTransactionCommit(undefined, callback);
+
+        expect(callback).toHaveBeenCalledTimes(1);
+    });
+
+    it("defers side effects until the transaction commits", () => {
+        const afterCommit = vi.fn();
+        const callback = vi.fn();
+
+        afterTransactionCommit({ afterCommit } as any, callback);
+
+        expect(callback).not.toHaveBeenCalled();
+        expect(afterCommit).toHaveBeenCalledWith(callback);
+    });
+
     it("reuses an external transaction without opening a new one", async () => {
         const extTransaction = { id: "ext-tx" } as any;
         const transactionSpy = vi.spyOn(sequelize, "transaction");

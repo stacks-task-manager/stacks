@@ -51,7 +51,11 @@ const permissionRow = (overrides: Record<string, any> = {}) => ({
     ...overrides,
 });
 
-const transaction = { id: "tx-1" } as any;
+const afterCommitCallbacks: Array<() => void | Promise<void>> = [];
+const transaction = {
+    id: "tx-1",
+    afterCommit: vi.fn((callback: () => void | Promise<void>) => afterCommitCallbacks.push(callback)),
+} as any;
 
 describe("PermissionsLoader", () => {
     const sendRealtimeUpdateMock = vi.mocked(sendRealtimeUpdate);
@@ -60,6 +64,7 @@ describe("PermissionsLoader", () => {
 
     beforeEach(() => {
         vi.clearAllMocks();
+        afterCommitCallbacks.length = 0;
         findOneMock.mockReset();
         updateMock.mockReset();
     });
@@ -129,6 +134,8 @@ describe("PermissionsLoader", () => {
                 returning: true,
             })
         );
+        expect(sendRealtimeUpdateMock).not.toHaveBeenCalled();
+        await afterCommitCallbacks[0]();
         expect(sendRealtimeUpdateMock).toHaveBeenCalledWith({
             type: POLLINGTYPE.TASK,
             action: POLLINGACTIONS.UPDATE,
@@ -206,6 +213,8 @@ describe("PermissionsLoader", () => {
                 returning: true,
             })
         );
+        expect(sendRealtimeUpdateMock).not.toHaveBeenCalled();
+        await afterCommitCallbacks[0]();
         expect(sendRealtimeUpdateMock).toHaveBeenCalledWith({
             type: POLLINGTYPE.TASK,
             action: POLLINGACTIONS.UPDATE,

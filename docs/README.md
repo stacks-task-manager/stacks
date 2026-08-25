@@ -51,6 +51,7 @@ Living under `packages/server/docs/` so they sit next to the code they describe:
 | -------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
 | [Server onboarding](../packages/server/docs/ONBOARDING.md)                 | Stack overview, bootstrap order, request lifecycle, how to add a route |
 | [Caching system](../packages/server/docs/CACHING.md)                       | Multi-tenant response cache, invalidation, configuration               |
+| [In-app notifications](../packages/server/docs/NOTIFICATIONS.md)           | Persistence, targeting, and transaction-safe realtime delivery         |
 | [Embedded bundle integrity](../packages/server/docs/EMBEDDED_INTEGRITY.md) | Build-time signing + boot-time verification                            |
 
 ## Web app internals (deep dives)

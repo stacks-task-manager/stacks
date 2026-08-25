@@ -23,6 +23,10 @@ test.describe("People and Companies", () => {
         attachVideoContext(context);
     });
 
+    test.afterEach(async () => {
+        await people.clearTimesheetMock();
+    });
+
     test.afterAll(async () => {
         if (page && !page.isClosed()) await page.close();
         if (context) await context.close();
@@ -69,6 +73,58 @@ test.describe("People and Companies", () => {
 
         await people.selectApprovalGrouping("person");
         await expect(people.approvalsPersonGroupingButton).toHaveClass(/bp6-active/);
+    });
+
+    test("Should submit the full weekly timesheet for review", async () => {
+        await people.openContacts();
+        await people.mockPendingTimesheet();
+        await people.openTimesheet();
+
+        const submission = await people.submitTimesheetForReview();
+        const start = new Date(`${submission.start}T00:00:00`);
+        const end = new Date(`${submission.end}T00:00:00`);
+
+        expect((end.getTime() - start.getTime()) / (24 * 60 * 60 * 1000)).toBe(6);
+    });
+
+    test("Should group timesheet entries by project and task", async () => {
+        await people.openContacts();
+        await people.mockPendingTimesheet();
+        await people.openTimesheet();
+
+        await people.expectTimesheetGrouping();
+    });
+
+    test("Should open the time entry dialog from an empty day", async () => {
+        await people.openContacts();
+        await people.mockPendingTimesheet();
+        await people.openTimesheet();
+
+        await people.openTimeEntryDialogFromEmptyDay();
+    });
+
+    test("Should open a rejected time entry for correction", async () => {
+        await people.openContacts();
+        await people.mockRejectedTimesheet();
+        await people.openTimesheet();
+
+        await people.openRejectedEntryForCorrection();
+    });
+
+    test("Should show a partially reviewed weekly status", async () => {
+        await people.openContacts();
+        await people.mockPartiallyReviewedTimesheet();
+        await people.openTimesheet();
+
+        await people.expectPartiallyReviewedStatus();
+    });
+
+    test("Should disable submission while the timesheet is in review", async () => {
+        await people.openContacts();
+        await people.mockInReviewTimesheet();
+        await people.openTimesheet();
+
+        await people.expectInReviewStatus();
     });
 
     test("Should create and update a person", async () => {

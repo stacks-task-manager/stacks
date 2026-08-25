@@ -18,7 +18,14 @@ import { getCurrentUser } from "./context";
 import { pgStringLiteral } from "./sqlLiteral";
 import { ProjectsLoader } from "./projects";
 import { TasksLoader } from "./tasks";
-import { createOne, deleteAll, sanitizeWhere, updateOne, withTransaction } from "./utils";
+import {
+    afterTransactionCommit,
+    createOne,
+    deleteAll,
+    sanitizeWhere,
+    updateOne,
+    withTransaction,
+} from "./utils";
 import { NotificationsLoader } from "./notifications";
 import { sendRealtimeUpdate } from "../events";
 import { invalidateApiCacheForCurrentRequest } from "../utils/cache";
@@ -161,6 +168,10 @@ async function getAll(filters: TimelogFilter, extTransaction?: Transaction) {
             filter.id = filters.timelog;
         }
 
+        if (filters.person != null) {
+            filter.person = filters.person;
+        }
+
         const user = getCurrentUser();
         const where: any = sanitizeWhere(filter);
 
@@ -224,9 +235,25 @@ async function create(data: Omit<ITimeLog, "id" | "created" | "updated">) {
 /** PATCH existing row and refresh derived task totals. */
 async function update(id: string, data: Partial<ITimeLog>) {
     return withTransaction(undefined, async (transaction: Transaction) => {
-        const timelog = await getOne(id);
+        const user = getCurrentUser();
+        const timelog = await getOne(id, transaction);
 
-        const [, updatedRows] = await TimelogEntity.update(data, {
+        if (!user.admin && timelog.person !== user.id) {
+            throw Errors.forbidden(translate("Record update not allowed"));
+        }
+        if (!user.admin && [TIMELOG_STATUS.INREVIEW, TIMELOG_STATUS.APPROVED].includes(timelog.status)) {
+            throw Errors.forbidden(translate("Record update not allowed"));
+        }
+
+        const updateData: Partial<ITimeLog> = { ...data };
+        if (timelog.status === TIMELOG_STATUS.REJECTED) {
+            updateData.status = TIMELOG_STATUS.PENDING;
+            updateData.approvedBy = null;
+            updateData.approvedOn = null;
+            updateData.rejectReason = null;
+        }
+
+        const [, updatedRows] = await TimelogEntity.update(updateData, {
             where: sanitizeWhere({ id }),
             returning: true,
             transaction,
@@ -270,6 +297,9 @@ async function remove(id: string) {
         const timelog = await getOne(id);
 
         if (!user.admin && timelog.person !== user.id) {
+            throw Errors.forbidden(translate("Timelog delete not allowed"));
+        }
+        if (!user.admin && [TIMELOG_STATUS.INREVIEW, TIMELOG_STATUS.APPROVED].includes(timelog.status)) {
             throw Errors.forbidden(translate("Timelog delete not allowed"));
         }
 
@@ -317,6 +347,14 @@ async function removeByProject(project: string, extTransaction?: Transaction) {
 async function review(start: string, end: string) {
     return withTransaction(undefined, async (transaction: Transaction) => {
         const user = getCurrentUser();
+        const timelogs = await getAll(
+            { person: user.id, start, end, status: TIMELOG_STATUS.PENDING },
+            transaction
+        );
+        if (timelogs.length === 0) {
+            return false;
+        }
+
         const [affectedCount] = await TimelogEntity.update(
             {
                 updatedBy: user.id,
@@ -324,25 +362,14 @@ async function review(start: string, end: string) {
             },
             {
                 where: {
-                    person: user.id,
-                    date: {
-                        [Op.gte]: start,
-                        [Op.lte]: end,
-                    },
+                    id: timelogs.map(timelog => timelog.id),
+                    status: TIMELOG_STATUS.PENDING,
                 },
                 transaction,
             }
         );
 
-        // sending notifications to reviewers
-        const timelogs = await getAll({ start, end }, transaction);
-
-        const projectsIds: string[] = [];
-        for (const timelog of timelogs) {
-            if (!projectsIds.includes(timelog.project)) {
-                projectsIds.push(timelog.project);
-            }
-        }
+        const projectsIds = [...new Set(timelogs.map(timelog => timelog.project))];
 
         const projectsEntities = await ProjectEntity.findAll({
             where: {
@@ -361,13 +388,18 @@ async function review(start: string, end: string) {
             for (const approver of project.approvers) {
                 if (approver === user.id) continue;
                 const projectTimelogs = timelogs.filter(timelog => timelog.project === project.id);
-                NotificationsLoader.add({
-                    recipient: approver,
-                    subject: translate("Timelog review pending"),
-                    message: translate("You have timelogs pending review", { count: projectTimelogs.length }),
-                    recordType: NOTIFICATION_RECORD_TYPE.TIMELOG,
-                    data: projectTimelogs,
-                });
+                await NotificationsLoader.add(
+                    {
+                        recipient: approver,
+                        subject: translate("Timelog review pending"),
+                        message: translate("You have timelogs pending review", {
+                            count: projectTimelogs.length,
+                        }),
+                        recordType: NOTIFICATION_RECORD_TYPE.TIMELOG,
+                        data: projectTimelogs,
+                    },
+                    transaction
+                );
             }
         }
 
@@ -383,12 +415,27 @@ async function updateStatus(
     reason?: string
 ): Promise<ITimeLog[]> {
     return withTransaction(undefined, async (transaction: Transaction) => {
-        const timelogs = await getAll(filters, transaction);
+        if (![TIMELOG_STATUS.APPROVED, TIMELOG_STATUS.REJECTED].includes(action)) {
+            throw Errors.badRequest(translate("Timelog status update failed"));
+        }
+
+        const user = getCurrentUser();
+        const visibleTimelogs = await getAll({ ...filters, status: TIMELOG_STATUS.INREVIEW }, transaction);
+        const timelogs = user.admin
+            ? visibleTimelogs
+            : visibleTimelogs.filter(timelog => {
+                  const approvers = (
+                      timelog.projectInfo as typeof timelog.projectInfo & {
+                          approvers?: string[];
+                      }
+                  ).approvers;
+                  return timelog.person !== user.id && approvers?.includes(user.id);
+              });
+
         if (timelogs.length === 0) {
             return [];
         }
 
-        const user = getCurrentUser();
         const id = timelogs.map(timelog => timelog.id);
         const updateData: Partial<ITimeLog> = {
             updatedBy: user.id,
@@ -399,6 +446,8 @@ async function updateStatus(
 
         if (action === TIMELOG_STATUS.REJECTED) {
             updateData.rejectReason = reason;
+        } else {
+            updateData.rejectReason = null;
         }
 
         const [affectedCount] = await TimelogEntity.update(updateData, {
@@ -411,22 +460,25 @@ async function updateStatus(
         }
 
         // sending notification to each of the timelogs assignees
-        const assignees = timelogs.map(timelog => timelog.person);
+        const assignees = [...new Set(timelogs.map(timelog => timelog.person))];
         for (const assignee of assignees) {
             if (assignee === user.id) continue;
-            NotificationsLoader.add({
-                recipient: assignee,
-                subject: translate("A timelog where you are assigned to was evaluated"),
-                message: translate("Timelog change to action", { action }),
-                recordType: NOTIFICATION_RECORD_TYPE.TIMELOG,
-                data: timelogs
-                    .filter(timelog => timelog.person === assignee)
-                    .map((timelog: ITimeLog) => ({
-                        recordId: timelog.id,
-                        recordType: NOTIFICATION_RECORD_TYPE.TIMELOG,
-                        message: translate("Your timelog was action", { action }),
-                    })),
-            });
+            await NotificationsLoader.add(
+                {
+                    recipient: assignee,
+                    subject: translate("A timelog where you are assigned to was evaluated"),
+                    message: translate("Timelog change to action", { action }),
+                    recordType: NOTIFICATION_RECORD_TYPE.TIMELOG,
+                    data: timelogs
+                        .filter(timelog => timelog.person === assignee)
+                        .map((timelog: ITimeLog) => ({
+                            recordId: timelog.id,
+                            recordType: NOTIFICATION_RECORD_TYPE.TIMELOG,
+                            message: translate("Your timelog was action", { action }),
+                        })),
+                },
+                transaction
+            );
         }
 
         invalidateApiCacheForCurrentRequest();
@@ -457,14 +509,16 @@ async function updateTotals(taskId: string, extTransaction?: Transaction): Promi
                 transaction
             );
 
-            for (const timelog of timelogs) {
-                sendRealtimeUpdate({
-                    type: POLLINGTYPE.TIMELOG,
-                    record: timelog.id,
-                    action: POLLINGACTIONS.UPDATE,
-                    permissions: task.permissions,
-                });
-            }
+            afterTransactionCommit(transaction, () => {
+                for (const timelog of timelogs) {
+                    sendRealtimeUpdate({
+                        type: POLLINGTYPE.TIMELOG,
+                        record: timelog.id,
+                        action: POLLINGACTIONS.UPDATE,
+                        permissions: task.permissions,
+                    });
+                }
+            });
 
             return timeSpent;
         }

@@ -247,6 +247,7 @@ These live next to the server source under [`packages/server/docs/`](../../packa
 - [Loaders](../../packages/server/docs/LOADERS.md) — the database access layer, request context, transactions, and shared query helpers
 - [Permissions and roles](../../packages/server/docs/PERMISSIONS.md) — RBAC vs per-record ACL, enforcement points, and realtime behavior
 - [Realtime updates](../../packages/server/docs/REALTIME_UPDATES.md) — server emission, WebSocket transport, instanceId suppression, and app-side consumption
+- [In-app notifications](../../packages/server/docs/NOTIFICATIONS.md) — persistence, recipient targeting, and post-commit realtime delivery
 - [Embedded bundle integrity](../../packages/server/docs/EMBEDDED_INTEGRITY.md) — production bundle signing and the boot-time verification
 
 ## Related

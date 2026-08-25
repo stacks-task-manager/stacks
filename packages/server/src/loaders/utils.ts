@@ -394,6 +394,19 @@ export async function withTransaction<T>(
     }
 }
 
+/** Runs a side effect immediately when no transaction exists, or only after a successful commit. */
+export function afterTransactionCommit(
+    transaction: Transaction | undefined,
+    callback: () => void | Promise<void>
+): void {
+    if (transaction) {
+        transaction.afterCommit(callback);
+        return;
+    }
+
+    void callback();
+}
+
 /**
  * Merge two permissions objects, considering visibility rules.
  * @param permissionA The first permission object.

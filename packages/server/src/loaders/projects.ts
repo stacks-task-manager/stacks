@@ -6,7 +6,16 @@ import { literal, Op, Transaction } from "sequelize";
 import { IProjectWithDocument, IProjectWithTitle } from "../types/project";
 import { canWrite, getCurrentUser } from "./context";
 import { StacksLoader } from "./stacks";
-import { createOne, deleteOne, findAll, findOne, updateAll, updateOne, withTransaction } from "./utils";
+import {
+    afterTransactionCommit,
+    createOne,
+    deleteOne,
+    findAll,
+    findOne,
+    updateAll,
+    updateOne,
+    withTransaction,
+} from "./utils";
 import { sendRealtimeUpdate } from "../events";
 import { invalidateApiCacheForCurrentRequest } from "../utils/cache";
 import { translate } from "@stacks/translations";
@@ -119,11 +128,13 @@ async function update(id: string, data: Partial<IProject>, extTransaction?: Tran
             transaction,
         });
 
-        await sendRealtimeUpdate({
-            type: POLLINGTYPE.PROJECT,
-            record: id,
-            action: POLLINGACTIONS.UPDATE,
-            permissions: project.permissions,
+        afterTransactionCommit(transaction, () => {
+            sendRealtimeUpdate({
+                type: POLLINGTYPE.PROJECT,
+                record: id,
+                action: POLLINGACTIONS.UPDATE,
+                permissions: project.permissions,
+            });
         });
 
         invalidateApiCacheForCurrentRequest();
@@ -157,11 +168,13 @@ async function remove(id: string, extTransaction?: Transaction): Promise<boolean
             transaction,
         });
 
-        await sendRealtimeUpdate({
-            type: POLLINGTYPE.PROJECT,
-            record: id,
-            action: POLLINGACTIONS.DELETED,
-            permissions: project.permissions,
+        afterTransactionCommit(transaction, () => {
+            sendRealtimeUpdate({
+                type: POLLINGTYPE.PROJECT,
+                record: id,
+                action: POLLINGACTIONS.DELETED,
+                permissions: project.permissions,
+            });
         });
 
         invalidateApiCacheForCurrentRequest();
@@ -207,14 +220,16 @@ async function archiveCompletedTasks(id: string, extTransaction?: Transaction): 
             transaction,
         });
 
-        for (const task of taskToArchive) {
-            sendRealtimeUpdate({
-                type: POLLINGTYPE.TASK,
-                record: task.id,
-                action: POLLINGACTIONS.ARCHIVED,
-                permissions: task.permissions,
-            });
-        }
+        afterTransactionCommit(transaction, () => {
+            for (const task of taskToArchive) {
+                sendRealtimeUpdate({
+                    type: POLLINGTYPE.TASK,
+                    record: task.id,
+                    action: POLLINGACTIONS.ARCHIVED,
+                    permissions: task.permissions,
+                });
+            }
+        });
 
         invalidateApiCacheForCurrentRequest();
         return archivedTasks;
@@ -266,11 +281,13 @@ async function removeStackOrder(
         const stacksOrder = project.stacksOrder.filter(stack => stack !== stackId);
         const updatedProject = await update(id, { stacksOrder }, transaction);
 
-        await sendRealtimeUpdate({
-            type: POLLINGTYPE.PROJECT,
-            record: project.id,
-            action: POLLINGACTIONS.UPDATE,
-            permissions: project.permissions,
+        afterTransactionCommit(transaction, () => {
+            sendRealtimeUpdate({
+                type: POLLINGTYPE.PROJECT,
+                record: project.id,
+                action: POLLINGACTIONS.UPDATE,
+                permissions: project.permissions,
+            });
         });
 
         return updatedProject;

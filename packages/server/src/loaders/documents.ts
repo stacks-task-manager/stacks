@@ -9,7 +9,16 @@ import { FilesLoader } from "./files";
 import { NotepadsLoader } from "./notepads";
 import { PermissionsLoader } from "./permissions";
 import { ProjectsLoader } from "./projects";
-import { createOne, deleteOne, findAll, findOne, sanitizeWhere, updateOne, withTransaction } from "./utils";
+import {
+    afterTransactionCommit,
+    createOne,
+    deleteOne,
+    findAll,
+    findOne,
+    sanitizeWhere,
+    updateOne,
+    withTransaction,
+} from "./utils";
 import { sendRealtimeUpdate } from "../events";
 import { invalidateApiCacheForCurrentRequest } from "../utils/cache";
 import { translate } from "@stacks/translations";
@@ -97,11 +106,13 @@ async function create(data: IDocumentCreate, extTransaction?: Transaction) {
         const document = sanitizeDocument(newDocument);
         document.permissions = permissions;
 
-        sendRealtimeUpdate({
-            type: POLLINGTYPE.DOCUMENTS,
-            record: document.id,
-            action: POLLINGACTIONS.CREATE,
-            permissions: document.permissions,
+        afterTransactionCommit(transaction, () => {
+            sendRealtimeUpdate({
+                type: POLLINGTYPE.DOCUMENTS,
+                record: document.id,
+                action: POLLINGACTIONS.CREATE,
+                permissions: document.permissions,
+            });
         });
 
         invalidateApiCacheForCurrentRequest();
@@ -155,11 +166,13 @@ async function remove(id: string, extTransaction?: Transaction) {
         const deletedDocument = await removeRecursive(id, transaction);
 
         if (deletedDocument) {
-            await sendRealtimeUpdate({
-                type: POLLINGTYPE.DOCUMENTS,
-                record: id,
-                action: POLLINGACTIONS.DELETED,
-                permissions: deletedDocument.permissions,
+            afterTransactionCommit(transaction, () => {
+                sendRealtimeUpdate({
+                    type: POLLINGTYPE.DOCUMENTS,
+                    record: id,
+                    action: POLLINGACTIONS.DELETED,
+                    permissions: deletedDocument.permissions,
+                });
             });
         }
 
@@ -326,11 +339,13 @@ async function update(id: string, data: any, extTransaction?: Transaction): Prom
             }
         }
 
-        await sendRealtimeUpdate({
-            type: POLLINGTYPE.DOCUMENTS,
-            record: id,
-            action: POLLINGACTIONS.UPDATE,
-            permissions: document.permissions,
+        afterTransactionCommit(transaction, () => {
+            sendRealtimeUpdate({
+                type: POLLINGTYPE.DOCUMENTS,
+                record: id,
+                action: POLLINGACTIONS.UPDATE,
+                permissions: document.permissions,
+            });
         });
 
         invalidateApiCacheForCurrentRequest();

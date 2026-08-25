@@ -33,8 +33,8 @@ function getInterval(date: Date, showWeekends: boolean) {
 
 const load = async () => {
     const interval: Date[] = PersonTimesheetStore.get().interval;
-    const start = formatISO9075(interval.at(0)!, { representation: "date" });
-    const end = formatISO9075(interval.at(-1)!, { representation: "date" });
+    const start = formatISO9075(startOfWeek(interval.at(0)!), { representation: "date" });
+    const end = formatISO9075(endOfWeek(interval.at(0)!), { representation: "date" });
 
     await TimelogsActions.load({ start, end });
 };
@@ -100,13 +100,21 @@ const toggleWeekendVisibility = async () => {
 
 const submitReview = async () => {
     const { interval } = PersonTimesheetStore.get();
-    const start = formatISO9075(interval.at(0)!, { representation: "date" });
-    const end = formatISO9075(interval.at(-1)!, { representation: "date" });
+    const weekStart = startOfWeek(interval.at(0)!);
+    const weekEnd = endOfWeek(interval.at(0)!);
+    const start = formatISO9075(weekStart, { representation: "date" });
+    const end = formatISO9075(weekEnd, { representation: "date" });
 
-    await TimelogsAPI.review({
+    const submitted = await TimelogsAPI.review({
         start,
         end,
     });
+
+    await load();
+    if (submitted) {
+        TimelogsActions.markPendingInReview(weekStart, weekEnd);
+    }
+    return submitted;
 };
 
 export const PersonTimesheetActions = {

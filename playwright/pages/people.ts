@@ -1,6 +1,14 @@
 import { expect, Locator, Page } from "@playwright/test";
 import Base from "./base";
+import { QuickTimelog } from "./components/QuickTimelog";
 import Sidebar from "./sidebar";
+
+type MockTimesheetStatus = "approved" | "inreview" | "pending" | "rejected";
+
+const MOCK_TIMELOG_IDS = ["11111111-1111-4111-8111-111111111111", "55555555-5555-4555-8555-555555555555"];
+const MOCK_PROJECT_ID = "22222222-2222-4222-8222-222222222222";
+const MOCK_TASK_ID = "33333333-3333-4333-8333-333333333333";
+const MOCK_PERSON_ID = "44444444-4444-4444-8444-444444444444";
 
 class People extends Base {
     public sidebar: Sidebar;
@@ -18,6 +26,7 @@ class People extends Base {
     public timesheetNextWeekButton: Locator;
     public timesheetCurrentWeekButton: Locator;
     public timesheetToggleWeekendsButton: Locator;
+    public timesheetSubmitReviewButton: Locator;
     public approvalsPreviousMonthButton: Locator;
     public approvalsNextMonthButton: Locator;
     public approvalsCurrentMonthButton: Locator;
@@ -45,11 +54,13 @@ class People extends Base {
     public companyUpdateButton: Locator;
     public personEmbeddedDetails: Locator;
     public companyEmbeddedDetails: Locator;
+    public quickTimelog: QuickTimelog;
 
     constructor(page: Page) {
         super(page);
 
         this.sidebar = new Sidebar(page);
+        this.quickTimelog = new QuickTimelog(page);
         this.toolbarMenuButton = page.getByTestId("people-toolbar-menu-button");
         this.toolbarMenu = page.getByTestId("people-toolbar-menu");
         this.contactsTab = page.getByTestId("people-tab-contacts");
@@ -64,6 +75,7 @@ class People extends Base {
         this.timesheetNextWeekButton = page.getByTestId("people-timesheet-next-week-button");
         this.timesheetCurrentWeekButton = page.getByTestId("people-timesheet-current-week-button");
         this.timesheetToggleWeekendsButton = page.getByTestId("people-timesheet-toggle-weekends-button");
+        this.timesheetSubmitReviewButton = page.getByTestId("people-timesheet-submit-review-button");
         this.approvalsPreviousMonthButton = page.getByTestId("people-approvals-previous-month-button");
         this.approvalsNextMonthButton = page.getByTestId("people-approvals-next-month-button");
         this.approvalsCurrentMonthButton = page.getByTestId("people-approvals-current-month-button");
@@ -167,6 +179,136 @@ class People extends Base {
         await expect(this.timesheetToggleWeekendsButton).not.toHaveText(originalLabel ?? "");
         await this.timesheetToggleWeekendsButton.click();
         await expect(this.timesheetToggleWeekendsButton).toHaveText(originalLabel ?? "");
+    }
+
+    public async mockPendingTimesheet() {
+        await this.mockTimesheet(["pending"]);
+    }
+
+    public async mockRejectedTimesheet() {
+        await this.mockTimesheet(["rejected"]);
+    }
+
+    public async mockPartiallyReviewedTimesheet() {
+        await this.mockTimesheet(["pending", "approved"]);
+    }
+
+    public async mockInReviewTimesheet() {
+        await this.mockTimesheet(["inreview"]);
+    }
+
+    private async mockTimesheet(statuses: MockTimesheetStatus[]) {
+        const today = new Date();
+        const monday = new Date(today);
+        monday.setDate(today.getDate() - today.getDay() + 1);
+        monday.setHours(12, 0, 0, 0);
+        const date = monday.toISOString();
+        let submitted = false;
+
+        await this.page.route("**/api/timelogs*", async route => {
+            const request = route.request();
+            if (request.method() === "PATCH" && request.url().endsWith("/api/timelogs/review")) {
+                submitted = true;
+                await route.fulfill({
+                    status: 200,
+                    contentType: "application/json",
+                    body: JSON.stringify({ success: true, data: true }),
+                });
+                return;
+            }
+
+            if (request.method() === "GET") {
+                await route.fulfill({
+                    status: 200,
+                    contentType: "application/json",
+                    body: JSON.stringify({
+                        success: true,
+                        data: statuses.map((status, index) => {
+                            const currentStatus = submitted && status === "pending" ? "inreview" : status;
+                            return {
+                                id: MOCK_TIMELOG_IDS[index],
+                                project: MOCK_PROJECT_ID,
+                                task: MOCK_TASK_ID,
+                                person: MOCK_PERSON_ID,
+                                date,
+                                duration: 3600,
+                                description: `E2E timesheet entry ${index + 1}`,
+                                status: currentStatus,
+                                approvedBy: null,
+                                approvedOn: null,
+                                rejectReason: currentStatus === "rejected" ? "Please add details" : null,
+                                documentInfo: { title: "E2E project" },
+                                taskInfo: { title: "E2E task" },
+                                projectInfo: {},
+                            };
+                        }),
+                    }),
+                });
+                return;
+            }
+
+            await route.continue();
+        });
+    }
+
+    public async expectTimesheetGrouping() {
+        const projectRow = this.page.getByTestId(`people-timesheet-project-${MOCK_PROJECT_ID}-row`);
+        const taskRow = this.page.getByTestId(`people-timesheet-task-${MOCK_TASK_ID}-row`);
+
+        await expect(projectRow).toBeVisible();
+        await expect(taskRow).toHaveCount(0);
+        await projectRow.getByTestId(`people-timesheet-project-${MOCK_PROJECT_ID}-toggle`).click();
+        await expect(taskRow).toBeVisible();
+    }
+
+    public async openTimeEntryDialogFromEmptyDay() {
+        const projectRow = this.page.getByTestId(`people-timesheet-project-${MOCK_PROJECT_ID}-row`);
+        await projectRow
+            .getByTestId(/^people-timesheet-day-.*-add$/)
+            .first()
+            .click();
+        await expect(this.quickTimelog.timelog).toBeVisible();
+        await this.quickTimelog.cancelButton.click();
+        await expect(this.quickTimelog.timelog).toBeHidden();
+    }
+
+    public async openRejectedEntryForCorrection() {
+        const projectRow = this.page.getByTestId(`people-timesheet-project-${MOCK_PROJECT_ID}-row`);
+        await expect(projectRow.getByTestId("people-timesheet-status-rejected")).toBeVisible();
+        await expect(this.timesheetSubmitReviewButton).toBeDisabled();
+        await projectRow.getByTestId(/^people-timesheet-day-.*-entries$/).click();
+        await this.page.getByTestId(`people-timesheet-timelog-${MOCK_TIMELOG_IDS[0]}`).click();
+        await expect(this.quickTimelog.timelog).toBeVisible();
+        await this.quickTimelog.cancelButton.click();
+    }
+
+    public async expectPartiallyReviewedStatus() {
+        const projectRow = this.page.getByTestId(`people-timesheet-project-${MOCK_PROJECT_ID}-row`);
+        await expect(projectRow.getByTestId("people-timesheet-status-partially-reviewed")).toBeVisible();
+        await expect(this.timesheetSubmitReviewButton).toBeEnabled();
+    }
+
+    public async expectInReviewStatus() {
+        const projectRow = this.page.getByTestId(`people-timesheet-project-${MOCK_PROJECT_ID}-row`);
+        await expect(projectRow.getByTestId("people-timesheet-status-inreview")).toBeVisible();
+        await expect(this.timesheetSubmitReviewButton).toBeDisabled();
+    }
+
+    public async clearTimesheetMock() {
+        await this.page.unroute("**/api/timelogs*");
+    }
+
+    public async submitTimesheetForReview() {
+        await expect(this.timesheetSubmitReviewButton).toBeEnabled();
+        const requestPromise = this.page.waitForRequest(
+            request => request.method() === "PATCH" && request.url().endsWith("/api/timelogs/review")
+        );
+        await this.timesheetSubmitReviewButton.click();
+        await expect(this.page.getByTestId("confirm-dialog-title")).toBeVisible();
+        await this.page.getByTestId("confirm-dialog-confirm-button").click();
+        const request = await requestPromise;
+        await this.page.unroute("**/api/timelogs*");
+        return request.postDataJSON() as { start: string; end: string };
     }
 
     public async navigateApprovalInterval() {

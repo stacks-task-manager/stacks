@@ -23,6 +23,7 @@ import { ProjectsLoader } from "./projects";
 import { StacksLoader } from "./stacks";
 import { TimelogsLoader } from "./timelogs";
 import {
+    afterTransactionCommit,
     createOne,
     deleteAll,
     deleteOne,
@@ -60,7 +61,7 @@ async function create(data: Partial<ITask>, positionInStack?: "top" | "bottom") 
             transaction,
         });
 
-        const project = await ProjectsLoader.getOne(newTask.project);
+        const project = await ProjectsLoader.getOne(newTask.project, transaction);
 
         // create permissions for the new task
         const permissions = await PermissionsLoader.create(
@@ -76,26 +77,31 @@ async function create(data: Partial<ITask>, positionInStack?: "top" | "bottom") 
 
         const task = { ...newTask, permissions };
 
-        await sendRealtimeUpdate({
-            type: POLLINGTYPE.TASK,
-            record: task.id,
-            action: POLLINGACTIONS.CREATE,
-            permissions: mergePermissions(permissions, project.permissions),
+        afterTransactionCommit(transaction, () => {
+            sendRealtimeUpdate({
+                type: POLLINGTYPE.TASK,
+                record: task.id,
+                action: POLLINGACTIONS.CREATE,
+                permissions: mergePermissions(permissions, project.permissions),
+            });
         });
 
-        await StacksLoader.addTaskOrder(newTask.stack, newTask.id, positionInStack ?? "bottom");
+        await StacksLoader.addTaskOrder(newTask.stack, newTask.id, positionInStack ?? "bottom", transaction);
 
         if (newTask.assignees?.length) {
             for (const assignee of newTask.assignees) {
                 if (assignee === user.id) continue;
-                NotificationsLoader.add({
-                    recipient: assignee,
-                    subject: translate("You have been assigned to a new task"),
-                    message: newTask.title,
-                    recordType: NOTIFICATION_RECORD_TYPE.TASK,
-                    recordId: newTask.id,
-                    data: newTask as any,
-                });
+                await NotificationsLoader.add(
+                    {
+                        recipient: assignee,
+                        subject: translate("You have been assigned to a new task"),
+                        message: newTask.title,
+                        recordType: NOTIFICATION_RECORD_TYPE.TASK,
+                        recordId: newTask.id,
+                        data: newTask as any,
+                    },
+                    transaction
+                );
             }
         }
         // Trigger CREATED automation event
@@ -348,14 +354,17 @@ async function removeById(id: string, extTransaction?: Transaction): Promise<ITa
 
         for (const assignee of task.assignees ?? []) {
             if (assignee === user.id) continue;
-            NotificationsLoader.add({
-                recipient: assignee,
-                subject: translate("A task you were assigned to was deleted"),
-                message: task.title,
-                recordType: NOTIFICATION_RECORD_TYPE.TASK,
-                recordId: id,
-                data: task,
-            });
+            await NotificationsLoader.add(
+                {
+                    recipient: assignee,
+                    subject: translate("A task you were assigned to was deleted"),
+                    message: task.title,
+                    recordType: NOTIFICATION_RECORD_TYPE.TASK,
+                    recordId: id,
+                    data: task,
+                },
+                transaction
+            );
         }
 
         await TimelogsLoader.removeByTask(id, transaction);
@@ -366,11 +375,13 @@ async function removeById(id: string, extTransaction?: Transaction): Promise<ITa
             transaction,
         });
 
-        await sendRealtimeUpdate({
-            type: POLLINGTYPE.TASK,
-            record: task.id,
-            action: POLLINGACTIONS.DELETED,
-            permissions: task.permissions,
+        afterTransactionCommit(transaction, () => {
+            sendRealtimeUpdate({
+                type: POLLINGTYPE.TASK,
+                record: task.id,
+                action: POLLINGACTIONS.DELETED,
+                permissions: task.permissions,
+            });
         });
 
         await StacksLoader.removeTaskOrder(task.stack, task.id, transaction);
@@ -399,14 +410,18 @@ async function removeByProject(project: string, extTransaction?: Transaction): P
 
         for (const task of deletedTasks) {
             await StacksLoader.removeTaskOrder(task.stack, task.id, transaction);
-
-            await sendRealtimeUpdate({
-                type: POLLINGTYPE.TASK,
-                record: task.id,
-                action: POLLINGACTIONS.DELETED,
-                permissions: task.permissions,
-            });
         }
+
+        afterTransactionCommit(transaction, () => {
+            for (const task of deletedTasks) {
+                sendRealtimeUpdate({
+                    type: POLLINGTYPE.TASK,
+                    record: task.id,
+                    action: POLLINGACTIONS.DELETED,
+                    permissions: task.permissions,
+                });
+            }
+        });
 
         invalidateApiCacheForCurrentRequest();
         return deletedTasks;
@@ -433,14 +448,18 @@ async function removeByStack(stack: string, extTransaction?: Transaction): Promi
 
         for (const task of deletedTasks) {
             await StacksLoader.removeTaskOrder(task.stack, task.id, transaction);
-
-            await sendRealtimeUpdate({
-                type: POLLINGTYPE.TASK,
-                record: task.id,
-                action: POLLINGACTIONS.DELETED,
-                permissions: task.permissions,
-            });
         }
+
+        afterTransactionCommit(transaction, () => {
+            for (const task of deletedTasks) {
+                sendRealtimeUpdate({
+                    type: POLLINGTYPE.TASK,
+                    record: task.id,
+                    action: POLLINGACTIONS.DELETED,
+                    permissions: task.permissions,
+                });
+            }
+        });
 
         invalidateApiCacheForCurrentRequest();
         return deletedTasks;
@@ -498,28 +517,34 @@ async function update(id: string, data: Partial<ITask>, extTransaction?: Transac
             for (const assignee of data.assignees) {
                 // sending notification to assignees by skipping current user
                 if (assignee === user.id) continue;
-                NotificationsLoader.add({
-                    recipient: assignee,
-                    subject: translate("You have been assigned to a task"),
-                    message: task.title,
-                    recordType: NOTIFICATION_RECORD_TYPE.TASK,
-                    recordId: id,
-                    data: task,
-                });
+                await NotificationsLoader.add(
+                    {
+                        recipient: assignee,
+                        subject: translate("You have been assigned to a task"),
+                        message: task.title,
+                        recordType: NOTIFICATION_RECORD_TYPE.TASK,
+                        recordId: id,
+                        data: task,
+                    },
+                    transaction
+                );
             }
         }
 
         if (data.done === false && task.done === true) {
             for (const assignee of task.assignees ?? []) {
                 if (assignee === user.id) continue;
-                NotificationsLoader.add({
-                    recipient: assignee,
-                    subject: translate("A task you are assigned to was reopened"),
-                    message: task.title,
-                    recordId: id,
-                    recordType: NOTIFICATION_RECORD_TYPE.TASK,
-                    data: task,
-                });
+                await NotificationsLoader.add(
+                    {
+                        recipient: assignee,
+                        subject: translate("A task you are assigned to was reopened"),
+                        message: task.title,
+                        recordId: id,
+                        recordType: NOTIFICATION_RECORD_TYPE.TASK,
+                        data: task,
+                    },
+                    transaction
+                );
             }
         }
 
@@ -527,14 +552,17 @@ async function update(id: string, data: Partial<ITask>, extTransaction?: Transac
             for (const assignee of task.assignees ?? []) {
                 // sending notification to assignees by skipping current user
                 if (assignee === user.id) continue;
-                NotificationsLoader.add({
-                    recipient: assignee,
-                    subject: translate("A task where you are assigned to was completed"),
-                    message: task.title,
-                    recordId: id,
-                    recordType: NOTIFICATION_RECORD_TYPE.TASK,
-                    data: task,
-                });
+                await NotificationsLoader.add(
+                    {
+                        recipient: assignee,
+                        subject: translate("A task where you are assigned to was completed"),
+                        message: task.title,
+                        recordId: id,
+                        recordType: NOTIFICATION_RECORD_TYPE.TASK,
+                        data: task,
+                    },
+                    transaction
+                );
             }
         }
         /*
@@ -620,12 +648,14 @@ async function update(id: string, data: Partial<ITask>, extTransaction?: Transac
 
         const project = await ProjectsLoader.getOne(updatedTask.project, transaction);
 
-        await sendRealtimeUpdate({
-            type: POLLINGTYPE.TASK,
-            record: task.id,
-            action: POLLINGACTIONS.UPDATE,
-            permissions: mergePermissions(task.permissions, project.permissions),
-            automation: automationRan,
+        afterTransactionCommit(transaction, () => {
+            sendRealtimeUpdate({
+                type: POLLINGTYPE.TASK,
+                record: task.id,
+                action: POLLINGACTIONS.UPDATE,
+                permissions: mergePermissions(task.permissions, project.permissions),
+                automation: automationRan,
+            });
         });
 
         invalidateApiCacheForCurrentRequest();
@@ -652,7 +682,7 @@ const unarchive = async (id: string, stack?: string, extTransaction?: Transactio
             await StacksLoader.addTaskOrder(stack, id, "top", transaction);
         }
 
-        return update(id, data, extTransaction);
+        return update(id, data, transaction);
     });
 };
 

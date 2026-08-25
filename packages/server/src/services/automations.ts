@@ -20,7 +20,7 @@ import {
 } from "@stacks/types";
 
 import { Errors } from "../errors";
-import { findOne, updateOne, withTransaction } from "../loaders/utils";
+import { afterTransactionCommit, findOne, updateOne } from "../loaders/utils";
 import { ProjectsLoader, StacksLoader } from "src/loaders";
 import { sendRealtimeUpdate } from "src/events";
 
@@ -271,12 +271,14 @@ async function executeAction(
 
             const project = await ProjectsLoader.getOne(stack.project, extTransaction);
 
-            await sendRealtimeUpdate({
-                type: POLLINGTYPE.STACK,
-                record: stack.id,
-                action: POLLINGACTIONS.UPDATE,
-                permissions: project.permissions,
-                automation: true,
+            afterTransactionCommit(extTransaction, () => {
+                sendRealtimeUpdate({
+                    type: POLLINGTYPE.STACK,
+                    record: stack.id,
+                    action: POLLINGACTIONS.UPDATE,
+                    permissions: project.permissions,
+                    automation: true,
+                });
             });
 
             break;

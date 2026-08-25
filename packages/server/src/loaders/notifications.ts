@@ -10,7 +10,7 @@ import { Errors } from "../errors";
 import { sendRealtimeUpdateToUser } from "../events";
 import { invalidateApiCacheForCurrentRequest } from "../utils/cache";
 import { getCurrentUser } from "./context";
-import { withTransaction } from "./utils";
+import { afterTransactionCommit, withTransaction } from "./utils";
 import { sanitizeWhere } from "./utils";
 
 /** Unread notifications for the current user, newest first. */
@@ -46,10 +46,12 @@ async function add(data: NotificationData, extTransaction?: Transaction) {
 
         const newNotification = newNotificationEntity.toJSON();
 
-        sendRealtimeUpdateToUser(data.recipient, {
-            type: POLLINGTYPE.NOTIFICATION,
-            record: `${newNotification.id}`,
-            action: POLLINGACTIONS.CREATE,
+        afterTransactionCommit(transaction, () => {
+            sendRealtimeUpdateToUser(data.recipient, {
+                type: POLLINGTYPE.NOTIFICATION,
+                record: `${newNotification.id}`,
+                action: POLLINGACTIONS.CREATE,
+            });
         });
 
         return newNotification;

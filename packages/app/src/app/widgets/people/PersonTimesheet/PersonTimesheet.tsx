@@ -41,11 +41,7 @@ import classNames from "classnames";
 import { useCanAccess, useTimelogsInterval } from "app/hooks";
 import { translate } from "@stacks/translations";
 
-type TimesheetStatus =
-    | TIMELOG_STATUS.PENDING
-    | TIMELOG_STATUS.APPROVED
-    | TIMELOG_STATUS.REJECTED
-    | "partiallyApproved";
+type TimesheetStatus = TIMELOG_STATUS | "partiallyReviewed";
 
 interface IBase {
     id: string;
@@ -99,6 +95,11 @@ export const TIMELOG_STATUS_MAP = {
     },
 };
 
+const summarizeStatus = (timelogs: ITimeLog[]): TimesheetStatus => {
+    const statuses = new Set(timelogs.map(timelog => timelog.status));
+    return statuses.size === 1 ? timelogs[0].status : "partiallyReviewed";
+};
+
 export const PersonTimesheet = () => {
     const { interval } = PersonTimesheetStore.use();
     const { timelogs, isLoading } = useTimelogsInterval(interval);
@@ -139,35 +140,10 @@ export const PersonTimesheet = () => {
         }, {} as Record<string, IProjectBased>);
 
         Object.values(groupedTimelogs).forEach(project => {
-            // Set status for each task based on its timelogs
             Object.values(project.tasks).forEach(task => {
-                const reviewed = task.timelogs.some(timelog => timelog.status !== TIMELOG_STATUS.PENDING);
-                const isApproved = task.timelogs.every(timelog => timelog.status === TIMELOG_STATUS.APPROVED);
-                if (isApproved) {
-                    task.status = TIMELOG_STATUS.APPROVED;
-                } else {
-                    const isPartiallyApproved =
-                        reviewed && task.timelogs.some(timelog => timelog.status === TIMELOG_STATUS.APPROVED);
-                    if (isPartiallyApproved) {
-                        task.status = "partiallyApproved";
-                    }
-                }
+                task.status = summarizeStatus(task.timelogs);
             });
-
-            // Set status for project based on all tasks' timelogs
-            const isApproved = Object.values(project.tasks)
-                .flatMap(task => task.timelogs)
-                .every(timelog => timelog.status === TIMELOG_STATUS.APPROVED);
-            if (isApproved) {
-                project.status = TIMELOG_STATUS.APPROVED;
-            } else {
-                const isPartiallyApproved = Object.values(project.tasks)
-                    .flatMap(task => task.timelogs)
-                    .some(timelog => timelog.status === TIMELOG_STATUS.APPROVED);
-                if (isPartiallyApproved) {
-                    project.status = "partiallyApproved";
-                }
-            }
+            project.status = summarizeStatus(Object.values(project.tasks).flatMap(task => task.timelogs));
         });
 
         return groupedTimelogs;
@@ -185,21 +161,26 @@ export const PersonTimesheet = () => {
             date: date ?? interval[0] ?? new Date(),
             task,
         });
-        setShowTimelog(!showTimelog);
+        setShowTimelog(true);
     };
 
     const handleCloseTimelog = () => {
         setShowTimelog(false);
     };
 
-    const handleOnAdd = (timelog: ITimeLog, another?: boolean) => {
+    const handleOnAdd = (_timelog: ITimeLog, another?: boolean) => {
         if (another) {
             setShowTimelog(true);
         }
     };
 
+    const handleEditTimelog = (timelog: ITimeLog) => {
+        setTimelog(timelog);
+        setShowTimelog(true);
+    };
+
     const toggleProjectVisibility = (projectId: string) => {
-        setExplodedProjects(xor(explodedProjects, [projectId]));
+        setExplodedProjects(current => xor(current, [projectId]));
     };
 
     return (
@@ -219,7 +200,11 @@ export const PersonTimesheet = () => {
                         }
                         description={translate("Add some timelogs to see the data here")}
                     >
-                        <Button intent="primary" onClick={() => handleToggleTimelog()}>
+                        <Button
+                            intent="primary"
+                            onClick={() => handleToggleTimelog()}
+                            data-testid="people-timesheet-empty-log-time-button"
+                        >
                             {translate("Log time")}
                         </Button>
                     </BlankSlate>
@@ -233,39 +218,49 @@ export const PersonTimesheet = () => {
                     <TableBody>
                         {Object.values(grouped).map(project => (
                             <React.Fragment key={project.id}>
-                                <tr>
+                                <tr data-testid={`people-timesheet-project-${project.id}-row`}>
                                     <TitleCol
                                         title={project.title}
                                         isMain
                                         isOpen={explodedProjects.includes(project.id)}
                                         onToggleVisibility={() => toggleProjectVisibility(project.id)}
                                         status={project.status}
+                                        testId={`people-timesheet-project-${project.id}-toggle`}
                                     />
                                     <TimelogsCols
                                         projectId={project.id}
                                         detailed
                                         timelogs={Object.values(project.tasks).flatMap(task => task.timelogs)}
                                         onAdd={handleToggleTimelog}
+                                        onEdit={handleEditTimelog}
                                     />
                                     <TotalColumn value={project.total} />
-                                    <AddColumn onAdd={() => handleToggleTimelog(project.id)} />
+                                    <AddColumn
+                                        onAdd={() => handleToggleTimelog(project.id)}
+                                        testId={`people-timesheet-project-${project.id}-add`}
+                                    />
                                 </tr>
 
                                 {explodedProjects.includes(project.id) &&
                                     Object.values(project.tasks).map(task => (
-                                        <tr key={task.id}>
+                                        <tr
+                                            key={task.id}
+                                            data-testid={`people-timesheet-task-${task.id}-row`}
+                                        >
                                             <TitleCol title={task.title} status={task.status} />
                                             <TimelogsCols
                                                 projectId={project.id}
                                                 taskId={task.id}
                                                 timelogs={task.timelogs}
                                                 onAdd={handleToggleTimelog}
+                                                onEdit={handleEditTimelog}
                                             />
                                             <TotalColumn value={task.total} />
                                             <AddColumn
                                                 onAdd={() =>
                                                     handleToggleTimelog(project.id, undefined, task.id)
                                                 }
+                                                testId={`people-timesheet-task-${task.id}-add`}
                                             />
                                         </tr>
                                     ))}
@@ -348,13 +343,20 @@ const TotalColumn = ({ value }: { value: number }) => {
     );
 };
 
-const AddColumn = ({ onAdd }: { onAdd: () => void }) => {
+const AddColumn = ({ onAdd, testId }: { onAdd: () => void; testId: string }) => {
     const { write: canLogTime } = useCanAccess(ROLE_SECTIONS.TIMELOGS);
 
     return (
         <TableBodyCell align="right">
-            <Tooltip content="Log time this week" placement="top-end">
-                <Button variant="minimal" size="small" onClick={onAdd} disabled={!canLogTime}>
+            <Tooltip content={translate("Log time this week")} placement="top-end">
+                <Button
+                    variant="minimal"
+                    size="small"
+                    onClick={onAdd}
+                    disabled={!canLogTime}
+                    aria-label={translate("Log time this week")}
+                    data-testid={testId}
+                >
                     <Icon icon="plus" />
                 </Button>
             </Tooltip>
@@ -368,6 +370,7 @@ interface TitleColProps {
     isMain?: boolean;
     status?: TimesheetStatus;
     onToggleVisibility?: () => void;
+    testId?: string;
 }
 const TitleCol: FunctionComponent<TitleColProps> = ({
     title,
@@ -375,6 +378,7 @@ const TitleCol: FunctionComponent<TitleColProps> = ({
     isOpen,
     isMain,
     onToggleVisibility,
+    testId,
 }) => {
     return (
         <TableBodyCell>
@@ -382,7 +386,13 @@ const TitleCol: FunctionComponent<TitleColProps> = ({
                 <Col align="center" gap={10}>
                     {isMain ? (
                         <>
-                            <Button variant="minimal" size="small" onClick={onToggleVisibility}>
+                            <Button
+                                variant="minimal"
+                                size="small"
+                                onClick={onToggleVisibility}
+                                aria-label={isOpen ? translate("Collapse") : translate("Expand")}
+                                data-testid={testId}
+                            >
                                 <Icon icon={isOpen ? "chevron-up" : "chevron-down"} />
                             </Button>
                             <strong>{title}</strong>
@@ -394,14 +404,28 @@ const TitleCol: FunctionComponent<TitleColProps> = ({
                     )}
                 </Col>
                 <Col justify="right">
-                    {status === "approved" && (
-                        <Tag minimal intent={Intent.SUCCESS}>
+                    {status === TIMELOG_STATUS.APPROVED && (
+                        <Tag minimal intent={Intent.SUCCESS} data-testid="people-timesheet-status-approved">
                             {translate("Approved")}
                         </Tag>
                     )}
-                    {status === "partiallyApproved" && (
-                        <Tag minimal intent={Intent.WARNING}>
-                            {translate("Partial")}
+                    {status === TIMELOG_STATUS.INREVIEW && (
+                        <Tag minimal intent={Intent.WARNING} data-testid="people-timesheet-status-inreview">
+                            {translate("In review")}
+                        </Tag>
+                    )}
+                    {status === TIMELOG_STATUS.REJECTED && (
+                        <Tag minimal intent={Intent.DANGER} data-testid="people-timesheet-status-rejected">
+                            {translate("Needs changes")}
+                        </Tag>
+                    )}
+                    {status === "partiallyReviewed" && (
+                        <Tag
+                            minimal
+                            intent={Intent.WARNING}
+                            data-testid="people-timesheet-status-partially-reviewed"
+                        >
+                            {translate("Partially reviewed")}
                         </Tag>
                     )}
                 </Col>
@@ -415,6 +439,7 @@ interface TimelogsColsProps {
     timelogs: ITimeLog[];
     detailed?: boolean;
     onAdd: (project?: string, date?: Date, task?: string) => void;
+    onEdit: (timelog: ITimeLog) => void;
     taskId?: string;
 }
 const TimelogsCols: FunctionComponent<TimelogsColsProps> = ({
@@ -423,14 +448,28 @@ const TimelogsCols: FunctionComponent<TimelogsColsProps> = ({
     timelogs: logs,
     detailed,
     onAdd,
+    onEdit,
 }) => {
     const { interval } = PersonTimesheetStore.use();
     const { write: canLogTime } = useCanAccess(ROLE_SECTIONS.TIMELOGS);
+    const timelogsByDate = useMemo(() => {
+        const result = new Map<string, ITimeLog[]>();
+        logs.forEach(timelog => {
+            const key = format(timelog.date, "yyyy-MM-dd");
+            const entries = result.get(key);
+            if (entries) {
+                entries.push(timelog);
+            } else {
+                result.set(key, [timelog]);
+            }
+        });
+        return result;
+    }, [logs]);
 
     return (
         <>
             {interval.map((date, i) => {
-                const timelogs = logs.filter(tl => isSameDay(tl.date, date));
+                const timelogs = timelogsByDate.get(format(date, "yyyy-MM-dd")) ?? [];
                 const duration = timelogs.reduce((acc, timelog) => acc + timelog.duration, 0);
 
                 const isApproved =
@@ -478,11 +517,18 @@ const TimelogsCols: FunctionComponent<TimelogsColsProps> = ({
                                         date={date}
                                         task={taskId}
                                         detailed={detailed}
+                                        timelogs={timelogs}
                                         onAdd={() => onAdd(projectId, date, taskId)}
+                                        onEdit={onEdit}
                                     />
                                 }
                             >
-                                <Tag minimal interactive intent={Intent.SUCCESS}>
+                                <Tag
+                                    minimal
+                                    interactive
+                                    intent={Intent.SUCCESS}
+                                    data-testid={`people-timesheet-day-${format(date, "yyyy-MM-dd")}-entries`}
+                                >
                                     {formatStringDuration(duration)}
                                 </Tag>
                             </Popover>
@@ -496,6 +542,7 @@ const TimelogsCols: FunctionComponent<TimelogsColsProps> = ({
                                     minimal
                                     interactive={canLogTime}
                                     onClick={() => onAdd(projectId, date, taskId)}
+                                    data-testid={`people-timesheet-day-${format(date, "yyyy-MM-dd")}-add`}
                                 >
                                     -
                                 </Tag>
@@ -512,17 +559,15 @@ const FooterTotals = ({ records }: { records: Record<string, IProjectBased> }) =
     const { interval } = PersonTimesheetStore.use();
 
     const { daysTotals, weekTotal } = useMemo(() => {
-        const daysTotals: number[] = interval.map(date => {
-            return Object.values(records).reduce((acc, project) => {
-                return (
-                    acc +
-                    Object.values(project.tasks)
-                        .flatMap(task => task.timelogs)
-                        .filter(timelog => isSameDay(timelog.date, date))
-                        .reduce((acc, timelog) => acc + timelog.duration, 0)
-                );
-            }, 0);
-        });
+        const totalsByDate = new Map<string, number>();
+        Object.values(records)
+            .flatMap(project => Object.values(project.tasks))
+            .flatMap(task => task.timelogs)
+            .forEach(timelog => {
+                const key = format(timelog.date, "yyyy-MM-dd");
+                totalsByDate.set(key, (totalsByDate.get(key) ?? 0) + timelog.duration);
+            });
+        const daysTotals = interval.map(date => totalsByDate.get(format(date, "yyyy-MM-dd")) ?? 0);
 
         const weekTotal = daysTotals.reduce((acc, day) => {
             return acc + day;
@@ -558,12 +603,20 @@ interface DayPopupContent {
     task?: string;
     date: Date;
     detailed?: boolean;
+    timelogs: ITimeLog[];
     onAdd: () => void;
+    onEdit: (timelog: ITimeLog) => void;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const DayPopupContent: FunctionComponent<DayPopupContent> = ({ project, task, date, detailed, onAdd }) => {
-    const { timelogs } = useTimelogsInterval([date]);
+const DayPopupContent: FunctionComponent<DayPopupContent> = ({
+    project,
+    task,
+    date,
+    detailed,
+    timelogs,
+    onAdd,
+    onEdit,
+}) => {
     const navigate = useNavigate();
     const location = useLocation();
     const { write: canLogTime } = useCanAccess(ROLE_SECTIONS.TIMELOGS);
@@ -590,6 +643,9 @@ const DayPopupContent: FunctionComponent<DayPopupContent> = ({ project, task, da
         <Scroller thin vertical maxHeight={300}>
             <Menu style={{ maxWidth: 300 }}>
                 {filteredTimelogs.map(timelog => {
+                    const canEdit =
+                        canLogTime &&
+                        [TIMELOG_STATUS.PENDING, TIMELOG_STATUS.REJECTED].includes(timelog.status);
                     return (
                         <MenuItem
                             key={timelog.id}
@@ -622,14 +678,20 @@ const DayPopupContent: FunctionComponent<DayPopupContent> = ({ project, task, da
                                     {formatStringDuration(timelog.duration)}
                                 </Tag>
                             }
-                            onClick={() => handleOpenTask(timelog.task)}
+                            onClick={() => (canEdit ? onEdit(timelog) : handleOpenTask(timelog.task))}
+                            data-testid={`people-timesheet-timelog-${timelog.id}`}
                         />
                     );
                 })}
                 {canLogTime && (
                     <>
                         <MenuDivider />
-                        <MenuItem icon={<Icon icon="plus" />} text={translate("Log time")} onClick={onAdd} />
+                        <MenuItem
+                            icon={<Icon icon="plus" />}
+                            text={translate("Log time")}
+                            onClick={onAdd}
+                            data-testid="people-timesheet-popover-log-time-button"
+                        />
                     </>
                 )}
             </Menu>
@@ -639,7 +701,7 @@ const DayPopupContent: FunctionComponent<DayPopupContent> = ({ project, task, da
 
 export const TimelogStatusIcon = ({ status }: { status: TIMELOG_STATUS }) => {
     return (
-        <Tooltip content={TIMELOG_STATUS_MAP[status].label} placement="left">
+        <Tooltip content={translate(TIMELOG_STATUS_MAP[status].label)} placement="left">
             <Icon icon={TIMELOG_STATUS_MAP[status].icon} color={TIMELOG_STATUS_MAP[status].color} />
         </Tooltip>
     );

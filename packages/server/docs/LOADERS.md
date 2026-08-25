@@ -84,21 +84,29 @@ This makes it easy for callers to compose multiple loader operations into one at
 ### Realtime broadcasts
 
 After mutations, loaders typically emit a lightweight “polling update” so connected clients refresh their local stores.
+When a mutation uses a Sequelize transaction, defer the update until commit with
+`afterTransactionCommit(transaction, callback)`. Publishing inside a rollbackable transaction can
+make clients reload stale data or react to a write that never commits.
 
 The primitive is [`sendRealtimeUpdate`](../src/events.ts), which emits an [`IUpdate`](../../types/src/models/updates.ts) via the app-wide emitter. The WebSocket server broadcasts it to clients.
 
 Example: task creation broadcasts an update whose `permissions` is the merged task+project visibility:
 
 ```ts
-await sendRealtimeUpdate({
-  type: POLLINGTYPE.TASK,
-  record: task.id,
-  action: POLLINGACTIONS.CREATE,
-  permissions: mergePermissions(permissions, project.permissions),
+afterTransactionCommit(transaction, () => {
+  sendRealtimeUpdate({
+    type: POLLINGTYPE.TASK,
+    record: task.id,
+    action: POLLINGACTIONS.CREATE,
+    permissions: mergePermissions(permissions, project.permissions),
+  });
 });
 ```
 
-See the end-to-end realtime flow in [REALTIME_UPDATES.md](REALTIME_UPDATES.md).
+Nested loaders must receive the outer transaction so both their writes and their post-commit side
+effects share the same outcome. See the end-to-end realtime flow in
+[REALTIME_UPDATES.md](REALTIME_UPDATES.md) and the notification-specific rules in
+[NOTIFICATIONS.md](NOTIFICATIONS.md).
 
 ### Cache invalidation
 
@@ -111,6 +119,7 @@ Some loaders call `invalidateApiCacheForCurrentRequest()` after writes so cached
 3. Re-export it from [`src/loaders/index.ts`](../src/loaders/index.ts).
 4. Reuse shared helpers:
    - `withTransaction` for transaction boundaries
+   - `afterTransactionCommit` for realtime or other external side effects coupled to a write
    - `createOne`, `updateOne`, `deleteOne` for consistent audit fields and tenant scoping
    - `sanitizeWhere` / `sanitizeWherePermissions` for consistent visibility rules
 

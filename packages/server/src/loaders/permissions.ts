@@ -7,7 +7,13 @@ import { Errors } from "../errors";
 import { POLLINGACTIONS, POLLINGTYPE, type IPermissions } from "@stacks/types";
 import type { Transaction } from "sequelize";
 import { getCurrentUser } from "./context";
-import { createOne, sanitizeWhere, sanitizeWherePermissions, withTransaction } from "./utils";
+import {
+    afterTransactionCommit,
+    createOne,
+    sanitizeWhere,
+    sanitizeWherePermissions,
+    withTransaction,
+} from "./utils";
 import { sendRealtimeUpdate } from "../events";
 import { translate } from "@stacks/translations";
 
@@ -95,30 +101,32 @@ async function update(id: string, permissions: PermissionUpdateInput, transactio
 
         if (updatedPermissions && updatedPermissions.length) {
             const updatedRow = updatedPermissions[0].toJSON() as IPermissions & { type: POLLINGTYPE };
-            sendRealtimeUpdate({
-                type: updatedRow.type,
-                action: POLLINGACTIONS.UPDATE,
-                record: id,
-                permissions: updatedRow,
+            afterTransactionCommit(transaction, () => {
+                sendRealtimeUpdate({
+                    type: updatedRow.type,
+                    action: POLLINGACTIONS.UPDATE,
+                    record: id,
+                    permissions: updatedRow,
+                });
+
+                if ([POLLINGTYPE.PROJECT, POLLINGTYPE.NOTEPAD].includes(updatedRow.type)) {
+                    sendRealtimeUpdate({
+                        type: POLLINGTYPE.DOCUMENTS,
+                        action: POLLINGACTIONS.UPDATE,
+                        record: id,
+                        permissions: updatedRow,
+                    });
+                }
+
+                if (updatedRow.type === POLLINGTYPE.CALENDAR) {
+                    sendRealtimeUpdate({
+                        type: POLLINGTYPE.EVENT,
+                        action: POLLINGACTIONS.UPDATE,
+                        record: id,
+                        permissions: updatedRow,
+                    });
+                }
             });
-
-            if ([POLLINGTYPE.PROJECT, POLLINGTYPE.NOTEPAD].includes(updatedRow.type)) {
-                sendRealtimeUpdate({
-                    type: POLLINGTYPE.DOCUMENTS,
-                    action: POLLINGACTIONS.UPDATE,
-                    record: id,
-                    permissions: updatedRow,
-                });
-            }
-
-            if (updatedRow.type === POLLINGTYPE.CALENDAR) {
-                sendRealtimeUpdate({
-                    type: POLLINGTYPE.EVENT,
-                    action: POLLINGACTIONS.UPDATE,
-                    record: id,
-                    permissions: updatedRow,
-                });
-            }
         }
 
         return true;

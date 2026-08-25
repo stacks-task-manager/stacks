@@ -52,6 +52,11 @@ Notes:
 
 - Many broadcasts include a `permissions` snapshot so the client can skip fetching records it cannot see.
 - Some flows target a single user (instead of broadcast) via [`sendRealtimeUpdateToUser`](../src/events.ts).
+- A broadcast coupled to a Sequelize transaction must be registered with
+  `afterTransactionCommit(transaction, callback)`. This prevents clients from reloading before the
+  write is visible and suppresses events for rolled-back writes.
+- In-app notification persistence and targeted delivery are documented in
+  [NOTIFICATIONS.md](NOTIFICATIONS.md).
 
 ## 3. Server transport (`/ws`)
 

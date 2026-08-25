@@ -2,8 +2,12 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { POLLINGACTIONS, POLLINGTYPE } from "@stacks/types";
 
+const afterCommitCallbacks: Array<() => void | Promise<void>> = [];
 const transaction = {
-    commit: vi.fn(),
+    afterCommit: vi.fn((callback: () => void | Promise<void>) => afterCommitCallbacks.push(callback)),
+    commit: vi.fn(async () => {
+        for (const callback of afterCommitCallbacks) await callback();
+    }),
     rollback: vi.fn(),
 };
 
@@ -93,7 +97,7 @@ describe("CalendarsLoader", () => {
 
     beforeEach(() => {
         vi.clearAllMocks();
-        transaction.commit.mockResolvedValue(undefined);
+        afterCommitCallbacks.length = 0;
         transaction.rollback.mockResolvedValue(undefined);
         transactionMock.mockResolvedValue(transaction as any);
         createCalendarMock.mockResolvedValue({

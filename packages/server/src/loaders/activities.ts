@@ -28,12 +28,15 @@ async function create(data: Omit<IActivity, "id" | "created" | "updated">): Prom
         }
 
         data.person = user.id;
-        const newActivityEntity = await ActivityEntity.create({
-            ...data,
-            tenant: user.tenant,
-            createdBy: user.id,
-            updatedBy: user.id,
-        });
+        const newActivityEntity = await ActivityEntity.create(
+            {
+                ...data,
+                tenant: user.tenant,
+                createdBy: user.id,
+                updatedBy: user.id,
+            },
+            { transaction }
+        );
         const newActivity: IActivity = newActivityEntity.toJSON();
 
         if (
@@ -52,14 +55,17 @@ async function create(data: Omit<IActivity, "id" | "created" | "updated">): Prom
 
                 for (const assignee of task.assignees ?? []) {
                     if (assignee === user.id) continue;
-                    NotificationsLoader.add({
-                        recipient: assignee,
-                        subject: translate("New comment on a task"),
-                        message: newActivity.content,
-                        recordType: NOTIFICATION_RECORD_TYPE.COMMENT,
-                        recordId: newActivity.id,
-                        data: newActivity as any,
-                    });
+                    await NotificationsLoader.add(
+                        {
+                            recipient: assignee,
+                            subject: translate("New comment on a task"),
+                            message: newActivity.content,
+                            recordType: NOTIFICATION_RECORD_TYPE.COMMENT,
+                            recordId: newActivity.id,
+                            data: newActivity as any,
+                        },
+                        transaction
+                    );
                 }
             }
         }

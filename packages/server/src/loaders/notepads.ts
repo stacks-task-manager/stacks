@@ -10,7 +10,7 @@ import { Errors } from "../errors";
 import { sendRealtimeUpdate } from "../events";
 import { invalidateApiCacheForCurrentRequest } from "../utils/cache";
 import { getCurrentUser } from "./context";
-import { deleteOne, findAll, findOne, updateOne, withTransaction } from "./utils";
+import { afterTransactionCommit, deleteOne, findAll, findOne, updateOne, withTransaction } from "./utils";
 
 NotepadEntity.hasOne(PermissionEntity, { foreignKey: "id", constraints: false });
 PermissionEntity.belongsTo(NotepadEntity, { foreignKey: "id", constraints: false });
@@ -110,11 +110,13 @@ async function update(id: string, data: any, transaction?: Transaction): Promise
             transaction,
         });
 
-        sendRealtimeUpdate({
-            type: POLLINGTYPE.NOTEPAD,
-            record: id,
-            action: POLLINGACTIONS.UPDATE,
-            permissions: notepad.permissions,
+        afterTransactionCommit(transaction, () => {
+            sendRealtimeUpdate({
+                type: POLLINGTYPE.NOTEPAD,
+                record: id,
+                action: POLLINGACTIONS.UPDATE,
+                permissions: notepad.permissions,
+            });
         });
 
         invalidateApiCacheForCurrentRequest();

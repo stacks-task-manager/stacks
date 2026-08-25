@@ -5,7 +5,7 @@
 import { Op } from "sequelize";
 import { Errors } from "../errors";
 import { CalendarEntity, PermissionEntity } from "@stacks/db";
-import { findAll, findOne, sanitizeWhere, updateOne, withTransaction } from "./utils";
+import { afterTransactionCommit, findAll, findOne, sanitizeWhere, updateOne, withTransaction } from "./utils";
 import { getCurrentUser } from "./context";
 import { invalidateApiCacheForCurrentRequest } from "../utils/cache";
 import { ICalendar, IPermissions, POLLINGACTIONS, POLLINGTYPE } from "@stacks/types";
@@ -141,7 +141,9 @@ async function create(data: {
             transaction
         );
 
-        await sendCalendarRealtimeUpdate(calendarData.id, POLLINGACTIONS.CREATE, permissions);
+        afterTransactionCommit(transaction, () =>
+            sendCalendarRealtimeUpdate(calendarData.id, POLLINGACTIONS.CREATE, permissions)
+        );
         invalidateApiCacheForCurrentRequest();
         return { ...calendarData, permissions };
     });

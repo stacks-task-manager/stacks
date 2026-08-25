@@ -4,7 +4,15 @@ import { Errors } from "../errors";
 import { POLLINGACTIONS, POLLINGTYPE, type IBookmark } from "@stacks/types";
 import type { Transaction } from "sequelize";
 import { getCurrentUser } from "./context";
-import { createOne, deleteOne, findAll, findOne, sanitizeWherePermissions, withTransaction } from "./utils";
+import {
+    afterTransactionCommit,
+    createOne,
+    deleteOne,
+    findAll,
+    findOne,
+    sanitizeWherePermissions,
+    withTransaction,
+} from "./utils";
 import { PermissionsLoader } from "./permissions";
 import { sendRealtimeUpdateToUser } from "../events";
 import { invalidateApiCacheForCurrentRequest } from "../utils/cache";
@@ -24,6 +32,7 @@ async function create(data: any, extTransaction?: Transaction) {
         const newBookmark = await createOne<IBookmark>({
             entity: BookmarkEntity,
             data,
+            transaction,
         });
         const user = getCurrentUser();
 
@@ -38,11 +47,13 @@ async function create(data: any, extTransaction?: Transaction) {
             transaction
         );
 
-        sendRealtimeUpdateToUser(user.id, {
-            type: POLLINGTYPE.BOOKMARKS,
-            record: newBookmark.id,
-            action: POLLINGACTIONS.CREATE,
-            permissions: permissions,
+        afterTransactionCommit(transaction, () => {
+            sendRealtimeUpdateToUser(user.id, {
+                type: POLLINGTYPE.BOOKMARKS,
+                record: newBookmark.id,
+                action: POLLINGACTIONS.CREATE,
+                permissions: permissions,
+            });
         });
 
         invalidateApiCacheForCurrentRequest();

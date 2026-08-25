@@ -12,14 +12,12 @@ export const SHOW_WEEKENDS_TIMESHEETS = "timesheets-show-weekends";
 export interface IPersonTimesheetStore {
     interval: Date[];
     showWeekends: boolean;
-    submittedIntervals: string[];
 }
 
 export const PersonTimesheetStore = entity<IPersonTimesheetStore>(
     {
         interval: [],
         showWeekends: false,
-        submittedIntervals: [],
     },
     [
         {

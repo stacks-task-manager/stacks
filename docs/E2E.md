@@ -1,6 +1,6 @@
 # E2E testing with Playwright
 
-End-to-end tests live at `playwright/` (repo root) and are driven by [Playwright](https://playwright.dev/). They exercise the running web app at `http://localhost:3000` through Chrome. The base URL assumes the default `APP_PORT=3000`; if you've changed it in `packages/server/.env` you'll need to override `webServer.url` and the test baseURL to match (see [INSTALLATION.md](INSTALLATION.md#2-open-the-app)).
+End-to-end tests live at `playwright/` (repo root) and are driven by [Playwright](https://playwright.dev/). They exercise the running web app at `http://localhost:3000` through Chrome. The base URL assumes the default `APP_PORT=3000`; if you've changed it in `packages/server/.env`, override the Playwright `baseURL` to match (see [INSTALLATION.md](INSTALLATION.md#2-open-the-app)). Keep `webServer.url` on port 3001 because it tracks the hardcoded frontend dev server.
 
 ## Table of Contents
 
@@ -8,7 +8,10 @@ End-to-end tests live at `playwright/` (repo root) and are driven by [Playwright
 - [Running the suite](#running-the-suite)
 - [Test layout](#test-layout)
 - [Conventions](#conventions)
+- [Agent workflow](#agent-workflow)
 - [Writing a new test](#writing-a-new-test)
+- [Editing an existing test](#editing-an-existing-test)
+- [Mocking APIs and isolating state](#mocking-apis-and-isolating-state)
 - [Debugging](#debugging)
 - [CI](#ci)
 - [License caveat](#license-caveat)
@@ -33,17 +36,33 @@ yarn test:e2e:ui       # interactive Playwright UI mode (great for authoring)
 yarn test:e2e:headed   # headed Chromium so you can watch
 ```
 
-The dev server is started automatically. From `playwright.config.ts`:
+The API server must already be running on port 3000. Playwright starts (or reuses) only the web app
+dev server on port 3001; browser traffic still goes through the API server at
+`http://localhost:3000`.
+
+Start the API in one terminal:
+
+```bash
+yarn dev:server
+```
+
+Then run Playwright in another terminal. Alternatively, keep `yarn dev` running and Playwright will
+reuse its frontend process. The relevant `playwright.config.ts` settings are:
 
 ```ts
+use: {
+  baseURL: "http://localhost:3000",
+},
 webServer: {
   command: "yarn dev:app",
-  url: "http://localhost:3000",
+  url: "http://localhost:3001",
   reuseExistingServer: !process.env.CI,
 }
 ```
 
-Locally, if you already have `yarn dev` running, Playwright reuses it. In CI it always launches its own.
+If authentication fails with `ERR_CONNECTION_REFUSED` for `http://localhost:3000/login`, the API
+server is not ready. Check the database, environment files, and development license before changing
+the test.
 
 ## Test layout
 
@@ -126,6 +145,30 @@ If a flow (logging in, opening a project, creating a task, dragging a card, asse
 
 Good rule of thumb: **the spec should read like English; the POM is the dictionary.**
 
+## Agent workflow
+
+For an agent adding or changing E2E coverage, use this sequence:
+
+1. Read this guide, then inspect the closest existing spec in `playwright/tests/`, its POM in
+   `playwright/pages/`, and the React component being exercised.
+2. Define the observable user outcome. Prefer a real cross-layer flow when server behavior is under
+   test; use a route mock when the test is specifically about deterministic UI states.
+3. Add stable `data-testid` attributes to every element the flow touches. Dynamic IDs should contain
+   a stable entity ID, not translated copy or an array index.
+4. Put selectors, clicks, waits, and DOM assertions in the POM. Put only user-intent calls and
+   non-DOM result assertions in the spec.
+5. Restore route mocks, preferences, dialogs, and other state after the scenario, including when an
+   assertion fails. Existing suites often reuse a page/context through `beforeAll`.
+6. Format the touched files, type-check Playwright, run the focused test, then run the containing
+   feature spec.
+
+```bash
+yarn prettier --write <component> <page-object> <spec>
+yarn type-check:e2e
+yarn test:e2e playwright/tests/<feature>/<name>.spec.ts --grep "scenario name"
+yarn test:e2e playwright/tests/<feature>/<name>.spec.ts
+```
+
 ## Writing a new test
 
 Look at `playwright/tests/project/board-view.spec.ts` for an idiomatic example. The pattern:
@@ -149,6 +192,31 @@ test("a card moves between stacks", async ({ page }) => {
 
 Notice that the spec contains no DOM details, no selectors, and no Playwright primitives beyond `test` / `expect`. All of that lives in `BoardViewPage`.
 
+Use unique data for records created against the real API (for example, a `Date.now()` suffix). Do not
+depend on test execution order unless the enclosing suite explicitly shares state and documents that
+choice. A focused test must be runnable on its own.
+
+## Editing an existing test
+
+Before editing, trace the whole testing seam: component `data-testid` → POM locator/method → spec.
+Keep established test-ID prefixes and extend the existing POM instead of creating a second POM for
+the same view. If a selector is brittle, fix the component hook and POM together. Do not move DOM
+access into the spec as a shortcut.
+
+Run the changed scenario with `--grep`, then run the complete spec because shared contexts, route
+mocks, local storage, and preferences can leak between otherwise passing tests.
+
+## Mocking APIs and isolating state
+
+Route mocks belong in the POM or a reusable fixture, not inline in a spec. Match both the HTTP method
+and endpoint, return the same `{ success, data }` envelope as the API, and let unrelated requests
+continue. Remove handlers with `page.unroute(...)` after the scenario; prefer `afterEach` or
+`try/finally` when a failed assertion could otherwise leave a mock active.
+
+Mock only what the scenario needs. Approval, authorization, notification, persistence, and other
+server contracts should have server tests or a real E2E path; a mocked UI test cannot prove those
+behaviors.
+
 ## Debugging
 
 - `yarn test:e2e --debug` — Playwright Inspector (step through, pause, eval).
@@ -165,8 +233,9 @@ This repository does not yet ship a GitHub Actions workflow. When one is added, 
 2. Provide `license.key` from a repository secret.
 3. `corepack enable && yarn install && yarn setup`
 4. `yarn playwright install --with-deps chromium`
-5. `yarn test:e2e`
-6. Upload `html-report/`, `results/reports/playwright.xml`, and `test-results/` (traces / videos) as artifacts.
+5. Start `yarn dev:server` and wait for `http://localhost:3000/health` to succeed.
+6. `yarn test:e2e` (Playwright starts the frontend on port 3001).
+7. Upload `html-report/`, `results/reports/playwright.xml`, and `test-results/` (traces / videos) as artifacts.
 
 ## License caveat
 

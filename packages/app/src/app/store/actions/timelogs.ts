@@ -4,7 +4,7 @@
  */
 import { produce } from "immer";
 
-import { ITimeLog, IUpdate } from "@stacks/types";
+import { ITimeLog, IUpdate, TIMELOG_STATUS } from "@stacks/types";
 import { TimelogsAPI, TimelogsFilterParams } from "app/api/timelogs";
 import Storage from "app/utils/storage";
 import { createDebouncedCallback, patchFilterField, upsertById } from "../actionHelpers";
@@ -39,6 +39,23 @@ const upsertTimelogs = (timelogs: ITimeLog[]) => {
             state.timelogs = upsertById(state.timelogs, timelogs);
             state.isLoading = false;
             state.loadingChunk = state.loadingChunk.filter(id => !newTimelogsTaskIds.includes(id));
+        })
+    );
+};
+
+const markPendingInReview = (start: Date, end: Date) => {
+    TimelogsStore.set(
+        produce((state: ITimelogsStore) => {
+            state.timelogs.forEach(timelog => {
+                const date = new Date(timelog.date);
+                if (
+                    timelog.status === TIMELOG_STATUS.PENDING &&
+                    date.getTime() >= start.getTime() &&
+                    date.getTime() <= end.getTime()
+                ) {
+                    timelog.status = TIMELOG_STATUS.INREVIEW;
+                }
+            });
         })
     );
 };
@@ -265,6 +282,7 @@ export const TimelogsActions = {
     reload,
     add,
     upsertTimelogs,
+    markPendingInReview,
     update,
     remove,
     toggleFilters,

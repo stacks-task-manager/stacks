@@ -62,7 +62,7 @@ timelogs.post(
         const action: TIMELOG_STATUS = c.req.param("action") as TIMELOG_STATUS;
         const { reason, ...filters } = c.req.valid("json");
 
-        z.enum(TIMELOG_STATUS).parse(action);
+        z.enum([TIMELOG_STATUS.APPROVED, TIMELOG_STATUS.REJECTED]).parse(action);
 
         const timelogs = await TimelogsLoader.updateStatus(action, filters, reason);
         return c.replySuccess(timelogs);

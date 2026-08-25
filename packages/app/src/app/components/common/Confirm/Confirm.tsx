@@ -35,6 +35,14 @@ const AlertService: FunctionComponent<AlertOptions> = ({
         setIsChecked(!isChecked);
     };
 
+    const handleOpened = (node: HTMLElement) => {
+        const buttons = node.querySelectorAll<HTMLButtonElement>("button");
+        const confirmButton = buttons.item(0);
+        const cancelButton = buttons.item(1);
+        confirmButton?.setAttribute("data-testid", "confirm-dialog-confirm-button");
+        cancelButton?.setAttribute("data-testid", "confirm-dialog-cancel-button");
+    };
+
     let icon: IconName = "info-sign";
     if (intent === Intent.DANGER) {
         icon = "error";
@@ -54,6 +62,7 @@ const AlertService: FunctionComponent<AlertOptions> = ({
             canEscapeKeyCancel
             onConfirm={() => handleClose(true)}
             onCancel={() => handleClose(false)}
+            onOpened={handleOpened}
             onClosed={() => onClose(isConfirm.current, isChecked)}
         >
             <>

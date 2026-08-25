@@ -100,13 +100,22 @@ interface ApproveRejectProps {
     person?: string;
 }
 
+const withCurrentInterval = (props: ApproveRejectProps) => {
+    const { interval } = TimesheetApprovalStore.get();
+    return {
+        ...props,
+        start: formatISO9075(interval.at(0)!, { representation: "date" }),
+        end: formatISO9075(interval.at(-1)!, { representation: "date" }),
+    };
+};
+
 const approve = async (props: ApproveRejectProps) => {
-    const timelogs = await TimelogsAPI.approve(props);
+    const timelogs = await TimelogsAPI.approve(withCurrentInterval(props));
     TimelogsActions.upsertTimelogs(timelogs);
 };
 
 const reject = async (props: ApproveRejectProps, reason: string) => {
-    const timelogs = await TimelogsAPI.reject({ ...props, reason });
+    const timelogs = await TimelogsAPI.reject({ ...withCurrentInterval(props), reason });
     TimelogsActions.upsertTimelogs(timelogs);
 };
 

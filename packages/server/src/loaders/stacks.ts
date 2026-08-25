@@ -8,7 +8,16 @@ import { sendRealtimeUpdate } from "../events";
 import { invalidateApiCacheForCurrentRequest } from "../utils/cache";
 import { ProjectsLoader } from "./projects";
 import { TasksLoader } from "./tasks";
-import { createOne, deleteAll, deleteOne, findAll, findOne, updateOne, withTransaction } from "./utils";
+import {
+    afterTransactionCommit,
+    createOne,
+    deleteAll,
+    deleteOne,
+    findAll,
+    findOne,
+    updateOne,
+    withTransaction,
+} from "./utils";
 import { PermissionsLoader } from "./permissions";
 import { translate } from "@stacks/translations";
 
@@ -45,15 +54,17 @@ async function create(data: IStack, index?: number, extTransaction?: Transaction
             transaction
         );
 
-        sendRealtimeUpdate({
-            type: POLLINGTYPE.STACK,
-            record: newStack.id,
-            parent: project.id,
-            action: POLLINGACTIONS.CREATE,
-            permissions: project.permissions,
+        afterTransactionCommit(transaction, () => {
+            sendRealtimeUpdate({
+                type: POLLINGTYPE.STACK,
+                record: newStack.id,
+                parent: project.id,
+                action: POLLINGACTIONS.CREATE,
+                permissions: project.permissions,
+            });
         });
 
-        await ProjectsLoader.addStackOrder(newStack.project, newStack.id, index);
+        await ProjectsLoader.addStackOrder(newStack.project, newStack.id, index, transaction);
 
         return newStack;
     });
@@ -126,12 +137,14 @@ async function update(id: string, data: any, extTransaction?: Transaction): Prom
             throw Errors.internal(translate("Stack update failed"));
         }
 
-        await sendRealtimeUpdate({
-            type: POLLINGTYPE.STACK,
-            record: id,
-            parent: project.id,
-            action: POLLINGACTIONS.UPDATE,
-            permissions: project.permissions,
+        afterTransactionCommit(transaction, () => {
+            sendRealtimeUpdate({
+                type: POLLINGTYPE.STACK,
+                record: id,
+                parent: project.id,
+                action: POLLINGACTIONS.UPDATE,
+                permissions: project.permissions,
+            });
         });
 
         invalidateApiCacheForCurrentRequest();
@@ -162,12 +175,14 @@ async function remove(id: string, extTransaction?: Transaction): Promise<IStack 
             throw Errors.internal("Stack delete failed");
         }
 
-        await sendRealtimeUpdate({
-            type: POLLINGTYPE.STACK,
-            record: stack.id,
-            parent: project.id,
-            action: POLLINGACTIONS.DELETED,
-            permissions: project.permissions,
+        afterTransactionCommit(transaction, () => {
+            sendRealtimeUpdate({
+                type: POLLINGTYPE.STACK,
+                record: stack.id,
+                parent: project.id,
+                action: POLLINGACTIONS.DELETED,
+                permissions: project.permissions,
+            });
         });
 
         return deletedStack;
@@ -193,15 +208,17 @@ async function removeAll(projectId: string, extTransaction?: Transaction): Promi
             transaction,
         });
 
-        for (const stack of deletedStacks) {
-            await sendRealtimeUpdate({
-                type: POLLINGTYPE.STACK,
-                record: stack.id,
-                parent: project.id,
-                action: POLLINGACTIONS.DELETED,
-                permissions: project.permissions,
-            });
-        }
+        afterTransactionCommit(transaction, () => {
+            for (const stack of deletedStacks) {
+                sendRealtimeUpdate({
+                    type: POLLINGTYPE.STACK,
+                    record: stack.id,
+                    parent: project.id,
+                    action: POLLINGACTIONS.DELETED,
+                    permissions: project.permissions,
+                });
+            }
+        });
 
         return deletedStacks;
     });
