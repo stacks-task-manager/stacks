@@ -128,7 +128,7 @@ const PEOPLE_IMPORT_COLUMNS = [
     },
 ];
 
-const NARROW_WIDTH = 990;
+const NARROW_WIDTH = 920;
 
 export const ToolbarPeople = () => {
     const toolbarRef = useRef<HTMLDivElement | null>(null);
@@ -695,7 +695,7 @@ const PeopleGroupingToggle = () => {
                     <Icon
                         icon={
                             PEOPLE_GROUPING_TYPE_ICONS[
-                                grouping.toUpperCase() as unknown as keyof typeof PEOPLE_GROUPING_TYPE_ICONS
+                            grouping.toUpperCase() as unknown as keyof typeof PEOPLE_GROUPING_TYPE_ICONS
                             ]
                         }
                     />
