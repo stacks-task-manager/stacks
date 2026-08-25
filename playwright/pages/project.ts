@@ -31,6 +31,12 @@ class Project extends Base {
     public menuButton: Locator;
     public menu: Locator;
     public dialog: Locator;
+    public infoButton: Locator;
+    public infoContent: Locator;
+    public favoriteButton: Locator;
+    public expirationButton: Locator;
+    public reloadButton: Locator;
+    public titleInput: Locator;
     public viewsButton: Locator;
     public viewsMenu: Locator;
     public settings: ProjectSettings;
@@ -48,6 +54,12 @@ class Project extends Base {
         this.menuButton = page.getByTestId("project-menu-button");
         this.menu = page.getByTestId("project-menu");
         this.dialog = page.getByRole("dialog");
+        this.infoButton = page.getByTestId("project-info-button");
+        this.infoContent = page.getByTestId("project-info-content");
+        this.favoriteButton = page.getByTestId("project-favorite-button");
+        this.expirationButton = page.getByTestId("project-expiration-button");
+        this.reloadButton = page.getByTestId("project-reload-button");
+        this.titleInput = page.getByTestId("toolbar-title-input");
         this.viewsButton = page.getByTestId("project-views-button");
         this.viewsMenu = page.getByTestId("project-views-menu");
         this.settings = new ProjectSettings(page);
@@ -130,6 +142,11 @@ class Project extends Base {
         await this.menu.waitFor({ state: "visible" });
     }
 
+    public async closeInfo() {
+        await this.page.keyboard.press("Escape");
+        await this.infoContent.waitFor({ state: "hidden" });
+    }
+
     public async closeMenu() {
         await this.page.keyboard.press("Escape");
         await this.menu.waitFor({ state: "hidden" });
@@ -153,6 +170,27 @@ class Project extends Base {
         await this.menuItem("project-menu-settings").click();
         await this.settings.dialog.waitFor({ state: "visible" });
         await this.settings.openTab("settings");
+    }
+
+    public async reload() {
+        await this.reloadButton.waitFor({ state: "visible" });
+        await expect(this.reloadButton).toBeEnabled();
+
+        const requestPromise = this.page.waitForRequest(
+            request => request.url().includes("/api/projects/") && request.method() === "GET"
+        );
+        await this.reloadButton.click();
+        await requestPromise;
+    }
+
+    public async rename(title: string) {
+        const responsePromise = this.page.waitForResponse(
+            response => response.url().includes("/api/documents/") && response.request().method() === "PATCH"
+        );
+        await this.page.getByTestId("toolbar-title").click();
+        await this.titleInput.fill(title);
+        await this.titleInput.press("Enter");
+        await responsePromise;
     }
 
     public viewTab(view: ProjectViewId): Locator {
@@ -224,6 +262,9 @@ export class ProjectSettings {
     public showSubtasksInput: Locator;
     public backgroundUrlInput: Locator;
     public clearBackgroundButton: Locator;
+    public endDateButton: Locator;
+    public oneWeekShortcut: Locator;
+    public datePickerApplyButton: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -236,6 +277,9 @@ export class ProjectSettings {
         this.showSubtasksInput = this.showSubtasksSwitch;
         this.backgroundUrlInput = page.getByTestId("project-settings-background-url-input");
         this.clearBackgroundButton = page.getByTestId("project-settings-clear-background-button");
+        this.endDateButton = page.getByTestId("project-settings-end-date-button");
+        this.oneWeekShortcut = page.getByTestId("date-picker-shortcut-1-week");
+        this.datePickerApplyButton = page.getByTestId("date-picker-apply");
     }
 
     public async openTab(tab: "settings" | "interface" | "time" | "fields") {
@@ -271,6 +315,19 @@ export class ProjectSettings {
         );
         await this.backgroundUrlInput.fill(url);
         await this.backgroundUrlInput.blur();
+        await responsePromise;
+    }
+
+    public async setEndDateSoon() {
+        await this.openTab("time");
+        await this.endDateButton.click();
+        await this.oneWeekShortcut.click();
+
+        const responsePromise = this.page.waitForResponse(
+            (response: any) =>
+                response.url().includes("/api/projects/") && response.request().method() === "PATCH"
+        );
+        await this.datePickerApplyButton.click();
         await responsePromise;
     }
 

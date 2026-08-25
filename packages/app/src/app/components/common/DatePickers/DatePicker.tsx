@@ -57,6 +57,9 @@ export const DateComponent: FunctionComponent<DatePickerProps> = ({
                                 labelClassName={Classes.TEXT_SMALL}
                                 shouldDismissPopover={false}
                                 onClick={() => handleShortcutSingleSelection(shortcut.date)}
+                                data-testid={`date-picker-shortcut-${shortcut.title
+                                    .toLowerCase()
+                                    .replace(/\s+/g, "-")}`}
                             />
                         );
                     })}

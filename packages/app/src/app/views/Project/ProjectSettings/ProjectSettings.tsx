@@ -314,6 +314,7 @@ export const ProjectSettings = () => {
                                         onChange={handleChangeEndDate}
                                         extendedFormat="PPP"
                                         disabled={isDisabled}
+                                        testId="project-settings-end-date-button"
                                     />
                                 }
                             />

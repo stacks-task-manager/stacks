@@ -19,7 +19,7 @@ export const ToolbarTitle: FunctionComponent<ToolbarTitleProps> = ({ documentId 
         if (document != null && document.title !== title) {
             setTitle(document.title);
         }
-    }, [document]);
+    }, [document, title]);
 
     const handleSetTitle = async (title: string) => {
         if (!document) return;
@@ -53,7 +53,7 @@ export const ToolbarTitle: FunctionComponent<ToolbarTitleProps> = ({ documentId 
                     )}
                 />
             ) : null}
-            <h1>
+            <h1 data-testid="toolbar-title">
                 <EditableText
                     value={title}
                     onChange={setTitle}
@@ -61,7 +61,12 @@ export const ToolbarTitle: FunctionComponent<ToolbarTitleProps> = ({ documentId 
                     minWidth={0}
                     disabled={!document}
                     onEdit={handleEditing}
-                    data-testid="toolbar-title-input"
+                    customInputAttributes={
+                        {
+                            "data-testid": "toolbar-title-input",
+                        } as React.InputHTMLAttributes<HTMLInputElement> &
+                            React.TextareaHTMLAttributes<HTMLTextAreaElement>
+                    }
                 />
             </h1>
         </>

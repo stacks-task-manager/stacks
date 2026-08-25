@@ -559,6 +559,7 @@ const ProjectSecondaryToolbar = ({ small }: { small: boolean }) => {
                             tooltip={translate("Reload project")}
                             placement="bottom-end"
                             onClick={handleReloadProject}
+                            data-testid="project-reload-button"
                         />
                     </>
                 )}
@@ -688,6 +689,8 @@ const FavoriteProject = () => {
             placement="bottom"
             iconColor={isFavorite ? Colors.GOLD5 : undefined}
             onClick={handleToggleFavorite}
+            data-testid="project-favorite-button"
+            data-active={isFavorite}
         />
     );
 };
@@ -836,6 +839,7 @@ const ProjectExpirationIcon = () => {
             }
             placement="bottom"
             iconColor={diff <= 0 ? "#d90429" : "#ffb703"}
+            data-testid="project-expiration-button"
         />
     );
 };
@@ -843,7 +847,12 @@ const ProjectExpirationIcon = () => {
 const ProjectInfoButton = () => {
     return (
         <Popover content={<ProjectInfoContent />} lazy popoverClassName="popover-padded">
-            <ToolbarButton icon="info-circle" tooltip={translate("View project info")} placement="bottom" />
+            <ToolbarButton
+                icon="info-circle"
+                tooltip={translate("View project info")}
+                placement="bottom"
+                data-testid="project-info-button"
+            />
         </Popover>
     );
 };
@@ -872,7 +881,7 @@ const ProjectInfoContent = () => {
     };
 
     return (
-        <div>
+        <div data-testid="project-info-content">
             <FormGroup>
                 <h6 className={Classes.HEADING}>
                     {translate("Tasks summary")} ({overview.tasksTotal})

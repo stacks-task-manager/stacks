@@ -10,6 +10,7 @@ test.describe("Project", () => {
     let page: Page;
     let project: Project;
     let sidebar: Sidebar;
+    let projectName: string;
 
     test.beforeAll(async ({ login: loginPage }: any) => {
         ({ browser, context, page } = await bootstrapContext());
@@ -17,6 +18,8 @@ test.describe("Project", () => {
 
         project = new Project(page);
         sidebar = new Sidebar(page);
+        projectName = `Project toolbar ${Math.floor(Math.random() * 10000)}`;
+        await project.addNew({ name: projectName });
     });
 
     test.beforeEach(({ attachVideoContext }: any) => {
@@ -24,6 +27,14 @@ test.describe("Project", () => {
     });
 
     test.afterAll(async () => {
+        if (page && !page.isClosed()) {
+            const matchingProjects = sidebar.documentsTreeItems.filter({ hasText: projectName });
+            if ((await matchingProjects.count()) > 0) {
+                await project.delete(projectName);
+            }
+            await expect(matchingProjects).toHaveCount(0);
+        }
+
         if (page && !page.isClosed()) {
             await page.close();
         }
@@ -37,16 +48,53 @@ test.describe("Project", () => {
         }
     });
 
-    /*
-        - Toolbar tests
-            - bell icon
-            - menues
-            - info icon
-            - star icon
-            - switches over to various views
-            - project reloading
-            - title change
+    test("Should expose toolbar controls and project menu actions", async () => {
+        await expect(project.toolbar).toBeVisible();
+        await expect(project.infoButton).toBeVisible();
+        await expect(project.favoriteButton).toHaveAttribute("data-active", "false");
 
-        5. Project settings
-    */
+        await project.infoButton.click();
+        await expect(project.infoContent).toBeVisible();
+        await project.closeInfo();
+
+        await project.openMenu();
+        await expect(project.menuItem("project-menu-settings")).toBeVisible();
+        await expect(project.menuItem("project-menu-automations")).toBeVisible();
+        await expect(project.menuItem("project-menu-tags-statuses")).toBeVisible();
+        await project.closeMenu();
+
+        await project.favoriteButton.click();
+        await expect(project.favoriteButton).toHaveAttribute("data-active", "true");
+        await project.favoriteButton.click();
+        await expect(project.favoriteButton).toHaveAttribute("data-active", "false");
+    });
+
+    test("Should switch between enabled project views", async () => {
+        await project.enableAllViews();
+        await project.expectAllViewsVisible();
+
+        await project.switchView("list");
+        await project.switchView("overview");
+        await project.switchView("notes");
+        await project.switchView("board");
+    });
+
+    test("Should update the project title", async () => {
+        const title = `Renamed project ${Date.now()}`;
+        await project.rename(title);
+        await expect(project.titleInput).toHaveValue(title);
+        projectName = title;
+    });
+
+    test("Should update project settings and show the expiration bell", async () => {
+        await project.openSettings();
+        await project.settings.setEndDateSoon();
+        await project.settings.close();
+
+        await expect(project.expirationButton).toBeVisible();
+    });
+
+    test("Should reload the project", async () => {
+        await project.reload();
+    });
 });

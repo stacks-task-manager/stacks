@@ -42,6 +42,7 @@ export const ReloadButton: FunctionComponent<IReloadButtonProps> = ({
     return (
         <ToolbarButton
             icon="refresh"
+            minimal
             iconSize={iconSize}
             tooltip={tooltip}
             placement={placement}

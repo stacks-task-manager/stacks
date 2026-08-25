@@ -35,38 +35,38 @@ const ToolbarDropdownButtonPure: ForwardRefRenderFunction<
     },
     ref
 ) => {
-    const buttonRef = useRef<HTMLButtonElement | null>(null);
-    useImperativeHandle(ref, () => buttonRef.current!, []);
+        const buttonRef = useRef<HTMLButtonElement | null>(null);
+        useImperativeHandle(ref, () => buttonRef.current!, []);
 
-    return (
-        <Popover
-            content={children}
-            placement={dropdownPlacement || placement}
-            renderTarget={({ isOpen: isPopoverOpen, ref: ref1, ...popoverProps }) => (
-                <Tooltip
-                    content={tooltip}
-                    placement={tooltipPlacement || placement}
-                    disabled={isPopoverOpen}
-                    openOnTargetFocus={false}
-                    renderTarget={({ isOpen, ref: ref2, ...tooltipProps }) => (
-                        <Button
-                            {...popoverProps}
-                            {...tooltipProps}
-                            variant="minimal"
-                            size="small"
-                            icon={<Icon icon={icon} color={iconColor} />}
-                            active={isPopoverOpen}
-                            ref={mergeRefs(ref1, ref2, buttonRef)}
-                            text={title}
-                        />
-                    )}
-                />
-            )}
-            onClosed={onClose}
-            onOpening={onOpen}
-        />
-    );
-};
+        return (
+            <Popover
+                content={children}
+                placement={dropdownPlacement || placement}
+                renderTarget={({ isOpen: isPopoverOpen, ref: ref1, ...popoverProps }) => (
+                    <Tooltip
+                        content={tooltip}
+                        placement={tooltipPlacement || placement}
+                        disabled={isPopoverOpen}
+                        openOnTargetFocus={false}
+                        renderTarget={({ isOpen, ref: ref2, ...tooltipProps }) => (
+                            <Button
+                                {...popoverProps}
+                                {...tooltipProps}
+                                variant="minimal"
+                                size="small"
+                                icon={<Icon icon={icon} color={iconColor} />}
+                                active={isPopoverOpen}
+                                ref={mergeRefs(ref1, ref2, buttonRef)}
+                                text={title}
+                            />
+                        )}
+                    />
+                )}
+                onClosed={onClose}
+                onOpening={onOpen}
+            />
+        );
+    };
 
 interface IToolbarButtonProps {
     title?: string | React.ReactNode;
@@ -86,6 +86,7 @@ interface IToolbarButtonProps {
     loading?: boolean;
     spin?: boolean;
     "data-testid"?: string;
+    "data-active"?: boolean;
     onClick?: (event: React.MouseEvent) => void;
 }
 export const ToolbarButton: FunctionComponent<IToolbarButtonProps> = ({
@@ -106,8 +107,11 @@ export const ToolbarButton: FunctionComponent<IToolbarButtonProps> = ({
     loading,
     spin,
     "data-testid": dataTestId,
+    "data-active": dataActive,
     onClick,
 }) => {
+    const variant = minimal ? "minimal" : outlined ? "outlined" : undefined;
+
     if (tooltip) {
         return (
             <HotkeyTooltip title={tooltip} placement={placement} keys={keys}>
@@ -119,12 +123,13 @@ export const ToolbarButton: FunctionComponent<IToolbarButtonProps> = ({
                     }
                     text={title}
                     intent={intent || (active ? Intent.PRIMARY : Intent.NONE)}
-                    variant={outlined ? "outlined" : undefined}
+                    variant={variant}
                     disabled={disabled}
                     onClick={onClick}
                     loading={loading}
                     className={classNames("toolbar-button", { badge })}
                     data-testid={dataTestId}
+                    data-active={dataActive}
                 />
             </HotkeyTooltip>
         );
@@ -135,13 +140,14 @@ export const ToolbarButton: FunctionComponent<IToolbarButtonProps> = ({
             size="small"
             icon={icon ? <Icon icon={icon} size={iconSize} spin={spin} /> : undefined}
             text={title}
-            variant={outlined ? "outlined" : undefined}
+            variant={variant}
             intent={intent || (active ? Intent.PRIMARY : Intent.NONE)}
             disabled={disabled}
             loading={loading}
             onClick={onClick}
             className={classNames("toolbar-button", { badge })}
             data-testid={dataTestId}
+            data-active={dataActive}
         />
     );
 };
