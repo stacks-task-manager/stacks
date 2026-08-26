@@ -61,6 +61,12 @@ test.describe("Notepad", () => {
         await expect(notepad.menuItem("notepad-menu-delete")).toBeVisible();
         await notepad.closeMenu();
 
+        const exported = await notepad.export("html");
+        expect(exported.status).toBe(200);
+        expect(exported.contentType).toContain("text/html");
+        expect(exported.disposition).toContain(".html");
+        expect(exported.request).toMatchObject({ format: "html", type: "notepad" });
+
         await sidebar.go("Home");
         await notepad.openByName(notepadName);
         await expect(notepad.editor).toContainText(content);

@@ -9,7 +9,7 @@ import { BookmarksActions } from "app/store/actions";
 export const ToolbarBookmarks = () => {
     useMousetrap(["ctrl+n", "command+n"], toggleNewBookmark);
 
-    const handleExport = (type: "excel" | "json") => {
+    const handleExport = (type: "excel" | "json" | "pdf") => {
         BookmarksActions.exportBookmarks(type);
     };
 
@@ -24,23 +24,40 @@ export const ToolbarBookmarks = () => {
                         <Popover
                             content={
                                 <Menu>
-                                    <MenuItem text={translate("Export")} icon={<Icon icon="download-04" />}>
+                                    <MenuItem
+                                        text={translate("Export")}
+                                        icon={<Icon icon="download-04" />}
+                                        data-testid="bookmarks-menu-export"
+                                    >
                                         <MenuItem
                                             text={translate("Export as", { type: ".xlsx" })}
                                             icon={<Icon icon="download-04" />}
                                             onClick={() => handleExport("excel")}
+                                            data-testid="bookmarks-menu-export-xlsx"
                                         />
                                         <MenuItem
                                             text={translate("Export as", { type: ".json" })}
                                             icon={<Icon icon="download-04" />}
                                             onClick={() => handleExport("json")}
+                                            data-testid="bookmarks-menu-export-json"
+                                        />
+                                        <MenuItem
+                                            text={translate("Export as", { type: ".pdf" })}
+                                            icon={<Icon icon="download-04" />}
+                                            onClick={() => handleExport("pdf")}
+                                            data-testid="bookmarks-menu-export-pdf"
                                         />
                                     </MenuItem>
                                 </Menu>
                             }
                             placement="bottom"
                         >
-                            <Button size="small" variant="minimal" icon={<Icon icon="chevron-down" />} />
+                            <Button
+                                size="small"
+                                variant="minimal"
+                                icon={<Icon icon="chevron-down" />}
+                                data-testid="bookmarks-menu-button"
+                            />
                         </Popover>
                     </div>
                 </div>

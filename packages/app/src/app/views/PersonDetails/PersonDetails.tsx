@@ -367,10 +367,11 @@ const PersonEditing: FunctionComponent<IPersonEditingProps> = ({ person, onClose
                         <Row padding={20} gutter={20}>
                             <Col>
                                 <FormGroup
-                                    label={`${translate("Birthday")} (${updatedPerson && updatedPerson.birthday
+                                    label={`${translate("Birthday")} (${
+                                        updatedPerson && updatedPerson.birthday
                                             ? formatDateDiff(updatedPerson.birthday)
                                             : "-"
-                                        })`}
+                                    })`}
                                     labelFor="nickname"
                                     style={{ width: "auto" }}
                                 >
@@ -911,11 +912,11 @@ const PersonRead: FunctionComponent<IPersonProps> = ({ person, onClose, onEdit }
         location.state && location.state.backgroundLocation
             ? location.state.backgroundLocation
             : {
-                pathname: `/people/person/${person.id}`,
-                search: "",
-                hash: "",
-                state: null,
-            };
+                  pathname: `/people/person/${person.id}`,
+                  search: "",
+                  hash: "",
+                  state: null,
+              };
 
     const isAdmin = Boolean(currentUser.admin);
 
@@ -964,16 +965,19 @@ const PersonRead: FunctionComponent<IPersonProps> = ({ person, onClose, onEdit }
                                         text={translate("Export as", { type: ".xlsx" })}
                                         icon={<Icon icon="download-04" />}
                                         onClick={() => handleExport("excel")}
+                                        data-testid="person-details-export-xlsx"
                                     />
                                     <MenuItem
                                         text={translate("Export as", { type: ".json" })}
                                         icon={<Icon icon="download-04" />}
                                         onClick={() => handleExport("json")}
+                                        data-testid="person-details-export-json"
                                     />
                                     <MenuItem
                                         text={translate("Export as", { type: ".pdf" })}
                                         icon={<Icon icon="download-04" />}
                                         onClick={() => handleExport("pdf")}
+                                        data-testid="person-details-export-pdf"
                                     />
                                 </MenuItem>
                                 <MenuDivider />

@@ -4,12 +4,10 @@
  */
 import type { Context } from "hono";
 import { Hono } from "hono";
-import { translate } from "@stacks/translations";
 import { generateExcel } from "../services/export/generateExcel";
 import { generatePdfFromHtml } from "../services/export/generatePdfFromHtml";
 import { normalizeExportRows } from "../services/export/normalizeExportRows";
-import { resolvePdfTemplatePath } from "../services/export/resolvePdfTemplate";
-import { Errors } from "../errors";
+import { renderExportHtml } from "../services/export/renderExportHtml";
 import { asyncHandler } from "../utils/errorHandler";
 import { validator } from "../middleware/validator";
 import { ExportBodySchema } from "./schema/export";
@@ -17,7 +15,7 @@ import { ExportBodySchema } from "./schema/export";
 const exportRouter = new Hono();
 
 /** Strips unsafe filename characters and caps length for `Content-Disposition`. */
-function sanitizeExportBasename(raw: string): string {
+export function sanitizeExportBasename(raw: string): string {
     const s = raw
         .trim()
         .replace(/[/\\:*?"<>|\u0000-\u001f]+/g, "-")
@@ -27,7 +25,7 @@ function sanitizeExportBasename(raw: string): string {
 }
 
 /** Local date/time, safe for filenames (no `:`). Example: `2025-03-26_14-30-52`. */
-function exportFilenameDateTime(d = new Date()): string {
+export function exportFilenameDateTime(d = new Date()): string {
     const pad = (n: number) => String(n).padStart(2, "0");
     return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}_${pad(d.getHours())}-${pad(
         d.getMinutes()
@@ -35,14 +33,35 @@ function exportFilenameDateTime(d = new Date()): string {
 }
 
 /** Builds `base_datetime.ext` using {@link sanitizeExportBasename} and {@link exportFilenameDateTime}. */
-function attachmentFilename(title: string | undefined | null, fallbackType: string, ext: string): string {
-    const dateTime = exportFilenameDateTime();
+export function attachmentFilename(
+    title: string | undefined | null,
+    fallbackType: string,
+    ext: string,
+    generatedAt = new Date()
+): string {
+    const dateTime = exportFilenameDateTime(generatedAt);
     const basePart =
         title != null && title.trim() !== "" ? sanitizeExportBasename(title) : `export-${fallbackType}`;
     const reserved = dateTime.length + 1 + ext.length + 1;
     const maxBase = Math.max(8, 230 - reserved);
     const base = basePart.slice(0, maxBase);
     return `${base}_${dateTime}.${ext}`;
+}
+
+/** Builds an RFC 6266/RFC 5987 attachment header with an ASCII fallback and UTF-8 filename. */
+export function attachmentContentDisposition(filename: string): string {
+    const asciiFallback =
+        filename
+            .normalize("NFKD")
+            .replace(/[^\x20-\x7e]+/g, "-")
+            .replace(/["\\]/g, "-")
+            .replace(/-+/g, "-")
+            .replace(/^-|-$/g, "") || "export";
+    const encoded = encodeURIComponent(filename).replace(
+        /[!'()*]/g,
+        character => `%${character.charCodeAt(0).toString(16).toUpperCase()}`
+    );
+    return `attachment; filename="${asciiFallback}"; filename*=UTF-8''${encoded}`;
 }
 
 /** POST `/` — Streams an export file in the requested `format`. */
@@ -58,11 +77,9 @@ exportRouter.post(
             const json = JSON.stringify(data);
             return c.body(new Uint8Array(Buffer.from(json, "utf-8")), 200, {
                 "Content-Type": "application/json",
-                "Content-Disposition": `attachment; filename="${attachmentFilename(
-                    title,
-                    typeLabel,
-                    "json"
-                )}"`,
+                "Content-Disposition": attachmentContentDisposition(
+                    attachmentFilename(title, typeLabel, "json")
+                ),
             });
         }
 
@@ -71,24 +88,30 @@ exportRouter.post(
             const buffer = await generateExcel(columns, rows);
             return c.body(new Uint8Array(buffer), 200, {
                 "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                "Content-Disposition": `attachment; filename="${attachmentFilename(
-                    title,
-                    typeLabel,
-                    "xlsx"
-                )}"`,
+                "Content-Disposition": attachmentContentDisposition(
+                    attachmentFilename(title, typeLabel, "xlsx")
+                ),
+            });
+        }
+
+        const locale = c.get("locale");
+        if (format === "html") {
+            const rendered = renderExportHtml("notepad", data, { locale, title });
+            return c.body(rendered.html, 200, {
+                "Content-Type": "text/html; charset=utf-8",
+                "Content-Disposition": attachmentContentDisposition(
+                    attachmentFilename(title, body.type, "html")
+                ),
+                "Content-Security-Policy":
+                    "default-src 'none'; img-src data:; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'",
             });
         }
 
         const pdfType = body.type;
-        const templatePath = resolvePdfTemplatePath(pdfType);
-        if (!templatePath) {
-            throw Errors.invalidInput(translate("No PDF template for this export type"));
-        }
-
-        const pdfBuffer = await generatePdfFromHtml(templatePath, { type: pdfType, data });
+        const pdfBuffer = await generatePdfFromHtml({ type: pdfType, data, locale, title });
         return c.body(new Uint8Array(pdfBuffer), 200, {
             "Content-Type": "application/pdf",
-            "Content-Disposition": `attachment; filename="${attachmentFilename(title, pdfType, "pdf")}"`,
+            "Content-Disposition": attachmentContentDisposition(attachmentFilename(title, pdfType, "pdf")),
         });
     })
 );

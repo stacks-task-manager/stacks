@@ -33,6 +33,16 @@ describe("Export API", () => {
         expect(res.status).toBe(400);
     });
 
+    test("POST /api/export — rejects HTML for non-notepad entities", async () => {
+        const headers = await getAuthenticatedHeaders();
+        const res = await app.request("/api/export", {
+            method: "POST",
+            headers: { ...headers, "Content-Type": "application/json" },
+            body: JSON.stringify({ format: "html", type: "task", data: {} }),
+        });
+        expect(res.status).toBe(400);
+    });
+
     test("POST /api/export — rejects body without data array", async () => {
         const headers = await getAuthenticatedHeaders();
         const res = await app.request("/api/export", {
@@ -77,6 +87,40 @@ describe("Export API", () => {
         expect(buf[1]).toBe(0x4b);
     });
 
+    test("POST /api/export — company and bookmark are valid entity types", async () => {
+        const headers = await getAuthenticatedHeaders();
+        for (const type of ["company", "bookmark"] as const) {
+            const res = await app.request("/api/export", {
+                method: "POST",
+                headers: { ...headers, "Content-Type": "application/json" },
+                body: JSON.stringify({ format: "json", type, data: [] }),
+            });
+            expect(res.status).toBe(200);
+            expect(res.headers.get("Content-Disposition")).toMatch(new RegExp(`export-${type}.*\\.json`));
+        }
+    });
+
+    test("POST /api/export — HTML returns sanitized HTML attachment", async () => {
+        const headers = await getAuthenticatedHeaders();
+        const res = await app.request("/api/export", {
+            method: "POST",
+            headers: { ...headers, "Content-Type": "application/json", "Accept-Language": "ar" },
+            body: JSON.stringify({
+                format: "html",
+                type: "notepad",
+                title: "Notes",
+                data: '<h1>Safe</h1><script>alert(1)</script><img src="https://tracker.invalid/x">',
+            }),
+        });
+        expect(res.status).toBe(200);
+        expect(res.headers.get("Content-Type")).toContain("text/html");
+        expect(res.headers.get("Content-Disposition")).toMatch(/Notes.*\.html/);
+        const html = await res.text();
+        expect(html).toContain('dir="rtl"');
+        expect(html).toContain("<h1>Safe</h1>");
+        expect(html).not.toMatch(/<script|tracker\.invalid/);
+    });
+
     test(
         "POST /api/export — pdf (Chromium)",
         async () => {
@@ -90,14 +134,11 @@ describe("Export API", () => {
                     data: [{ title: "Example" }],
                 }),
             });
-            if (res.status === 200) {
-                expect(res.headers.get("Content-Type")).toContain("application/pdf");
-                expect(res.headers.get("Content-Disposition")).toMatch(/export-task.*\.pdf/);
-                const text = new TextDecoder().decode((await res.arrayBuffer()).slice(0, 4));
-                expect(text.startsWith("%PDF")).toBe(true);
-            } else {
-                expect(res.status).toBe(500);
-            }
+            expect(res.status).toBe(200);
+            expect(res.headers.get("Content-Type")).toContain("application/pdf");
+            expect(res.headers.get("Content-Disposition")).toMatch(/export-task.*\.pdf/);
+            const text = new TextDecoder().decode((await res.arrayBuffer()).slice(0, 4));
+            expect(text.startsWith("%PDF")).toBe(true);
         },
         { timeout: 120_000 }
     );

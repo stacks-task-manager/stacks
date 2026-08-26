@@ -71,6 +71,7 @@ packages/license/dist/*
 /playwright.json
 coverage/
 .nyc_output/
+/output/
 
 # build output (catch-all in addition to per-package paths above)
 **/dist/

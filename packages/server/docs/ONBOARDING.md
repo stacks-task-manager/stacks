@@ -104,6 +104,8 @@ why they exist; the doc-comments inside each file repeat the contract.
   `requireAuth`; do not re-query `RoleEntity` here.
 - **`middleware/roleAccess.ts`** — Section/action gate based on `userRole`;
   admins skip the check. Errors propagate to the global handler.
+- **[Export service](EXPORTS.md)** — Request contracts, branded PDF templates,
+  rendering security, Chromium/font setup, and mandatory visual inspection.
 
 ## 5. How to add a route
 

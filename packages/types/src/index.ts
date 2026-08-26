@@ -10,6 +10,7 @@ export * from "./models/copymove.js";
 export * from "./models/defaults.js";
 export * from "./models/electron.js";
 export * from "./models/email.js";
+export * from "./models/export.js";
 export * from "./models/fields.js";
 export * from "./models/files.js";
 export * from "./models/home.js";

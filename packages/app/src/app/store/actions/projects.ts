@@ -11,6 +11,7 @@ import { DropResult } from "@hello-pangea/dnd";
 import { IAutomation, IField, IProject, IUpdate, PROJECTHEALTH } from "@stacks/types";
 import { ExportAPI, ProjectsAPI } from "app/api";
 import { getCurrentProjectId, getHashPathname, nav, publish } from "app/hooks";
+import { PeopleStore } from "app/store/people";
 import { IProjectsStore, ProjectsStore } from "app/store/projects";
 import Dialog from "app/utils/dialog";
 import { getStorage, setStorage } from "app/utils/storage";
@@ -444,44 +445,13 @@ const exportProject = async (projectId: string, format: "pdf" | "json" | "excel"
     const project = await getProject(projectId);
     if (!project) return;
 
-    // const document = getDocument(project.id);
-    // if (!document) return;
-    // const view = ProjectsStatusStore.get().lastViewTypes[projectId];
-
-    // const fileTitle = kebabCase(document.title);
-
-    // let filenameSuffix = "";
-    // if (view === "overview") {
-    //     filenameSuffix += "-overview";
-    // } else if (view === "time") {
-    //     filenameSuffix += "-timelogs";
-    // }
-
-    // const tasks = getProjectTasks(project.id);
-    // let timelogs = false;
-    // let overview = null;
-
-    // if (view === "time") {
-    //     timelogs = true;
-    // } else if (view === "overview") {
-    //     await OverviewActions.load(project.id);
-    //     overview = OverviewStore.get().overview;
-    // }
-
-    // await api("export/project", {
-    //     project,
-    //     tasks,
-    //     people: PeopleStore.get().people,
-    //     companies: PeopleStore.get().companies,
-    //     timelogs,
-    //     overview,
-    //     destination: info.filePath,
-    //     type,
-    // });
-
     await ExportAPI.export({
         title: "project",
-        data: project,
+        data: {
+            project,
+            people: PeopleStore.get().people,
+            companies: PeopleStore.get().companies,
+        },
         type: "project",
         format,
     });

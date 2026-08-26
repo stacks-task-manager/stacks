@@ -687,6 +687,7 @@ const FavoriteProject = () => {
             icon={isFavorite ? "star-filled" : "star"}
             tooltip={isFavorite ? translate("Remove from favorites") : translate("Add to favorites")}
             placement="bottom"
+            minimal
             iconColor={isFavorite ? Colors.GOLD5 : undefined}
             onClick={handleToggleFavorite}
             data-testid="project-favorite-button"
@@ -799,7 +800,7 @@ const TableGroupingToggle = () => {
                     <Icon
                         icon={
                             GROUPING_TYPE_ICONS[
-                                grouping.toUpperCase() as unknown as keyof typeof GROUPING_TYPE_ICONS
+                            grouping.toUpperCase() as unknown as keyof typeof GROUPING_TYPE_ICONS
                             ]
                         }
                     />
@@ -849,6 +850,7 @@ const ProjectInfoButton = () => {
         <Popover content={<ProjectInfoContent />} lazy popoverClassName="popover-padded">
             <ToolbarButton
                 icon="info-circle"
+                minimal
                 tooltip={translate("View project info")}
                 placement="bottom"
                 data-testid="project-info-button"

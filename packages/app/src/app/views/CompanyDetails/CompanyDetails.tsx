@@ -813,16 +813,19 @@ const CompanyRead: FunctionComponent<ICompanyProps> = ({ company, onClose, onEdi
                                         text={translate("Export as", { type: ".xlsx" })}
                                         icon={<Icon icon="download-04" />}
                                         onClick={() => handleExport("excel")}
+                                        data-testid="company-details-export-xlsx"
                                     />
                                     <MenuItem
                                         text={translate("Export as", { type: ".json" })}
                                         icon={<Icon icon="download-04" />}
                                         onClick={() => handleExport("json")}
+                                        data-testid="company-details-export-json"
                                     />
                                     <MenuItem
                                         text={translate("Export as", { type: ".pdf" })}
                                         icon={<Icon icon="download-04" />}
                                         onClick={() => handleExport("pdf")}
+                                        data-testid="company-details-export-pdf"
                                     />
                                 </MenuItem>
                                 <MenuDivider />

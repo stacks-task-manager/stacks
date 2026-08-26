@@ -150,7 +150,7 @@ const exportNotepad = async (content: string, format: "pdf" | "html") => {
     const fileTitle = kebabCase(document.text);
 
     await ExportAPI.export({
-        title: fileTitle ?? "notepad",
+        title: fileTitle || "notepad",
         data: content,
         type: "notepad",
         format,

@@ -24,7 +24,6 @@ import { ExtendedKeyboardEvent } from "mousetrap";
 import {
     ACTIVITYRESOURCETYPE,
     ACTIVITYTYPE,
-    IElectronSaveDialog,
     ILink,
     ILocation,
     IPermissions,
@@ -36,7 +35,7 @@ import {
     PRIORITY,
     REPEATTYPE,
 } from "@stacks/types";
-import api, { PermissionsAPI, TaskLoadParams, TasksAPI } from "app/api";
+import api, { ExportAPI, PermissionsAPI, TaskLoadParams, TasksAPI } from "app/api";
 import {
     getCurrentProjectId,
     getHashPathname,
@@ -1249,37 +1248,26 @@ const increaseCommentsCount = async (taskId: string) => {
     );
 };
 
-const exportTask = async (taskId: string, type: string) => {
+const exportTask = async (taskId: string, format: "json" | "pdf" | "excel") => {
     const task = await getTask(taskId);
     if (!task) return;
 
     const fileTitle = kebabCase(stripMd(task.title).substring(0, 30));
 
-    const info: IElectronSaveDialog = await Dialog.showSaveDialog({
-        title: "Select export location",
-        buttonLabel: translate("Save"),
-        defaultPath: `${fileTitle}.${type}`,
-        filters: [
-            {
-                name: fileTitle,
-                extensions: [type],
-            },
-        ],
-    });
-
-    if (info.canceled || !info.filePath) return;
-
     const subtasks = TasksStore.get().tasks.filter(subtask => subtask.parent === task.id);
     const project = await ProjectsActions.getProject(task.project);
 
-    await api("export/task", {
-        task,
-        subtasks,
-        project,
-        tags: RecordsStore.get().tags,
-        people: PeopleStore.get().people,
-        destination: info.filePath,
-        type,
+    await ExportAPI.export({
+        title: fileTitle,
+        data: {
+            task,
+            subtasks,
+            project,
+            tags: RecordsStore.get().tags,
+            people: PeopleStore.get().people,
+        },
+        type: "task",
+        format,
     });
 };
 

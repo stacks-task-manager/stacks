@@ -94,6 +94,22 @@ class Notepad extends Base {
         await this.page.keyboard.press("Escape");
         await this.menu.waitFor({ state: "hidden" });
     }
+
+    public async export(format: "pdf" | "html") {
+        await this.openMenu();
+        await this.menuItem("notepad-menu-export").hover();
+        const responsePromise = this.page.waitForResponse(
+            response => response.url().includes("/api/export") && response.request().method() === "POST"
+        );
+        await this.page.getByTestId(`notepad-menu-export-${format}`).click();
+        const response = await responsePromise;
+        return {
+            status: response.status(),
+            contentType: response.headers()["content-type"],
+            disposition: response.headers()["content-disposition"],
+            request: response.request().postDataJSON(),
+        };
+    }
 }
 
 export default Notepad;

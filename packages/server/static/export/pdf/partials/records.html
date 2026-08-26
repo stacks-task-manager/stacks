@@ -1,0 +1,52 @@
+{{#each records}}
+<article class="record">
+    <header class="record-hero">
+        <h2 class="record-title">{{title}}</h2>
+        {{#if subtitle}}
+        <p class="record-subtitle">{{subtitle}}</p>
+        {{/if}}{{#if badges}}
+        <div class="badges">{{#each badges}}<span class="badge">{{this}}</span>{{/each}}</div>
+        {{/if}}
+    </header>
+    {{#if facts}}
+    <div class="fact-grid">
+        {{#each facts}}
+        <div class="fact">
+            <span class="fact-label">{{label}}</span><span class="fact-value">{{value}}</span>
+        </div>
+        {{/each}}
+    </div>
+    {{/if}}{{#each sections}}
+    <section class="section">
+        <h3 class="section-title">{{title}}</h3>
+        {{#if text}}
+        <p class="section-text">{{text}}</p>
+        {{/if}}{{#if facts}}
+        <div class="fact-grid">
+            {{#each facts}}
+            <div class="fact">
+                <span class="fact-label">{{label}}</span><span class="fact-value">{{value}}</span>
+            </div>
+            {{/each}}
+        </div>
+        {{/if}}{{#if items}}
+        <div class="chips">{{#each items}}<span class="chip">{{this}}</span>{{/each}}</div>
+        {{/if}}{{#if rows}}
+        <table class="data-table">
+            <tbody>
+                {{#each rows}}
+                <tr>
+                    {{#each this}}
+                    <td><span class="table-label">{{label}}</span>{{value}}</td>
+                    {{/each}}
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+        {{/if}}
+    </section>
+    {{/each}}
+</article>
+{{else}}
+<p class="empty">{{emptyValue}}</p>
+{{/each}}

@@ -91,9 +91,9 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
     response => {
-        // If the request expects a blob (like for file downloads), return it directly
+        // Blob callers need response headers to preserve server-provided filenames.
         if (response.config.responseType === "blob") {
-            return response.data;
+            return response;
         }
 
         const { data } = response.data;

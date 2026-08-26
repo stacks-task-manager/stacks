@@ -76,8 +76,8 @@ export const useTaskMenuActions = (task: ITask, options?: IUseTaskMenuActionsOpt
      * Exports the task in the given format.
      * @param type The export format type.
      */
-    const handleExport = (type: string) => {
-        TasksActions.exportTask(task.id, type);
+    const handleExport = (type: "pdf" | "json" | "excel" | "xlsx") => {
+        TasksActions.exportTask(task.id, type === "xlsx" ? "excel" : type);
     };
 
     return {

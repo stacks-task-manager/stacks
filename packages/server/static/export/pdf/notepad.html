@@ -1,38 +1,22 @@
 <!DOCTYPE html>
-<html lang="en" class="theme-light">
-
-<head>
-    <meta charset="utf-8" />
-    <title>Notepad export</title>
-    <link rel="stylesheet" href="assets/css/stacks.min.css" />
-    <link rel="stylesheet" href="export/pdf/pdf-export.css" />
-</head>
-
-<body class="bg-theme-secondary-100">
-    <div class="pdf-export p16">
-        <!-- Header -->
-        <header class="pdf-header-accent">
-            <div class="pdf-meta d-flex ai-center jc-space-between fw-wrap gs8">
-                <div>
-                    <h1 class="pdf-meta-title">Notepad</h1>
-                    <p class="pdf-meta-subtitle m0 mt4">Rich text export</p>
-                </div>
-            </div>
-        </header>
-
-        <div class="pdf-card">
-            {{#if (isString data)}}
-            <div class="pdf-body">{{{data}}}</div>
-            {{else}}
-            <div class="pdf-fallback-label">No HTML body was provided; raw payload:</div>
-            <pre class="pdf-fallback">{{json data}}</pre>
-            {{/if}}
-        </div>
-
-        <footer class="pdf-footer">
-            Generated {{formatDate generatedAt}} · <span class="pdf-footer-brand">Stacks</span>
-        </footer>
-    </div>
-</body>
-
+<html lang="{{locale}}" dir="{{direction}}">
+    <head>
+        <meta charset="utf-8" />
+        <meta
+            http-equiv="Content-Security-Policy"
+            content="default-src 'none'; img-src data:; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'"
+        />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>{{documentTitle}}</title>
+        <style>
+            {{{inlineCss}}}
+        </style>
+    </head>
+    <body>
+        <main class="report report-notepad">
+            {{> header}}
+            <article class="section section-rich rich-body">{{{richHtml}}}</article>
+            {{> footer}}
+        </main>
+    </body>
 </html>

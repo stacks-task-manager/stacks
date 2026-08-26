@@ -21,6 +21,7 @@ import Dialog from "app/utils/dialog";
 import Storage from "app/utils/storage";
 import { createDebouncedCallback, patchFilterField } from "../actionHelpers";
 import { IPeopleStore, PeopleFilter, PeopleStore, PeopleViewType } from "../people";
+import { RecordsStore } from "../records";
 import { cleanupResourceNavigationRefs } from "./resourceNavigationCleanup";
 
 const VIEW_TYPE_NAME = "people-view-type";
@@ -576,24 +577,19 @@ const updateRole = async (data: IRole) => {
 };
 
 const exportPeople = async (format: "json" | "excel") => {
-    // ExportAPI.export({
-    //     data: PeopleStore.get().people,
-    //     companies: PeopleStore.get().companies,
-    //     destination: info.filePath,
-    //     type,
-    // });
-
-    ExportAPI.export({
+    await ExportAPI.export({
         title: "people",
         data: PeopleStore.get().people,
+        type: "person",
         format,
     });
 };
 
 const exportCompanies = async (format: "json" | "excel") => {
-    ExportAPI.export({
+    await ExportAPI.export({
         title: "companies",
         data: PeopleStore.get().companies,
+        type: "company",
         format,
     });
 };
@@ -602,9 +598,17 @@ const exportPerson = async (format: "json" | "pdf" | "excel", personId: string) 
     const person = getPerson(personId);
     if (!person) return;
 
-    ExportAPI.export({
+    await ExportAPI.export({
         title: `${person.firstName}_${person.lastName}`,
-        data: [person],
+        data:
+            format === "pdf"
+                ? {
+                      person,
+                      companies: PeopleStore.get().companies,
+                      roles: PeopleStore.get().roles,
+                      tags: RecordsStore.get().tags,
+                  }
+                : [person],
         type: "person",
         format,
     });
@@ -614,7 +618,7 @@ const exportCompany = async (format: "json" | "pdf" | "excel", companyId: string
     const company = getCompany(companyId);
     if (!company) return;
 
-    ExportAPI.export({
+    await ExportAPI.export({
         title: company.title,
         data: [company],
         type: "company",
