@@ -35,7 +35,10 @@ export class DatePicker {
     public async setDate(date: Date) {
         await this.monthPicker.selectOption({ label: format(date, "MMMM") });
         await this.yearPicker.selectOption({ label: format(date, "yyyy") });
-        await this.day.getByText(format(date, "d"), { exact: true }).click();
+        await this.wrapper
+            .locator(".rdp-day:not(.rdp-day_outside)")
+            .getByText(format(date, "d"), { exact: true })
+            .click();
         await this.hour.fill(format(date, "h"));
         await this.hour.blur();
         await this.minute.fill(format(date, "mm"));

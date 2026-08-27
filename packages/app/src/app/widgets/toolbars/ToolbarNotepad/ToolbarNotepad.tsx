@@ -145,7 +145,7 @@ export const ToolbarNotepad = () => {
                                     {notepadId && <DocumentTintMenuItem documentId={notepadId} />}
 
                                     <MenuItem
-                                        text={`${translate("Privacy")}...`}
+                                        text={`${translate("Permissions")}...`}
                                         icon={<Icon icon="lock-01" />}
                                         onClick={handleToggleVisibility}
                                         data-testid="notepad-menu-privacy"

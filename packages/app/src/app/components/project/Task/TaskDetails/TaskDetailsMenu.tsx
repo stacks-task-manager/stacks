@@ -155,7 +155,7 @@ export const TaskDetailsMenu: FunctionComponent<ITaskDetailsMenuProps> = ({
             <MenuDivider />
 
             <MenuItem
-                text={`${translate("Privacy")}...`}
+                text={`${translate("Permissions")}...`}
                 icon={<Icon icon="lock-01" />}
                 disabled={disabled}
                 onClick={onTogglePrivacy}

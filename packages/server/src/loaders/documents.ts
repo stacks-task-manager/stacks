@@ -23,6 +23,8 @@ import { sendRealtimeUpdate } from "../events";
 import { invalidateApiCacheForCurrentRequest } from "../utils/cache";
 import { translate } from "@stacks/translations";
 
+const ROOT_DOCUMENT_ID = "00000000-0000-0000-0000-000000000000";
+
 DocumentEntity.hasOne(PermissionEntity, { foreignKey: "id", constraints: false });
 PermissionEntity.belongsTo(DocumentEntity, { foreignKey: "id", constraints: false });
 
@@ -55,6 +57,9 @@ function sanitizeDocuments(documents: any[]): TreeNode[] {
 async function create(data: IDocumentCreate, extTransaction?: Transaction) {
     const user = getCurrentUser();
     return withTransaction(extTransaction, async transaction => {
+        if (data.parent && data.parent !== ROOT_DOCUMENT_ID) {
+            await getOne(data.parent, transaction);
+        }
         // fetch the document with the largest order value
         const maxOrderDoc: TreeNode | null = (await DocumentEntity.findOne({
             where: {
@@ -137,6 +142,16 @@ async function getOne(id: string, transaction?: Transaction) {
             throw Errors.notFound(translate("Document not found"));
         }
 
+        const visited = new Set([document.id]);
+        let parent = document.parent;
+        while (parent && parent !== ROOT_DOCUMENT_ID) {
+            if (visited.has(parent)) throw Errors.notFound(translate("Document not found"));
+            visited.add(parent);
+            const ancestor = await findOne({ entity: DocumentEntity, id: parent, transaction });
+            if (!ancestor) throw Errors.notFound(translate("Document not found"));
+            parent = ancestor.parent;
+        }
+
         return sanitizeDocument(document);
     } catch (error) {
         throw error;
@@ -152,7 +167,19 @@ async function getAll(): Promise<TreeNode[]> {
         entity: DocumentEntity,
         order: [["order", "ASC"]],
     });
-    return sanitizeDocuments(documents);
+    const visibleIds = new Set(documents.map((document: any) => document.id));
+    const byId = new Map(documents.map((document: any) => [document.id, document]));
+    const hierarchyVisible = (document: any) => {
+        const visited = new Set([document.id]);
+        let parent = document.parent;
+        while (parent && parent !== ROOT_DOCUMENT_ID) {
+            if (visited.has(parent) || !visibleIds.has(parent)) return false;
+            visited.add(parent);
+            parent = (byId.get(parent) as any)?.parent;
+        }
+        return true;
+    };
+    return sanitizeDocuments(documents.filter(hierarchyVisible));
 }
 
 /**
@@ -244,6 +271,10 @@ async function update(id: string, data: any, extTransaction?: Transaction): Prom
         const newParent = data.parent ?? oldParent;
         let newPosition = data.order ?? oldPosition;
 
+        if (newParent && newParent !== ROOT_DOCUMENT_ID && newParent !== oldParent) {
+            await getOne(newParent, transaction);
+        }
+
         // Clamp destination index to valid sibling range
         if (data.order != null) {
             const destCount = await DocumentEntity.count({
@@ -264,6 +295,13 @@ async function update(id: string, data: any, extTransaction?: Transaction): Prom
             entity: DocumentEntity,
             id,
             data,
+            // Users may organize documents that are visible to them, but all
+            // other document mutations remain restricted to the ACL owner.
+            writePolicy:
+                Object.keys(data).length > 0 &&
+                Object.keys(data).every(key => key === "parent" || key === "order")
+                    ? "visible"
+                    : "owner",
             transaction,
         });
 

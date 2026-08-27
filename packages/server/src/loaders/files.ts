@@ -13,6 +13,12 @@ import { getCurrentUser } from "./context";
 import { withTransaction } from "./utils";
 import { formatBytes } from "../utils/files";
 import { translate } from "@stacks/translations";
+import { TasksLoader } from "./tasks";
+import { ProjectsLoader } from "./projects";
+import { NotepadsLoader } from "./notepads";
+import { DocumentsLoader } from "./documents";
+import { PeopleLoader } from "./people";
+import { CompaniesLoader } from "./companies";
 
 // Constants for file handling
 const SUPPORTED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp"];
@@ -30,6 +36,40 @@ if (!FileEntity.associations.Attachments) {
 
 const UPLOAD_DIR = join(process.cwd(), "uploads");
 const PREVIEW_DIR = join(process.cwd(), "previews");
+
+async function assertAttachmentParentVisible(recordId: string, type: string, transaction?: Transaction) {
+    if (!Object.values(FILES_TYPE).includes(type as FILES_TYPE)) {
+        throw Errors.badRequest(translate("Invalid file type"));
+    }
+
+    if (
+        [FILES_TYPE.TASK_ATTACHMENT, FILES_TYPE.TASK_COVER, FILES_TYPE.TASK_COMMENT].includes(
+            type as FILES_TYPE
+        )
+    ) {
+        await TasksLoader.getOne(recordId, transaction);
+        return;
+    }
+    if (type === FILES_TYPE.PROJECT_DESCRIPTION) {
+        await ProjectsLoader.getOne(recordId, transaction);
+        return;
+    }
+    if ([FILES_TYPE.NOTEPAD_COVER, FILES_TYPE.NOTEPAD_FILE].includes(type as FILES_TYPE)) {
+        await NotepadsLoader.getOne(recordId, transaction);
+        return;
+    }
+    if (type === FILES_TYPE.FILE) {
+        await DocumentsLoader.getOne(recordId, transaction);
+        return;
+    }
+    if (type === FILES_TYPE.AVATAR) {
+        await PeopleLoader.getOne(recordId);
+        return;
+    }
+    if (type === FILES_TYPE.COMPANY_LOGO) {
+        await CompaniesLoader.getOne(recordId);
+    }
+}
 
 // Ensure upload and preview directories exist
 if (!existsSync(UPLOAD_DIR)) {
@@ -203,6 +243,7 @@ async function uploadFile(
     }
 
     return withTransaction(extTransaction, async transaction => {
+        await assertAttachmentParentVisible(recordId, type, transaction);
         const hash = calculateHash(buffer);
         const size = buffer.length;
         // Store file without extension, using only the hash
@@ -298,6 +339,7 @@ async function checkExistingFileAndCreateAttachment(
     extTransaction?: Transaction
 ): Promise<IAttachment | null> {
     return withTransaction(extTransaction, async transaction => {
+        await assertAttachmentParentVisible(recordId, type, transaction);
         // Check if file exists and is not deleted
         const file = await FileEntity.findOne({
             where: {
@@ -351,6 +393,7 @@ async function getAttachments(recordId: string, type?: FILES_TYPE) {
     };
 
     if (type) {
+        await assertAttachmentParentVisible(recordId, type);
         filter.type = type;
     }
 
@@ -364,6 +407,12 @@ async function getAttachments(recordId: string, type?: FILES_TYPE) {
             },
         ],
     });
+
+    if (!type) {
+        for (const attachmentType of new Set(attachments.map(row => row.get("type") as string))) {
+            await assertAttachmentParentVisible(recordId, attachmentType);
+        }
+    }
 
     return attachments.map(attachment => {
         const file = attachment.get("File") as any;
@@ -400,6 +449,11 @@ async function getAttachment(id: string) {
         throw Errors.notFound("File not found");
     }
 
+    await assertAttachmentParentVisible(
+        attachment.get("recordId") as string,
+        attachment.get("type") as string
+    );
+
     const file = attachment.get("File") as any;
     return formatAttachmentObject(attachment, file);
 }
@@ -425,6 +479,11 @@ async function download(
     if (!attachment) {
         return null;
     }
+
+    await assertAttachmentParentVisible(
+        attachment.get("recordId") as string,
+        attachment.get("type") as string
+    );
 
     const file = attachment.get("File") as any;
     // Construct full path from relative path
@@ -468,6 +527,12 @@ async function deleteByAttachment(attachmentId: string, extTransaction?: Transac
             throw Errors.notFound(translate("Attachment not found"));
         }
 
+        await assertAttachmentParentVisible(
+            attachment.get("recordId") as string,
+            attachment.get("type") as string,
+            transaction
+        );
+
         // Prepare the return object using the helper function
         const file = attachment.get("File") as any;
         const attachmentObject = formatAttachmentObject(attachment, file);
@@ -491,6 +556,7 @@ async function deleteByAttachment(attachmentId: string, extTransaction?: Transac
 async function deleteByRecord(recordId: string, type: FILES_TYPE, extTransaction?: Transaction) {
     const user = getCurrentUser();
     return withTransaction(extTransaction, async transaction => {
+        await assertAttachmentParentVisible(recordId, type, transaction);
         // Get all attachments for the record with the specified type
         const attachments = await AttachmentEntity.findAll({
             where: {
@@ -560,6 +626,11 @@ async function getPreviewByAttachmentId(
     if (!attachment || !attachment.get("File")) {
         return null;
     }
+
+    await assertAttachmentParentVisible(
+        attachment.get("recordId") as string,
+        attachment.get("type") as string
+    );
 
     const file = attachment.get("File") as any;
 

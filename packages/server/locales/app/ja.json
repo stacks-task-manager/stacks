@@ -629,8 +629,6 @@
     "Priority": "優先度",
     "Priority asc": "優先度（昇順）",
     "Priority desc": "優先度（降順）",
-    "Privacy": "プライバシー",
-    "Privacy and Permissions": "プライバシーと権限",
     "Private notes": "非公開ノート",
     "Private visibility hint": "このリソースを非公開にし、所有者と公開リスト内のユーザーのみに表示できるようにします。",
     "Problem removing selected event": "選択したイベントの削除中に問題が発生しました",

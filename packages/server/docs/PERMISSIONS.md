@@ -152,3 +152,46 @@ Every realtime “polling update” can optionally include a `permissions` snaps
   - the author of the update (`update.user === me.id`)
 
 This is a client-side optimization to avoid fetching entities the user cannot see; the REST API is still expected to enforce visibility on reads.
+
+## 6. Enforcement order and audit matrix
+
+Authenticated resource operations use this order. A denial at a resource or parent ACL is reported as not found so the API does not disclose that the row exists.
+
+1. `mountAuthenticated()` runs JWT authentication and installs request context.
+2. Applicable role section/action checks run in route middleware or the loader.
+3. `sanitizeWhere()` restricts rows to the current tenant and `deleted IS NULL`.
+4. `sanitizeWherePermissions()` applies the resource ACL. Missing or soft-deleted ACL rows fail closed for non-admins.
+5. Parent loaders apply every applicable parent ACL. Admins bypass ACL/RBAC, but queries remain tenant-scoped.
+
+| Resource / entrypoint              | Read rule                                                                         | Mutation rule                                                       | Applicable parent rule                                                                       |
+| ---------------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| Documents                          | Resource ACL; list removes descendants whose visible ancestor chain is incomplete | ACL owner/admin; visible users may move/reorder                     | Every document ancestor; destination parent is checked before create/move                    |
+| Projects / notepads                | Shared document/resource ACL                                                      | Owner/admin, plus existing project-settings policy                  | Backing document and every document ancestor                                                 |
+| Stacks                             | Resource ACL                                                                      | ACL owner/admin                                                     | Project detail ACL                                                                           |
+| Tasks                              | Resource ACL                                                                      | ACL owner/admin                                                     | Project ACL; list/count resolve visible projects once and filter in the task query           |
+| Timelogs                           | Person/approver business rule                                                     | Person/admin and status workflow                                    | Task ACL and its project ACL, resolved in batches for lists                                  |
+| Activities                         | Tenant scope plus validated resource type                                         | Comments write capability                                           | Task ACL; list first resolves the visible task set                                           |
+| Attachments                        | Tenant scope plus validated `FILES_TYPE`                                          | Same parent visibility is required before attachment writes/deletes | Task, project, notepad, document, person, or company loader selected from the validated type |
+| Local events                       | Event ACL                                                                         | ACL owner/admin                                                     | Calendar ACL for detail/list/count/create/move                                               |
+| Search / overview / AI tools / MCP | Loader result policies                                                            | Loader mutation policies                                            | These callers do not bypass loader checks                                                    |
+| WebSocket updates                  | Permission snapshot is advisory filtering only                                    | N/A                                                                 | REST/loaders independently re-authorize subsequent reads                                     |
+
+All resource routers in `src/api.ts` are mounted with `mountAuthenticated()`. The intentionally public API surfaces are source/license information and the documented Google OAuth handshake routes.
+
+## 7. Permission mutation hardening
+
+Permission route IDs and all audience IDs are UUID-validated. Audience arrays are capped at 500 entries and deduplicated. The loader verifies the owner and visible users/roles are active, non-deleted rows in the current tenant. `type` and `tenant` are not accepted update fields. Ownership changes remain available only to the existing permission owner or an admin.
+
+The authorization read and ACL write run in one transaction with a row lock. ACL deletion uses the same transactional pattern. After a successful ACL or role-access update, the complete current-tenant API response cache is invalidated after commit; realtime events are emitted after commit as well.
+
+## 8. Query-shape and index review
+
+Hierarchy list paths use bounded query counts rather than per-row parent lookups:
+
+- document ancestry is intersected in memory from one tenant/ACL-filtered document query;
+- project/notepad lists reuse that visible document-id set;
+- task list/count resolves visible projects once and applies an `IN` predicate in the task query;
+- activity and timelog lists resolve visible tasks in one batch;
+- event list/count resolves visible calendars once.
+
+No permission index migration was added. The audit did not produce three warm `EXPLAIN (ANALYZE, BUFFERS)` runs showing the required 20% improvement or a demonstrated high-cardinality permissions scan, so adding speculative B-tree/GIN indexes would violate the migration threshold. A production-sized benchmark should seed at least 10,000 mixed-ACL rows in an isolated database, run detail/list/count/search/overview/event/timelog queries three times after warm-up, and retain the plans before selecting an index.

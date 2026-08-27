@@ -8,6 +8,7 @@ import { IRole, UUID } from "@stacks/types";
 import { getCurrentUser } from "./context";
 import { createOne, sanitizeWhere, withTransaction } from "./utils";
 import { Transaction } from "sequelize";
+import { invalidateApiCacheForCurrentRequest } from "../utils/cache";
 
 /** All roles in the tenant ordered by title. */
 async function getAll() {
@@ -48,6 +49,7 @@ async function update(id: UUID, data: Pick<IRole, "access" | "title" | "descript
                 },
             }
         );
+        if (affectedCount > 0) invalidateApiCacheForCurrentRequest();
         return affectedCount > 0;
     } catch (error) {
         throw error;

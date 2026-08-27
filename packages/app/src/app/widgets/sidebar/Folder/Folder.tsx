@@ -12,6 +12,7 @@ import { RecordActions } from "app/store/actions";
 import { Confirm, Icon } from "app/components/common";
 import { SidebarButton } from "app/widgets/sidebar";
 import { setSelectedRecord, SidebarStore } from "app/store/sidebar";
+import { showPermissions } from "app/store/global";
 
 interface IFolder2Props {
     folder: TreeNode;
@@ -77,8 +78,15 @@ export const Folder: FunctionComponent<IFolder2Props> = ({ folder, depth, isOpen
         setIsEditing(false);
     };
 
+    const handlePermissions = () => {
+        showPermissions(folder.permissions, updatedPermissions =>
+            RecordActions.updatePermissions(folder.id, updatedPermissions)
+        );
+    };
+
     return (
         <SidebarButton
+            data-testid={`sidebar-folder-${folder.id}`}
             title={folder.title}
             icon={isOpen ? "folder-minus" : "folder-plus"}
             depth={depth + 1}
@@ -91,6 +99,13 @@ export const Folder: FunctionComponent<IFolder2Props> = ({ folder, depth, isOpen
                         icon={<Icon icon="edit-05" />}
                         text={`${translate("Edit folder")}...`}
                         onClick={() => setIsEditing(true)}
+                        data-testid="sidebar-folder-edit"
+                    />
+                    <MenuItem
+                        icon={<Icon icon="lock-01" />}
+                        text={`${translate("Permissions")}...`}
+                        onClick={handlePermissions}
+                        data-testid="sidebar-folder-permissions"
                     />
                     <MenuDivider />
                     <MenuItem

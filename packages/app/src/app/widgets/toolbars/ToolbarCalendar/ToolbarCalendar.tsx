@@ -363,6 +363,7 @@ const FilterButton = () => {
             placement="bottom-end"
             active={showFilters}
             onClick={CalendarActions.toggleFilters}
+            data-testid="calendar-filter-button"
         />
     );
 };

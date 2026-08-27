@@ -82,7 +82,7 @@ test.describe("Project", () => {
     test("Should update the project title", async () => {
         const title = `Renamed project ${Date.now()}`;
         await project.rename(title);
-        await expect(project.titleInput).toHaveValue(title);
+        await expect(project.title).toHaveText(title);
         projectName = title;
     });
 

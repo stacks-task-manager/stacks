@@ -9,6 +9,7 @@ vi.mock("@stacks/db", () => ({
         findOne: vi.fn(),
         create: vi.fn(),
         update: vi.fn(),
+        count: vi.fn(),
     },
     EventEntity: {
         hasOne: vi.fn(),
@@ -16,6 +17,7 @@ vi.mock("@stacks/db", () => ({
         findOne: vi.fn(),
         create: vi.fn(),
         update: vi.fn(),
+        count: vi.fn(),
     },
     PermissionEntity: {
         belongsTo: vi.fn(),
@@ -91,6 +93,7 @@ describe("EventsLoader calendar ACL", () => {
     const findOneCalendarMock = vi.mocked(CalendarEntity.findOne);
     const findAllEventMock = vi.mocked(EventEntity.findAll);
     const createEventMock = vi.mocked(EventEntity.create);
+    const countEventMock = vi.mocked(EventEntity.count);
 
     beforeEach(() => {
         vi.clearAllMocks();
@@ -132,5 +135,25 @@ describe("EventsLoader calendar ACL", () => {
         ).rejects.toThrow(/calendar not found/i);
 
         expect(createEventMock).not.toHaveBeenCalled();
+    });
+
+    it("counts only events in visible calendars through the event ACL join", async () => {
+        countEventMock.mockResolvedValue(3 as any);
+
+        await expect(
+            runWithContext(() =>
+                EventsLoader.countAll({
+                    from: "2026-01-01T00:00:00.000Z",
+                    to: "2026-01-31T00:00:00.000Z",
+                })
+            )
+        ).resolves.toBe(3);
+
+        const call = countEventMock.mock.calls[0][0] as any;
+        const calendarFilter = call.where.calendar;
+        const operator = Object.getOwnPropertySymbols(calendarFilter)[0];
+        expect(calendarFilter[operator]).toEqual([visibleCalendarId]);
+        expect(call.include).toEqual([{ model: expect.anything(), required: false }]);
+        expect(call.distinct).toBe(true);
     });
 });

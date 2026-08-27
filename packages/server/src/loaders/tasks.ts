@@ -152,6 +152,8 @@ async function getOne(id: string, extTransaction?: Transaction) {
             throw Errors.notFound(translate("Task not found"));
         }
 
+        await ProjectsLoader.getOne(task.project, transaction);
+
         return task;
     });
 }
@@ -286,7 +288,9 @@ function buildTaskListFilter(filters: GetAllFilters): object {
  */
 async function countAll(filters: GetAllFilters, extTransaction?: Transaction): Promise<number> {
     return withTransaction(extTransaction, async transaction => {
-        const filter = buildTaskListFilter(filters);
+        const filter: any = buildTaskListFilter(filters);
+        const visibleProjectIds = (await ProjectsLoader.getAll(transaction)).map(project => project.id);
+        filter[Op.and] = [...((filter as any)[Op.and] ?? []), { project: { [Op.in]: visibleProjectIds } }];
         return TaskEntity.count({
             where: sanitizeWherePermissions(filter),
             include: [
@@ -314,7 +318,9 @@ async function getAll(
     extTransaction?: Transaction
 ): Promise<ITask[]> {
     return withTransaction(extTransaction, async transaction => {
-        const filter = buildTaskListFilter(filters);
+        const filter: any = buildTaskListFilter(filters);
+        const visibleProjectIds = (await ProjectsLoader.getAll(transaction)).map(project => project.id);
+        filter[Op.and] = [...((filter as any)[Op.and] ?? []), { project: { [Op.in]: visibleProjectIds } }];
 
         const tasks = await findAll<ITask>({
             entity: TaskEntity,
@@ -338,6 +344,7 @@ async function getAll(
             },
             group: ["TaskEntity.id", "PermissionEntity.id", "projectInfo.id"],
             order: order,
+            transaction,
         });
 
         return tasks.map(task => ({

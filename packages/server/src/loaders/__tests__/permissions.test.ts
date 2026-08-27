@@ -1,7 +1,7 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { POLLINGACTIONS, POLLINGTYPE } from "@stacks/types";
-import { PermissionEntity } from "@stacks/db";
+import { PermissionEntity, RoleEntity, UserEntity } from "@stacks/db";
 
 vi.mock("@stacks/db", () => ({
     PermissionEntity: {
@@ -9,6 +9,8 @@ vi.mock("@stacks/db", () => ({
         findOne: vi.fn(),
         update: vi.fn(),
     },
+    UserEntity: { count: vi.fn() },
+    RoleEntity: { count: vi.fn() },
 }));
 
 vi.mock("../../events", () => ({
@@ -67,6 +69,8 @@ describe("PermissionsLoader", () => {
         afterCommitCallbacks.length = 0;
         findOneMock.mockReset();
         updateMock.mockReset();
+        vi.mocked(UserEntity.count).mockImplementation(async ({ where }: any) => where.id.length);
+        vi.mocked(RoleEntity.count).mockImplementation(async ({ where }: any) => where.id.length);
     });
 
     it("rejects permission updates from visible non-owners", async () => {
@@ -135,7 +139,7 @@ describe("PermissionsLoader", () => {
             })
         );
         expect(sendRealtimeUpdateMock).not.toHaveBeenCalled();
-        await afterCommitCallbacks[0]();
+        await Promise.all(afterCommitCallbacks.map(callback => callback()));
         expect(sendRealtimeUpdateMock).toHaveBeenCalledWith({
             type: POLLINGTYPE.TASK,
             action: POLLINGACTIONS.UPDATE,
@@ -214,12 +218,61 @@ describe("PermissionsLoader", () => {
             })
         );
         expect(sendRealtimeUpdateMock).not.toHaveBeenCalled();
-        await afterCommitCallbacks[0]();
+        await Promise.all(afterCommitCallbacks.map(callback => callback()));
         expect(sendRealtimeUpdateMock).toHaveBeenCalledWith({
             type: POLLINGTYPE.TASK,
             action: POLLINGACTIONS.UPDATE,
             record: "perm-1",
             permissions: updated,
         });
+    });
+
+    it("deduplicates audiences before validating and saving them", async () => {
+        findOneMock.mockResolvedValue({ toJSON: () => permissionRow() } as any);
+        updateMock.mockResolvedValue([1, [{ toJSON: () => permissionRow() }]] as any);
+
+        await runWithContext(() =>
+            PermissionsLoader.update(
+                "perm-1",
+                {
+                    isPublic: false,
+                    visibleUsers: ["user-2", "user-2"],
+                    visibleRoles: ["role-2", "role-2"],
+                },
+                transaction
+            )
+        );
+
+        expect(UserEntity.count).toHaveBeenCalledWith(
+            expect.objectContaining({ where: expect.objectContaining({ id: ["user-2"] }) })
+        );
+        expect(RoleEntity.count).toHaveBeenCalledWith(
+            expect.objectContaining({ where: expect.objectContaining({ id: ["role-2"] }) })
+        );
+        expect(updateMock).toHaveBeenCalledWith(
+            expect.objectContaining({ visibleUsers: ["user-2"], visibleRoles: ["role-2"] }),
+            expect.anything()
+        );
+    });
+
+    it("rejects audiences containing users outside the active tenant", async () => {
+        findOneMock.mockResolvedValue({ toJSON: () => permissionRow() } as any);
+        vi.mocked(UserEntity.count).mockResolvedValue(0);
+
+        await expect(
+            runWithContext(() =>
+                PermissionsLoader.update(
+                    "perm-1",
+                    {
+                        isPublic: false,
+                        visibleUsers: ["cross-tenant-user"],
+                        visibleRoles: [],
+                    },
+                    transaction
+                )
+            )
+        ).rejects.toThrow(/workspace/i);
+
+        expect(updateMock).not.toHaveBeenCalled();
     });
 });

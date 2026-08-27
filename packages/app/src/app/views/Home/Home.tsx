@@ -2,7 +2,7 @@
 import { Button, Card, Classes, Menu, MenuItem } from "@blueprintjs/core";
 import { translate } from "@stacks/translations";
 import classNames from "classnames";
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { APPICONS, RECORDTYPE, TreeNode, defaultHome } from "@stacks/types";
@@ -46,7 +46,7 @@ export const Home = () => {
         if (home.widgets == null) {
             setHome({ ...home, widgets: defaultHome.widgets });
         }
-    }, [home]);
+    }, [home, setHome]);
 
     useEffect(() => {
         HomeActions.load();
@@ -181,7 +181,7 @@ const FavoriteProjects = () => {
                     {projects.map(project => (
                         <MenuItem
                             key={project.id}
-                            text={project.text}
+                            text={project.title}
                             icon={<Icon icon="check-circle-broken" />}
                             onClick={() => navigate(`/project/${project.id}`)}
                         />
@@ -225,7 +225,7 @@ const PinnedBookmarks = () => {
                                                 <Icon
                                                     icon={
                                                         APPICONS[
-                                                            bookmark.type.toUpperCase() as unknown as keyof typeof APPICONS
+                                                        bookmark.type.toUpperCase() as unknown as keyof typeof APPICONS
                                                         ]
                                                     }
                                                 />

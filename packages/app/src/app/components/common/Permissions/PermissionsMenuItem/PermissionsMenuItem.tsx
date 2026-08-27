@@ -9,7 +9,7 @@ export const PermissionsMenuItem: FunctionComponent<IPermissionMenuItemProps> = 
     return (
         <React.Fragment>
             <MenuDivider />
-            <MenuItem icon="lock" text={`${translate("Privacy and Permissions")}...`} onClick={onClick} />
+            <MenuItem icon="lock" text={`${translate("Permissions")}...`} onClick={onClick} />
         </React.Fragment>
     );
 };

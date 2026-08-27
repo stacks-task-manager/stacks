@@ -131,7 +131,7 @@ function parseLoaderMethods(source: string) {
     if (!nameMatch) throw new Error("No loader export found");
 
     const exportName = nameMatch[1];
-    const startIdx = idx + nameMatch[0].length;
+    const startIdx = idx + nameMatch.index! + nameMatch[0].length;
 
     // Track brace depth to find the matching closing brace
     let depth = 1,

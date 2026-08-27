@@ -174,7 +174,7 @@ export const PermissionsDialog: FunctionComponent = () => {
             onClose={handleClose}
             style={{ width: 420 }}
         >
-            <div className={Classes.DIALOG_BODY} style={{ marginBottom: 0 }}>
+            <div className={Classes.DIALOG_BODY} style={{ marginBottom: 0 }} data-testid="permissions-dialog">
                 {!canEdit && (
                     <Callout intent={Intent.WARNING}>
                         {translate("Only the owner can change visibility and or manage people")}
@@ -310,6 +310,7 @@ export const PermissionsDialog: FunctionComponent = () => {
                                 intent={isPublic ? Intent.SUCCESS : Intent.WARNING}
                                 icon={isPublic ? "unlock" : "lock"}
                                 onClick={handleTogglePublic}
+                                data-testid="permissions-public-toggle"
                             >
                                 {translate(isPublic ? "Make private" : "Make public")}
                             </AnchorButton>

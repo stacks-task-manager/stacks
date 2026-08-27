@@ -37,6 +37,7 @@ class Project extends Base {
     public expirationButton: Locator;
     public reloadButton: Locator;
     public titleInput: Locator;
+    public title: Locator;
     public viewsButton: Locator;
     public viewsMenu: Locator;
     public settings: ProjectSettings;
@@ -60,6 +61,7 @@ class Project extends Base {
         this.expirationButton = page.getByTestId("project-expiration-button");
         this.reloadButton = page.getByTestId("project-reload-button");
         this.titleInput = page.getByTestId("toolbar-title-input");
+        this.title = page.getByTestId("toolbar-title");
         this.viewsButton = page.getByTestId("project-views-button");
         this.viewsMenu = page.getByTestId("project-views-menu");
         this.settings = new ProjectSettings(page);
@@ -187,7 +189,8 @@ class Project extends Base {
         const responsePromise = this.page.waitForResponse(
             response => response.url().includes("/api/documents/") && response.request().method() === "PATCH"
         );
-        await this.page.getByTestId("toolbar-title").click();
+        await this.page.getByTestId("toolbar-title").dblclick();
+        await expect(this.titleInput).toBeVisible();
         await this.titleInput.fill(title);
         await this.titleInput.press("Enter");
         await responsePromise;

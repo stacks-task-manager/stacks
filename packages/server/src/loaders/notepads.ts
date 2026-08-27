@@ -11,6 +11,7 @@ import { sendRealtimeUpdate } from "../events";
 import { invalidateApiCacheForCurrentRequest } from "../utils/cache";
 import { getCurrentUser } from "./context";
 import { afterTransactionCommit, deleteOne, findAll, findOne, updateOne, withTransaction } from "./utils";
+import { assertDocumentHierarchyVisible, getHierarchyVisibleDocumentIds } from "../utils/documentPermissions";
 
 NotepadEntity.hasOne(PermissionEntity, { foreignKey: "id", constraints: false });
 PermissionEntity.belongsTo(NotepadEntity, { foreignKey: "id", constraints: false });
@@ -70,11 +71,14 @@ async function getOne(id: string, transaction?: Transaction) {
         throw Errors.notFound(translate("Notepad not found"));
     }
 
+    await assertDocumentHierarchyVisible(id, transaction);
+
     return notepad;
 }
 
 async function getAll(filters: { query?: string }) {
     const filter: any = {};
+    filter.id = { [Op.in]: await getHierarchyVisibleDocumentIds() };
     if (filters.query && filters.query.length) {
         filter[Op.and] = {
             content: {

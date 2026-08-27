@@ -2,7 +2,7 @@
 /**
  * Permission rows keyed by resource id with realtime broadcast on update.
  */
-import { PermissionEntity } from "@stacks/db";
+import { PermissionEntity, RoleEntity, UserEntity } from "@stacks/db";
 import { Errors } from "../errors";
 import { POLLINGACTIONS, POLLINGTYPE, type IPermissions } from "@stacks/types";
 import type { Transaction } from "sequelize";
@@ -16,6 +16,7 @@ import {
 } from "./utils";
 import { sendRealtimeUpdate } from "../events";
 import { translate } from "@stacks/translations";
+import { invalidateApiCacheForCurrentRequest } from "../utils/cache";
 
 export const defaultPermissions: Omit<IPermissions, "id" | "owner" | "type"> = {
     isPublic: true,
@@ -42,12 +43,27 @@ type PermissionUpdateInput = {
 async function create(id: string, permissions?: PermissionCreateInput, extTransaction?: Transaction) {
     return withTransaction(extTransaction, async transaction => {
         const user = getCurrentUser();
+        const visibleUsers = Array.from(new Set(permissions?.visibleUsers ?? []));
+        const visibleRoles = Array.from(new Set(permissions?.visibleRoles ?? []));
+        if (visibleUsers.length > 500 || visibleRoles.length > 500) {
+            throw Errors.badRequest(translate("Permission audience is too large"));
+        }
+        await validateAudience(
+            {
+                isPublic: permissions?.isPublic ?? defaultPermissions.isPublic,
+                visibleUsers,
+                visibleRoles,
+            },
+            transaction
+        );
         return await createOne<IPermissions>({
             entity: PermissionEntity,
             data: {
                 owner: user.id,
                 ...defaultPermissions,
                 ...(permissions ?? {}),
+                visibleUsers,
+                visibleRoles,
                 id,
             },
             transaction,
@@ -61,6 +77,7 @@ async function getOne(id: string, extTransaction?: Transaction): Promise<IPermis
         const permissionEntity = await PermissionEntity.findOne({
             where: sanitizeWherePermissions({ id }),
             transaction,
+            lock: transaction ? true : undefined,
         });
 
         if (!permissionEntity) {
@@ -71,27 +88,65 @@ async function getOne(id: string, extTransaction?: Transaction): Promise<IPermis
     });
 }
 
+async function validateAudience(
+    permissions: PermissionUpdateInput,
+    transaction: Transaction
+): Promise<PermissionUpdateInput> {
+    const user = getCurrentUser();
+    const visibleUsers = Array.from(new Set(permissions.visibleUsers));
+    const visibleRoles = Array.from(new Set(permissions.visibleRoles));
+    const owner = permissions.owner;
+    const userIds = Array.from(new Set([...(owner ? [owner] : []), ...visibleUsers]));
+
+    if (visibleUsers.length > 500 || visibleRoles.length > 500) {
+        throw Errors.badRequest(translate("Permission audience is too large"));
+    }
+
+    if (userIds.length) {
+        const count = await UserEntity.count({
+            where: { id: userIds, tenant: user.tenant, deleted: null, disabled: false },
+            transaction,
+        });
+        if (count !== userIds.length) {
+            throw Errors.badRequest(translate("Permission users must belong to this workspace"));
+        }
+    }
+
+    if (visibleRoles.length) {
+        const count = await RoleEntity.count({
+            where: { id: visibleRoles, tenant: user.tenant, deleted: null, disabled: false },
+            transaction,
+        });
+        if (count !== visibleRoles.length) {
+            throw Errors.badRequest(translate("Permission roles must belong to this workspace"));
+        }
+    }
+
+    return { ...permissions, visibleUsers, visibleRoles };
+}
+
 /** Updates ACL visibility and emits polling updates for the resource and sometimes documents. */
 async function update(id: string, permissions: PermissionUpdateInput, transaction?: Transaction) {
-    try {
+    return withTransaction(transaction, async activeTransaction => {
         const user = getCurrentUser();
-        const currentPermissions = await getOne(id, transaction);
+        const currentPermissions = await getOne(id, activeTransaction);
 
         if (!user.admin && currentPermissions.owner !== user.id) {
             throw Errors.forbidden(translate("Permission update not allowed"));
         }
 
+        const validated = await validateAudience(permissions, activeTransaction);
         const [affectedCount, updatedPermissions] = await PermissionEntity.update(
             {
-                isPublic: permissions.isPublic,
-                owner: permissions.owner ?? currentPermissions.owner,
-                visibleUsers: permissions.visibleUsers,
-                visibleRoles: permissions.visibleRoles,
+                isPublic: validated.isPublic,
+                owner: validated.owner ?? currentPermissions.owner,
+                visibleUsers: validated.visibleUsers,
+                visibleRoles: validated.visibleRoles,
             },
             {
                 where: sanitizeWhere({ id }),
                 returning: true,
-                transaction,
+                transaction: activeTransaction,
             }
         );
 
@@ -99,9 +154,13 @@ async function update(id: string, permissions: PermissionUpdateInput, transactio
             return false;
         }
 
+        afterTransactionCommit(activeTransaction, () => {
+            invalidateApiCacheForCurrentRequest();
+        });
+
         if (updatedPermissions && updatedPermissions.length) {
             const updatedRow = updatedPermissions[0].toJSON() as IPermissions & { type: POLLINGTYPE };
-            afterTransactionCommit(transaction, () => {
+            afterTransactionCommit(activeTransaction, () => {
                 sendRealtimeUpdate({
                     type: updatedRow.type,
                     action: POLLINGACTIONS.UPDATE,
@@ -130,16 +189,14 @@ async function update(id: string, permissions: PermissionUpdateInput, transactio
         }
 
         return true;
-    } catch (error) {
-        throw error;
-    }
+    });
 }
 
 /** Soft-deletes when the current user owns the permission row. */
 async function remove(id: string, transaction?: Transaction): Promise<boolean> {
-    const user = getCurrentUser();
-    try {
-        const permission = await getOne(id);
+    return withTransaction(transaction, async activeTransaction => {
+        const user = getCurrentUser();
+        const permission = await getOne(id, activeTransaction);
         if (!user.admin && permission.owner !== user.id) {
             throw Errors.forbidden(translate("Permission delete not allowed"));
         }
@@ -148,14 +205,17 @@ async function remove(id: string, transaction?: Transaction): Promise<boolean> {
             { deleted: new Date(), deletedBy: user.id },
             {
                 where: sanitizeWhere({ id }),
-                transaction,
+                transaction: activeTransaction,
             }
         );
 
+        if (affectedCount > 0) {
+            afterTransactionCommit(activeTransaction, () => {
+                invalidateApiCacheForCurrentRequest();
+            });
+        }
         return affectedCount > 0;
-    } catch (error) {
-        throw error;
-    }
+    });
 }
 
 export const PermissionsLoader = {

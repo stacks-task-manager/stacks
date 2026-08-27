@@ -357,7 +357,7 @@ export const TaskContextMenu: FunctionComponent<ITaskContextMenuProps> = ({ task
                 <>
                     <MenuDivider />
                     <MenuItem
-                        text={`${translate("Privacy")}...`}
+                        text={`${translate("Permissions")}...`}
                         icon={<Icon icon="lock-01" />}
                         onClick={() => TasksActions.togglePrivacy(task.id)}
                         data-testid="taskcontext-privacy"

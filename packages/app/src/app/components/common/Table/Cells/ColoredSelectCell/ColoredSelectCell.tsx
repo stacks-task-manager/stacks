@@ -35,7 +35,7 @@ export const ColoredSelectCell: FunctionComponent<IColoredSelectCellProps> = ({
 }) => {
     const currentValue = useMemo(() => {
         return items.find(item => item && item.value === value);
-    }, [value]);
+    }, [items, value]);
 
     return (
         <div className="colored-select-cell">

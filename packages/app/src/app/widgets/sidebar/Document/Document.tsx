@@ -10,6 +10,7 @@ import { nav } from "app/hooks";
 import { APPICONS, RECORDTYPE, TreeNode } from "@stacks/types";
 import { FilesActions, NotepadActions, ProjectsActions, RecordActions } from "app/store/actions";
 import { RecentsActions } from "app/store/actions/recents";
+import { showPermissions } from "app/store/global";
 import { setUnselectAll } from "app/store/sidebar";
 import Toast from "app/utils/toast";
 import { DocumentTintMenuItem } from "app/widgets/common";
@@ -97,8 +98,15 @@ export const Document: FunctionComponent<IDocumentProps> = ({ record, depth }) =
         }
     };
 
+    const handlePermissions = () => {
+        showPermissions(record.permissions, updatedPermissions =>
+            RecordActions.updatePermissions(record.id, updatedPermissions)
+        );
+    };
+
     return (
         <SidebarButton
+            data-testid={`sidebar-document-${record.id}`}
             title={record.title}
             icon={icon}
             isActive={isSelected}
@@ -112,6 +120,12 @@ export const Document: FunctionComponent<IDocumentProps> = ({ record, depth }) =
                         onClick={toggleEditing}
                     />
                     <DocumentTintMenuItem documentId={record.id} />
+                    <MenuItem
+                        icon={<Icon icon="lock-01" />}
+                        text={`${translate("Permissions")}...`}
+                        onClick={handlePermissions}
+                        data-testid="sidebar-document-permissions"
+                    />
 
                     <MenuDivider />
                     {record.archived != null ? (

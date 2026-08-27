@@ -11,6 +11,7 @@ import { Errors } from "../errors";
 import { asyncHandler } from "../utils/errorHandler";
 import { validator } from "../middleware/validator";
 import { PermissionUpdateSchema } from "./schema/permissions";
+import { parseUuidParam } from "./schema/common";
 
 const permissions = new Hono();
 
@@ -19,7 +20,7 @@ permissions.patch(
     "/:id",
     validator(PermissionUpdateSchema),
     asyncHandler(async (c: Context) => {
-        const { id } = c.req.param();
+        const id = parseUuidParam(c.req.param("id")!);
         const body = c.req.valid("json");
 
         const result = await PermissionsLoader.update(id, body);

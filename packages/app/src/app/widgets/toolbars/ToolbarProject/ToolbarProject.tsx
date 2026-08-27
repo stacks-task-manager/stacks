@@ -139,7 +139,7 @@ export const ProjectToolbar = () => {
                 <div className="section-toolbar">
                     <div className="section-toolbar-side side">
                         <div className="section-toolbar-title">
-                            <ToolbarTitle documentId={projectId} />
+                            <ProjectToolbarTitle projectId={projectId} />
                         </div>
                         <div className="section-toolbar-options">
                             <ProjectMenuButton
@@ -205,6 +205,19 @@ export const ProjectToolbar = () => {
                 {showArchives && <ArchivedTasksDialog onClose={() => setShowArchives(false)} />}
             </div>
         </ResizeSensor>
+    );
+};
+
+const ProjectToolbarTitle: FunctionComponent<{ projectId: string }> = ({ projectId }) => {
+    const { project } = useCurrentProject();
+    const me = useMe();
+    const { write: canChangeProjectSettings } = useCanAccess(ROLE_SECTIONS.PROJECT_SETTINGS);
+
+    return (
+        <ToolbarTitle
+            documentId={projectId}
+            disabled={!canChangeProjectSettings && project?.projectOwner !== me?.id}
+        />
     );
 };
 
@@ -300,14 +313,16 @@ const ProjectMenu = ({
                 onClick={onToggleTagsMgr}
                 data-testid="project-menu-tags-statuses"
             />
-            <DocumentTintMenuItem documentId={projectId} />
+            {canViewSettings && <DocumentTintMenuItem documentId={projectId} />}
             <MenuDivider />
-            <MenuItem
-                text={translate("Duplicate project")}
-                icon={<Icon icon="copy" />}
-                onClick={handleDuplicate}
-                data-testid="project-menu-duplicate"
-            />
+            {canViewSettings && (
+                <MenuItem
+                    text={translate("Duplicate project")}
+                    icon={<Icon icon="copy" />}
+                    onClick={handleDuplicate}
+                    data-testid="project-menu-duplicate"
+                />
+            )}
             <MenuItem
                 text={translate("Bookmark")}
                 icon={<Icon icon="bookmark" />}
@@ -354,7 +369,7 @@ const ProjectMenu = ({
 
             <MenuDivider />
             <MenuItem
-                text={`${translate("Privacy")}...`}
+                text={`${translate("Permissions")}...`}
                 icon={<Icon icon="lock-01" />}
                 onClick={onTogglePrivacy}
                 data-testid="project-menu-privacy"
@@ -800,7 +815,7 @@ const TableGroupingToggle = () => {
                     <Icon
                         icon={
                             GROUPING_TYPE_ICONS[
-                            grouping.toUpperCase() as unknown as keyof typeof GROUPING_TYPE_ICONS
+                                grouping.toUpperCase() as unknown as keyof typeof GROUPING_TYPE_ICONS
                             ]
                         }
                     />
@@ -986,7 +1001,11 @@ const ProjectInfoContent = () => {
 
             <FormGroup className="last">
                 <h6 className={Classes.HEADING}>{translate("Project health")}</h6>
-                <ProjectHealth value={health} onChange={handleSetHealth} disabled={!canSaveSettings} />
+                <ProjectHealth
+                    value={health}
+                    onChange={handleSetHealth}
+                    disabled={!canSaveSettings || !owner}
+                />
             </FormGroup>
         </div>
     );

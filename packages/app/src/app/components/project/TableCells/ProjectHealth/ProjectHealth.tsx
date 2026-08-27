@@ -2,7 +2,7 @@
 import { Intent, Size } from "@blueprintjs/core";
 import { ColoredSelectCell, IColoredMenuItem } from "app/components/common/Table/Cells";
 import { PROJECTHEALTH } from "@stacks/types";
-import React, { FunctionComponent, useMemo } from "react";
+import { FunctionComponent, useMemo } from "react";
 
 const projectHealth: (IColoredMenuItem | undefined)[] = [
     {

@@ -20,6 +20,11 @@ async function create(data: Omit<IActivity, "id" | "created" | "updated">): Prom
     return withTransaction(undefined, async (transaction: Transaction) => {
         const user = getCurrentUser();
 
+        if (data.resourceType !== ACTIVITYRESOURCETYPE.TASK) {
+            throw Errors.badRequest(translate("Invalid activity resource type"));
+        }
+        await TasksLoader.getOne(data.resourceId, transaction);
+
         if (data.type === ACTIVITYTYPE.MESSAGE) {
             const canCreateComments = canWrite(ROLE_SECTIONS.COMMENTS);
             if (!canCreateComments) {
@@ -77,9 +82,13 @@ async function create(data: Omit<IActivity, "id" | "created" | "updated">): Prom
 
 /** Lists activities for any of the given resource ids, newest first. */
 async function getAllByResources(resources: string[]) {
+    const visibleTasks = await TasksLoader.getAll({ ids: Array.from(new Set(resources)) });
+    const visibleResourceIds = visibleTasks.map(task => task.id);
+    if (visibleResourceIds.length === 0) return [];
     const activities = await ActivityEntity.findAll({
         where: sanitizeWhere({
-            resourceId: resources,
+            resourceId: visibleResourceIds,
+            resourceType: ACTIVITYRESOURCETYPE.TASK,
         }),
         order: [["created", "DESC"]],
     });

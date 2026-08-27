@@ -19,6 +19,7 @@ import {
 import { sendRealtimeUpdate } from "../events";
 import { invalidateApiCacheForCurrentRequest } from "../utils/cache";
 import { translate } from "@stacks/translations";
+import { assertDocumentHierarchyVisible, getHierarchyVisibleDocumentIds } from "../utils/documentPermissions";
 
 ProjectEntity.hasOne(PermissionEntity, { foreignKey: "id", constraints: false });
 ProjectEntity.hasOne(DocumentEntity, { foreignKey: "id", constraints: false });
@@ -59,6 +60,8 @@ async function getOne(id: string, extTransaction?: Transaction): Promise<IProjec
             throw Errors.notFound(translate("Project not found"));
         }
 
+        await assertDocumentHierarchyVisible(id, transaction);
+
         return project;
     });
 }
@@ -70,10 +73,12 @@ async function getOne(id: string, extTransaction?: Transaction): Promise<IProjec
  */
 async function getAll(extTransaction?: Transaction): Promise<IProjectWithTitle[]> {
     return withTransaction(extTransaction, async transaction => {
+        const visibleDocumentIds = await getHierarchyVisibleDocumentIds(transaction);
         const projects = await findAll<IProjectWithDocument>({
             entity: ProjectEntity,
             transaction,
             filter: {
+                id: { [Op.in]: visibleDocumentIds },
                 [Op.and]: literal(`"DocumentEntity"."archived" IS NULL`),
             },
             include: [

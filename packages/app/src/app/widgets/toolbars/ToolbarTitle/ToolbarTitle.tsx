@@ -9,25 +9,36 @@ import { Icon } from "app/components/common";
 
 interface ToolbarTitleProps {
     documentId?: string;
+    disabled?: boolean;
 }
-export const ToolbarTitle: FunctionComponent<ToolbarTitleProps> = ({ documentId }) => {
+export const ToolbarTitle: FunctionComponent<ToolbarTitleProps> = ({ documentId, disabled }) => {
     const [title, setTitle] = useState("Loading...");
+    const [isEditing, setIsEditing] = useState(false);
     const document = useDocument(documentId);
     const oldTitleRef = useRef("");
 
     useEffect(() => {
-        if (document != null && document.title !== title) {
+        if (!isEditing && document != null && document.title !== title) {
             setTitle(document.title);
         }
-    }, [document, title]);
+    }, [document, isEditing, title]);
 
     const handleSetTitle = async (title: string) => {
-        if (!document) return;
-        await RecordActions.setTitle(title, document.id);
+        if (document) {
+            await RecordActions.setTitle(title, document.id);
+        }
+        setTitle(title);
+        setIsEditing(false);
     };
 
     const handleEditing = () => {
         oldTitleRef.current = title;
+        setIsEditing(true);
+    };
+
+    const handleCancel = () => {
+        setTitle(oldTitleRef.current);
+        setIsEditing(false);
     };
 
     return (
@@ -58,14 +69,16 @@ export const ToolbarTitle: FunctionComponent<ToolbarTitleProps> = ({ documentId 
                     value={title}
                     onChange={setTitle}
                     onConfirm={handleSetTitle}
+                    onCancel={handleCancel}
+                    isEditing={isEditing}
                     minWidth={0}
-                    disabled={!document}
+                    disabled={!document || disabled}
                     onEdit={handleEditing}
                     customInputAttributes={
                         {
                             "data-testid": "toolbar-title-input",
                         } as React.InputHTMLAttributes<HTMLInputElement> &
-                            React.TextareaHTMLAttributes<HTMLTextAreaElement>
+                        React.TextareaHTMLAttributes<HTMLTextAreaElement>
                     }
                 />
             </h1>

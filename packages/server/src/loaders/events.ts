@@ -8,7 +8,7 @@ import { Errors } from "../errors";
 import { parseISO } from "date-fns";
 import { PermissionEntity, EventEntity } from "@stacks/db";
 import { RRule } from "rrule";
-import { deleteOne, findAll, findOne, sanitizeWhere, updateOne } from "./utils";
+import { deleteOne, findAll, findOne, sanitizeWhere, sanitizeWherePermissions, updateOne } from "./utils";
 import googleOAuthService, { type GoogleCalendarEvent } from "../services/googleOAuthService";
 import { CalendarsLoader } from "./calendar";
 
@@ -222,6 +222,10 @@ async function getOne(id: string) {
             throw Errors.notFound("Event not found");
         }
 
+        if (event.source === "local") {
+            await CalendarsLoader.getOne(event.calendar);
+        }
+
         return event;
     } catch (error) {
         throw error;
@@ -361,13 +365,20 @@ async function countAll(filters?: { from?: string; to?: string }): Promise<numbe
         const fromDate = filters?.from ? parseISO(filters.from) : startOfDay(new Date());
         const toDate = filters?.to ? parseISO(filters.to) : endOfDay(new Date());
 
-        const where = sanitizeWhere({
+        const visibleCalendarIds = await CalendarsLoader.getVisibleLocalCalendarIds();
+        const where = sanitizeWherePermissions({
             start: { [Op.gte]: fromDate },
             end: { [Op.lte]: toDate },
+            calendar: { [Op.in]: visibleCalendarIds },
         });
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-        return EventEntity.count({ where } as any) as unknown as Promise<number>;
+        return EventEntity.count({
+            where,
+            include: [{ model: PermissionEntity, required: false }],
+            distinct: true,
+            col: "id",
+        } as any) as unknown as Promise<number>;
     } catch (error) {
         throw error;
     }
