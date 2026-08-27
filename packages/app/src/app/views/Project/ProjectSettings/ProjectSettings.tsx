@@ -52,17 +52,17 @@ export const ProjectSettings = () => {
     const currency: ICurrency | undefined = useMemo(() => {
         if (!project) return undefined;
         return window.currencies[project.currency || "USD"];
-    }, [project?.currency]);
+    }, [project]);
 
     const startDate = useMemo(() => {
         if (!project) return undefined;
         return project.startDate ?? undefined;
-    }, [project?.startDate]);
+    }, [project]);
 
     const endDate = useMemo(() => {
         if (!project) return undefined;
         return project.endDate ?? undefined;
-    }, [project?.endDate]);
+    }, [project]);
 
     if (!project) return null;
 
@@ -93,7 +93,7 @@ export const ProjectSettings = () => {
             ProjectFiltersActions.set("state", defaultState);
         }
 
-        toast.info("To apply this option, the app may need to be restarted.");
+        toast.info(translate("To apply this option the app may need to be restarted"));
     };
 
     const handleSetShowSubtasks = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -178,7 +178,10 @@ export const ProjectSettings = () => {
                                 </span>
                             }
                         />
-                        <Tab id="time" title={<span data-testid="project-settings-tab-time">Time</span>} />
+                        <Tab
+                            id="time"
+                            title={<span data-testid="project-settings-tab-time">{translate("Time")}</span>}
+                        />
                         <Tab
                             id="fields"
                             title={
@@ -200,11 +203,13 @@ export const ProjectSettings = () => {
                     {currentTab === "settings" ? (
                         <div>
                             <SettingRow
-                                title="Project description"
-                                description="A brief description of the project, its purpose, and its scope."
+                                title={translate("Project description")}
+                                description={translate(
+                                    "A brief description of the project its purpose and its scope"
+                                )}
                             >
                                 <TextArea
-                                    placeholder="Project description"
+                                    placeholder={translate("Project description")}
                                     fill
                                     value={tempDescription ?? project.description ?? ""}
                                     onChange={handleDescriptionChange}
@@ -212,8 +217,10 @@ export const ProjectSettings = () => {
                                 />
                             </SettingRow>
                             <SettingRow
-                                title="Project owner"
-                                description="The project owner is typically, but not always, the head of the business unit receiving the product, and bears business responsibility for successful project implementation."
+                                title={translate("Project owner")}
+                                description={translate(
+                                    "The project owner is typically but not always the head of the business unit receiving the product and bears business responsibility for successful project implementation"
+                                )}
                                 rightElement={
                                     <TaskDetailsAssignees
                                         assignees={project.projectOwner ? [project.projectOwner] : []}
@@ -229,7 +236,7 @@ export const ProjectSettings = () => {
                             />
                             <SettingRow
                                 title={translate("Company")}
-                                description="The customer's company name"
+                                description={translate("The customer s company name")}
                                 rightElement={
                                     <CompanyPicker
                                         defaultValue={project.company}
@@ -240,8 +247,10 @@ export const ProjectSettings = () => {
                                 }
                             />
                             <SettingRow
-                                title="Default stack"
-                                description="Select the default stack where to add your tasks. If none is selected the first stack will be used."
+                                title={translate("Default stack")}
+                                description={translate(
+                                    "Select the default stack where to add your tasks If none is selected the first stack will be used"
+                                )}
                                 rightElement={
                                     <StackSelect
                                         projectId={project.id}
@@ -252,8 +261,10 @@ export const ProjectSettings = () => {
                                 }
                             />
                             <SettingRow
-                                title="Default filtering state"
-                                description="Select the default state of the filtered tasks. If none is selected, by default only incomplete tasks will be shown."
+                                title={translate("Default filtering state")}
+                                description={translate(
+                                    "Select the default state of the filtered tasks If none is selected by default only incomplete tasks will be shown"
+                                )}
                                 rightElement={
                                     <HTMLSelect
                                         value={defaultFilterState}
@@ -261,17 +272,19 @@ export const ProjectSettings = () => {
                                         onChange={handleSetFilter}
                                         data-testid="project-settings-default-filter-select"
                                     >
-                                        <option value="">Default</option>
-                                        <option value="all">All tasks</option>
-                                        <option value="done">Completed tasks</option>
-                                        <option value="todo">Incomplete tasks</option>
+                                        <option value="">{translate("Default")}</option>
+                                        <option value="all">{translate("All tasks")}</option>
+                                        <option value="done">{translate("Completed tasks")}</option>
+                                        <option value="todo">{translate("Incomplete tasks")}</option>
                                     </HTMLSelect>
                                 }
                             />
 
                             <SettingRow
-                                title="Show subtasks"
-                                description="Control the visibility of subtasks in the main project view. When enabled, subtasks will be displayed alongside regular tasks instead of being hidden within task details."
+                                title={translate("Show subtasks")}
+                                description={translate(
+                                    "Control the visibility of subtasks in the main project view When enabled subtasks will be displayed alongside regular tasks instead of being hidden within task details"
+                                )}
                                 last
                                 rightElement={
                                     <Switch
@@ -288,9 +301,11 @@ export const ProjectSettings = () => {
                     {currentTab === "time" ? (
                         <div>
                             <SettingRow
-                                sectionTitle="Settings"
-                                title="Start date"
-                                description="This will indicate the date on which the project should begin."
+                                sectionTitle={translate("Settings")}
+                                title={translate("Start date")}
+                                description={translate(
+                                    "This will indicate the date on which the project should begin"
+                                )}
                                 rightElement={
                                     <DatePickerButton
                                         value={startDate ?? null}
@@ -303,8 +318,10 @@ export const ProjectSettings = () => {
                                 }
                             />
                             <SettingRow
-                                title="End date"
-                                description="This will indicate the date on which the project should end."
+                                title={translate("End date")}
+                                description={translate(
+                                    "This will indicate the date on which the project should end"
+                                )}
                                 rightElement={
                                     <DatePickerButton
                                         value={endDate ?? null}
@@ -319,8 +336,10 @@ export const ProjectSettings = () => {
                                 }
                             />
                             <SettingRow
-                                title="Timesheets approvers"
-                                description="Designated users who can review and approve timesheets in addition to the project owner"
+                                title={translate("Timesheets approvers")}
+                                description={translate(
+                                    "Designated users who can review and approve timesheets in addition to the project owner"
+                                )}
                                 rightElement={
                                     <TaskDetailsAssignees
                                         assignees={project.approvers}
@@ -335,8 +354,8 @@ export const ProjectSettings = () => {
                                 }
                             />
                             <SettingRow
-                                title="Project estimate"
-                                description="Estimated time to complete the project in hours."
+                                title={translate("Project estimate")}
+                                description={translate("Estimated time to complete the project in hours")}
                                 rightElement={
                                     <PopupTime
                                         value={project.estimate ?? 0}
@@ -348,7 +367,7 @@ export const ProjectSettings = () => {
                                             {!Boolean(project.estimate) && (
                                                 <RoundButton
                                                     dashed
-                                                    title="Add estimate"
+                                                    title={translate("Add estimate")}
                                                     icon="clock-plus"
                                                     disabled={isDisabled}
                                                 />
@@ -366,7 +385,7 @@ export const ProjectSettings = () => {
                                                 >
                                                     {project.estimate
                                                         ? formatStringDuration(project.estimate)
-                                                        : "Not estimated"}
+                                                        : translate("Not estimated")}
                                                 </Tag>
                                             )}
                                         </>
@@ -375,7 +394,9 @@ export const ProjectSettings = () => {
                             />
                             <SettingRow
                                 title={translate("Hourly fee")}
-                                description="Configure your hourly fee/rate for this project. This is used to calculate earning based on the estimated vs. spent time."
+                                description={translate(
+                                    "Configure your hourly fee rate for this project This is used to calculate earning based on the estimated vs spent time"
+                                )}
                                 last
                                 rightElement={
                                     <FeeInputPopup
@@ -403,9 +424,11 @@ export const ProjectSettings = () => {
                     {currentTab === "interface" ? (
                         <div>
                             <SettingRow
-                                sectionTitle="Interface"
-                                title="Default view"
-                                description="Customize the default view type for this project. Whenever you click on this project the selected view will be shown."
+                                sectionTitle={translate("Interface")}
+                                title={translate("Default view")}
+                                description={translate(
+                                    "Customize the default view type for this project Whenever you click on this project the selected view will be shown"
+                                )}
                                 rightElement={
                                     <ProjectViewPicker
                                         disabled={isDisabled}
@@ -416,8 +439,10 @@ export const ProjectSettings = () => {
                             />
 
                             <SettingRow
-                                title="Custom background image"
-                                description="Enter the image URL you want to use as a background in your project."
+                                title={translate("Custom background image")}
+                                description={translate(
+                                    "Enter the image URL you want to use as a background in your project"
+                                )}
                                 last
                             >
                                 <InputGroup
@@ -427,7 +452,10 @@ export const ProjectSettings = () => {
                                     data-testid="project-settings-background-url-input"
                                     rightElement={
                                         project.backgroundUrl != null && project.backgroundUrl.length > 0 ? (
-                                            <Tooltip content="Clear background image" placement="top-end">
+                                            <Tooltip
+                                                content={translate("Clear background image")}
+                                                placement="top-end"
+                                            >
                                                 <Button
                                                     size="small"
                                                     variant="minimal"

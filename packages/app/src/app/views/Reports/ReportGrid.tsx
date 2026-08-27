@@ -300,6 +300,7 @@ const TableCellPure: FunctionComponent<TablePersistentCellProps<ReportRow>> = ({
         return (
             <ProjectHealth
                 value={row.health}
+                disabled
                 onChange={(value?: string) => ProjectsActions.setHealth(row.id, value as PROJECTHEALTH)}
             />
         );

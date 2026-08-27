@@ -77,13 +77,9 @@ export const FeeInput: FunctionComponent<FeeInputProps> = ({
     const [currentCurrency, setCurrentCurrency] = useState(currency);
 
     useEffect(() => {
-        if (value !== currentValue) {
-            setCurrentValue(value);
-        }
-        if (currency !== currentCurrency) {
-            setCurrentCurrency(currency);
-        }
-    }, [currency, currentCurrency, currentValue, value]);
+        setCurrentValue(value);
+        setCurrentCurrency(currency);
+    }, [value, currency]);
 
     const handleCurrencySelect = (selectedCurrency: string) => {
         setCurrentCurrency(selectedCurrency);
