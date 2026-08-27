@@ -369,20 +369,22 @@ export async function buildProfitabilityReport(ctx: ReportLoadContext) {
             .filter(task => task.project === project.id)
             .reduce((acc, task) => acc + (task.estimate || 0), 0);
 
+        /** Child rows come from who actually logged time on the project, not
+         *  from task assignees — logged time by people without task
+         *  assignments must still produce a person row and cost. */
         const peopleIds: string[] = [];
-        projectTasks
-            .filter(task => task.project === project.id)
-            .forEach(task => {
-                if (task.assignees) {
-                    task.assignees.forEach(assignee => {
-                        if (!peopleIds.includes(assignee)) {
-                            peopleIds.push(assignee);
-                        }
-                    });
+        timelogs
+            .filter(timelog => timelog.project === project.id)
+            .forEach(timelog => {
+                if (timelog.person && !peopleIds.includes(timelog.person)) {
+                    peopleIds.push(timelog.person);
                 }
             });
         const projectPeople = people.filter(person => peopleIds.includes(person.id));
 
+        /** Group financials accumulate from the person rows below so every
+         *  group total is the sum of its children: revenue bills logged time
+         *  at the project hourly rate, cost accrues at each person's rate. */
         const row = {
             groupId: project.id,
             title: project.title,
@@ -391,7 +393,7 @@ export async function buildProfitabilityReport(ctx: ReportLoadContext) {
             timeLogged,
             tasksEstimate,
             cost: 0,
-            revenue: (project.hourlyRate ?? 0) * ((project.estimate ?? 0) / 3600),
+            revenue: 0,
             estimate: project.estimate,
             hourlyRate: project.hourlyRate,
             currency: project.currency,
@@ -404,16 +406,22 @@ export async function buildProfitabilityReport(ctx: ReportLoadContext) {
                 .filter(timelog => timelog.project === project.id && timelog.person === person.id)
                 .reduce((acc, timelog) => acc + timelog.duration, 0);
 
+            const personRevenue = (project.hourlyRate ?? 0) * (timelogedPerson / 3600);
+            const personCost = personRate * (timelogedPerson / 3600);
+
             const rowData = {
                 project: {},
                 person: person.id,
                 timeLogged: timelogedPerson,
                 hourlyRate: personRate,
                 currency: project.currency,
-                cost: personRate * (timelogedPerson / 3600),
+                cost: personCost,
+                revenue: personRevenue,
+                profit: personRevenue - personCost,
             };
 
             row.cost += rowData.cost;
+            row.revenue += rowData.revenue;
 
             row.data.push(rowData);
         }

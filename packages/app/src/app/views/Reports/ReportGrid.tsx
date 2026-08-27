@@ -253,7 +253,7 @@ const TableCellPure: FunctionComponent<TablePersistentCellProps<ReportRow>> = ({
     }
 
     // cost
-    else if (["cost", "hourlyRate"].includes(column)) {
+    else if (["cost", "hourlyRate", "revenue", "profit"].includes(column)) {
         const locale = getBrowserLocale();
         const symbol = row.currency ? window.currencies[row.currency].symbol : "";
         const value = Number(row[column] ?? 0);
@@ -272,8 +272,8 @@ const TableCellPure: FunctionComponent<TablePersistentCellProps<ReportRow>> = ({
             column === "timeEstimated"
                 ? Intent.PRIMARY
                 : row.timeLogged > row.timeEstimated
-                ? Intent.WARNING
-                : Intent.SUCCESS;
+                    ? Intent.WARNING
+                    : Intent.SUCCESS;
         return (
             <Tag minimal intent={intent}>
                 {formatStringDuration(value, "d")}
