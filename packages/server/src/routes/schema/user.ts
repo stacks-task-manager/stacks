@@ -9,8 +9,7 @@ export const UserRegisterSchema = z
     .object({
         email: z.email(),
         password: z.string().min(8),
-        role: z.uuid(),
-        tenant: z.uuid(),
+        tenant: z.guid(),
         firstName: z.string(),
         lastName: z.string(),
         gender: z.string().optional(),
@@ -60,9 +59,25 @@ export const LoginSchema = z.object({
 /** Optional base64 error payload on GET `/login`. */
 export const LoginErrorSchema = z.object({
     e: z.string().optional(),
+    s: z.string().optional(),
 });
 
 /** Starts password recovery for an email. */
 export const PasswordRecoverySchema = z.object({
     email: z.email(),
 });
+
+export const PasswordResetQuerySchema = z.object({
+    token: z.string().length(64),
+});
+
+export const PasswordResetSchema = z
+    .object({
+        token: z.string().length(64),
+        password1: z.string().min(8),
+        password2: z.string(),
+    })
+    .refine(({ password1, password2 }) => password1 === password2, {
+        message: "Passwords must match",
+        path: ["password2"],
+    });

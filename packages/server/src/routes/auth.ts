@@ -3,6 +3,7 @@
  * JSON API auth: registration, login, activation, password flows, and session helpers.
  */
 import { TenantEntity, UserEntity } from "@stacks/db";
+import { EMAIL_TEMPLATES } from "@stacks/types";
 import * as bcrypt from "bcryptjs";
 import { compare } from "bcryptjs";
 import type { Context } from "hono";
@@ -12,12 +13,16 @@ import { deleteCookie, getSignedCookie, setSignedCookie } from "hono/cookie";
 import { sign } from "hono/jwt";
 import z from "zod/v4";
 import { getCookieSecret, getJwtSecret } from "../config/secrets";
-import { TenantsLoader } from "../loaders";
+import { isRegistrationEnabled } from "../config/features";
+import { EmailsLoader, TenantsLoader } from "../loaders";
 import { validator } from "../middleware/validator";
 import { Errors } from "../errors";
 import { asyncHandler } from "../utils/errorHandler";
 import { getClientIP } from "../utils/clientIp";
 import { Logger } from "../utils/logger";
+import { createActivationToken } from "../services/accountTokens";
+import { findPublicRegistrationRole } from "../services/registration";
+import type { User } from "../types";
 import { uuidStringSchema } from "./schema/common";
 import { UserActivationSchema, UserLoginSchema, UserRegisterSchema } from "./schema/user";
 
@@ -65,6 +70,12 @@ async function takeActivationFlash(c: Context): Promise<string[]> {
  */
 auth.post(
     "/register",
+    async (c, next) => {
+        if (!isRegistrationEnabled()) {
+            throw Errors.forbidden(translate("Registration is disabled by the administrator"));
+        }
+        await next();
+    },
     validator(UserRegisterSchema),
     asyncHandler(async (c: Context) => {
         const userData = c.req.valid("json");
@@ -108,13 +119,42 @@ auth.post(
             );
             throw Errors.notFound(translate("Tenant not found"));
         }
+        const role = await findPublicRegistrationRole(userData.tenant);
+        if (!role) {
+            throw Errors.badRequest(translate("Registration details are invalid"));
+        }
 
         // Hash password
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(userData.password, salt);
 
         // Create new user
-        const newUser = await UserEntity.create({ ...userData, password: hashedPassword });
+        const activation = createActivationToken();
+        const newUser = await UserEntity.create({
+            ...userData,
+            role: role.get("id"),
+            password: hashedPassword,
+            real: true,
+            disabled: true,
+            token: activation.token,
+            activationTokenExpiresAt: activation.expiresAt,
+        });
+
+        const queued = await EmailsLoader.queueEmail(
+            String(newUser.get("id")),
+            {
+                userName: `${userData.firstName} ${userData.lastName}`,
+                verificationLink: `/auth/activate/${activation.token}`,
+                expirationTime: "24 hours",
+            },
+            EMAIL_TEMPLATES.REGISTRATION,
+            c.get("locale") || "en",
+            newUser.toJSON() as User
+        );
+        if (!queued) {
+            await newUser.destroy({ force: true });
+            throw Errors.internal(translate("Registration email could not be queued"));
+        }
 
         Logger.info("User registered successfully", {
             userId: newUser.get("id"),
@@ -296,19 +336,8 @@ auth.get(
             return c.replyHtml(ACTIVATION_ERROR_PAGE);
         }
 
-        if (user.get("disabled")) {
-            Logger.security(
-                "Activation attempt for disabled user",
-                "high",
-                {
-                    token,
-                    userId: user.get("id"),
-                    email: user.get("email"),
-                    clientIp,
-                    requestId,
-                },
-                c
-            );
+        const activationExpiresAt = user.get("activationTokenExpiresAt") as Date | null;
+        if (activationExpiresAt && activationExpiresAt.getTime() <= Date.now()) {
             return c.replyHtml(ACTIVATION_ERROR_PAGE);
         }
 
@@ -376,11 +405,18 @@ auth.post(
                 return c.replyHtml(ACTIVATION_ERROR_PAGE);
             }
 
+            const activationExpiresAt = user.get("activationTokenExpiresAt") as Date | null;
+            if (activationExpiresAt && activationExpiresAt.getTime() <= Date.now()) {
+                return c.replyHtml(ACTIVATION_ERROR_PAGE);
+            }
+
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(activationData.password1 as string, salt);
 
             user.set("password", hashedPassword);
             user.set("token", null);
+            user.set("activationTokenExpiresAt", null);
+            user.set("disabled", false);
             await user.save();
 
             Logger.info("Account activated successfully", {

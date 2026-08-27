@@ -55,13 +55,13 @@
                             <div class="d-flex gy4 fd-column">
                                 <div class="d-flex ai-center ps-relative jc-space-between">
                                     <label class="s-label" for="password2">Password</label>
-                                    <a
+                                    {{#if passwordRecoveryEnabled}}<a
                                         class="flex--item s-link fs-caption"
                                         href="/login/password-recovery"
                                         data-testid="login-forget-password-link"
                                     >
-                                        Forgot password?
-                                    </a>
+                                        Forgot password? </a
+                                    >{{/if}}
                                 </div>
                                 <input
                                     class="s-input s-input__md"
@@ -85,7 +85,9 @@
                 </div>
 
                 <div class="mx-auto ta-center fs-body1 p16 pb0 w100 wmx3" data-testid="login-footer">
-                    Don’t have an account? <a href="/register" data-testid="login-register-link">Sign up</a>
+                    {{#if registrationEnabled}}Don’t have an account?
+                    <a href="/register" data-testid="login-register-link">Sign up</a>{{else}}Account creation
+                    is managed by this server’s administrator.{{/if}}
                 </div>
             </div>
         </div>

@@ -31,6 +31,8 @@ Key variables:
 - `COOKIE_SECRET`, `JWT_SECRET` — auth / session secrets (must be strong in production)
 - `DEBUG_DB` — set to `true` to log Sequelize SQL
 - `DELETE_FILES` — whether deletes via the API also remove files from disk
+- `REGISTRATION_ENABLED` — opt in to public registration (`true`, `1`, `yes`, or `on`)
+- `PASSWORD_RECOVERY_ENABLED` — opt in to public password recovery; requires the email-service worker
 
 Optional:
 
@@ -38,6 +40,15 @@ Optional:
 - `REQUIRE_SECRETS=1` — enforce strong secrets outside production
 - Google Calendar OAuth: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, optional `GOOGLE_REDIRECT_URI`
 - AI assistant: `AI_BASE_URL`, `AI_API_KEY`, `AI_MODEL`, `AI_CHAT_ENABLED`, `AI_CHAT_AUTO_REDIRECT`
+
+Public registration and password recovery are disabled by default. When recovery is disabled, administrators
+should provide a secure, identity-verified support process for password resets. Enabling recovery also requires a
+configured `@stacks/email-service` worker so reset messages can be delivered.
+
+When registration is enabled, new accounts remain disabled until the recipient follows the emailed activation
+link. Password recovery queues a one-hour, single-use reset link; only that link can open and submit the password
+reset form. Configure the email worker's `PUBLIC_URL` to the externally reachable server origin so both link types
+resolve correctly.
 
 ## Development
 

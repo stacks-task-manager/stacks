@@ -1,6 +1,6 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import * as nodemailer from "nodemailer";
-import { QueryTypes, Transaction } from "sequelize";
+import { QueryTypes } from "sequelize";
 import { sequelize } from "@stacks/db";
 import { EMAIL_TEMPLATES } from "@stacks/types";
 import TemplateCompiler from "./TemplateCompiler";
@@ -11,7 +11,7 @@ interface SMTPConfig {
     host: string;
     port: number;
     secure: boolean;
-    auth: {
+    auth?: {
         user: string;
         pass: string;
     };
@@ -21,6 +21,9 @@ interface SMTPConfig {
     tls?: {
         rejectUnauthorized: boolean;
     };
+    requireTLS?: boolean;
+    pool?: boolean;
+    maxConnections?: number;
 }
 
 interface QueuedEmailRow {
@@ -34,15 +37,46 @@ interface QueuedEmailRow {
     tenant: string | null;
 }
 
-const REQUIRED_SMTP_VARS = [
-    "SMTP_HOST",
-    "SMTP_PORT",
-    "SMTP_USER",
-    "SMTP_PASSWORD",
-    "SMTP_FROM_EMAIL",
-] as const;
-const MAX_RETRIES = 3;
+const REQUIRED_SMTP_VARS = ["SMTP_HOST", "SMTP_PORT", "SMTP_FROM_EMAIL"] as const;
+const DEFAULT_MAX_ATTEMPTS = 3;
 const SEND_RETRY_LIMIT = 2;
+
+export function parsePositiveInteger(value: string | undefined, fallback: number, maximum: number): number {
+    const parsed = Number(value);
+    return Number.isInteger(parsed) && parsed > 0 ? Math.min(parsed, maximum) : fallback;
+}
+
+export function isTransientSmtpError(error: unknown): boolean {
+    const candidate = error as { code?: string; responseCode?: number };
+    return (
+        ["ETIMEDOUT", "ECONNRESET", "ECONNREFUSED", "EPIPE", "ENETUNREACH"].includes(candidate?.code ?? "") ||
+        (typeof candidate?.responseCode === "number" &&
+            candidate.responseCode >= 400 &&
+            candidate.responseCode < 500)
+    );
+}
+
+export function normalizePublicUrl(value: string | undefined): string {
+    const normalized = value?.trim().replace(/\/+$/, "") ?? "";
+    if (!normalized) return "";
+    const url = new URL(normalized);
+    if (url.protocol !== "http:" && url.protocol !== "https:") {
+        throw new Error("PUBLIC_URL must use http or https");
+    }
+    return normalized;
+}
+
+function failureMessage(error: unknown): string {
+    return (error instanceof Error ? error.message : "Unknown error").slice(0, 2000);
+}
+
+function maskEmail(email: string | null): string {
+    if (!email) return "unknown";
+    const [local, domain] = email.split("@");
+    return domain ? `${local.slice(0, 2)}***@${domain}` : "invalid-address";
+}
+
+class PermanentEmailError extends Error {}
 
 class EmailService {
     private transporter: nodemailer.Transporter | null;
@@ -84,7 +118,17 @@ class EmailService {
             return { config: null, missing };
         }
 
-        const port = parseInt(process.env.SMTP_PORT as string, 10);
+        const port = Number(process.env.SMTP_PORT);
+        if (!Number.isInteger(port) || port < 1 || port > 65535) {
+            logger.error("⛔ SMTP_PORT must be an integer between 1 and 65535");
+            return { config: null, missing: ["SMTP_PORT"] };
+        }
+        const user = process.env.SMTP_USER?.trim();
+        const password = process.env.SMTP_PASSWORD?.trim();
+        if (Boolean(user) !== Boolean(password)) {
+            logger.error("⛔ SMTP_USER and SMTP_PASSWORD must either both be set or both be empty");
+            return { config: null, missing: [user ? "SMTP_PASSWORD" : "SMTP_USER"] };
+        }
         const secure = process.env.SMTP_SECURE === "true";
 
         if (port === 465 && !secure) {
@@ -101,16 +145,16 @@ class EmailService {
                 host: process.env.SMTP_HOST as string,
                 port,
                 secure,
-                auth: {
-                    user: process.env.SMTP_USER as string,
-                    pass: process.env.SMTP_PASSWORD as string,
-                },
+                ...(user && password ? { auth: { user, pass: password } } : {}),
                 connectionTimeout: 60000,
                 greetingTimeout: 30000,
                 socketTimeout: 60000,
                 tls: {
-                    rejectUnauthorized: false,
+                    rejectUnauthorized: process.env.SMTP_TLS_REJECT_UNAUTHORIZED !== "false",
                 },
+                requireTLS: process.env.SMTP_REQUIRE_TLS === "true",
+                pool: true,
+                maxConnections: parsePositiveInteger(process.env.SMTP_MAX_CONNECTIONS, 5, 20),
             },
             missing: [],
         };
@@ -135,7 +179,7 @@ class EmailService {
             await this.transporter.sendMail(mailOptions);
         } catch (error) {
             const code = (error as NodeJS.ErrnoException)?.code;
-            if ((code === "ETIMEDOUT" || code === "ECONNRESET") && attempt < SEND_RETRY_LIMIT) {
+            if (isTransientSmtpError(error) && attempt < SEND_RETRY_LIMIT) {
                 const delay = 5000 * (attempt + 1);
                 logger.warn(
                     `🔄 SMTP ${code}, retrying in ${delay}ms (attempt ${attempt + 1}/${SEND_RETRY_LIMIT})`
@@ -148,10 +192,9 @@ class EmailService {
     }
 
     /**
-     * Atomically claim up to `limit` pending emails using FOR UPDATE SKIP LOCKED,
-     * process them, and update their status before committing the transaction.
-     * Holding the row locks for the duration of the batch prevents concurrent
-     * service instances from picking the same emails.
+     * Atomically leases pending rows, commits immediately, then performs slow SMTP
+     * I/O outside the transaction. An expired lease makes crash-interrupted rows
+     * eligible again without holding database locks while connecting to SMTP.
      */
     async processQueuedEmails(limit: number = 50): Promise<void> {
         if (!this.enabled) {
@@ -159,10 +202,13 @@ class EmailService {
             return;
         }
 
+        const batchLimit = Math.max(1, Math.min(Math.floor(limit), 500));
+        const leaseMs = parsePositiveInteger(process.env.EMAIL_CLAIM_LEASE_MS, 300_000, 3_600_000);
+        const concurrency = parsePositiveInteger(process.env.EMAIL_SEND_CONCURRENCY, 5, 20);
         const transaction = await sequelize.transaction();
-        let committed = false;
+        let queuedEmails: QueuedEmailRow[] = [];
         try {
-            const queuedEmails = await sequelize.query<QueuedEmailRow>(
+            queuedEmails = await sequelize.query<QueuedEmailRow>(
                 `
                 SELECT "queue".*, users.email, users.tenant
                 FROM email_queue AS "queue"
@@ -175,34 +221,44 @@ class EmailService {
                 `,
                 {
                     type: QueryTypes.SELECT,
-                    replacements: { limit },
+                    replacements: { limit: batchLimit },
                     transaction,
                 }
             );
 
             if (queuedEmails.length === 0) {
                 await transaction.commit();
-                committed = true;
                 return;
             }
-
-            logger.info(`📧 Processing ${queuedEmails.length} queued emails`);
-
-            for (const queuedEmail of queuedEmails) {
-                await this.processQueuedEmail(queuedEmail, transaction);
-            }
-
+            await sequelize.query(
+                `UPDATE email_queue
+                 SET "scheduledAt" = :leaseUntil
+                 WHERE id IN (:ids) AND status = 'pending'`,
+                {
+                    replacements: {
+                        ids: queuedEmails.map(email => email.id),
+                        leaseUntil: new Date(Date.now() + leaseMs),
+                    },
+                    type: QueryTypes.UPDATE,
+                    transaction,
+                }
+            );
             await transaction.commit();
-            committed = true;
         } catch (error) {
             logger.error("❌ Error processing email queue:", error);
-            if (!committed) {
-                try {
-                    await transaction.rollback();
-                } catch (rollbackError) {
-                    logger.error("❌ Failed to rollback transaction:", rollbackError);
-                }
+            try {
+                await transaction.rollback();
+            } catch (rollbackError) {
+                logger.error("❌ Failed to rollback transaction:", rollbackError);
             }
+            return;
+        }
+
+        logger.info(`📧 Processing ${queuedEmails.length} queued emails with concurrency ${concurrency}`);
+        for (let index = 0; index < queuedEmails.length; index += concurrency) {
+            await Promise.all(
+                queuedEmails.slice(index, index + concurrency).map(email => this.processQueuedEmail(email))
+            );
         }
     }
 
@@ -211,11 +267,15 @@ class EmailService {
      * Failures are recorded in a single UPDATE that either reschedules the
      * row for retry or marks it permanently failed.
      */
-    private async processQueuedEmail(queuedEmail: QueuedEmailRow, transaction: Transaction): Promise<void> {
+    private async processQueuedEmail(queuedEmail: QueuedEmailRow): Promise<void> {
         const recipientEmail = queuedEmail.email;
         try {
             const emailData = parseEmailData(queuedEmail.data);
-            emailData.publicUrl = process.env.PUBLIC_URL ?? "";
+            try {
+                emailData.publicUrl = normalizePublicUrl(process.env.PUBLIC_URL);
+            } catch (error) {
+                throw new PermanentEmailError(failureMessage(error));
+            }
 
             const tenantId = queuedEmail.tenant ?? "default";
 
@@ -226,16 +286,20 @@ class EmailService {
             );
 
             if (!emailTemplate) {
-                throw new Error(
+                throw new PermanentEmailError(
                     `Template not found: ${queuedEmail.template} for locale ${queuedEmail.locale} and tenant ${tenantId}`
                 );
             }
 
-            const emailHtml = this.templateCompiler.processTemplateVariables(emailTemplate.body, emailData);
+            const emailHtml = this.templateCompiler.processTemplateVariables(
+                emailTemplate.body,
+                emailData,
+                true
+            );
             const subject = this.templateCompiler.processTemplateVariables(emailTemplate.subject, emailData);
 
             if (!recipientEmail) {
-                throw new Error("Recipient email not found for queue row");
+                throw new PermanentEmailError("Recipient email not found for queue row");
             }
 
             await this.sendEmail(recipientEmail, subject, emailHtml);
@@ -247,18 +311,22 @@ class EmailService {
                 {
                     replacements: { id: queuedEmail.id },
                     type: QueryTypes.UPDATE,
-                    transaction,
                 }
             );
 
-            logger.info(`✅ Email sent to ${recipientEmail}`);
+            logger.info(`✅ Email ${queuedEmail.id} sent to ${maskEmail(recipientEmail)}`);
         } catch (error) {
-            const message = error instanceof Error ? error.message : "Unknown error";
+            const message = failureMessage(error);
             const newRetryCount = queuedEmail.retryCount + 1;
-            const canRetry = queuedEmail.retryCount < MAX_RETRIES;
+            const maxAttempts = parsePositiveInteger(
+                process.env.EMAIL_MAX_ATTEMPTS,
+                DEFAULT_MAX_ATTEMPTS,
+                20
+            );
+            const canRetry = !(error instanceof PermanentEmailError) && newRetryCount < maxAttempts;
 
             logger.error(
-                `❌ Failed to send email to ${recipientEmail ?? "unknown"} (id ${queuedEmail.id}): ${message}`
+                `❌ Failed to send email ${queuedEmail.id} to ${maskEmail(recipientEmail)}: ${message}`
             );
 
             if (canRetry) {
@@ -279,7 +347,6 @@ class EmailService {
                             scheduledAt,
                         },
                         type: QueryTypes.UPDATE,
-                        transaction,
                     }
                 );
                 logger.warn(`🔄 Email ${queuedEmail.id} rescheduled in ${retryDelayMs / 1000}s`);
@@ -297,7 +364,6 @@ class EmailService {
                             retryCount: newRetryCount,
                         },
                         type: QueryTypes.UPDATE,
-                        transaction,
                     }
                 );
                 logger.error(`💀 Email ${queuedEmail.id} permanently failed after ${newRetryCount} attempts`);

@@ -7,3 +7,7 @@ import { __setLicenseForTests } from "@stacks/license";
 import { TEST_LICENSE } from "./helpers/testLicense";
 
 __setLicenseForTests(TEST_LICENSE);
+
+// Existing auth-flow tests exercise enabled behavior; flag parser and disabled-policy tests override these locally.
+process.env.REGISTRATION_ENABLED = "true";
+process.env.PASSWORD_RECOVERY_ENABLED = "true";

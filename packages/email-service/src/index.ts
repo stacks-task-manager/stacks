@@ -1,6 +1,6 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { connectDb, sequelize } from "@stacks/db";
-import EmailService from "./services/EmailService";
+import EmailService, { parsePositiveInteger } from "./services/EmailService";
 import TemplateCompiler from "./services/TemplateCompiler";
 import logger from "./utils/logger";
 
@@ -76,7 +76,7 @@ class EmailServiceApp {
             return;
         }
 
-        const interval = parseInt(process.env.EMAIL_PROCESS_INTERVAL || "60000", 10);
+        const interval = parsePositiveInteger(process.env.EMAIL_PROCESS_INTERVAL, 60_000, 3_600_000);
 
         logger.info(`📅 Starting email processing with ${interval}ms interval`);
 
@@ -159,7 +159,8 @@ class EmailServiceApp {
         this.isProcessing = true;
 
         try {
-            await this.emailService.processQueuedEmails();
+            const batchSize = parsePositiveInteger(process.env.EMAIL_BATCH_SIZE, 50, 500);
+            await this.emailService.processQueuedEmails(batchSize);
         } catch (error) {
             logger.error("❌ Error during email processing:", error);
         } finally {

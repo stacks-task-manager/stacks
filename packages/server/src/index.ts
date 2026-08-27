@@ -64,6 +64,7 @@ import { initializeLicense as initLicense } from "@stacks/license";
 const LICENSE_EXPIRY_CHECK_INTERVAL_MS = 24 * 60 * 60 * 1000;
 import { translations } from "./middleware/translations";
 import { appPackageVersion, serverPackageVersion } from "./packageVersions";
+import { isPasswordRecoveryEnabled, isRegistrationEnabled } from "./config/features";
 
 // Initialize Hono application
 const app = new Hono();
@@ -94,6 +95,8 @@ app.get("/", c => {
     return c.replyHtml("landing", {
         versionServer: serverPackageVersion,
         versionApp: appPackageVersion,
+        registrationEnabled: isRegistrationEnabled(),
+        passwordRecoveryEnabled: isPasswordRecoveryEnabled(),
     });
 });
 

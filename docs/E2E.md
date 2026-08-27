@@ -64,6 +64,21 @@ If authentication fails with `ERR_CONNECTION_REFUSED` for `http://localhost:3000
 server is not ready. Check the database, environment files, and development license before changing
 the test.
 
+### Auth feature flags
+
+Registration and password recovery are opt-in. To run their specs
+(`playwright/tests/auth/registration.spec.ts` and `playwright/tests/auth/password-recovery.spec.ts`),
+the server must be running with those features enabled in `packages/server/.env`:
+
+```bash
+REGISTRATION_ENABLED=true
+PASSWORD_RECOVERY_ENABLED=true
+```
+
+Both default to `false` (see `packages/server/env.example`). The specs skip nothing and fail with a
+403 if the flags are off, because the auth pages themselves render only when the feature is enabled.
+These settings are never committed — they live in your local, git-ignored `.env`.
+
 ## Test layout
 
 ```

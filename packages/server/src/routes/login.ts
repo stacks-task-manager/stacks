@@ -3,15 +3,27 @@
  * Session-based login, password recovery, and reset HTML flows (cookies + redirects).
  */
 import { TenantEntity, UserEntity } from "@stacks/db";
-import { compare } from "bcryptjs";
+import { EMAIL_TEMPLATES } from "@stacks/types";
+import { compare, hash } from "bcryptjs";
 import type { Context } from "hono";
 import { Hono } from "hono";
 import { deleteCookie, getSignedCookie, setCookie, setSignedCookie } from "hono/cookie";
 import { sign } from "hono/jwt";
 import z from "zod/v4";
 import { getCookieSecret, getJwtSecret } from "../config/secrets";
+import { isPasswordRecoveryEnabled, isRegistrationEnabled } from "../config/features";
+import { translate } from "@stacks/translations";
 import { validator } from "../middleware/validator";
-import { LoginErrorSchema, LoginSchema, PasswordRecoverySchema } from "./schema/user";
+import { EmailsLoader } from "../loaders";
+import { createPasswordResetToken, hashAccountToken } from "../services/accountTokens";
+import type { User } from "../types";
+import {
+    LoginErrorSchema,
+    LoginSchema,
+    PasswordRecoverySchema,
+    PasswordResetQuerySchema,
+    PasswordResetSchema,
+} from "./schema/user";
 
 const login = new Hono();
 
@@ -60,8 +72,16 @@ login.get("/", validator(LoginErrorSchema, "query"), async c => {
         if (query.e != null) {
             errors.push(Buffer.from(query.e, "base64").toString());
         }
+        if (query.s != null) {
+            success.push(Buffer.from(query.s, "base64").toString());
+        }
 
-        return c.replyHtml("login", { errors, success });
+        return c.replyHtml("login", {
+            errors,
+            success,
+            registrationEnabled: isRegistrationEnabled(),
+            passwordRecoveryEnabled: isPasswordRecoveryEnabled(),
+        });
     } catch (error) {
         return c.text("Login page not found", 404);
     }
@@ -105,6 +125,10 @@ login.post("/", async c => {
             });
             return c.redirect("/login");
         }
+        if (user.get("disabled")) {
+            await setLoginFlash(c, { errors: ["User account disabled. Please contact support."] });
+            return c.redirect("/login");
+        }
 
         // Generate JWT token
         const payload = {
@@ -130,6 +154,9 @@ login.post("/", async c => {
 
 /** GET `/password-recovery` — Renders password recovery form with flash state. */
 login.get("/password-recovery", async c => {
+    if (!isPasswordRecoveryEnabled()) {
+        return c.text(translate("Password recovery is disabled by the administrator"), 403);
+    }
     try {
         const flash = await takeLoginFlash(c);
         const errors = [...(flash.errors ?? [])];
@@ -143,6 +170,9 @@ login.get("/password-recovery", async c => {
 
 /** POST `/password-recovery` — Starts recovery flow and redirects. */
 login.post("/password-recovery", async c => {
+    if (!isPasswordRecoveryEnabled()) {
+        return c.text(translate("Password recovery is disabled by the administrator"), 403);
+    }
     try {
         const recoveryData = await c.req.parseBody();
         PasswordRecoverySchema.parse(recoveryData);
@@ -152,25 +182,51 @@ login.post("/password-recovery", async c => {
         const recoveryErrors: string[] = [];
         if (!userEntity) {
             recoveryErrors.push("Invalid email");
-        } else if (userEntity.get("disabled")) {
-            recoveryErrors.push("User account disabled. Please contact support.");
         } else if (userEntity.get("token") && (userEntity.get("token") as string).length > 0) {
             recoveryErrors.push(
                 "User account not yet activated. Please click on the link in the email to activate your account."
             );
+        } else if (userEntity.get("disabled")) {
+            recoveryErrors.push("User account disabled. Please contact support.");
         } else if (userEntity.get("system")) {
             recoveryErrors.push("Unauthorized password reset. Please contact support.");
         }
 
         if (recoveryErrors.length) {
             await setLoginFlash(c, { errors: recoveryErrors });
-            return c.redirect("/password-recovery");
+            return c.redirect("/login/password-recovery");
         }
 
-        userEntity?.set("passToken", Math.floor(111111 + Math.random() * 999999).toString());
-        await userEntity?.save();
+        const reset = createPasswordResetToken();
+        userEntity!.set("passwordResetTokenHash", reset.hash);
+        userEntity!.set("passwordResetTokenExpiresAt", reset.expiresAt);
+        await userEntity!.save();
 
-        return c.redirect("/login/password-reset");
+        const queued = await EmailsLoader.queueEmail(
+            String(userEntity!.get("id")),
+            {
+                userName: `${userEntity!.get("firstName")} ${userEntity!.get("lastName")}`,
+                resetLink: `/login/password-reset?token=${reset.token}`,
+                expirationTime: "1 hour",
+                ipAddress: c.req.header("x-forwarded-for"),
+                userAgent: c.req.header("user-agent"),
+            },
+            EMAIL_TEMPLATES.PASSWORD_RESET,
+            c.get("locale") || "en",
+            userEntity!.toJSON() as User
+        );
+        if (!queued) {
+            userEntity!.set("passwordResetTokenHash", null);
+            userEntity!.set("passwordResetTokenExpiresAt", null);
+            await userEntity!.save();
+            await setLoginFlash(c, { errors: ["Password recovery email could not be queued"] });
+            return c.redirect("/login/password-recovery");
+        }
+
+        await setLoginFlash(c, {
+            success: ["Check your email for a password reset link."],
+        });
+        return c.redirect("/login");
     } catch (error) {
         if (error instanceof z.ZodError) {
             await setLoginFlash(c, { errors: error.issues.map(issue => issue.message) });
@@ -181,10 +237,54 @@ login.post("/password-recovery", async c => {
 
 /** GET `/password-reset` — Renders password reset page. */
 login.get("/password-reset", async c => {
+    if (!isPasswordRecoveryEnabled()) {
+        return c.text(translate("Password recovery is disabled by the administrator"), 403);
+    }
     try {
-        return c.replyHtml("password-reset");
+        const query = PasswordResetQuerySchema.safeParse(c.req.query());
+        if (!query.success) {
+            return c.text(translate("Password reset link is invalid or expired"), 400);
+        }
+        const { token } = query.data;
+        const user = await UserEntity.findOne({
+            where: { passwordResetTokenHash: hashAccountToken(token) },
+        });
+        const expiresAt = user?.get("passwordResetTokenExpiresAt") as Date | null | undefined;
+        if (!user || !expiresAt || expiresAt.getTime() <= Date.now()) {
+            return c.text(translate("Password reset link is invalid or expired"), 400);
+        }
+        return c.replyHtml("password-reset", { token, email: user.get("email") });
     } catch (error) {
         return c.text("Password reset page not found", 404);
+    }
+});
+
+/** POST `/password-reset` — Changes a password after validating the emailed token. */
+login.post("/password-reset", async c => {
+    if (!isPasswordRecoveryEnabled()) {
+        return c.text(translate("Password recovery is disabled by the administrator"), 403);
+    }
+    try {
+        const resetData = PasswordResetSchema.parse(await c.req.parseBody());
+        const user = await UserEntity.findOne({
+            where: { passwordResetTokenHash: hashAccountToken(resetData.token) },
+        });
+        const expiresAt = user?.get("passwordResetTokenExpiresAt") as Date | null | undefined;
+        if (!user || !expiresAt || expiresAt.getTime() <= Date.now()) {
+            return c.text(translate("Password reset link is invalid or expired"), 400);
+        }
+
+        user.set("password", await hash(resetData.password1, 10));
+        user.set("passwordResetTokenHash", null);
+        user.set("passwordResetTokenExpiresAt", null);
+        await user.save();
+        await setLoginFlash(c, { success: ["Your password has been reset. You can now log in."] });
+        return c.redirect("/login");
+    } catch (error) {
+        if (error instanceof z.ZodError) {
+            return c.text(error.issues.map(issue => issue.message).join("\n"), 400);
+        }
+        throw error;
     }
 });
 

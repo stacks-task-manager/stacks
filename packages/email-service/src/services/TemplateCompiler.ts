@@ -41,6 +41,15 @@ export function escapeRegExp(value: string): string {
     return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
+export function escapeHtml(value: string): string {
+    return value
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+}
+
 /**
  * Service responsible for compiling React email templates into HTML
  * and storing them in the database on application boot
@@ -92,7 +101,8 @@ export class TemplateCompiler {
             logger.info(`📋 Found template types: ${templateTypes.join(", ")}`);
             logger.info(`🌍 Found locales: ${locales.join(", ")}`);
 
-            for (const tenantId of Object.keys(templates)) {
+            const tenantIds = new Set(["default", ...tenantMap.keys(), ...Object.keys(templates)]);
+            for (const tenantId of tenantIds) {
                 const tenantTitle = tenantMap.get(tenantId) || tenantMap.get("default") || "Stacks";
 
                 for (const templateType of templateTypes) {
@@ -374,15 +384,19 @@ export class TemplateCompiler {
      * Replace `%key%` placeholders in the supplied string with values from `data`.
      * Keys are regex-escaped so unusual characters can't break the substitution.
      */
-    processTemplateVariables(html: string, data: TemplateData): string {
+    processTemplateVariables(html: string, data: TemplateData, escapeValues: boolean = false): string {
         let processedHtml = html;
 
         for (const [key, value] of Object.entries(data)) {
             const regex = new RegExp(`%\\s*${escapeRegExp(key)}\\s*%`, "g");
-            processedHtml = processedHtml.replace(regex, String(value ?? ""));
+            const replacement = String(value ?? "");
+            processedHtml = processedHtml.replace(
+                regex,
+                escapeValues ? escapeHtml(replacement) : replacement
+            );
         }
 
-        return processedHtml;
+        return processedHtml.replace(/%\s*[A-Za-z][A-Za-z0-9_.-]*\s*%/g, "");
     }
 }
 
