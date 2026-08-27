@@ -108,7 +108,7 @@ describe("Login HTML", () => {
         expect(hasAuthToken).toBe(true);
     });
 
-    test("POST /login/password-recovery with non-existent email redirects to /password-recovery", async () => {
+    test("POST /login/password-recovery with non-existent email redirects to /login/password-recovery", async () => {
         const res = await app.request("/login/password-recovery", {
             method: "POST",
             headers: {
@@ -117,7 +117,7 @@ describe("Login HTML", () => {
             body: "email=nonexistent@example.com",
         });
         expect(res.status).toBe(302);
-        expect(res.headers.get("location")).toBe("/password-recovery");
+        expect(res.headers.get("location")).toBe("/login/password-recovery");
     });
 
     test("POST /login with missing password redirects to /login", async () => {
@@ -214,7 +214,7 @@ describe("Login HTML", () => {
             body: "email=nonexistent@example.com",
         });
         expect(post.status).toBe(302);
-        expect(post.headers.get("location")).toBe("/password-recovery");
+        expect(post.headers.get("location")).toBe("/login/password-recovery");
 
         const cookie = cookieHeaderFromSetCookie(post.headers.getSetCookie());
         const get = await app.request("/login/password-recovery", {
@@ -281,7 +281,7 @@ describe("Login HTML — edge cases", () => {
             body: `email=${encodeURIComponent(user.get("email") as string)}`,
         });
         expect(res.status).toBe(302);
-        expect(res.headers.get("location")).toBe("/password-recovery");
+        expect(res.headers.get("location")).toBe("/login/password-recovery");
         await UserEntity.destroy({ where: { id: user.get("id") as unknown as string } });
     });
 
@@ -304,7 +304,7 @@ describe("Login HTML — edge cases", () => {
             body: `email=${encodeURIComponent(user.get("email") as string)}`,
         });
         expect(res.status).toBe(302);
-        expect(res.headers.get("location")).toBe("/password-recovery");
+        expect(res.headers.get("location")).toBe("/login/password-recovery");
         await UserEntity.destroy({ where: { id: user.get("id") as unknown as string } });
     });
 
@@ -318,7 +318,7 @@ describe("Login HTML — edge cases", () => {
             body: "email=system@getstacksapp.com",
         });
         expect(res.status).toBe(302);
-        expect(res.headers.get("location")).toBe("/password-recovery");
+        expect(res.headers.get("location")).toBe("/login/password-recovery");
     });
 
     test("POST /login with non-activated user redirects and sets flash error", async () => {

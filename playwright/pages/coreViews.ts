@@ -24,7 +24,12 @@ class CoreViews extends Base {
         return this.page.getByTestId(`${view}-view`);
     }
 
-    public async open(view: CoreView) {
+    public async open(view?: CoreView) {
+        if (!view) {
+            await super.open();
+            return;
+        }
+
         if (view === "tasks") {
             await this.goto("/app/tasks");
         } else {

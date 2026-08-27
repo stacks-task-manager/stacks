@@ -106,6 +106,12 @@ jobs:
       - name: Build internal packages
         run: yarn build:internal
 
+      # `src/**/*.test.ts` includes the Playwright PDF export test, which
+      # launches Chromium's headless shell. Install it via the server
+      # workspace so the browser build matches the server's playwright dep.
+      - name: Install Playwright headless shell
+        run: yarn workspace @stacks/server playwright install --with-deps --only-shell chromium
+
       - name: Run server unit tests
         run: yarn test:server:unit
 
@@ -199,6 +205,12 @@ jobs:
           done
           echo "Postgres did not become ready in time"
           exit 1
+
+      # The full suite includes the Playwright PDF export test, which
+      # launches Chromium's headless shell. Install it via the server
+      # workspace so the browser build matches the server's playwright dep.
+      - name: Install Playwright headless shell
+        run: yarn workspace @stacks/server playwright install --with-deps --only-shell chromium
 
       - name: Run server integration tests
         run: yarn test:server
