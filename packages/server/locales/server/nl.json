@@ -75,7 +75,7 @@
     "Password recovery is disabled by the administrator": "Het herstellen van het wachtwoord is uitgeschakeld door de beheerder",
     "Payment": "Betaling",
     "Payment details": "Betalingsdetails",
-    "PDF export failed Chromium required for PDF printing": "De PDF-export kon niet worden gemaakt",
+    "PDF export failed": "De PDF-export kon niet worden gemaakt",
     "Permission delete not allowed": "Verwijderen niet toegestaan",
     "Permission not found": "Recht niet gevonden",
     "Person": "Persoon",

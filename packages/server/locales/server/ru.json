@@ -75,7 +75,7 @@
     "Password recovery is disabled by the administrator": "Восстановление пароля отключено администратором",
     "Payment": "Плата",
     "Payment details": "Данные об оплате",
-    "PDF export failed Chromium required for PDF printing": "Не удалось создать PDF-экспорт",
+    "PDF export failed": "Не удалось создать PDF-экспорт",
     "Permission delete not allowed": "Нет прав на удаление",
     "Permission not found": "Разрешение не найдено",
     "Person": "Пользователь",

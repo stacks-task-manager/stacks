@@ -122,7 +122,7 @@ describe("Export API", () => {
     });
 
     test(
-        "POST /api/export — pdf (Chromium)",
+        "POST /api/export — pdf",
         async () => {
             const headers = await getAuthenticatedHeaders();
             const res = await app.request("/api/export", {

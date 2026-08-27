@@ -21,7 +21,7 @@ Invalid format/type combinations return `400`. Filenames use a sanitized title p
 - `src/services/export/templateRegistry.ts` is the explicit entity-to-template registry. Never derive a template path from request text.
 - `src/services/export/presenters.ts` normalizes flexible client payloads into stable report records, sections, labels, dates, and numbers.
 - `src/services/export/renderExportHtml.ts` caches compiled Handlebars templates, partials, CSS, and the Stacks logo for the process lifetime.
-- `src/services/export/chromePdfFromHtml.ts` launches an isolated Playwright Chromium browser for each PDF.
+- `src/services/export/playwrightPdfFromHtml.ts` launches an isolated Playwright-managed Chromium browser for each PDF.
 - `static/export/pdf/` contains standalone print templates and assets. The server post-build step copies this directory into `dist/static`.
 
 ## Adding or changing a template
@@ -38,11 +38,17 @@ Chromium runs with JavaScript disabled and aborts HTTP, HTTPS, WebSocket, and se
 
 The HTML response also sends a restrictive Content Security Policy. Renderer failures log the underlying server-side error and return only a localized, non-sensitive message.
 
-## Chromium and fonts
+## Playwright Chromium and fonts
 
-The production server image installs Chromium and Noto core, CJK, and emoji fonts. It sets `CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium`.
+The production server image installs Playwright's matched Chromium browser, its Linux dependencies, and Noto core, CJK, and emoji fonts.
 
-For local overrides, set `CHROMIUM_EXECUTABLE_PATH`. `PUPPETEER_EXECUTABLE_PATH` remains a deprecated fallback for existing installations. With neither variable set, Playwright's Chromium path is used.
+For non-Docker development or a standalone deployment, install the matched browser once after installing dependencies:
+
+```bash
+yarn workspace @stacks/server playwright install chromium
+```
+
+On Linux hosts that also need the browser's system dependencies, use `install --with-deps chromium` instead.
 
 ## Preview and mandatory visual inspection
 
@@ -56,7 +62,7 @@ The command generates all representative PDFs under `output/pdf/export-preview/`
 
 Before merging any template or presenter change:
 
-1. Run the export unit tests and Chromium smoke test.
+1. Run the export unit tests and Playwright PDF smoke test.
 2. Run the preview command.
 3. Inspect every generated PNG for clipped text, overflow, broken tables, poor page transitions, missing glyphs, and incorrect RTL layout.
 4. Re-render and inspect again after every meaningful layout correction. HTML-only review is not sufficient.

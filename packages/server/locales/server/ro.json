@@ -75,7 +75,7 @@
     "Password recovery is disabled by the administrator": "Recuperarea parolei este dezactivată de administrator",
     "Payment": "Plată",
     "Payment details": "Detalii plată",
-    "PDF export failed Chromium required for PDF printing": "Nu s-a putut crea exportul PDF",
+    "PDF export failed": "Nu s-a putut crea exportul PDF",
     "Permission delete not allowed": "Ștergere neautorizată",
     "Permission not found": "Permisiunea nu a fost găsită",
     "Person": "Persoană",

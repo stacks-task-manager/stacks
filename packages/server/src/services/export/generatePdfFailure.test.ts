@@ -3,15 +3,15 @@ import { beforeEach, expect, test, vi } from "vitest";
 import { setTranslations } from "@stacks/translations";
 import { Logger } from "../../utils/logger";
 
-vi.mock("./chromePdfFromHtml", () => ({
-    printHtmlToPdfWithChrome: vi.fn().mockRejectedValue(new Error("browser exploded with secret detail")),
+vi.mock("./playwrightPdfFromHtml", () => ({
+    printHtmlToPdfWithPlaywright: vi.fn().mockRejectedValue(new Error("browser exploded with secret detail")),
 }));
 
 import { generatePdfFromHtml } from "./generatePdfFromHtml";
 
 beforeEach(() => {
     setTranslations({
-        "PDF export failed Chromium required for PDF printing": "Unable to create the PDF export.",
+        "PDF export failed": "Unable to create the PDF export.",
         "Export report": "Export report",
         Generated: "Generated",
         Task: "Task",

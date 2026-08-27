@@ -9,6 +9,7 @@ test.describe("Project - Views", () => {
     let page: Page;
     let project: Project;
     let projectName: string;
+    let projectId: string;
 
     test.beforeAll(async ({ login: loginPage }: any) => {
         ({ browser, context, page } = await bootstrapContext());
@@ -16,7 +17,7 @@ test.describe("Project - Views", () => {
 
         project = new Project(page);
         projectName = `Project views ${Date.now()}`;
-        await project.addNew({ name: projectName });
+        projectId = await project.addNew({ name: projectName });
     });
 
     test.beforeEach(({ attachVideoContext }: any) => {
@@ -24,13 +25,13 @@ test.describe("Project - Views", () => {
     });
 
     test.afterAll(async () => {
-        if (page && !page.isClosed()) {
-            await project.delete(projectName);
-            await page.close();
+        try {
+            if (page && !page.isClosed() && projectId) await project.deleteById(projectId);
+        } finally {
+            if (page && !page.isClosed()) await page.close();
+            if (context) await context.close();
+            if (browser) await browser.close();
         }
-
-        if (context) await context.close();
-        if (browser) await browser.close();
     });
 
     test("Should enable and show all nine project views", async () => {

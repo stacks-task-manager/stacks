@@ -1,4 +1,4 @@
-FROM node:20-bullseye
+FROM node:20-bookworm
 
 # Install system dependencies for canvas with specific versions
 RUN apt-get update && apt-get install -y \
@@ -7,7 +7,6 @@ RUN apt-get update && apt-get install -y \
     libpango1.0-dev \
     libjpeg-dev \
     libgif-dev \
-    chromium \
     fonts-noto-core \
     fonts-noto-cjk \
     fonts-noto-color-emoji \
@@ -20,7 +19,6 @@ RUN apt-get update && apt-get install -y \
 ENV PYTHON=/usr/bin/python3
 ENV npm_config_cache_max=0
 ENV CANVAS_PREBUILT=1
-ENV CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium
 
 # Set working directory
 WORKDIR /server
@@ -37,6 +35,9 @@ COPY server .
 
 # Remove any existing node_modules and reinstall to ensure compatibility
 RUN rm -rf node_modules && yarn install --production
+
+# Install the browser version matched to the production Playwright package and its Linux dependencies.
+RUN yarn playwright install --with-deps chromium
 
 # AGPL-3.0 — ship LICENSE + NOTICE alongside the binary so operators and end users
 # running this container have on-disk access to the terms and source pointer.

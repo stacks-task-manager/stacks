@@ -75,7 +75,7 @@
     "Password recovery is disabled by the administrator": "パスワードの再設定は管理者によって無効化されています",
     "Payment": "支払い",
     "Payment details": "支払い詳細",
-    "PDF export failed Chromium required for PDF printing": "PDF エクスポートを作成できませんでした",
+    "PDF export failed": "PDF エクスポートを作成できませんでした",
     "Permission delete not allowed": "削除は許可されていません",
     "Permission not found": "権限が見つかりません",
     "Person": "ユーザー",

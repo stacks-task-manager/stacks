@@ -543,6 +543,7 @@ const ProjectSecondaryToolbar = ({ small }: { small: boolean }) => {
                     <ToolbarButton
                         icon="refresh"
                         tooltip={translate("Reload time")}
+                        minimal
                         placement="bottom-end"
                         onClick={handleReloadTime}
                     />
@@ -815,7 +816,7 @@ const TableGroupingToggle = () => {
                     <Icon
                         icon={
                             GROUPING_TYPE_ICONS[
-                                grouping.toUpperCase() as unknown as keyof typeof GROUPING_TYPE_ICONS
+                            grouping.toUpperCase() as unknown as keyof typeof GROUPING_TYPE_ICONS
                             ]
                         }
                     />
@@ -853,6 +854,7 @@ const ProjectExpirationIcon = () => {
                     translate("This project ends in days", { days: diff })
                 )
             }
+            minimal
             placement="bottom"
             iconColor={diff <= 0 ? "#d90429" : "#ffb703"}
             data-testid="project-expiration-button"

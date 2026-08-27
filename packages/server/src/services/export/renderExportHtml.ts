@@ -47,7 +47,7 @@ export function clearExportTemplateCache(): void {
     logo = undefined;
 }
 
-/** Compiles a sanitized, self-contained HTML export for Chromium or direct download. */
+/** Compiles a sanitized, self-contained HTML export for PDF rendering or direct download. */
 export function renderExportHtml(
     type: ExportEntityType,
     data: unknown,

@@ -1,5 +1,6 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { FunctionComponent } from "react";
+import { translate } from "@stacks/translations";
 
 import { useDocument } from "app/hooks";
 import { Colors } from "@blueprintjs/core";
@@ -19,8 +20,9 @@ export const DocumentPrivacyButton: FunctionComponent<DocumentPrivacyButtonProps
     return (
         <ToolbarButton
             icon="shield-tick"
-            tooltip="This project is private"
+            tooltip={translate("This project is private")}
             placement="bottom"
+            minimal
             iconColor={Colors.RED3}
             onClick={onClick}
         />

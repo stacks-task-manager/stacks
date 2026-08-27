@@ -1,26 +1,15 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
-import { chromium } from "playwright-core";
-
-/** Resolves Chromium from the preferred environment variable, legacy fallback, or Playwright. */
-export function resolveChromeExecutablePath(): string {
-    const env = process.env.CHROMIUM_EXECUTABLE_PATH?.trim() || process.env.PUPPETEER_EXECUTABLE_PATH?.trim();
-    if (env) {
-        return env;
-    }
-    return chromium.executablePath();
-}
+import { chromium } from "playwright";
 
 /**
  * Prints HTML to PDF using an isolated headless Chromium browser via Playwright.
  */
-export async function printHtmlToPdfWithChrome(
+export async function printHtmlToPdfWithPlaywright(
     html: string,
     options: { footerText: string }
 ): Promise<Buffer> {
-    const executablePath = resolveChromeExecutablePath();
     const browser = await chromium.launch({
         headless: true,
-        executablePath,
         args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
     try {

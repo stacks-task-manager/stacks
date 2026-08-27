@@ -83,7 +83,7 @@
     "Password reset link is invalid or expired": "Password reset link is invalid or expired",
     "Payment": "Payment",
     "Payment details": "Payment details",
-    "PDF export failed Chromium required for PDF printing": "Unable to create the PDF export",
+    "PDF export failed": "Unable to create the PDF export",
     "Permission delete not allowed": "Unauthorized delete",
     "Permission not found": "Permission not found",
     "Permission update not allowed": "Unauthorized update",

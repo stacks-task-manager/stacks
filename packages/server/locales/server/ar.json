@@ -75,7 +75,7 @@
     "Password recovery is disabled by the administrator": "تم تعطيل استعادة كلمة المرور بواسطة المسؤول",
     "Payment": "الدفع",
     "Payment details": "تفاصيل الدفع",
-    "PDF export failed Chromium required for PDF printing": "تعذّر إنشاء ملف PDF للتصدير",
+    "PDF export failed": "تعذّر إنشاء ملف PDF للتصدير",
     "Permission delete not allowed": "حذف غير مصرح به",
     "Permission not found": "لم يتم العثور على الإذن",
     "Person": "شخص",

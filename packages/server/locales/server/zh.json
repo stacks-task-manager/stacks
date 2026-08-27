@@ -75,7 +75,7 @@
     "Password recovery is disabled by the administrator": "密码恢复已被管理员禁用",
     "Payment": "付款",
     "Payment details": "付款详情",
-    "PDF export failed Chromium required for PDF printing": "无法创建 PDF 导出",
+    "PDF export failed": "无法创建 PDF 导出",
     "Permission delete not allowed": "不允许删除",
     "Permission not found": "未找到权限",
     "Person": "人员",

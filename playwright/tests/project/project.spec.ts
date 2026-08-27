@@ -2,24 +2,22 @@ import type { Browser, BrowserContext, Page } from "@playwright/test";
 import { test, expect } from "../../fixtures";
 import { bootstrapContext } from "../../fixtures/bootstrapContext";
 import Project from "../../pages/project";
-import Sidebar from "../../pages/sidebar";
 
 test.describe("Project", () => {
     let browser: Browser;
     let context: BrowserContext;
     let page: Page;
     let project: Project;
-    let sidebar: Sidebar;
     let projectName: string;
+    let projectId: string;
 
     test.beforeAll(async ({ login: loginPage }: any) => {
         ({ browser, context, page } = await bootstrapContext());
         await loginPage({ page });
 
         project = new Project(page);
-        sidebar = new Sidebar(page);
         projectName = `Project toolbar ${Math.floor(Math.random() * 10000)}`;
-        await project.addNew({ name: projectName });
+        projectId = await project.addNew({ name: projectName });
     });
 
     test.beforeEach(({ attachVideoContext }: any) => {
@@ -27,24 +25,14 @@ test.describe("Project", () => {
     });
 
     test.afterAll(async () => {
-        if (page && !page.isClosed()) {
-            const matchingProjects = sidebar.documentsTreeItems.filter({ hasText: projectName });
-            if ((await matchingProjects.count()) > 0) {
-                await project.delete(projectName);
+        try {
+            if (page && !page.isClosed() && projectId) {
+                await project.deleteById(projectId);
             }
-            await expect(matchingProjects).toHaveCount(0);
-        }
-
-        if (page && !page.isClosed()) {
-            await page.close();
-        }
-
-        if (context) {
-            await context.close();
-        }
-
-        if (browser) {
-            await browser.close();
+        } finally {
+            if (page && !page.isClosed()) await page.close();
+            if (context) await context.close();
+            if (browser) await browser.close();
         }
     });
 
@@ -77,6 +65,17 @@ test.describe("Project", () => {
         await project.switchView("overview");
         await project.switchView("notes");
         await project.switchView("board");
+    });
+
+    test("Should export the project overview as PDF", async () => {
+        const result = await project.exportPdf();
+
+        expect(result.status).toBe(200);
+        expect(result.contentType).toContain("application/pdf");
+        expect(result.contentDisposition).toMatch(/attachment;.*\.pdf/i);
+        expect(result.requestBody).toMatchObject({ type: "project", format: "pdf" });
+        expect(result.body.subarray(0, 4).toString()).toBe("%PDF");
+        expect(result.body.length).toBeGreaterThan(4);
     });
 
     test("Should update the project title", async () => {

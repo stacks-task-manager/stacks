@@ -75,7 +75,7 @@
     "Password recovery is disabled by the administrator": "पासवर्ड पुनर्प्राप्ति व्यवस्थापक द्वारा अक्षम की गई है",
     "Payment": "भुगतान",
     "Payment details": "भुगतान विवरण",
-    "PDF export failed Chromium required for PDF printing": "PDF निर्यात बनाने में असमर्थ",
+    "PDF export failed": "PDF निर्यात बनाने में असमर्थ",
     "Permission delete not allowed": "हटाने की अनुमति नहीं है",
     "Permission not found": "अनुमति नहीं मिली",
     "Person": "व्यक्ति",

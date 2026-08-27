@@ -75,7 +75,7 @@
     "Password recovery is disabled by the administrator": "Odzyskiwanie hasła zostało wyłączone przez administratora",
     "Payment": "Płatność",
     "Payment details": "Szczegóły płatności",
-    "PDF export failed Chromium required for PDF printing": "Nie można wygenerować PDF z eksportem",
+    "PDF export failed": "Nie można wygenerować PDF z eksportem",
     "Permission delete not allowed": "Nieautoryzowane usunięcie",
     "Permission not found": "Uprawnienie nie zostało znalezione",
     "Person": "Osoba",

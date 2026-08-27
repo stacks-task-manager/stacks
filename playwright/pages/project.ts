@@ -20,6 +20,14 @@ export const PROJECT_VIEW_IDS = [
 export type ProjectViewId = (typeof PROJECT_VIEW_IDS)[number];
 export type EmptyProjectViewId = "attachments" | "links" | "gantt";
 
+export interface PdfExportResult {
+    status: number;
+    contentType: string | undefined;
+    contentDisposition: string | undefined;
+    requestBody: unknown;
+    body: Buffer;
+}
+
 class Project extends Base {
     public sidebar: Sidebar;
     public newProjectDialog: NewProjectDialog;
@@ -88,6 +96,36 @@ class Project extends Base {
 
     public async delete(projectName: string) {
         await this.sidebar.deleteDocument(projectName);
+    }
+
+    public async deleteById(projectId: string) {
+        const response = await this.page.request.delete(`/api/documents/${projectId}`);
+        if (!response.ok()) {
+            throw new Error(`Project cleanup failed with HTTP ${response.status()}`);
+        }
+    }
+
+    public async exportPdf(): Promise<PdfExportResult> {
+        await this.switchView("overview");
+        await this.openMenu();
+        await this.menuItem("project-menu-export").hover();
+
+        const pdfItem = this.page.getByTestId("project-menu-export-pdf");
+        await pdfItem.waitFor({ state: "visible" });
+        const responsePromise = this.page.waitForResponse(
+            response => response.url().includes("/api/export") && response.request().method() === "POST"
+        );
+        await pdfItem.click();
+        await this.menu.waitFor({ state: "hidden" });
+
+        const response = await responsePromise;
+        return {
+            status: response.status(),
+            contentType: response.headers()["content-type"],
+            contentDisposition: response.headers()["content-disposition"],
+            requestBody: response.request().postDataJSON(),
+            body: await response.body(),
+        };
     }
 
     public async addTask({

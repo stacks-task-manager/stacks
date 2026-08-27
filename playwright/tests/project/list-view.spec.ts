@@ -12,6 +12,7 @@ test.describe("Project - List view", () => {
     let page: Page;
     let project: Project;
     let sidebar: Sidebar;
+    let projectId: string;
 
     test.beforeAll(async ({ login: loginPage }: any) => {
         ({ browser, context, page } = await bootstrapContext());
@@ -21,7 +22,7 @@ test.describe("Project - List view", () => {
         sidebar = new Sidebar(page);
 
         // creating a base test project
-        const projectId = await project.addNew({ name: TEST_PROJECT });
+        projectId = await project.addNew({ name: TEST_PROJECT });
         const matchingProjects = sidebar.documentsTreeItems.filter({ hasText: TEST_PROJECT });
         await expect(matchingProjects).toHaveCount(1);
         await project.expectProjectUrl(projectId);
@@ -32,21 +33,12 @@ test.describe("Project - List view", () => {
     });
 
     test.afterAll(async () => {
-        await project.delete(TEST_PROJECT);
-        const matchingProjects = sidebar.documentsTreeItems.filter({ hasText: TEST_PROJECT });
-        await expect(matchingProjects).toHaveCount(0);
-        await expect(page.getByRole("alert")).toHaveText("Record deleted successfully");
-
-        if (page && !page.isClosed()) {
-            await page.close();
-        }
-
-        if (context) {
-            await context.close();
-        }
-
-        if (browser) {
-            await browser.close();
+        try {
+            if (page && !page.isClosed() && projectId) await project.deleteById(projectId);
+        } finally {
+            if (page && !page.isClosed()) await page.close();
+            if (context) await context.close();
+            if (browser) await browser.close();
         }
     });
 

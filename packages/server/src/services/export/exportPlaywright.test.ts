@@ -2,11 +2,11 @@
 import { expect, test } from "vitest";
 import { generatePdfFromHtml } from "./generatePdfFromHtml";
 
-test("Chromium produces a valid PDF from the branded task template", async () => {
+test("Playwright produces a valid PDF from the branded task template", async () => {
     const pdf = await generatePdfFromHtml({
         type: "task",
         locale: "en",
-        title: "Chromium smoke test",
+        title: "Playwright smoke test",
         data: { title: "A rendered task", progress: 0, description: "Smoke test" },
     });
     expect(pdf.subarray(0, 4).toString()).toBe("%PDF");

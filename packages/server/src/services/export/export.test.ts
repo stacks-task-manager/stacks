@@ -1,5 +1,5 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
-import { afterEach, beforeAll, describe, expect, test } from "vitest";
+import { beforeAll, describe, expect, test } from "vitest";
 import { EXPORT_ENTITY_TYPES } from "@stacks/types";
 import { setTranslations } from "@stacks/translations";
 import { ExportBodySchema } from "../../routes/schema/export";
@@ -9,7 +9,6 @@ import {
     sanitizeExportBasename,
 } from "../../routes/export";
 import { getMergedTranslationsForLocale, preloadLocales } from "../../i18n/locales";
-import { resolveChromeExecutablePath } from "./chromePdfFromHtml";
 import { presentPdfExport } from "./presenters";
 import { renderExportHtml } from "./renderExportHtml";
 import { normalizeExportRows } from "./normalizeExportRows";
@@ -202,28 +201,6 @@ describe("template compilation", () => {
         expect(html).toContain("<svg");
         expect(html).not.toContain("<script");
         expect(html).not.toContain('href="http');
-    });
-});
-
-describe("Chromium configuration", () => {
-    const originalChromium = process.env.CHROMIUM_EXECUTABLE_PATH;
-    const originalPuppeteer = process.env.PUPPETEER_EXECUTABLE_PATH;
-
-    afterEach(() => {
-        process.env.CHROMIUM_EXECUTABLE_PATH = originalChromium;
-        process.env.PUPPETEER_EXECUTABLE_PATH = originalPuppeteer;
-    });
-
-    test("prefers the Chromium environment variable over the deprecated fallback", () => {
-        process.env.CHROMIUM_EXECUTABLE_PATH = "/new/chromium";
-        process.env.PUPPETEER_EXECUTABLE_PATH = "/old/chromium";
-        expect(resolveChromeExecutablePath()).toBe("/new/chromium");
-    });
-
-    test("uses the deprecated executable variable when it is the only override", () => {
-        delete process.env.CHROMIUM_EXECUTABLE_PATH;
-        process.env.PUPPETEER_EXECUTABLE_PATH = "/legacy/chromium";
-        expect(resolveChromeExecutablePath()).toBe("/legacy/chromium");
     });
 });
 

@@ -17,6 +17,7 @@ test.describe("Project - Board view", () => {
     let sidebar: Sidebar;
     let board: BoardView;
     let projectName: string;
+    let projectId: string;
     let preferences: Preferences;
 
     test.beforeAll(async ({ login: loginPage }: any) => {
@@ -36,34 +37,18 @@ test.describe("Project - Board view", () => {
     });
 
     test.afterAll(async () => {
-        if (page && !page.isClosed()) {
-            const matchingProjects = sidebar.documentsTreeItems.filter({ hasText: projectName });
-            const hadProject = (await matchingProjects.count()) > 0;
-            if (hadProject) {
-                await project.delete(projectName);
-            }
-            await expect(matchingProjects).toHaveCount(0);
-            if (hadProject) {
-                await expect(page.getByRole("alert")).toHaveText("Record deleted successfully");
-            }
-        }
-
-        if (page && !page.isClosed()) {
-            await page.close();
-        }
-
-        if (context) {
-            await context.close();
-        }
-
-        if (browser) {
-            await browser.close();
+        try {
+            if (page && !page.isClosed() && projectId) await project.deleteById(projectId);
+        } finally {
+            if (page && !page.isClosed()) await page.close();
+            if (context) await context.close();
+            if (browser) await browser.close();
         }
     });
 
     test("Board workflow", async () => {
         await test.step("Should create a project", async () => {
-            const projectId = await project.addNew({ name: projectName });
+            projectId = await project.addNew({ name: projectName });
             const matchingProjects = sidebar.documentsTreeItems.filter({ hasText: projectName });
             const count = await matchingProjects.count();
             expect(count).toBeGreaterThanOrEqual(1);

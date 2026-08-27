@@ -75,7 +75,7 @@
     "Password recovery is disabled by the administrator": "Salasanan palauttaminen on poistettu käytöstä ylläpitäjän toimesta",
     "Payment": "Maksu",
     "Payment details": "Maksutiedot",
-    "PDF export failed Chromium required for PDF printing": "PDF-vientiraporttia ei voitu luoda",
+    "PDF export failed": "PDF-vientiraporttia ei voitu luoda",
     "Permission delete not allowed": "Poisto ei ole sallittu",
     "Permission not found": "Oikeutta ei löydy",
     "Person": "Henkilö",

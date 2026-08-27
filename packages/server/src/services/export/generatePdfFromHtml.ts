@@ -3,7 +3,7 @@ import type { ExportEntityType } from "@stacks/types";
 import { translate } from "@stacks/translations";
 import { Errors } from "../../errors";
 import { Logger } from "../../utils/logger";
-import { printHtmlToPdfWithChrome } from "./chromePdfFromHtml";
+import { printHtmlToPdfWithPlaywright } from "./playwrightPdfFromHtml";
 import { renderExportHtml } from "./renderExportHtml";
 
 /** Input required to present and print one entity export. */
@@ -22,7 +22,7 @@ export interface PdfTemplateContext {
 export async function generatePdfFromHtml(context: PdfTemplateContext): Promise<Buffer> {
     try {
         const rendered = renderExportHtml(context.type, context.data, context);
-        return await printHtmlToPdfWithChrome(rendered.html, { footerText: rendered.generatedAt });
+        return await printHtmlToPdfWithPlaywright(rendered.html, { footerText: rendered.generatedAt });
     } catch (error) {
         Logger.error(
             "PDF export rendering failed",
@@ -32,6 +32,6 @@ export async function generatePdfFromHtml(context: PdfTemplateContext): Promise<
                 locale: context.locale,
             }
         );
-        throw Errors.internal(translate("PDF export failed Chromium required for PDF printing"));
+        throw Errors.internal(translate("PDF export failed"));
     }
 }

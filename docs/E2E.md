@@ -1,6 +1,6 @@
 # E2E testing with Playwright
 
-End-to-end tests live at `playwright/` (repo root) and are driven by [Playwright](https://playwright.dev/). They exercise the running web app at `http://localhost:3000` through Chrome. The base URL assumes the default `APP_PORT=3000`; if you've changed it in `packages/server/.env`, override the Playwright `baseURL` to match (see [INSTALLATION.md](INSTALLATION.md#2-open-the-app)). Keep `webServer.url` on port 3001 because it tracks the hardcoded frontend dev server.
+End-to-end tests live at `playwright/` (repo root) and are driven by [Playwright](https://playwright.dev/). They exercise the running web app at `http://localhost:3000` through Chromium. The base URL assumes the default `APP_PORT=3000`; if you've changed it in `packages/server/.env`, override the Playwright `baseURL` to match (see [INSTALLATION.md](INSTALLATION.md#2-open-the-app)). Keep `webServer.url` on port 3001 because it tracks the hardcoded frontend dev server.
 
 ## Table of Contents
 
@@ -96,7 +96,7 @@ playwright/
         └── task-details.spec.ts
 ```
 
-The config defines two projects: a `setup` project that runs `auth.setup.ts` to seed an authenticated `storageState`, and a `chrome` project that depends on it and runs the actual specs in Desktop Chrome viewport.
+The config defines two projects: a `setup` project that runs `auth.setup.ts` to seed an authenticated `storageState`, and a `chrome` project that depends on it and runs the actual specs in a desktop Chromium viewport.
 
 ## Conventions
 

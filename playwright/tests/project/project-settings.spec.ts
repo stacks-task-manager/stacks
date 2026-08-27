@@ -2,24 +2,22 @@ import type { Browser, BrowserContext, Page } from "@playwright/test";
 import { test, expect } from "../../fixtures";
 import { bootstrapContext } from "../../fixtures/bootstrapContext";
 import Project from "../../pages/project";
-import Sidebar from "../../pages/sidebar";
 
 test.describe("Project - Settings", () => {
     let browser: Browser;
     let context: BrowserContext;
     let page: Page;
     let project: Project;
-    let sidebar: Sidebar;
     let projectName: string;
+    let projectId: string;
 
     test.beforeAll(async ({ login: loginPage }: any) => {
         ({ browser, context, page } = await bootstrapContext());
         await loginPage({ page });
 
         project = new Project(page);
-        sidebar = new Sidebar(page);
         projectName = `Project settings ${Math.floor(Math.random() * 10000)}`;
-        await project.addNew({ name: projectName });
+        projectId = await project.addNew({ name: projectName });
     });
 
     test.beforeEach(({ attachVideoContext }: any) => {
@@ -27,17 +25,13 @@ test.describe("Project - Settings", () => {
     });
 
     test.afterAll(async () => {
-        if (page && !page.isClosed()) {
-            const matchingProjects = sidebar.documentsTreeItems.filter({ hasText: projectName });
-            if ((await matchingProjects.count()) > 0) {
-                await project.delete(projectName);
-            }
-            await expect(matchingProjects).toHaveCount(0);
+        try {
+            if (page && !page.isClosed() && projectId) await project.deleteById(projectId);
+        } finally {
+            if (page && !page.isClosed()) await page.close();
+            if (context) await context.close();
+            if (browser) await browser.close();
         }
-
-        if (page && !page.isClosed()) await page.close();
-        if (context) await context.close();
-        if (browser) await browser.close();
     });
 
     test("Should update project settings and persist project fields", async () => {

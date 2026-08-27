@@ -7320,7 +7320,7 @@ __metadata:
     multer: ^2.0.2
     pdf2pic: ^3.2.0
     pg: ^8.15.6
-    playwright-core: ^1.58.0
+    playwright: ^1.58.0
     rrule: ^2.8.1
     sanitize-html: ^2.17.7
     sequelize: ^6.37.7
@@ -21654,12 +21654,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"playwright-core@npm:1.59.1, playwright-core@npm:^1.58.0":
+"playwright-core@npm:1.59.1":
   version: 1.59.1
   resolution: "playwright-core@npm:1.59.1"
   bin:
     playwright-core: cli.js
   checksum: 5835e24d181098b5cd4ee1b65dfc583bbab5724bab6af729ec79b3c24b1d02867010f355b23b1953387bf22bad03230243c4a3e5a52d7c46e8c3305dd9419a8f
+  languageName: node
+  linkType: hard
+
+"playwright-core@npm:1.62.1":
+  version: 1.62.1
+  resolution: "playwright-core@npm:1.62.1"
+  bin:
+    playwright-core: cli.js
+  checksum: 270674de6b921dd09e00d01e9a725117d03097f0e540ed681fb70d183d2f7855188640b0d7de1b9c0f8a2fb334eb33dedf1f34eeed86792fe88dc14633b06121
   languageName: node
   linkType: hard
 
@@ -21675,6 +21684,21 @@ __metadata:
   bin:
     playwright: cli.js
   checksum: 71ee1b525536411389860c7077d3757be25965645eb1830a0534da5ae3bf46f286730e3bf023d4ad6510c091c9333510139432d3c9a164531fdf2b81ef1aedfa
+  languageName: node
+  linkType: hard
+
+"playwright@npm:^1.58.0":
+  version: 1.62.1
+  resolution: "playwright@npm:1.62.1"
+  dependencies:
+    fsevents: 2.3.2
+    playwright-core: 1.62.1
+  dependenciesMeta:
+    fsevents:
+      optional: true
+  bin:
+    playwright: cli.js
+  checksum: 1e18e684d97b3d42ac6c80defe676c4c6c85d96394b690407f75b7a9007d8d44d774c9e9c40957a7319ff70a4d4dad103d6362415b81055256b823abe89abdca
   languageName: node
   linkType: hard
 

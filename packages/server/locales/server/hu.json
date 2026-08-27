@@ -75,7 +75,7 @@
     "Password recovery is disabled by the administrator": "A jelszó-helyreállítás le van tiltva a rendszergazda által",
     "Payment": "Fizetés",
     "Payment details": "Fizetési adatok",
-    "PDF export failed Chromium required for PDF printing": "Az exportált PDF létrehozása nem sikerült",
+    "PDF export failed": "Az exportált PDF létrehozása nem sikerült",
     "Permission delete not allowed": "Törlés nem engedélyezett",
     "Permission not found": "A jogosultság nem található",
     "Person": "Személy",

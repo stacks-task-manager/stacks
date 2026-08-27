@@ -75,7 +75,7 @@
     "Password recovery is disabled by the administrator": "Återställning av lösenord är inaktiverad av administratören",
     "Payment": "Betalning",
     "Payment details": "Betalningsuppgifter",
-    "PDF export failed Chromium required for PDF printing": "Det gick inte att skapa PDF-exporten",
+    "PDF export failed": "Det gick inte att skapa PDF-exporten",
     "Permission delete not allowed": "Otillåten borttagning",
     "Permission not found": "Behörighet hittades inte",
     "Person": "Person",
