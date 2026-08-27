@@ -24,7 +24,7 @@
         "@hono/zod-validator": "^0.4.3",
         "@modelcontextprotocol/sdk": "^1.15.0",
         "@stacks/translations": "workspace:*",
-        "@types/lodash": "^4.17.24",
+        "@types/lodash": "^4.17.25",
         "ai": "^6.0.206",
         "bcryptjs": "^3.0.2",
         "date-fns": "^4.1.0",
@@ -44,7 +44,7 @@
         "sanitize-html": "^2.17.7",
         "sequelize": "^6.37.7",
         "sharp": "^0.34.3",
-        "typescript": "^5.8.3",
+        "typescript": "^7.0.2",
         "uuid": "^9.0.1",
         "zod": "^3.25.32"
     },
@@ -52,17 +52,17 @@
         "@stacks/db": "workspace:*",
         "@stacks/license": "workspace:*",
         "@stacks/types": "workspace:*",
-        "@types/bcrypt": "^5.0.2",
+        "@types/bcrypt": "^6.0.0",
         "@types/mime-types": "^3.0.1",
         "@types/multer": "^2.0.0",
-        "@types/node": "^20.11.17",
+        "@types/node": "^26.3.0",
         "@types/pg": "^8.11.14",
         "@types/sanitize-html": "^2.16.1",
-        "@types/sequelize": "^4.28.20",
+        "@types/sequelize": "^6.12.0",
         "@types/uuid": "^9.0.8",
         "esbuild": "^0.25.8",
         "sequelize-cli": "^6.6.3",
-        "tsx": "^4.7.1",
-        "vitest": "^1.6.1"
+        "tsx": "^4.23.12",
+        "vitest": "^4.1.11"
     }
 }
