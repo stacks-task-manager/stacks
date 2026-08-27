@@ -5127,14 +5127,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@playwright/test@npm:^1.40.0":
-  version: 1.59.1
-  resolution: "@playwright/test@npm:1.59.1"
+"@playwright/test@npm:^1.62.1":
+  version: 1.62.1
+  resolution: "@playwright/test@npm:1.62.1"
   dependencies:
-    playwright: 1.59.1
+    playwright: 1.62.1
   bin:
     playwright: cli.js
-  checksum: ce2920786b79985b255991b77af3927ba3f7b41545a4486d1893153ec5e95dffb734871935753c90eb62c8ec3c2159e434d17bda9a609a41af18e8f3f7bdc6f3
+  checksum: 168f3c0436aa6ddfdfca955ce7b329c42fddef27b1f8898d09c7af34e51f54739bc421f24058e9a851d9d9b26f68d2dec87cc9564826d15539f3b572c1ed9aea
   languageName: node
   linkType: hard
 
@@ -21654,15 +21654,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"playwright-core@npm:1.59.1":
-  version: 1.59.1
-  resolution: "playwright-core@npm:1.59.1"
-  bin:
-    playwright-core: cli.js
-  checksum: 5835e24d181098b5cd4ee1b65dfc583bbab5724bab6af729ec79b3c24b1d02867010f355b23b1953387bf22bad03230243c4a3e5a52d7c46e8c3305dd9419a8f
-  languageName: node
-  linkType: hard
-
 "playwright-core@npm:1.62.1":
   version: 1.62.1
   resolution: "playwright-core@npm:1.62.1"
@@ -21672,22 +21663,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"playwright@npm:1.59.1":
-  version: 1.59.1
-  resolution: "playwright@npm:1.59.1"
-  dependencies:
-    fsevents: 2.3.2
-    playwright-core: 1.59.1
-  dependenciesMeta:
-    fsevents:
-      optional: true
-  bin:
-    playwright: cli.js
-  checksum: 71ee1b525536411389860c7077d3757be25965645eb1830a0534da5ae3bf46f286730e3bf023d4ad6510c091c9333510139432d3c9a164531fdf2b81ef1aedfa
-  languageName: node
-  linkType: hard
-
-"playwright@npm:^1.58.0":
+"playwright@npm:1.62.1, playwright@npm:^1.58.0":
   version: 1.62.1
   resolution: "playwright@npm:1.62.1"
   dependencies:
@@ -25354,7 +25330,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "stacks-mono@workspace:."
   dependencies:
-    "@playwright/test": ^1.40.0
+    "@playwright/test": ^1.62.1
     "@types/node": ^25.2.3
     concurrently: ^10.0.3
     date-fns: ^4.1.0
