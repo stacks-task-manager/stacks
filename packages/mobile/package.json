@@ -36,7 +36,7 @@
         "expo-secure-store": "~57.0.1",
         "expo-status-bar": "~57.0.1",
         "heroui-native": "^1.0.8",
-        "react": "19.2.3",
+        "react": "19.2.8",
         "react-native": "0.86.2",
         "react-native-gesture-handler": "~2.32.0",
         "react-native-keyboard-controller": "1.21.9",
@@ -51,7 +51,7 @@
         "uniwind": "^1.10.0"
     },
     "devDependencies": {
-        "@types/react": "~19.2.3",
+        "@types/react": "~19.2.18",
         "babel-plugin-module-resolver": "^5.0.0",
         "prettier-plugin-tailwindcss": "^0.5.11",
         "tailwindcss": "^4.3.2",
