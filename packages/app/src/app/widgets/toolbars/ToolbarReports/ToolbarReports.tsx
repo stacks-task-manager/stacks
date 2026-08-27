@@ -1,7 +1,7 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { translate } from "@stacks/translations";
 import { Button, SegmentedControl, Tooltip } from "@blueprintjs/core";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { shallowEqual } from "app/hooks/store";
 import { ReportsActions } from "app/store/actions";
 import { ReportSpan, ReportsStore } from "app/store/reports";
@@ -84,9 +84,13 @@ export const ToolbarReport = () => {
 
     const navigate = useNavigate();
 
+    useEffect(() => {
+        ReportsActions.loadList();
+    }, []);
+
     const report = useMemo(() => {
         return reports.find(report => report.type === params.type);
-    }, [params.type]);
+    }, [params.type, reports]);
 
     return (
         <div className="main-toolbar">
@@ -99,7 +103,7 @@ export const ToolbarReport = () => {
                             size="small"
                             variant="minimal"
                         />
-                        <h1>{report?.title ?? "Unknown report"}</h1>
+                        <h1 data-testid="report-toolbar-title">{report?.title ?? "Unknown report"}</h1>
 
                         {report && (
                             <Tooltip content={report.description}>
