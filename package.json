@@ -83,7 +83,7 @@
         "clean": "bash scripts/clean.sh"
     },
     "devDependencies": {
-        "@playwright/test": "^1.40.0",
+        "@playwright/test": "^1.62.1",
         "@types/node": "^25.2.3",
         "concurrently": "^10.0.3",
         "date-fns": "^4.1.0",
