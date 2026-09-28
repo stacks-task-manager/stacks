@@ -20,7 +20,7 @@ async function getAll() {
 
 /** Loads one company or throws not found. */
 async function getOne(id: string) {
-    const company = await CompanyEntity.findByPk(id);
+    const company = await CompanyEntity.findOne({ where: sanitizeWhere({ id }) });
 
     if (!company) {
         throw Errors.notFound("Company not found");
@@ -59,7 +59,7 @@ async function update(id: string, data: Partial<ICompany>) {
                 updatedBy: user.id,
             },
             {
-                where: { id },
+                where: sanitizeWhere({ id }),
                 returning: false, // Optimize for performance
             }
         );
