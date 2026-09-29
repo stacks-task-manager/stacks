@@ -23,7 +23,7 @@
         "@blueprintjs/datetime": "^6.0.1",
         "@blueprintjs/icons": "^6.10.0",
         "@blueprintjs/select": "^6.0.1",
-        "@floating-ui/dom": "^1.6.0",
+        "@floating-ui/dom": "^1.8.0",
         "@fullcalendar/core": "^6.1.20",
         "@fullcalendar/daygrid": "^6.1.20",
         "@fullcalendar/interaction": "^6.1.21",
