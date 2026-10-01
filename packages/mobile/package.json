@@ -31,7 +31,7 @@
         "expo-blur": "~57.0.2",
         "expo-constants": "~57.0.12",
         "expo-font": "~57.0.1",
-        "expo-linking": "~57.0.6",
+        "expo-linking": "~57.0.11",
         "expo-router": "~57.0.14",
         "expo-secure-store": "~57.0.1",
         "expo-status-bar": "~57.0.1",
