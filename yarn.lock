@@ -6427,9 +6427,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native-community/datetimepicker@npm:9.1.0":
-  version: 9.1.0
-  resolution: "@react-native-community/datetimepicker@npm:9.1.0"
+"@react-native-community/datetimepicker@npm:9.2.1":
+  version: 9.2.1
+  resolution: "@react-native-community/datetimepicker@npm:9.2.1"
   dependencies:
     invariant: ^2.2.4
   peerDependencies:
@@ -6442,7 +6442,7 @@ __metadata:
       optional: true
     react-native-windows:
       optional: true
-  checksum: 31b37df04613d299b4f107ee2325d4ea25a895bc358c080eca23ea06dc2278393950b632f67b5a27a8b2b801823f1febc201d3a555972c121e3a1f0b559180e3
+  checksum: 5001e0db2e5c9b234050f08c25556c668a1fbeff60107f26af0e947baf1995b7ac50f9f05803d8f57c3b856665f59a443df6039536ace928f5009a540cedcc6e
   languageName: node
   linkType: hard
 
@@ -7271,7 +7271,7 @@ __metadata:
     "@expo-google-fonts/inter": ^0.4.1
     "@expo/html-elements": ^0.10.1
     "@gorhom/bottom-sheet": ^5.2.14
-    "@react-native-community/datetimepicker": 9.1.0
+    "@react-native-community/datetimepicker": 9.2.1
     "@react-native-masked-view/masked-view": 0.3.2
     "@react-navigation/drawer": ^7.5.0
     "@react-navigation/native": ^7.0.0
