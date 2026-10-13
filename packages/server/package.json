@@ -4,18 +4,20 @@
     "type": "commonjs",
     "license": "AGPL-3.0-only",
     "scripts": {
-        "build": "tsc --project tsconfig.json && node -e \"const fs=require('fs'),p=require('path');const s=p.join('src','ai','prompts'),d=p.join('dist','ai','prompts');if(fs.existsSync(s)){fs.mkdirSync(p.dirname(d),{recursive:true});fs.cpSync(s,d,{recursive:true});}\"",
+        "build": "node scripts/prepare-needle.cjs --dist && tsc --project tsconfig.json && node -e \"const fs=require('fs'),p=require('path');const s=p.join('src','ai','prompts'),d=p.join('dist','ai','prompts');if(fs.existsSync(s)){fs.mkdirSync(p.dirname(d),{recursive:true});fs.cpSync(s,d,{recursive:true});}\"",
         "build:translations": "cd ../translations && yarn install && yarn build",
         "bundle": "yarn build:translations && yarn pre-bundle && node -e \"require('./esbuild.config.js').buildSecure()\" && yarn post-bundle",
-        "bundle-unsecure": "node esbuild.config.js",
-        "pre-bundle": "node pre-build.js",
+        "bundle-unsecure": "node scripts/prepare-needle.cjs --dist && node esbuild.config.js",
+        "pre-bundle": "node scripts/prepare-needle.cjs --dist && node pre-build.js",
         "post-bundle": "node post-build.js",
         "setup": "yarn install",
         "dev": "tsx watch --include \"./src/**/*.ts\" --include \"../translations/src/**/*.ts\" --include \"../db/src/**/*.ts\" --include \"../types/src/**/*.ts\" --include \"../license/src/**/*.ts\" --tsconfig tsconfig.dev.json --inspect --env-file=.env src/index.ts",
         "export:preview": "tsx scripts/export-preview.ts",
         "ai:debug": "tsx --env-file=.env src/ai/debugServer.ts",
         "test": "vitest run",
-        "test:unit": "vitest run --config vitest.unit.config.js"
+        "test:unit": "vitest run --config vitest.unit.config.js",
+        "needle:prepare": "node scripts/prepare-needle.cjs",
+        "needle:benchmark": "tsx --tsconfig tsconfig.dev.json scripts/benchmark-needle.ts"
     },
     "dependencies": {
         "@ai-sdk/openai": "^3.0.50",

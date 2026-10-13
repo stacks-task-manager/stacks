@@ -27,7 +27,7 @@
         "prune:workspaces": "node scripts/prune-nested-workspace-stacks.cjs",
         "postinstall": "yarn prune:workspaces",
         "install:deps": "yarn install --mode=skip-build",
-        "setup:finalize": "yarn prune:workspaces",
+        "setup:finalize": "yarn prune:workspaces && yarn workspace @stacks/server needle:prepare",
         "setup": "yarn clean && yarn install:deps && yarn build:internal && yarn setup:finalize",
         "---- DEV ----": "",
         "dev": "yarn prune:workspaces && yarn workspace @stacks/types run compile && yarn workspace @stacks/translations run build && yarn workspace @stacks/db run compile && yarn workspace @stacks/license run build && concurrently -n libs,app,server -c cyan,green,magenta \"yarn dev:libs\" \"yarn dev:app:watch\" \"yarn workspace @stacks/server run dev\"",

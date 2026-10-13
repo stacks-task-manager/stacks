@@ -45,6 +45,7 @@ export type AiChatDebugTurn = {
     tools: AiChatDebugToolCall[];
     responseText?: string;
     error?: string;
+    planner?: { name: string; plans: unknown[]; fallback?: string; shadow: boolean };
 };
 
 const MAX_DEBUG_TURNS = 500;
@@ -74,6 +75,7 @@ function safeJson(value: unknown): string {
 }
 
 export async function appendAiChatDebugTurn(turn: AiChatDebugTurn): Promise<void> {
+    if (process.env.AI_CHAT_DEBUG !== "true") return;
     try {
         await mkdir(aiChatDebugDir(), { recursive: true });
         await appendFile(aiChatDebugLogPath(), `${safeJson(turn)}\n`, "utf8");

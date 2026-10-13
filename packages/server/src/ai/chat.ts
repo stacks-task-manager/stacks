@@ -2,6 +2,10 @@
 /**
  * Streaming AI chat turn using Vercel AI SDK, tools, and prompt templates.
  */
+import { getLlmConfig, isLlmConfigured } from "./config";
+import { runNeedleTurn, status } from "./needle/pipeline";
+import { initializeNeedle, isNeedleReady } from "./needle/runtime";
+import type { ChoiceReply } from "./needle/sessions";
 import { createOpenAI } from "@ai-sdk/openai";
 import { stepCountIs, streamText, type ModelMessage } from "ai";
 import { requestContext } from "../services/requestContext";
@@ -230,11 +234,12 @@ export function widgetsFromToolResult(toolName: string, output: unknown): AiChat
 /**
  * Runs a streamed chat turn with tools. Call only inside `requestContext.run` after loaders auth is set.
  */
-export async function streamAiChat(
+async function streamLlmChat(
     history: AiChatClientMessage[],
     newUserMessage: string,
     handlers: StreamAiChatHandlers,
-    clientRoute?: AiChatClientRoutePayload | null
+    clientRoute?: AiChatClientRoutePayload | null,
+    executedResults?: unknown[]
 ): Promise<void> {
     const debugStartedAt = new Date();
     const debugTools: AiChatDebugToolCall[] = [];
@@ -258,9 +263,7 @@ export async function streamAiChat(
               email?: string;
           }
         | undefined;
-    const baseURL = envTrim("AI_BASE_URL") || envTrim("AI_OPENAI_BASE_URL");
-    const modelId = envTrim("AI_MODEL");
-    const apiKey = envTrim("AI_API_KEY") || envTrim("AI_OPENAI_API_KEY") || "not-needed";
+    const { baseURL, modelId, apiKey } = getLlmConfig();
 
     if (!baseURL || !modelId) {
         debugStatus = "error";
@@ -332,7 +335,7 @@ export async function streamAiChat(
         })
     );
 
-    const shouldUseMcp = shouldUseMcpToolBackend();
+    const shouldUseMcp = !executedResults && shouldUseMcpToolBackend();
     const mcp = shouldUseMcp ? await createMcpToolClient() : null;
     const executeOverride: AiToolExecuteOverride | undefined = mcp
         ? async ({ toolName, input, defaultExecute }) => {
@@ -343,17 +346,21 @@ export async function streamAiChat(
           }
         : undefined;
 
-    const tools = buildAiTools(selection.allowedTools, executeOverride);
+    const tools = executedResults ? undefined : buildAiTools(selection.allowedTools, executeOverride);
 
     const messages: ModelMessage[] = [
         ...toModelMessages(history),
         {
             role: "user",
-            content: template("client-chat.md", {
-                newUserMessage,
-                ...identityVars,
-                ...routeVars,
-            }),
+            content: executedResults
+                ? `The tools have already executed. Explain only these results; do not claim additional actions. User request: ${newUserMessage}\nResults: ${JSON.stringify(
+                      executedResults
+                  ).slice(0, 50000)}`
+                : template("client-chat.md", {
+                      newUserMessage,
+                      ...identityVars,
+                      ...routeVars,
+                  }),
         },
     ];
     debugMessages = messages;
@@ -431,5 +438,106 @@ export async function streamAiChat(
         if (mcp) {
             await mcp.close().catch(() => undefined);
         }
+    }
+}
+
+/** Needle plans and executes; the optional LLM writes a reply or handles unsupported requests. */
+export async function streamAiChat(
+    history: AiChatClientMessage[],
+    newUserMessage: string,
+    handlers: StreamAiChatHandlers,
+    clientRoute?: AiChatClientRoutePayload | null,
+    options: { conversationId?: string; choiceReply?: ChoiceReply } = {}
+): Promise<void> {
+    if (!isNeedleReady() && !options.choiceReply && isLlmConfigured()) {
+        void initializeNeedle().catch(() => undefined);
+        if (isLlmConfigured()) return streamLlmChat(history, newUserMessage, handlers, clientRoute);
+    }
+    const startedAt = new Date().toISOString();
+    let mcp: Awaited<ReturnType<typeof createMcpToolClient>> | null = null;
+    try {
+        mcp = shouldUseMcpToolBackend() ? await createMcpToolClient() : null;
+        const turn = await runNeedleTurn({
+            history,
+            message: newUserMessage,
+            route: clientRoute,
+            conversationId: options.conversationId ?? requestContext.getCurrentUser().id,
+            choiceReply: options.choiceReply,
+            shadow: process.env.AI_NEEDLE_SHADOW === "true",
+            executeOverride: mcp
+                ? async ({ toolName, input, defaultExecute }) =>
+                      MCP_AI_TOOL_NAMES.has(toolName) ? mcp!.callTool(toolName, input) : defaultExecute(input)
+                : undefined,
+        });
+        if (process.env.AI_NEEDLE_SHADOW === "true") {
+            console.log(
+                "[aiChat] Needle shadow",
+                JSON.stringify(
+                    turn.plans.map(plan => ({
+                        confidence: plan.response.confidence,
+                        proposedTools: [
+                            ...(plan.response.function_calls ?? []),
+                            ...(plan.response.suppressed_calls ?? []),
+                        ].map(call => call.name),
+                        retrievedTools: plan.retrievedTools,
+                        elapsedMs: plan.elapsedMs,
+                    }))
+                )
+            );
+        }
+        await appendAiChatDebugTurn({
+            id: `${Date.now()}-needle`,
+            startedAt,
+            finishedAt: new Date().toISOString(),
+            status: turn.fallback || turn.tools.some(tool => !tool.success) ? "error" : "ok",
+            request: { newUserMessage, history, clientRoute },
+            tools: turn.tools,
+            planner: {
+                name: "needle",
+                plans: turn.plans,
+                fallback: turn.fallback,
+                shadow: process.env.AI_NEEDLE_SHADOW === "true",
+            },
+        });
+        if (turn.fallback && !turn.mutated && !options.choiceReply && isLlmConfigured())
+            return await streamLlmChat(history, newUserMessage, handlers, clientRoute);
+        const widgets = [...turn.widgets];
+        for (const tool of turn.tools)
+            if (tool.success && tool.toolName !== "askUserChoice")
+                widgets.push(...widgetsFromToolResult(tool.toolName, tool.output));
+        if (
+            isLlmConfigured() &&
+            turn.results.length &&
+            !turn.widgets.some(widget => widget.type === "choice" || widget.type === "status")
+        ) {
+            let completed = false;
+            try {
+                await streamLlmChat(
+                    history,
+                    newUserMessage,
+                    {
+                        ...handlers,
+                        onError: () => widgets.push(status("Reply unavailable")),
+                        onDone: result => {
+                            completed = true;
+                            handlers.onDone({ text: result.text, widgets });
+                        },
+                    },
+                    clientRoute,
+                    turn.results
+                );
+            } catch {
+                widgets.push(status("Reply unavailable"));
+            }
+            if (!completed) handlers.onDone({ text: "", widgets });
+        } else
+            handlers.onDone({
+                text: "",
+                widgets: widgets.length ? widgets : [status("Request unsupported")],
+            });
+    } catch (error) {
+        handlers.onDone({ text: "", widgets: [status(formatAiChatError(error), "error")] });
+    } finally {
+        if (mcp) await mcp.close().catch(() => undefined);
     }
 }

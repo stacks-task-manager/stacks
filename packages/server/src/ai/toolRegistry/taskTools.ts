@@ -335,6 +335,17 @@ export const taskAiTools = [
     }),
 
     defineTool({
+        name: "deleteTask",
+        description:
+            "Permanently delete a task by UUID. If given a task name, resolve it with listTasks first.",
+        inputSchema: z.object({ taskId: z.string().describe("Task UUID") }),
+        execute: async ({ taskId }) => {
+            const task = await TasksLoader.removeById(taskId);
+            return { id: task.id, title: task.title, deleted: true };
+        },
+    }),
+
+    defineTool({
         name: "createTask",
         description: `Create a task in a project. Requires projectId (listProjects if you only have a name). Picks the default stack from the project's stack order.`,
         inputSchema: z.object({
@@ -430,7 +441,7 @@ export const taskAiTools = [
             taskId: z.string().describe("Task UUID"),
             title: z.string().optional(),
             description: z.string().optional().describe("Task description; pass empty string to clear"),
-            done: z.boolean().optional().describe("True = mark done (there is no delete-task tool)"),
+            done: z.boolean().optional().describe("True = mark the task complete"),
             todo: z.boolean().optional().describe("True = mark not done"),
             startdate: z.string().nullable().optional().describe("ISO 8601 or null to clear"),
             duedate: z.string().nullable().optional().describe("ISO 8601 or null to clear"),

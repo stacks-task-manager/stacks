@@ -51,10 +51,12 @@ export const AI_TOOL_REGISTRY = [
 
 export const MCP_AI_TOOL_NAMES = new Set<string>([
     "getTask",
+    "deleteTask",
     "createTask",
     "listStacks",
     "createStack",
     "updateStack",
+    "deleteStack",
     "listCalendars",
     "createLocalCalendar",
     "updateLocalCalendar",

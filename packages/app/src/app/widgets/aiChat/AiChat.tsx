@@ -11,6 +11,8 @@ import {
     Tooltip,
 } from "@blueprintjs/core";
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { translate } from "@stacks/translations";
+import "app/widgets/aiChat/_AiChatResults.scss";
 import { useNavigate } from "react-router-dom";
 
 import { Icon } from "app/components/common";
@@ -50,7 +52,16 @@ const panelStyle: React.CSSProperties = {
 /** Avoid duplicate auto-navigation (e.g. React StrictMode or remounts). */
 const redirectedAssistantMessageIds = new Set<string>();
 
-function MessageBubble({
+function translatedLabel(label: string): string {
+    if (label.startsWith("Required: "))
+        return translate("Required field", { field: label.slice(10).replace(/([a-z])([A-Z])/g, "$1 $2") });
+    // Dynamic confirmation text is content, not a translation key.
+    if (!/^[A-Za-z0-9_ ]+$/.test(label) || label !== label.trim()) return label;
+    const translated = translate(label);
+    return translated === label.toUpperCase() ? label : translated;
+}
+
+export function MessageBubble({
     msg,
     onChoice,
 }: {
@@ -111,12 +122,50 @@ function MessageBubble({
                 wordBreak: "break-word",
             }}
         >
-            {isUser ? body : <AiChatMarkdown>{body}</AiChatMarkdown>}
+            {isUser ? body : body ? <AiChatMarkdown>{body}</AiChatMarkdown> : null}
             {msg.widgets?.map((w, i) => {
+                if (w.type === "status")
+                    return (
+                        <div key={i} data-testid="ai-chat-status" role="status">
+                            {translatedLabel(w.label)}
+                        </div>
+                    );
+                if (w.type === "result")
+                    return (
+                        <div key={i} data-testid="ai-chat-result" className="ai-chat-result">
+                            <strong>{translatedLabel(w.label)}</strong>
+                            {w.items.map((item, index) => (
+                                <div key={index}>
+                                    {item.hashPath ? (
+                                        <Button
+                                            data-testid="ai-chat-result-link"
+                                            variant="minimal"
+                                            onClick={() => navigate(item.hashPath!.replace(/^#/, ""))}
+                                        >
+                                            {item.label || w.label}
+                                        </Button>
+                                    ) : (
+                                        item.label && <strong>{item.label}</strong>
+                                    )}
+                                    <dl>
+                                        {item.fields.map((field, j) => (
+                                            <React.Fragment key={j}>
+                                                <dt>{translatedLabel(field.label)}</dt>
+                                                <dd>{field.value}</dd>
+                                            </React.Fragment>
+                                        ))}
+                                    </dl>
+                                </div>
+                            ))}
+                            {!w.items.length && <span>{translate("No results")}</span>}
+                            {w.truncated && <span>{translate("More results available")}</span>}
+                        </div>
+                    );
                 if (w.type === "button") {
                     return (
                         <div key={i} style={{ marginTop: 8 }}>
                             <Button
+                                data-testid={`ai-chat-link-${msg.id}-${i}`}
                                 size="small"
                                 variant={isUser ? "minimal" : undefined}
                                 intent={Intent.PRIMARY}
@@ -133,7 +182,7 @@ function MessageBubble({
                 const current = selected[w.id] ?? [];
                 return (
                     <div key={w.id} style={{ marginTop: 10 }} data-testid={`ai-chat-choice-${w.id}`}>
-                        <div style={{ marginBottom: 6, fontWeight: 600 }}>{w.question}</div>
+                        <div style={{ marginBottom: 6, fontWeight: 600 }}>{translatedLabel(w.question)}</div>
                         {w.control === "buttons" ? (
                             <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                                 {w.options.map(option => (
@@ -240,7 +289,7 @@ export const AiChat: React.FC = () => {
     }, [serverEnabled]);
 
     const sendMessage = useCallback(
-        async (content: string) => {
+        async (content: string, choiceReply?: { token: string; optionIds: string[] }) => {
             if (!content.trim() || isAwaitingReply) {
                 return;
             }
@@ -271,6 +320,8 @@ export const AiChat: React.FC = () => {
                     type: "ai_chat_request",
                     payload: {
                         clientRequestId,
+                        conversationId: AiChatStore.get().conversationId,
+                        choiceReply,
                         messages: nextMessages,
                         clientRoute,
                     },
@@ -302,6 +353,7 @@ export const AiChat: React.FC = () => {
                 intent={Intent.PRIMARY}
                 icon="chat"
                 style={fabStyle}
+                data-testid="ai-chat-open"
                 onClick={() => AiChatActions.togglePanel()}
                 aria-label="Open AI assistant"
             />
@@ -323,6 +375,7 @@ export const AiChat: React.FC = () => {
                                 <Button
                                     size="small"
                                     variant="minimal"
+                                    data-testid="ai-chat-clear"
                                     icon="trash"
                                     onClick={() => AiChatActions.clearConversation()}
                                     disabled={isAwaitingReply}
@@ -332,6 +385,7 @@ export const AiChat: React.FC = () => {
                             <Button
                                 size="small"
                                 variant="minimal"
+                                data-testid="ai-chat-close"
                                 icon="cross"
                                 onClick={() => AiChatActions.closePanel()}
                             />
@@ -358,7 +412,15 @@ export const AiChat: React.FC = () => {
                                         ? undefined
                                         : (messageId, widgetId, optionIds, text) => {
                                               AiChatActions.answerChoice(messageId, widgetId, optionIds);
-                                              void sendMessage(text);
+                                              const choice = m.widgets?.find(
+                                                  w => w.type === "choice" && w.id === widgetId
+                                              );
+                                              void sendMessage(
+                                                  text,
+                                                  choice?.type === "choice" && choice.pendingActionToken
+                                                      ? { token: choice.pendingActionToken, optionIds }
+                                                      : undefined
+                                              );
                                           }
                                 }
                             />
@@ -381,6 +443,7 @@ export const AiChat: React.FC = () => {
 
                     <div style={{ display: "flex", gap: 8 }}>
                         <InputGroup
+                            data-testid="ai-chat-input"
                             fill
                             placeholder="Message…"
                             value={draft}
@@ -396,6 +459,7 @@ export const AiChat: React.FC = () => {
                             rightElement={
                                 <Button
                                     variant="minimal"
+                                    data-testid="ai-chat-send"
                                     onClick={() => void send()}
                                     disabled={isAwaitingReply}
                                     icon={<Icon icon="send-03" />}

@@ -102,3 +102,5 @@ license.key
 graft/
 opencode.json
 opencode-swarm.json
+
+packages/server/needle-runtime/

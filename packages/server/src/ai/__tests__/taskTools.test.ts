@@ -11,12 +11,24 @@ vi.mock("../../loaders", () => ({
     },
     TasksLoader: {
         getOne: vi.fn(),
+        removeById: vi.fn(),
         update: vi.fn(),
     },
 }));
 
 import { TasksLoader } from "../../loaders";
 import { taskAiTools } from "../toolRegistry/taskTools";
+
+describe("ai.taskTools.deleteTask", () => {
+    const deleteTask = taskAiTools.find(tool => tool.name === "deleteTask");
+
+    it("deletes the resolved task through the authorized loader", async () => {
+        vi.mocked(TasksLoader.removeById).mockResolvedValue({ id: "task-1", title: "Task 1" } as never);
+        const result = await deleteTask?.execute(deleteTask.inputSchema.parse({ taskId: "task-1" }) as never);
+        expect(TasksLoader.removeById).toHaveBeenCalledWith("task-1");
+        expect(result).toEqual({ id: "task-1", title: "Task 1", deleted: true });
+    });
+});
 
 describe("ai.taskTools.updateTask input schema", () => {
     const updateTask = taskAiTools.find(tool => tool.name === "updateTask");

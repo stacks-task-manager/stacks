@@ -4,7 +4,7 @@
  */
 import { z } from "zod";
 import { TASKSORTING, type IStack } from "@stacks/types";
-import { StacksLoader } from "../../loaders";
+import { ProjectsLoader, StacksLoader } from "../../loaders";
 import { defineTool } from "./defineTool";
 
 /** Board / column tools (`StacksLoader`). */
@@ -112,6 +112,18 @@ export const stackAiTools = [
                 maxTasks: stack.maxTasks ?? null,
                 sorting: stack.sorting ?? null,
             };
+        },
+    }),
+    defineTool({
+        name: "deleteStack",
+        description:
+            "Delete a board column/stack and the tasks in it. Resolve a column name with listStacks first.",
+        inputSchema: z.object({ stackId: z.string().describe("Column/stack UUID") }),
+        execute: async ({ stackId }) => {
+            const deleted = await StacksLoader.remove(stackId);
+            if (!deleted) throw new Error("Column could not be deleted");
+            await ProjectsLoader.removeStackOrder(deleted.project, deleted.id);
+            return { id: deleted.id, title: deleted.title, projectId: deleted.project, deleted: true };
         },
     }),
 ];

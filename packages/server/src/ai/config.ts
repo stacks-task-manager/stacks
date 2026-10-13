@@ -4,6 +4,8 @@
  */
 
 /** Reads `process.env[name]` trimmed, or empty string when unset. */
+import { isNeedleReady } from "./needle/runtime";
+
 function envTrim(name: string): string {
     const v = process.env[name];
     return typeof v === "string" ? v.trim() : "";
@@ -14,16 +16,19 @@ export function isAiChatKillSwitchOn(): boolean {
     return v === "false" || v === "0" || v === "off";
 }
 
-/**
- * True when the server should expose AI chat (API flag + WS handler) and the LLM is configured.
- */
+export function getLlmConfig() {
+    return {
+        baseURL: envTrim("AI_BASE_URL") || envTrim("AI_OPENAI_BASE_URL"),
+        modelId: envTrim("AI_MODEL"),
+        apiKey: envTrim("AI_API_KEY") || envTrim("AI_OPENAI_API_KEY") || "not-needed",
+    };
+}
+export function isLlmConfigured() {
+    const config = getLlmConfig();
+    return Boolean(config.baseURL && config.modelId);
+}
 export function isAiChatConfigured(): boolean {
-    if (isAiChatKillSwitchOn()) {
-        return false;
-    }
-    const base = envTrim("AI_BASE_URL");
-    const model = envTrim("AI_MODEL");
-    return Boolean(base && model);
+    return !isAiChatKillSwitchOn() && (isNeedleReady() || isLlmConfigured());
 }
 
 export function getAiChatPublicConfig(): { enabled: boolean; model: string | null } {
@@ -31,4 +36,11 @@ export function getAiChatPublicConfig(): { enabled: boolean; model: string | nul
         enabled: isAiChatConfigured(),
         model: isAiChatConfigured() ? envTrim("AI_MODEL") : null,
     };
+}
+
+/** Unscored proposals require confirmation; all calls retain grounding and Zod checks. */
+export function getNeedleConfidenceThreshold(): number {
+    const raw = envTrim("AI_NEEDLE_CONFIDENCE_THRESHOLD");
+    const value = Number(raw);
+    return raw && Number.isFinite(value) && value >= 0 && value <= 1 ? value : 0.7;
 }

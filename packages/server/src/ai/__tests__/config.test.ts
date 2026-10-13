@@ -1,6 +1,6 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { describe, expect, it, beforeEach, afterEach } from "vitest";
-import { isAiChatConfigured, isAiChatKillSwitchOn } from "../config";
+import { isAiChatConfigured, isAiChatKillSwitchOn, getNeedleConfidenceThreshold } from "../config";
 
 describe("ai config", () => {
     const env = { ...process.env };
@@ -15,6 +15,16 @@ describe("ai config", () => {
         process.env = { ...env };
     });
 
+    it("uses the default threshold for invalid values and accepts 0 through 1", () => {
+        for (const value of ["", "NaN", "-1", "1.1", "oops"]) {
+            process.env.AI_NEEDLE_CONFIDENCE_THRESHOLD = value;
+            expect(getNeedleConfidenceThreshold()).toBe(0.7);
+        }
+        for (const value of ["0", "0.5", "1"]) {
+            process.env.AI_NEEDLE_CONFIDENCE_THRESHOLD = value;
+            expect(getNeedleConfidenceThreshold()).toBe(Number(value));
+        }
+    });
     it("is false when vars missing", () => {
         expect(isAiChatConfigured()).toBe(false);
     });

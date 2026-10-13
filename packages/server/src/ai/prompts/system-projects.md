@@ -5,3 +5,4 @@
 - Board columns (stacks) → `listStacks` with `projectId` (check before adding duplicates and to inspect current tint/collapsed/maxTasks/sorting values).
 - Add a column → `createStack` with `projectId` and a title.
 - Update a column → `updateStack` with `stackId`. Supported fields: `title`, `tint`, `collapsed`, `maxTasks`, `sorting`. If the user names a column by title, use `listStacks` first to resolve the id.
+- Delete a column → `deleteStack` with `stackId`. If the user names a column, use `listStacks` in the current project to resolve the id. Deleting a column also deletes its tasks.

@@ -2,6 +2,7 @@
 /**
  * AI chat panel messages and streaming.
  */
+import { createChatId } from "app/utils/aiChat";
 import { produce } from "immer";
 import {
     AiChatStore,
@@ -12,16 +13,9 @@ import {
 } from "../aiChat";
 import { setStorage } from "app/utils/storage";
 
-function newId(prefix: string) {
-    if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
-        return crypto.randomUUID();
-    }
-    return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
-}
-
 function persistMessages() {
-    const { messages } = AiChatStore.get();
-    setStorage(AI_CHAT_MESSAGES_KEY, { messages });
+    const { messages, conversationId } = AiChatStore.get();
+    setStorage(AI_CHAT_MESSAGES_KEY, { messages, conversationId });
 }
 
 /** Models often emit leading newlines after tool calls; strip so bubbles and history stay clean. */
@@ -73,8 +67,8 @@ export const AiChatActions = {
 
     /** Returns clientRequestId to send over WebSocket (correlates deltas / done / error). */
     appendUserMessage(content: string): string {
-        const messageId = newId("u");
-        const clientRequestId = newId("req");
+        const messageId = createChatId("u");
+        const clientRequestId = createChatId("req");
         AiChatStore.set(
             produce((s: IAiChatStore) => {
                 s.messages.push({ id: messageId, role: "user", content });
@@ -96,7 +90,7 @@ export const AiChatActions = {
     },
 
     finalizeAssistantTurn(clientRequestId: string, text: string, widgets: AiChatWidget[]) {
-        const id = newId("a");
+        const id = createChatId("a");
         AiChatStore.set(
             produce((s: IAiChatStore) => {
                 if (s.activeClientRequestId !== clientRequestId) {
@@ -155,6 +149,7 @@ export const AiChatActions = {
         AiChatStore.set(
             produce((s: IAiChatStore) => {
                 s.messages = [];
+                s.conversationId = createChatId("conversation");
                 s.isAwaitingReply = false;
                 s.activeClientRequestId = null;
                 s.streamingAssistantContent = "";

@@ -5,10 +5,12 @@ import { TASKSORTING } from "@stacks/types";
 vi.mock("../../loaders", () => ({
     StacksLoader: {
         update: vi.fn(),
+        remove: vi.fn(),
     },
+    ProjectsLoader: { removeStackOrder: vi.fn() },
 }));
 
-import { StacksLoader } from "../../loaders";
+import { ProjectsLoader, StacksLoader } from "../../loaders";
 import { stackAiTools } from "../toolRegistry/stackTools";
 
 describe("ai.stackTools.updateStack", () => {
@@ -72,5 +74,19 @@ describe("ai.stackTools.updateStack", () => {
                 sorting: TASKSORTING.TITLEASC,
             })
         ).not.toThrow();
+    });
+});
+
+describe("ai.stackTools.deleteStack", () => {
+    const deleteStack = stackAiTools.find(tool => tool.name === "deleteStack");
+    it("removes the column and its project ordering entry", async () => {
+        vi.mocked(StacksLoader.remove).mockResolvedValue({
+            id: "stack-1",
+            title: "Column XYZ",
+            project: "project-1",
+        } as never);
+        await deleteStack?.execute(deleteStack.inputSchema.parse({ stackId: "stack-1" }) as never);
+        expect(StacksLoader.remove).toHaveBeenCalledWith("stack-1");
+        expect(ProjectsLoader.removeStackOrder).toHaveBeenCalledWith("project-1", "stack-1");
     });
 });

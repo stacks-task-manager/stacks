@@ -7,12 +7,12 @@ import { randomUUID } from "crypto";
 import { RolesLoader } from "../loaders";
 import { requestContext } from "../services/requestContext";
 import type { User } from "../types/user";
-import type { IRole } from "@stacks/types";
+import type { AiChatChoiceReply, IRole } from "@stacks/types";
 import { onCustomMessage } from "../events";
 import { sendMessageToUser } from "../routes/socket";
 import { formatAiChatError, streamAiChat, type AiChatClientMessage } from "./chat";
 import type { AiChatClientRoutePayload } from "./clientRoute";
-import { isAiChatConfigured } from "./config";
+import { isAiChatKillSwitchOn } from "./config";
 
 /** Accepts only well-shaped client route objects from WS JSON. */
 function sanitizeClientRoute(raw: unknown): AiChatClientRoutePayload | undefined {
@@ -21,13 +21,21 @@ function sanitizeClientRoute(raw: unknown): AiChatClientRoutePayload | undefined
     }
     const { section, sectionId, viewType, childId } = raw as Record<string, string>;
 
-    return { section, sectionId, viewType, childId };
+    if (typeof section !== "string" || section.length > 100) return undefined;
+    return {
+        section,
+        sectionId: typeof sectionId === "string" ? sectionId.slice(0, 100) : undefined,
+        viewType: typeof viewType === "string" ? viewType.slice(0, 100) : undefined,
+        childId: typeof childId === "string" ? childId.slice(0, 100) : undefined,
+    };
 }
 
 type AiChatRequestPayload = {
     clientRequestId?: string;
     messages?: AiChatClientMessage[];
     clientRoute?: AiChatClientRoutePayload;
+    conversationId?: string;
+    choiceReply?: AiChatChoiceReply;
 };
 
 function sendAi(userId: string, type: "ai_chat_delta" | "ai_chat_done" | "ai_chat_error", payload: object) {
@@ -49,7 +57,7 @@ export function registerAiChatWebSocketHandlers(): void {
             return;
         }
 
-        if (!isAiChatConfigured()) {
+        if (isAiChatKillSwitchOn()) {
             sendAi(userId, "ai_chat_error", {
                 clientRequestId: (data.messageData?.payload as AiChatRequestPayload)?.clientRequestId,
                 message: "AI chat is not enabled",
@@ -117,7 +125,15 @@ export function registerAiChatWebSocketHandlers(): void {
                                     sendAi(userId, "ai_chat_error", { clientRequestId, message });
                                 },
                             },
-                            clientRoute
+                            clientRoute,
+                            {
+                                conversationId:
+                                    typeof payload.conversationId === "string" &&
+                                    payload.conversationId.length <= 100
+                                        ? payload.conversationId
+                                        : undefined,
+                                choiceReply: payload.choiceReply,
+                            }
                         )
                 );
             } catch (e) {

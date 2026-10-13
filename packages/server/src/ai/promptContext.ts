@@ -54,6 +54,7 @@ export const TOPIC_TOOLS: Record<PromptTopic, readonly string[]> = {
     tasks: [
         "findTasks",
         "listTasks",
+        "deleteTask",
         "createTask",
         "updateTask",
         "moveTask",
@@ -62,7 +63,7 @@ export const TOPIC_TOOLS: Record<PromptTopic, readonly string[]> = {
         "listActivities",
         "listReminders",
     ],
-    projects: ["createProject", "listStacks", "createStack", "updateStack"],
+    projects: ["createProject", "listStacks", "createStack", "updateStack", "deleteStack"],
     notepads: ["listNotepads"],
     calendar: [
         "listCalendars",

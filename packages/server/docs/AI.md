@@ -324,3 +324,96 @@ Two helpers in [`chat.ts`](../src/ai/chat.ts) decide which widget shape to emit:
 - [`docs/packages/server.md`](../../../docs/packages/server.md) — server package overview, environment variables.
 - [`packages/server/docs/ONBOARDING.md`](ONBOARDING.md) — bootstrap order, loaders, request lifecycle.
 - [`packages/app/src/app/widgets/aiChat/`](../../app/src/app/widgets/aiChat) — the React widget on the other end of the WebSocket.
+
+## Needle 3 planner
+
+Chat is available when the bundled Needle worker is ready or an OpenAI-compatible LLM is configured.
+`AI_CHAT_ENABLED=false` still disables the feature. Needle runs on the server in a worker thread;
+users need no Python, inference service or API key. A configured LLM writes replies from completed
+results with tool execution disabled, and handles unsupported requests only before a mutation is attempted.
+
+Run `yarn workspace @stacks/server needle:prepare` after installing dependencies. Setup and server
+builds run this automatically. It downloads the pinned engine and full-depth weights from Hugging Face,
+checks SHA-256 hashes and retains the upstream Apache-2.0 license in the ignored `needle-runtime/`
+directory. Production builds copy this directory into `dist/`, and releases and Docker copy it alongside
+the server bundle. Runtime inference performs no downloads; telemetry is disabled in the worker.
+
+The pinned model revision and checksums live in `scripts/needle-assets.json`. Update them together,
+then rerun the runtime tests and benchmark before shipping a different engine or weights.
+
+The worker serializes inference and resets between jobs. A 30-second timeout terminates the worker;
+a later request recreates it. It uses Needle's embedding head to rank compact eligible tool descriptions,
+caches those embeddings, and routes against the five closest tools with compact schemas before extracting
+arguments against the selected tools with their complete schemas.
+This avoids repeatedly embedding the complete, large Stacks schemas, which exceeded the timeout
+in the initial deployment benchmark. Retrieved tool names and Node process RSS are reported with
+latency. The engine's own RAM metric is not used because it returned invalid values in the WASM gate.
+
+The tool registry remains authoritative: the adapter derives structural schemas using the AI SDK,
+resolves entity names through authorized loaders, validates arguments with Zod, and executes in the
+original request context, including the optional MCP backend. Add metadata and a benchmark request
+for every new tool. Arbitrary UUIDs are never synthesized by the adapter. Unknown names and missing
+fields ask for more information; multiple exact matches ask the user to choose. A missing stack project
+is resolved from the selected task. Folder references require an explicit id.
+
+Without an LLM, assistant content is empty and result/status widgets show bounded records, fields and
+links. Notepad reads show a source preview rather than a generated summary. Navigation retains the
+existing auto-redirect flag. Low-confidence (below `AI_NEEDLE_CONFIDENCE_THRESHOLD`, default 0.7) or unscored calls ask for confirmation;
+negated calls are refused and ungrounded fields ask for replacement values. The threshold is a starting
+point for the shipped model, not a guarantee of correctness for every language or request.
+
+Clients send a persisted `conversationId` and structured `choiceReply` (`token`, `optionIds`) for
+server-issued choices. Pending actions and prior results are scoped to tenant, user and conversation,
+expire after 30 minutes, and live only in server memory. Expired or forged choices cannot execute an action.
+Restarting the server invalidates pending choices; users should repeat their request. Free-form field
+answers are accepted only against the conversation's pending field. Only one turn runs per conversation.
+
+Set `AI_NEEDLE_SHADOW=true` to log proposed tool names, confidence and timing without executing them.
+Enable `AI_CHAT_DEBUG=true` as well to record proposal arguments and detailed request data. With an LLM,
+shadow mode falls back to the existing LLM tool flow; without one it shows a status result. Set
+`AI_CHAT_DEBUG=true` to enable detailed local JSONL logs, including planner confidence, retrieved
+names, selected tools, latency, tool outcomes and fallback reasons. Logs contain workspace data and are off by default.
+
+Run `yarn workspace @stacks/server needle:benchmark` for the real artifact coverage matrix: all
+registered schemas, representative requests, predicted arguments, confidence, latency, RSS and
+catalogue retrieval examples. Inspect argument accuracy as well as tool selection; valid schemas alone
+do not establish correct intent. Evaluate on the deployment host and representative user languages
+before relying on the initial threshold. This release does not fine-tune or downsize the base model.
+
+### Initial deployment measurements
+
+On the development Mac (Apple Silicon, Node 20.20.2), cold worker loading took approximately 120 ms.
+All 36 registered schemas initialized, and 34 single-tool examples produced a matching proposed call;
+this includes suppressed calls. Expected argument subsets matched in 31 of 36 single-tool fixtures;
+these fixture checks are not an end-to-end accuracy estimate. The complete coverage matrix, proposals,
+confidence and timings are recorded in [NEEDLE_BENCHMARK.json](NEEDLE_BENCHMARK.json). The five catalogue-routing
+examples selected the expected tool after compact routing and explicit subject/operation eligibility
+filters. Routing/extraction took approximately 2–7.5 seconds, including an initial embedding-cache fill.
+The complete benchmark harness reported 292–431 MB process RSS, including imported server libraries.
+
+The base model confused calendar deletion with event deletion despite high confidence. Explicit
+calendar subjects now exclude event mutations, and explicit create/update/move/delete verbs restrict
+eligible mutation names before routing. Exact flat-navigation requests route to `navigate`. Date
+arguments are checked before any mutation; simple today/tomorrow/yesterday values normalize against
+UTC, and unsupported date expressions ask for an ISO value. More realistic inputs and other hosts
+still require evaluation; the published 35 MB weights do not establish chat latency or reliability.
+
+The representative fixtures exposed incorrect assignment filtering, an unrequested task title,
+and malformed choice labels. The adapter normalizes explicit "assigned to me" filters to the current
+user and rejects automatic task-title changes when the request contains no naming intent. Low-confidence
+choice proposals require confirmation. Docker/Linux benchmarks and live WebSocket E2E runs remain
+required on a running deployment; the local Docker daemon and Stacks server were unavailable during
+this implementation.
+
+Creation requests constrain the planner to the requested entity (task, column, project or calendar).
+Confirmation and field replies retain the original request and its eligible tools. Planned calls execute
+sequentially; after a batch containing a mutation, the turn ends rather than reinterpreting its result as
+another command. Task requests such as `create a new task in Col 3 called "Hello world"` use the current
+project and resolve the column through authorized lookups. A parent folder id is optional for creating
+projects and has no role in task creation.
+
+The configured confidence threshold also applies to proposals in Needle's `suppressed_calls`, after
+checking negation, grounding, references and authoritative Zod validation. Optional ungrounded fields
+are omitted; required ungrounded fields ask for clarification. Column positions and task due dates are
+omitted when the request provides no matching intent. This avoids a separate hidden confirmation
+threshold inside the engine.
