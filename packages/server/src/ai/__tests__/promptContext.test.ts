@@ -4,6 +4,17 @@ import { parseClientRoute } from "../clientRoute";
 import { CORE_TOOLS, TOPIC_TOOLS, selectPromptContext } from "../promptContext";
 
 describe("promptContext.selectPromptContext", () => {
+    it.each([
+        ["Show reminders for Buy milk this week", "listReminders"],
+        ["Show activity for Buy milk this week", "listActivities"],
+        ["Show comments on Buy milk this week", "listActivities"],
+        ["List my documents", "listNotepads"],
+        ["Schedule a task", "createTask"],
+        ["Show today's schedule", "listCalendarEvents"],
+        ["I need notes from the meeting", "listNotepads"],
+    ])("preserves needed tools for competing/missed keywords: %s", (request, tool) => {
+        expect(selectPromptContext({ newUserMessage: request }).allowedTools).toContain(tool);
+    });
     it("always includes the core fragment and core tools", () => {
         const sel = selectPromptContext({ newUserMessage: "hi" });
         expect(sel.promptFragments[0]).toBe("system-core.md");

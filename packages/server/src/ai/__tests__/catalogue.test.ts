@@ -16,7 +16,7 @@ describe("AI catalogue consistency", () => {
         for (const value of ["2026-10-14", "2026-10-14T09:00:00Z", "2026-10-14T09:00:00+02:00"])
             expect(aiDateInput.parse(value)).toBe(value);
     });
-    const names = AI_TOOL_REGISTRY.map(t => t.name);
+    const names: string[] = AI_TOOL_REGISTRY.map(t => t.name);
     it("has unique names, fixture coverage, and no unreachable tools", () => {
         expect(new Set(names).size).toBe(names.length);
         for (const name of names) {

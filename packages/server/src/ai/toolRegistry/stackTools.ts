@@ -12,18 +12,50 @@ export const stackAiTools = [
     defineTool({
         name: "createStack",
         description: `Create a new board column. Requires projectId.`,
-        inputSchema: z.object({
-            projectId: z
-                .string()
-                .describe(
-                    "Project UUID from current UI or listProjects(search). Resolve a supplied project name now; never ask for its UUID"
-                ),
-            title: z.string().min(1).describe("Column title"),
-            insertIndex: z.number().int().min(0).optional().describe("0-based position; omit to append"),
-        }),
-        execute: async ({ projectId, title, insertIndex }) => {
+        inputSchema: z
+            .object({
+                projectId: z
+                    .string()
+                    .describe(
+                        "Project UUID from current UI or listProjects(search). Resolve a supplied project name now; never ask for its UUID"
+                    ),
+                title: z.string().min(1).describe("Column title"),
+                insertIndex: z
+                    .number()
+                    .int()
+                    .min(0)
+                    .optional()
+                    .describe(
+                        "0-based absolute position; omit to append. For relative placement use beforeStackId or afterStackId."
+                    ),
+                beforeStackId: z
+                    .string()
+                    .optional()
+                    .describe(
+                        "Existing column ID to insert immediately before (in front of); resolve with listStacks"
+                    ),
+                afterStackId: z
+                    .string()
+                    .optional()
+                    .describe("Existing column ID to insert immediately after; resolve with listStacks"),
+            })
+            .refine(
+                input =>
+                    [input.insertIndex, input.beforeStackId, input.afterStackId].filter(
+                        value => value !== undefined
+                    ).length <= 1,
+                { message: "Specify only one insertion position" }
+            ),
+        execute: async ({ projectId, title, insertIndex, beforeStackId, afterStackId }) => {
             const data = { title, project: projectId } as IStack;
-            const stack = await StacksLoader.create(data, insertIndex);
+            const stack = await StacksLoader.create(
+                data,
+                beforeStackId !== undefined
+                    ? { beforeStackId }
+                    : afterStackId !== undefined
+                    ? { afterStackId }
+                    : insertIndex
+            );
             return {
                 id: stack.id,
                 title: stack.title,
@@ -43,18 +75,24 @@ export const stackAiTools = [
                 ),
         }),
         execute: async ({ projectId }) => {
+            const project = await ProjectsLoader.getOne(projectId);
             const stacks = await StacksLoader.getAll(projectId);
-            return stacks.map(s => ({
-                id: s.id,
-                title: s.title,
-                project: s.project,
-                projectId: s.project,
-                tint: s.tint ?? null,
-                collapsed: Boolean(s.collapsed),
-                maxTasks: s.maxTasks ?? null,
-                sorting: s.sorting ?? null,
-                taskCount: s.tasksOrder?.length ?? 0,
-            }));
+            const order = project.stacksOrder;
+            const position = (id: string) => (order.includes(id) ? order.indexOf(id) : order.length);
+            return [...stacks]
+                .sort((a, b) => position(a.id) - position(b.id))
+                .map((s, index) => ({
+                    index,
+                    id: s.id,
+                    title: s.title,
+                    project: s.project,
+                    projectId: s.project,
+                    tint: s.tint ?? null,
+                    collapsed: Boolean(s.collapsed),
+                    maxTasks: s.maxTasks ?? null,
+                    sorting: s.sorting ?? null,
+                    taskCount: s.tasksOrder?.length ?? 0,
+                }));
         },
     }),
 

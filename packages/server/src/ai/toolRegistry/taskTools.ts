@@ -143,7 +143,7 @@ function buildListTasksFilters(input: {
 }
 
 /** Maps findTasks / listTasks tool input to `/tasks` hash-route query string (same keys as the app `Tasks` view). */
-function findTasksInputToQueryString(input: {
+export function findTasksInputToQueryString(input: {
     project?: string | string[];
     projectId?: string;
     taskIds?: string | string[];

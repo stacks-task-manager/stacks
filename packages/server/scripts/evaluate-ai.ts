@@ -1,7 +1,7 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 /** Synthetic tools only: this runner never invokes loaders or the MCP backend. */
 import { generateText, stepCountIs, asSchema } from "ai";
-import { createLlmModel } from "../src/ai/model";
+import { createLlmModel, LLM_GENERATION_SETTINGS } from "../src/ai/model";
 import { EvaluationTerminal } from "./ai-eval/terminal";
 import { renderEvaluationHtml } from "./ai-eval/report";
 import Handlebars from "handlebars";
@@ -15,14 +15,14 @@ import { selectPromptContext } from "../src/ai/promptContext";
 import { getLlmConfig } from "../src/ai/config";
 import {
     createExecutionGuard,
-    getConversation,
+    createConversationState,
     isMutation,
     rememberIds,
     rememberResult,
     groundedHistory,
 } from "../src/ai/conversation";
 import { clientRouteTemplateVars, parseClientRoute } from "../src/ai/clientRoute";
-import { createMock, ids, normalize } from "./ai-eval/world";
+import { createMock, ids, normalize, EVALUATION_REFERENCE_DATE } from "./ai-eval/world";
 import { fixtures } from "./ai-eval/fixtures";
 
 async function main() {
@@ -123,7 +123,7 @@ async function main() {
                 ...routeVars,
                 newUserMessage: fixture.request,
                 todaysDate: "Tue Oct 13 2026 (UTC)",
-                todaysDateISO: "2026-10-13T12:00:00.000Z",
+                todaysDateISO: EVALUATION_REFERENCE_DATE,
                 hasCurrentUser: true,
                 currentUserId: ids.me,
                 currentUserName: "Test user",
@@ -139,7 +139,7 @@ async function main() {
                 parsedRoute: route ? parseClientRoute(route) : null,
                 routeSection: route?.section,
             });
-            const session = getConversation("eval", ids.me, `${Date.now()}-${fixture.id}-${run}`);
+            const session = createConversationState(ids.me);
             rememberIds(session, routeVars);
             rememberIds(session, { id: ids.me });
             const priorResults = normalize(fixture.priorResults ?? []);
@@ -147,24 +147,37 @@ async function main() {
                 rememberResult(session, reference.toolName, normalize(reference.output));
             const calls: EvaluationCall[] = [];
             const mock = createMock(fixture);
-            const guard = createExecutionGuard(session, fixture.request, mock);
-            const tools = buildAiTools(selection.allowedTools, async options => {
-                const call: EvaluationCall = {
-                    name: options.toolName,
-                    input: options.input as Record<string, unknown>,
-                };
-                calls.push(call);
-                terminal.tool(call.name, call.input);
-                try {
-                    call.output = await (baseline ? mock(options) : guard.execute(options));
-                    terminal.toolResult(call.name, call.output);
-                    return call.output;
-                } catch (error) {
-                    call.error = error instanceof Error ? error.message : String(error);
-                    terminal.toolResult(call.name, undefined, call.error);
-                    throw error;
-                }
+            const guard = createExecutionGuard(session, fixture.request, mock, undefined, {
+                resolveReferenceNames: true,
+                projectId: routeVars.projectId || undefined,
+                onReferenceLookup: call => {
+                    calls.push({ ...call, source: "application" });
+                    terminal.tool(call.name + " (server lookup)", call.input);
+                    terminal.toolResult(call.name, call.output, call.error);
+                },
             });
+            const tools = buildAiTools(
+                selection.allowedTools,
+                async options => {
+                    const call: EvaluationCall = {
+                        source: "model",
+                        name: options.toolName,
+                        input: options.input as Record<string, unknown>,
+                    };
+                    calls.push(call);
+                    terminal.tool(call.name, call.input);
+                    try {
+                        call.output = await (baseline ? mock(options) : guard.execute(options));
+                        terminal.toolResult(call.name, call.output);
+                        return call.output;
+                    } catch (error) {
+                        call.error = error instanceof Error ? error.message : String(error);
+                        terminal.toolResult(call.name, undefined, call.error);
+                        throw error;
+                    }
+                },
+                !baseline
+            );
             if (baseline)
                 for (const [name, tool] of Object.entries(tools))
                     tool.description = oldDescriptions[name] ?? tool.description;
@@ -198,8 +211,9 @@ async function main() {
                     tools: AI_TOOL_REGISTRY.filter(t => selection.allowedTools.includes(t.name)).map(t => ({
                         name: t.name,
                         description: baseline ? oldDescriptions[t.name] ?? t.description : t.description,
-                        schema: (asSchema as (schema: unknown) => { jsonSchema: unknown })(t.inputSchema)
-                            .jsonSchema,
+                        schema: (asSchema as (schema: unknown) => { jsonSchema: unknown })(
+                            tools[t.name].inputSchema
+                        ).jsonSchema,
                     })),
                 })
             );
@@ -222,30 +236,34 @@ async function main() {
             );
             heartbeat.unref();
             try {
-                const result = await generateText({
-                    model: createLlmModel(config),
-                    ...payload,
-                    tools,
-                    temperature: 0,
-                    providerOptions: { openai: { parallelToolCalls: false } },
-                    maxRetries: 0,
-                    onStepFinish: step => {
-                        modelSteps.push({ text: step.text, finishReason: step.finishReason });
-                        terminal.step(modelSteps.length, step.finishReason, step.toolCalls.length);
-                        for (const call of step.toolCalls) {
-                            if ("invalid" in call && call.invalid)
-                                calls.push({
-                                    name: call.toolName,
-                                    input: (call.input ?? {}) as Record<string, unknown>,
-                                    invalid: true,
-                                });
-                        }
-                    },
-                    stopWhen: baseline ? stepCountIs(12) : [stepCountIs(12), () => guard.stopped()],
-                    abortSignal: AbortSignal.timeout(timeoutMs),
-                });
-                usage = result.totalUsage;
-                responseText = result.text;
+                if (!baseline && selection.unsupportedReason) {
+                    responseText =
+                        "I can't perform this operation through chat. " + selection.unsupportedReason;
+                } else {
+                    const result = await generateText({
+                        model: createLlmModel(config),
+                        ...payload,
+                        tools,
+                        ...LLM_GENERATION_SETTINGS,
+                        maxRetries: 0,
+                        onStepFinish: step => {
+                            modelSteps.push({ text: step.text, finishReason: step.finishReason });
+                            terminal.step(modelSteps.length, step.finishReason, step.toolCalls.length);
+                            for (const call of step.toolCalls) {
+                                if ("invalid" in call && call.invalid)
+                                    calls.push({
+                                        name: call.toolName,
+                                        input: (call.input ?? {}) as Record<string, unknown>,
+                                        invalid: true,
+                                    });
+                            }
+                        },
+                        stopWhen: baseline ? stepCountIs(12) : [stepCountIs(12), () => guard.stopped()],
+                        abortSignal: AbortSignal.timeout(timeoutMs),
+                    });
+                    usage = result.totalUsage;
+                    responseText = baseline ? result.text : guard.summary() ?? result.text;
+                }
             } catch (e) {
                 error = e instanceof Error ? e.message : String(e);
             } finally {

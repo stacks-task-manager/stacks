@@ -444,14 +444,18 @@ async function removeByProject(project: string, extTransaction?: Transaction): P
  */
 async function removeByStack(stack: string, extTransaction?: Transaction): Promise<ITask[]> {
     return withTransaction(extTransaction, async transaction => {
+        // Totals must be recalculated while the tasks still exist in this transaction.
+        const tasks = await findAll<ITask>({ entity: TaskEntity, filter: { stack }, transaction });
+        await TimelogsLoader.removeByTasks(
+            tasks.map(task => task.id),
+            transaction
+        );
+
         const deletedTasks: ITask[] = await deleteAll<ITask>({
             entity: TaskEntity,
             filter: { stack },
             transaction,
         });
-
-        const taskIds = deletedTasks.map(task => task.id);
-        await TimelogsLoader.removeByTasks(taskIds, transaction);
 
         for (const task of deletedTasks) {
             await StacksLoader.removeTaskOrder(task.stack, task.id, transaction);

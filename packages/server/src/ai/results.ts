@@ -2,6 +2,25 @@
 import type { AiChatWidget } from "@stacks/types";
 const humanLabel = (name: string) =>
     name.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/^./, s => s.toUpperCase());
+/** A completed handler is evidence of success only when its result confirms the action. */
+export function mutationSummary(name: string, output: unknown): string {
+    const row = output && typeof output === "object" ? (output as Record<string, unknown>) : {};
+    if (typeof row.id !== "string" || !row.id || (name.startsWith("delete") && row.deleted !== true))
+        throw new Error("The tool did not confirm the action succeeded; check its result before retrying.");
+    const verb = name.startsWith("create")
+        ? "created"
+        : name.startsWith("delete")
+        ? "deleted"
+        : name.startsWith("move")
+        ? "moved"
+        : "updated";
+    const entity = name
+        .replace(/^(create|delete|move|update)/, "")
+        .replace(/^Local/, "")
+        .replace(/^Stack$/, "Column")
+        .replace(/([a-z])([A-Z])/g, "$1 $2");
+    return `${entity} ${verb}${typeof row.title === "string" && row.title ? ": " + row.title : ""}.`;
+}
 export function presentResult(name: string, output: unknown): AiChatWidget {
     const meta = { label: humanLabel(name) };
     const object = output && typeof output === "object" ? (output as Record<string, unknown>) : {};

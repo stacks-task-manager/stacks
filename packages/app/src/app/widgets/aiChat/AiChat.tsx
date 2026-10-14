@@ -71,6 +71,17 @@ export function MessageBubble({
     const navigate = useNavigate();
     const isUser = msg.role === "user";
     const body = isUser ? msg.content : msg.content.replace(/^\s+/, "");
+    const visibleWidgets = msg.widgets?.filter(
+        widget =>
+            !(
+                widget.type === "choice" &&
+                widget.answered &&
+                widget.pendingActionToken &&
+                widget.options.length === 2 &&
+                widget.options.some(option => option.id === "confirm") &&
+                widget.options.some(option => option.id === "cancel")
+            )
+    );
 
     const [selected, setSelected] = useState<Record<string, string[]>>({});
 
@@ -108,6 +119,8 @@ export function MessageBubble({
         }
     };
 
+    if (!body && !visibleWidgets?.length) return null;
+
     return (
         <div
             style={{
@@ -123,7 +136,7 @@ export function MessageBubble({
             }}
         >
             {isUser ? body : body ? <AiChatMarkdown>{body}</AiChatMarkdown> : null}
-            {msg.widgets?.map((w, i) => {
+            {visibleWidgets?.map((w, i) => {
                 if (w.type === "status")
                     return (
                         <div key={i} data-testid="ai-chat-status" role="status">
@@ -307,7 +320,7 @@ export const AiChat: React.FC = () => {
                 content: m.role === "assistant" ? m.content.replace(/^\s+/, "") : m.content,
             }));
 
-            const clientRequestId = AiChatActions.appendUserMessage(content);
+            const clientRequestId = AiChatActions.appendUserMessage(content, !choiceReply);
 
             const nextMessages = [...history, { role: "user" as const, content }];
 

@@ -1,4 +1,5 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+import type { StackPosition } from "./stackPosition";
 import { PermissionEntity, StackEntity } from "@stacks/db";
 import { Errors } from "../errors";
 import { POLLINGACTIONS, POLLINGTYPE, type IProject, type IStack } from "@stacks/types";
@@ -31,7 +32,7 @@ PermissionEntity.belongsTo(StackEntity, { foreignKey: "id", constraints: false }
  * @param extTransaction External transaction
  * @returns Stack
  */
-async function create(data: IStack, index?: number, extTransaction?: Transaction) {
+async function create(data: IStack, index?: StackPosition, extTransaction?: Transaction) {
     return withTransaction(extTransaction, async transaction => {
         const project = await ProjectsLoader.getOne(data.project, transaction);
 

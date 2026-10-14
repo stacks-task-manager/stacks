@@ -2,6 +2,12 @@
 import { createOpenAI } from "@ai-sdk/openai";
 import { getLlmConfig } from "./config";
 
+/** Keep runtime and manual evaluations on the same explicit generation settings. */
+export const LLM_GENERATION_SETTINGS = {
+    temperature: 0,
+    providerOptions: { openai: { parallelToolCalls: false } },
+} as const;
+
 /** The OpenAI provider strips unknown options, so add this server extension at the HTTP boundary. */
 export function createLlmModel(config = getLlmConfig(), fetchImpl: typeof fetch = globalThis.fetch) {
     const provider = createOpenAI({

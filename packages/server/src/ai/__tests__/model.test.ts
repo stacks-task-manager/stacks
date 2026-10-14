@@ -1,7 +1,7 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { describe, expect, it, vi } from "vitest";
 import { generateText, streamText } from "ai";
-import { createLlmModel } from "../model";
+import { createLlmModel, LLM_GENERATION_SETTINGS } from "../model";
 const config = {
     baseURL: "http://test.invalid/v1",
     modelId: "qwen-test",
@@ -17,6 +17,33 @@ const completion = {
 };
 
 describe("shared model thinking configuration", () => {
+    it.each(["generate", "stream"])("serializes shared sampling settings for %s", async mode => {
+        const chunk = {
+            id: "test",
+            created: 1,
+            model: "test",
+            choices: [{ index: 0, delta: { role: "assistant", content: "Hello" }, finish_reason: "stop" }],
+        };
+        const fetchMock = vi.fn(async () =>
+            mode === "generate"
+                ? new Response(JSON.stringify(completion), {
+                      headers: { "content-type": "application/json" },
+                  })
+                : new Response(`data: ${JSON.stringify(chunk)}\n\ndata: [DONE]\n\n`, {
+                      headers: { "content-type": "text/event-stream" },
+                  })
+        );
+        const options = {
+            model: createLlmModel(config, fetchMock),
+            ...LLM_GENERATION_SETTINGS,
+            prompt: "Hi",
+            maxRetries: 0,
+        };
+        if (mode === "generate") await generateText(options);
+        else await streamText(options).consumeStream();
+        const [, init] = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
+        expect(JSON.parse(String(init.body))).toMatchObject({ temperature: 0, parallel_tool_calls: false });
+    });
     it.each([true, false])(
         "sends the opt-in template flag for non-streamed requests: %s",
         async disableThinking => {

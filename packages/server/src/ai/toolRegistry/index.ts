@@ -16,6 +16,7 @@ import { reminderAiTools } from "./reminderTools";
 import { searchAiTools } from "./searchTools";
 import { stackAiTools } from "./stackTools";
 import { taskAiTools } from "./taskTools";
+import { referenceNameSchema } from "../referenceInput";
 
 export { defineTool } from "./defineTool";
 export { activityAiTools } from "./activityTools";
@@ -48,6 +49,8 @@ export const AI_TOOL_REGISTRY = [
     ...choiceAiTools,
     ...navigationAiTools,
 ];
+
+export type AiToolName = (typeof AI_TOOL_REGISTRY)[number]["name"];
 
 export const MCP_AI_TOOL_NAMES = new Set<string>([
     "getTask",
@@ -93,8 +96,10 @@ export type AiToolExecuteOverride = (opts: {
  */
 export function buildAiTools(
     allowedNames?: Iterable<string>,
-    executeOverride?: AiToolExecuteOverride
+    executeOverride?: AiToolExecuteOverride,
+    referenceNames = false
 ): ToolSet {
+    if (referenceNames && !executeOverride) throw new Error("Reference names require an execution guard");
     const out = {} as ToolSet;
     const bindTool = tool as unknown as BindAiTool;
     const allow = allowedNames ? new Set(allowedNames) : null;
@@ -104,13 +109,14 @@ export function buildAiTools(
         }
         const defaultExecute = async (input: unknown) =>
             (def.execute as (input: unknown) => Promise<unknown>)(def.inputSchema.parse(input));
+        const inputSchema = referenceNames ? referenceNameSchema(def.inputSchema) : def.inputSchema;
         const execute = executeOverride
             ? async (input: unknown) =>
-                  executeOverride({ toolName: def.name, input: def.inputSchema.parse(input), defaultExecute })
+                  executeOverride({ toolName: def.name, input: inputSchema.parse(input), defaultExecute })
             : defaultExecute;
         (out as Record<string, unknown>)[def.name] = bindTool({
             description: def.description,
-            inputSchema: def.inputSchema,
+            inputSchema,
             execute: execute as (input: never) => Promise<unknown>,
         });
     }

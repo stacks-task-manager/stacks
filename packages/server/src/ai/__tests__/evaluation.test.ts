@@ -169,8 +169,10 @@ describe("expanded scenario assertions", () => {
             sectionId: ids.Website,
         });
         const mock = createMock({ id: "missing", locale: "en", request: "", mock: "not-found" });
-        expect(await mock({ toolName: "listTasks", input: {} })).toEqual([]);
-        await expect(mock({ toolName: "getTask", input: {} })).rejects.toThrow("not found");
+        expect(await mock({ toolName: "listTasks", input: { searchQuery: "Missing task" } })).toEqual([]);
+        await expect(mock({ toolName: "getTask", input: { taskId: "missing" } })).rejects.toThrow(
+            "not found"
+        );
     });
     it("accepts supported project aliases and equivalent profile navigation", async () => {
         const { normalize, ids } = await import("../../../scripts/ai-eval/world");

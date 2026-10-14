@@ -83,14 +83,15 @@ export const TOPIC_TOOLS: Record<PromptTopic, readonly string[]> = {
 /**
  * Keyword patterns used to detect topic intent in free-form user text.
  *
- * Favor recall over precision: a false positive just adds a few tools that
- * won't be called, but a false negative means the model can't answer. The
+ * Favor recall over precision: false positives add tool schemas and prompt
+ * fragments (token cost and possible model distraction); false negatives hide
+ * tools needed to answer. The
  * matchers intentionally use word boundaries and common synonyms.
  */
 const TOPIC_KEYWORDS: Record<PromptTopic, RegExp> = {
-    tasks: /\b(task|tasks|todo|to-?do|assign(?:ee|ed)?|due\s*date|due|complete[ds]?|mark(?: as)? (?:done|todo)|backlog|ticket)\b/i,
+    tasks: /\b(task|tasks|todo|to-?do|assign(?:ee|ed)?|due\s*date|due|complete[ds]?|mark(?: as)? (?:done|todo)|backlog|ticket|reminders?|comments?|activit(?:y|ies))\b/i,
     projects: /\b(projects?|boards?|columns?|stacks?|kanban|lanes?|pipelines?|milestones?)\b/i,
-    notepads: /\b(note|notes|notepad|notepads|doc|document(?!ation)|memo)\b/i,
+    notepads: /\b(note|notes|notepad|notepads|docs?|documents?(?!ation)|memo)\b/i,
     calendar: /\b(calendars?|events?|meetings?|schedule[ds]?|appointment|today'?s schedule|this week)\b/i,
     org: /\b(compan(?:y|ies)|org|organi[sz]ation|tag|tags|label|labels|bookmark|bookmarks|pinned)\b/i,
 };
@@ -185,7 +186,7 @@ export function unsupportedRequestReason(message: string): string | undefined {
     )
         return undefined;
     const start = "^(?:(?:please|can you|could you|would you)\\s+)?";
-    const noun = "(?:a |an |the |my |this |new )?";
+    const noun = "(?:(?:a|an|the|my|this|new)\\s+)*";
     const rules: [RegExp, string][] = [
         [
             new RegExp(

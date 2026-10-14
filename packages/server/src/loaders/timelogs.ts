@@ -125,7 +125,7 @@ async function getAll(filters: TimelogFilter, extTransaction?: Transaction) {
         const filter: Record<string, any> = {};
         if (filters.task != null) {
             if (Array.isArray(filters.task)) {
-                const tasks = await TasksLoader.getAll({ ids: filters.task });
+                const tasks = await TasksLoader.getAll({ ids: filters.task }, undefined, transaction);
 
                 if (tasks.length !== filters.task.length) {
                     return [];
@@ -209,7 +209,7 @@ async function getAll(filters: TimelogFilter, extTransaction?: Transaction) {
         );
 
         const ids = timelogs.map(timelog => timelog.task);
-        const tasks = await TasksLoader.getAll({ ids });
+        const tasks = await TasksLoader.getAll({ ids }, undefined, transaction);
         const taskIds = tasks.map(task => task.id);
 
         return timelogs.filter(timelog => taskIds.includes(timelog.task));
@@ -225,7 +225,7 @@ async function create(data: Omit<ITimeLog, "id" | "created" | "updated">) {
             transaction,
         });
 
-        await updateTotals(newTimelog.task);
+        await updateTotals(newTimelog.task, transaction);
 
         invalidateApiCacheForCurrentRequest();
         return newTimelog;
@@ -265,7 +265,7 @@ async function update(id: string, data: Partial<ITimeLog>) {
         }
         const udatedTimelog = updatedTimelogEntity.toJSON() as ITimeLog;
 
-        await updateTotals(timelog.task);
+        await updateTotals(timelog.task, transaction);
 
         invalidateApiCacheForCurrentRequest();
         return udatedTimelog;
@@ -282,7 +282,7 @@ async function removeByIds(id: string[], extTransaction?: Transaction) {
         });
 
         for (const timelog of deletedTimelogs) {
-            await updateTotals(timelog.task);
+            await updateTotals(timelog.task, transaction);
         }
 
         invalidateApiCacheForCurrentRequest();
@@ -294,7 +294,7 @@ async function removeByIds(id: string[], extTransaction?: Transaction) {
 async function remove(id: string) {
     return withTransaction(undefined, async (transaction: Transaction) => {
         const user = getCurrentUser();
-        const timelog = await getOne(id);
+        const timelog = await getOne(id, transaction);
 
         if (!user.admin && timelog.person !== user.id) {
             throw Errors.forbidden(translate("Timelog delete not allowed"));
@@ -493,7 +493,7 @@ async function updateTotals(taskId: string, extTransaction?: Transaction): Promi
 
         if (task) {
             const timelogsEntities = await TimelogEntity.findAll({
-                where: { task: taskId },
+                where: sanitizeWhere({ task: taskId }),
                 transaction,
             });
             const timelogs: ITimeLog[] = timelogsEntities.map(

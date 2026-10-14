@@ -5,6 +5,7 @@ import {
     groundedHistory,
     createExecutionGuard,
     getConversation,
+    createConversationState,
     issueChoice,
     rememberIds,
 } from "../conversation";
@@ -20,6 +21,52 @@ const widget = {
     ],
 };
 describe("conversation execution boundary", () => {
+    it.each(["createTask", "updateTask", "moveTask"])(
+        "executes clear %s once without approval",
+        async toolName => {
+            const s = session();
+            rememberIds(s, { id: "task-1", title: "Buy milk" });
+            const execute = vi.fn().mockResolvedValue({ id: "task-1", title: "Buy milk" });
+            const guard = createExecutionGuard(s, "Change Buy milk");
+            await guard.execute({ toolName, input: { taskId: "task-1" }, defaultExecute: execute });
+            expect(execute).toHaveBeenCalledOnce();
+            expect(s.pending).toBeUndefined();
+            expect(guard.summary()).toContain("Buy milk");
+            expect(guard.stopped()).toBe(true);
+            await expect(
+                guard.execute({ toolName, input: { taskId: "task-1" }, defaultExecute: execute })
+            ).rejects.toThrow();
+            expect(execute).toHaveBeenCalledOnce();
+        }
+    );
+    it("uses the MCP override for immediate writes and retains actual results", async () => {
+        const s = session();
+        const local = vi.fn();
+        const backend = vi.fn().mockResolvedValue({ id: "project-created", title: "Test" });
+        const guard = createExecutionGuard(s, "Create project Test", backend);
+        await guard.execute({ toolName: "createProject", input: { title: "Test" }, defaultExecute: local });
+        expect(backend).toHaveBeenCalledOnce();
+        expect(local).not.toHaveBeenCalled();
+        expect(s.pending).toBeUndefined();
+        expect(s.results.at(-1)).toMatchObject({ tool: "createProject" });
+        expect(guard.summary()).toBe("Project created: Test.");
+    });
+    it("stops without claiming success when an immediate mutation fails", async () => {
+        const execute = vi.fn().mockRejectedValue(new Error("Forbidden"));
+        const guard = createExecutionGuard(session(), "Create project Test");
+        await expect(
+            guard.execute({ toolName: "createProject", input: { title: "Test" }, defaultExecute: execute })
+        ).rejects.toThrow("Forbidden");
+        expect(guard.failure()).toBe("Forbidden");
+        expect(guard.summary()).toBeUndefined();
+        expect(guard.stopped()).toBe(true);
+    });
+    it("creates isolated evaluation state without filling the runtime conversation registry", () => {
+        const states = Array.from({ length: 1100 }, () => createConversationState("user"));
+        states[0].knownIds.add("only-first");
+        expect(states[1099].knownIds.has("only-first")).toBe(false);
+        expect(session().knownIds.has("only-first")).toBe(false);
+    });
     it("rejects empty mutation references without issuing confirmation", async () => {
         const s = session();
         const guard = createExecutionGuard(s, "Delete task");
@@ -31,19 +78,18 @@ describe("conversation execution boundary", () => {
         expect(s.pending).toBeUndefined();
         expect(guard.stopped()).toBe(true);
     });
-    it("asks before a mutation, stores exact arguments, and stops parallel calls", async () => {
+    it("asks before deletion, stores exact arguments, and stops parallel calls", async () => {
         const s = session();
         rememberIds(s, { id: "task-1", title: "Buy milk" });
-        const guard = createExecutionGuard(s, "Assign myself to Buy milk");
+        const guard = createExecutionGuard(s, "Delete Buy milk");
         const execute = vi.fn();
-        const input = { taskId: "task-1", assigneeUserIds: ["user"] };
-        const output = await guard.execute({ toolName: "updateTask", input, defaultExecute: execute });
+        const input = { taskId: "task-1" };
+        const output = await guard.execute({ toolName: "deleteTask", input, defaultExecute: execute });
         expect(execute).not.toHaveBeenCalled();
         expect(output).toMatchObject({ type: "choice" });
         expect(s.pending?.widget.question).toContain("Buy milk");
-        expect(s.pending?.widget.question).toContain("You");
         input.taskId = "changed";
-        expect(s.pending?.mutation?.input).toEqual({ taskId: "task-1", assigneeUserIds: ["user"] });
+        expect(s.pending?.mutation?.input).toEqual({ taskId: "task-1" });
         await expect(
             guard.execute({ toolName: "deleteTask", input, defaultExecute: execute })
         ).rejects.toThrow("Await");
@@ -72,9 +118,9 @@ describe("conversation execution boundary", () => {
     it("stops execution after clarification even if the model calls another tool", async () => {
         const s = session();
         const guard = createExecutionGuard(s, "Choose a task");
-        await guard.execute({ toolName: "askUserChoice", input: {}, defaultExecute: async () => widget });
+        await guard.execute({ toolName: "askUserChoice", input: widget, defaultExecute: async () => widget });
         await expect(
-            guard.execute({ toolName: "listTasks", input: {}, defaultExecute: vi.fn() })
+            guard.execute({ toolName: "listTasks", input: widget, defaultExecute: vi.fn() })
         ).rejects.toThrow("Await");
     });
     it("rejects forged, multiple single-choice, and replayed replies", () => {

@@ -66,12 +66,13 @@ export const AiChatActions = {
     },
 
     /** Returns clientRequestId to send over WebSocket (correlates deltas / done / error). */
-    appendUserMessage(content: string): string {
+    appendUserMessage(content: string, recordMessage = true): string {
         const messageId = createChatId("u");
         const clientRequestId = createChatId("req");
         AiChatStore.set(
             produce((s: IAiChatStore) => {
-                s.messages.push({ id: messageId, role: "user", content });
+                // Structured choice replies travel to the server without an extra chat bubble.
+                if (recordMessage) s.messages.push({ id: messageId, role: "user", content });
                 s.isAwaitingReply = true;
                 s.activeClientRequestId = clientRequestId;
                 s.streamingAssistantContent = "";

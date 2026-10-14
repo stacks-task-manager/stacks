@@ -127,7 +127,7 @@ type AiChatWidget =
 
 `askUserChoice` is always available to the assistant. Button choices submit immediately; radio and checkbox choices require the client-side `Next` button. The client sends the server-issued token and selected option ids with the next message and persists the widget as answered. The server validates the selection and reconstructs its text from stored options; client prose cannot change approved arguments.
 
-Because the choice is answered in a separate round-trip, the assistant must **ask first and act later**: it calls `askUserChoice` and stops — the chosen labels come back as the next user message, and only then does it run `moveTask` / `updateTask` / `createTask` etc. The execution guard stops further calls after a choice, including parallel calls in the same step. Every mutation proposal creates a separate confirmation of the exact validated arguments; approval executes that stored action through its authorized loader or MCP. The system prompt and the `askUserChoice` tool description also carry that instruction; the widget already renders the question and options, so the assistant must not repeat them as plain text.
+Because the choice is answered in a separate round-trip, the assistant must **ask first and act later**: it calls `askUserChoice` and stops — the chosen labels come back as the next user message, and only then does it run `moveTask` / `updateTask` / `createTask` etc. The execution guard stops further calls after a choice, including parallel calls in the same step. Only deletion proposals create a confirmation of the exact validated arguments; approval executes that stored action through its authorized loader or MCP. Clear creates, updates, and moves execute immediately after validation and authorized reference resolution. The system prompt and the `askUserChoice` tool description also carry that instruction; the widget already renders the question and options, so the assistant must not repeat them as plain text.
 
 The client side that drives this lives at [`packages/app/src/app/widgets/aiChat/AiChat.tsx`](../../app/src/app/widgets/aiChat/AiChat.tsx) (sends `ai_chat_request`) and [`packages/app/src/app/store/actions/aiChat.ts`](../../app/src/app/store/actions/aiChat.ts) (handles deltas/done/error into the Zustand store).
 
@@ -342,13 +342,16 @@ completed request ids are cached (last 50) to prevent replaying successful mutat
 
 The shared registry validates inputs before dispatch, including MCP overrides. Mutation references
 must come from current UI context, authorized tool output, identity, or ids explicitly supplied by
-the user. Other mutation fields require the user's approval of the complete proposed arguments.
-Confirmation is required for every mutation, so writes have one additional user interaction.
+the user. Include only fields requested by the user; missing or ambiguous required information
+still requires clarification. Only deletions require approval of the complete validated arguments.
+Clear creates, updates, and moves execute without an additional confirmation.
 Loaders remain responsible for tenant, ACL, and domain write authorization at execution time.
 MCP errors fail the action instead of being presented as successful results.
 
-After approval, the action executes once, its result card remains available even if the model reply
-fails, and the LLM can propose remaining dependent actions for separate confirmation. Failed actions
+After approval, the action executes once and the server immediately returns a concise summary from
+its tool result, without another LLM request or duplicate result card. For a request containing
+multiple actions, ask the assistant to continue after each approved action; completed results are
+retained in the conversation so subsequent requests can use them. Failed actions
 are not retried automatically. Batches are not atomic: completed actions remain committed if a later
 action fails. The server does not claim rollback. Exact repeated tool calls are blocked within a turn.
 
@@ -393,10 +396,95 @@ Successful tool results now retain known entity kinds alongside ids. A known pro
 used as a stack/task/calendar reference; route fields and related record fields also retain their kind.
 Unknown references and known wrong-kind mutation references stop the turn and produce an error
 status. The final assistant response suppresses success prose after a rejected mutation. Authorized
-loaders still check access and domain rules when a confirmed action actually executes.
+loaders still check access and domain rules when an immediate or confirmed action actually executes.
 
 Choice tools accept optional model option ids and generate distinct server ids when model ids are
 missing or duplicated. Valid distinct ids retain compatibility. Client replies still require the current
 server token and valid unique selected option ids; normalization does not relax reply validation.
 
 Client-supplied assistant history has unknown UUIDs replaced with a lookup instruction; user messages and server-grounded references are preserved. Explicit single unsupported English requests narrow the exposed mutation tools, while mixed requests retain normal routing and execution guards. Mutation dates are validated as ISO dates or date-times with explicit timezones before dispatch. See [the Gemma correction log](../../../docs/AI_MODEL_EVALUATION_FIXES.md) for measured results and remaining model failures.
+
+## Application-managed references and action outcomes
+
+Chat tool reference fields accept exact names or ids. The execution layer resolves
+names through existing registered read handlers, using the same local/MCP dispatch
+and loader authorization as ordinary reads. It preserves the original execution
+schemas for final validation and for direct MCP interfaces. Task/project/column,
+person, company, calendar/event, notepad, and status references are covered;
+folder document ids still require an explicit id.
+
+Resolution uses exact names (case-insensitive), email, nickname or an exact first/last name for people, and
+never guesses from a partial match. The person references `me` and `myself` resolve to the authenticated user. Project context scopes task and column lookup;
+a task move resolves its destination column in the task's actual project. Without
+project context, column-only requests ask which project. Event title lookup searches
+one month around a supplied start date or today; an absent match is described as
+missing in that window, not missing globally. Truncated directory results require
+narrower input. Loader/MCP errors stop the proposal.
+
+Ambiguous matches produce a server-issued choice. The stored proposal retains its
+arguments and the selected record value; a reply resumes resolution directly in
+application code. Deletion confirmation follows resolution and final schema
+validation. Mentioning a name in user prose does not make it an executable id.
+Approval also checks resolved reference form, rejecting older confirmations that
+stored names as ids. Known provider calendar/event ids retain compatibility.
+Concurrent model calls are serialized within a turn, so a pending choice cannot
+be overwritten by another action proposal.
+
+Explicit single unsupported requests return an application explanation before
+opening a model/MCP connection. Generic model choices cannot offer recognized
+unsupported actions or serve as mutation approval; deletion tools generate the
+validated confirmation. Ordinary clarification choices remain available. Choice
+widget ids are not remembered as entity ids.
+
+After an immediate mutation or approved deletion, a single plain-text action summary is generated from the returned tool result.
+Completed mutations do not add duplicate success widgets or raw result cards. Missing result ids and unconfirmed deletions do not receive
+success status. Model prose and text deltas are suppressed for completed mutation
+turns. A completed action summary remains available if stream completion later fails.
+Later failures retain earlier success widgets. These checks do not make multi-step
+handlers atomic or establish rollback after a handler error.
+
+The model still chooses the operation and non-reference arguments. No natural
+language planner is added in application code. See the manual evaluation guide for
+application/model lookup attribution and the Temp-column reproduction.
+
+### Confirmation display
+
+Confirmation controls are shown until answered, then hidden from the visible
+transcript. Their stored choice state still validates the selected token/option.
+The generated `Question / Selected` reply is sent in the request context without
+being appended as a visible or persisted user message. Ordinary typed messages and
+non-confirmation clarification widgets retain their normal history behavior.
+
+For example, a successful column deletion returns `Column deleted: Temp.` once.
+Raw mutation output remains in server reference data; it is not displayed as a
+`Delete Stack / Deleted / true` card. Completed-action text remains available when
+a subsequent model continuation fails, with a warning only when needed.
+
+## Generation settings and connection cleanup
+
+Runtime chat and the manual evaluation runner share `LLM_GENERATION_SETTINGS` in
+`src/ai/model.ts`: temperature `0` and OpenAI provider option
+`parallelToolCalls: false`. Providers must support these request parameters;
+rejections are reported through the existing error flow rather than retried with
+weaker settings. The execution guard still serializes calls in case a provider
+ignores the parallel-call preference. Evaluation timeout/retry policy and its fixed
+reference date remain separate from runtime behavior.
+
+MCP ownership starts inside the streaming turn's cleanup boundary. Setup failures,
+including tool construction and message/template assembly, close the connection.
+Cleanup runs before debug persistence so logging cannot bypass closing the client.
+
+Conversation capacity is capped at 1,000 sessions across the entire server process.
+This guards against unbounded session counts; it is not a total memory-byte limit.
+Expired idle sessions are swept on access after 30 minutes. Busy sessions are not
+evicted. At capacity, existing sessions continue while new sessions receive
+`Chat capacity reached`. State and pending confirmations are lost on restart.
+
+### Relative column placement
+
+`listStacks` returns columns in the project's stored board order, with zero-based `index` values.
+`createStack` accepts exactly one of `insertIndex`, `beforeStackId`, or `afterStackId` (or none to append).
+For "before" / "in front of" and "after" requests, the assistant uses a resolved column anchor.
+The loader computes the insertion position from the current board order inside the creation
+transaction. A missing or foreign anchor fails the transaction rather than appending silently.
+Numeric insertion positions remain supported for existing web and mobile callers.

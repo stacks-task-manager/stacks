@@ -2,6 +2,7 @@
 import type { Fixture } from "./fixtures";
 
 export type EvaluationCall = {
+    source?: "model" | "application";
     name: string;
     input: Record<string, unknown>;
     invalid?: boolean;

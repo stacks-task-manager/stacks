@@ -66,6 +66,25 @@ const task = (id: string, request: string, expected: Record<string, unknown>, pr
     scenario(id, request, { tool: "updateTask", expected: { taskId: "Buy milk", ...expected }, prohibited });
 const readonly = ["mutation"];
 export const scenarios: Fixture[] = [
+    scenario("column-before-reference", 'add a new column named "Test" in front of the "Done" column', {
+        tool: "createStack",
+        expected: { projectId: "Website", title: "Test", beforeStackId: "Done" },
+        prohibited: ["insertIndex", "afterStackId"],
+        route: { section: "project", sectionId: "Website" },
+    }),
+    scenario("column-after-reference", 'add a new column named "Test" after the "Done" column', {
+        tool: "createStack",
+        expected: { projectId: "Website", title: "Test", afterStackId: "Done" },
+        prohibited: ["insertIndex", "beforeStackId"],
+        route: { section: "project", sectionId: "Website" },
+    }),
+    scenario("route-delete-column-name", "delete the Temp column", {
+        tool: "deleteStack",
+        expected: { stackId: "Temp" },
+        requiredTools: ["listStacks"],
+        maxMutationCalls: 1,
+        route: { section: "project", sectionId: "Website", viewType: "kanban" },
+    }),
     scenario("typo-projects", "can u list my projcts pls", { tool: "listProjects" }),
     scenario("typo-task-done", "mark task Buy milk as complte pls", {
         tool: "updateTask",

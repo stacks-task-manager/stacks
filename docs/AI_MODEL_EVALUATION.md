@@ -112,17 +112,17 @@ on completion. Ctrl+C leaves the last saved progress report. Reports in `ai-eval
 
 ## Coverage and execution
 
-The English matrix contains 242 cases:
+The English matrix contains 243 cases:
 
 | Suite            | Cases | Coverage                                                                                                             |
 | ---------------- | ----- | -------------------------------------------------------------------------------------------------------------------- |
 | `tools`          | 114   | Each of the 38 registered tools: a canonical request and two alternate phrasings.                                    |
-| `interpretation` | 75    | Typos, field-specific edits, combined intents, dates, page context, follow-ups, summaries, missing data, and errors. |
+| `interpretation` | 76    | Typos, field-specific edits, combined intents, dates, page context, follow-ups, summaries, missing data, and errors. |
 | `safety`         | 53    | Negated/missing mutation requests, ambiguous references, unsupported operations, and retrieved instructions.         |
 
 Cases include assignment removal, descriptions, date clearing, estimates, progress, calendar colors,
 event locations/recurrence, directory filters, explicit navigation versus in-chat answers, and compound
-reads. Compound mutation cases check the first proposal and stopping at confirmation. History and
+reads. Compound mutation cases check the first action and stopping after execution or deletion confirmation. History and
 prior authorized results simulate follow-ups; route fixtures supply the same UI-context template and
 prompt selection inputs as the runtime. Route-change fixtures check that current page context wins.
 
@@ -286,3 +286,53 @@ otherwise legitimately requires clarification. Future figures should be compared
 fixtures, mock data, and scoring version.
 
 See [the Gemma corrections and comparison](AI_MODEL_EVALUATION_FIXES.md) for the completed report review, benchmark corrections, remaining failures, and verification limits.
+
+## Server-managed reference regressions
+
+Chat reference arguments accept exact names as well as ids. The server resolves names
+through the registered authorized read tools, validates the original execution schema,
+and proposes only resolved mutation arguments. Application lookups appear in JSON/HTML
+call records as `source: "application"`; model calls use `source: "model"`. Application
+lookups count toward execution expectations, so this suite evaluates the assembled
+assistant rather than attributing every successful lookup to the model. Payload size
+uses the actual chat schemas. Historical comparisons must account for this change.
+
+`route-delete-column-name` reproduces `delete the Temp column` on a project page.
+Its three targeted model runs passed after the fix; the ignored local report is
+`packages/server/ai-eval-reports/column-reference-fix.html`. This is one targeted
+regression, not a new full-matrix result.
+
+Explicit single unsupported requests receive a deterministic application explanation
+and do not call the model. Those cases test capability routing, not model interpretation.
+Other cases still depend on the model selecting an action. Name resolution cannot
+complete a request when the model never calls the appropriate tool.
+
+## Synthetic backend fidelity and coverage
+
+Every fixture repetition starts with isolated synthetic state. Explicit handlers
+are checked against the registry's literal `AiToolName` union at compile time;
+unknown tool names and invalid execution arguments fail instead of receiving a
+fabricated mutation result. Mutations use distinct entity ids, update subsequent
+reads, reject wrong-kind/missing targets, and return explicit deletion outcomes.
+
+Task project/id/column/status/assignment/date filters, directory contact/role/
+birthday filters, and calendar date windows are applied to synthetic records.
+The calendar world includes Work and Personal so deleting Work does not implicitly
+ask to remove the only default calendar. Calendar name uniqueness, final-default
+protection, column/task relationships and run isolation have deterministic tests.
+Navigation task filters reuse the production query-string builder.
+
+Calendar windows and the prompt use the fixed evaluation reference date,
+`2026-10-13T12:00:00.000Z`; calendar window behavior follows the current tool's
+rolling-week definition. This backend remains a bounded simulation, not a full
+SQL, ACL/RBAC, Google transport or recurrence engine. Model fixtures still stop at
+mutation approval; state-changing handler tests run separately without real writes.
+
+Runtime and evaluation use the same shared temperature and parallel-tool settings.
+Changes to synthetic data, validation and filtering alter the benchmark: rerun
+both comparison variants against the same harness version before attributing
+accuracy changes to the model or prompts. Earlier full-matrix scores remain
+historical measurements.
+
+Evaluation conversation state is created independently of the runtime session
+registry, so large repetition counts do not exhaust the runtime conversation cap.

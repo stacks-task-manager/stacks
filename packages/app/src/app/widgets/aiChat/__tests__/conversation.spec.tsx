@@ -4,7 +4,7 @@ import { MemoryRouter } from "react-router-dom";
 import { fireEvent, render } from "@testing-library/react";
 import { AiChatStore } from "app/store/aiChat";
 import { AiChatActions } from "app/store/actions/aiChat";
-import { MessageBubble } from "app/widgets/aiChat/AiChat";
+import { AiChat, MessageBubble } from "app/widgets/aiChat/AiChat";
 import type { AiChatWidget } from "@stacks/types";
 jest.mock("app/components/common", () => ({ Icon: () => null }));
 jest.mock("app/hooks", () => ({
@@ -129,4 +129,95 @@ it("exposes clickable radio labels and separate disabled input identifiers", () 
     fireEvent.click(view.getByTestId("ai-chat-choice-option-low"));
     expect(view.getByTestId("ai-chat-choice-input-low")).toBeChecked();
     expect(view.getByTestId("ai-chat-choice-next-priority")).toBeEnabled();
+});
+
+it("sends a choice reply without storing an extra visible user message", () => {
+    const previous = AiChatActions.appendUserMessage("delete the Temp column");
+    AiChatActions.finalizeAssistantTurn(previous, "", []);
+    const messages = AiChatStore.get().messages;
+    const requestId = AiChatActions.appendUserMessage(
+        'Confirm delete column: Column: "Temp".\nSelected: Confirm',
+        false
+    );
+    expect(AiChatStore.get().messages).toEqual(messages);
+    expect(AiChatStore.get().isAwaitingReply).toBe(true);
+    expect(AiChatStore.get().activeClientRequestId).toBe(requestId);
+    AiChatStore.init();
+    expect(AiChatStore.get().messages.some(message => message.content.includes("Selected: Confirm"))).toBe(
+        false
+    );
+});
+it("removes answered mutation confirmations from the visible transcript", () => {
+    const view = render(
+        <MemoryRouter>
+            <MessageBubble
+                msg={{
+                    id: "confirmed",
+                    role: "assistant",
+                    content: "",
+                    widgets: [
+                        {
+                            type: "choice",
+                            id: "confirmation",
+                            pendingActionToken: "token",
+                            question: 'Confirm delete column: Column: "Temp".',
+                            control: "buttons",
+                            answered: true,
+                            selectedOptionIds: ["confirm"],
+                            options: [
+                                { id: "confirm", label: "Confirm" },
+                                { id: "cancel", label: "Cancel" },
+                            ],
+                        },
+                    ],
+                }}
+            />
+        </MemoryRouter>
+    );
+    expect(view.queryByTestId("ai-chat-choice-confirmation")).toBeNull();
+    expect(view.container).toBeEmptyDOMElement();
+});
+
+it("submits the confirmation context to the server without echoing it in chat", () => {
+    HTMLElement.prototype.scrollTo = jest.fn();
+    const sendMessage = jest.fn().mockResolvedValue(undefined);
+    window.updatePoller = { sendMessage, onAiChatMessage: jest.fn(() => () => {}) } as any;
+    AiChatActions.setServerEnabled(true);
+    AiChatActions.openPanel();
+    const request = AiChatActions.appendUserMessage("delete the Temp column");
+    AiChatActions.finalizeAssistantTurn(request, "", [
+        {
+            type: "choice",
+            id: "confirmation",
+            pendingActionToken: "server-token",
+            question: 'Confirm delete column: Column: "Temp".',
+            control: "buttons",
+            options: [
+                { id: "confirm", label: "Confirm" },
+                { id: "cancel", label: "Cancel" },
+            ],
+        },
+    ]);
+    const view = render(
+        <MemoryRouter>
+            <AiChat />
+        </MemoryRouter>
+    );
+    fireEvent.click(view.getByTestId("ai-chat-choice-option-confirm"));
+    expect(sendMessage).toHaveBeenCalledWith(
+        expect.objectContaining({
+            payload: expect.objectContaining({
+                choiceReply: { token: "server-token", optionIds: ["confirm"] },
+                messages: expect.arrayContaining([
+                    expect.objectContaining({
+                        role: "user",
+                        content: expect.stringContaining("Selected: Confirm"),
+                    }),
+                ]),
+            }),
+        })
+    );
+    expect(AiChatStore.get().messages.filter(message => message.role === "user")).toHaveLength(1);
+    expect(view.queryByTestId("ai-chat-choice-confirmation")).toBeNull();
+    expect(view.container).not.toHaveTextContent("Selected: Confirm");
 });

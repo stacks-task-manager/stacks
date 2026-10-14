@@ -1,4 +1,5 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+import { stackInsertIndex, type StackPosition } from "./stackPosition";
 import { DocumentEntity, PermissionEntity, ProjectEntity, TaskEntity } from "@stacks/db";
 import { Errors } from "../errors";
 import { ITask, POLLINGACTIONS, POLLINGTYPE, ROLE_SECTIONS, type IProject } from "@stacks/types";
@@ -252,18 +253,14 @@ async function archiveCompletedTasks(id: string, extTransaction?: Transaction): 
 async function addStackOrder(
     id: string,
     stackId: string,
-    index?: number,
+    index?: StackPosition,
     extTransaction?: Transaction
 ): Promise<IProject> {
     return withTransaction(extTransaction, async transaction => {
         const project = await getOne(id, transaction);
         const stacksOrder = project.stacksOrder;
 
-        if (index != null) {
-            stacksOrder.splice(index, 0, stackId);
-        } else {
-            stacksOrder.push(stackId);
-        }
+        stacksOrder.splice(stackInsertIndex(stacksOrder, index), 0, stackId);
 
         return await update(id, { stacksOrder }, transaction);
     });
