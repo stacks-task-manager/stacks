@@ -74,6 +74,23 @@ export function registerAiChatWebSocketHandlers(): void {
             return;
         }
 
+        if (
+            messages.length > 100 ||
+            messages.some(
+                m =>
+                    !m ||
+                    !["user", "assistant"].includes(m.role) ||
+                    typeof m.content !== "string" ||
+                    m.content.length > 20000
+            ) ||
+            messages.reduce((sum, m) => sum + m.content.length, 0) > 100000
+        ) {
+            sendAi(userId, "ai_chat_error", {
+                clientRequestId,
+                message: "Invalid or oversized chat history",
+            });
+            return;
+        }
         const last = messages[messages.length - 1];
         if (last.role !== "user") {
             sendAi(userId, "ai_chat_error", { clientRequestId, message: "Last message must be from user" });
@@ -127,6 +144,7 @@ export function registerAiChatWebSocketHandlers(): void {
                             },
                             clientRoute,
                             {
+                                clientRequestId,
                                 conversationId:
                                     typeof payload.conversationId === "string" &&
                                     payload.conversationId.length <= 100

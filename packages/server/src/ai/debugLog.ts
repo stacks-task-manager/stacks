@@ -45,7 +45,6 @@ export type AiChatDebugTurn = {
     tools: AiChatDebugToolCall[];
     responseText?: string;
     error?: string;
-    planner?: { name: string; plans: unknown[]; fallback?: string; shadow: boolean };
 };
 
 const MAX_DEBUG_TURNS = 500;

@@ -13,7 +13,11 @@ export const stackAiTools = [
         name: "createStack",
         description: `Create a new board column. Requires projectId.`,
         inputSchema: z.object({
-            projectId: z.string().describe("Project UUID"),
+            projectId: z
+                .string()
+                .describe(
+                    "Project UUID from current UI or listProjects(search). Resolve a supplied project name now; never ask for its UUID"
+                ),
             title: z.string().min(1).describe("Column title"),
             insertIndex: z.number().int().min(0).optional().describe("0-based position; omit to append"),
         }),
@@ -30,9 +34,13 @@ export const stackAiTools = [
 
     defineTool({
         name: "listStacks",
-        description: `List columns in a project.`,
+        description: `List columns in one project. Resolve a project name with listProjects first. projectId is required; ask which project only if it is absent from the user message and current UI.`,
         inputSchema: z.object({
-            projectId: z.string().describe("Project UUID"),
+            projectId: z
+                .string()
+                .describe(
+                    "Project UUID from current UI or listProjects(search). Resolve a supplied project name now; never ask for its UUID"
+                ),
         }),
         execute: async ({ projectId }) => {
             const stacks = await StacksLoader.getAll(projectId);
@@ -56,7 +64,11 @@ export const stackAiTools = [
             "Update an existing board column/stack. Supports title, tint color, collapsed state, max task limit, and sorting.",
         inputSchema: z
             .object({
-                stackId: z.string().describe("Stack/column UUID"),
+                stackId: z
+                    .string()
+                    .describe(
+                        "Existing column UUID from listStacks(projectId); resolve the project first via current UI or listProjects"
+                    ),
                 title: z.string().min(1).optional().describe("New column title"),
                 tint: z.string().nullable().optional().describe("Column tint/color value, or null to clear"),
                 collapsed: z.boolean().optional().describe("Whether the column is collapsed"),

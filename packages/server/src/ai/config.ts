@@ -4,7 +4,6 @@
  */
 
 /** Reads `process.env[name]` trimmed, or empty string when unset. */
-import { isNeedleReady } from "./needle/runtime";
 
 function envTrim(name: string): string {
     const v = process.env[name];
@@ -21,6 +20,7 @@ export function getLlmConfig() {
         baseURL: envTrim("AI_BASE_URL") || envTrim("AI_OPENAI_BASE_URL"),
         modelId: envTrim("AI_MODEL"),
         apiKey: envTrim("AI_API_KEY") || envTrim("AI_OPENAI_API_KEY") || "not-needed",
+        disableThinking: ["true", "1", "yes", "on"].includes(envTrim("AI_DISABLE_THINKING").toLowerCase()),
     };
 }
 export function isLlmConfigured() {
@@ -28,7 +28,7 @@ export function isLlmConfigured() {
     return Boolean(config.baseURL && config.modelId);
 }
 export function isAiChatConfigured(): boolean {
-    return !isAiChatKillSwitchOn() && (isNeedleReady() || isLlmConfigured());
+    return !isAiChatKillSwitchOn() && isLlmConfigured();
 }
 
 export function getAiChatPublicConfig(): { enabled: boolean; model: string | null } {
@@ -36,11 +36,4 @@ export function getAiChatPublicConfig(): { enabled: boolean; model: string | nul
         enabled: isAiChatConfigured(),
         model: isAiChatConfigured() ? envTrim("AI_MODEL") : null,
     };
-}
-
-/** Unscored proposals require confirmation; all calls retain grounding and Zod checks. */
-export function getNeedleConfidenceThreshold(): number {
-    const raw = envTrim("AI_NEEDLE_CONFIDENCE_THRESHOLD");
-    const value = Number(raw);
-    return raw && Number.isFinite(value) && value >= 0 && value <= 1 ? value : 0.7;
 }

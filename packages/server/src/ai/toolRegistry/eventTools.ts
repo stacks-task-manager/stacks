@@ -9,6 +9,7 @@ import { EventsLoader, CalendarsLoader } from "../../loaders";
 import { getCurrentUser } from "../../loaders/context";
 import { Errors } from "../../errors";
 import googleOAuthService from "../../services/googleOAuthService";
+import { aiDateInput } from "./dateInput";
 import { defineTool } from "./defineTool";
 
 const calendarSourceSchema = z.enum(["local", "google"]);
@@ -143,8 +144,8 @@ async function assertWritableGoogleCalendar(calendarId: string): Promise<void> {
 const eventCreateSchema = z.object({
     title: z.string().min(1).describe("Event title"),
     description: z.string().optional().describe("Event description"),
-    start: z.string().describe("Event start ISO 8601 date-time"),
-    end: z.string().describe("Event end ISO 8601 date-time"),
+    start: aiDateInput.describe("Event start ISO 8601 date-time"),
+    end: aiDateInput.describe("Event end ISO 8601 date-time"),
     allDay: z.boolean().optional().describe("True for an all-day event"),
     source: calendarSourceSchema.optional().describe("Calendar source; defaults to local"),
     calendar: z
@@ -161,11 +162,15 @@ const eventCreateSchema = z.object({
 });
 
 const eventUpdateSchema = z.object({
-    eventId: z.string().describe("Event UUID, or google_<calendarId>_<eventId> for Google events"),
+    eventId: z
+        .string()
+        .describe(
+            "Event id from listCalendarEvents or prior results. Resolve a supplied event title with listCalendarEvents now; never ask the user for an id"
+        ),
     title: z.string().min(1).optional(),
     description: z.string().optional().describe("Event description; pass empty string to clear"),
-    start: z.string().optional().describe("Event start ISO 8601 date-time"),
-    end: z.string().optional().describe("Event end ISO 8601 date-time"),
+    start: aiDateInput.optional().describe("Event start ISO 8601 date-time"),
+    end: aiDateInput.optional().describe("Event end ISO 8601 date-time"),
     allDay: z.boolean().optional(),
     location: z.string().optional().describe("Event location; pass empty string to clear"),
     recurrenceRule: z
@@ -294,7 +299,11 @@ export const eventAiTools = [
         name: "getCalendarEvent",
         description: `Load one local calendar event by id. Google event details are returned by listCalendarEvents; do not call this for google_* ids.`,
         inputSchema: z.object({
-            eventId: z.string().describe("Event UUID, or google_<calendarId>_<eventId> for Google events"),
+            eventId: z
+                .string()
+                .describe(
+                    "Event id from listCalendarEvents or prior results. Resolve a supplied event title with listCalendarEvents now; never ask the user for an id"
+                ),
         }),
         execute: async ({ eventId }) => {
             const event = (await EventsLoader.getOne(eventId)) as ICalendarEvent;
@@ -382,7 +391,11 @@ export const eventAiTools = [
         name: "moveCalendarEvent",
         description: `Move an event to another calendar within the same source. Local events can only move to local calendars; Google events can only move to writable Google calendars.`,
         inputSchema: z.object({
-            eventId: z.string().describe("Event UUID, or google_<calendarId>_<eventId> for Google events"),
+            eventId: z
+                .string()
+                .describe(
+                    "Event id from listCalendarEvents or prior results. Resolve a supplied event title with listCalendarEvents now; never ask the user for an id"
+                ),
             source: eventPatchSourceSchema.describe("Source of the existing event"),
             calendarId: z.string().describe("Destination calendar id"),
         }),
@@ -402,7 +415,11 @@ export const eventAiTools = [
         name: "deleteCalendarEvent",
         description: `Delete a calendar event by id. For recurring events, this removes all occurrences in the series.`,
         inputSchema: z.object({
-            eventId: z.string().describe("Event UUID, or google_<calendarId>_<eventId> for Google events"),
+            eventId: z
+                .string()
+                .describe(
+                    "Event id from listCalendarEvents or prior results. Resolve a supplied event title with listCalendarEvents now; never ask the user for an id"
+                ),
         }),
         execute: async ({ eventId }) => {
             const deleted = await EventsLoader.remove(eventId);

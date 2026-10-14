@@ -1,6 +1,7 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { sign } from "hono/jwt";
 import { createRequire } from "module";
+import { join } from "node:path";
 import { getJwtSecret } from "../config/secrets";
 import { serverPackageVersion } from "../packageVersions";
 import { requestContext } from "../services/requestContext";
@@ -44,22 +45,33 @@ function parseToolResultText(content: unknown): unknown {
     return null;
 }
 
+export function parseMcpToolResult(result: {
+    content: unknown;
+    isError?: boolean;
+    structuredContent?: unknown;
+}): unknown {
+    const output = result.structuredContent ?? parseToolResultText(result.content);
+    if (result.isError) throw new Error(typeof output === "string" ? output : "MCP tool execution failed");
+    return output;
+}
+
 export async function createMcpToolClient(): Promise<McpToolClient> {
-    const require = createRequire(import.meta.url);
-    const { Client } = require("@modelcontextprotocol/sdk/client") as {
+    const require = createRequire(join(__dirname, "mcpToolClient.js"));
+    const { Client } = require("@modelcontextprotocol/sdk/client/index.js") as {
         Client: new (info: { name: string; version: string }) => {
             connect: (transport: unknown) => Promise<void>;
             callTool: (params: {
                 name: string;
                 arguments?: Record<string, unknown>;
-            }) => Promise<{ content: unknown }>;
+            }) => Promise<{ content: unknown; isError?: boolean; structuredContent?: unknown }>;
         };
     };
-    const { StreamableHTTPClientTransport } = require("@modelcontextprotocol/sdk/client/streamableHttp") as {
-        StreamableHTTPClientTransport: new (url: URL, opts?: { requestInit?: RequestInit }) => {
-            close: () => Promise<void>;
+    const { StreamableHTTPClientTransport } =
+        require("@modelcontextprotocol/sdk/client/streamableHttp.js") as {
+            StreamableHTTPClientTransport: new (url: URL, opts?: { requestInit?: RequestInit }) => {
+                close: () => Promise<void>;
+            };
         };
-    };
 
     const url = envTrim("AI_MCP_URL") || `http://localhost:${process.env.APP_PORT ?? 3000}/api/mcp`;
     const token = await createInternalAuthToken();
@@ -77,7 +89,12 @@ export async function createMcpToolClient(): Promise<McpToolClient> {
         version: serverPackageVersion,
     });
 
-    await client.connect(transport);
+    try {
+        await client.connect(transport);
+    } catch (error) {
+        await transport.close().catch(() => undefined);
+        throw error;
+    }
 
     return {
         callTool: async (toolName, input) => {
@@ -85,7 +102,7 @@ export async function createMcpToolClient(): Promise<McpToolClient> {
                 name: toolName,
                 arguments: input as Record<string, unknown>,
             });
-            return parseToolResultText(result.content);
+            return parseMcpToolResult(result);
         },
         close: async () => {
             await transport.close();

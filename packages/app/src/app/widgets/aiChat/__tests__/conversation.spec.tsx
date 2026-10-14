@@ -102,3 +102,31 @@ it("renders dynamic confirmation text without treating it as a translation key",
     expect(view.container).toHaveTextContent(question);
     expect(translate).not.toHaveBeenCalledWith(question);
 });
+
+it("exposes clickable radio labels and separate disabled input identifiers", () => {
+    const view = render(
+        <MemoryRouter>
+            <MessageBubble
+                onChoice={jest.fn()}
+                msg={{
+                    id: "radio",
+                    role: "assistant",
+                    content: "",
+                    widgets: [
+                        {
+                            type: "choice",
+                            id: "priority",
+                            question: "Priority?",
+                            control: "radio",
+                            options: [{ id: "low", label: "Low" }],
+                        },
+                    ],
+                }}
+            />
+        </MemoryRouter>
+    );
+    expect(view.getByTestId("ai-chat-choice-option-low")).toHaveTextContent("Low");
+    fireEvent.click(view.getByTestId("ai-chat-choice-option-low"));
+    expect(view.getByTestId("ai-chat-choice-input-low")).toBeChecked();
+    expect(view.getByTestId("ai-chat-choice-next-priority")).toBeEnabled();
+});

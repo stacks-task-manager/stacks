@@ -39,9 +39,10 @@ The repo is a Yarn workspaces monorepo; each workspace has its own page under `d
 
 ## Testing
 
-| Doc                                   | What you'll find                                |
-| ------------------------------------- | ----------------------------------------------- |
-| [E2E testing with Playwright](E2E.md) | Test layout, POM conventions, running the suite |
+| Doc                                                   | What you'll find                                                 |
+| ----------------------------------------------------- | ---------------------------------------------------------------- |
+| [E2E testing with Playwright](E2E.md)                 | Test layout, POM conventions, running the suite                  |
+| [Manual LLM model evaluation](AI_MODEL_EVALUATION.md) | Opt-in prompt and tool-calling tests, reports, model comparisons |
 
 ## Server internals (deep dives)
 

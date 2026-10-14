@@ -40,6 +40,9 @@ describe("ai.taskTools.updateTask input schema", () => {
         updateMock.mockReset();
     });
 
+    it("rejects updates with no requested fields", () => {
+        expect(updateTask?.inputSchema.safeParse({ taskId: "task-1" }).success).toBe(false);
+    });
     it("accepts startdate as an ISO string", () => {
         const result = updateTask?.inputSchema.safeParse({
             taskId: "task-1",

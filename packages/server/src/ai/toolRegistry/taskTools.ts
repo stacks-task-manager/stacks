@@ -8,6 +8,7 @@ import { z } from "zod";
 import { Errors } from "../../errors";
 import { ProjectsLoader, StacksLoader, TasksLoader } from "../../loaders";
 import type { GetAllFilters } from "../../loaders/tasks";
+import { aiDateInput } from "./dateInput";
 import { defineTool } from "./defineTool";
 
 function pickDefaultStackId(projectId: string, stacksOrder: string[], stacks: { id: string }[]): string {
@@ -210,10 +211,14 @@ function findTasksInputToQueryString(input: {
 export const taskAiTools = [
     defineTool({
         name: "findTasks",
-        description: `Find / search / show / open tasks in the app UI. Returns hashPath (/tasks?...) to navigate. Use listProjects first if you need a projectId. For listing tasks inside the chat instead, use listTasks. "assigned to me / <person>" → assigneeUserIds (NOT assignedOnly).`,
+        description: `Open a filtered task list in the app UI, only when the user explicitly requests navigation. Returns hashPath (/tasks?...) to navigate. Use listProjects first if you need a projectId. For listing tasks inside the chat instead, use listTasks. "assigned to me / <person>" → assigneeUserIds (NOT assignedOnly).`,
         inputSchema: z
             .object({
-                projectId: z.string().uuid().optional().describe("Single project UUID"),
+                projectId: z
+                    .string()
+                    .uuid()
+                    .optional()
+                    .describe("Single project UUID; prefer projectId over the project alias"),
                 project: uuidOrArray.optional().describe("Project UUID or list of them"),
                 taskIds: uuidOrArray.optional().describe("Specific task UUID(s)"),
                 stackId: z.string().uuid().optional().describe("Tasks in this stack UUID"),
@@ -259,10 +264,14 @@ export const taskAiTools = [
 
     defineTool({
         name: "listTasks",
-        description: `Return task rows for you to summarize in chat. Use only when the user explicitly asks to list/enumerate/bullet tasks in conversation. For find/search/show-in-UI use findTasks. "assigned to me / <person>" → assigneeUserIds (NOT assignedOnly).`,
+        description: `Return task rows for you to summarize in chat. Default for task questions, searches, counts, summaries, and name-to-id resolution in chat. Use findTasks only for explicit navigation to the app UI. "assigned to me / <person>" → assigneeUserIds (NOT assignedOnly).`,
         inputSchema: z
             .object({
-                projectId: z.string().uuid().optional().describe("Single project UUID"),
+                projectId: z
+                    .string()
+                    .uuid()
+                    .optional()
+                    .describe("Single project UUID; prefer projectId over the project alias"),
                 project: uuidOrArray.optional().describe("Project UUID or list of them"),
                 taskIds: uuidOrArray.optional().describe("Specific task UUID(s)"),
                 stackId: z.string().uuid().optional().describe("Tasks in this stack UUID"),
@@ -315,9 +324,13 @@ export const taskAiTools = [
 
     defineTool({
         name: "getTask",
-        description: `Load one task by id. Use when a task id is in the UI block or the user asks about a specific task.`,
+        description: `Read full details of an existing task in chat. If only its title is supplied, call listTasks with searchQuery first; then call this getter. Do not navigate or ask permission to look up the task.`,
         inputSchema: z.object({
-            taskId: z.string().describe("Task UUID"),
+            taskId: z
+                .string()
+                .describe(
+                    "Task UUID from current UI, prior authorized results, or listTasks(searchQuery). Resolve a supplied task name now; never ask the user for a UUID"
+                ),
         }),
         execute: async ({ taskId }) => {
             const t = await TasksLoader.getOne(taskId);
@@ -338,7 +351,13 @@ export const taskAiTools = [
         name: "deleteTask",
         description:
             "Permanently delete a task by UUID. If given a task name, resolve it with listTasks first.",
-        inputSchema: z.object({ taskId: z.string().describe("Task UUID") }),
+        inputSchema: z.object({
+            taskId: z
+                .string()
+                .describe(
+                    "Task UUID from current UI, prior authorized results, or listTasks(searchQuery). Resolve a supplied task name now; never ask the user for a UUID"
+                ),
+        }),
         execute: async ({ taskId }) => {
             const task = await TasksLoader.removeById(taskId);
             return { id: task.id, title: task.title, deleted: true };
@@ -347,12 +366,19 @@ export const taskAiTools = [
 
     defineTool({
         name: "createTask",
-        description: `Create a task in a project. Requires projectId (listProjects if you only have a name). Picks the default stack from the project's stack order.`,
+        description: `Create a NEW task only. For changes to an existing task (including setting due dates), use updateTask. Requires projectId (listProjects if you only have a name). Picks the default stack from the project's stack order.`,
         inputSchema: z.object({
-            projectId: z.string().describe("Project UUID"),
+            projectId: z
+                .string()
+                .describe(
+                    "Project UUID from current UI or listProjects(search). Resolve the supplied project name now"
+                ),
             stackId: z.string().optional().describe("Stack UUID (optional)"),
-            title: z.string().min(1).describe("Task title"),
-            duedate: z.string().optional().describe("Due date ISO 8601"),
+            title: z
+                .string()
+                .min(1)
+                .describe("Exact new task title only; exclude the project name and surrounding request text"),
+            duedate: aiDateInput.optional().describe("Due date ISO 8601"),
             assigneeUserIds: z.array(z.string()).optional().describe("Assignee user UUIDs"),
             description: z.string().optional().describe("Task description"),
         }),
@@ -403,7 +429,12 @@ export const taskAiTools = [
         name: "moveTask",
         description: `Move a task to a different stack (board column) on the same project. Use this — not updateTask — whenever the user says move/drag/send a task to a column or to "Done"/"Todo"/etc. Get stackIds via listStacks (or use the UI block if the task's project is the current one). Optional afterTaskId places the task after a specific task id in the destination stack; otherwise it goes to the top.`,
         inputSchema: z.object({
-            taskId: z.string().uuid().describe("Task UUID to move"),
+            taskId: z
+                .string()
+                .uuid()
+                .describe(
+                    "Task UUID from current UI, prior authorized results, or listTasks(searchQuery). Resolve a supplied task name now; never ask the user for a UUID to move"
+                ),
             stackId: z.string().uuid().describe("Destination stack (column) UUID"),
             afterTaskId: z
                 .string()
@@ -437,28 +468,43 @@ export const taskAiTools = [
     defineTool({
         name: "updateTask",
         description: `Update a task's fields (title/description/done/dates/assignees/priority/status/estimate/progress/tint). Does NOT move between columns — for that use moveTask. If you only know a title, call listTasks first (returns ids; findTasks does not). Resolve status ids via listTags when the user names a status label.`,
-        inputSchema: z.object({
-            taskId: z.string().describe("Task UUID"),
-            title: z.string().optional(),
-            description: z.string().optional().describe("Task description; pass empty string to clear"),
-            done: z.boolean().optional().describe("True = mark the task complete"),
-            todo: z.boolean().optional().describe("True = mark not done"),
-            startdate: z.string().nullable().optional().describe("ISO 8601 or null to clear"),
-            duedate: z.string().nullable().optional().describe("ISO 8601 or null to clear"),
-            dodate: z.string().nullable().optional().describe("ISO 8601 or null to clear"),
-            assigneeUserIds: z.array(z.string()).optional().describe("Replace assignees with these UUIDs"),
-            priority: z.nativeEnum(PRIORITY).nullable().optional().describe("Priority, or null to clear"),
-            statusTagId: z.string().nullable().optional().describe("Status tag UUID, or null to clear"),
-            estimateMinutes: z
-                .number()
-                .int()
-                .min(0)
-                .nullable()
-                .optional()
-                .describe("Estimate in minutes, or null to clear"),
-            progress: z.number().min(0).max(100).optional().describe("Progress percentage from 0 to 100"),
-            tint: z.string().nullable().optional().describe("Task tint/color value, or null to clear"),
-        }),
+        inputSchema: z
+            .object({
+                taskId: z
+                    .string()
+                    .describe(
+                        "Task UUID from current UI, prior authorized results, or listTasks(searchQuery). Resolve a supplied task name now; never ask the user for a UUID"
+                    ),
+                title: z.string().optional(),
+                description: z.string().optional().describe("Task description; pass empty string to clear"),
+                done: z.boolean().optional().describe("True = mark the task complete"),
+                todo: z.boolean().optional().describe("True = mark not done"),
+                startdate: aiDateInput.nullable().optional().describe("ISO 8601 or null to clear"),
+                duedate: aiDateInput.nullable().optional().describe("ISO 8601 or null to clear"),
+                dodate: aiDateInput.nullable().optional().describe("ISO 8601 or null to clear"),
+                assigneeUserIds: z
+                    .array(z.string())
+                    .optional()
+                    .describe(
+                        "Replace assignees with the specified people: searchPeople for each named person; use current user id only for me/myself. Never substitute a different person"
+                    ),
+                priority: z.nativeEnum(PRIORITY).nullable().optional().describe("Priority, or null to clear"),
+                statusTagId: z.string().nullable().optional().describe("Status tag UUID, or null to clear"),
+                estimateMinutes: z
+                    .number()
+                    .int()
+                    .min(0)
+                    .nullable()
+                    .optional()
+                    .describe("Estimate in minutes, or null to clear"),
+                progress: z.number().min(0).max(100).optional().describe("Progress percentage from 0 to 100"),
+                tint: z.string().nullable().optional().describe("Task tint/color value, or null to clear"),
+            })
+            .refine(
+                input =>
+                    Object.entries(input).some(([key, value]) => key !== "taskId" && value !== undefined),
+                "Provide at least one task field to update"
+            ),
         execute: async ({
             taskId,
             title,

@@ -55,7 +55,6 @@ import { registerApiRoutes } from "./api";
 import ping from "./routes/ping";
 import login from "./routes/login";
 import register from "./routes/register";
-import { initializeNeedle } from "./ai/needle/runtime";
 import { registerAiChatWebSocketHandlers } from "./ai/wsBridge";
 import { registerSocket } from "./routes/socket";
 import { seedDatabase } from "./seed/index.js";
@@ -150,7 +149,6 @@ async function bootstrap() {
 
     console.log(`🚀 Stacks server is running on port: ${port}`);
 
-    await initializeNeedle().catch(error => console.warn("[needle] unavailable", error.message));
     const server = serve({
         fetch: app.fetch,
         port,

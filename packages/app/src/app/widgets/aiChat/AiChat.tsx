@@ -216,20 +216,28 @@ export function MessageBubble({
                                     return w.control === "radio" ? (
                                         <Radio
                                             key={option.id}
-                                            label={option.label}
+                                            labelElement={
+                                                <span data-testid={`ai-chat-choice-option-${option.id}`}>
+                                                    {option.label}
+                                                </span>
+                                            }
                                             checked={checked}
                                             onChange={onChange}
                                             disabled={w.answered || !onChoice}
-                                            data-testid={`ai-chat-choice-option-${option.id}`}
+                                            data-testid={`ai-chat-choice-input-${option.id}`}
                                         />
                                     ) : (
                                         <Checkbox
                                             key={option.id}
-                                            label={option.label}
+                                            labelElement={
+                                                <span data-testid={`ai-chat-choice-option-${option.id}`}>
+                                                    {option.label}
+                                                </span>
+                                            }
                                             checked={checked}
                                             onChange={onChange}
                                             disabled={w.answered || !onChoice}
-                                            data-testid={`ai-chat-choice-option-${option.id}`}
+                                            data-testid={`ai-chat-choice-input-${option.id}`}
                                         />
                                     );
                                 })}
@@ -308,6 +316,7 @@ export const AiChat: React.FC = () => {
                 const clientRoute: Record<string, string> = {
                     section: route[0] ?? "",
                     sectionId: route[1] ?? "",
+                    childId: route[2] ?? "",
                 };
 
                 if (clientRoute.section === "project") {

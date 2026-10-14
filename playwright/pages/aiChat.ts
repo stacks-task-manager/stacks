@@ -110,7 +110,7 @@ class AiChat extends Base {
 
     async expectDisabled(id: string) {
         const root = this.option(id);
-        const input = root.locator("input");
+        const input = this.page.getByTestId(`ai-chat-choice-input-${id}`);
         if (await input.count()) {
             await expect(input).toBeDisabled();
         } else {

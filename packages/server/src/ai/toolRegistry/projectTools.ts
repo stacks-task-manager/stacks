@@ -73,7 +73,7 @@ export const projectAiTools = [
 
     defineTool({
         name: "getProject",
-        description: `Load one project by id. Returns stacksOrder, description, dates, company, owner.`,
+        description: `Read full project details in chat: description, columns, dates, company, owner. Resolve a name with listProjects first; use an id from the current UI directly. A details request is not navigation.`,
         inputSchema: z.object({
             projectId: z.string().describe("Project UUID"),
         }),

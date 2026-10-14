@@ -102,9 +102,11 @@ export function buildAiTools(
         if (allow && !allow.has(def.name)) {
             continue;
         }
-        const defaultExecute = def.execute as (input: unknown) => Promise<unknown>;
+        const defaultExecute = async (input: unknown) =>
+            (def.execute as (input: unknown) => Promise<unknown>)(def.inputSchema.parse(input));
         const execute = executeOverride
-            ? (input: unknown) => executeOverride({ toolName: def.name, input, defaultExecute })
+            ? async (input: unknown) =>
+                  executeOverride({ toolName: def.name, input: def.inputSchema.parse(input), defaultExecute })
             : defaultExecute;
         (out as Record<string, unknown>)[def.name] = bindTool({
             description: def.description,

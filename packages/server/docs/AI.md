@@ -88,6 +88,8 @@ All four message types travel over the existing `/ws` connection (same JWT auth 
   type: "ai_chat_request",
   payload: {
     clientRequestId?: string,                                  // server generates one if omitted
+    conversationId?: string,                                 // persisted by the client
+    choiceReply?: { token: string; optionIds: string[] },        // server-issued choice reply
     messages: { role: "user" | "assistant", content: string }[], // full chat history; last must be role:"user"
     clientRoute?: {                                            // user's current React Router location
       section: string,                                         // e.g. "project", "mytasks", "people"
@@ -123,9 +125,9 @@ type AiChatWidget =
     };
 ```
 
-`askUserChoice` is always available to the assistant. Button choices submit immediately; radio and checkbox choices require the client-side `Next` button. The client sends selected labels back as the next ordinary user message and persists the widget as answered.
+`askUserChoice` is always available to the assistant. Button choices submit immediately; radio and checkbox choices require the client-side `Next` button. The client sends the server-issued token and selected option ids with the next message and persists the widget as answered. The server validates the selection and reconstructs its text from stored options; client prose cannot change approved arguments.
 
-Because the choice is answered in a separate round-trip, the assistant must **ask first and act later**: it calls `askUserChoice` and stops — the chosen labels come back as the next user message, and only then does it run `moveTask` / `updateTask` / `createTask` etc. It must never both ask and perform the mutation in the same turn (otherwise the action happens before the answer). The system prompt and the `askUserChoice` tool description carry that instruction; the widget already renders the question and options, so the assistant must not repeat them as plain text.
+Because the choice is answered in a separate round-trip, the assistant must **ask first and act later**: it calls `askUserChoice` and stops — the chosen labels come back as the next user message, and only then does it run `moveTask` / `updateTask` / `createTask` etc. The execution guard stops further calls after a choice, including parallel calls in the same step. Every mutation proposal creates a separate confirmation of the exact validated arguments; approval executes that stored action through its authorized loader or MCP. The system prompt and the `askUserChoice` tool description also carry that instruction; the widget already renders the question and options, so the assistant must not repeat them as plain text.
 
 The client side that drives this lives at [`packages/app/src/app/widgets/aiChat/AiChat.tsx`](../../app/src/app/widgets/aiChat/AiChat.tsx) (sends `ai_chat_request`) and [`packages/app/src/app/store/actions/aiChat.ts`](../../app/src/app/store/actions/aiChat.ts) (handles deltas/done/error into the Zustand store).
 
@@ -144,7 +146,7 @@ Templates are Markdown files under [`src/ai/prompts/`](../src/ai/prompts) render
 | `client-ui-context.md` | Appended when the request includes a `clientRoute`.                    |
 | `client-chat.md`       | Wraps the latest user message before it goes to the model.             |
 
-Template variables available in every fragment: `todaysDate`, `todaysDateISO`, plus identity (`hasCurrentUser`, `currentUserId`, `currentUserName`, `currentUserEmail`). The `client-ui-context.md` and `client-chat.md` templates additionally receive `viewKind`, `viewSummary`, `routeSection`, and per-entity inferred ids (`projectId`, `taskId`, `notepadId`, `personId`, `companyId`, `reportType`) — see [`clientRouteTemplateVars()`](../src/ai/clientRoute.ts).
+`client-chat.md` now preserves the user message verbatim; identity and route context are supplied once in the system prompt. Template variables available in every fragment: `todaysDate`, `todaysDateISO`, plus identity (`hasCurrentUser`, `currentUserId`, `currentUserName`, `currentUserEmail`). The `client-ui-context.md` and `client-chat.md` templates additionally receive `viewKind`, `viewSummary`, `routeSection`, and per-entity inferred ids (`projectId`, `taskId`, `notepadId`, `personId`, `companyId`, `reportType`) — see [`clientRouteTemplateVars()`](../src/ai/clientRoute.ts).
 
 ## Dynamic prompt + tool selection
 
@@ -248,7 +250,7 @@ Conventions worth following (see existing tools for examples):
 - **`execute` runs inside `requestContext`** — loaders authenticated as the current user. Use them; don't reach into Sequelize directly.
 - **Return small objects.** Truncate lists (most existing tools cap at 50–100 rows and set `truncated: true`). Token budget matters.
 - **Validate at the boundary with Zod.** The schema is also what the model sees, so the `.describe(...)` strings are real prompt engineering — be specific.
-- **Throw to fail.** A thrown error becomes a tool error visible to the model; it'll often retry with different args.
+- **Throw to fail.** A thrown error becomes a tool error visible to the model. Failed approved mutations are not retried automatically; failed lookups may be corrected.
 
 ### 3. Register it in the registry
 
@@ -325,95 +327,76 @@ Two helpers in [`chat.ts`](../src/ai/chat.ts) decide which widget shape to emit:
 - [`packages/server/docs/ONBOARDING.md`](ONBOARDING.md) — bootstrap order, loaders, request lifecycle.
 - [`packages/app/src/app/widgets/aiChat/`](../../app/src/app/widgets/aiChat) — the React widget on the other end of the WebSocket.
 
-## Needle 3 planner
+## Conversation and execution safeguards
 
-Chat is available when the bundled Needle worker is ready or an OpenAI-compatible LLM is configured.
-`AI_CHAT_ENABLED=false` still disables the feature. Needle runs on the server in a worker thread;
-users need no Python, inference service or API key. A configured LLM writes replies from completed
-results with tool execution disabled, and handles unsupported requests only before a mutation is attempted.
+`streamAiChat` uses the configured OpenAI-compatible model for all inference. Set `AI_BASE_URL`
+(or the existing `AI_OPENAI_BASE_URL` alias) to a local or hosted endpoint ending in `/v1`, and set
+`AI_MODEL` to its served model id. Use `AI_API_KEY` (or `AI_OPENAI_API_KEY`) for endpoints requiring
+authentication; local endpoints may use the default `not-needed`. No model runtime or weights are downloaded by setup or builds.
 
-Run `yarn workspace @stacks/server needle:prepare` after installing dependencies. Setup and server
-builds run this automatically. It downloads the pinned engine and full-depth weights from Hugging Face,
-checks SHA-256 hashes and retains the upstream Apache-2.0 license in the ignored `needle-runtime/`
-directory. Production builds copy this directory into `dist/`, and releases and Docker copy it alongside
-the server bundle. Runtime inference performs no downloads; telemetry is disabled in the worker.
+Conversation state is isolated by tenant, user, and conversation id. Pending choices expire after
+30 minutes of inactivity and disappear on server restart. A new ordinary request abandons an
+unanswered choice. Buttons/radio accept one selected id; checkbox accepts multiple unique ids.
+Invalid, expired, or consumed tokens cannot execute an action. One turn runs per conversation;
+completed request ids are cached (last 50) to prevent replaying successful mutations.
 
-The pinned model revision and checksums live in `scripts/needle-assets.json`. Update them together,
-then rerun the runtime tests and benchmark before shipping a different engine or weights.
+The shared registry validates inputs before dispatch, including MCP overrides. Mutation references
+must come from current UI context, authorized tool output, identity, or ids explicitly supplied by
+the user. Other mutation fields require the user's approval of the complete proposed arguments.
+Confirmation is required for every mutation, so writes have one additional user interaction.
+Loaders remain responsible for tenant, ACL, and domain write authorization at execution time.
+MCP errors fail the action instead of being presented as successful results.
 
-The worker serializes inference and resets between jobs. A 30-second timeout terminates the worker;
-a later request recreates it. It uses Needle's embedding head to rank compact eligible tool descriptions,
-caches those embeddings, and routes against the five closest tools with compact schemas before extracting
-arguments against the selected tools with their complete schemas.
-This avoids repeatedly embedding the complete, large Stacks schemas, which exceeded the timeout
-in the initial deployment benchmark. Retrieved tool names and Node process RSS are reported with
-latency. The engine's own RAM metric is not used because it returned invalid values in the WASM gate.
+After approval, the action executes once, its result card remains available even if the model reply
+fails, and the LLM can propose remaining dependent actions for separate confirmation. Failed actions
+are not retried automatically. Batches are not atomic: completed actions remain committed if a later
+action fails. The server does not claim rollback. Exact repeated tool calls are blocked within a turn.
 
-The tool registry remains authoritative: the adapter derives structural schemas using the AI SDK,
-resolves entity names through authorized loaders, validates arguments with Zod, and executes in the
-original request context, including the optional MCP backend. Add metadata and a benchmark request
-for every new tool. Arbitrary UUIDs are never synthesized by the adapter. Unknown names and missing
-fields ask for more information; multiple exact matches ask the user to choose. A missing stack project
-is resolved from the selected task. Folder references require an explicit id.
+Record contents and retained tool results are untrusted reference data; instructions inside them do
+not authorize mutations. Retained data is bounded and can be truncated, so exhaustive summaries or
+counts require fresh reads. Dates use an explicit UTC reference; ambiguous local event times require
+clarification. The model stream times out after two minutes. Detailed JSONL logs remain opt-in via
+`AI_CHAT_DEBUG=true` and may contain workspace data.
 
-Without an LLM, assistant content is empty and result/status widgets show bounded records, fields and
-links. Notepad reads show a source preview rather than a generated summary. Navigation retains the
-existing auto-redirect flag. Low-confidence (below `AI_NEEDLE_CONFIDENCE_THRESHOLD`, default 0.7) or unscored calls ask for confirmation;
-negated calls are refused and ungrounded fields ask for replacement values. The threshold is a starting
-point for the shipped model, not a guarantee of correctness for every language or request.
+## Disabling model thinking
 
-Clients send a persisted `conversationId` and structured `choiceReply` (`token`, `optionIds`) for
-server-issued choices. Pending actions and prior results are scoped to tenant, user and conversation,
-expire after 30 minutes, and live only in server memory. Expired or forged choices cannot execute an action.
-Restarting the server invalidates pending choices; users should repeat their request. Free-form field
-answers are accepted only against the conversation's pending field. Only one turn runs per conversation.
+Set `AI_DISABLE_THINKING=true` in `packages/server/.env` and restart the server to request
+non-thinking mode. Accepted enabled values: `true`, `1`, `yes`, and `on` (case-insensitive).
+Unset, `false`, and other values preserve the endpoint default; they do not force thinking on.
+The shared model factory applies the same setting to streaming chat and manual evaluations.
 
-Set `AI_NEEDLE_SHADOW=true` to log proposed tool names, confidence and timing without executing them.
-Enable `AI_CHAT_DEBUG=true` as well to record proposal arguments and detailed request data. With an LLM,
-shadow mode falls back to the existing LLM tool flow; without one it shows a status result. Set
-`AI_CHAT_DEBUG=true` to enable detailed local JSONL logs, including planner confidence, retrieved
-names, selected tools, latency, tool outcomes and fallback reasons. Logs contain workspace data and are off by default.
+The request adds this extension to the Chat Completions JSON body:
 
-Run `yarn workspace @stacks/server needle:benchmark` for the real artifact coverage matrix: all
-registered schemas, representative requests, predicted arguments, confidence, latency, RSS and
-catalogue retrieval examples. Inspect argument accuracy as well as tool selection; valid schemas alone
-do not establish correct intent. Evaluate on the deployment host and representative user languages
-before relying on the initial threshold. This release does not fine-tune or downsize the base model.
+```json
+{ "chat_template_kwargs": { "enable_thinking": false } }
+```
 
-### Initial deployment measurements
+This is a server/template extension supported by Qwen templates on compatible deployments such as
+llama.cpp and vLLM; it is not a universal OpenAI API parameter. The serving model/template must
+honor it. Other endpoints may ignore or reject it; leave the flag unset/false for those providers and
+use their own controls. Stacks does not silently retry without the setting. It does not use prompt
+commands such as `/nothink` or remove reasoning text as a substitute for disabling generation.
 
-On the development Mac (Apple Silicon, Node 20.20.2), cold worker loading took approximately 120 ms.
-All 36 registered schemas initialized, and 34 single-tool examples produced a matching proposed call;
-this includes suppressed calls. Expected argument subsets matched in 31 of 36 single-tool fixtures;
-these fixture checks are not an end-to-end accuracy estimate. The complete coverage matrix, proposals,
-confidence and timings are recorded in [NEEDLE_BENCHMARK.json](NEEDLE_BENCHMARK.json). The five catalogue-routing
-examples selected the expected tool after compact routing and explicit subject/operation eligibility
-filters. Routing/extraction took approximately 2–7.5 seconds, including an initial embedding-cache fill.
-The complete benchmark harness reported 292–431 MB process RSS, including imported server libraries.
+See the [Qwen3.6 model guidance](https://huggingface.co/Qwen/Qwen3.6-27B#instruct-or-non-thinking-mode)
+and [llama.cpp server API](https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md#post-v1chatcompletions-openai-compatible-chat-completions-api).
+Confirm the setting through your server's logs and compare latency and correctness in the manual suite.
 
-The base model confused calendar deletion with event deletion despite high confidence. Explicit
-calendar subjects now exclude event mutations, and explicit create/update/move/delete verbs restrict
-eligible mutation names before routing. Exact flat-navigation requests route to `navigate`. Date
-arguments are checked before any mutation; simple today/tomorrow/yesterday values normalize against
-UTC, and unsupported date expressions ask for an ISO value. More realistic inputs and other hosts
-still require evaluation; the published 35 MB weights do not establish chat latency or reliability.
+## Manual model effectiveness tests
 
-The representative fixtures exposed incorrect assignment filtering, an unrequested task title,
-and malformed choice labels. The adapter normalizes explicit "assigned to me" filters to the current
-user and rejects automatic task-title changes when the request contains no naming intent. Low-confidence
-choice proposals require confirmation. Docker/Linux benchmarks and live WebSocket E2E runs remain
-required on a running deployment; the local Docker daemon and Stacks server were unavailable during
-this implementation.
+See [Manual LLM model evaluation](../../../docs/AI_MODEL_EVALUATION.md) for endpoint setup,
+manual commands, suites, report interpretation, baseline comparisons, and adding fixtures.
+Live evaluations are separate from unit/E2E commands, refuse to run in CI, and use synthetic tools.
 
-Creation requests constrain the planner to the requested entity (task, column, project or calendar).
-Confirmation and field replies retain the original request and its eligible tools. Planned calls execute
-sequentially; after a batch containing a mutation, the turn ends rather than reinterpreting its result as
-another command. Task requests such as `create a new task in Col 3 called "Hello world"` use the current
-project and resolve the column through authorized lookups. A parent folder id is optional for creating
-projects and has no role in task creation.
+## Reference and failure regressions
 
-The configured confidence threshold also applies to proposals in Needle's `suppressed_calls`, after
-checking negation, grounding, references and authoritative Zod validation. Optional ungrounded fields
-are omitted; required ungrounded fields ask for clarification. Column positions and task due dates are
-omitted when the request provides no matching intent. This avoids a separate hidden confirmation
-threshold inside the engine.
+Successful tool results now retain known entity kinds alongside ids. A known project id cannot be
+used as a stack/task/calendar reference; route fields and related record fields also retain their kind.
+Unknown references and known wrong-kind mutation references stop the turn and produce an error
+status. The final assistant response suppresses success prose after a rejected mutation. Authorized
+loaders still check access and domain rules when a confirmed action actually executes.
+
+Choice tools accept optional model option ids and generate distinct server ids when model ids are
+missing or duplicated. Valid distinct ids retain compatibility. Client replies still require the current
+server token and valid unique selected option ids; normalization does not relax reply validation.
+
+Client-supplied assistant history has unknown UUIDs replaced with a lookup instruction; user messages and server-grounded references are preserved. Explicit single unsupported English requests narrow the exposed mutation tools, while mixed requests retain normal routing and execution guards. Mutation dates are validated as ISO dates or date-times with explicit timezones before dispatch. See [the Gemma correction log](../../../docs/AI_MODEL_EVALUATION_FIXES.md) for measured results and remaining model failures.

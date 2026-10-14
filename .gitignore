@@ -103,4 +103,5 @@ graft/
 opencode.json
 opencode-swarm.json
 
-packages/server/needle-runtime/
+# Manual live-model evaluation reports
+ai-eval-reports/

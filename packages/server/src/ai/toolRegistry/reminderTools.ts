@@ -10,7 +10,7 @@ import { defineTool } from "./defineTool";
 export const reminderAiTools = [
     defineTool({
         name: "listReminders",
-        description: `List reminders on a record (usually a task).`,
+        description: `Read reminders attached to a task. Resolve a supplied task name with listTasks(searchQuery) now, then pass that task id as recordId. This tool cannot create reminders.`,
         inputSchema: z.object({
             recordId: z.string().describe("Record UUID"),
         }),

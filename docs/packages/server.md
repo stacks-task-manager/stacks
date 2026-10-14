@@ -50,6 +50,11 @@ link. Password recovery queues a one-hour, single-use reset link; only that link
 reset form. Configure the email worker's `PUBLIC_URL` to the externally reachable server origin so both link types
 resolve correctly.
 
+For compatible Qwen template servers, set `AI_DISABLE_THINKING=true` to request non-thinking mode
+in both assistant chat and manual model tests. Unset/false preserves the endpoint default. This sends
+`chat_template_kwargs.enable_thinking=false`; provider/template support is required. See
+[AI thinking configuration](../../packages/server/docs/AI.md#disabling-model-thinking).
+
 ## Development
 
 ```bash
@@ -253,6 +258,7 @@ yarn release         # produces the runnable releases/server bundle
 These live next to the server source under [`packages/server/docs/`](../../packages/server/docs/):
 
 - [Server onboarding](../../packages/server/docs/ONBOARDING.md) — bootstrap order, request lifecycle, how to add a new route or loader
+- [Manual LLM model evaluation](../AI_MODEL_EVALUATION.md) — opt-in model tests, suites, reports, and fixture authoring
 - [AI assistant framework](../../packages/server/docs/AI.md) — chat WebSocket contract, prompt + tool selection, how to add new tools
 - [Caching system](../../packages/server/docs/CACHING.md) — the multi-tenant response cache, invalidation, and configuration
 - [Loaders](../../packages/server/docs/LOADERS.md) — the database access layer, request context, transactions, and shared query helpers

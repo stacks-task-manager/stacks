@@ -1,7 +1,7 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { Hono } from "hono";
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp";
-import { WebStandardStreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/webStandardStreamableHttp";
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { WebStandardStreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js";
 import { AI_TOOL_REGISTRY, MCP_AI_TOOL_NAMES } from "../ai/toolRegistry";
 import { serverPackageVersion } from "../packageVersions";
 
@@ -21,7 +21,7 @@ for (const def of AI_TOOL_REGISTRY) {
             inputSchema: def.inputSchema as any,
         },
         async (args: unknown) => {
-            const output = await def.execute(args as never);
+            const output = await def.execute(def.inputSchema.parse(args) as never);
             return {
                 content: [
                     {
