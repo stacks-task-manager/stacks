@@ -194,7 +194,7 @@ export function MessageBubble({
                 }
                 const current = selected[w.id] ?? [];
                 return (
-                    <div key={w.id} style={{ marginTop: 10 }} data-testid={`ai-chat-choice-${w.id}`}>
+                    <div key={w.id} data-testid={`ai-chat-choice-${w.id}`}>
                         <div style={{ marginBottom: 6, fontWeight: 600 }}>{translatedLabel(w.question)}</div>
                         {w.control === "buttons" ? (
                             <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
