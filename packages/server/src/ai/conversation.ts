@@ -440,9 +440,16 @@ export function createExecutionGuard(
             );
         }
         if (toolName === "askUserChoice" || toolName === "findTasks") stopped = true;
-        const output = backend
-            ? await backend({ toolName, input, defaultExecute })
-            : await defaultExecute(input);
+        let output: unknown;
+        try {
+            output = backend
+                ? await backend({ toolName, input, defaultExecute })
+                : await defaultExecute(input);
+        } catch (error) {
+            if (toolName === "findTasks")
+                reject(error instanceof Error ? error.message : "Task navigation failed");
+            throw error;
+        }
         if (toolName === "askUserChoice") return issueChoice(session, output as PendingChoice["widget"]);
         rememberResult(session, toolName, output);
         if (toolName === "findTasks") {

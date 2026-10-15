@@ -233,3 +233,57 @@ passed. Targeted synthetic model evaluations passed 3/3 immediate relative-colum
 failures or provider errors. Reports: `packages/server/ai-eval-reports/deletions-only-create.html`
 and `packages/server/ai-eval-reports/deletions-only-delete.html`. No user workspace records were
 changed and the complete model matrix was not rerun.
+
+## Filtered task navigation and overdue follow-ups (2026-10-15)
+
+The reported chat claimed it opened task views without changing the URL. Investigation found:
+
+- `findTasks` always emitted a button, even with `AI_CHAT_AUTO_REDIRECT=true`. It now follows
+  the same navigation mode as `navigate` and `openProfile`.
+- Neither task tool exposed an overdue filter. `overdueOnly` now maps to `overdue=true` through
+  the Tasks URL, client API parameters, REST validation, and authorized loader. It means an
+  incomplete task whose due date is strictly before now; date-window overlap is not equivalent.
+- Assignee arrays generated PostgreSQL `&&` against the JSONB assignees column. The loader now
+  uses OR-ed JSONB containment predicates, preserving any-assignee matching and project ACL filters.
+- The chat omitted current task query parameters, so narrowing follow-ups lacked the active filter
+  context. Recognized current filters now reach Current UI through bounded optional `clientRoute.search`.
+- The configured model initially claimed "Showing overdue tasks assigned to you" without a tool
+  call in 3/3 synthetic attempts. Prompt instructions now distinguish data questions from changing
+  an open filtered view, require a fresh call for each filter change, and distinguish link mode
+  from automatic navigation. `findTasks` finishes from its validated path with a server summary,
+  avoiding another model request just to acknowledge navigation; failures do not claim success.
+
+Executed evidence: the five new focused server regressions failed before the implementation and
+passed afterward. The final affected server/unit selection passed 211 tests; client tests passed
+13 tests, including real React Router query updates, link-mode click behavior, filter transport,
+and URL-to-API parsing. Server/evaluator and app TypeScript checks passed. Focused app ESLint
+passed with two warnings. SQL verification used Sequelize's PostgreSQL generator with mocked
+loaders, not a live database. No browser E2E or live database query was run for this change.
+
+Synthetic model checks used `ISTA-DASLab/Qwen3.8-Flash-Next-GSQ-RCO-Coder-GGUF:IQ1_M`, temperature 0,
+thinking-disable requested, sequential execution, and three repetitions each. After prompt-only
+changes, the overdue case passed 2/3 with one timeout during the additional response request.
+With the tool-result acknowledgement, overdue navigation passed 3/3 (median 3,837 ms, p95 10,553 ms).
+The original "show me all the tasks assigned to me" request passed 3/3 routing/argument checks
+using `listTasks`, with no unwanted navigation (median 5,371 ms, p95 8,158 ms). These are targeted
+routing/argument checks with synthetic tool output, not a comprehensive grade of response prose
+or a controlled latency benchmark. The full model matrix was not rerun.
+
+Ignored local reports: `packages/server/ai-eval-reports/overdue-task-navigation-final.html` and
+`packages/server/ai-eval-reports/assigned-tasks-chat.html`. No user workspace records were changed.
+
+## Task lists open the app by default (2026-10-15)
+
+The user changed the task-list output policy: "show me", "list my tasks", task searches,
+and filtered task-list questions now use `findTasks` by default. The assistant must not first
+print rows or ask whether to open the view. Explicit "here/in chat/as text" or "don't navigate"
+requests use `listTasks`, and that explicit output choice survives narrowing follow-ups even
+when the current route is Tasks. Internal lookups, counts, and analysis still use `listTasks`.
+Specific record details are unaffected. Automatic navigation continues to honor
+`AI_CHAT_AUTO_REDIRECT`.
+
+Updated core/task fragments, both tool descriptions, the canonical `listTasks` example, and
+existing fixtures that previously expected chat output for ordinary task-list requests. Added
+regressions for the exact assigned-tasks request, overdue navigation, explicit chat, explicit
+no-navigation, and a chat-only overdue follow-up. This policy supersedes the previous default
+recorded above; earlier `assigned-tasks-chat` reports describe the former policy.

@@ -217,7 +217,7 @@ export function findTasksInputToQueryString(input: {
 export const taskAiTools = [
     defineTool({
         name: "findTasks",
-        description: `Open a filtered task list in the app UI, only when the user explicitly requests navigation. Returns hashPath (/tasks?...) to navigate. Use listProjects first if you need a projectId. For listing tasks inside the chat instead, use listTasks. "assigned to me / <person>" → assigneeUserIds (NOT assignedOnly).`,
+        description: `Default for task-list requests: "show me", "list tasks", "which tasks", filtering and task searches. Open the filtered Tasks view directly without asking whether to navigate or printing rows. Returns hashPath (/tasks?...). Use listProjects first if you need a projectId. Use listTasks to enumerate rows only when the user explicitly requests them here/in chat/as text or says not to navigate. "assigned to me / <person>" → assigneeUserIds (NOT assignedOnly).`,
         inputSchema: z
             .object({
                 projectId: z
@@ -276,7 +276,7 @@ export const taskAiTools = [
 
     defineTool({
         name: "listTasks",
-        description: `Return task rows for you to summarize in chat. Default for task questions, searches, counts, summaries, and name-to-id resolution in chat. Use findTasks only for explicit navigation to the app UI. "assigned to me / <person>" → assigneeUserIds (NOT assignedOnly).`,
+        description: `Return task rows for explicit in-chat/as-text listings, or internal counts, analysis, summaries, and name-to-id resolution. Ordinary task-list requests ("show me", "list tasks", "which tasks", task searches) default to findTasks. Do not enumerate rows in chat unless explicitly requested, and do not use an internal lookup as a substitute for opening the requested task view. "assigned to me / <person>" → assigneeUserIds (NOT assignedOnly).`,
         inputSchema: z
             .object({
                 projectId: z

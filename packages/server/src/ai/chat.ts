@@ -485,7 +485,7 @@ async function streamLlmChat(
 
         const raw = (await Promise.resolve(result.text)) || "";
         const text = raw.replace(/^\s+/, "");
-        debugResponseText = text;
+        debugResponseText = guard.summary() ?? text;
         if (guard.failure()) {
             debugStatus = "error";
             debugError = guard.failure();

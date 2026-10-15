@@ -32,6 +32,20 @@ describe("conversation execution boundary", () => {
         ).rejects.toThrow("Await");
         expect(execute).toHaveBeenCalledOnce();
     });
+    it("reports a filtered-navigation failure without claiming success", async () => {
+        const guard = createExecutionGuard(session(), "Open overdue tasks");
+        await expect(
+            guard.execute({
+                toolName: "findTasks",
+                input: {},
+                defaultExecute: async () => {
+                    throw new Error("Connection unavailable");
+                },
+            })
+        ).rejects.toThrow("Connection unavailable");
+        expect(guard.failure()).toBe("Connection unavailable");
+        expect(guard.summary()).toBeUndefined();
+    });
     it("does not acknowledge navigation without a valid task path", async () => {
         const guard = createExecutionGuard(session(), "Open overdue tasks");
         await expect(

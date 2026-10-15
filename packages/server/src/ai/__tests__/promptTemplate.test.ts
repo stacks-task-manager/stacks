@@ -3,6 +3,15 @@ import { describe, expect, it } from "vitest";
 import { template } from "../promptTemplate";
 
 describe("promptTemplate", () => {
+    it("keeps core and task fragments consistent about default task-list navigation", () => {
+        for (const name of ["system-core", "system-tasks"]) {
+            const text = template(name, { currentUserId: "user" });
+            expect(text).toContain("Task-list requests default to `findTasks`");
+            expect(text).toMatch(/(?:Enumerate|enumerate) task rows.*(?:explicitly|only when)/);
+            expect(text).not.toContain("Default tool for task data is `listTasks`");
+            expect(text).not.toContain("Only call `findTasks` when the user explicitly");
+        }
+    });
     it("interpolates variables from system-core.md", () => {
         const out = template("system-core", {
             todaysDate: "Mon Jan 1 2024",

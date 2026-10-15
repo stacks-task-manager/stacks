@@ -12,7 +12,7 @@ export const examples: Record<string, string> = {
     updateStack: 'Rename column Review in Website to "Ready"',
     deleteStack: "Delete column Column XYZ in Website",
     findTasks: "Open tasks assigned to me",
-    listTasks: "List tasks in Website",
+    listTasks: "List tasks in Website here in chat",
     getTask: "Show task Buy milk",
     deleteTask: "Delete task Buy milk",
     createTask: 'Create task "Buy milk" in Website tomorrow',

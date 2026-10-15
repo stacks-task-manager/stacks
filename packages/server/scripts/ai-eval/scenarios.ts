@@ -77,10 +77,39 @@ export const scenarios: Fixture[] = [
         ],
         route: { section: "tasks", search: "?assignees=00000000-0000-4000-8000-000000000010" },
     }),
-    scenario("task-assigned-chat-default", "show me all the tasks assigned to me", {
+    scenario("task-list-explicit-chat", "show me all the tasks assigned to me here in chat", {
         tool: "listTasks",
         expected: { assigneeUserIds: ["me"] },
         prohibitedTools: ["findTasks", "navigate"],
+    }),
+    scenario("task-list-default-overdue", "show me only my overdue tasks", {
+        tool: "findTasks",
+        expected: { assigneeUserIds: ["me"], overdueOnly: true },
+        prohibitedTools: ["listTasks", "navigate"],
+    }),
+    scenario(
+        "task-list-explicit-no-navigation",
+        "show me all the tasks assigned to me, don't change the page",
+        {
+            tool: "listTasks",
+            expected: { assigneeUserIds: ["me"] },
+            prohibitedTools: ["findTasks", "navigate"],
+        }
+    ),
+    scenario("task-list-chat-followup", "only the overdue tasks", {
+        tool: "listTasks",
+        expected: { assigneeUserIds: ["me"], overdueOnly: true },
+        prohibitedTools: ["findTasks", "navigate"],
+        history: [
+            { role: "user", content: "List tasks assigned to me here in chat" },
+            { role: "assistant", content: "Here are your assigned tasks." },
+        ],
+        route: { section: "tasks", search: "?assignees=00000000-0000-4000-8000-000000000010" },
+    }),
+    scenario("task-list-default-assigned", "show me all the tasks assigned to me", {
+        tool: "findTasks",
+        expected: { assigneeUserIds: ["me"] },
+        prohibitedTools: ["listTasks", "navigate"],
     }),
     scenario("column-before-reference", 'add a new column named "Test" in front of the "Done" column', {
         tool: "createStack",
@@ -130,21 +159,21 @@ export const scenarios: Fixture[] = [
         prohibited: ["assignedOnly"],
     }),
     scenario("tasks-any-assignee", "List Website tasks that have anyone assigned", {
-        tool: "listTasks",
+        tool: "findTasks",
         expected: { projectId: "Website", assignedOnly: true },
         prohibited: ["assigneeUserIds"],
     }),
     scenario("tasks-unassigned", "List Website tasks that have nobody assigned", {
-        tool: "listTasks",
+        tool: "findTasks",
         expected: { projectId: "Website", unassignedOnly: true },
         prohibited: ["assigneeUserIds", "assignedOnly"],
     }),
     scenario("tasks-completed", "Which Website tasks are completed?", {
-        tool: "listTasks",
+        tool: "findTasks",
         expected: { projectId: "Website", doneFilter: "done" },
     }),
     scenario("tasks-archived", "List archived tasks in Website", {
-        tool: "listTasks",
+        tool: "findTasks",
         expected: { projectId: "Website", archivedOnly: true },
     }),
     scenario("tasks-search", "Search task titles for budget and tell me the matches here", {
@@ -334,7 +363,7 @@ export const scenarios: Fixture[] = [
     }),
     scenario("route-project-list", "List the tasks in this project", {
         route: { section: "project", sectionId: "Website", viewType: "kanban" },
-        tool: "listTasks",
+        tool: "findTasks",
         expected: { projectId: "Website" },
     }),
     scenario("route-project-create", "Add a task called Draft here", {

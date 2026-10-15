@@ -10,6 +10,28 @@ import { aiDateInput } from "../toolRegistry/dateInput";
 vi.mock("../../loaders", () => ({}));
 vi.mock("../../loaders/context", () => ({ getCurrentUser: () => ({ id: "user" }) }));
 describe("AI catalogue consistency", () => {
+    it("aligns default task-list tool descriptions and evaluation expectations", () => {
+        expect(AI_TOOL_REGISTRY.find(t => t.name === "findTasks")!.description).toContain(
+            "Default for task-list requests"
+        );
+        expect(AI_TOOL_REGISTRY.find(t => t.name === "listTasks")!.description).toContain(
+            "explicit in-chat/as-text listings"
+        );
+        for (const id of ["task-list-default-assigned", "task-list-default-overdue"])
+            expect(fixtures.find(f => f.id === id)).toMatchObject({
+                tool: "findTasks",
+                prohibitedTools: ["listTasks", "navigate"],
+            });
+        for (const id of [
+            "task-list-explicit-chat",
+            "task-list-explicit-no-navigation",
+            "task-list-chat-followup",
+        ])
+            expect(fixtures.find(f => f.id === id)).toMatchObject({
+                tool: "listTasks",
+                prohibitedTools: ["findTasks", "navigate"],
+            });
+    });
     it("rejects invalid dates before mutation dispatch", () => {
         for (const value of ["tomorrow", "2026-02-30", "2026-10-14T09:00:00", "2026-10-14T99:00:00Z"])
             expect(aiDateInput.safeParse(value).success).toBe(false);

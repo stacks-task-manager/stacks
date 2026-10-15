@@ -494,8 +494,11 @@ Numeric insertion positions remain supported for existing web and mobile callers
 `findTasks` returns a path with task filters and honors `AI_CHAT_AUTO_REDIRECT`, just like other
 navigation tools. Its validated path ends the turn with a server-generated acknowledgement, avoiding
 a second LLM request merely to describe navigation. With auto redirect off, it renders a button; the assistant must not claim the
-page has already opened. `listTasks` stays the default for task data requested in chat, including
-"show me all tasks assigned to me". A read failure does not switch to navigation automatically.
+page has already opened. Task-list requests such as "show me all tasks assigned to me", "list my
+tasks", task searches, and filtering default to `findTasks`. Enumerate rows in chat only when the
+user explicitly asks for them here/in chat/as text or says not to navigate. Explicit chat intent
+persists across narrowing follow-ups. `listTasks` remains available for internal reference lookups,
+counts, and analysis. A read failure does not change the requested output mode.
 
 Both tools accept `overdueOnly: true`: incomplete tasks with a non-null due date strictly before
 now, matching the app's overdue semantics. Navigation serializes this as `overdue=true`; the Tasks
