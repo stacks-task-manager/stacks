@@ -21,6 +21,24 @@ const widget = {
     ],
 };
 describe("conversation execution boundary", () => {
+    it("finishes filtered navigation from its real result without a second model step", async () => {
+        const guard = createExecutionGuard(session(), "Open overdue tasks");
+        const execute = vi.fn().mockResolvedValue({ hashPath: "/tasks?assignees=user&overdue=true" });
+        await guard.execute({ toolName: "findTasks", input: {}, defaultExecute: execute });
+        expect(guard.stopped()).toBe(true);
+        expect(guard.summary()).toBe("The filtered task view is ready.");
+        await expect(
+            guard.execute({ toolName: "listTasks", input: {}, defaultExecute: execute })
+        ).rejects.toThrow("Await");
+        expect(execute).toHaveBeenCalledOnce();
+    });
+    it("does not acknowledge navigation without a valid task path", async () => {
+        const guard = createExecutionGuard(session(), "Open overdue tasks");
+        await expect(
+            guard.execute({ toolName: "findTasks", input: {}, defaultExecute: async () => ({}) })
+        ).rejects.toThrow("did not return");
+        expect(guard.summary()).toBeUndefined();
+    });
     it.each(["createTask", "updateTask", "moveTask"])(
         "executes clear %s once without approval",
         async toolName => {

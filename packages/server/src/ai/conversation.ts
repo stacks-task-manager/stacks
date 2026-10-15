@@ -439,12 +439,18 @@ export function createExecutionGuard(
                 { toolName, input: structuredClone(input), intent: message }
             );
         }
-        if (toolName === "askUserChoice") stopped = true;
+        if (toolName === "askUserChoice" || toolName === "findTasks") stopped = true;
         const output = backend
             ? await backend({ toolName, input, defaultExecute })
             : await defaultExecute(input);
         if (toolName === "askUserChoice") return issueChoice(session, output as PendingChoice["widget"]);
         rememberResult(session, toolName, output);
+        if (toolName === "findTasks") {
+            const path = (output as { hashPath?: unknown } | null)?.hashPath;
+            if (typeof path !== "string" || !/^\/tasks(?:\?|$)/.test(path))
+                reject("The task tool did not return a filtered task view.");
+            summary = "The filtered task view is ready.";
+        }
         return output;
     };
     let tail: Promise<unknown> = Promise.resolve();

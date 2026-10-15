@@ -124,6 +124,7 @@ async function main() {
                 newUserMessage: fixture.request,
                 todaysDate: "Tue Oct 13 2026 (UTC)",
                 todaysDateISO: EVALUATION_REFERENCE_DATE,
+                autoRedirect: process.env.AI_CHAT_AUTO_REDIRECT?.trim() === "true",
                 hasCurrentUser: true,
                 currentUserId: ids.me,
                 currentUserName: "Test user",

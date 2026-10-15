@@ -123,6 +123,10 @@ This repository is a Yarn workspaces monorepo that ships Stacks as a set of serv
 
 ## Documentation
 
+For development navigation, see the [project structure](docs/PROJECT_STRUCTURE.md).
+Agent-assisted work starts with [AGENTS.md](AGENTS.md) and the
+[completion workflow](docs/AGENT_WORKFLOW.md).
+
 The full documentation index lives at **[docs/README.md](docs/README.md)** — start there for everything beyond the quick start above (per-package docs, server internals, Docker deployment, E2E testing, Tiptap Pro setup).
 
 Most-reached-for pages:

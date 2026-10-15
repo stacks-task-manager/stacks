@@ -19,11 +19,12 @@ function sanitizeClientRoute(raw: unknown): AiChatClientRoutePayload | undefined
     if (!raw || typeof raw !== "object") {
         return undefined;
     }
-    const { section, sectionId, viewType, childId } = raw as Record<string, string>;
+    const { section, sectionId, viewType, childId, search } = raw as Record<string, string>;
 
     if (typeof section !== "string" || section.length > 100) return undefined;
     return {
         section,
+        search: section === "tasks" && typeof search === "string" ? search.slice(0, 4000) : undefined,
         sectionId: typeof sectionId === "string" ? sectionId.slice(0, 100) : undefined,
         viewType: typeof viewType === "string" ? viewType.slice(0, 100) : undefined,
         childId: typeof childId === "string" ? childId.slice(0, 100) : undefined,

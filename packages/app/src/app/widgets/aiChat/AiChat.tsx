@@ -16,7 +16,7 @@ import "app/widgets/aiChat/_AiChatResults.scss";
 import { useNavigate } from "react-router-dom";
 
 import { Icon } from "app/components/common";
-import { getHashPathname, getProjectLastView, getViewType } from "app/hooks";
+import { getHashSearch, getHashPathname, getProjectLastView, getViewType } from "app/hooks";
 import { shallowEqual } from "app/hooks/store";
 import { AiChatActions } from "app/store/actions/aiChat";
 import { AiChatStore, type AiChatMessage } from "app/store/aiChat";
@@ -332,6 +332,7 @@ export const AiChat: React.FC = () => {
                     childId: route[2] ?? "",
                 };
 
+                if (clientRoute.section === "tasks") clientRoute.search = getHashSearch();
                 if (clientRoute.section === "project") {
                     clientRoute.viewType = getProjectLastView(clientRoute.sectionId);
                 } else if (clientRoute.section === "people") {

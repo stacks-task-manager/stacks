@@ -186,6 +186,10 @@ export function createMock(fixture: Fixture) {
                 (!requested || requested.some(id => assignees.includes(id))) &&
                 (!args.assignedOnly || assignees.length > 0) &&
                 (!args.unassignedOnly || !assignees.length) &&
+                (!args.overdueOnly ||
+                    (!row.done &&
+                        Boolean(row.duedate) &&
+                        Date.parse(String(row.duedate)) < Date.parse(EVALUATION_REFERENCE_DATE))) &&
                 (!(args.from || args.to) ||
                     ((!row.startdate || Date.parse(String(row.startdate)) <= dateTo) &&
                         (!row.duedate || Date.parse(String(row.duedate)) >= dateFrom)))

@@ -40,7 +40,7 @@ Output lands in `packages/app/build/`. `yarn release` copies it into the runnabl
 These live next to the source under [`packages/app/docs/`](../../packages/app/docs/):
 
 - [Web app onboarding](../../packages/app/docs/ONBOARDING.md) — stack overview, boot sequence, code layout, **"add a feature" walkthrough**, conventions, FAQ
-- [Web app architecture](../../packages/app/docs/ARCHITECTURE.md) — routing model (HashRouter, background-route panels), state pattern, real-time updates, drag-and-drop, theming, the global user-feedback surface
+- [Web app architecture](../../packages/app/docs/ARCHITECTURE.md) — routing model (BrowserRouter under `/app`, background-route panels), state pattern, real-time updates, drag-and-drop, theming, the global user-feedback surface
 - [API client](../../packages/app/docs/API_CLIENT.md) — the shared Axios instance, date round-tripping, `X-Instance-ID`, error handling, per-domain modules
 
 ## Related

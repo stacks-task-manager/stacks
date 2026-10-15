@@ -22,6 +22,7 @@ html-report/
 results/
 playwright.json
 playwright/.auth/user.json
+.pi/
 
 # deps
 node_modules/

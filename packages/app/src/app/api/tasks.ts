@@ -13,6 +13,7 @@ export interface TaskLoadParams {
     archived?: boolean;
     completed?: boolean;
     open?: boolean;
+    overdue?: boolean;
     assigned?: boolean;
     unassigned?: boolean;
     assignees?: string[];

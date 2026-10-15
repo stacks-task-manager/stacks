@@ -147,7 +147,7 @@ function currentUserTemplateVars(): {
  * `openProfile`). With `AI_CHAT_AUTO_REDIRECT=true` these auto-open; otherwise
  * they show a button the user can click.
  *
- * Do NOT use this for side-effect tools (`createTask`, `findTasks`, etc.) —
+ * Do NOT use this for side-effect tools (`createTask`, etc.) —
  * those return a route path as a courtesy link, not as a "take me there"
  * instruction. Use `aiChatLinkWidget` for those to prevent a very unpleasant
  * "every answer teleports me to /tasks" UX.
@@ -225,7 +225,7 @@ export function widgetsFromToolResult(toolName: string, output: unknown): AiChat
     }
 
     if (toolName === "findTasks" && typeof o.hashPath === "string") {
-        return [aiChatLinkWidget("Show tasks", o.hashPath)];
+        return [aiChatNavigationWidget("Show tasks", o.hashPath)];
     }
 
     if (toolName === "openProfile" && typeof o.hashPath === "string") {
@@ -335,6 +335,7 @@ async function streamLlmChat(
     const fragmentVars = {
         todaysDate: now.toISOString().slice(0, 10) + " UTC",
         todaysDateISO: now.toISOString(),
+        autoRedirect: envTrim("AI_CHAT_AUTO_REDIRECT") === "true",
         ...identityVars,
     };
     const fragmentParts = selection.promptFragments.map(name => template(name, fragmentVars));

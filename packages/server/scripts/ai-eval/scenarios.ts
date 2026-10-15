@@ -66,6 +66,22 @@ const task = (id: string, request: string, expected: Record<string, unknown>, pr
     scenario(id, request, { tool: "updateTask", expected: { taskId: "Buy milk", ...expected }, prohibited });
 const readonly = ["mutation"];
 export const scenarios: Fixture[] = [
+    scenario("task-overdue-followup-view", "only show me the overdue tasks", {
+        tool: "findTasks",
+        expected: { assigneeUserIds: ["me"], overdueOnly: true },
+        prohibited: ["from", "to", "assignedOnly"],
+        prohibitedTools: ["navigate"],
+        history: [
+            { role: "user", content: "Open all tasks assigned to me in the task view" },
+            { role: "assistant", content: "Showing tasks assigned to you." },
+        ],
+        route: { section: "tasks", search: "?assignees=00000000-0000-4000-8000-000000000010" },
+    }),
+    scenario("task-assigned-chat-default", "show me all the tasks assigned to me", {
+        tool: "listTasks",
+        expected: { assigneeUserIds: ["me"] },
+        prohibitedTools: ["findTasks", "navigate"],
+    }),
     scenario("column-before-reference", 'add a new column named "Test" in front of the "Done" column', {
         tool: "createStack",
         expected: { projectId: "Website", title: "Test", beforeStackId: "Done" },

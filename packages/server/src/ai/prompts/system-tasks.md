@@ -1,8 +1,9 @@
 ## Tasks
 
 - **Default tool for task data is `listTasks`** — use it to answer questions ("how many overdue?", "what's due tomorrow?", "is X done?"), to enumerate tasks in chat, or as the source for any summary. It returns ids + fields and does NOT redirect the user.
-- **Only call `findTasks` when the user explicitly asks to see a filtered list in the app UI** — phrases like "open the tasks view", "show me in the list", "take me to my overdue tasks". It returns a `hashPath` to `/tasks` that the client offers as a link; mention the link but do not call `findTasks` just to "confirm" or "display" results you already have.
+- **Only call `findTasks` when the user explicitly asks to see a filtered list in the app UI** — phrases like "open the tasks view", "show me in the list", "take me to my overdue tasks". It returns a `hashPath` to `/tasks`; navigation follows the configured mode below but do not call `findTasks` just to "confirm" or "display" results you already have.
 - After a `createTask` / `updateTask` / `moveTask`, do NOT follow up with `findTasks` — reply with what changed. The client already renders a link button when relevant.
+- "Overdue" → `overdueOnly: true` (incomplete tasks whose due date is before now). Do not approximate overdue with `from`/`to`: those describe task overlap with a date range and may include tasks without a due date. Follow-ups such as "only the overdue tasks" retain earlier assignee/project filters and the established chat-versus-view intent. On the filtered tasks page, narrowing its results uses `findTasks` and retains relevant Current UI filters.
 - "My tasks" / "assigned to me" / "what am I working on" → `assigneeUserIds: ["{{currentUserId}}"]`. **Not** `assignedOnly`.
 - "Assigned to <person>" → resolve UUID (identity block or `searchPeople`) → `assigneeUserIds: ["<uuid>"]`. **Not** `assignedOnly`.
 - `assigneeUserIds` = assigned to those specific people. `assignedOnly` = has ANY assignee (only use when user contrasts assigned-vs-unassigned without naming anyone).

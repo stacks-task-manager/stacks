@@ -34,13 +34,13 @@ There is no separate HTTP endpoint for chat; everything rides the user's authent
 
 Set in `packages/server/.env`. All five are described in [`docs/packages/server.md`](../../../docs/packages/server.md#environment) and read in [`src/ai/config.ts`](../src/ai/config.ts) + [`src/ai/chat.ts`](../src/ai/chat.ts):
 
-| Variable                | Purpose                                                                                                     |
-| ----------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `AI_BASE_URL`           | OpenAI-compatible endpoint (e.g. a local LLM server). Required.                                             |
-| `AI_API_KEY`            | Key for the endpoint. Defaults to `"not-needed"` for local servers.                                         |
-| `AI_MODEL`              | Model id passed to `openai.chat(modelId)`. Required.                                                        |
-| `AI_CHAT_ENABLED`       | Kill switch — set to `false` / `0` / `off` to disable even when configured.                                 |
-| `AI_CHAT_AUTO_REDIRECT` | When `true`, `navigate`/`openProfile` results auto-navigate the client instead of rendering a click button. |
+| Variable                | Purpose                                                                                                                 |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `AI_BASE_URL`           | OpenAI-compatible endpoint (e.g. a local LLM server). Required.                                                         |
+| `AI_API_KEY`            | Key for the endpoint. Defaults to `"not-needed"` for local servers.                                                     |
+| `AI_MODEL`              | Model id passed to `openai.chat(modelId)`. Required.                                                                    |
+| `AI_CHAT_ENABLED`       | Kill switch — set to `false` / `0` / `off` to disable even when configured.                                             |
+| `AI_CHAT_AUTO_REDIRECT` | When `true`, `findTasks`/`navigate`/`openProfile` results auto-navigate the client instead of rendering a click button. |
 
 `isAiChatConfigured()` ([`src/ai/config.ts:20`](../src/ai/config.ts)) returns `false` when the kill switch is on or `AI_BASE_URL` / `AI_MODEL` are missing — in which case `ai_chat_request` messages return an `ai_chat_error` with `"AI chat is not enabled"`.
 
@@ -310,7 +310,7 @@ When a new domain is big enough to warrant its own fragment (multiple tools, dis
 
 Two helpers in [`chat.ts`](../src/ai/chat.ts) decide which widget shape to emit:
 
-- **`aiChatNavigationWidget(label, hashPath)`** — for navigation-intent tools (`navigate`, `openProfile`). Emits `type: "redirect"` when `AI_CHAT_AUTO_REDIRECT=true`, otherwise `type: "button"`.
+- **`aiChatNavigationWidget(label, hashPath)`** — for navigation-intent tools (`findTasks`, `navigate`, `openProfile`). Emits `type: "redirect"` when `AI_CHAT_AUTO_REDIRECT=true`, otherwise `type: "button"`.
 - **`aiChatLinkWidget(label, hashPath)`** — always emits `type: "button"`. Use this for side-effect tools that return a courtesy link ("here's the task I just made"), to avoid the "every answer teleports me to /tasks" UX.
 
 `widgetsFromToolResult(toolName, output)` in [`chat.ts:146`](../src/ai/chat.ts) is the dispatch map. If you add a tool that should surface a widget, register it here.
@@ -488,3 +488,20 @@ For "before" / "in front of" and "after" requests, the assistant uses a resolved
 The loader computes the insertion position from the current board order inside the creation
 transaction. A missing or foreign anchor fails the transaction rather than appending silently.
 Numeric insertion positions remain supported for existing web and mobile callers.
+
+### Filtered tasks and follow-ups
+
+`findTasks` returns a path with task filters and honors `AI_CHAT_AUTO_REDIRECT`, just like other
+navigation tools. Its validated path ends the turn with a server-generated acknowledgement, avoiding
+a second LLM request merely to describe navigation. With auto redirect off, it renders a button; the assistant must not claim the
+page has already opened. `listTasks` stays the default for task data requested in chat, including
+"show me all tasks assigned to me". A read failure does not switch to navigation automatically.
+
+Both tools accept `overdueOnly: true`: incomplete tasks with a non-null due date strictly before
+now, matching the app's overdue semantics. Navigation serializes this as `overdue=true`; the Tasks
+page forwards it to the validated `/api/tasks` endpoint. This differs from `from`/`to`, which test
+task/date-window overlap and can include undated tasks. Existing assignee/project constraints
+remain part of a narrowing follow-up. The client sends the current Tasks query string as optional
+`clientRoute.search`; the server includes recognized filter keys as reference data in Current UI.
+Assignee arrays use JSONB containment predicates with OR semantics, preserving matches for any
+requested person without PostgreSQL array-overlap operators.

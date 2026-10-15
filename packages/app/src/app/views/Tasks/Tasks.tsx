@@ -6,7 +6,9 @@ import { Outlet, useSearchParams } from "react-router-dom";
 import { ITask } from "@stacks/types";
 import { BlankSlate, Grid } from "app/components/common";
 import { TaskLoadParams, TasksAPI } from "app/api/tasks";
+import { shallowEqual } from "app/hooks/store";
 import { TasksActions } from "app/store/actions";
+import { TasksStore } from "app/store/tasks";
 import { AppView, AppViewContent, TaskRowSkeleton, TasksTable } from "app/widgets";
 import { parseISO } from "date-fns";
 
@@ -54,11 +56,13 @@ export function searchParamsToTaskLoadParams(searchParams: URLSearchParams): Tas
     const archived = readTrueFlag("archived");
     const completed = readTrueFlag("completed");
     const open = readTrueFlag("open");
+    const overdue = readTrueFlag("overdue");
     const assigned = readTrueFlag("assigned");
     const unassigned = readTrueFlag("unassigned");
     if (archived) params.archived = true;
     if (completed) params.completed = true;
     if (open) params.open = true;
+    if (overdue) params.overdue = true;
     if (assigned) params.assigned = true;
     if (unassigned) params.unassigned = true;
 
@@ -80,13 +84,20 @@ export const Tasks = () => {
         [searchKey]
     );
 
-    const [tasks, setTasks] = useState<ITask[]>([]);
+    // ids of the filtered fetch, in server order — rows are sourced from TasksStore so
+    // in-cell edits (and realtime updates) re-render the table without a refetch
+    const [loadedIds, setLoadedIds] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [loadError, setLoadError] = useState<string | null>(null);
 
+    const tasks = TasksStore.use(state => {
+        const byId = new Map(state.tasks.map((t: ITask) => [t.id, t]));
+        return loadedIds.map(id => byId.get(id)).filter((t): t is ITask => Boolean(t));
+    }, shallowEqual);
+
     useEffect(() => {
         if (!loadParams) {
-            setTasks([]);
+            setLoadedIds([]);
             setLoadError(null);
             setIsLoading(false);
             return;
@@ -99,12 +110,12 @@ export const Tasks = () => {
             try {
                 const list = await TasksAPI.load(loadParams);
                 if (!cancelled) {
-                    setTasks(list);
                     await TasksActions.upsertTasks(list);
+                    setLoadedIds(list.map((t: ITask) => t.id));
                 }
             } catch (e) {
                 if (!cancelled) {
-                    setTasks([]);
+                    setLoadedIds([]);
                     setLoadError(e instanceof Error ? e.message : translate("Something went wrong"));
                 }
             } finally {

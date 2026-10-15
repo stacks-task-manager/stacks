@@ -76,6 +76,7 @@ export const TasksFilteredSchema = z
         archived: z.enum(["true"]).optional(),
         completed: z.enum(["true"]).optional(),
         open: z.enum(["true"]).optional(),
+        overdue: z.enum(["true"]).optional(),
         assigned: z.enum(["true"]).optional(),
         unassigned: z.enum(["true"]).optional(),
         assignees: z.union([z.uuid(), z.array(z.uuid())]).optional(),

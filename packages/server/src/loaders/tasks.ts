@@ -165,6 +165,7 @@ export interface GetAllFilters {
     from?: string; // ISO date — start of range; matches tasks whose startdate or duedate falls in the window (see server TasksLoader)
     to?: string; // ISO date — end of range (paired with from)
     completed?: "true" | true; // Only tasks with `done: true` (matches REST `completed=true`).
+    overdue?: "true" | true; // Incomplete tasks with a due date strictly before now.
     open?: "true" | true; // Only tasks with `done: false` (not completed).
     archived?: "true" | true; // Only tasks with `archived: null` (not archived).
     assigned?: "true" | true; // Only tasks with assignees (matches REST `assigned=true`).
@@ -198,7 +199,7 @@ function buildTaskListFilter(filters: GetAllFilters): object {
     if (filters.assignees) {
         if (Array.isArray(filters.assignees)) {
             filter.assignees = {
-                [Op.overlap]: filters.assignees,
+                [Op.or]: filters.assignees.map(id => ({ [Op.contains]: [id] })),
             };
         } else {
             filter.assignees = {
@@ -238,6 +239,9 @@ function buildTaskListFilter(filters: GetAllFilters): object {
     }
 
     const andClauses: object[] = [];
+    if (filters.overdue === "true" || filters.overdue === true) {
+        andClauses.push({ done: false, duedate: { [Op.lt]: new Date() } });
+    }
 
     // Filter by query (title or description)
     if (filters.query && filters.query.length) {

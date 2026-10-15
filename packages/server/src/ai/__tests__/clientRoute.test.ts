@@ -3,6 +3,17 @@ import { describe, expect, it } from "vitest";
 import { clientRouteTemplateVars, parseClientRoute } from "../clientRoute";
 
 describe("parseClientRoute", () => {
+    it("includes current filtered-task constraints for follow-up requests", () => {
+        const route = parseClientRoute({
+            section: "tasks",
+            search: "?assignees=user-id&overdue=true&unknown=ignored",
+        });
+        expect(route.viewKind).toBe("Filtered tasks");
+        expect(route.summary).toContain('"assignees":["user-id"]');
+        expect(route.summary).toContain('"overdue":["true"]');
+        expect(route.summary).not.toContain("unknown");
+        expect(route.summary).toContain("Preserve relevant filters");
+    });
     it("parses person overlay route (section + sectionId)", () => {
         const r = parseClientRoute({
             section: "person",

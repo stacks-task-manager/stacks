@@ -11,6 +11,7 @@ vi.mock("../../loaders", () => ({
     },
     TasksLoader: {
         getOne: vi.fn(),
+        getAll: vi.fn(),
         removeById: vi.fn(),
         update: vi.fn(),
     },
@@ -285,5 +286,24 @@ describe("ai.taskTools.updateTask input schema", () => {
                 duedate: new Date("2026-07-10T10:00:00.000Z"),
             })
         );
+    });
+});
+
+describe("task filter navigation and chat parity", () => {
+    const person = "00000000-0000-4000-8000-000000000001";
+    it("preserves assignees and an explicit overdue filter in navigation", async () => {
+        const tool = taskAiTools.find(t => t.name === "findTasks")!;
+        const input = tool.inputSchema.parse({ assigneeUserIds: [person], overdueOnly: true });
+        const output = (await tool.execute(input as never)) as { hashPath: string };
+        const params = new URL(output.hashPath, "http://test").searchParams;
+        expect(params.get("assignees")).toBe(person);
+        expect(params.get("overdue")).toBe("true");
+    });
+    it("passes the same overdue predicate to the authorized chat loader", async () => {
+        vi.mocked(TasksLoader.getAll).mockResolvedValue([]);
+        const tool = taskAiTools.find(t => t.name === "listTasks")!;
+        const input = tool.inputSchema.parse({ overdueOnly: true });
+        await tool.execute(input as never);
+        expect(TasksLoader.getAll).toHaveBeenCalledWith({ overdue: "true" });
     });
 });

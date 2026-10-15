@@ -1,6 +1,8 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import React from "react";
-import { MemoryRouter } from "react-router-dom";
+import { translate } from "@stacks/translations";
+import { getHashPathname } from "app/hooks";
+import { MemoryRouter, useLocation } from "react-router-dom";
 import { fireEvent, render } from "@testing-library/react";
 import { AiChatStore } from "app/store/aiChat";
 import { AiChatActions } from "app/store/actions/aiChat";
@@ -8,7 +10,8 @@ import { AiChat, MessageBubble } from "app/widgets/aiChat/AiChat";
 import type { AiChatWidget } from "@stacks/types";
 jest.mock("app/components/common", () => ({ Icon: () => null }));
 jest.mock("app/hooks", () => ({
-    getHashPathname: () => "/home",
+    getHashPathname: jest.fn(() => "/home"),
+    getHashSearch: () => "?assignees=user-id",
     getProjectLastView: () => "board",
     getViewType: () => "list",
 }));
@@ -76,8 +79,7 @@ it("forwards a pending choice's option identifiers for structured replies", () =
 });
 
 it("renders dynamic confirmation text without treating it as a translation key", () => {
-    const { translate } = require("@stacks/translations");
-    translate.mockClear();
+    jest.mocked(translate).mockClear();
     const question = "Column: project: example; title: Col 3";
     const view = render(
         <MemoryRouter>
@@ -220,4 +222,96 @@ it("submits the confirmation context to the server without echoing it in chat", 
     expect(AiChatStore.get().messages.filter(message => message.role === "user")).toHaveLength(1);
     expect(view.queryByTestId("ai-chat-choice-confirmation")).toBeNull();
     expect(view.container).not.toHaveTextContent("Selected: Confirm");
+});
+
+function CurrentRoute() {
+    const location = useLocation();
+    return <span data-testid="current-route">{location.pathname + location.search}</span>;
+}
+it("updates query parameters on the same tasks route for an overdue follow-up", () => {
+    const view = render(
+        <MemoryRouter initialEntries={["/tasks?assignees=user-id"]}>
+            <CurrentRoute />
+            <MessageBubble
+                msg={{
+                    id: "overdue-navigation",
+                    role: "assistant",
+                    content: "",
+                    widgets: [
+                        {
+                            type: "redirect",
+                            label: "Show tasks",
+                            hashPath: "/tasks?assignees=user-id&overdue=true",
+                        },
+                    ],
+                }}
+            />
+        </MemoryRouter>
+    );
+    expect(view.getByTestId("current-route")).toHaveTextContent("/tasks?assignees=user-id&overdue=true");
+});
+it("changes the task URL only after clicking a link-mode result", () => {
+    const view = render(
+        <MemoryRouter initialEntries={["/home"]}>
+            <CurrentRoute />
+            <MessageBubble
+                msg={{
+                    id: "task-link-mode",
+                    role: "assistant",
+                    content: "",
+                    widgets: [
+                        {
+                            type: "button",
+                            label: "Show tasks",
+                            hashPath: "/tasks?assignees=user-id&overdue=true",
+                        },
+                    ],
+                }}
+            />
+        </MemoryRouter>
+    );
+    expect(view.getByTestId("current-route")).toHaveTextContent("/home");
+    fireEvent.click(view.getByTestId("ai-chat-link-task-link-mode-0"));
+    expect(view.getByTestId("current-route")).toHaveTextContent("/tasks?assignees=user-id&overdue=true");
+});
+it("sends current task URL filters with the next chat request", () => {
+    const pathnameMock = jest.mocked(getHashPathname);
+    const original = pathnameMock.getMockImplementation();
+    const pollerDescriptor = Object.getOwnPropertyDescriptor(window, "updatePoller");
+    const scrollDescriptor = Object.getOwnPropertyDescriptor(HTMLElement.prototype, "scrollTo");
+    const priorEnabled = AiChatStore.get().serverEnabled;
+    const priorPanel = AiChatStore.get().panelOpen;
+    pathnameMock.mockReturnValue("/tasks");
+    try {
+        HTMLElement.prototype.scrollTo = jest.fn();
+        const sendMessage = jest.fn().mockResolvedValue(undefined);
+        window.updatePoller = {
+            sendMessage,
+            onAiChatMessage: jest.fn(() => () => {}),
+        } as unknown as typeof window.updatePoller;
+        AiChatActions.setServerEnabled(true);
+        AiChatActions.openPanel();
+        const view = render(
+            <MemoryRouter>
+                <AiChat />
+            </MemoryRouter>
+        );
+        fireEvent.change(view.getByTestId("ai-chat-input"), { target: { value: "only show overdue tasks" } });
+        fireEvent.click(view.getByTestId("ai-chat-send"));
+        expect(sendMessage).toHaveBeenCalledWith(
+            expect.objectContaining({
+                payload: expect.objectContaining({
+                    clientRoute: expect.objectContaining({ section: "tasks", search: "?assignees=user-id" }),
+                }),
+            })
+        );
+    } finally {
+        pathnameMock.mockImplementation(original);
+        if (pollerDescriptor) Object.defineProperty(window, "updatePoller", pollerDescriptor);
+        else Reflect.deleteProperty(window, "updatePoller");
+        if (scrollDescriptor) Object.defineProperty(HTMLElement.prototype, "scrollTo", scrollDescriptor);
+        else Reflect.deleteProperty(HTMLElement.prototype, "scrollTo");
+        AiChatActions.setServerEnabled(priorEnabled);
+        if (!priorPanel) AiChatActions.closePanel();
+    }
 });

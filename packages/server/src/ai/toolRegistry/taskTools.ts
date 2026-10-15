@@ -41,6 +41,7 @@ function listTasksHasFilter(d: {
     from?: string;
     to?: string;
     archivedOnly?: boolean;
+    overdueOnly?: boolean;
     assigneeUserIds?: string | string[];
     assignedOnly?: boolean;
     unassignedOnly?: boolean;
@@ -65,6 +66,7 @@ function listTasksHasFilter(d: {
     if (d.from || d.to) {
         return true;
     }
+    if (d.overdueOnly === true) return true;
     if (d.archivedOnly === true) {
         return true;
     }
@@ -93,6 +95,7 @@ function buildListTasksFilters(input: {
     from?: string;
     to?: string;
     archivedOnly?: boolean;
+    overdueOnly?: boolean;
     assigneeUserIds?: string | string[];
     assignedOnly?: boolean;
     unassignedOnly?: boolean;
@@ -122,6 +125,7 @@ function buildListTasksFilters(input: {
     if (input.to) {
         f.to = input.to;
     }
+    if (input.overdueOnly === true) f.overdue = "true";
     if (input.archivedOnly === true) {
         f.archived = "true";
     }
@@ -142,7 +146,7 @@ function buildListTasksFilters(input: {
     return f;
 }
 
-/** Maps findTasks / listTasks tool input to `/tasks` hash-route query string (same keys as the app `Tasks` view). */
+/** Maps findTasks / listTasks tool input to `/tasks` route query string (same keys as the app `Tasks` view). */
 export function findTasksInputToQueryString(input: {
     project?: string | string[];
     projectId?: string;
@@ -153,6 +157,7 @@ export function findTasksInputToQueryString(input: {
     from?: string;
     to?: string;
     archivedOnly?: boolean;
+    overdueOnly?: boolean;
     assigneeUserIds?: string | string[];
     assignedOnly?: boolean;
     unassignedOnly?: boolean;
@@ -183,6 +188,7 @@ export function findTasksInputToQueryString(input: {
     if (input.to) {
         params.set("to", input.to);
     }
+    if (input.overdueOnly === true) params.set("overdue", "true");
     if (input.archivedOnly === true) {
         params.set("archived", "true");
     }
@@ -227,6 +233,12 @@ export const taskAiTools = [
                 from: z.string().optional().describe("ISO date — start of startdate/duedate range"),
                 to: z.string().optional().describe("ISO date — end of range (paired with from)"),
                 archivedOnly: z.boolean().optional().describe("True = only archived tasks"),
+                overdueOnly: z
+                    .boolean()
+                    .optional()
+                    .describe(
+                        "True = incomplete tasks with a due date before now. Preserve other requested filters such as assigneeUserIds."
+                    ),
                 assigneeUserIds: uuidOrArray
                     .optional()
                     .describe(
@@ -280,6 +292,12 @@ export const taskAiTools = [
                 from: z.string().optional().describe("ISO date — start of startdate/duedate range"),
                 to: z.string().optional().describe("ISO date — end of range (paired with from)"),
                 archivedOnly: z.boolean().optional().describe("True = only archived tasks"),
+                overdueOnly: z
+                    .boolean()
+                    .optional()
+                    .describe(
+                        "True = incomplete tasks with a due date before now. Preserve other requested filters such as assigneeUserIds."
+                    ),
                 assigneeUserIds: uuidOrArray
                     .optional()
                     .describe(

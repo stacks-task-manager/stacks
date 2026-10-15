@@ -7,6 +7,15 @@ const world = () => createMock({ id: "world", locale: "en", request: "" });
 const call = (mock: ReturnType<typeof world>, toolName: string, input: Record<string, unknown> = {}) =>
     mock({ toolName, input });
 describe("synthetic backend contracts", () => {
+    it("excludes completed and undated tasks from overdue results", async () => {
+        const mock = world();
+        const filter = { assigneeUserIds: [ids.me], overdueOnly: true };
+        expect(await call(mock, "listTasks", filter)).toEqual([]);
+        await call(mock, "updateTask", { taskId: ids["Buy milk"], duedate: "2026-10-12T09:00:00Z" });
+        expect(await call(mock, "listTasks", filter)).toHaveLength(1);
+        await call(mock, "updateTask", { taskId: ids["Buy milk"], done: true });
+        expect(await call(mock, "listTasks", filter)).toEqual([]);
+    });
     it("creates immediately before or after a resolved column", async () => {
         const mock = world();
         const created = (await call(mock, "createStack", {

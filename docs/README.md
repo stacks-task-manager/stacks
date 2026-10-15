@@ -5,11 +5,12 @@ This page is the navigation hub for everything under `docs/` and the per-package
 ## Table of Contents
 
 - [Getting started](#getting-started)
+- [Agent workflow and project structure](#agent-workflow-and-project-structure)
 - [Per-package docs](#per-package-docs)
 - [Testing](#testing)
 - [Server internals (deep dives)](#server-internals-deep-dives)
 - [Web app internals (deep dives)](#web-app-internals-deep-dives)
-- [Operations & deployment](#operations-deployment)
+- [Operations & deployment](#operations--deployment)
 
 ## Getting started
 
@@ -20,6 +21,14 @@ This page is the navigation hub for everything under `docs/` and the per-package
 | [Contributing](../CONTRIBUTING.md)                  | Branching, PR rules, CLA, commit message format                                         |
 | [Code of Conduct](../CODE_OF_CONDUCT.md)            | Contributor Covenant                                                                    |
 | [Security policy](../SECURITY.md)                   | How to report a vulnerability                                                           |
+
+## Agent workflow and project structure
+
+| Doc                                       | What you'll find                                                               |
+| ----------------------------------------- | ------------------------------------------------------------------------------ |
+| [Agent instructions](../AGENTS.md)        | Shared rules, scoped instruction links, commands, runtime invariants           |
+| [Project structure](PROJECT_STRUCTURE.md) | Repository map, implementation placement, documentation ownership              |
+| [Agent workflow](AGENT_WORKFLOW.md)       | Acceptance criteria, completion loop, review boundaries, verification evidence |
 
 ## Per-package docs
 
@@ -51,6 +60,11 @@ Living under `packages/server/docs/` so they sit next to the code they describe:
 | Doc                                                                        | What you'll find                                                       |
 | -------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
 | [Server onboarding](../packages/server/docs/ONBOARDING.md)                 | Stack overview, bootstrap order, request lifecycle, how to add a route |
+| [Loaders](../packages/server/docs/LOADERS.md)                              | Database access, transactions, and write side effects                  |
+| [Permissions](../packages/server/docs/PERMISSIONS.md)                      | ACL record visibility and RBAC action permissions                      |
+| [Realtime updates](../packages/server/docs/REALTIME_UPDATES.md)            | WebSocket invalidation and client refresh flow                         |
+| [AI assistant](../packages/server/docs/AI.md)                              | AI SDK, tools, and WebSocket streaming                                 |
+| [Exports](../packages/server/docs/EXPORTS.md)                              | Export formats and implementation contracts                            |
 | [Caching system](../packages/server/docs/CACHING.md)                       | Multi-tenant response cache, invalidation, configuration               |
 | [In-app notifications](../packages/server/docs/NOTIFICATIONS.md)           | Persistence, targeting, and transaction-safe realtime delivery         |
 | [Embedded bundle integrity](../packages/server/docs/EMBEDDED_INTEGRITY.md) | Build-time signing + boot-time verification                            |
@@ -59,11 +73,11 @@ Living under `packages/server/docs/` so they sit next to the code they describe:
 
 Living under `packages/app/docs/`, same pattern:
 
-| Doc                                                          | What you'll find                                                                                 |
-| ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------ |
-| [Web app onboarding](../packages/app/docs/ONBOARDING.md)     | Stack overview, boot sequence, code layout, worked "add a feature" walkthrough                   |
-| [Web app architecture](../packages/app/docs/ARCHITECTURE.md) | Routing (HashRouter + background panels), state model, real-time updates, drag-and-drop, theming |
-| [API client](../packages/app/docs/API_CLIENT.md)             | The shared Axios instance, date round-tripping, `X-Instance-ID`, error handling                  |
+| Doc                                                          | What you'll find                                                                                                 |
+| ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------- |
+| [Web app onboarding](../packages/app/docs/ONBOARDING.md)     | Stack overview, boot sequence, code layout, worked "add a feature" walkthrough                                   |
+| [Web app architecture](../packages/app/docs/ARCHITECTURE.md) | Routing (BrowserRouter under `/app` + background panels), state model, real-time updates, drag-and-drop, theming |
+| [API client](../packages/app/docs/API_CLIENT.md)             | The shared Axios instance, date round-tripping, `X-Instance-ID`, error handling                                  |
 
 ## Operations & deployment
 
