@@ -4,54 +4,61 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { WebStandardStreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js";
 import { AI_TOOL_REGISTRY, MCP_AI_TOOL_NAMES } from "../ai/toolRegistry";
 import { serverPackageVersion } from "../packageVersions";
+import { MCP_INSTRUCTIONS, mcpToolAnnotations } from "../ai/mcpGuidance";
 
-const mcpServer = new McpServer({
-    name: "stacks-mcp",
-    version: serverPackageVersion,
-});
-
-for (const def of AI_TOOL_REGISTRY) {
-    if (!MCP_AI_TOOL_NAMES.has(def.name)) {
-        continue;
-    }
-    (mcpServer as any).registerTool(
-        def.name,
+function createMcpServer() {
+    const mcpServer = new McpServer(
         {
-            description: def.description,
-            inputSchema: def.inputSchema as any,
+            name: "stacks-mcp",
+            version: serverPackageVersion,
         },
-        async (args: unknown) => {
-            const output = await def.execute(def.inputSchema.parse(args) as never);
-            return {
-                content: [
-                    {
-                        type: "text" as const,
-                        text: JSON.stringify(output ?? null),
-                    },
-                ],
-            };
-        }
+        { instructions: MCP_INSTRUCTIONS }
     );
-}
 
-const transport = new WebStandardStreamableHTTPServerTransport({
-    sessionIdGenerator: undefined,
-    enableJsonResponse: true,
-});
-
-let connectOnce: Promise<void> | null = null;
-async function ensureConnected() {
-    if (!connectOnce) {
-        connectOnce = mcpServer.connect(transport);
+    for (const def of AI_TOOL_REGISTRY) {
+        if (!MCP_AI_TOOL_NAMES.has(def.name)) {
+            continue;
+        }
+        (mcpServer as any).registerTool(
+            def.name,
+            {
+                description: def.description,
+                annotations: mcpToolAnnotations(def.name),
+                inputSchema: def.inputSchema as any,
+            },
+            async (args: unknown) => {
+                const output = await def.execute(def.inputSchema.parse(args) as never);
+                return {
+                    content: [
+                        {
+                            type: "text" as const,
+                            text: JSON.stringify(output ?? null),
+                        },
+                    ],
+                };
+            }
+        );
     }
-    await connectOnce;
+
+    return mcpServer;
 }
 
 const mcp = new Hono();
 
 mcp.all("*", async c => {
-    await ensureConnected();
-    return await transport.handleRequest(c.req.raw);
+    // Stateless SDK transports are single-request objects; sharing one also mixes client ids.
+    const server = createMcpServer();
+    const transport = new WebStandardStreamableHTTPServerTransport({
+        sessionIdGenerator: undefined,
+        enableJsonResponse: true,
+    });
+    try {
+        await server.connect(transport);
+        // JSON mode resolves only after the request's handler has produced its response.
+        return await transport.handleRequest(c.req.raw);
+    } finally {
+        await server.close();
+    }
 });
 
 export default mcp;

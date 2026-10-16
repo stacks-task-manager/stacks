@@ -20,6 +20,10 @@ export function getLlmConfig() {
         baseURL: envTrim("AI_BASE_URL") || envTrim("AI_OPENAI_BASE_URL"),
         modelId: envTrim("AI_MODEL"),
         apiKey: envTrim("AI_API_KEY") || envTrim("AI_OPENAI_API_KEY") || "not-needed",
+        cacheNamespace: envTrim("AI_PROMPT_CACHE_NAMESPACE") || "stacks",
+        cacheMode: envTrim("AI_PROMPT_CACHE_MODE") || "auto",
+        cacheRetention: envTrim("AI_PROMPT_CACHE_RETENTION"),
+        cacheProtocol: envTrim("AI_PROMPT_CACHE_PROTOCOL") || "auto",
         disableThinking: ["true", "1", "yes", "on"].includes(envTrim("AI_DISABLE_THINKING").toLowerCase()),
     };
 }

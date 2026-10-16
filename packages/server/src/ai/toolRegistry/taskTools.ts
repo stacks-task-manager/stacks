@@ -519,13 +519,11 @@ export const taskAiTools = [
 
     defineTool({
         name: "getTask",
-        description: `Read full details of an existing task in chat. If only its title is supplied, call listTasks with searchQuery first; then call this getter. Do not navigate or ask permission to look up the task.`,
+        description: `Read full details of one existing task by resolved taskId. Returns id, title, description, done, duedate, assignees, project, and stack references. This read does not navigate. Resolve a title through available authorized host lookups before calling.`,
         inputSchema: z.object({
             taskId: z
                 .string()
-                .describe(
-                    "Task UUID from current UI, prior authorized results, or listTasks(searchQuery). Resolve a supplied task name now; never ask the user for a UUID"
-                ),
+                .describe("Task UUID resolved through authorized context or an available task lookup"),
         }),
         execute: async ({ taskId }) => {
             const t = await TasksLoader.getOne(taskId);
@@ -545,13 +543,11 @@ export const taskAiTools = [
     defineTool({
         name: "deleteTask",
         description:
-            "Permanently delete a task by UUID. If given a task name, resolve it with listTasks first.",
+            "Permanently delete one task by resolved taskId. Returns its id, title, and deleted flag. This is a destructive action; direct MCP execution deletes immediately without the built-in chat confirmation.",
         inputSchema: z.object({
             taskId: z
                 .string()
-                .describe(
-                    "Task UUID from current UI, prior authorized results, or listTasks(searchQuery). Resolve a supplied task name now; never ask the user for a UUID"
-                ),
+                .describe("Task UUID resolved through authorized context or an available task lookup"),
         }),
         execute: async ({ taskId }) => {
             const task = await TasksLoader.removeById(taskId);
@@ -561,20 +557,28 @@ export const taskAiTools = [
 
     defineTool({
         name: "createTask",
-        description: `Create a NEW task only. For changes to an existing task (including setting due dates), use updateTask. Requires projectId (listProjects if you only have a name). Picks the default stack from the project's stack order.`,
+        description: `Create a new task in a resolved project, optionally in a specified column. For changes to an existing task, use updateTask when available. Omitted stack uses the project's default column. Include only requested title, description, due date, and assignees; do not infer assignment or a due date. Returns the created task's id, title, projectId, stackId, and done state.`,
         inputSchema: z.object({
             projectId: z
                 .string()
-                .describe(
-                    "Project UUID from current UI or listProjects(search). Resolve the supplied project name now"
-                ),
-            stackId: z.string().optional().describe("Stack UUID (optional)"),
+                .describe("Resolved project UUID from authorized context or an available project lookup"),
+            stackId: z
+                .string()
+                .optional()
+                .describe("Resolved column UUID from listStacks; omit to use the default column"),
             title: z
                 .string()
                 .min(1)
                 .describe("Exact new task title only; exclude the project name and surrounding request text"),
-            duedate: aiDateInput.optional().describe("Due date ISO 8601"),
-            assigneeUserIds: z.array(z.string()).optional().describe("Assignee user UUIDs"),
+            duedate: aiDateInput
+                .optional()
+                .describe(
+                    "Due date as an ISO calendar date or timezone-qualified date-time; date-only values mean midnight UTC"
+                ),
+            assigneeUserIds: z
+                .array(z.string())
+                .optional()
+                .describe("Resolved assignee user UUIDs; omit to leave the new task unassigned"),
             description: z.string().optional().describe("Task description"),
         }),
         execute: async ({ projectId, stackId: stackIdArg, title, duedate, assigneeUserIds, description }) => {
@@ -628,7 +632,7 @@ export const taskAiTools = [
                 .string()
                 .uuid()
                 .describe(
-                    "Task UUID from current UI, prior authorized results, or listTasks(searchQuery). Resolve a supplied task name now; never ask the user for a UUID to move"
+                    "Task UUID resolved through authorized context or an available task lookup to move"
                 ),
             stackId: z.string().uuid().describe("Destination stack (column) UUID"),
             afterTaskId: z
@@ -667,9 +671,7 @@ export const taskAiTools = [
             .object({
                 taskId: z
                     .string()
-                    .describe(
-                        "Task UUID from current UI, prior authorized results, or listTasks(searchQuery). Resolve a supplied task name now; never ask the user for a UUID"
-                    ),
+                    .describe("Task UUID resolved through authorized context or an available task lookup"),
                 title: z.string().optional(),
                 description: z.string().optional().describe("Task description; pass empty string to clear"),
                 done: z.boolean().optional().describe("True = mark the task complete"),

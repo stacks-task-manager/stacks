@@ -1,15 +1,17 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 /** Synthetic tools only: this runner never invokes loaders or the MCP backend. */
-import { generateText, stepCountIs, asSchema } from "ai";
+import { generateText, stepCountIs, asSchema, jsonSchema } from "ai";
 import { createLlmModel, LLM_GENERATION_SETTINGS } from "../src/ai/model";
 import { EvaluationTerminal } from "./ai-eval/terminal";
 import { renderEvaluationHtml } from "./ai-eval/report";
 import Handlebars from "handlebars";
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { scoreFixture, parseOptions, EvaluationCall } from "./ai-eval/scoring";
 import { performance } from "node:perf_hooks";
-import { AI_TOOL_REGISTRY, buildAiTools } from "../src/ai/tools";
+import { buildAiTools } from "../src/ai/tools";
+import { assembleSystemPrompt } from "../src/ai/promptAssembly";
+import { cacheToolDefinitions, type CacheUsage, createCacheUsageTracker } from "../src/ai/promptCache";
 import { template } from "../src/ai/promptTemplate";
 import { selectPromptContext } from "../src/ai/promptContext";
 import { getLlmConfig } from "../src/ai/config";
@@ -29,14 +31,40 @@ async function main() {
     if (process.env.CI && process.env.CI !== "false" && process.env.CI !== "0")
         throw new Error("Live model evaluations are manual-only and cannot run in CI.");
     const options = parseOptions(process.argv.slice(2));
+    const fixtureIds = options.fixture ? options.fixture.split(",").map(id => id.trim()) : [];
+    if (fixtureIds.some(id => !fixtures.some(fixture => fixture.id === id)))
+        throw new Error("Unknown fixture id; use --list to see available cases");
     const selectedFixtures = fixtures.filter(
         f =>
-            (!options.fixture || f.id === options.fixture) &&
+            (!fixtureIds.length || fixtureIds.includes(f.id)) &&
             (options.suite === "all" || f.suite === options.suite)
     );
     if (!selectedFixtures.length) throw new Error("No fixtures matched; use --list to see available cases.");
     if (options.list) {
         console.log(selectedFixtures.map(f => `${f.id} [${f.suite}] ${f.request}`).join("\n"));
+        return;
+    }
+    if (options.capture) {
+        const path = resolve(options.capture);
+        if (existsSync(path)) throw new Error("Snapshot already exists; choose a new --capture path");
+        const tools = buildAiTools(undefined, async () => null, true);
+        const directory = resolve(__dirname, "../src/ai/prompts");
+        const snapshot = {
+            prompts: Object.fromEntries(
+                readdirSync(directory)
+                    .filter(name => name.endsWith(".md"))
+                    .map(name => [name, readFileSync(resolve(directory, name), "utf8")])
+            ),
+            tools: Object.fromEntries(
+                cacheToolDefinitions(tools).map(({ name, description, schema }) => [
+                    name,
+                    { description, schema },
+                ])
+            ),
+        };
+        mkdirSync(dirname(path), { recursive: true });
+        writeFileSync(path, JSON.stringify(snapshot, null, 2) + "\n");
+        console.log("Saved prompt/tool snapshot: " + path);
         return;
     }
     const config = getLlmConfig();
@@ -46,6 +74,7 @@ async function main() {
     if (!Number.isInteger(timeoutMs) || timeoutMs <= 0 || timeoutMs > 2147483647)
         throw new Error("AI_EVAL_TIMEOUT_MS must be a positive integer up to 2147483647");
     const baseline = options.baseline;
+    const snapshot = options.snapshot ? JSON.parse(readFileSync(resolve(options.snapshot), "utf8")) : null;
     const htmlPath = resolve(
         options.html ||
             (options.output
@@ -75,6 +104,7 @@ async function main() {
         latencyMs: number;
         payloadBytes: number;
         usage?: unknown;
+        cacheUsage?: CacheUsage;
         error?: string;
     })[] = [];
     let consecutiveProviderErrors = 0;
@@ -87,6 +117,8 @@ async function main() {
             executionMode: "sequential",
             parallelToolCalls: false,
             baseline,
+            snapshot: options.snapshot || undefined,
+            contextStrategy: options.context,
             status: "running",
             planned: selectedFixtures.length * options.runs,
             rows,
@@ -131,10 +163,18 @@ async function main() {
                 currentUserEmail: "test@example.invalid",
             };
             const render = (name: string) =>
-                baseline
+                snapshot
+                    ? Handlebars.compile(
+                          snapshot.prompts["request-context.md"] && name === "client-chat.md"
+                              ? snapshot.prompts[name].trim()
+                              : snapshot.prompts[name],
+                          { noEscape: true }
+                      )(vars)
+                    : baseline
                     ? Handlebars.compile(oldPrompts[name], { noEscape: true })(vars)
-                    : template(name, vars);
+                    : template(name, vars, name === "client-chat.md");
             const selection = selectPromptContext({
+                strategy: options.context as "targeted" | "full",
                 newUserMessage: fixture.request,
                 history: fixture.history,
                 parsedRoute: route ? parseClientRoute(route) : null,
@@ -179,18 +219,31 @@ async function main() {
                 },
                 !baseline
             );
+            if (snapshot)
+                for (const [name, tool] of Object.entries(tools)) {
+                    tool.description = snapshot.tools[name].description;
+                    tool.inputSchema = jsonSchema(snapshot.tools[name].schema);
+                }
             if (baseline)
                 for (const [name, tool] of Object.entries(tools))
                     tool.description = oldDescriptions[name] ?? tool.description;
+            const legacyLayout = baseline || (snapshot && !snapshot.prompts["request-context.md"]);
+            const assembled = assembleSystemPrompt(
+                selection.promptFragments,
+                vars,
+                routeVars,
+                snapshot && !legacyLayout ? render : template
+            );
             const payload = {
-                system:
-                    selection.promptFragments.map(render).join("\n\n") +
-                    (selection.unsupportedReason
-                        ? "\n\nRequested operation: " +
-                          selection.unsupportedReason +
-                          " Explain this limitation; do not ask for confirmation or missing parameters."
-                        : "") +
-                    (routeVars.hasClientRoute ? "\n\n" + render("client-ui-context.md") : ""),
+                system: !legacyLayout
+                    ? assembled.systemMessages
+                    : selection.promptFragments.map(render).join("\n\n") +
+                      (selection.unsupportedReason
+                          ? "\n\nRequested operation: " +
+                            selection.unsupportedReason +
+                            " Explain this limitation; do not ask for confirmation or missing parameters."
+                          : "") +
+                      (routeVars.hasClientRoute ? "\n\n" + render("client-ui-context.md") : ""),
                 messages: [
                     ...groundedHistory(session, fixture.history ?? []),
                     ...(fixture.priorResults?.length
@@ -209,13 +262,7 @@ async function main() {
             const payloadBytes = Buffer.byteLength(
                 JSON.stringify({
                     ...payload,
-                    tools: AI_TOOL_REGISTRY.filter(t => selection.allowedTools.includes(t.name)).map(t => ({
-                        name: t.name,
-                        description: baseline ? oldDescriptions[t.name] ?? t.description : t.description,
-                        schema: (asSchema as (schema: unknown) => { jsonSchema: unknown })(
-                            tools[t.name].inputSchema
-                        ).jsonSchema,
-                    })),
+                    tools: cacheToolDefinitions(tools),
                 })
             );
             terminal.begin(
@@ -229,6 +276,7 @@ async function main() {
             const start = performance.now();
             let error: string | undefined;
             let usage: unknown;
+            const cacheTracker = createCacheUsageTracker();
             let responseText = "";
             const modelSteps: { text: string; finishReason: string }[] = [];
             const heartbeat = setInterval(
@@ -242,7 +290,12 @@ async function main() {
                         "I can't perform this operation through chat. " + selection.unsupportedReason;
                 } else {
                     const result = await generateText({
-                        model: createLlmModel(config),
+                        model: createLlmModel(config, globalThis.fetch, {
+                            scope: "stacks-evaluation",
+                            stable: legacyLayout ? String(payload.system) : assembled.stable,
+                            tools: cacheToolDefinitions(tools),
+                            onUsage: cacheTracker.observe,
+                        }),
                         ...payload,
                         tools,
                         ...LLM_GENERATION_SETTINGS,
@@ -300,6 +353,7 @@ async function main() {
                 latencyMs: Math.round(performance.now() - start),
                 payloadBytes,
                 usage,
+                cacheUsage: cacheTracker.snapshot(),
                 error,
                 ...scoreFixture(fixture, calls, normalize, responseText, error),
             });
@@ -329,6 +383,8 @@ async function main() {
         executionMode: "sequential",
         parallelToolCalls: false,
         baseline,
+        snapshot: options.snapshot || undefined,
+        contextStrategy: options.context,
         runs: options.runs,
         fixtureCount: selectedFixtures.length,
         passed: rows.filter(r => r.passed).length,

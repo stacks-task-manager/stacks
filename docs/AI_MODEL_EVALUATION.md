@@ -336,3 +336,41 @@ historical measurements.
 
 Evaluation conversation state is created independently of the runtime session
 registry, so large repetition counts do not exhaust the runtime conversation cap.
+
+## Controlled prompt and cache comparisons
+
+Capture the **current** prompts, tool descriptions, and model-facing schemas before editing them:
+
+```bash
+yarn test:ai:model --capture=ai-eval-reports/before-prompts.json
+yarn test:ai:model --snapshot=ai-eval-reports/before-prompts.json --runs=3 --output=ai-eval-reports/before.json
+yarn test:ai:model --context=targeted --runs=3 --output=ai-eval-reports/after-targeted.json
+yarn test:ai:model --context=full --runs=3 --output=ai-eval-reports/after-full.json
+```
+
+Capture refuses to overwrite an existing file and performs no inference. A snapshot preserves prompt
+text, descriptions, and schemas; it is not a snapshot of old runtime code. Unlike historical
+`--baseline`, current snapshots use the current execution guard and reference resolution. Fixtures,
+synthetic outputs, provider settings, and generation settings must remain fixed for attribution.
+Snapshot files are local JSON artifacts; use the ignored `ai-eval-reports` directory.
+
+`--context` defaults to `targeted`; `full` exposes all supported topic fragments and tools while
+retaining unsupported-operation detection and execution safeguards. The application default remains
+targeted until comparison evidence justifies a change. `--fixture` also accepts comma-separated
+exact ids for a bounded sample; unknown ids are rejected. Reports label the context strategy and
+current snapshots separately from historical baselines.
+
+Current prompts use the same stable/dynamic assembly and provider cache policy as chat, including
+every SDK continuation request. Each report row contains raw `cacheUsage.readTokens` and
+`writeTokens`; missing provider metrics are null. The HTML report displays these counts. Normalized
+SDK `usage` is retained separately and can contain zeros substituted for absent metrics.
+
+To measure reuse, run three repetitions of a fixture with eligible context on the same endpoint.
+Treat the first attempt as an initial observation, not proof of an empty provider cache: it may
+already be warm from earlier requests. Compare initial and later raw cache counts and latency.
+Neither positive cache counts from a tool continuation alone nor lower latency proves reuse across
+user turns. Inspect each request where needed. Provider eviction, token thresholds, and server
+capacity can prevent reuse; never classify unavailable telemetry as a cache miss.
+
+Review [prompt/cache configuration](../packages/server/docs/AI.md#prompt-authoring-and-context-caching)
+and the [review record](AI_PROMPT_REVIEW.md). External MCP hosts control their own model caching.

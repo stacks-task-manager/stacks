@@ -137,10 +137,16 @@ export function parseOptions(args: string[]) {
         suite: "all",
         output: "",
         html: "",
+        snapshot: "",
+        capture: "",
+        context: "targeted",
     };
     for (const arg of args) {
         if (arg === "--list") options.list = true;
         else if (arg === "--baseline") options.baseline = true;
+        else if (arg.startsWith("--capture=")) options.capture = arg.slice(10);
+        else if (arg.startsWith("--snapshot=")) options.snapshot = arg.slice(11);
+        else if (arg.startsWith("--context=")) options.context = arg.slice(10);
         else if (arg.startsWith("--runs=")) options.runs = Number(arg.slice(7));
         else if (arg.startsWith("--fixture=")) options.fixture = arg.slice(10);
         else if (arg.startsWith("--suite=")) options.suite = arg.slice(8);
@@ -152,5 +158,11 @@ export function parseOptions(args: string[]) {
         throw new Error("--runs must be an integer from 1 to 20");
     if (!["all", "tools", "safety", "interpretation"].includes(options.suite))
         throw new Error("--suite must be all, tools, safety, or interpretation");
+    if (!["targeted", "full"].includes(options.context))
+        throw new Error("--context must be targeted or full");
+    if (options.capture && (options.baseline || options.snapshot))
+        throw new Error("--capture cannot be combined with --baseline or --snapshot");
+    if (options.baseline && options.snapshot)
+        throw new Error("--baseline and --snapshot are mutually exclusive");
     return options;
 }

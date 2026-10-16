@@ -11,7 +11,11 @@ const mocks = vi.hoisted(() => ({
     connect: vi.fn(),
     setupError: false,
 }));
-vi.mock("ai", () => ({ streamText: mocks.stream, stepCountIs: vi.fn() }));
+vi.mock("ai", () => ({
+    streamText: mocks.stream,
+    stepCountIs: vi.fn(),
+    wrapLanguageModel: ({ model }: any) => model,
+}));
 vi.mock("@ai-sdk/openai", () => ({ createOpenAI: () => ({ chat: () => ({}) }) }));
 vi.mock("../config", () => ({
     getLlmConfig: () => ({ baseURL: "http://test/v1", modelId: "test", apiKey: "test" }),
@@ -383,4 +387,14 @@ describe("LLM chat orchestration", () => {
             ],
         });
     });
+});
+
+it("sends the user's exact text after separate stable and dynamic system messages", async () => {
+    const message = "  Explain this:\n\n\n```\n  {{literal}}  \n```\n ";
+    await streamAiChat([], message, handlers(), undefined, { conversationId: "verbatim-prompt-regression" });
+    const options = mocks.stream.mock.calls[0][0];
+    expect(options.messages.at(-1).content).toBe(message);
+    expect(options.system).toHaveLength(2);
+    expect(options.system[0].content).not.toContain("Authenticated user id:");
+    expect(options.system[1].content).toContain("Authenticated user id:");
 });

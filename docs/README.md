@@ -53,6 +53,8 @@ The repo is a Yarn workspaces monorepo; each workspace has its own page under `d
 | [E2E testing with Playwright](E2E.md)                 | Test layout, POM conventions, running the suite                  |
 | [Manual LLM model evaluation](AI_MODEL_EVALUATION.md) | Opt-in prompt and tool-calling tests, reports, model comparisons |
 
+| [AI prompt and cache review](AI_PROMPT_REVIEW.md) | Prompt findings, cache behavior, and verification limits |
+
 ## Server internals (deep dives)
 
 Living under `packages/server/docs/` so they sit next to the code they describe:

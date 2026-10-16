@@ -3,8 +3,8 @@
  * Dynamic prompt + tool selector.
  *
  * Goal: per turn, assemble only the system prompt fragments and expose only the
- * tools that the current intent actually needs. Cheaper in tokens, easier for
- * the model to stay on-task, and still capable — because the "core" fragment +
+ * tools that the current intent needs. Context size is not a hard limit; selection helps
+ * the model stay on-task while the "core" fragment and
  * core tools always cover identity, navigation, and common getters.
  *
  * The selector is **pure** (no I/O). Inputs: latest user message, recent chat
@@ -23,12 +23,8 @@ export const PROMPT_TOPICS = ["tasks", "projects", "notepads", "calendar", "org"
 export type PromptTopic = (typeof PROMPT_TOPICS)[number];
 
 /**
- * Tools that are always available regardless of topic. Chosen for two reasons:
- *   1. They're tiny (descriptions measured in a few dozen tokens each) so the
- *      cost of always including them is negligible.
- *   2. They unblock navigation, identity resolution, and single-record reads
- *      from anywhere, which keeps the assistant conversational even when no
- *      topic matches (e.g. a pure "who am I" turn).
+ * Tools available across topics for navigation, identity resolution, and common reads,
+ * including requests that do not match a domain keyword.
  */
 export const CORE_TOOLS: readonly string[] = [
     "askUserChoice",
@@ -121,6 +117,7 @@ const ROUTE_TOPICS: Record<string, PromptTopic[]> = {
 
 export type PromptContextInputs = {
     newUserMessage: string;
+    strategy?: "targeted" | "full";
     history?: AiChatClientMessage[];
     parsedRoute?: ParsedClientRoute | null;
     /** Routing section (e.g. `"project"`, `"mytasks"`). */
@@ -273,6 +270,9 @@ export function selectPromptContext(inputs: PromptContextInputs): PromptContextS
         // This is purely additive — sticky topics never override anything.
         activate(topic, "sticky from recent chat");
     }
+
+    if (inputs.strategy === "full")
+        for (const topic of PROMPT_TOPICS) activate(topic, "full context evaluation");
 
     let topics = PROMPT_TOPICS.filter(t => reasons[t] && reasons[t].length > 0);
 

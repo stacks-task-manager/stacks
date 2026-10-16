@@ -11,7 +11,7 @@ import { defineTool } from "./defineTool";
 export const orgAiTools = [
     defineTool({
         name: "listTags",
-        description: `List workspace tags and statuses (projects, people, timebox).`,
+        description: `Read workspace tags and status labels. Returns ids, titles, colors, sections, types, and parent references. A status has type status; resolve a named label to the correct id before filtering or updating a task. Does not create tags.`,
         inputSchema: z.object({}),
         execute: async () => {
             const tags = await TagsLoader.getAll();
@@ -28,7 +28,7 @@ export const orgAiTools = [
 
     defineTool({
         name: "listCompanies",
-        description: `List companies. Optional title filter.`,
+        description: `Read companies, optionally filtering by a case-insensitive title substring. Returns ids, titles, city, country, email, and website. Use getCompany for one company's detailed record; multiple similar titles require disambiguation.`,
         inputSchema: z.object({
             search: z.string().optional().describe("Case-insensitive title filter"),
         }),
@@ -49,7 +49,7 @@ export const orgAiTools = [
 
     defineTool({
         name: "getCompany",
-        description: `Load one company by id.`,
+        description: `Read a company's detailed contact information, industry, notes, and address by resolved company id. Returns one record; use listCompanies to resolve a name when available.`,
         inputSchema: z.object({
             companyId: z.string().describe("Company UUID"),
         }),
@@ -73,7 +73,7 @@ export const orgAiTools = [
 
     defineTool({
         name: "listBookmarks",
-        description: `List the current user's bookmarks (pinned tasks/projects/etc).`,
+        description: `Read the authenticated user's bookmarks. Returns an array of ids, record types, titles, resource references, URLs, and pinned flags. Does not create bookmarks or navigate to them.`,
         inputSchema: z.object({}),
         execute: async () => {
             const bookmarks = (await BookmarksLoader.getAll()) as IBookmark[];

@@ -11,13 +11,13 @@ import { defineTool } from "./defineTool";
 export const stackAiTools = [
     defineTool({
         name: "createStack",
-        description: `Create a new board column. Requires projectId.`,
+        description: `Create a board column in a resolved project. Returns its id, title, and projectId. Omit placement to append; specify only one of insertIndex, beforeStackId, or afterStackId. Use listStacks to resolve relative placement; do not create a duplicate to rename an existing column.`,
         inputSchema: z
             .object({
                 projectId: z
                     .string()
                     .describe(
-                        "Project UUID from current UI or listProjects(search). Resolve a supplied project name now; never ask for its UUID"
+                        "Project UUID resolved through authorized context or an available project lookup"
                     ),
                 title: z.string().min(1).describe("Column title"),
                 insertIndex: z
@@ -66,13 +66,11 @@ export const stackAiTools = [
 
     defineTool({
         name: "listStacks",
-        description: `List columns in one project. Resolve a project name with listProjects first. projectId is required; ask which project only if it is absent from the user message and current UI.`,
+        description: `Read columns in one resolved project, in board order. Returns zero-based index, id, title, projectId, tint, collapsed state, maxTasks, sorting, and taskCount. Use ids from this result for column changes and task destinations. Obtain projectId from authorized host context or an available project lookup.`,
         inputSchema: z.object({
             projectId: z
                 .string()
-                .describe(
-                    "Project UUID from current UI or listProjects(search). Resolve a supplied project name now; never ask for its UUID"
-                ),
+                .describe("Project UUID resolved through authorized context or an available project lookup"),
         }),
         execute: async ({ projectId }) => {
             const project = await ProjectsLoader.getOne(projectId);
@@ -99,13 +97,13 @@ export const stackAiTools = [
     defineTool({
         name: "updateStack",
         description:
-            "Update an existing board column/stack. Supports title, tint color, collapsed state, max task limit, and sorting.",
+            "Update an existing board column by resolved stackId. Supply at least one requested field: title, tint, collapsed, maxTasks, or sorting. Omitted fields remain unchanged; documented null values clear settings. Returns the updated column fields. Does not move tasks or create a column.",
         inputSchema: z
             .object({
                 stackId: z
                     .string()
                     .describe(
-                        "Existing column UUID from listStacks(projectId); resolve the project first via current UI or listProjects"
+                        "Existing column UUID from listStacks; obtain its project reference from authorized context or an available project lookup"
                     ),
                 title: z.string().min(1).optional().describe("New column title"),
                 tint: z.string().nullable().optional().describe("Column tint/color value, or null to clear"),
@@ -167,7 +165,7 @@ export const stackAiTools = [
     defineTool({
         name: "deleteStack",
         description:
-            "Delete a board column/stack and the tasks in it. Resolve a column name with listStacks first.",
+            "Permanently delete a resolved board column and the tasks in it. Resolve its name with listStacks and account for the contained tasks before requesting deletion. Returns the deleted column reference. Direct MCP execution performs deletion without the built-in chat confirmation.",
         inputSchema: z.object({ stackId: z.string().describe("Column/stack UUID") }),
         execute: async ({ stackId }) => {
             const deleted = await StacksLoader.remove(stackId);

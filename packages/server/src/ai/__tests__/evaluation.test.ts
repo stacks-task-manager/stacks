@@ -248,3 +248,17 @@ describe("expanded scenario assertions", () => {
         ).toBe(false);
     });
 });
+
+describe("controlled prompt comparisons", () => {
+    it("accepts targeted/full contexts and separate current snapshots", () => {
+        expect(parseOptions(["--context=full", "--snapshot=before.json"])).toMatchObject({
+            context: "full",
+            snapshot: "before.json",
+            baseline: false,
+        });
+        expect(parseOptions(["--capture=before.json"]).capture).toBe("before.json");
+        expect(() => parseOptions(["--context=unknown"])).toThrow();
+        expect(() => parseOptions(["--snapshot=x", "--baseline"])).toThrow();
+        expect(() => parseOptions(["--capture=x", "--snapshot=y"])).toThrow();
+    });
+});

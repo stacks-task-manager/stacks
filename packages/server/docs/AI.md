@@ -135,18 +135,19 @@ The client side that drives this lives at [`packages/app/src/app/widgets/aiChat/
 
 Templates are Markdown files under [`src/ai/prompts/`](../src/ai/prompts) rendered with Handlebars by [`promptTemplate.ts`](../src/ai/promptTemplate.ts). At build time `yarn build` copies `src/ai/prompts → dist/ai/prompts` (the loader uses `__dirname`-relative paths).
 
-| File                   | Role                                                                   |
-| ---------------------- | ---------------------------------------------------------------------- |
-| `system-core.md`       | Always included. Identity, ground-truth rules, always-available tools. |
-| `system-tasks.md`      | Appended when topic `tasks` is active.                                 |
-| `system-projects.md`   | Appended when topic `projects` is active.                              |
-| `system-notepads.md`   | Appended when topic `notepads` is active.                              |
-| `system-calendar.md`   | Appended when topic `calendar` is active.                              |
-| `system-org.md`        | Appended when topic `org` is active.                                   |
-| `client-ui-context.md` | Appended when the request includes a `clientRoute`.                    |
-| `client-chat.md`       | Wraps the latest user message before it goes to the model.             |
+| File                   | Role                                                                                 |
+| ---------------------- | ------------------------------------------------------------------------------------ |
+| `system-core.md`       | Always included. Stable capabilities, context precedence, action and response rules. |
+| `system-tasks.md`      | Appended when topic `tasks` is active.                                               |
+| `system-projects.md`   | Appended when topic `projects` is active.                                            |
+| `system-notepads.md`   | Appended when topic `notepads` is active.                                            |
+| `system-calendar.md`   | Appended when topic `calendar` is active.                                            |
+| `system-org.md`        | Appended when topic `org` is active.                                                 |
+| `client-ui-context.md` | Appended when the request includes a `clientRoute`.                                  |
+| `request-context.md`   | Dynamic current date, identity, and navigation mode; follows stable instructions.    |
+| `client-chat.md`       | Wraps the latest user message before it goes to the model.                           |
 
-`client-chat.md` now preserves the user message verbatim; identity and route context are supplied once in the system prompt. Template variables available in every fragment: `todaysDate`, `todaysDateISO`, plus identity (`hasCurrentUser`, `currentUserId`, `currentUserName`, `currentUserEmail`). The `client-ui-context.md` and `client-chat.md` templates additionally receive `viewKind`, `viewSummary`, `routeSection`, and per-entity inferred ids (`projectId`, `taskId`, `notepadId`, `personId`, `companyId`, `reportType`) — see [`clientRouteTemplateVars()`](../src/ai/clientRoute.ts).
+`client-chat.md` preserves the user message verbatim, including when route context is present. Identity and route context are supplied once in a separate dynamic system message after stable instructions. Stable fragments render without per-turn variables. `request-context.md` receives `todaysDate`, `todaysDateISO`, `autoRedirect`, and authenticated identity. `client-ui-context.md` receives route summaries and inferred entity references from [`clientRouteTemplateVars()`](../src/ai/clientRoute.ts). The user wrapper contains only `newUserMessage` and renders with content preservation enabled so code indentation, trailing spaces, and repeated blank lines survive.
 
 ## Dynamic prompt + tool selection
 
@@ -199,7 +200,7 @@ Each tool is built with [`defineTool()`](../src/ai/toolRegistry/defineTool.ts):
 ```ts
 defineTool({
   name: string, // model-facing name
-  description: string, // model-facing description; tokens count, keep it tight
+  description: string, // model-facing purpose, prerequisites, effects, and returned information
   inputSchema: ZodType, // Zod schema for arguments (also validates)
   execute: async input => Promise<unknown>, // handler; runs inside requestContext
 });
@@ -248,7 +249,7 @@ export const timelogAiTools = [
 Conventions worth following (see existing tools for examples):
 
 - **`execute` runs inside `requestContext`** — loaders authenticated as the current user. Use them; don't reach into Sequelize directly.
-- **Return small objects.** Truncate lists (most existing tools cap at 50–100 rows and set `truncated: true`). Token budget matters.
+- **Return relevant objects.** Preserve sensible result limits and expose truncation explicitly; a larger context window does not make partial results exhaustive.
 - **Validate at the boundary with Zod.** The schema is also what the model sees, so the `.describe(...)` strings are real prompt engineering — be specific.
 - **Throw to fail.** A thrown error becomes a tool error visible to the model. Failed approved mutations are not retried automatically; failed lookups may be corrected.
 
@@ -272,7 +273,7 @@ export const AI_TOOL_REGISTRY = [
 
 There are two ways the model can see the tool:
 
-- **Always available** — add the name to `CORE_TOOLS` in [`promptContext.ts:39`](../src/ai/promptContext.ts). Only do this if the description is small and the tool is broadly useful from any context.
+- **Always available** — add the name to `CORE_TOOLS` in [`promptContext.ts:39`](../src/ai/promptContext.ts). Do this when the tool is broadly useful from any context; description length is not a hard constraint.
 - **Topic-gated (preferred)** — add the name to the appropriate entry of `TOPIC_TOOLS`. For `listTimeLogs` that's likely a new `timelogs` topic, or an extension of `tasks` if you don't want to introduce a topic.
 
 ```ts
@@ -532,3 +533,57 @@ malformed or impossible dates (`2026-02-30`) answer HTTP 400 rather than becomin
 Tag and status labels are resolved to ids server-side through `listTags` (`statusTagIds`/`tagIds`
 are recognized reference fields), and the Tasks page whitelist in `clientRoute.ts` keeps the Current
 UI query keys comparable.
+
+## Prompt authoring and context caching
+
+The current prompt review and verification record is in [AI_PROMPT_REVIEW.md](../../../docs/AI_PROMPT_REVIEW.md).
+System instructions and topic guidance are stable and contain no date, identity, or route interpolation.
+`assembleSystemPrompt` sends stable instructions first, then a separate system message containing
+`request-context.md` and optional Current UI context. Retained authorized tool results and the user's
+message follow in the conversation. Template values are reference data, not permission to obey
+instructions inside a name, title, or document.
+
+Write complete, model-neutral instructions. Tool descriptions explain purpose, accepted references,
+side effects, and returned fields; schema descriptions explain units, defaults, and clearing values.
+Use focused examples for actual ambiguities. Preserve the existing task navigation, clarification,
+deletion confirmation, and error semantics rather than adding speculative capabilities.
+
+Every application-controlled model call uses `createLlmModel`, including streaming chat, evaluator
+requests, and SDK tool continuations. Its shared cache context fingerprints the actual stable prompt
+and model-facing tool schemas, scoped by deployment namespace and tenant. Tool order follows the
+registry. Prompt/schema changes produce different keys. No response or mutation result is reused
+as a substitute for a fresh authorized request.
+
+| Variable                    | Default  | Meaning                                                                                                                                                                                                                                                      |
+| --------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `AI_PROMPT_CACHE_MODE`      | `auto`   | `auto`: cache hints for official OpenAI HTTPS endpoints; `openai`: explicitly verified compatible endpoint; `off`: omit application cache hints.                                                                                                             |
+| `AI_PROMPT_CACHE_PROTOCOL`  | `auto`   | `legacy` uses SDK key/retention fields; `modern` adds documented implicit caching options and an explicit stable-prefix breakpoint. Auto recognizes official GPT-5.6–5.9 and GPT-6–9 model identifiers; use an explicit override for proxies/custom aliases. |
+| `AI_PROMPT_CACHE_RETENTION` | unset    | Provider default. Legacy: `in_memory` or `24h`; modern: `30m`. Model/account support still applies.                                                                                                                                                          |
+| `AI_PROMPT_CACHE_NAMESPACE` | `stacks` | Deployment partition for opaque tenant-scoped keys.                                                                                                                                                                                                          |
+
+Unknown endpoints receive no speculative caching fields. They still receive stable, complete
+prompts and can use automatic prefix caching. For llama.cpp/LM Studio, vLLM, and other local
+servers, verify the running server's documented prefix/KV cache settings and capacity. Stacks
+does not change server settings, prewarm caches, or replay failed requests to negotiate support.
+`off` cannot force a provider to disable its own automatic cache.
+
+The installed AI SDK supports cache keys and legacy retention. Modern options/breakpoints are
+added only at the shared HTTP boundary because this SDK version strips those fields. Complete
+context is still sent; expiry and cache eviction never remove required instructions. Provider
+defaults are retained unless configured explicitly; longer retention should match deployment
+data-retention requirements.
+
+Debug JSONL turns include `cacheUsage` (read/write token counts). The evaluator includes the same
+counts per row. These use raw provider telemetry, including streamed usage chunks; absent counts
+are `null`, not zero. SDK-normalized counts alone cannot prove a cache miss. A lower latency
+alone cannot prove a cache hit. Cache eligibility depends on model thresholds and infrastructure.
+See [OpenAI's prompt-caching guide](https://developers.openai.com/api/docs/guides/prompt-caching)
+and [Chat Completions reference](https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/create).
+
+### External MCP agents
+
+The MCP initialization response supplies server instructions and tools carry read-only/destructive
+hints. Annotations are guidance, not authorization. External clients see strict execution schemas;
+they do not inherit chat's name-resolution adapter or confirmation guard. Direct MCP mutations
+execute their handlers immediately. Use authorized host references and host approval policies.
+The host controls its own model request caching; Stacks can only provide stable tool metadata.

@@ -21,6 +21,8 @@ import { stepCountIs, streamText, type ModelMessage } from "ai";
 import { requestContext } from "../services/requestContext";
 import { clientRouteTemplateVars, parseClientRoute, type AiChatClientRoutePayload } from "./clientRoute";
 import { selectPromptContext } from "./promptContext";
+import { assembleSystemPrompt } from "./promptAssembly";
+import { cacheToolDefinitions, type CacheUsage, createCacheUsageTracker } from "./promptCache";
 import { template } from "./promptTemplate";
 import { AI_TOOL_REGISTRY, buildAiTools, MCP_AI_TOOL_NAMES, type AiToolExecuteOverride } from "./tools";
 import { createMcpToolClient } from "./mcpToolClient";
@@ -258,6 +260,7 @@ async function streamLlmChat(
     let debugResponseText: string | undefined;
     let debugSystemPrompt: string | undefined;
     let debugMessages: ModelMessage[] | undefined;
+    let debugUsage: CacheUsage | undefined;
     let debugSelection:
         | {
               topics: string[];
@@ -320,7 +323,6 @@ async function streamLlmChat(
         });
         return;
     }
-    const model = createLlmModel(llmConfig);
     debugSelection = {
         topics: selection.topics,
         allowedTools: selection.allowedTools,
@@ -328,26 +330,14 @@ async function streamLlmChat(
         reasons: selection.reasons,
     };
 
-    // Core is rendered with the full variable bag (identity + today). Topic
-    // fragments currently only use `currentUserId` — passing the same bag to
-    // every fragment is cheap and avoids branching, and any future template
-    // var can be added in one place.
     const fragmentVars = {
         todaysDate: now.toISOString().slice(0, 10) + " UTC",
         todaysDateISO: now.toISOString(),
         autoRedirect: envTrim("AI_CHAT_AUTO_REDIRECT") === "true",
         ...identityVars,
     };
-    const fragmentParts = selection.promptFragments.map(name => template(name, fragmentVars));
-    let systemPrompt = fragmentParts.join("\n\n");
-    if (selection.unsupportedReason)
-        systemPrompt +=
-            "\n\nRequested operation: " +
-            selection.unsupportedReason +
-            " Explain this limitation; do not ask for confirmation or missing parameters.";
-    if (routeVars.hasClientRoute) {
-        systemPrompt += "\n\n" + template("client-ui-context.md", routeVars);
-    }
+    const prompt = assembleSystemPrompt(selection.promptFragments, fragmentVars, routeVars);
+    const systemPrompt = prompt.system;
     debugSystemPrompt = systemPrompt;
 
     console.log(
@@ -388,6 +378,13 @@ async function streamLlmChat(
         });
         executionGuard = guard;
         const tools = buildAiTools(selection.allowedTools, guard.execute, true);
+        const cacheTracker = createCacheUsageTracker();
+        const model = createLlmModel(llmConfig, globalThis.fetch, {
+            scope: JSON.stringify(["tenant", requestContext.getCurrentUser().tenant]),
+            stable: prompt.stable,
+            tools: cacheToolDefinitions(tools),
+            onUsage: cacheTracker.observe,
+        });
 
         const messages: ModelMessage[] = [
             ...toModelMessages(groundedHistory(session, history)),
@@ -403,11 +400,15 @@ async function streamLlmChat(
                 : []),
             {
                 role: "user",
-                content: template("client-chat.md", {
-                    newUserMessage,
-                    ...identityVars,
-                    ...routeVars,
-                }),
+                content: template(
+                    "client-chat.md",
+                    {
+                        newUserMessage,
+                        ...identityVars,
+                        ...routeVars,
+                    },
+                    true
+                ),
             },
         ];
         debugMessages = messages;
@@ -418,7 +419,7 @@ async function streamLlmChat(
             abortSignal: AbortSignal.timeout(120000),
             tools,
             stopWhen: [stepCountIs(12), () => guard.stopped()],
-            system: systemPrompt,
+            system: prompt.systemMessages,
             messages,
             experimental_onToolCallFinish: async event => {
                 const toolCall = event.toolCall as {
@@ -482,6 +483,7 @@ async function streamLlmChat(
         });
 
         await result.consumeStream();
+        debugUsage = cacheTracker.snapshot();
 
         const raw = (await Promise.resolve(result.text)) || "";
         const text = raw.replace(/^\s+/, "");
@@ -527,6 +529,7 @@ async function streamLlmChat(
             messages: debugMessages,
             tools: debugTools,
             responseText: debugResponseText,
+            cacheUsage: debugUsage,
             error: debugError,
         });
     }

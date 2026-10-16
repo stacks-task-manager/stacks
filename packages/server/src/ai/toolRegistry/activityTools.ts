@@ -10,7 +10,7 @@ import { defineTool } from "./defineTool";
 export const activityAiTools = [
     defineTool({
         name: "listActivities",
-        description: `List activity/comments for task(s). Newest first.`,
+        description: `Read activity and comments for 1–20 resolved task ids, newest first. Returns an array with each entry's task reference, type, person, content, and creation date. This does not add comments.`,
         inputSchema: z.object({
             resourceIds: z.array(z.string()).min(1).max(20).describe("Task UUIDs (max 20)"),
         }),

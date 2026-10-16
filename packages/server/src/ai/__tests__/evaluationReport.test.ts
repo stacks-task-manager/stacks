@@ -99,3 +99,29 @@ describe("HTML evaluation report", () => {
         expect(parseOptions(["--html=review.html"]).html).toBe("review.html");
     });
 });
+
+it("shows unknown cache telemetry and distinguishes snapshots from historical baselines", () => {
+    const html = renderEvaluationHtml({
+        model: "test",
+        status: "complete",
+        planned: 1,
+        snapshot: "before.json",
+        contextStrategy: "full",
+        rows: [
+            {
+                fixture: "cache",
+                run: 1,
+                responseText: "OK",
+                passed: true,
+                reasons: [],
+                calls: [],
+                latencyMs: 1,
+                cacheUsage: { readTokens: 0, writeTokens: null },
+            },
+        ],
+    });
+    expect(html).toContain("cache read: 0 tokens");
+    expect(html).toContain("cache write: unknown tokens");
+    expect(html).toContain("Captured current snapshot");
+    expect(html).toContain("Context: full");
+});

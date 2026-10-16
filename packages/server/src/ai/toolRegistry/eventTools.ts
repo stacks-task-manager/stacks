@@ -144,8 +144,12 @@ async function assertWritableGoogleCalendar(calendarId: string): Promise<void> {
 const eventCreateSchema = z.object({
     title: z.string().min(1).describe("Event title"),
     description: z.string().optional().describe("Event description"),
-    start: aiDateInput.describe("Event start ISO 8601 date-time"),
-    end: aiDateInput.describe("Event end ISO 8601 date-time"),
+    start: aiDateInput.describe(
+        "Event start as ISO 8601 with explicit UTC/offset for timed events; date-only YYYY-MM-DD for all-day events"
+    ),
+    end: aiDateInput.describe(
+        "Event end as ISO 8601 with explicit UTC/offset for timed events; date-only YYYY-MM-DD for all-day events"
+    ),
     allDay: z.boolean().optional().describe("True for an all-day event"),
     source: calendarSourceSchema.optional().describe("Calendar source; defaults to local"),
     calendar: z
@@ -165,13 +169,24 @@ const eventUpdateSchema = z.object({
     eventId: z
         .string()
         .describe(
-            "Event id from listCalendarEvents or prior results. Resolve a supplied event title with listCalendarEvents now; never ask the user for an id"
+            "Exact source-specific event id from listCalendarEvents or authorized context; a title is not an event id"
         ),
-    title: z.string().min(1).optional(),
+    title: z.string().min(1).optional().describe("New title; omit to preserve the existing title"),
     description: z.string().optional().describe("Event description; pass empty string to clear"),
-    start: aiDateInput.optional().describe("Event start ISO 8601 date-time"),
-    end: aiDateInput.optional().describe("Event end ISO 8601 date-time"),
-    allDay: z.boolean().optional(),
+    start: aiDateInput
+        .optional()
+        .describe(
+            "Event start as ISO 8601 with explicit UTC/offset for timed events; date-only YYYY-MM-DD for all-day events"
+        ),
+    end: aiDateInput
+        .optional()
+        .describe(
+            "Event end as ISO 8601 with explicit UTC/offset for timed events; date-only YYYY-MM-DD for all-day events"
+        ),
+    allDay: z
+        .boolean()
+        .optional()
+        .describe("Set only when changing all-day status; omitted preserves the existing value"),
     location: z.string().optional().describe("Event location; pass empty string to clear"),
     recurrenceRule: z
         .string()
@@ -248,8 +263,11 @@ export const eventAiTools = [
         description: `Update a local calendar's title, color, or default status. Use listCalendars first if you only know the name.`,
         inputSchema: z.object({
             calendarId: z.string().uuid().describe("Local calendar UUID"),
-            title: z.string().min(1).optional(),
-            color: z.string().optional(),
+            title: z.string().min(1).optional().describe("New title; omit to preserve the existing title"),
+            color: z
+                .string()
+                .optional()
+                .describe("New local calendar color; omitted preserves the existing value"),
             primary: z.boolean().optional().describe("Set as the default local calendar"),
         }),
         execute: async ({ calendarId, title, color, primary }) => {
@@ -272,7 +290,7 @@ export const eventAiTools = [
 
     defineTool({
         name: "deleteLocalCalendar",
-        description: `Delete a local calendar by id. This does not delete Google calendars.`,
+        description: `Delete a resolved local calendar. Google calendar deletion is unsupported. Returns the deleted calendar reference. Direct MCP execution performs this destructive action immediately; it does not ask for chat confirmation.`,
         inputSchema: z.object({
             calendarId: z.string().uuid().describe("Local calendar UUID"),
         }),
@@ -284,7 +302,7 @@ export const eventAiTools = [
 
     defineTool({
         name: "listCalendarEvents",
-        description: `Calendar events in a window (day/week/month) around an anchor date (defaults today).`,
+        description: `Read calendar events for a day, week, or month containing the anchor date (defaults to today). Returns event details and source-specific ids. Resolve relative windows to a span and ISO anchor; preserve the returned source and ids for later event actions.`,
         inputSchema: z.object({
             span: z.enum(["day", "week", "month"]).describe("Window size"),
             date: z.string().optional().describe("Anchor ISO yyyy-mm-dd; defaults today"),
@@ -302,7 +320,7 @@ export const eventAiTools = [
             eventId: z
                 .string()
                 .describe(
-                    "Event id from listCalendarEvents or prior results. Resolve a supplied event title with listCalendarEvents now; never ask the user for an id"
+                    "Exact source-specific event id from listCalendarEvents or authorized context; a title is not an event id"
                 ),
         }),
         execute: async ({ eventId }) => {
@@ -342,7 +360,7 @@ export const eventAiTools = [
 
     defineTool({
         name: "updateCalendarEvent",
-        description: `Update an event's fields. Recurring event edits apply to the whole series; individual occurrence edits are not supported.`,
+        description: `Update only requested fields of an existing event using its exact eventId. Omitted fields remain unchanged; empty description/location clears them and null recurrenceRule removes recurrence. Changing recurrenceRule resets recurrence exclusions unless supplied. Recurring edits apply to the whole series, not an individual occurrence. Returns id and updated.`,
         inputSchema: eventUpdateSchema,
         execute: async ({
             eventId,
@@ -394,7 +412,7 @@ export const eventAiTools = [
             eventId: z
                 .string()
                 .describe(
-                    "Event id from listCalendarEvents or prior results. Resolve a supplied event title with listCalendarEvents now; never ask the user for an id"
+                    "Exact source-specific event id from listCalendarEvents or authorized context; a title is not an event id"
                 ),
             source: eventPatchSourceSchema.describe("Source of the existing event"),
             calendarId: z.string().describe("Destination calendar id"),
@@ -413,12 +431,12 @@ export const eventAiTools = [
 
     defineTool({
         name: "deleteCalendarEvent",
-        description: `Delete a calendar event by id. For recurring events, this removes all occurrences in the series.`,
+        description: `Delete a resolved calendar event using the exact source-specific eventId returned by an authorized lookup. For recurring events, this removes all occurrences in the series. Direct MCP execution performs deletion immediately without chat confirmation. Do not retry after an uncertain failure.`,
         inputSchema: z.object({
             eventId: z
                 .string()
                 .describe(
-                    "Event id from listCalendarEvents or prior results. Resolve a supplied event title with listCalendarEvents now; never ask the user for an id"
+                    "Exact source-specific event id from listCalendarEvents or authorized context; a title is not an event id"
                 ),
         }),
         execute: async ({ eventId }) => {

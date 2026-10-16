@@ -1,6 +1,6 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { describe, expect, it, beforeEach, afterEach } from "vitest";
-import { isAiChatConfigured, isAiChatKillSwitchOn, getLlmConfig } from "../config";
+import { isAiChatConfigured, isAiChatKillSwitchOn, getLlmConfig, getAiChatPublicConfig } from "../config";
 
 describe("ai config", () => {
     const env = { ...process.env };
@@ -11,6 +11,10 @@ describe("ai config", () => {
         delete process.env.AI_OPENAI_BASE_URL;
         delete process.env.AI_MODEL;
         delete process.env.AI_DISABLE_THINKING;
+        delete process.env.AI_PROMPT_CACHE_MODE;
+        delete process.env.AI_PROMPT_CACHE_PROTOCOL;
+        delete process.env.AI_PROMPT_CACHE_RETENTION;
+        delete process.env.AI_PROMPT_CACHE_NAMESPACE;
     });
 
     afterEach(() => {
@@ -45,4 +49,26 @@ describe("ai config", () => {
         process.env.AI_DISABLE_THINKING = value;
         expect(getLlmConfig().disableThinking).toBe(false);
     });
+});
+
+it("keeps cache settings server-side and preserves provider defaults", () => {
+    const original = { ...process.env };
+    try {
+        delete process.env.AI_PROMPT_CACHE_MODE;
+        delete process.env.AI_PROMPT_CACHE_RETENTION;
+        expect(getLlmConfig()).toMatchObject({ cacheMode: "auto", cacheRetention: "" });
+        process.env.AI_PROMPT_CACHE_MODE = " openai ";
+        process.env.AI_PROMPT_CACHE_PROTOCOL = " modern ";
+        process.env.AI_PROMPT_CACHE_RETENTION = " 30m ";
+        process.env.AI_PROMPT_CACHE_NAMESPACE = " deployment-1 ";
+        expect(getLlmConfig()).toMatchObject({
+            cacheMode: "openai",
+            cacheProtocol: "modern",
+            cacheRetention: "30m",
+            cacheNamespace: "deployment-1",
+        });
+        expect(Object.keys(getAiChatPublicConfig()).sort()).toEqual(["enabled", "model"]);
+    } finally {
+        process.env = original;
+    }
 });

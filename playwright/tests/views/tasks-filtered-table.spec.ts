@@ -257,7 +257,10 @@ test.describe("Tasks - Filtered table in-cell edits", () => {
     test("combines assignee, overdue, and progress filters in the task list", async () => {
         const overdueDate = "2020-01-01T00:00:00.000Z";
         await tasksTable.assignTaskViaApi({ projectId, title: WINDOW_TITLE, personId });
-        for (const [id, progress] of [[taskId, 0], [windowTaskId, 60]] as const) {
+        for (const [id, progress] of [
+            [taskId, 0],
+            [windowTaskId, 60],
+        ] as const) {
             const response = await page.request.patch(`/api/tasks/${id}`, {
                 data: { duedate: overdueDate, progress },
             });

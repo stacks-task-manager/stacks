@@ -18,6 +18,7 @@ export type ReportRow = {
     history?: unknown;
     route?: unknown;
     usage?: unknown;
+    cacheUsage?: { readTokens: number | null; writeTokens: number | null };
 };
 export type EvaluationReport = {
     model: string;
@@ -28,6 +29,8 @@ export type EvaluationReport = {
     createdAt?: string;
     temperature?: number;
     baseline?: boolean;
+    snapshot?: string;
+    contextStrategy?: string;
 };
 export const escapeHtml = (value: unknown): string =>
     String(value ?? "").replace(
@@ -67,7 +70,9 @@ export function renderEvaluationHtml(report: EvaluationReport): string {
             }</span></header>
 <p class="muted">${escapeHtml(row.suite)} · ${row.latencyMs.toLocaleString("en-US")} ms · ${
                 row.payloadBytes ?? "?"
-            } payload bytes</p>
+            } payload bytes · cache read: ${row.cacheUsage?.readTokens ?? "unknown"} tokens · cache write: ${
+                row.cacheUsage?.writeTokens ?? "unknown"
+            } tokens</p>
 <div class="conversation"><section><h3>User prompt</h3><p class="text">${escapeHtml(
                 row.request ?? "Prompt unavailable in this older report"
             )}</p></section>
@@ -97,6 +102,7 @@ ${
                 route: row.route,
                 steps: row.modelSteps,
                 usage: row.usage,
+                cacheUsage: row.cacheUsage,
             })}</pre></details>
 <div class="review"><label for="rating-${index}">Your evaluation</label><select id="rating-${index}" class="rating"><option value="unreviewed">Unreviewed</option><option value="good">Good</option><option value="needs-work">Needs work</option><option value="incorrect">Incorrect</option></select>
 <label class="notes-label" for="notes-${index}">Review notes</label><textarea id="notes-${index}" class="notes" placeholder="Accuracy, clarity, missing steps, or unwanted actions"></textarea></div></article>`;
@@ -109,8 +115,12 @@ ${
 <p class="muted">Model: <strong id="model">${escapeHtml(report.model)}</strong> · ${escapeHtml(
         report.createdAt ?? "Time unavailable"
     )} · ${escapeHtml(report.status)} · Temperature: ${report.temperature ?? "?"} · ${
-        report.baseline ? "Captured baseline prompts" : "Current prompts"
-    }</p>
+        report.baseline
+            ? "Historical baseline prompts"
+            : report.snapshot
+            ? "Captured current snapshot"
+            : "Current prompts"
+    } · Context: ${escapeHtml(report.contextStrategy ?? "targeted")}</p>
 <p>Thinking: ${
         report.disableThinking === undefined
             ? "Not recorded in this older report"

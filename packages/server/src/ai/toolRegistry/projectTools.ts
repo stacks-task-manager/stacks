@@ -30,7 +30,7 @@ export const projectAiTools = [
 
     defineTool({
         name: "createProject",
-        description: `Create a new project (same as the sidebar "new project" flow). Requires title. Do NOT use this for the current project's id in the UI block.`,
+        description: `Create a new project with the requested title and optional description, parent folder, and owner. Returns the new document id, title, and type. Omitted owner defaults to the authenticated user. Does not modify an existing project.`,
         inputSchema: z.object({
             title: z.string().min(1).describe("Project name"),
             description: z.string().optional().describe("Description"),

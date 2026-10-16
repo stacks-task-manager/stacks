@@ -44,6 +44,7 @@ export type AiChatDebugTurn = {
     messages?: unknown[];
     tools: AiChatDebugToolCall[];
     responseText?: string;
+    cacheUsage?: { readTokens: number | null; writeTokens: number | null };
     error?: string;
 };
 
