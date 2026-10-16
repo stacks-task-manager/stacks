@@ -307,3 +307,97 @@ describe("task filter navigation and chat parity", () => {
         expect(TasksLoader.getAll).toHaveBeenCalledWith({ overdue: "true" });
     });
 });
+
+describe("task filters for tags, statuses, priority, progress and date windows", () => {
+    const tagA = "00000000-0000-4000-8000-00000000000a";
+    const tagB = "00000000-0000-4000-8000-00000000000b";
+    const statusId = "00000000-0000-4000-8000-00000000000c";
+
+    it("treats a tag-only request as a filter and keeps it in the navigation path", async () => {
+        const tool = taskAiTools.find(t => t.name === "findTasks")!;
+        const input = tool.inputSchema.parse({ tagIds: [tagA, tagB], statusTagIds: [statusId] });
+        const output = (await tool.execute(input as never)) as { hashPath: string };
+        const params = new URL(output.hashPath, "http://test").searchParams;
+        expect(params.get("tags")).toBe(`${tagA},${tagB}`);
+        expect(params.get("status")).toBe(statusId);
+    });
+
+    it("carries priority, progress operators and ISO date windows into the navigation path", async () => {
+        const tool = taskAiTools.find(t => t.name === "findTasks")!;
+        const input = tool.inputSchema.parse({
+            projectId: tagA,
+            priority: "high",
+            progress: "gt:60",
+            dueFrom: "2026-10-12T00:00:00.000Z",
+            dueTo: "2026-10-18T23:59:59.999Z",
+            startFrom: "2026-10-01T00:00:00.000Z",
+            startTo: "2026-10-05T23:59:59.999Z",
+        });
+        const output = (await tool.execute(input as never)) as { hashPath: string };
+        const params = new URL(output.hashPath, "http://test").searchParams;
+        expect(params.get("priority")).toBe("high");
+        expect(params.get("progress")).toBe("gt:60");
+        expect(params.get("dueFrom")).toBe("2026-10-12T00:00:00.000Z");
+        expect(params.get("dueTo")).toBe("2026-10-18T23:59:59.999Z");
+        expect(params.get("startFrom")).toBe("2026-10-01T00:00:00.000Z");
+        expect(params.get("startTo")).toBe("2026-10-05T23:59:59.999Z");
+    });
+
+    it("passes the same filters to the authorized chat loader", async () => {
+        vi.mocked(TasksLoader.getAll).mockResolvedValue([]);
+        const tool = taskAiTools.find(t => t.name === "listTasks")!;
+        const input = tool.inputSchema.parse({
+            tagIds: [tagA],
+            statusTagIds: [statusId],
+            priority: "high",
+            progress: "lt:20",
+            dueFrom: "2026-10-12T00:00:00.000Z",
+            dueTo: "2026-10-18T23:59:59.999Z",
+        });
+        await tool.execute(input as never);
+        expect(TasksLoader.getAll).toHaveBeenCalledWith({
+            tags: [tagA],
+            status: [statusId],
+            priority: "high",
+            progress: "lt:20",
+            dueFrom: "2026-10-12T00:00:00.000Z",
+            dueTo: "2026-10-18T23:59:59.999Z",
+        });
+    });
+
+    it("rejects malformed progress operators and unknown priority values", () => {
+        const tool = taskAiTools.find(t => t.name === "findTasks")!;
+        expect(tool.inputSchema.safeParse({ projectId: tagA, progress: "above:60" }).success).toBe(false);
+        expect(tool.inputSchema.safeParse({ projectId: tagA, priority: "urgent" }).success).toBe(false);
+        expect(tool.inputSchema.safeParse({ projectId: tagA, progress: "gt:150" }).success).toBe(false);
+    });
+
+    it("validates every date bound and rejects impossible or ambiguous dates", async () => {
+        const tool = taskAiTools.find(t => t.name === "findTasks")!;
+        for (const field of ["dueFrom", "dueTo", "startFrom", "startTo"]) {
+            for (const value of ["not-a-date", "2026-02-30", "2026-10-12T00:00:00"]) {
+                expect(tool.inputSchema.safeParse({ projectId: tagA, [field]: value } as any).success).toBe(
+                    false
+                );
+            }
+        }
+    });
+
+    it("normalises bare model dates to UTC day bounds in both tool paths", async () => {
+        const find = taskAiTools.find(t => t.name === "findTasks")!;
+        const input = find.inputSchema.parse({ projectId: tagA, dueFrom: "2026-10-12", dueTo: "2026-10-18" });
+        const output = (await find.execute(input as never)) as { hashPath: string };
+        const params = new URL(output.hashPath, "http://test").searchParams;
+        expect(params.get("dueFrom")).toBe("2026-10-12T00:00:00.000Z");
+        expect(params.get("dueTo")).toBe("2026-10-18T00:00:00.000Z");
+
+        vi.mocked(TasksLoader.getAll).mockResolvedValue([]);
+        const list = taskAiTools.find(t => t.name === "listTasks")!;
+        const listInput = list.inputSchema.parse({ dueFrom: "2026-10-12", startTo: "2026-10-05" });
+        await list.execute(listInput as never);
+        expect(TasksLoader.getAll).toHaveBeenCalledWith({
+            dueFrom: "2026-10-12T00:00:00.000Z",
+            startTo: "2026-10-05T00:00:00.000Z",
+        });
+    });
+});

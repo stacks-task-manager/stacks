@@ -287,3 +287,61 @@ existing fixtures that previously expected chat output for ordinary task-list re
 regressions for the exact assigned-tasks request, overdue navigation, explicit chat, explicit
 no-navigation, and a chat-only overdue follow-up. This policy supersedes the previous default
 recorded above; earlier `assigned-tasks-chat` reports describe the former policy.
+
+### Verification of the task-list output policy
+
+Executed the AI unit selection after updating the policy: 209 tests passed and the server/evaluator
+TypeScript check passed. A later focused run against the current workspace passed all 20 prompt,
+catalogue, and navigation-widget tests, and TypeScript passed again.
+
+Live synthetic model cases `task-list-default-assigned`, `task-list-default-overdue`,
+`task-list-explicit-chat`, and `task-list-explicit-no-navigation` each passed 3/3 sequential runs:
+12 passing routing/argument checks. The `task-list-chat-followup` case hit three 60-second provider
+timeouts; one attempt had already issued the correct `listTasks` call before timing out during
+response completion. Those timeouts do not establish a routing assertion failure, nor do they
+verify a completed response. Earlier reports remain available; the full model matrix was not rerun.
+Reports are ignored files under `packages/server/ai-eval-reports/task-list-*.html`.
+
+The follow-up completed successfully in a separate single run with a 120-second timeout
+(86034 ms). It used `listTasks` with the expected assignee and overdue filters and did
+not navigate, despite the current Tasks route. This verifies one completed follow-up; it does not
+convert the original three timeouts into passes. Report:
+`packages/server/ai-eval-reports/task-list-chat-followup-extended.html`.
+
+## Task filters for tags, statuses, priority, progress and date windows (2026-10-15)
+
+The Tasks view and the AI task tools gained filters that previously had no argument: tags, status,
+priority, progress comparisons, and explicit due/start date windows. The route schema, loader,
+client, and both AI tools were extended together so chat rows and navigation stay consistent.
+
+Progress uses an explicit operator string (`gt:60`, `gte:60`, `lt:20`, `lte:20`, `eq:0`) because a
+bare number cannot express "above/below/equal"; the loader parses the same grammar and rejects
+malformed operators with `Errors.badRequest` instead of ignoring them. Relative words remain the
+assistant's job: the prompt instructs it to emit ISO `dueFrom`/`dueTo` and `startFrom`/`startTo`
+windows, and the URL/API stay ISO-only. Plain "overdue" keeps `overdueOnly` rather than being
+approximated by a window. Tag and status ids come from `listTags`; `tagIds`/`statusTagIds` joined
+the existing server-managed reference resolver so labels resolve before execution.
+
+Eval coverage added fixtures for a due-this-week window, a due-tomorrow chat window, a start-next-week
+window, progress above and at-zero requests, tag, status, and priority filters, each asserting the
+expected tool and arguments while prohibiting the old approximations (`from`/`to`, `overdueOnly`,
+`doneFilter`) where they would be wrong. The evaluation harness `filterTasks` mirror in
+`packages/server/scripts/ai-eval/world.ts` now applies the same operators and day windows so count
+checks cannot pass against a looser predicate.
+
+Review follow-ups on the same filters (2026-10-15): the count route moved above `GET /:id` so
+`/api/tasks/count` cannot be captured as a task id; the loader reads `dueFrom`/`dueTo`/`startFrom`/`startTo`
+as whole UTC calendar days (`utcDayBounds`) instead of host-timezone day edges, and rejects impossible
+bounds such as `2026-02-30`; the Tasks view parses filter dates with a validating reader that drops
+unparseable values, so `qs` never receives `Invalid Date`; `aiDateInput` now requires an explicit
+timezone for date-times and `utcWindowDate` normalises model dates to `…T00:00:00.000Z`; the evaluation
+world lists the `Bug` tag and `In Progress` status so those names resolve exactly; and the filtered-table
+Playwright spec drives tag, status, progress, and window filters through POM helpers that await the
+filtered API response and the rendered empty state.
+
+Further review follow-ups on the same filters (2026-10-15): the loader's four `Errors.badRequest`
+messages now go through `translate` with the offending value in the error `context`, matching the
+convention in the other loaders, and the new `Invalid progress filter`, `Invalid progress filter value`,
+`Invalid date window`, and `Invalid date range` keys were added to `locales/server/en.json` through
+`@stacks/locales-tui`. The loader test now pins all five progress operators: mutating `gt` to `gte` or
+`lte` to `lt` previously left the suite green.

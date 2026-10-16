@@ -116,9 +116,57 @@ class TasksTable {
         );
     }
 
+    /**
+     * Navigates to a filtered tasks URL whose filter matches nothing and waits for the empty state,
+     * so a following `expectRowAbsent` cannot pass against a stale render. Pair with
+     * {@link openFilteredTasks} when the filter is expected to match.
+     */
+    public async gotoEmptyFilteredTasks(query: Record<string, string>) {
+        const qs = new URLSearchParams(query).toString();
+        await this.page.goto(`/app/tasks?${qs}`);
+        await this.page.getByTestId("tasks-no-match-slate").waitFor({ state: "visible" });
+    }
+
+    /**
+     * Task ids the filtered list route returns for the same query keys the view uses.
+     * Awaits the API response, so a scenario can compare the server's answer with the rendered DOM.
+     */
+    public async filteredTaskIds(query: Record<string, string>): Promise<string[]> {
+        const qs = new URLSearchParams(query).toString();
+        const response = await this.page.request.get(`/api/tasks?${qs}`);
+        if (!response.ok()) {
+            throw new Error(`Filtered task lookup failed with HTTP ${response.status()}`);
+        }
+        const { data } = await response.json();
+        return (data as { id: string }[]).map(row => row.id);
+    }
+
+    /**
+     * ISO date-time at noon on the page's local day `offset` days away. The value is computed inside
+     * the browser so it shares the clock of the date pickers that set the task dates, and noon keeps
+     * a whole-day window from slipping across time zones.
+     */
+    public async dayWindowValue(offset: number): Promise<string> {
+        return await this.page.evaluate(
+            ({ offset }) => {
+                const day = new Date();
+                day.setDate(day.getDate() + offset);
+                const month = String(day.getMonth() + 1).padStart(2, "0");
+                const date = String(day.getDate()).padStart(2, "0");
+                return `${day.getFullYear()}-${month}-${date}T12:00:00.000Z`;
+            },
+            { offset }
+        );
+    }
+
     /** Asserts the table shows a row for the task id. */
     public async expectRowVisible(taskId: string) {
         await expect(this.row(taskId)).toBeVisible();
+    }
+
+    /** Asserts the table renders no row for the task id (the filter excluded it). */
+    public async expectRowAbsent(taskId: string) {
+        await expect(this.row(taskId)).toHaveCount(0);
     }
 
     /** Asserts a cell's rendered text. */
@@ -233,6 +281,56 @@ class TasksTable {
         if (!update.ok()) throw new Error(`Assigning task failed with HTTP ${update.status()}`);
 
         return task.id;
+    }
+
+    /**
+     * Id of the tag or status with an exact title, creating it when the workspace has none.
+     * The lookup-first shape keeps repeated runs from stacking up duplicates, since tags have no
+     * DELETE route to clean up after them.
+     */
+    public async findOrCreateTagViaApi({
+        title,
+        type,
+    }: {
+        title: string;
+        type: "tag" | "status";
+    }): Promise<string> {
+        const response = await this.page.request.get("/api/tags");
+        if (!response.ok()) throw new Error(`Tag lookup failed with HTTP ${response.status()}`);
+        const { data } = await response.json();
+        const existing = (data as any[]).find(
+            row => row.title === title && row.type === type && row.section === "projects"
+        );
+        if (existing) return existing.id;
+
+        const created = await this.page.request.post("/api/tags", {
+            data: { title, color: "#888888", section: "projects", type },
+        });
+        if (!created.ok()) throw new Error(`Tag creation failed with HTTP ${created.status()}`);
+        const { data: createdData } = await created.json();
+        return createdData.id;
+    }
+
+    /** Replaces a task's tags through the API. */
+    public async setTaskTagsViaApi(taskId: string, tagIds: string[]) {
+        const response = await this.page.request.patch(`/api/tasks/${taskId}`, { data: { tags: tagIds } });
+        if (!response.ok()) throw new Error(`Tagging task failed with HTTP ${response.status()}`);
+    }
+
+    /** Sets a task's status tag through the API. */
+    public async setTaskStatusViaApi(taskId: string, statusTagId: string) {
+        const response = await this.page.request.patch(`/api/tasks/${taskId}`, {
+            data: { status: statusTagId },
+        });
+        if (!response.ok()) throw new Error(`Setting task status failed with HTTP ${response.status()}`);
+    }
+
+    /** Sets a task's progress percentage through the API. */
+    public async setTaskProgressViaApi(taskId: string, progress: number) {
+        const response = await this.page.request.patch(`/api/tasks/${taskId}`, {
+            data: { progress },
+        });
+        if (!response.ok()) throw new Error(`Setting task progress failed with HTTP ${response.status()}`);
     }
 
     /** Hard-deletes a task through the API. */

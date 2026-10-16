@@ -181,6 +181,46 @@ export const scenarios: Fixture[] = [
         expected: { searchQuery: "budget" },
         prohibitedTools: ["findTasks"],
     }),
+    scenario("tasks-due-this-week", "Open tasks due this week", {
+        tool: "findTasks",
+        expected: { dueFrom: "2026-10-12T00:00:00.000Z", dueTo: "2026-10-18T23:59:59.999Z" },
+        dateOnlyFields: ["dueFrom", "dueTo"],
+        prohibited: ["from", "to", "overdueOnly"],
+    }),
+    scenario("tasks-due-tomorrow-chat", "Show tasks due tomorrow here in chat", {
+        tool: "listTasks",
+        expected: { dueFrom: "2026-10-14T00:00:00.000Z", dueTo: "2026-10-14T23:59:59.999Z" },
+        dateOnlyFields: ["dueFrom", "dueTo"],
+        prohibitedTools: ["findTasks"],
+    }),
+    scenario("tasks-start-next-week", "Open tasks that start next week", {
+        tool: "findTasks",
+        expected: { startFrom: "2026-10-19T00:00:00.000Z", startTo: "2026-10-25T23:59:59.999Z" },
+        dateOnlyFields: ["startFrom", "startTo"],
+        prohibited: ["from", "to"],
+    }),
+    scenario("tasks-progress-above", "Open tasks that are more than 60 percent done", {
+        tool: "findTasks",
+        expected: { progress: "gt:60" },
+        prohibited: ["doneFilter"],
+    }),
+    scenario("tasks-progress-zero-chat", "List tasks at zero percent progress here", {
+        tool: "listTasks",
+        expected: { progress: "eq:0" },
+    }),
+    scenario("tasks-tag-bug", "Open tasks tagged Bug", {
+        tool: "findTasks",
+        expected: { tagIds: ["Bug"] },
+    }),
+    scenario("tasks-status-in-progress", "Show tasks with the status In Progress here in chat", {
+        tool: "listTasks",
+        expected: { statusTagIds: ["In Progress"] },
+        prohibitedTools: ["findTasks"],
+    }),
+    scenario("tasks-high-priority", "Open only the high priority tasks", {
+        tool: "findTasks",
+        expected: { priority: "high" },
+    }),
     task("task-rename", 'Rename Buy milk to "Buy oat milk"', { title: "Buy oat milk" }, [
         "done",
         "duedate",

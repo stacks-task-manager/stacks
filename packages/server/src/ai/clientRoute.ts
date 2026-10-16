@@ -54,6 +54,14 @@ export function parseClientRoute(payload: AiChatClientRoutePayload): ParsedClien
             "assigned",
             "unassigned",
             "overdue",
+            "tags",
+            "status",
+            "priority",
+            "progress",
+            "dueFrom",
+            "dueTo",
+            "startFrom",
+            "startTo",
         ];
         const filters = Object.fromEntries(
             keys.filter(key => params.has(key)).map(key => [key, params.getAll(key)])

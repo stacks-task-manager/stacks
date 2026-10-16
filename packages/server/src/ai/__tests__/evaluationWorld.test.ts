@@ -80,6 +80,56 @@ describe("synthetic backend contracts", () => {
         ).toHaveLength(1);
         expect(await call(mock, "listTasks", { doneFilter: "open" })).toEqual([]);
     });
+    it("lists tags and statuses by exact title so the reference resolver can match them", async () => {
+        const mock = world();
+        const rows = (
+            (await call(mock, "listTags", {})) as { id: string; title: string; type: string }[]
+        ).map(row => ({ id: row.id, title: row.title, type: row.type }));
+        expect(rows).toEqual([
+            { id: ids.Bug, title: "Bug", type: "tag" },
+            { id: ids["In Progress"], title: "In Progress", type: "status" },
+        ]);
+        const empty = createMock({ id: "empty", locale: "en", request: "", mock: "empty" });
+        expect(await call(empty, "listTags", {})).toEqual([]);
+    });
+    it("applies tag, status, priority, progress and explicit date-window filters", async () => {
+        const mock = world();
+        expect(await call(mock, "listTasks", { tagIds: [ids.Bug] })).toHaveLength(1);
+        expect(await call(mock, "listTasks", { tagIds: [ids.Acme, ids.Website] })).toEqual([]);
+        expect(await call(mock, "listTasks", { statusTagIds: [ids["In Progress"]] })).toHaveLength(1);
+        expect(await call(mock, "listTasks", { statusTagIds: [ids.Alex] })).toEqual([]);
+        expect(await call(mock, "listTasks", { priority: "high" })).toHaveLength(1);
+        expect(await call(mock, "listTasks", { priority: "low" })).toEqual([]);
+        expect(await call(mock, "listTasks", { progress: "gt:20" })).toEqual([]);
+        expect(await call(mock, "listTasks", { progress: "eq:0" })).toHaveLength(1);
+        await call(mock, "updateTask", {
+            taskId: ids["Buy milk"],
+            progress: 45,
+            duedate: "2026-10-14T00:00:00Z",
+            startdate: "2026-10-20T00:00:00Z",
+        });
+        expect(await call(mock, "listTasks", { progress: "gt:20" })).toHaveLength(1);
+        expect(await call(mock, "listTasks", { progress: "lte:20" })).toEqual([]);
+        expect(await call(mock, "listTasks", { dueFrom: "2026-10-12", dueTo: "2026-10-18" })).toHaveLength(1);
+        expect(await call(mock, "listTasks", { dueFrom: "2026-10-19", dueTo: "2026-10-25" })).toEqual([]);
+        expect(
+            await call(mock, "listTasks", { startFrom: "2026-10-19", startTo: "2026-10-25" })
+        ).toHaveLength(1);
+    });
+    it("normalizes timezone-offset bounds to the UTC day before filtering", async () => {
+        const mock = world();
+        await call(mock, "updateTask", {
+            taskId: ids["Buy milk"],
+            duedate: "2026-10-11T23:30:00.000Z",
+        });
+
+        // This bound is 2026-10-11T23:00Z, so its whole UTC day includes the task above.
+        expect(
+            await call(mock, "listTasks", {
+                dueFrom: "2026-10-12T01:00:00+02:00",
+            })
+        ).toHaveLength(1);
+    });
     it("reflects date edits and date-window filtering", async () => {
         const mock = world();
         await call(mock, "updateTask", {

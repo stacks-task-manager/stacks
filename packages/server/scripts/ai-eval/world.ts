@@ -22,6 +22,8 @@ export const ids: Record<string, string> = Object.fromEntries(
         "Column XYZ",
         "Temp",
         "Personal",
+        "Bug",
+        "In Progress",
     ].map((name, i) => [name, `00000000-0000-4000-8000-${String(i + 1).padStart(12, "0")}`])
 );
 export const normalize = (value: unknown, key?: string): unknown => {
@@ -62,6 +64,10 @@ const task = {
     startdate: null,
     archived: null,
     parent: null,
+    tags: [ids.Bug],
+    status: ids["In Progress"],
+    priority: "high",
+    progress: 0,
 };
 const person = {
     id: ids.Alex,
@@ -107,13 +113,33 @@ const columns = ["Review", "Done", "Column XYZ", "Temp"].map(title => ({
     project: ids.Website,
     projectId: ids.Website,
 }));
+const tags = [
+    { id: ids.Bug, title: "Bug", color: "#b00b7d", section: "projects", type: "tag", parent: ids.Website },
+    {
+        id: ids["In Progress"],
+        title: "In Progress",
+        color: "#22aa55",
+        section: "projects",
+        type: "status",
+        parent: ids.Website,
+    },
+];
 const includes = (text: string, query: unknown) =>
     !query || text.toLowerCase().includes(String(query).toLowerCase());
 
 type Row = Record<string, unknown> & { id: string };
 type Args = Record<string, unknown>;
 type MockHandler = (args: Args) => unknown | Promise<unknown>;
-type Table = "projects" | "tasks" | "people" | "calendars" | "events" | "notepads" | "companies" | "columns";
+type Table =
+    | "projects"
+    | "tasks"
+    | "people"
+    | "calendars"
+    | "events"
+    | "notepads"
+    | "companies"
+    | "columns"
+    | "tags";
 
 /** Isolated state per fixture/run. No handler calls loaders, PostgreSQL, or MCP. */
 export function createMock(fixture: Fixture) {
@@ -136,6 +162,7 @@ export function createMock(fixture: Fixture) {
         notepads: empty ? [] : [note],
         companies: empty ? [] : [company],
         columns: empty ? [] : columns,
+        tags: empty ? [] : tags,
     });
     const one = (table: Table, id: unknown): Row => {
         const row = state[table].find(row => row.id === id);
@@ -159,6 +186,61 @@ export function createMock(fixture: Fixture) {
         );
     const member = (value: unknown, filter: unknown) =>
         filter === undefined || (Array.isArray(filter) ? filter : [filter]).includes(value);
+    /** Normalise a reference argument into a list of ids (single values and arrays are both accepted). */
+    const toIds = (value: unknown) =>
+        Array.isArray(value) ? value.map(String) : value === undefined ? [] : [String(value)];
+    /** Evaluate a `gt|gte|lt|lte|eq:<percent>` operator against a row value (missing values never match). */
+    const matchesOperator = (value: unknown, operator: unknown) => {
+        if (operator === undefined || operator === null || operator === false) {
+            return true;
+        }
+        const parsed = /^(gt|gte|lt|lte|eq):(\d{1,3})$/.exec(String(operator));
+        if (!parsed || value == null) {
+            return false;
+        }
+        const target = Number(parsed[2]);
+        const current = Number(value);
+        if (parsed[1] === "gt") {
+            return current > target;
+        }
+        if (parsed[1] === "gte") {
+            return current >= target;
+        }
+        if (parsed[1] === "lt") {
+            return current < target;
+        }
+        if (parsed[1] === "lte") {
+            return current <= target;
+        }
+        return current === target;
+    };
+    /**
+     * True when the row date falls inside the requested window, mirroring the loader's whole-UTC-day
+     * bounds ({@link buildDateWindowClause}): the edges come from the bound's UTC calendar date, never
+     * the host-local day, so a harness count cannot match a wider window than the server would answer.
+     * Rows without the date never match, which is how SQL compares a NULL column to a bound.
+     * @param columnValue the row's date value
+     * @param from first bound of the window
+     * @param to last bound of the window
+     */
+    const inDayWindow = (columnValue: unknown, from: unknown, to: unknown) => {
+        if (!from && !to) {
+            return true;
+        }
+        if (!columnValue) {
+            return false;
+        }
+        const at = Date.parse(String(columnValue));
+        const dayStart = (value: unknown): number => {
+            const instant = new Date(String(value));
+            return Date.UTC(instant.getUTCFullYear(), instant.getUTCMonth(), instant.getUTCDate());
+        };
+        const dayMs = 24 * 60 * 60 * 1000;
+        if (from && at < dayStart(from)) {
+            return false;
+        }
+        return !to || at <= dayStart(to) + dayMs - 1;
+    };
     const filterTasks = (args: Args) =>
         state.tasks.filter(row => {
             const assignees = Array.isArray(row.assignees) ? row.assignees : [];
@@ -192,7 +274,17 @@ export function createMock(fixture: Fixture) {
                         Date.parse(String(row.duedate)) < Date.parse(EVALUATION_REFERENCE_DATE))) &&
                 (!(args.from || args.to) ||
                     ((!row.startdate || Date.parse(String(row.startdate)) <= dateTo) &&
-                        (!row.duedate || Date.parse(String(row.duedate)) >= dateFrom)))
+                        (!row.duedate || Date.parse(String(row.duedate)) >= dateFrom))) &&
+                (toIds(args.tagIds).length === 0 ||
+                    (Array.isArray(row.tags) ? row.tags : []).some(tag =>
+                        toIds(args.tagIds).includes(String(tag))
+                    )) &&
+                (toIds(args.statusTagIds).length === 0 ||
+                    toIds(args.statusTagIds).includes(String(row.status))) &&
+                (!args.priority || row.priority === args.priority) &&
+                matchesOperator(row.progress, args.progress) &&
+                inDayWindow(row.duedate, args.dueFrom, args.dueTo) &&
+                inDayWindow(row.startdate, args.startFrom, args.startTo)
             );
         });
     const columnResponse = (row: Row) => ({ ...row, projectId: row.project });
@@ -376,7 +468,15 @@ export function createMock(fixture: Fixture) {
         }),
         listCompanies: args => state.companies.filter(row => includes(String(row.title), args.search)),
         getCompany: args => one("companies", args.companyId),
-        listTags: () => [],
+        listTags: () =>
+            state.tags.map((row: Row) => ({
+                id: row.id,
+                title: row.title,
+                color: row.color,
+                section: row.section,
+                type: row.type,
+                parent: row.parent,
+            })),
         listBookmarks: () => [],
         listReminders: args => {
             one("tasks", args.recordId);

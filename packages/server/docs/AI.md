@@ -508,3 +508,27 @@ remain part of a narrowing follow-up. The client sends the current Tasks query s
 `clientRoute.search`; the server includes recognized filter keys as reference data in Current UI.
 Assignee arrays use JSONB containment predicates with OR semantics, preserving matches for any
 requested person without PostgreSQL array-overlap operators.
+
+### Task filter extensions
+
+`findTasks` and `listTasks` share the same filter object and validators, so every filter below works
+for both chat rows and navigation:
+
+| Filter            | Tool argument         | Tasks view query      | Server behavior                                                                                  |
+| ----------------- | --------------------- | --------------------- | ------------------------------------------------------------------------------------------------ |
+| Tags              | `tagIds`              | `tags`                | JSONB `contains` per tag joined with OR — any requested tag matches                              |
+| Status            | `statusTagIds`        | `status`              | the task `status` column holds one status tag UUID, so a list becomes an `IN` match              |
+| Priority          | `priority`            | `priority`            | exact `none \| low \| medium \| high \| critical` match                                          |
+| Progress          | `progress`            | `progress`            | operator string `gt:60`, `gte:60`, `lt:20`, `lte:20`, `eq:0`; tasks with no progress never match |
+| Due date window   | `dueFrom`/`dueTo`     | `dueFrom`/`dueTo`     | `duedate` inside the inclusive whole-UTC-day window                                              |
+| Start date window | `startFrom`/`startTo` | `startFrom`/`startTo` | `startdate` inside the inclusive whole-UTC-day window                                            |
+
+Relative words ("due today", "this week", "next week", "starts next month") are translated by the
+assistant into explicit ISO window values before the tool call; the URL, the API, and the loader only
+accept ISO dates, and no server-side token expansion exists. `findTasks`/`listTasks` accept a bare
+`YYYY-MM-DD` or a timezone-qualified date-time and normalize it to a full UTC `…T00:00:00.000Z` bound;
+`GET /api/tasks` and `/api/tasks/count` require that full ISO date-time (Zod v4 `z.iso.datetime()`), so
+malformed or impossible dates (`2026-02-30`) answer HTTP 400 rather than becoming `Invalid Date`.
+Tag and status labels are resolved to ids server-side through `listTags` (`statusTagIds`/`tagIds`
+are recognized reference fields), and the Tasks page whitelist in `clientRoute.ts` keeps the Current
+UI query keys comparable.

@@ -82,6 +82,17 @@ export const TasksFilteredSchema = z
         assignees: z.union([z.uuid(), z.array(z.uuid())]).optional(),
         parent: z.uuid().optional(),
         query: z.string().optional(),
+        tags: z.union([z.array(z.uuid()), z.uuid()]).optional(),
+        status: z.union([z.array(z.uuid()), z.uuid()]).optional(),
+        priority: z.enum(["critical", "high", "medium", "low", "none"]).optional(),
+        progress: z
+            .string()
+            .regex(/^(?:gt|gte|lt|lte|eq):(?:[1-9]|[1-9][0-9]|100|0)$/)
+            .optional(),
+        dueFrom: z.iso.datetime().optional(),
+        dueTo: z.iso.datetime().optional(),
+        startFrom: z.iso.datetime().optional(),
+        startTo: z.iso.datetime().optional(),
         limit: z.coerce.number().int().positive().max(500).optional(),
     })
     .strict()

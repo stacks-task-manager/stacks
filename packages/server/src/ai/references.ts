@@ -41,7 +41,18 @@ export async function resolveReferences(
 ): Promise<{ input: Record<string, unknown>; choice?: ReferenceChoice }> {
     const resolved = structuredClone(input);
     const fields = Object.keys(resolved).filter(key => referenceKinds[key]);
-    const order = ["projectId", "project", "calendarId", "calendar", "taskId", "taskIds", "parentTaskId"];
+    const order = [
+        "projectId",
+        "project",
+        "calendarId",
+        "calendar",
+        "taskId",
+        "taskIds",
+        "parentTaskId",
+        "tagIds",
+        "statusTagIds",
+        "statusTagId",
+    ];
     fields.sort(
         (a, b) => (order.includes(a) ? order.indexOf(a) : 100) - (order.includes(b) ? order.indexOf(b) : 100)
     );

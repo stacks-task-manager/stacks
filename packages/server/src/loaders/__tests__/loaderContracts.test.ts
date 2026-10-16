@@ -185,13 +185,12 @@ function parseLoaderMethods(source: string) {
 
 describe("loader source contracts", () => {
     it("keeps the domain loader file list in sync", () => {
-        const loaderFiles = readdirSync(loadersDir)
-            .filter(
-                file =>
-                    file.endsWith(".ts") &&
-                    !["context.ts", "index.ts", "sqlLiteral.ts", "utils.ts"].includes(file)
-            )
-            .sort();
+        // Shared helpers in this folder are not domain loaders: no `*Loader` export, no barrel re-export
+        const nonLoaderFiles = ["context.ts", "index.ts", "sqlLiteral.ts", "stackPosition.ts", "utils.ts"];
+        const loaderFiles = readdirSync(loadersDir).filter(
+            file => file.endsWith(".ts") && !nonLoaderFiles.includes(file)
+        );
+        loaderFiles.sort();
 
         expect(loaderFiles).toEqual(Object.keys(expectedMethodsByFile).sort());
     });

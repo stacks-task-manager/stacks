@@ -2,7 +2,7 @@
 /**
  * Task board API: filters, CRUD, move, duplicate, archive.
  */
-import { ITask } from "@stacks/types";
+import { PRIORITY, type ITask } from "@stacks/types";
 import request from "./request";
 
 /** GET `/api/tasks` query shape. */
@@ -21,6 +21,14 @@ export interface TaskLoadParams {
     query?: string;
     from?: Date;
     to?: Date;
+    tags?: string | string[];
+    status?: string | string[];
+    priority?: PRIORITY;
+    progress?: string;
+    dueFrom?: Date;
+    dueTo?: Date;
+    startFrom?: Date;
+    startTo?: Date;
 }
 
 export const TasksAPI = {

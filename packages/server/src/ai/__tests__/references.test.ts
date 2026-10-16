@@ -54,6 +54,26 @@ describe("server-managed references", () => {
         expect(result.input).toEqual({ assigneeUserIds: [taskId] });
         expect(lookup).not.toHaveBeenCalled();
     });
+    it("resolves tag names supplied as tagIds and statusTagIds through listTags", async () => {
+        const tagId = "00000000-0000-4000-8000-00000000000a";
+        const statusId = "00000000-0000-4000-8000-00000000000c";
+        const lookup = vi.fn(async (name: string) =>
+            name === "listTags"
+                ? [
+                      { id: tagId, title: "Bug" },
+                      { id: statusId, title: "In Progress" },
+                  ]
+                : []
+        );
+        const result = await resolveReferences(
+            { tagIds: ["Bug"], statusTagIds: ["In Progress"] },
+            new Set<string>(),
+            lookup,
+            undefined
+        );
+        expect(result.input).toEqual({ tagIds: [tagId], statusTagIds: [statusId] });
+        expect(lookup).toHaveBeenCalledWith("listTags", expect.anything());
+    });
     it("accepts names in chat while retaining execution validation and unrelated constraints", () => {
         const schema = z
             .object({ taskId: z.string().uuid(), progress: z.number().max(100) })

@@ -31,6 +31,17 @@ function shiftDateHours(date: Date, direction: -1 | 1): Date {
     return new Date(date.getTime() + direction * ONE_HOUR_MS);
 }
 
+/**
+ * Normalise an `aiDateInput`-validated value into the full UTC ISO date-time (`…Z`) that the tasks
+ * route schema and the loader's whole-UTC-day windows expect, so a model cannot send a bare `YYYY-MM-DD`
+ * (which the route rejects) or a `+HH:MM` offset (which the loader would read in its own day).
+ * @param value ISO date or timezone-qualified date-time already accepted by `aiDateInput`
+ * @returns ISO date-time with an explicit `Z` timezone
+ */
+function utcWindowDate(value: string): string {
+    return /^\d{4}-\d{2}-\d{2}$/.test(value) ? `${value}T00:00:00.000Z` : new Date(value).toISOString();
+}
+
 function listTasksHasFilter(d: {
     project?: string | string[];
     projectId?: string;
@@ -46,6 +57,14 @@ function listTasksHasFilter(d: {
     assignedOnly?: boolean;
     unassignedOnly?: boolean;
     doneFilter?: "all" | "open" | "done";
+    tagIds?: string | string[];
+    statusTagIds?: string | string[];
+    priority?: "critical" | "high" | "medium" | "low" | "none";
+    progress?: string;
+    dueFrom?: string;
+    dueTo?: string;
+    startFrom?: string;
+    startTo?: string;
 }): boolean {
     const project = d.project ?? d.projectId;
     if (project !== undefined) {
@@ -82,6 +101,21 @@ function listTasksHasFilter(d: {
     if (d.doneFilter === "open" || d.doneFilter === "done") {
         return true;
     }
+    if (d.tagIds !== undefined) {
+        return Array.isArray(d.tagIds) ? d.tagIds.length > 0 : true;
+    }
+    if (d.statusTagIds !== undefined) {
+        return Array.isArray(d.statusTagIds) ? d.statusTagIds.length > 0 : true;
+    }
+    if (d.priority !== undefined) {
+        return true;
+    }
+    if (d.progress !== undefined) {
+        return true;
+    }
+    if (d.dueFrom || d.dueTo || d.startFrom || d.startTo) {
+        return true;
+    }
     return false;
 }
 
@@ -100,6 +134,14 @@ function buildListTasksFilters(input: {
     assignedOnly?: boolean;
     unassignedOnly?: boolean;
     doneFilter?: "all" | "open" | "done";
+    tagIds?: string | string[];
+    statusTagIds?: string | string[];
+    priority?: "critical" | "high" | "medium" | "low" | "none";
+    progress?: string;
+    dueFrom?: string;
+    dueTo?: string;
+    startFrom?: string;
+    startTo?: string;
 }): GetAllFilters {
     const f: GetAllFilters = {};
     const project = input.project ?? input.projectId;
@@ -143,6 +185,30 @@ function buildListTasksFilters(input: {
     } else if (input.doneFilter === "done") {
         f.completed = "true";
     }
+    if (input.tagIds !== undefined) {
+        f.tags = input.tagIds;
+    }
+    if (input.statusTagIds !== undefined) {
+        f.status = input.statusTagIds;
+    }
+    if (input.priority !== undefined) {
+        f.priority = input.priority;
+    }
+    if (input.progress !== undefined) {
+        f.progress = input.progress;
+    }
+    if (input.dueFrom) {
+        f.dueFrom = utcWindowDate(input.dueFrom);
+    }
+    if (input.dueTo) {
+        f.dueTo = utcWindowDate(input.dueTo);
+    }
+    if (input.startFrom) {
+        f.startFrom = utcWindowDate(input.startFrom);
+    }
+    if (input.startTo) {
+        f.startTo = utcWindowDate(input.startTo);
+    }
     return f;
 }
 
@@ -162,6 +228,14 @@ export function findTasksInputToQueryString(input: {
     assignedOnly?: boolean;
     unassignedOnly?: boolean;
     doneFilter?: "all" | "open" | "done";
+    tagIds?: string | string[];
+    statusTagIds?: string | string[];
+    priority?: "critical" | "high" | "medium" | "low" | "none";
+    progress?: string;
+    dueFrom?: string;
+    dueTo?: string;
+    startFrom?: string;
+    startTo?: string;
 }): string {
     const params = new URLSearchParams();
 
@@ -209,6 +283,33 @@ export function findTasksInputToQueryString(input: {
     } else if (input.doneFilter === "done") {
         params.set("completed", "true");
     }
+    if (input.tagIds !== undefined) {
+        params.set("tags", Array.isArray(input.tagIds) ? input.tagIds.join(",") : input.tagIds);
+    }
+    if (input.statusTagIds !== undefined) {
+        params.set(
+            "status",
+            Array.isArray(input.statusTagIds) ? input.statusTagIds.join(",") : input.statusTagIds
+        );
+    }
+    if (input.priority !== undefined) {
+        params.set("priority", input.priority);
+    }
+    if (input.progress !== undefined) {
+        params.set("progress", input.progress);
+    }
+    if (input.dueFrom) {
+        params.set("dueFrom", utcWindowDate(input.dueFrom));
+    }
+    if (input.dueTo) {
+        params.set("dueTo", utcWindowDate(input.dueTo));
+    }
+    if (input.startFrom) {
+        params.set("startFrom", utcWindowDate(input.startFrom));
+    }
+    if (input.startTo) {
+        params.set("startTo", utcWindowDate(input.startTo));
+    }
 
     return params.toString();
 }
@@ -252,6 +353,44 @@ export const taskAiTools = [
                     ),
                 unassignedOnly: z.boolean().optional().describe("True = tasks with no assignees."),
                 doneFilter: z.enum(["all", "open", "done"]).optional(),
+                tagIds: uuidOrArray
+                    .optional()
+                    .describe(
+                        "Task tag UUID(s) — resolve tag names with listTags now. Multiple tags match tasks carrying any of them."
+                    ),
+                statusTagIds: uuidOrArray
+                    .optional()
+                    .describe(
+                        "Status tag UUID(s) (tags of type status) — resolve status names with listTags now. Multiple statuses match any of them."
+                    ),
+                priority: z.nativeEnum(PRIORITY).optional().describe("Exact priority match"),
+                progress: z
+                    .string()
+                    .regex(/^(gt|gte|lt|lte|eq):(0|[1-9]|[1-9][0-9]|100)$/)
+                    .optional()
+                    .describe(
+                        'Progress percentage operator: "gt:60" above 60%, "gte:60" at least, "lt:20" below, "lte:20" at most, "eq:0" at zero.'
+                    ),
+                dueFrom: aiDateInput
+                    .optional()
+                    .describe(
+                        'ISO date or date-time — first day of the due-date window (whole UTC day). Resolve "due today / this week / next week / next month" into dueFrom and dueTo now; keep overdueOnly for plain "overdue".'
+                    ),
+                dueTo: aiDateInput
+                    .optional()
+                    .describe(
+                        "ISO date or date-time — last day of the due-date window (whole UTC day, paired with dueFrom)"
+                    ),
+                startFrom: aiDateInput
+                    .optional()
+                    .describe(
+                        'ISO date or date-time — first day of the start-date window (whole UTC day). Resolve "starts today / this week / next week" into startFrom and startTo now'
+                    ),
+                startTo: aiDateInput
+                    .optional()
+                    .describe(
+                        "ISO date or date-time — last day of the start-date window (whole UTC day, paired with startFrom)"
+                    ),
             })
             .refine(d => listTasksHasFilter(d), {
                 message:
@@ -314,6 +453,44 @@ export const taskAiTools = [
                     .enum(["all", "open", "done"])
                     .optional()
                     .describe("open = not completed, done = completed only, all = omit filter"),
+                tagIds: uuidOrArray
+                    .optional()
+                    .describe(
+                        "Task tag UUID(s) — resolve tag names with listTags now. Multiple tags match tasks carrying any of them."
+                    ),
+                statusTagIds: uuidOrArray
+                    .optional()
+                    .describe(
+                        "Status tag UUID(s) (tags of type status) — resolve status names with listTags now. Multiple statuses match any of them."
+                    ),
+                priority: z.nativeEnum(PRIORITY).optional().describe("Exact priority match"),
+                progress: z
+                    .string()
+                    .regex(/^(gt|gte|lt|lte|eq):(0|[1-9]|[1-9][0-9]|100)$/)
+                    .optional()
+                    .describe(
+                        'Progress percentage operator: "gt:60" above 60%, "gte:60" at least, "lt:20" below, "lte:20" at most, "eq:0" at zero.'
+                    ),
+                dueFrom: aiDateInput
+                    .optional()
+                    .describe(
+                        'ISO date or date-time — first day of the due-date window (whole UTC day). Resolve "due today / this week / next week / next month" into dueFrom and dueTo now; keep overdueOnly for plain "overdue".'
+                    ),
+                dueTo: aiDateInput
+                    .optional()
+                    .describe(
+                        "ISO date or date-time — last day of the due-date window (whole UTC day, paired with dueFrom)"
+                    ),
+                startFrom: aiDateInput
+                    .optional()
+                    .describe(
+                        'ISO date or date-time — first day of the start-date window (whole UTC day). Resolve "starts today / this week / next week" into startFrom and startTo now'
+                    ),
+                startTo: aiDateInput
+                    .optional()
+                    .describe(
+                        "ISO date or date-time — last day of the start-date window (whole UTC day, paired with startFrom)"
+                    ),
             })
             .refine(d => listTasksHasFilter(d), {
                 message:

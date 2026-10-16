@@ -21,6 +21,8 @@ export const referenceKinds: Record<string, string> = {
     eventId: "event",
     notepadId: "notepad",
     statusTagId: "tag",
+    statusTagIds: "tag",
+    tagIds: "tag",
     recordId: "task",
     resourceIds: "task",
 };

@@ -3,7 +3,8 @@ import { PRIORITY } from "@stacks/types";
 
 import { IFilters } from "app/store/projectFilters";
 
-const PRIORITY_VALUES = new Set<string>(Object.values(PRIORITY));
+/** Accepted `priority` query values, derived from the shared enum so the two URL filter parsers agree. */
+export const PRIORITY_VALUES = new Set<string>(Object.values(PRIORITY));
 
 const STATE_VALUES = new Set<string>(["all", "done", "todo"]);
 

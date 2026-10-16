@@ -3,14 +3,59 @@ import { translate } from "@stacks/translations";
 import React, { useEffect, useMemo, useState } from "react";
 import { Outlet, useSearchParams } from "react-router-dom";
 
-import { ITask } from "@stacks/types";
+import { PRIORITY, ITask } from "@stacks/types";
 import { BlankSlate, Grid } from "app/components/common";
 import { TaskLoadParams, TasksAPI } from "app/api/tasks";
 import { shallowEqual } from "app/hooks/store";
 import { TasksActions } from "app/store/actions";
 import { TasksStore } from "app/store/tasks";
+import { PRIORITY_VALUES } from "app/utils/filterQueryParams";
 import { AppView, AppViewContent, TaskRowSkeleton, TasksTable } from "app/widgets";
-import { parseISO } from "date-fns";
+
+const PROGRESS_FILTER = /^(gt|gte|lt|lte|eq):(0|[1-9]|[1-9][0-9]|100)$/;
+/** `YYYY-MM-DD` — a bare calendar day, normalised to UTC midnight below. */
+const ISO_DAY = /^\d{4}-\d{2}-\d{2}$/;
+/** `YYYY-MM-DDTHH:MM[:SS[.sss]]` with an optional explicit timezone. */
+const ISO_MOMENT = /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d{1,3})?)?)(Z|[+-]\d{2}:\d{2})?$/;
+/** A `YYYY-MM-DD` prefix that names a real calendar day, used to reject rollover such as `2026-02-30`. */
+const calendarDay = (value: string): boolean => {
+    const day = new Date(`${value.slice(0, 10)}T00:00:00.000Z`);
+    return Number.isFinite(day.getTime()) && day.toISOString().slice(0, 10) === value.slice(0, 10);
+};
+
+/**
+ * Read a filter date from the URL, dropping anything unparseable.
+ *
+ * Date-only values become UTC midnight, so `?dueFrom=2026-10-12` names that same calendar day in
+ * every browser timezone; date-times without an explicit timezone are read as UTC too. Invalid
+ * values are never returned, because the shared Axios/`qs` layer serialises `Date` params and
+ * throws `RangeError: Invalid time value` for an Invalid Date.
+ */
+function readFilterDate(searchParams: URLSearchParams, key: string): Date | undefined {
+    const raw = searchParams.get(key);
+    if (!raw) {
+        return undefined;
+    }
+
+    const moment = ISO_MOMENT.exec(raw);
+    const iso = ISO_DAY.test(raw)
+        ? `${raw}T00:00:00.000Z`
+        : moment && moment[2]
+        ? raw
+        : moment
+        ? `${moment[1]}Z`
+        : "";
+    if (!iso) {
+        return undefined;
+    }
+
+    const value = new Date(iso);
+    if (!Number.isFinite(value.getTime()) || !calendarDay(raw)) {
+        return undefined;
+    }
+
+    return value;
+}
 
 /** Build GET `/api/tasks` params from URL search (same filter keys as {@link TasksFilteredSchema}). */
 export function searchParamsToTaskLoadParams(searchParams: URLSearchParams): TaskLoadParams | null {
@@ -38,8 +83,18 @@ export function searchParamsToTaskLoadParams(searchParams: URLSearchParams): Tas
     const parent = readOptionalString("parent");
     const queryRaw = readOptionalString("query");
     const query = queryRaw?.trim() ? queryRaw.trim() : undefined;
-    const from = readOptionalString("from");
-    const to = readOptionalString("to");
+    const from = readFilterDate(searchParams, "from");
+    const to = readFilterDate(searchParams, "to");
+    const tags = readUuidList("tags");
+    const status = readUuidList("status");
+    const priorityRaw = readOptionalString("priority");
+    const priority = priorityRaw && PRIORITY_VALUES.has(priorityRaw) ? priorityRaw : undefined;
+    const progressRaw = readOptionalString("progress");
+    const progress = progressRaw && PROGRESS_FILTER.test(progressRaw) ? progressRaw : undefined;
+    const dueFrom = readFilterDate(searchParams, "dueFrom");
+    const dueTo = readFilterDate(searchParams, "dueTo");
+    const startFrom = readFilterDate(searchParams, "startFrom");
+    const startTo = readFilterDate(searchParams, "startTo");
 
     const params: TaskLoadParams = {};
     if (ids?.length) params.ids = ids;
@@ -50,8 +105,16 @@ export function searchParamsToTaskLoadParams(searchParams: URLSearchParams): Tas
     if (assignees?.length) params.assignees = assignees;
     if (parent) params.parent = parent;
     if (query) params.query = query;
-    if (from) params.from = parseISO(from);
-    if (to) params.to = parseISO(to);
+    if (from) params.from = from;
+    if (to) params.to = to;
+    if (tags?.length) params.tags = tags;
+    if (status?.length) params.status = status;
+    if (priority) params.priority = priority as PRIORITY;
+    if (progress) params.progress = progress;
+    if (dueFrom) params.dueFrom = dueFrom;
+    if (dueTo) params.dueTo = dueTo;
+    if (startFrom) params.startFrom = startFrom;
+    if (startTo) params.startTo = startTo;
 
     const archived = readTrueFlag("archived");
     const completed = readTrueFlag("completed");
@@ -174,6 +237,7 @@ export const Tasks = () => {
                         title={translate("No tasks")}
                         icon="check-circle"
                         description={translate("No tasks match these filters")}
+                        testId="tasks-no-match-slate"
                     />
                 </Grid>
             );
