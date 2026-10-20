@@ -3,7 +3,15 @@ import { addDays, endOfDay, startOfDay } from "date-fns";
 import uniq from "lodash/uniq";
 import { Op, Transaction } from "sequelize";
 
-import { AttachmentEntity, DocumentEntity, PermissionEntity, sequelize, TaskEntity } from "@stacks/db";
+import {
+    AttachmentEntity,
+    DocumentEntity,
+    PermissionEntity,
+    sequelize,
+    TagEntity,
+    TaskEntity,
+    UserEntity,
+} from "@stacks/db";
 import {
     AUTOMATION_EVENT,
     NOTIFICATION_RECORD_TYPE,
@@ -24,6 +32,7 @@ import { StacksLoader } from "./stacks";
 import { TimelogsLoader } from "./timelogs";
 import {
     afterTransactionCommit,
+    assertCanWriteResource,
     createOne,
     deleteAll,
     deleteOne,
@@ -47,6 +56,64 @@ if (!(TaskEntity as any)[TASKS_ASSOC_KEY]) {
     (TaskEntity as any)[TASKS_ASSOC_KEY] = true;
 }
 
+async function assertRelatedTasksVisible(
+    taskIds: Array<string | null | undefined>,
+    transaction: Transaction
+) {
+    const requestedIds = [...new Set(taskIds.filter((id): id is string => Boolean(id)))];
+    if (requestedIds.length === 0) return;
+
+    const relatedTasks = await findAll<ITask>({
+        entity: TaskEntity,
+        filter: { id: { [Op.in]: requestedIds } },
+        transaction,
+    });
+    if (relatedTasks.length !== requestedIds.length) {
+        throw Errors.notFound(translate("Task not found"));
+    }
+
+    const visibleProjectIds = new Set((await ProjectsLoader.getAll(transaction)).map(project => project.id));
+    if (relatedTasks.some(task => !visibleProjectIds.has(task.project))) {
+        throw Errors.notFound(translate("Task not found"));
+    }
+}
+
+async function assertTaskTagsBelongToTenant(
+    tagIds: Array<string | null | undefined>,
+    tenant: string,
+    transaction: Transaction
+) {
+    const requestedIds = [...new Set(tagIds.filter((id): id is string => Boolean(id)))];
+    if (requestedIds.length === 0) return;
+
+    const tags = await TagEntity.findAll({
+        where: { id: { [Op.in]: requestedIds }, tenant, deleted: null },
+        attributes: ["id"],
+        transaction,
+    });
+    if (tags.length !== requestedIds.length) {
+        throw Errors.notFound(translate("Task not found"));
+    }
+}
+
+async function assertTaskAssigneesBelongToTenant(
+    userIds: Array<string | null | undefined>,
+    tenant: string,
+    transaction: Transaction
+) {
+    const requestedIds = [...new Set(userIds.filter((id): id is string => Boolean(id)))];
+    if (requestedIds.length === 0) return;
+
+    const users = await UserEntity.findAll({
+        where: { id: { [Op.in]: requestedIds }, tenant, deleted: null },
+        attributes: ["id"],
+        transaction,
+    });
+    if (users.length !== requestedIds.length) {
+        throw Errors.notFound(translate("Task not found"));
+    }
+}
+
 /**
  * Create a new task.
  * @param data Task data
@@ -55,13 +122,18 @@ if (!(TaskEntity as any)[TASKS_ASSOC_KEY]) {
 async function create(data: Partial<ITask>, positionInStack?: "top" | "bottom") {
     return withTransaction(undefined, async transaction => {
         const user = getCurrentUser();
+        await assertRelatedTasksVisible([data.parent], transaction);
+        const project = await ProjectsLoader.getOne(data.project!, transaction);
+        const stack = await StacksLoader.getOne(data.stack!, transaction);
+        if (stack.project !== project.id) {
+            throw Errors.notFound(translate("Task not found"));
+        }
+
         const newTask = await createOne<ITask>({
             entity: TaskEntity,
             data: data,
             transaction,
         });
-
-        const project = await ProjectsLoader.getOne(newTask.project, transaction);
 
         // create permissions for the new task
         const permissions = await PermissionsLoader.create(
@@ -485,7 +557,7 @@ async function countAll(filters: GetAllFilters, extTransaction?: Transaction): P
                 },
             ],
             distinct: true,
-            col: "TaskEntity.id",
+            col: "id",
             transaction,
         });
     });
@@ -673,17 +745,25 @@ async function update(id: string, data: Partial<ITask>, extTransaction?: Transac
     const user = getCurrentUser();
     return withTransaction(extTransaction, async transaction => {
         const task = await getOne(id, transaction);
+        assertCanWriteResource(task, "owner");
+        await assertRelatedTasksVisible(
+            [data.parent, ...(data.dependencies ?? []), ...(data.subtasksOrder ?? [])],
+            transaction
+        );
+        await assertTaskTagsBelongToTenant([...(data.tags ?? []), data.status], user.tenant, transaction);
+        await assertTaskAssigneesBelongToTenant(data.assignees ?? [], user.tenant, transaction);
 
-        // if the user changes the task project
-        // we make sure we actually have access to that project
+        const targetProjectId = data.project ?? task.project;
+        const targetStackId = data.stack ?? task.stack;
+
         if (data.project != null) {
             await ProjectsLoader.getOne(data.project, transaction);
         }
-
-        // if the user changes the task stack
-        // we make sure we actually have access to that stack
-        if (data.stack != null) {
-            await StacksLoader.getOne(data.stack, transaction);
+        if (data.project != null || data.stack != null) {
+            const targetStack = await StacksLoader.getOne(targetStackId, transaction);
+            if (targetStack.project !== targetProjectId) {
+                throw Errors.notFound(translate("Task not found"));
+            }
         }
 
         const prevTaskSnapshot = {
@@ -891,6 +971,9 @@ const move = async (
     return withTransaction(extTransaction, async transaction => {
         const task = await getOne(taskId, transaction);
         const stack = await StacksLoader.getOne(stackId, transaction);
+        if (stack.project !== task.project) {
+            throw Errors.notFound(translate("Task not found"));
+        }
         const isSameStack = stackId === task.stack;
         const order = stack.tasksOrder;
 

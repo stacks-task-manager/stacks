@@ -3,6 +3,7 @@ import { sign } from "hono/jwt";
 import { createRequire } from "module";
 import { join } from "node:path";
 import { getJwtSecret } from "../config/secrets";
+import { SESSION_AUDIENCE, SESSION_ISSUER } from "../config/session";
 import { serverPackageVersion } from "../packageVersions";
 import { requestContext } from "../services/requestContext";
 
@@ -16,11 +17,20 @@ function envTrim(name: string): string {
     return typeof v === "string" ? v.trim() : "";
 }
 
-async function createInternalAuthToken(): Promise<string> {
-    const userId = (requestContext.getCurrentUser() as unknown as { id: string }).id;
+export async function createInternalAuthToken(): Promise<string> {
+    const userId = String(requestContext.getCurrentUser().id);
+    const sid = requestContext.getContext()?.sid;
+    if (!sid) {
+        throw new Error("Authenticated session context is required for internal MCP calls");
+    }
+    const issuedAt = Math.floor(Date.now() / 1000);
     const payload = {
         uid: userId,
-        exp: Math.floor(Date.now() / 1000) + 60,
+        sid,
+        iat: issuedAt,
+        exp: issuedAt + 120,
+        iss: SESSION_ISSUER,
+        aud: SESSION_AUDIENCE,
     };
     return await sign(payload, getJwtSecret());
 }

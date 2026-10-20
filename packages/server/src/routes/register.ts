@@ -8,12 +8,15 @@ import { Hono } from "hono";
 import { translate } from "@stacks/translations";
 import { EMAIL_TEMPLATES } from "@stacks/types";
 import z from "zod/v4";
+import { browserMutationAllowed, browserRequestToken } from "../middleware/auth";
+import { CSRF_FORM_FIELD } from "../config/browserCsrf";
 import { isRegistrationEnabled } from "../config/features";
 import { EmailsLoader } from "../loaders";
 import { createActivationToken } from "../services/accountTokens";
 import { findPublicRegistrationRole } from "../services/registration";
 import type { User } from "../types";
 import { UserRegisterSchema } from "./schema/user";
+import { enforceAuthAttemptLimit } from "../utils/authRateLimit";
 
 const register = new Hono();
 
@@ -28,7 +31,8 @@ register.get("/", async c => {
             id: tenant.get("id"),
             title: tenant.get("title"),
         }));
-        return c.replyHtml("register", { tenants });
+        const csrf = await browserRequestToken(c);
+        return c.replyHtml("register", { csrf, tenants });
     } catch (error) {
         return c.text("Register page not found", 404);
     }
@@ -40,9 +44,16 @@ register.post("/", async c => {
         return c.text(translate("Registration is disabled by the administrator"), 403);
     }
 
+    if (!(await browserMutationAllowed(c, "none"))) {
+        return c.text(translate("Cross site request rejected"), 403);
+    }
+
     try {
         const form = await c.req.parseBody();
+        delete form[CSRF_FORM_FIELD];
         const userData = UserRegisterSchema.parse(form);
+        const limited = await enforceAuthAttemptLimit(c, "registration", userData.email, userData.tenant);
+        if (limited) return limited;
         const [tenant, role, existingUser] = await Promise.all([
             TenantEntity.findOne({ where: { id: userData.tenant, disabled: false } }),
             findPublicRegistrationRole(userData.tenant),
@@ -63,7 +74,7 @@ register.post("/", async c => {
             password: await hash(userData.password, 10),
             real: true,
             disabled: true,
-            token: activation.token,
+            activationTokenHash: activation.hash,
             activationTokenExpiresAt: activation.expiresAt,
         });
 

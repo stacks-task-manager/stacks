@@ -143,12 +143,34 @@ const Person: FunctionComponent<PersonProps> = ({ onClose }) => {
         setIsEditing(!isEditing);
     };
 
-    const handleSavePerson = (person?: IPerson) => {
-        handleToggleEditing();
-
-        if (person) {
-            PeopleActions.update(person.id, person);
+    const handleSavePerson = async (personToSave?: IPerson) => {
+        if (!personToSave || !person) {
+            handleToggleEditing();
+            return;
         }
+
+        let updates: Partial<IPerson> = personToSave;
+        if (person.real && personToSave.email !== person.email) {
+            try {
+                await PeopleActions.requestEmailChange(person.id, personToSave.email);
+                const profileUpdates: Partial<IPerson> = { ...personToSave };
+                delete profileUpdates.email;
+                updates = profileUpdates;
+                window.toaster.show({
+                    message: translate("Verification email sent"),
+                    intent: Intent.SUCCESS,
+                });
+            } catch {
+                window.toaster.show({
+                    message: translate("Email change request failed"),
+                    intent: Intent.DANGER,
+                });
+                return;
+            }
+        }
+
+        handleToggleEditing();
+        PeopleActions.update(person.id, updates);
     };
 
     if (!isLoading && person && !isEditing) {

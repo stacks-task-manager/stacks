@@ -23,10 +23,10 @@ const expectedMethodsByFile = {
     "emails.ts": ["queueEmail"],
     "events.ts": ["getOne", "getAll", "countAll", "create", "update", "move", "remove"],
     "files.ts": [
+        "assertAttachmentParentWritable",
         "uploadFile",
         "uploadFileStream",
         "getStreamUploadProgress",
-        "checkExistingFileAndCreateAttachment",
         "getAttachments",
         "getAttachment",
         "download",

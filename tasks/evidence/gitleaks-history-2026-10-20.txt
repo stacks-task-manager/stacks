@@ -1,0 +1,5 @@
+Scanner: gitleaks 8.30.1
+Scope: repository Git history
+Exit: 1 (one candidate finding)
+Only paths and rule IDs are recorded; no match values are included.
+.yarn/releases/yarn-3.6.4.cjs	generic-api-key	1

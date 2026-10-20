@@ -15,11 +15,13 @@ vi.mock("@stacks/db", () => ({
 
 vi.mock("../../events", () => ({
     sendRealtimeUpdate: vi.fn(),
+    sendRealtimeInvalidation: vi.fn(),
 }));
 
 import { sendRealtimeUpdate } from "../../events";
 import { PermissionsLoader } from "../permissions";
 import { requestContext } from "../../services/requestContext";
+import { cacheInstances } from "../../utils/cache";
 import type { User } from "../../types";
 
 const baseContext = (overrides: Partial<User> = {}) => ({
@@ -146,6 +148,38 @@ describe("PermissionsLoader", () => {
             record: "perm-1",
             permissions: updated,
         });
+    });
+
+    it("invalidates warmed API responses only after an ACL update commits", async () => {
+        const previousCacheSetting = process.env.CACHE;
+        process.env.CACHE = "true";
+        const key = "tenant-1:user-1:GET:/api/tasks/task-1:{}:headers";
+        cacheInstances.api.set(key, { body: "private task" } as any);
+        findOneMock.mockResolvedValue({
+            toJSON: () => permissionRow({ visibleUsers: ["user-2"] }),
+        } as any);
+        updateMock.mockResolvedValue([
+            1,
+            [{ toJSON: () => permissionRow({ isPublic: false, visibleUsers: [], visibleRoles: [] }) }],
+        ] as any);
+
+        try {
+            await runWithContext(async () => {
+                await PermissionsLoader.update(
+                    "task-1",
+                    { isPublic: false, visibleUsers: [], visibleRoles: [] },
+                    transaction
+                );
+
+                expect(cacheInstances.api.has(key)).toBe(true);
+                await Promise.all(afterCommitCallbacks.map(callback => callback()));
+            });
+            expect(cacheInstances.api.has(key)).toBe(false);
+        } finally {
+            cacheInstances.api.delete(key);
+            if (previousCacheSetting === undefined) delete process.env.CACHE;
+            else process.env.CACHE = previousCacheSetting;
+        }
     });
 
     it("rejects owner changes from visible non-owners", async () => {

@@ -1,6 +1,14 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { stackInsertIndex, type StackPosition } from "./stackPosition";
-import { DocumentEntity, PermissionEntity, ProjectEntity, TaskEntity } from "@stacks/db";
+import {
+    CompanyEntity,
+    DocumentEntity,
+    PermissionEntity,
+    ProjectEntity,
+    StackEntity,
+    TaskEntity,
+    UserEntity,
+} from "@stacks/db";
 import { Errors } from "../errors";
 import { ITask, POLLINGACTIONS, POLLINGTYPE, ROLE_SECTIONS, type IProject } from "@stacks/types";
 import { literal, Op, Transaction } from "sequelize";
@@ -34,6 +42,58 @@ PermissionEntity.belongsTo(ProjectEntity, { foreignKey: "id", constraints: false
  */
 async function create(data: object, extTransaction?: Transaction) {
     return withTransaction(extTransaction, async transaction => {
+        const user = getCurrentUser();
+        const projectData = data as Partial<IProject>;
+        if (projectData.company !== undefined && projectData.company !== null) {
+            const company = await CompanyEntity.findOne({
+                where: { id: projectData.company, tenant: user.tenant, deleted: null },
+                attributes: ["id"],
+                transaction,
+            });
+            if (!company) throw Errors.notFound(translate("Project not found"));
+        }
+
+        const projectOwner = projectData.projectOwner;
+        if (projectOwner !== undefined && projectOwner !== null) {
+            const owner = await UserEntity.findOne({
+                where: { id: projectOwner, tenant: user.tenant, deleted: null },
+                attributes: ["id"],
+                transaction,
+            });
+            if (!owner) throw Errors.notFound(translate("Project not found"));
+        }
+
+        if (projectData.approvers !== undefined && projectData.approvers.length > 0) {
+            const approvers = await UserEntity.findAll({
+                where: {
+                    id: { [Op.in]: projectData.approvers },
+                    tenant: user.tenant,
+                    deleted: null,
+                },
+                attributes: ["id"],
+                transaction,
+            });
+            if (approvers.length !== projectData.approvers.length) {
+                throw Errors.notFound(translate("Project not found"));
+            }
+        }
+
+        if (projectData.stacksOrder !== undefined && projectData.stacksOrder.length > 0) {
+            const projectStacks = await StackEntity.findAll({
+                where: {
+                    id: { [Op.in]: projectData.stacksOrder },
+                    project: projectData.id,
+                    tenant: user.tenant,
+                    deleted: null,
+                },
+                attributes: ["id"],
+                transaction,
+            });
+            if (projectStacks.length !== projectData.stacksOrder.length) {
+                throw Errors.notFound(translate("Project not found"));
+            }
+        }
+
         const created = await createOne({
             entity: ProjectEntity,
             data,
@@ -126,6 +186,55 @@ async function update(id: string, data: Partial<IProject>, extTransaction?: Tran
             throw Errors.forbidden(translate("Project update not allowed"));
         }
 
+        if (data.company !== undefined && data.company !== null) {
+            const company = await CompanyEntity.findOne({
+                where: { id: data.company, tenant: project.tenant, deleted: null },
+                attributes: ["id"],
+                transaction,
+            });
+            if (!company) throw Errors.notFound(translate("Project not found"));
+        }
+
+        if (data.projectOwner !== undefined && data.projectOwner !== null) {
+            const owner = await UserEntity.findOne({
+                where: { id: data.projectOwner, tenant: project.tenant, deleted: null },
+                attributes: ["id"],
+                transaction,
+            });
+            if (!owner) throw Errors.notFound(translate("Project not found"));
+        }
+
+        if (data.approvers !== undefined && data.approvers.length > 0) {
+            const approvers = await UserEntity.findAll({
+                where: {
+                    id: { [Op.in]: data.approvers },
+                    tenant: project.tenant,
+                    deleted: null,
+                },
+                attributes: ["id"],
+                transaction,
+            });
+            if (approvers.length !== data.approvers.length) {
+                throw Errors.notFound(translate("Project not found"));
+            }
+        }
+
+        if (data.stacksOrder !== undefined && data.stacksOrder.length > 0) {
+            const projectStacks = await StackEntity.findAll({
+                where: {
+                    id: { [Op.in]: data.stacksOrder },
+                    project: id,
+                    tenant: project.tenant,
+                    deleted: null,
+                },
+                attributes: ["id"],
+                transaction,
+            });
+            if (projectStacks.length !== data.stacksOrder.length) {
+                throw Errors.notFound(translate("Project not found"));
+            }
+        }
+
         const updatedProject: IProject = await updateOne<IProject>({
             entity: ProjectEntity,
             id,
@@ -200,7 +309,7 @@ async function archiveCompletedTasks(id: string, extTransaction?: Transaction): 
 
         const project = await getOne(id, transaction);
 
-        // check if the person archiving all the completed tasks is the project owner or admin
+        // Require project ownership/admin access here; updateAll still applies each task's owner/admin ACL.
         if (project.projectOwner !== user.id && !user.admin) {
             throw Errors.forbidden(translate("Archive completed not allowed"));
         }

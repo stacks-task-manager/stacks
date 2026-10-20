@@ -48,3 +48,5 @@ export const PeopleUpdateSchema = z.object({
     hourlyRates: z.union([z.json(), z.null()]).optional(),
     role: z.uuid().optional(),
 });
+
+export const EmailChangeRequestSchema = z.object({ email: z.email().max(254) }).strict();

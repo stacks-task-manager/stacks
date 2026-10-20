@@ -13,6 +13,7 @@ import { join } from "path";
 
 import type { ContentfulStatusCode } from "hono/utils/http-status";
 import { AppError } from "../errors";
+import { ApiMessageKeys } from "../apiMessageKeys";
 import "../types/hono.d.ts";
 import { EMAIL_TEMPLATES, EmailTemplateData } from "@stacks/types";
 import { EmailsLoader } from "../loaders";
@@ -85,6 +86,11 @@ export function registerResponseHelpers(app: Hono): void {
                 statusCode = code ?? fromCause ?? 500;
                 resolvedCode = errorCode;
                 errorsPayload = errors;
+                if (statusCode >= 500) {
+                    errorMessage = ApiMessageKeys.internalServerError;
+                    resolvedCode = resolvedCode ?? "INTERNAL_ERROR";
+                    errorsPayload = undefined;
+                }
             }
 
             const response: ErrorResponse = {

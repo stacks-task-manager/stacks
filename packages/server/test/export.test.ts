@@ -10,7 +10,22 @@ describe("Export API", () => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ format: "json", type: "task", data: [] }),
         });
-        expect([401, 404]).toContain(res.status);
+        expect(res.status).toBe(401);
+    });
+
+    test("POST /api/export — rejects oversized PDF requests before parsing", async () => {
+        const headers = await getAuthenticatedHeaders();
+        const res = await app.request("/api/export", {
+            method: "POST",
+            headers: { ...headers, "Content-Type": "application/json" },
+            body: JSON.stringify({
+                format: "pdf",
+                type: "notepad",
+                data: { html: "x".repeat(1_048_576) },
+            }),
+        });
+
+        expect(res.status).toBe(413);
     });
 
     test("POST /api/export — rejects invalid format", async () => {

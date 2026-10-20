@@ -15,6 +15,7 @@ The Stacks web client. A React 18 + TypeScript app, bundled with Webpack, that r
 `packages/app/.env` (no `env.example` is checked in — create it manually if you need to override defaults):
 
 - `PORT` — dev server port (default `3001` in this repo)
+- `HOST` — bind address (defaults to `127.0.0.1`; override only on a trusted network because the dev server exposes the source bundle)
 - `BROWSER` — set to `none` to prevent auto-opening a browser
 - `GENERATE_SOURCEMAP` — enable / disable source maps
 

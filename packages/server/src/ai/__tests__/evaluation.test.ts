@@ -170,9 +170,9 @@ describe("expanded scenario assertions", () => {
         });
         const mock = createMock({ id: "missing", locale: "en", request: "", mock: "not-found" });
         expect(await mock({ toolName: "listTasks", input: { searchQuery: "Missing task" } })).toEqual([]);
-        await expect(mock({ toolName: "getTask", input: { taskId: "missing" } })).rejects.toThrow(
-            "not found"
-        );
+        await expect(
+            mock({ toolName: "getTask", input: { taskId: "00000000-0000-4000-8000-000000000001" } })
+        ).rejects.toThrow("not found");
     });
     it("accepts supported project aliases and equivalent profile navigation", async () => {
         const { normalize, ids } = await import("../../../scripts/ai-eval/world");

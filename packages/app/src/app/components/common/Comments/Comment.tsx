@@ -4,20 +4,13 @@ import { Button, Classes, Intent, Menu, MenuItem, Popover, Tag } from "@blueprin
 import classNames from "classnames";
 import React, { useEffect, useMemo, useState } from "react";
 
-import {
-    ACTIVITYTYPE,
-    FILES_TYPE,
-    IActivity,
-    IActivityChange,
-    IComment,
-    PRIORITY,
-    TAGSECTION,
-} from "@stacks/types";
+import { ACTIVITYTYPE, FILES_TYPE, IActivity, IComment, PRIORITY, TAGSECTION } from "@stacks/types";
 import { Avatar, Col, DateChip, Grid, Icon, Row } from "app/components/common";
 import { PriorityChip, TIRepeats } from "app/components/project";
 import { getPeople, getStack, getTag } from "app/hooks";
 import { ActivitiesActions, FilesActions } from "app/store/actions";
 import { formatDuration, timeSince } from "app/utils/date";
+import { diffActivitySegments } from "app/utils/activityDiff";
 import { Assignees, Editor, HTMLRenderer, StatusChip, Tags, TipTapEditorContent } from "app/widgets";
 interface ICommentProps {
     resourceId: string;
@@ -58,7 +51,7 @@ export const Comment = React.memo(function Comment({ resourceId, comment, mine }
 
     if (comment.type === ACTIVITYTYPE.LOG) {
         return (
-            <div className={classNames("comment", comment.type)}>
+            <div className={classNames("comment", comment.type)} data-testid="activity-log-entry">
                 <div>
                     {comment.assignee && (
                         <span style={{ fontWeight: "600" }}>
@@ -280,12 +273,19 @@ const ActivityLogRenderer = ({ activity }: { activity: IActivity }) => {
                 // AFTER
                 else if (part === "{after}") {
                     if (field === "title") {
-                        return (
-                            <span
-                                key={index}
-                                dangerouslySetInnerHTML={{ __html: highlightDifferences(change) }}
-                            />
-                        );
+                        return diffActivitySegments(change).map((segment, position) => {
+                            if (segment.kind === "removed") {
+                                return (
+                                    <del key={position} className={Classes.TEXT_DISABLED}>
+                                        {segment.text}
+                                    </del>
+                                );
+                            }
+                            if (segment.kind === "inserted") {
+                                return <ins key={position}>{segment.text}</ins>;
+                            }
+                            return segment.text;
+                        });
                     } else {
                         return <ActivityParser key={index} field={field} value={after} />;
                     }
@@ -301,37 +301,3 @@ const ActivityLogRenderer = ({ activity }: { activity: IActivity }) => {
         </>
     );
 };
-
-function highlightDifferences(diff: IActivityChange): string {
-    // If no before value is provided, treat the entire after string as new
-    if (!diff.before) {
-        return `<ins>${diff.after}</ins>`;
-    }
-
-    const before = diff.before;
-    const after = diff.after;
-
-    // Find the common prefix
-    let i = 0;
-    while (i < before.length && i < after.length && before[i] === after[i]) {
-        i++;
-    }
-
-    // Find the common suffix
-    let j = 1;
-    while (
-        j <= before.length - i &&
-        j <= after.length - i &&
-        before[before.length - j] === after[after.length - j]
-    ) {
-        j++;
-    }
-    j--;
-
-    const prefix = before.slice(0, i);
-    const oldPart = before.slice(i, before.length - j);
-    const newPart = after.slice(i, after.length - j);
-    const suffix = before.slice(before.length - j);
-
-    return `${prefix}<del class="${Classes.TEXT_DISABLED}">${oldPart}</del>${newPart}${suffix}`;
-}

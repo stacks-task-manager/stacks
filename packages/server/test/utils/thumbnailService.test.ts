@@ -82,6 +82,7 @@ describe("Thumbnail Service", () => {
 
         // Mock sharp
         const mockSharpInstance = {
+            timeout: vi.fn().mockReturnThis(),
             resize: vi.fn().mockReturnThis(),
             jpeg: vi.fn().mockReturnThis(),
             png: vi.fn().mockReturnThis(),
@@ -160,7 +161,8 @@ describe("Thumbnail Service", () => {
             );
 
             expect(result.path).toBe(outputPath);
-            expect(mockSharp).toHaveBeenCalledWith(filePath);
+            expect(mockSharp).toHaveBeenCalledWith(filePath, { limitInputPixels: 40_000_000 });
+            expect(mockSharp.mock.results[0].value.timeout).toHaveBeenCalledWith({ seconds: 15 });
         });
 
         test("should generate thumbnail for video files", async () => {

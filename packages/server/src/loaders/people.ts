@@ -2,7 +2,7 @@
 /**
  * Directory users: birthday filters, profile updates, invites with seat limits.
  */
-import { UserEntity } from "@stacks/db";
+import { sequelize, UserEntity } from "@stacks/db";
 import { Errors } from "../errors";
 import { IPerson, ROLE_SECTIONS } from "@stacks/types";
 import * as bcrypt from "bcryptjs";
@@ -10,10 +10,14 @@ import { randomUUID } from "crypto";
 import { formatISO9075, parseISO } from "date-fns";
 import { fn, literal, Op, Transaction, where, type WhereOptions } from "sequelize";
 import { invalidateApiCacheForCurrentRequest } from "../utils/cache";
+import { toPublicPerson } from "../utils/publicPerson";
 import { canWrite, getCurrentUser, getTenantLicense } from "./context";
+import { CompaniesLoader } from "./companies";
 import { RolesLoader } from "./roles";
 import { sanitizeWhere } from "./utils";
 import { translate } from "@stacks/translations";
+import { createActivationToken } from "../services/accountTokens";
+import { revokeAllUserSessions } from "../services/sessions";
 
 /**
  * Filters accepted by {@link getAll}. All fields are optional and AND-composed;
@@ -138,7 +142,7 @@ async function buildWhereClause(filters: PeopleFilters): Promise<WhereOptions | 
     }
 
     if (filters.birthdayMonth !== undefined) {
-        andClauses.push(literal(`EXTRACT(MONTH FROM "birthday") = ${filters.birthdayMonth}`));
+        andClauses.push(where(fn("EXTRACT", literal(`MONTH FROM "birthday"`)), filters.birthdayMonth));
     }
 
     if (filters.disabled !== undefined) {
@@ -146,11 +150,6 @@ async function buildWhereClause(filters: PeopleFilters): Promise<WhereOptions | 
     }
 
     return sanitizeWhere({ [Op.and]: andClauses }) as WhereOptions;
-}
-
-function stripPassword(user: Record<string, unknown>): IPerson {
-    const { password: _password, ...rest } = user;
-    return rest as unknown as IPerson;
 }
 
 /** Lists non-system people; all {@link PeopleFilters} are composed with AND. */
@@ -169,7 +168,7 @@ async function getAll(filters: PeopleFilters): Promise<IPerson[]> {
         ...(filters.limit !== undefined ? { limit: filters.limit } : {}),
     });
 
-    return users.map(u => stripPassword(u.toJSON()));
+    return users.map(u => toPublicPerson(u.toJSON()));
 }
 
 /**
@@ -194,7 +193,7 @@ async function getAllWithCount(filters: PeopleFilters): Promise<{ total: number;
         ...(filters.limit !== undefined ? { limit: filters.limit } : {}),
     });
 
-    return { total: count, rows: rows.map(u => stripPassword(u.toJSON())) };
+    return { total: count, rows: rows.map(u => toPublicPerson(u.toJSON())) };
 }
 
 /** Loads one person without password hash; optional transaction for nested writes. */
@@ -211,8 +210,7 @@ const getOne = async (id: string, extTransaction?: Transaction) => {
         throw Errors.notFound(translate("User not found or deactivated"));
     }
 
-    const { password, ...rest } = userData?.toJSON();
-    return rest;
+    return toPublicPerson(userData.toJSON());
 };
 
 /** Enforces admin/self rules, optional role change validation, then PATCHes the row. */
@@ -221,14 +219,17 @@ const update = async (id: string, updateData: any) => {
     const targetUserData = await getOne(id);
 
     const isAdmin = user.admin;
-    const isTargetUserReal = targetUserData.real;
     const isTargetUserDisabled = targetUserData.disabled;
     const isSelfUpdate = user.id === id;
 
     // Access control logic
-    const isUnauthorized = (isTargetUserReal && !isSelfUpdate) || isTargetUserDisabled;
+    const isUnauthorized = !isSelfUpdate || isTargetUserDisabled;
     if (isUnauthorized && !isAdmin) {
-        throw Errors.forbidden(translate("User not authorized"));
+        throw Errors.notFound(translate("User not found or deactivated"));
+    }
+
+    if (updateData.email !== undefined && updateData.email !== targetUserData.email && targetUserData.real) {
+        throw Errors.badRequest(translate("Invalid request format"));
     }
 
     if (updateData.role != null) {
@@ -242,10 +243,14 @@ const update = async (id: string, updateData: any) => {
         }
     }
 
+    if (updateData.company != null) {
+        await CompaniesLoader.getOne(updateData.company);
+    }
+
     const [affectedRows] = await UserEntity.update(
         { ...updateData, updatedBy: user.id },
         {
-            where: { id },
+            where: { id, tenant: user.tenant },
             returning: false, // Optimize for performance
         }
     );
@@ -265,6 +270,21 @@ const create = async (data: NewUser) => {
         throw Errors.forbidden(translate("User not authorized"));
     }
 
+    // Role IDs are tenant-scoped relationships, including for non-login contacts.
+    await RolesLoader.getOne(data.role);
+
+    // The route adds server-controlled fields to the request data. Copy only the
+    // creation fields accepted by this loader so an ID or tenant can never flow
+    // into the soft-delete revival update.
+    const personData: NewUser = {
+        email: data.email,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        gender: data.gender,
+        real: data.real,
+        role: data.role,
+    };
+
     const license = getTenantLicense();
 
     const { count } = await UserEntity.findAndCountAll({
@@ -282,49 +302,81 @@ const create = async (data: NewUser) => {
 
     const oldUser = await UserEntity.findOne({
         where: {
-            email: data.email,
+            email: personData.email,
         },
     });
 
     const salt = await bcrypt.genSalt(10);
     const password = await bcrypt.hash(randomUUID(), salt);
+    const activation = personData.real ? createActivationToken() : null;
 
     if (oldUser) {
-        if (oldUser.get("deleted")) {
-            // if the user was previously deleted
-            // undelete it and return the user
-            await UserEntity.update(
-                {
-                    ...data,
-                    password,
-                    tenant: user.tenant,
-                    deleted: null,
-                    updatedBy: user.id,
-                    deletedBy: null,
-                },
-                {
-                    where: { id: oldUser.get("id") },
-                }
-            );
+        if (String(oldUser.get("tenant")) !== user.tenant) {
+            throw Errors.badRequest(translate("User email already exists"));
+        }
 
-            const { password: pwd, deleted, ...person } = oldUser.toJSON();
+        if (oldUser.get("deleted")) {
+            // Revive only within the same tenant and retain the user's stable ID.
+            // A new login account must complete fresh activation before login; contacts
+            // stay disabled. Revoke all old capabilities atomically with the revival.
+            const transaction = await sequelize.transaction();
+            let revivedUser;
+            try {
+                revivedUser = await oldUser.update(
+                    {
+                        ...personData,
+                        company: user.company,
+                        password,
+                        token: null,
+                        activationTokenHash: activation?.hash ?? null,
+                        activationTokenExpiresAt: activation?.expiresAt ?? null,
+                        passwordResetTokenHash: null,
+                        passwordResetTokenExpiresAt: null,
+                        pendingEmail: null,
+                        emailChangeTokenHash: null,
+                        emailChangeTokenExpiresAt: null,
+                        disabled: true,
+                        tenant: user.tenant,
+                        deleted: null,
+                        updatedBy: user.id,
+                        deletedBy: null,
+                    },
+                    { transaction }
+                );
+                await revokeAllUserSessions(String(oldUser.get("id")), transaction);
+                await transaction.commit();
+            } catch (error) {
+                await transaction.rollback();
+                throw error;
+            }
+
+            const revived = revivedUser.toJSON();
             invalidateApiCacheForCurrentRequest();
-            return person;
+            return {
+                person: toPublicPerson(revived),
+                activationToken: activation?.token ?? null,
+            };
         } else {
             throw Errors.badRequest(translate("User email already exists"));
         }
     }
 
     const newUser = await UserEntity.create({
-        ...data,
+        ...personData,
+        company: user.company,
         password,
+        activationTokenHash: activation?.hash ?? null,
+        activationTokenExpiresAt: activation?.expiresAt ?? null,
         tenant: user.tenant,
         createdBy: user.id,
         updatedBy: user.id,
     });
-    const { password: pwd, ...person } = newUser.toJSON();
+    const created = newUser.toJSON();
     invalidateApiCacheForCurrentRequest();
-    return person;
+    return {
+        person: toPublicPerson(created),
+        activationToken: activation?.token ?? null,
+    };
 };
 
 export const PeopleLoader = {

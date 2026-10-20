@@ -76,10 +76,10 @@ export function formatAiChatError(error: unknown): string {
         return "AI error";
     }
     if (typeof error === "string") {
-        return error;
+        return redactAiErrorText(error);
     }
     if (error instanceof Error) {
-        const parts: string[] = [error.message || error.name || "AI error"];
+        const parts: string[] = [redactAiErrorText(error.message || error.name || "AI error")];
         const cause = (error as { cause?: unknown }).cause;
         const causeMsg = formatAiChatError(cause);
         if (cause && causeMsg && causeMsg !== parts[0] && causeMsg !== "AI error") {
@@ -96,18 +96,28 @@ export function formatAiChatError(error: unknown): string {
             (typeof o.statusText === "string" && o.statusText) ||
             "";
         if (candidate) {
-            return candidate;
+            return redactAiErrorText(candidate);
         }
         try {
             const json = JSON.stringify(error);
             if (json && json !== "{}") {
-                return json;
+                return redactAiErrorText(json);
             }
         } catch {
             // fall through
         }
     }
     return "AI error";
+}
+
+function redactAiErrorText(value: string): string {
+    return value
+        .replace(
+            /(authorization|access[_-]?token|refresh[_-]?token|id[_-]?token|client[_-]?secret|password|secret|api[_-]?key)\s*[:=]\s*["']?[^\s"',;]+/gi,
+            "$1=[redacted]"
+        )
+        .replace(/\bBearer\s+[A-Za-z0-9._~+/-]+=*/gi, "Bearer [redacted]")
+        .replace(/([?&](?:code|state|token|secret|key)=)[^&#\s]+/gi, "$1[redacted]");
 }
 
 /**
@@ -251,7 +261,8 @@ async function streamLlmChat(
     newUserMessage: string,
     handlers: StreamAiChatHandlers,
     clientRoute: AiChatClientRoutePayload | null | undefined,
-    session: Conversation
+    session: Conversation,
+    callerSignal?: AbortSignal
 ): Promise<void> {
     const debugStartedAt = new Date();
     const debugTools: AiChatDebugToolCall[] = [];
@@ -351,6 +362,14 @@ async function streamLlmChat(
 
     const shouldUseMcp = shouldUseMcpToolBackend();
     let mcp: Awaited<ReturnType<typeof createMcpToolClient>> | null = null;
+    const requestAbortController = new AbortController();
+    const timeout = setTimeout(
+        () => requestAbortController.abort(new Error("AI request timed out")),
+        120_000
+    );
+    const abortFromCaller = () => requestAbortController.abort(callerSignal?.reason);
+    if (callerSignal?.aborted) abortFromCaller();
+    else callerSignal?.addEventListener("abort", abortFromCaller, { once: true });
     try {
         mcp = shouldUseMcp ? await createMcpToolClient() : null;
         const executeOverride: AiToolExecuteOverride | undefined = mcp
@@ -416,7 +435,7 @@ async function streamLlmChat(
         const result = streamText({
             model,
             ...LLM_GENERATION_SETTINGS,
-            abortSignal: AbortSignal.timeout(120000),
+            abortSignal: requestAbortController.signal,
             tools,
             stopWhen: [stepCountIs(12), () => guard.stopped()],
             system: prompt.systemMessages,
@@ -474,10 +493,10 @@ async function streamLlmChat(
                 debugStatus = "error";
                 debugError = "AI request timed out";
             },
-            onError: ({ error }) => {
-                console.error("[aiChat] stream error", error);
+            onError: () => {
+                console.error("[aiChat] stream error");
                 debugStatus = "error";
-                debugError = formatAiChatError(error);
+                debugError = "AI provider request failed";
                 // Emit exactly one terminal message after stream consumption.
             },
         });
@@ -500,18 +519,20 @@ async function streamLlmChat(
             else if (widgets.length) handlers.onDone({ text: "", widgets });
             else handlers.onError(debugError || "AI error");
         } else handlers.onDone({ text: guard.summary() ?? (guard.stopped() ? "" : text), widgets });
-    } catch (e) {
-        console.error("[aiChat] turn failed", e);
+    } catch {
+        console.error("[aiChat] turn failed");
         debugStatus = "error";
-        debugError = formatAiChatError(e);
+        debugError = "AI request failed";
         if (executionGuard?.summary()) handlers.onDone({ text: executionGuard.summary()!, widgets });
         else if (widgets.length)
             handlers.onDone({
                 text: "",
                 widgets: [...widgets, { type: "status", label: "Reply unavailable", severity: "warning" }],
             });
-        else handlers.onError(formatAiChatError(e));
+        else handlers.onError(debugError);
     } finally {
+        clearTimeout(timeout);
+        callerSignal?.removeEventListener("abort", abortFromCaller);
         if (mcp) {
             await mcp.close().catch(() => undefined);
         }
@@ -541,7 +562,12 @@ export async function streamAiChat(
     newUserMessage: string,
     handlers: StreamAiChatHandlers,
     clientRoute?: AiChatClientRoutePayload | null,
-    options: { conversationId?: string; choiceReply?: AiChatChoiceReply; clientRequestId?: string } = {}
+    options: {
+        conversationId?: string;
+        choiceReply?: AiChatChoiceReply;
+        clientRequestId?: string;
+        signal?: AbortSignal;
+    } = {}
 ): Promise<void> {
     if (!isAiChatConfigured()) {
         handlers.onError("AI chat is not enabled");
@@ -667,7 +693,7 @@ export async function streamAiChat(
             // A new ordinary request abandons an unanswered choice.
             session.pending = undefined;
         }
-        await streamLlmChat(history, newUserMessage, wrapped, clientRoute, session);
+        await streamLlmChat(history, newUserMessage, wrapped, clientRoute, session, options.signal);
     } catch (error) {
         handlers.onError(formatAiChatError(error));
     } finally {

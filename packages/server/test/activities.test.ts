@@ -176,11 +176,7 @@ describe("Activities", () => {
             },
         });
 
-        expect([200, 404, 500]).toContain(res.status);
-        if (res.status === 200) {
-            const bodyInvalidIdGet = await res.json();
-            expect(bodyInvalidIdGet.success).toBe(true);
-        }
+        expect(res.status).toBe(400);
     });
 
     test("Update activity with invalid ID", async () => {
@@ -229,7 +225,6 @@ describe("Activities", () => {
             },
         });
 
-        // Should fail without authentication or route missing
-        expect([401, 404]).toContain(res.status);
+        expect(res.status).toBe(401);
     });
 });

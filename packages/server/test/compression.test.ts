@@ -1,17 +1,20 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { describe, test, expect } from "vitest";
-import app from "../src/index";
-import { getAuthenticatedHeaders } from "./helpers/authHelper";
+import { Hono } from "hono";
+import { compress } from "hono/compress";
 
 /**
- * Verifies `hono/compress` on `/api/*`: browsers send Accept-Encoding; this asserts the header contract.
+ * Verifies `hono/compress` on an API route without relying on the shared
+ * authenticated integration-test session, which other files can revoke.
  */
 describe("API response compression", () => {
     test("sets Content-Encoding: gzip when client accepts gzip", async () => {
-        const headers = await getAuthenticatedHeaders();
-        const res = await app.request("/api/home", {
+        const app = new Hono();
+        app.use("/api/*", compress());
+        app.get("/api/compression-test", c => c.json({ payload: "x".repeat(2048) }));
+
+        const res = await app.request("/api/compression-test", {
             headers: {
-                ...headers,
                 "Accept-Encoding": "gzip",
             },
         });

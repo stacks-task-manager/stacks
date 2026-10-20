@@ -26,20 +26,32 @@ cp packages/server/env.example packages/server/.env
 Key variables:
 
 - `APP_PORT` — HTTP port (default `3000`)
-- `APP_ORIGIN` — public origin used for OAuth redirect URIs and popup postMessage target origin (e.g. `http://localhost:3000` in dev)
+- `APP_ORIGIN` — public origin used for OAuth redirect URIs, popup postMessage target origin, and the trusted-origin check on WebSocket upgrades (e.g. `http://localhost:3000` in dev)
+- `TRUST_PROXY_HEADERS` — set to `1` only when a controlled reverse proxy overwrites forwarded client-IP headers and direct access to the server is blocked; otherwise the server uses the Node socket peer address and ignores forwarding headers
+- Public login, recovery, and registration use shared PostgreSQL limits by account and peer IP. Defaults are 10 login attempts per account and 100 per IP, 5 recovery/registration attempts per account and 30 per IP, and 3 email-change requests per account and 10 per IP, per 15 minutes. `RATE_LIMIT_AUTH_WINDOW_MS` and the `RATE_LIMIT_{LOGIN,RECOVERY,REGISTER,EMAIL_CHANGE}_{ACCOUNT,IP}_MAX` values can override these bounds; invalid values prevent the server from starting. Counter subjects are stored as HMACs, and store failures return a generic 503.
+- Other API requests use shared budgets of 600 per peer IP and 300 per authenticated user per minute. `RATE_LIMIT_API_WINDOW_MS`, `RATE_LIMIT_UNAUTH_API_IP_MAX`, and `RATE_LIMIT_AUTH_API_USER_MAX` override those defaults; responses use a generic 429 with `Retry-After`.
+- Request bodies are counted before route parsing: 1 MiB for ordinary requests and 256 KiB for MCP. `/api/files/upload` is excluded because its authenticated streaming loader enforces the 25 MiB actual-byte limit.
 - `POSTGRES_HOST`, `POSTGRES_PORT`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB` — database connection
-- `COOKIE_SECRET`, `JWT_SECRET` — auth / session secrets (must be strong in production)
+- `COOKIE_SECRET`, `JWT_SECRET` — distinct auth / session secrets; strict mode requires each to be at least 32 UTF-8 bytes
 - `DEBUG_DB` — set to `true` to log Sequelize SQL
-- `DELETE_FILES` — whether deletes via the API also remove files from disk
+- `DELETE_FILES` — when `true`, remove an unreferenced global file after its final attachment is deleted; `false` retains bytes on disk
 - `REGISTRATION_ENABLED` — opt in to public registration (`true`, `1`, `yes`, or `on`)
 - `PASSWORD_RECOVERY_ENABLED` — opt in to public password recovery; requires the email-service worker
 
 Optional:
 
-- `CORS_ORIGINS` — comma-separated list of allowed origins; if unset, CORS is permissive
+- `CORS_ORIGINS` — comma-separated list of allowed origins; if unset, the configured app origin is used
 - `REQUIRE_SECRETS=1` — enforce strong secrets outside production
 - Google Calendar OAuth: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, optional `GOOGLE_REDIRECT_URI`
-- AI assistant: `AI_BASE_URL`, `AI_API_KEY`, `AI_MODEL`, `AI_CHAT_ENABLED`, `AI_CHAT_AUTO_REDIRECT`
+- AI assistant: `AI_BASE_URL`, `AI_API_KEY`, `AI_MODEL`, `AI_CHAT_ENABLED`, `AI_CHAT_AUTO_REDIRECT`, `AI_CHAT_DEBUG`
+
+Generate separate production values with `openssl rand -hex 32` (run it once for each variable). This
+produces 32 random bytes encoded as 64 hexadecimal characters. The length check rejects weak values;
+it cannot prove that a value was generated randomly. Do not reuse either value for another secret.
+
+The separate AI debug viewer (`yarn workspace @stacks/server ai:debug`) is for local development only.
+It binds to `127.0.0.1`, refuses production startup, and prints a temporary Basic-auth credential to
+the launching terminal. Treat the viewer's conversation and tool data as sensitive.
 
 Public registration and password recovery are disabled by default. When recovery is disabled, administrators
 should provide a secure, identity-verified support process for password resets. Enabling recovery also requires a
@@ -158,12 +170,124 @@ Endpoint **`/ws`** ([`packages/server/src/routes/socket.ts`](../../packages/serv
 
 ### Auth model
 
-Sessions are signed JWTs (HS256). Two transports are accepted, in order:
+Every credential is a **session**: a row in the `auth_sessions` table plus a signed JWT (HS256) that
+carries that row. Two transports are accepted, in order:
 
 1. **Signed cookie** `auth_token` (cookie signature uses `COOKIE_SECRET`)
 2. **Authorization header** `Bearer <jwt>`
 
-Token extraction lives in [`src/middleware/utils.ts`](../../packages/server/src/middleware/utils.ts) (`getAuthTokenWithSource`); verification in [`src/middleware/auth.ts`](../../packages/server/src/middleware/auth.ts). Payload fields: `uid`, `email`, `role`, `tenant`, `iat`, `exp`.
+Token extraction lives in [`src/middleware/utils.ts`](../../packages/server/src/middleware/utils.ts) (`getAuthTokenWithSource`); verification in [`src/middleware/auth.ts`](../../packages/server/src/middleware/auth.ts). Payload fields are `uid`, `sid`, `iat`, `exp`, `iss` (`stacks`) and `aud` (`stacks-client`); all six are required, so a token missing any of them — including every token issued before sessions existed — is rejected. The raw bearer token is never stored in the database.
+
+Sessions are issued by [`issueSession`](../../packages/server/src/services/sessions.ts) with a **seven-day absolute** lifetime (`SESSION_LIFETIME_SECONDS` in [`src/config/session.ts`](../../packages/server/src/config/session.ts)): there is no refresh, sliding expiry, or re-issue. Every protected request re-checks the session row (existence, owner, `revokedAt`, own `exp`) and then the current user/tenant state, so revocation and account deactivation take effect immediately. Authentication infrastructure failures fail closed.
+
+| Revocation point            | Effect                                                                                  |
+| --------------------------- | --------------------------------------------------------------------------------------- |
+| `POST /auth/logout`         | Revokes the current `sid`                                                               |
+| `POST /auth/logout-all`     | Revokes every live session of the authenticated user                                    |
+| Password reset / activation | Revokes all of the user's sessions **in the same transaction** as the credential change |
+
+The two logout endpoints resolve the caller's identity first and then apply the browser policy described in [Browser origin and CSRF](#browser-origin-and-csrf); a bearer/API caller is exempt. Login cookies are centralized in `authCookieOptions` — `HttpOnly`, `SameSite=Lax`, `Path=/`, `Max-Age` bounded by the token's own expiry, and `Secure` whenever the request is HTTPS (or `NODE_ENV=production`). The `uid` and `tenant` cookies are non-authoritative hints only and are cleared with matching path settings.
+
+Clients must handle expiry rather than assume a long-lived token:
+
+- **Mobile** ([`packages/mobile/src/api/client.ts`](../mobile.md)): a `401` clears the stored bearer and forces re-login; `logout()` calls `POST /auth/logout` and clears local state even when that request fails, reporting whether the server accepted the revocation.
+- **MCP** (`/api/mcp`): the MCP client authenticates with the same session token, so it must re-login once the token expires or the session is revoked. There is no MCP-specific refresh path.
+- **Web**: the `Me` widget logout calls `POST /auth/logout`; the browser never stores a bearer in `localStorage`.
+
+### Account tokens
+
+Activation and password-reset links carry a credential that is **single-use, hashed at rest, and always expired**.
+[`src/services/accountTokens.ts`](../../packages/server/src/services/accountTokens.ts) issues 32 random bytes as hex
+(24 hours for activation, 1 hour for reset) and returns both the raw `token` — shown once, in the emailed link — and
+its SHA-256 `hash`. Only the hash is written to the user row (`activationTokenHash` / `passwordResetTokenHash`)
+alongside the matching `…TokenExpiresAt`; the raw value never reaches the database or a directory response.
+
+Redeeming a link is an **atomic conditional claim** in one transaction: the update matches on the stored hash _and_ an
+expiry still in the future, and a claim count of anything but `1` means the link was already consumed, expired, or
+malformed. Two browsers opened from the same emailed link therefore change the password exactly once, and the loser
+cannot overwrite the winner. A successful activation or password reset revokes the user's sessions in the same
+transaction.
+
+| Link type  | Issued by                                                       | Redeemed at                  |
+| ---------- | --------------------------------------------------------------- | ---------------------------- |
+| Activation | `POST /auth/register`, `POST /api/people/:id/resend-activation` | `GET`/`POST /auth/activate`  |
+| Reset      | `POST /login/password-recovery`                                 | `POST /login/password-reset` |
+
+Migration [`005_add_activation_token_hash.cjs`](../../packages/db/migrations/005_add_activation_token_hash.cjs) expires
+activation links that were still pending when the model changed: their raw `token` predates the hash, so it can never
+match the new lookup. Those links stop redeeming rather than keeping a raw-token path, and an administrator sends a
+fresh one with `POST /api/people/:id/resend-activation` (admin-only, re-queues `EMAIL_TEMPLATES.REGISTRATION`). The
+downgrade is lossy for the same reason and is documented in the migration.
+
+New passwords are bounded **before** bcrypt runs ([`src/utils/passwordPolicy.ts`](../../packages/server/src/utils/passwordPolicy.ts)):
+at least 12 code points and at most 72 bytes, with no silent truncation. Password recovery responses are identical for
+missing, disabled, system, and deleted accounts — only the email queue can tell them apart.
+
+### OAuth attempts
+
+A Google Calendar flow is bound to the browser that started it. [`beginOAuthAttempt`](../../packages/server/src/services/oauthAttempts.ts)
+writes one row in `oauth_attempts` when the client asks for `GET /api/google/auth-url` and returns the `state` value,
+a browser `nonce`, and the S256 PKCE `challenge` exactly once. The row keeps only SHA-256 hashes of the first two and
+the `codeVerifier` server-side, so no flow value is stored in the clear and none is read back.
+
+`GET`/`POST /api/google/callback` redeems that row **before** anything is exchanged: the state, the `stacks_oauth_nonce`
+cookie, the current `sid`, and the current user/tenant must all match, and the attempt must still be inside its
+ten-minute window (`OAUTH_ATTEMPT_LIFETIME_MS` in [`src/config/oauthAttempts.ts`](../../packages/server/src/config/oauthAttempts.ts)).
+Redemption is an atomic conditional claim (`consumedAt` set while still `null`), so two callbacks for one state have
+exactly one winner — a replay, an unsolicited callback, an expired window, or a different browser links nothing.
+A provider error or a user denial still burns the attempt, so a retry cannot reuse it.
+
+The provider client is created per call ([`googleOAuthService.client()`](../../packages/server/src/services/googleOAuthService.ts)),
+never shared across requests, so credentials for one account cannot reach another account's exchange or refresh.
+
+Migration [`006_add_oauth_attempts.cjs`](../../packages/db/migrations/006_add_oauth_attempts.cjs) adds the table with a
+unique index on `stateHash`; its downgrade drops the table (`cascade: true`) because a half-consumed attempt has no
+meaningful earlier state.
+
+### Browser origin and CSRF
+
+Two different origins are configured, and they are not interchangeable:
+
+| Variable       | Controls                                                    | Default                          |
+| -------------- | ----------------------------------------------------------- | -------------------------------- |
+| `APP_ORIGIN`   | Browser policy: CORS, WebSocket upgrade, CSRF token binding | `http://localhost:<APP_PORT>`    |
+| `CORS_ORIGINS` | Additional exact browser origins (comma-separated)          | unset                            |
+| `API_BASE_URL` | Server-side API base for non-browser clients                | `http://localhost:<SERVER_PORT>` |
+
+Matching is **exact string equality** after `trim()` — no wildcard, no regex, no prefix or suffix match
+([`src/config/origins.ts`](../../packages/server/src/config/origins.ts)). `http://localhost:3000/evil`,
+`http://localhost:3000.evil.com`, and `http://localhost:3001` are all rejected. In strict mode (`NODE_ENV=production`
+or `REQUIRE_SECRETS=1`) the server refuses to boot unless `APP_ORIGIN` is a bare `http(s)` origin and no `CORS_ORIGINS`
+entry is a wildcard or carries a path ([`src/config/origins.ts`](../../packages/server/src/config/origins.ts)).
+
+A **browser** mutation (anything that is not `GET`/`HEAD`/`OPTIONS`) must prove same-site intent:
+
+1. A present, non-null `Origin` that is not configured is rejected outright, even with a valid token.
+2. The opaque `Origin: null` is not trusted by origin matching. It is accepted only when the request carries a
+   valid nonce-bound CSRF token; an opaque-origin request without the browser nonce is rejected.
+3. A request with no `Origin` and no `auth_token` or `browser_nonce` is a non-browser client (for example, a native
+   app) and is allowed — there is no browser credential to bind.
+4. Otherwise the request must carry a token that the server can re-derive. `browser_nonce` is 32 random bytes
+   issued when the login cookie is set, and the only token a browser may present is
+   `HMAC-SHA256(browser_nonce, COOKIE_SECRET)` ([`src/utils/browserCsrf.ts`](../../packages/server/src/utils/browserCsrf.ts)).
+   It arrives in the `x-csrf-token` header and/or a hidden form field `csrf`; exactly one candidate must be present
+   and must match in constant time. A cookie alone is not enough, and an `auth_token` without a nonce is rejected.
+
+`GET /auth/csrf` hands the browser that token for the current session. The static form templates
+(`static/*.html`) carry it in `<input type="hidden" name="csrf" value="{{csrf}}" />`; the web client fetches it
+once and caches it in [`packages/app/src/app/api/request.ts`](../../packages/app/src/api.md), attaching it as
+`x-csrf-token` to every state-changing request and clearing the cache on logout. The issuance endpoint applies the
+same origin rule, so an untrusted `Origin` is never handed a token, and its response is `no-store` because the token
+is only valid for one browser. Duplicate `csrf` fields are rejected, as is a nonce from a
+different session. `browser_nonce` is rotated on every logout, so a token captured before logout stops working.
+
+**Bearer/API callers skip the gate entirely** — they never send an `Origin` that means anything, and they cannot
+drive a cross-site form. `requireAuth` applies the policy for every `/api/*` route
+([`src/middleware/auth.ts`](../../packages/server/src/middleware/auth.ts) `browserMutationAllowed`); the auth routes
+under `/auth/*` call it explicitly because they authenticate themselves.
+
+`OPTIONS` preflights are answered (the exact origin is echoed in `access-control-allow-origin`) but never
+authorize a mutation. WebSocket upgrades use the same exact-origin list.
 
 ## Sending email
 

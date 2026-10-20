@@ -50,7 +50,7 @@ The [documentation index](docs/README.md) links the detailed guides. Read only t
 
 ## Environment and runtime invariants
 
-- Node.js 18+ (20 recommended), Yarn 3.6.4 (`corepack enable`), PostgreSQL 15.
+- Node.js 22.12+, Yarn 3.6.4 (`corepack enable`), PostgreSQL 15.
 - First-time setup: follow [INSTALLATION.md](docs/INSTALLATION.md). `yarn setup` performs a **clean**
   install and builds internal packages; do not rerun it automatically in a working environment.
 - Required env templates: `packages/db/env.example` and `packages/server/env.example`.

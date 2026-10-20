@@ -7,7 +7,7 @@ import { translate } from "@stacks/translations";
 import { Errors } from "../errors";
 import { ACTIVITYRESOURCETYPE, ACTIVITYTYPE, type IActivity } from "../types";
 import { canWrite, getCurrentUser } from "./context";
-import { withTransaction } from "./utils";
+import { assertCanWriteResource, withTransaction } from "./utils";
 import { invalidateApiCacheForCurrentRequest } from "../utils/cache";
 import { NotificationsLoader } from "./notifications";
 import { TasksLoader } from "./tasks";
@@ -23,13 +23,16 @@ async function create(data: Omit<IActivity, "id" | "created" | "updated">): Prom
         if (data.resourceType !== ACTIVITYRESOURCETYPE.TASK) {
             throw Errors.badRequest(translate("Invalid activity resource type"));
         }
-        await TasksLoader.getOne(data.resourceId, transaction);
+        const task = await TasksLoader.getOne(data.resourceId, transaction);
 
         if (data.type === ACTIVITYTYPE.MESSAGE) {
             const canCreateComments = canWrite(ROLE_SECTIONS.COMMENTS);
             if (!canCreateComments) {
                 throw Errors.forbidden("User not authorized");
             }
+        } else {
+            // Task log entries represent changes made through owner-authorized task mutations.
+            assertCanWriteResource(task, "owner");
         }
 
         data.person = user.id;
@@ -48,30 +51,19 @@ async function create(data: Omit<IActivity, "id" | "created" | "updated">): Prom
             newActivity.resourceType === ACTIVITYRESOURCETYPE.TASK &&
             newActivity.type === ACTIVITYTYPE.MESSAGE
         ) {
-            const task = await TasksLoader.getOne(newActivity.resourceId, transaction);
-            if (task) {
-                await TasksLoader.update(
-                    newActivity.resourceId,
+            for (const assignee of task.assignees ?? []) {
+                if (assignee === user.id) continue;
+                await NotificationsLoader.add(
                     {
-                        comments: task.comments + 1,
+                        recipient: assignee,
+                        subject: translate("New comment on a task"),
+                        message: newActivity.content,
+                        recordType: NOTIFICATION_RECORD_TYPE.COMMENT,
+                        recordId: newActivity.id,
+                        data: newActivity as any,
                     },
                     transaction
                 );
-
-                for (const assignee of task.assignees ?? []) {
-                    if (assignee === user.id) continue;
-                    await NotificationsLoader.add(
-                        {
-                            recipient: assignee,
-                            subject: translate("New comment on a task"),
-                            message: newActivity.content,
-                            recordType: NOTIFICATION_RECORD_TYPE.COMMENT,
-                            recordId: newActivity.id,
-                            data: newActivity as any,
-                        },
-                        transaction
-                    );
-                }
             }
         }
 

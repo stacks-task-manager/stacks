@@ -43,7 +43,7 @@ async function compileMigration() {
             entryPoints: [srcFile],
             bundle: true,
             platform: "node",
-            target: "node18",
+            target: "node22",
             format: "cjs", // CommonJS format for Sequelize migrations
             outfile: outFile,
             external: ["sequelize", "sequelize-cli", "pg", "pg-hstore"],

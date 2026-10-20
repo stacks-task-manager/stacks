@@ -16,6 +16,7 @@ export const stackAiTools = [
             .object({
                 projectId: z
                     .string()
+                    .uuid()
                     .describe(
                         "Project UUID resolved through authorized context or an available project lookup"
                     ),
@@ -30,12 +31,14 @@ export const stackAiTools = [
                     ),
                 beforeStackId: z
                     .string()
+                    .uuid()
                     .optional()
                     .describe(
                         "Existing column ID to insert immediately before (in front of); resolve with listStacks"
                     ),
                 afterStackId: z
                     .string()
+                    .uuid()
                     .optional()
                     .describe("Existing column ID to insert immediately after; resolve with listStacks"),
             })
@@ -70,6 +73,7 @@ export const stackAiTools = [
         inputSchema: z.object({
             projectId: z
                 .string()
+                .uuid()
                 .describe("Project UUID resolved through authorized context or an available project lookup"),
         }),
         execute: async ({ projectId }) => {
@@ -102,6 +106,7 @@ export const stackAiTools = [
             .object({
                 stackId: z
                     .string()
+                    .uuid()
                     .describe(
                         "Existing column UUID from listStacks; obtain its project reference from authorized context or an available project lookup"
                     ),
@@ -121,6 +126,7 @@ export const stackAiTools = [
                     .optional()
                     .describe("Sorting mode identifier, or null for manual ordering"),
             })
+            .strict()
             .refine(
                 input =>
                     input.title !== undefined ||
@@ -166,7 +172,7 @@ export const stackAiTools = [
         name: "deleteStack",
         description:
             "Permanently delete a resolved board column and the tasks in it. Resolve its name with listStacks and account for the contained tasks before requesting deletion. Returns the deleted column reference. Direct MCP execution performs deletion without the built-in chat confirmation.",
-        inputSchema: z.object({ stackId: z.string().describe("Column/stack UUID") }),
+        inputSchema: z.object({ stackId: z.string().uuid().describe("Column/stack UUID") }),
         execute: async ({ stackId }) => {
             const deleted = await StacksLoader.remove(stackId);
             if (!deleted) throw new Error("Column could not be deleted");

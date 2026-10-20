@@ -3,54 +3,29 @@
  * Browser UI for inspecting AI chat debug turns.
  */
 import { serve } from "@hono/node-server";
-import { Hono } from "hono";
 import { clearAiChatDebugTurns, readAiChatDebugTurns } from "./debugLog";
+import { createDebugServerApp, isDebugViewerAllowed } from "./debugServerApp";
+import { randomBytes } from "crypto";
 
-const app = new Hono();
 const port = Number(process.env.AI_CHAT_DEBUG_PORT ?? 3025);
+if (!isDebugViewerAllowed(process.env)) {
+    console.error("AI chat debug viewer is disabled in production.");
+    process.exit(1);
+}
 
-app.get("/", c => c.html(indexHtml()));
-
-app.get("/api/turns", async c => {
-    const limit = Number(c.req.query("limit") ?? 200);
-    const turns = await readAiChatDebugTurns(Number.isFinite(limit) ? limit : 200);
-    return c.json(
-        turns.map(turn => ({
-            id: turn.id,
-            startedAt: turn.startedAt,
-            finishedAt: turn.finishedAt,
-            status: turn.status,
-            modelId: turn.modelId,
-            user: turn.user,
-            message: turn.request.newUserMessage,
-            topics: turn.promptSelection?.topics ?? [],
-            tools: turn.tools.map(tool => ({
-                toolName: tool.toolName,
-                success: tool.success,
-                timestamp: tool.timestamp,
-            })),
-            responsePreview: (turn.responseText ?? turn.error ?? "").slice(0, 240),
-        }))
-    );
+const credential = randomBytes(32).toString("base64url");
+const app = createDebugServerApp({
+    credential,
+    port,
+    readTurns: readAiChatDebugTurns,
+    clearTurns: clearAiChatDebugTurns,
+    renderIndex: indexHtml,
 });
+serve({ fetch: app.fetch, hostname: "127.0.0.1", port });
 
-app.get("/api/turns/:id", async c => {
-    const turns = await readAiChatDebugTurns();
-    const turn = turns.find(candidate => candidate.id === c.req.param("id"));
-    if (!turn) {
-        return c.json({ error: "Turn not found" }, 404);
-    }
-    return c.json(turn);
-});
-
-app.delete("/api/turns", async c => {
-    await clearAiChatDebugTurns();
-    return c.json({ ok: true });
-});
-
-serve({ fetch: app.fetch, port });
-
-console.log(`AI chat debug viewer running at http://localhost:${port}`);
+console.log(`AI chat debug viewer: http://127.0.0.1:${port}`);
+console.log(`Browser auth username: stacks-debug`);
+console.log(`Browser auth password: ${credential}`);
 
 function indexHtml() {
     return `<!doctype html>

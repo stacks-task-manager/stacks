@@ -1,0 +1,13 @@
+/goal Complete the remaining security remediation work in tasks/todo.md. Use tasks/plan.md and tasks/authorization-evidence.md as context. This goal requires implementation and verification, not another handoff-preparation pass.
+
+Read applicable AGENTS.md instructions and docs/AGENT_WORKFLOW.md, inspect staged/unstaged and untracked changes, preserve existing work and staging, and use Graft for discovery.
+
+Work through L1–L5: resolve the app Tiptap Markdown parsing advisory with a compatible fixed release; establish braces mitigation across affected public compile/expand paths; finish the mobile Tiptap, node-forge and sprintf-js technical dispositions; obtain and reconcile a fresh native Yarn audit; then review and verify the final changes. Revalidate current advisory metadata and installed versions. Add meaningful regressions and allowed-operation controls before demonstrated repairs. Preserve the separate mobile v2 graph, use Yarn for lockfile changes, and avoid unrelated upgrades.
+
+Continue autonomously while any authorized local task remains actionable. A prepared checklist, source search, green unrelated test or proposed risk acceptance is not completion. Remove completed todo items only with evidence; keep remaining items concrete. Distinguish fresh checks from historical results, and retain concise reproducible evidence without chronological logs. Do not reopen completed invitation/revival work or expand the separate E2E backlog without a concrete regression.
+
+For operator gates, complete all independent preparation, then request the exact missing access, decision or authorization in one concise batch. Continue other independent work while awaiting input. Do not rotate credentials, revoke grants, deploy, change infrastructure or delete real data without explicit authorization for that action. Do not invent access or approve residual risk on the operator's behalf.
+
+Do not stop at a handoff while actionable local work remains. If only external dependencies remain, report the goal as incomplete and name the exact blocked items; do not repeatedly poll or claim all todos complete. Resume those items when the necessary input arrives. Declare overall completion only when every required item has verified completion evidence or an explicit operator-approved disposition that satisfies its acceptance criteria.
+
+Run checks proportional to actual changes, verify cleanup, and preserve unrelated services. Do not stage, commit, push, merge, bypass licensing, reset a shared database or expose secrets. Finish with changes, commands/results and any genuinely unresolved dependencies.

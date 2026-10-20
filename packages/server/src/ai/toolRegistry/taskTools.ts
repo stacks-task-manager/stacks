@@ -523,6 +523,7 @@ export const taskAiTools = [
         inputSchema: z.object({
             taskId: z
                 .string()
+                .uuid()
                 .describe("Task UUID resolved through authorized context or an available task lookup"),
         }),
         execute: async ({ taskId }) => {
@@ -547,6 +548,7 @@ export const taskAiTools = [
         inputSchema: z.object({
             taskId: z
                 .string()
+                .uuid()
                 .describe("Task UUID resolved through authorized context or an available task lookup"),
         }),
         execute: async ({ taskId }) => {
@@ -561,9 +563,11 @@ export const taskAiTools = [
         inputSchema: z.object({
             projectId: z
                 .string()
+                .uuid()
                 .describe("Resolved project UUID from authorized context or an available project lookup"),
             stackId: z
                 .string()
+                .uuid()
                 .optional()
                 .describe("Resolved column UUID from listStacks; omit to use the default column"),
             title: z
@@ -576,7 +580,7 @@ export const taskAiTools = [
                     "Due date as an ISO calendar date or timezone-qualified date-time; date-only values mean midnight UTC"
                 ),
             assigneeUserIds: z
-                .array(z.string())
+                .array(z.string().uuid())
                 .optional()
                 .describe("Resolved assignee user UUIDs; omit to leave the new task unassigned"),
             description: z.string().optional().describe("Task description"),
@@ -671,6 +675,7 @@ export const taskAiTools = [
             .object({
                 taskId: z
                     .string()
+                    .uuid()
                     .describe("Task UUID resolved through authorized context or an available task lookup"),
                 title: z.string().optional(),
                 description: z.string().optional().describe("Task description; pass empty string to clear"),
@@ -680,13 +685,18 @@ export const taskAiTools = [
                 duedate: aiDateInput.nullable().optional().describe("ISO 8601 or null to clear"),
                 dodate: aiDateInput.nullable().optional().describe("ISO 8601 or null to clear"),
                 assigneeUserIds: z
-                    .array(z.string())
+                    .array(z.string().uuid())
                     .optional()
                     .describe(
                         "Replace assignees with the specified people: searchPeople for each named person; use current user id only for me/myself. Never substitute a different person"
                     ),
                 priority: z.nativeEnum(PRIORITY).nullable().optional().describe("Priority, or null to clear"),
-                statusTagId: z.string().nullable().optional().describe("Status tag UUID, or null to clear"),
+                statusTagId: z
+                    .string()
+                    .uuid()
+                    .nullable()
+                    .optional()
+                    .describe("Status tag UUID, or null to clear"),
                 estimateMinutes: z
                     .number()
                     .int()

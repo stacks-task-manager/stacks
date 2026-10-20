@@ -36,10 +36,11 @@ export const projectAiTools = [
             description: z.string().optional().describe("Description"),
             parentFolderDocumentId: z
                 .string()
+                .uuid()
                 .optional()
                 .describe("Folder document UUID; omit for top-level"),
             isPublic: z.boolean().optional().describe("Visibility; default true"),
-            projectOwnerId: z.string().optional().describe("Owner UUID; defaults to current user"),
+            projectOwnerId: z.string().uuid().optional().describe("Owner UUID; defaults to current user"),
         }),
         execute: async ({ title, description, parentFolderDocumentId, isPublic, projectOwnerId }) => {
             const user = getCurrentUser();
@@ -75,7 +76,7 @@ export const projectAiTools = [
         name: "getProject",
         description: `Read full project details in chat: description, columns, dates, company, owner. Resolve a name with listProjects first; use an id from the current UI directly. A details request is not navigation.`,
         inputSchema: z.object({
-            projectId: z.string().describe("Project UUID"),
+            projectId: z.string().uuid().describe("Project UUID"),
         }),
         execute: async ({ projectId }) => {
             const p = await ProjectsLoader.getOne(projectId);

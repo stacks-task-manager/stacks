@@ -7,6 +7,7 @@ import { FunctionComponent, useEffect, useState } from "react";
 import { Grid, HotkeyTooltip, Icon, Scroller } from "app/components/common";
 import { useStorage } from "app/hooks";
 import toast from "app/utils/toast";
+import { sanitizeRichHtml } from "app/utils/safeHtml";
 import { APP_PACKAGE_VERSION } from "appPackageVersion";
 
 export const WhatsNewButton = () => {
@@ -111,7 +112,9 @@ const ChangelogDialog: FunctionComponent<ChangelogDialogProps> = ({ onClose }) =
                 </div>
             ) : (
                 <>
-                    {changelog?.body ? <p dangerouslySetInnerHTML={{ __html: changelog?.body }} /> : null}
+                    {changelog?.body ? (
+                        <p dangerouslySetInnerHTML={{ __html: sanitizeRichHtml(changelog.body) }} />
+                    ) : null}
 
                     <Scroller className={Classes.DIALOG_BODY} maxHeight={500} vertical thin>
                         <Grid>
@@ -189,7 +192,10 @@ const Changelog: FunctionComponent<ChangelogProps> = ({ title, icon, logs, inten
                         <span className={Classes.MENU_ITEM_ICON}>
                             <Icon icon={icon} />
                         </span>
-                        <div dangerouslySetInnerHTML={{ __html: item }} className={Classes.FILL}></div>
+                        <div
+                            dangerouslySetInnerHTML={{ __html: sanitizeRichHtml(item) }}
+                            className={Classes.FILL}
+                        ></div>
                     </li>
                 ))}
             </ul>

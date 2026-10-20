@@ -12,7 +12,7 @@ export const reminderAiTools = [
         name: "listReminders",
         description: `Read reminders attached to a task. Resolve a supplied task name with listTasks(searchQuery) now, then pass that task id as recordId. This tool cannot create reminders.`,
         inputSchema: z.object({
-            recordId: z.string().describe("Task UUID whose reminders should be read"),
+            recordId: z.string().uuid().describe("Task UUID whose reminders should be read"),
         }),
         execute: async ({ recordId }) => {
             const reminders = await RemindersLoader.getAll(recordId);

@@ -181,9 +181,16 @@ describe("conversation execution boundary", () => {
         const now = Date.now();
         const s = getConversation("a", "u", id, now);
         issueChoice(s, widget);
-        expect(getConversation("b", "u", id, now).pending).toBeUndefined();
-        expect(getConversation("a", "v", id, now).pending).toBeUndefined();
-        expect(getConversation("a", "u", id, now + 1800000).pending).toBeUndefined();
+        s.completed.set("same-request", { text: "tenant A private response", widgets: [] });
+        const otherTenant = getConversation("b", "u", id, now);
+        const otherUser = getConversation("a", "v", id, now);
+        const expired = getConversation("a", "u", id, now + 1800000);
+        expect(otherTenant.pending).toBeUndefined();
+        expect(otherTenant.completed.has("same-request")).toBe(false);
+        expect(otherUser.pending).toBeUndefined();
+        expect(otherUser.completed.has("same-request")).toBe(false);
+        expect(expired.pending).toBeUndefined();
+        expect(expired.completed.has("same-request")).toBe(false);
     });
     it("blocks repeated calls and confirmed mutations within the same turn", async () => {
         const s = session();

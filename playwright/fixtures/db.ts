@@ -34,13 +34,24 @@ export class DbHelper {
         await this.pool.end();
     }
 
-    /** Raw activation token stored on the user row (users.token). */
+    /** Raw activation token extracted from the queued email link; only its hash is stored on the user. */
     async getActivationToken(email: string): Promise<string | null> {
+        const user = await this.pool.query(`SELECT "id" FROM "users" WHERE "email" = $1 LIMIT 1`, [email]);
+        const userId = user.rows[0]?.id;
+        if (!userId) {
+            return null;
+        }
         const result = await this.pool.query(
-            `SELECT "token" FROM "users" WHERE "email" = $1 ORDER BY "created" DESC LIMIT 1`,
-            [email]
+            `SELECT "data" FROM "email_queue"
+             WHERE "userId" = $1 AND "template" = 'registration'
+             ORDER BY "created" DESC LIMIT 1`,
+            [userId]
         );
-        return result.rows[0]?.token ?? null;
+        const verificationLink = result.rows[0]?.data?.verificationLink;
+        if (typeof verificationLink !== "string") {
+            return null;
+        }
+        return new URL(verificationLink, "http://localhost").pathname.split("/").pop() ?? null;
     }
 
     /**

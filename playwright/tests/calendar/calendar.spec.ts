@@ -1,6 +1,6 @@
 import type { Browser, BrowserContext, Page } from "@playwright/test";
 import { setDate } from "date-fns";
-import { test } from "../../fixtures";
+import { expect, test } from "../../fixtures";
 import { bootstrapContext } from "../../fixtures/bootstrapContext";
 import Calendar from "../../pages/calendar";
 
@@ -24,15 +24,41 @@ test.describe("Calendar", () => {
     });
 
     test.afterAll(async () => {
+        const cleanupErrors: unknown[] = [];
         if (page && !page.isClosed()) {
             for (const eventId of createdEventIds) {
-                await calendar.deleteEventByApi(eventId);
+                try {
+                    await calendar.deleteEventByApi(eventId);
+                } catch (error) {
+                    cleanupErrors.push(error);
+                }
             }
         }
 
-        if (page && !page.isClosed()) await page.close();
-        if (context) await context.close();
-        if (browser) await browser.close();
+        if (page && !page.isClosed()) {
+            try {
+                await page.close();
+            } catch (error) {
+                cleanupErrors.push(error);
+            }
+        }
+        if (context) {
+            try {
+                await context.close();
+            } catch (error) {
+                cleanupErrors.push(error);
+            }
+        }
+        if (browser) {
+            try {
+                await browser.close();
+            } catch (error) {
+                cleanupErrors.push(error);
+            }
+        }
+        if (cleanupErrors.length > 0) {
+            throw new Error(cleanupErrors.map(error => String(error)).join("; "));
+        }
     });
 
     test("switches calendar views", async () => {
@@ -69,6 +95,12 @@ test.describe("Calendar", () => {
         const reload = calendar.waitForEventsReload();
         await calendar.reloadEvents();
         await reload;
+    });
+
+    test("provider denial closes the OAuth popup without linking an account", async () => {
+        const result = await calendar.denyGoogleOAuth();
+
+        expect(result).toEqual({ callbackStatus: 200, popupClosed: true, isAuthenticated: false });
     });
 
     test("creates and edits a local event through the details sidebar", async () => {

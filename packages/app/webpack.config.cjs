@@ -381,7 +381,7 @@ module.exports = (env, argv) => {
                   static: { directory: publicDir, publicPath: `${publicUrl}/` },
                   compress: true,
                   port: process.env.PORT ? Number(process.env.PORT) : 3001,
-                  host: process.env.HOST || "0.0.0.0",
+                  host: process.env.HOST || "127.0.0.1",
                   client: { overlay: { errors: true, warnings: false } },
               }
             : undefined,

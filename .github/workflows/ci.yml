@@ -170,6 +170,7 @@ jobs:
           --health-retries 10
     env:
       NODE_ENV: test
+      ALLOW_TEST_DB_RESET: "1"
       POSTGRES_HOST: localhost
       POSTGRES_PORT: "5432"
       POSTGRES_USER: postgres

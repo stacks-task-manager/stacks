@@ -25,9 +25,18 @@ boot.get(
         const aiChat = getAiChatPublicConfig();
         const user = c.get("user") as User;
         const googleAuthenticated = await googleOAuthService.hasValidTokens(user.id);
+        // License administrators can contain bootstrap credentials; they are server-only data.
+        const publicLicense = {
+            ...license,
+            tenants: license.tenants.map(tenant => ({ ...tenant, admins: [] })),
+        };
 
         return c.replySuccess({
-            license,
+            session: {
+                userId: String(user.id),
+                tenantId: String(c.get("userTenant")),
+            },
+            license: publicLicense,
             translations,
             preferences,
             aiChat,

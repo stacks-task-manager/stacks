@@ -3,10 +3,49 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.migration
-    env_file:
-      - .env
     environment:
-      - POSTGRES_HOST=postgres
+      NODE_ENV: production
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-stacks}
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp:rw,nosuid,nodev,size=64m,mode=1777
+    depends_on:
+      postgres:
+        condition: service_healthy
+      role-bootstrap:
+        condition: service_completed_successfully
+    restart: "no"
+
+  role-bootstrap:
+    build:
+      context: .
+      dockerfile: Dockerfile.migration
+    working_dir: /db
+    command: ["sh", "/db/provision-postgres-app-role.sh"]
+    environment:
+      NODE_ENV: production
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-stacks}
+      POSTGRES_APP_USER: ${POSTGRES_APP_USER:-stacks_app}
+      POSTGRES_APP_PASSWORD: ${POSTGRES_APP_PASSWORD:?Set POSTGRES_APP_PASSWORD in .env}
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp:rw,nosuid,nodev,size=64m,mode=1777
     depends_on:
       postgres:
         condition: service_healthy
@@ -17,12 +56,27 @@ services:
       context: .
       dockerfile: Dockerfile.server
     working_dir: /server
+    user: "${STACKS_UID:-1000}:${STACKS_GID:-1000}"
     ports:
-      - "3000:3000"
+      - "${STACKS_BIND_ADDRESS:-127.0.0.1}:3000:3000"
     env_file:
       - .env
     environment:
-      - POSTGRES_HOST=postgres
+      NODE_ENV: production
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+      POSTGRES_USER: ${POSTGRES_APP_USER:-stacks_app}
+      POSTGRES_PASSWORD: ${POSTGRES_APP_PASSWORD:?Set POSTGRES_APP_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-stacks}
+      AI_CHAT_DEBUG_DIR: /var/log/ai-chat-debug
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp:rw,nosuid,nodev,size=256m,mode=1777
+      - /home/node/.cache:rw,nosuid,nodev,size=64m,uid=${STACKS_UID:-1000},gid=${STACKS_GID:-1000},mode=0700
     volumes:
       # Persist uploads
       - ./data/uploads:/server/uploads
@@ -30,7 +84,7 @@ services:
       # Persist logs
       - ./logs:/var/log
       # Persist license key
-      - ./license.key:/server/license.key
+      - ./license.key:/server/license.key:ro
     depends_on:
       postgres:
         condition: service_healthy
@@ -49,10 +103,29 @@ services:
       context: .
       dockerfile: Dockerfile.email
     working_dir: /email-service
-    env_file:
-      - .env
     environment:
-      - POSTGRES_HOST=postgres
+      NODE_ENV: production
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+      POSTGRES_USER: ${POSTGRES_APP_USER:-stacks_app}
+      POSTGRES_PASSWORD: ${POSTGRES_APP_PASSWORD:?Set POSTGRES_APP_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-stacks}
+      SMTP_HOST: ${SMTP_HOST:-smtp.example.com}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_SECURE: ${SMTP_SECURE:-false}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_FROM_NAME: ${SMTP_FROM_NAME:-Stacks}
+      SMTP_FROM_EMAIL: ${SMTP_FROM_EMAIL:-noreply@example.com}
+      EMAIL_PROCESS_INTERVAL: ${EMAIL_PROCESS_INTERVAL:-60000}
+      PUBLIC_URL: ${PUBLIC_URL:-http://localhost:3000}
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp:rw,nosuid,nodev,size=64m,mode=1777
     depends_on:
       postgres:
         condition: service_healthy
@@ -68,8 +141,10 @@ services:
 
   postgres:
     image: postgres:15-alpine
-    env_file:
-      - .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-stacks}
     volumes:
       - ./data/db:/var/lib/postgresql/data
     restart: unless-stopped

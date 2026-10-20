@@ -36,7 +36,7 @@ export const notepadAiTools = [
         name: "summarizeNotepad",
         description: `Read a resolved notepad's text for summarization. Returns content, title, original contentLength, and contentTruncated; content is capped at 80,000 characters. Summarize returned facts and action items, noting omitted content when truncated. Does not edit the notepad.`,
         inputSchema: z.object({
-            notepadId: z.string().describe("Notepad UUID"),
+            notepadId: z.string().uuid().describe("Notepad UUID"),
         }),
         execute: async ({ notepadId }) => {
             const n = await NotepadsLoader.getOne(notepadId);

@@ -51,10 +51,12 @@ describe("ai.widgetsFromToolResult", () => {
     });
 
     it("returns a link widget for findTasks", () => {
-        const widgets = widgetsFromToolResult("findTasks", {
-            hashPath: "/inbox",
+        withEnv(undefined, () => {
+            const widgets = widgetsFromToolResult("findTasks", {
+                hashPath: "/inbox",
+            });
+            expect(widgets).toEqual([{ type: "button", label: "Show tasks", hashPath: "/inbox" }]);
         });
-        expect(widgets).toEqual([{ type: "button", label: "Show tasks", hashPath: "/inbox" }]);
     });
 
     it("returns a button widget for navigate when auto redirect is off", () => {

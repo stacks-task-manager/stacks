@@ -1,16 +1,18 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import type { StackPosition } from "./stackPosition";
-import { PermissionEntity, StackEntity } from "@stacks/db";
+import { PermissionEntity, StackEntity, TaskEntity } from "@stacks/db";
 import { Errors } from "../errors";
-import { POLLINGACTIONS, POLLINGTYPE, type IProject, type IStack } from "@stacks/types";
+import { POLLINGACTIONS, POLLINGTYPE, ROLE_SECTIONS, type IProject, type IStack } from "@stacks/types";
 import uniq from "lodash/uniq";
-import { type Transaction } from "sequelize";
+import { Op, type Transaction } from "sequelize";
 import { sendRealtimeUpdate } from "../events";
 import { invalidateApiCacheForCurrentRequest } from "../utils/cache";
 import { ProjectsLoader } from "./projects";
 import { TasksLoader } from "./tasks";
+import { canWrite, getCurrentUser } from "./context";
 import {
     afterTransactionCommit,
+    assertCanWriteResource,
     createOne,
     deleteAll,
     deleteOne,
@@ -35,6 +37,10 @@ PermissionEntity.belongsTo(StackEntity, { foreignKey: "id", constraints: false }
 async function create(data: IStack, index?: StackPosition, extTransaction?: Transaction) {
     return withTransaction(extTransaction, async transaction => {
         const project = await ProjectsLoader.getOne(data.project, transaction);
+        const user = getCurrentUser();
+        if (!canWrite(ROLE_SECTIONS.PROJECT_SETTINGS) && project.projectOwner !== user.id) {
+            throw Errors.forbidden(translate("Project update not allowed"));
+        }
 
         const newStack = await createOne<IStack>({
             entity: StackEntity,
@@ -125,6 +131,23 @@ async function getOne(id: string, extTransaction?: Transaction): Promise<IStack>
 async function update(id: string, data: any, extTransaction?: Transaction): Promise<IStack> {
     return withTransaction(extTransaction, async transaction => {
         const stack = await getOne(id, transaction);
+        assertCanWriteResource(stack, "owner");
+
+        if (data.tasksOrder !== undefined) {
+            const requestedTaskIds = [...new Set(data.tasksOrder)];
+            const tasks = await findAll<{ id: string }>({
+                entity: TaskEntity,
+                filter: {
+                    id: { [Op.in]: requestedTaskIds },
+                    project: stack.project,
+                },
+                transaction,
+            });
+            if (tasks.length !== requestedTaskIds.length) {
+                throw Errors.notFound(translate("Task not found"));
+            }
+        }
+
         const project = await ProjectsLoader.getOne(stack.project, transaction);
 
         const updatedStack = await updateOne<IStack>({

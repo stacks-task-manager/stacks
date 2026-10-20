@@ -24,10 +24,19 @@ describe("ai.taskTools.deleteTask", () => {
     const deleteTask = taskAiTools.find(tool => tool.name === "deleteTask");
 
     it("deletes the resolved task through the authorized loader", async () => {
-        vi.mocked(TasksLoader.removeById).mockResolvedValue({ id: "task-1", title: "Task 1" } as never);
-        const result = await deleteTask?.execute(deleteTask.inputSchema.parse({ taskId: "task-1" }) as never);
-        expect(TasksLoader.removeById).toHaveBeenCalledWith("task-1");
-        expect(result).toEqual({ id: "task-1", title: "Task 1", deleted: true });
+        vi.mocked(TasksLoader.removeById).mockResolvedValue({
+            id: "11111111-1111-4111-8111-111111111111",
+            title: "Task 1",
+        } as never);
+        const result = await deleteTask?.execute(
+            deleteTask.inputSchema.parse({ taskId: "11111111-1111-4111-8111-111111111111" }) as never
+        );
+        expect(TasksLoader.removeById).toHaveBeenCalledWith("11111111-1111-4111-8111-111111111111");
+        expect(result).toEqual({
+            id: "11111111-1111-4111-8111-111111111111",
+            title: "Task 1",
+            deleted: true,
+        });
     });
 });
 
@@ -42,11 +51,13 @@ describe("ai.taskTools.updateTask input schema", () => {
     });
 
     it("rejects updates with no requested fields", () => {
-        expect(updateTask?.inputSchema.safeParse({ taskId: "task-1" }).success).toBe(false);
+        expect(
+            updateTask?.inputSchema.safeParse({ taskId: "11111111-1111-4111-8111-111111111111" }).success
+        ).toBe(false);
     });
     it("accepts startdate as an ISO string", () => {
         const result = updateTask?.inputSchema.safeParse({
-            taskId: "task-1",
+            taskId: "11111111-1111-4111-8111-111111111111",
             startdate: "2026-07-08T00:00:00.000Z",
         });
         expect(result?.success).toBe(true);
@@ -54,7 +65,7 @@ describe("ai.taskTools.updateTask input schema", () => {
 
     it("accepts null startdate to clear the field", () => {
         const result = updateTask?.inputSchema.safeParse({
-            taskId: "task-1",
+            taskId: "11111111-1111-4111-8111-111111111111",
             startdate: null,
         });
         expect(result?.success).toBe(true);
@@ -62,7 +73,7 @@ describe("ai.taskTools.updateTask input schema", () => {
 
     it("accepts the common task detail fields exposed by the app", () => {
         const result = updateTask?.inputSchema.safeParse({
-            taskId: "task-1",
+            taskId: "11111111-1111-4111-8111-111111111111",
             description: "Refined task brief",
             dodate: "2026-07-08T00:00:00.000Z",
             priority: PRIORITY.HIGH,
@@ -76,7 +87,7 @@ describe("ai.taskTools.updateTask input schema", () => {
 
     it("accepts null to clear the clearable detail fields", () => {
         const result = updateTask?.inputSchema.safeParse({
-            taskId: "task-1",
+            taskId: "11111111-1111-4111-8111-111111111111",
             dodate: null,
             priority: null,
             statusTagId: null,
@@ -88,12 +99,12 @@ describe("ai.taskTools.updateTask input schema", () => {
 
     it("moves startdate one hour earlier when it would end up after the due date", async () => {
         getOneMock.mockResolvedValue({
-            id: "task-1",
+            id: "11111111-1111-4111-8111-111111111111",
             title: "Task",
             description: "",
-            project: "project-1",
+            project: "22222222-2222-4222-8222-222222222222",
             projectInfo: null,
-            stack: "stack-1",
+            stack: "33333333-3333-4333-8333-333333333333",
             tags: [],
             status: null,
             startdate: new Date("2026-07-10T12:00:00.000Z"),
@@ -120,7 +131,7 @@ describe("ai.taskTools.updateTask input schema", () => {
             completed: null,
             archived: null,
             permissions: {
-                id: "task-1",
+                id: "11111111-1111-4111-8111-111111111111",
                 owner: "user-1",
                 type: "task",
                 isPublic: true,
@@ -131,12 +142,12 @@ describe("ai.taskTools.updateTask input schema", () => {
             updated: new Date(),
         } as any);
         updateMock.mockResolvedValue({
-            id: "task-1",
+            id: "11111111-1111-4111-8111-111111111111",
             title: "Task",
             description: "",
-            project: "project-1",
+            project: "22222222-2222-4222-8222-222222222222",
             projectInfo: null,
-            stack: "stack-1",
+            stack: "33333333-3333-4333-8333-333333333333",
             tags: [],
             status: null,
             startdate: new Date("2026-07-10T08:00:00.000Z"),
@@ -163,7 +174,7 @@ describe("ai.taskTools.updateTask input schema", () => {
             completed: null,
             archived: null,
             permissions: {
-                id: "task-1",
+                id: "11111111-1111-4111-8111-111111111111",
                 owner: "user-1",
                 type: "task",
                 isPublic: true,
@@ -175,12 +186,12 @@ describe("ai.taskTools.updateTask input schema", () => {
         } as any);
 
         await updateTask?.execute({
-            taskId: "task-1",
+            taskId: "11111111-1111-4111-8111-111111111111",
             startdate: "2026-07-10T12:00:00.000Z",
         } as never);
 
         expect(updateMock).toHaveBeenCalledWith(
-            "task-1",
+            "11111111-1111-4111-8111-111111111111",
             expect.objectContaining({
                 startdate: new Date("2026-07-10T08:00:00.000Z"),
             })
@@ -189,12 +200,12 @@ describe("ai.taskTools.updateTask input schema", () => {
 
     it("moves duedate one hour later when it would end up before the start date", async () => {
         getOneMock.mockResolvedValue({
-            id: "task-1",
+            id: "11111111-1111-4111-8111-111111111111",
             title: "Task",
             description: "",
-            project: "project-1",
+            project: "22222222-2222-4222-8222-222222222222",
             projectInfo: null,
-            stack: "stack-1",
+            stack: "33333333-3333-4333-8333-333333333333",
             tags: [],
             status: null,
             startdate: new Date("2026-07-10T09:00:00.000Z"),
@@ -221,7 +232,7 @@ describe("ai.taskTools.updateTask input schema", () => {
             completed: null,
             archived: null,
             permissions: {
-                id: "task-1",
+                id: "11111111-1111-4111-8111-111111111111",
                 owner: "user-1",
                 type: "task",
                 isPublic: true,
@@ -232,12 +243,12 @@ describe("ai.taskTools.updateTask input schema", () => {
             updated: new Date(),
         } as any);
         updateMock.mockResolvedValue({
-            id: "task-1",
+            id: "11111111-1111-4111-8111-111111111111",
             title: "Task",
             description: "",
-            project: "project-1",
+            project: "22222222-2222-4222-8222-222222222222",
             projectInfo: null,
-            stack: "stack-1",
+            stack: "33333333-3333-4333-8333-333333333333",
             tags: [],
             status: null,
             startdate: new Date("2026-07-10T09:00:00.000Z"),
@@ -264,7 +275,7 @@ describe("ai.taskTools.updateTask input schema", () => {
             completed: null,
             archived: null,
             permissions: {
-                id: "task-1",
+                id: "11111111-1111-4111-8111-111111111111",
                 owner: "user-1",
                 type: "task",
                 isPublic: true,
@@ -276,12 +287,12 @@ describe("ai.taskTools.updateTask input schema", () => {
         } as any);
 
         await updateTask?.execute({
-            taskId: "task-1",
+            taskId: "11111111-1111-4111-8111-111111111111",
             duedate: "2026-07-10T07:00:00.000Z",
         } as never);
 
         expect(updateMock).toHaveBeenCalledWith(
-            "task-1",
+            "11111111-1111-4111-8111-111111111111",
             expect.objectContaining({
                 duedate: new Date("2026-07-10T10:00:00.000Z"),
             })

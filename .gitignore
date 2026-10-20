@@ -11,6 +11,8 @@ packages/db/dist/
 packages/db/build/
 packages/email-service/dist/
 .yarn/*
+!.yarn/patches/
+!.yarn/patches/**
 !.yarn/plugins/
 !.yarn/plugins/**
 !.yarn/releases/
@@ -79,12 +81,14 @@ coverage/
 **/build/
 *.tsbuildinfo
 *.tgz
+!third-party/rc-gantt/rc-gantt-0.3.3.tgz
 
 # editor scratch / swap files
 *.bak
 *.swp
 *.swo
 *.tmp
+/.tmp-t08/
 *~
 
 # direnv / dotenv extras

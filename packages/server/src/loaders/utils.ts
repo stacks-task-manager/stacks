@@ -83,7 +83,7 @@ export const attachPermissionsToRow = (item: any) => {
     };
 };
 
-function assertCanWriteResource(record: any, policy: ResourceWritePolicy) {
+export function assertCanWriteResource(record: any, policy: ResourceWritePolicy) {
     if (policy === "visible") return;
 
     const user = getCurrentUser();

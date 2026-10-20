@@ -109,15 +109,17 @@ describe("server-managed references", () => {
         expect(output.question).not.toContain("stack Id");
         expect(action).not.toHaveBeenCalled();
     });
-    it("never treats a remembered literal column name as an executable id", async () => {
+    it("rejects a remembered literal column name before executable dispatch", async () => {
         const s = session();
         s.knownIds.add("Temp");
         s.knownKinds.set("Temp", new Set(["stack"]));
         const guard = createExecutionGuard(s, "delete the Temp column", undefined, undefined, names);
+        const action = vi.fn();
         await expect(
-            guard.execute({ toolName: "deleteStack", input: { stackId: "Temp" }, defaultExecute: vi.fn() })
-        ).rejects.toThrow("not a resolved id");
+            guard.execute({ toolName: "deleteStack", input: { stackId: "Temp" }, defaultExecute: action })
+        ).rejects.toThrow();
         expect(s.pending).toBeUndefined();
+        expect(action).not.toHaveBeenCalled();
     });
     it("resolves exact project names before executing validated arguments", async () => {
         const s = session();
