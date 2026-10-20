@@ -8,6 +8,7 @@ describe("column placement in current board order", () => {
         [{ afterStackId: "Drafts" }, ["Review", "Drafts", "Test", "Done"]],
         [{ beforeStackId: "Review" }, ["Test", "Review", "Drafts", "Done"]],
         [undefined, ["Review", "Drafts", "Done", "Test"]],
+        [null, ["Review", "Drafts", "Done", "Test"]],
         [0, ["Test", "Review", "Drafts", "Done"]],
     ] as const)("inserts using %j", (position, expected) => {
         const current = [...order];

@@ -1,8 +1,8 @@
-/** A numeric position or a column anchor in the current board order. */
+/** A numeric position, a column anchor, or `null`/`undefined` for the end of the board. */
 export type StackPosition = number | { beforeStackId: string } | { afterStackId: string };
 
-export function stackInsertIndex(order: string[], position?: StackPosition): number {
-    if (position === undefined) return order.length;
+export function stackInsertIndex(order: string[], position?: StackPosition | null): number {
+    if (position == null) return order.length;
     if (typeof position === "number") return position;
     const before = "beforeStackId" in position;
     const anchor = before ? position.beforeStackId : position.afterStackId;
