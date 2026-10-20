@@ -10,7 +10,6 @@ import { POLLINGACTIONS, POLLINGTYPE } from "@stacks/types";
 import type { IUpdate, IPermissions } from "@stacks/types";
 import type { RealtimeAudience } from "./utils/realtimeAudience";
 import { EventEmitter } from "events";
-import { sendMessageToUser } from "./routes/socket";
 import type { WebSocketMessage } from "./routes/socket";
 import { requestContext } from "./services/requestContext";
 

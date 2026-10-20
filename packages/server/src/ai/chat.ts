@@ -185,6 +185,14 @@ function toModelMessages(messages: AiChatClientMessage[]): ModelMessage[] {
     });
 }
 
+/** Tool results that already render as a client-side choice widget are forwarded verbatim. */
+function isChoiceWidgetOutput(output: unknown): boolean {
+    if (!output || typeof output !== "object") {
+        return false;
+    }
+    return (output as { type?: string }).type === "choice";
+}
+
 export function widgetsFromToolResult(toolName: string, output: unknown): AiChatWidget[] {
     if (!output || typeof output !== "object") {
         return [];
@@ -469,11 +477,7 @@ async function streamLlmChat(
                     }
                     return;
                 }
-                if (
-                    event.output &&
-                    typeof event.output === "object" &&
-                    (event.output as { type?: string }).type === "choice"
-                ) {
+                if (isChoiceWidgetOutput(event.output)) {
                     widgets.push(event.output as AiChatWidget);
                 } else if (!isMutation(name)) {
                     widgets.push(...widgetsFromToolResult(name, event.output));
@@ -629,20 +633,16 @@ export async function streamAiChat(
                                 def.inputSchema.parse(input)
                             ),
                     });
-                    wrapped.onDone({
-                        text: guard.summary() ?? "",
-                        widgets:
-                            output &&
-                            typeof output === "object" &&
-                            (output as { type?: string }).type === "choice"
-                                ? [output as AiChatWidget]
-                                : isMutation(def.name)
-                                ? []
-                                : [
-                                      presentResult(def.name, output),
-                                      ...widgetsFromToolResult(def.name, output),
-                                  ],
-                    });
+                    let widgets: AiChatWidget[] = [];
+                    if (isChoiceWidgetOutput(output)) {
+                        widgets = [output as AiChatWidget];
+                    } else if (!isMutation(def.name)) {
+                        widgets = [
+                            presentResult(def.name, output),
+                            ...widgetsFromToolResult(def.name, output),
+                        ];
+                    }
+                    wrapped.onDone({ text: guard.summary() ?? "", widgets });
                 } catch (error) {
                     wrapped.onDone({
                         text: "",

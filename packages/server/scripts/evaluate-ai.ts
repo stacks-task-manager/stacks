@@ -1,6 +1,6 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 /** Synthetic tools only: this runner never invokes loaders or the MCP backend. */
-import { generateText, stepCountIs, asSchema, jsonSchema } from "ai";
+import { generateText, stepCountIs, jsonSchema } from "ai";
 import { createLlmModel, LLM_GENERATION_SETTINGS } from "../src/ai/model";
 import { EvaluationTerminal } from "./ai-eval/terminal";
 import { renderEvaluationHtml } from "./ai-eval/report";
@@ -18,7 +18,6 @@ import { getLlmConfig } from "../src/ai/config";
 import {
     createExecutionGuard,
     createConversationState,
-    isMutation,
     rememberIds,
     rememberResult,
     groundedHistory,

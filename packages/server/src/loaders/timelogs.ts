@@ -25,7 +25,7 @@ import { getCurrentUser } from "./context";
 import { pgStringLiteral } from "./sqlLiteral";
 import { ProjectsLoader } from "./projects";
 import { TasksLoader } from "./tasks";
-import { afterTransactionCommit, createOne, sanitizeWhere, updateOne, withTransaction } from "./utils";
+import { afterTransactionCommit, createOne, sanitizeWhere, withTransaction } from "./utils";
 import { NotificationsLoader } from "./notifications";
 import { sendRealtimeUpdate } from "../events";
 import { invalidateApiCacheForCurrentRequest } from "../utils/cache";

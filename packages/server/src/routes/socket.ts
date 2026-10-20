@@ -62,6 +62,10 @@ export function configureWebSocketPayloadLimit(wss: { options: { maxPayload?: nu
 const WEBSOCKET_CONNECTION_LEASE_MS = 10 * 60_000;
 const MAX_WEBSOCKET_CONNECTIONS_PER_USER = 5;
 const MAX_WEBSOCKET_CONNECTIONS_PER_IP = 100;
+/** Message quotas a live connection must stay inside before its message is processed */
+const MAX_WEBSOCKET_MESSAGES_PER_IP = 600;
+const MAX_WEBSOCKET_MESSAGES_PER_USER = 60;
+const WEBSOCKET_MESSAGE_WINDOW_MS = 60_000;
 /** Valid user status values */
 const VALID_USER_STATUSES = ["online", "idle", "offline"] as const;
 const IS_DEV = process.env.NODE_ENV === "development";
@@ -298,11 +302,15 @@ const captureRealtimeIdentity = (user: UserEntity | undefined): RealtimeRecipien
  * queue aggregates stay internal (see events.getConnectionStats) and are never
  * serialized into a client payload.
  */
+/** Live connections whose authenticated identity belongs to one tenant. */
+const scopedTenantConnections = (tenant: string | undefined) =>
+    tenant ? Array.from(connections.values()).filter(conn => conn.identity?.tenant === tenant) : [];
+
+/** How many live connections belong to one tenant, without the per-connection details. */
+const tenantConnectionCount = (tenant: string | undefined) => scopedTenantConnections(tenant).length;
+
 const tenantConnectionPayload = (tenant: string | undefined) => {
-    if (!tenant) {
-        return { activeConnections: 0, connections: [] };
-    }
-    const scoped = Array.from(connections.values()).filter(conn => conn.identity?.tenant === tenant);
+    const scoped = scopedTenantConnections(tenant);
     return {
         activeConnections: scoped.length,
         connections: scoped.map(conn => ({
@@ -398,7 +406,7 @@ const initializeConnection = async (
                 connectionId,
                 userId,
                 tenant: identity?.tenant,
-                activeConnections: tenantConnectionPayload(identity?.tenant).activeConnections,
+                activeConnections: tenantConnectionCount(identity?.tenant),
                 serverTime: Date.now(),
             },
             timestamp: Date.now(),
@@ -514,6 +522,83 @@ const cleanupConnection = async (connectionId: string): Promise<void> => {
         console.error(`Error during connection cleanup for ${connectionId}:`, error);
     }
 };
+
+/**
+ * Reserves the per-user and per-IP connection slots for one WebSocket handshake.
+ *
+ * @param userId - Authenticated user, when the connection carries one
+ * @param ip - Peer address the connection is attributed to
+ * @returns The lease ids the connection must carry, or null when a slot is full
+ *          (any lease already taken is released before returning null)
+ */
+async function acquireConnectionLeases(userId?: string, ip?: string): Promise<string[] | null> {
+    const leases: string[] = [];
+    if (userId) {
+        const userLease = await acquireRateLimitLease(
+            "websocket-connection-user",
+            userId,
+            MAX_WEBSOCKET_CONNECTIONS_PER_USER,
+            WEBSOCKET_CONNECTION_LEASE_MS
+        );
+        if (!userLease) {
+            return null;
+        }
+        leases.push(userLease.id);
+    }
+    const ipLease = await acquireRateLimitLease(
+        "websocket-connection-ip",
+        ip ?? "unknown",
+        MAX_WEBSOCKET_CONNECTIONS_PER_IP,
+        WEBSOCKET_CONNECTION_LEASE_MS
+    );
+    if (!ipLease) {
+        await Promise.all(leases.map(releaseRateLimitLease));
+        return null;
+    }
+    leases.push(ipLease.id);
+    return leases;
+}
+
+/**
+ * Extends the rate-limit leases a live connection holds so its slots stay reserved.
+ *
+ * @param conn - Connection whose leases should be renewed
+ * @returns Whether every lease was renewed; false means one slot expired
+ */
+async function renewConnectionLeases(conn: ConnectionInfo): Promise<boolean> {
+    const renewals = await Promise.all(
+        (conn.rateLimitLeaseIds ?? []).map(id => renewRateLimitLease(id, WEBSOCKET_CONNECTION_LEASE_MS))
+    );
+    return renewals.every(renewed => renewed);
+}
+
+/**
+ * Applies the per-IP and per-user message quotas for one live connection.
+ *
+ * Both counters are always consulted so their counts stay in step with each other.
+ * @param conn - Connection that received the message
+ * @param now - Epoch ms both counters share
+ * @returns Whether the message may be processed; throws when a counter is unavailable
+ */
+async function checkMessageQuota(conn: ConnectionInfo, now: number): Promise<boolean> {
+    const ipDecision = await consumeRateLimit(
+        "websocket-message-ip",
+        conn.metadata?.ip ?? "unknown",
+        MAX_WEBSOCKET_MESSAGES_PER_IP,
+        WEBSOCKET_MESSAGE_WINDOW_MS,
+        now
+    );
+    const userDecision = conn.userId
+        ? await consumeRateLimit(
+              "websocket-message-user",
+              conn.userId,
+              MAX_WEBSOCKET_MESSAGES_PER_USER,
+              WEBSOCKET_MESSAGE_WINDOW_MS,
+              now
+          )
+        : { allowed: true };
+    return ipDecision.allowed && userDecision.allowed;
+}
 
 /**
  * Pure predicate: should an idle connection re-check its identity now?
@@ -756,7 +841,7 @@ const messageHandlers = {
             const statsMessage: WebSocketMessage = {
                 type: "stats",
                 payload: {
-                    activeConnections: tenantConnectionPayload(conn?.identity?.tenant).activeConnections,
+                    activeConnections: tenantConnectionCount(conn?.identity?.tenant),
                 },
                 timestamp: Date.now(),
             };
@@ -1046,32 +1131,12 @@ export const registerSocketHandlers = (app: Hono) => {
                         initialization = (async () => {
                             try {
                                 console.log(`WebSocket connection opened: ${connectionId}`);
-                                const ip = metadata?.ip ?? "unknown";
-                                if (userId) {
-                                    const userLease = await acquireRateLimitLease(
-                                        "websocket-connection-user",
-                                        userId,
-                                        MAX_WEBSOCKET_CONNECTIONS_PER_USER,
-                                        WEBSOCKET_CONNECTION_LEASE_MS
-                                    );
-                                    if (!userLease) {
-                                        ws.close(1013, "Connection limit reached");
-                                        return;
-                                    }
-                                    leases.push(userLease.id);
-                                }
-                                const ipLease = await acquireRateLimitLease(
-                                    "websocket-connection-ip",
-                                    ip,
-                                    MAX_WEBSOCKET_CONNECTIONS_PER_IP,
-                                    WEBSOCKET_CONNECTION_LEASE_MS
-                                );
-                                if (!ipLease) {
-                                    await Promise.all(leases.map(releaseRateLimitLease));
+                                const acquired = await acquireConnectionLeases(userId, metadata?.ip);
+                                if (acquired === null) {
                                     ws.close(1013, "Connection limit reached");
                                     return;
                                 }
-                                leases.push(ipLease.id);
+                                leases.push(...acquired);
                                 await initializeConnection(
                                     connectionId,
                                     ws,
@@ -1142,44 +1207,21 @@ export const registerSocketHandlers = (app: Hono) => {
                                 return;
                             }
                             const now = Date.now();
-                            let ipDecision;
-                            let userDecision;
                             try {
-                                ipDecision = await consumeRateLimit(
-                                    "websocket-message-ip",
-                                    conn.metadata?.ip ?? "unknown",
-                                    600,
-                                    60_000,
-                                    now
-                                );
-                                userDecision = conn.userId
-                                    ? await consumeRateLimit(
-                                          "websocket-message-user",
-                                          conn.userId,
-                                          60,
-                                          60_000,
-                                          now
-                                      )
-                                    : { allowed: true };
+                                if (!(await checkMessageQuota(conn, now))) {
+                                    ws.close(1013, "Message rate limit exceeded");
+                                    return;
+                                }
                             } catch {
                                 ws.close(1013, "Message rate limit unavailable");
                                 void cleanupConnection(connectionId);
                                 return;
                             }
-                            if (!ipDecision.allowed || !userDecision.allowed) {
-                                ws.close(1013, "Message rate limit exceeded");
-                                return;
-                            }
-                            const leaseIds = conn.rateLimitLeaseIds ?? [];
-                            const renewals = await Promise.all(
-                                leaseIds.map(id => renewRateLimitLease(id, WEBSOCKET_CONNECTION_LEASE_MS))
-                            );
-                            if (renewals.some(renewed => !renewed)) {
+                            if (!(await renewConnectionLeases(conn))) {
                                 ws.close(1013, "Connection lease expired");
                                 void cleanupConnection(connectionId);
                                 return;
                             }
-
                             const data = parseWebSocketMessage(evt.data);
                             if (!data) {
                                 console.warn(`Invalid message format from connection ${connectionId}`);
@@ -1248,12 +1290,7 @@ export const registerSocketHandlers = (app: Hono) => {
                         if (conn) {
                             conn.lastSeen = Date.now();
                             try {
-                                const renewals = await Promise.all(
-                                    (conn.rateLimitLeaseIds ?? []).map(id =>
-                                        renewRateLimitLease(id, WEBSOCKET_CONNECTION_LEASE_MS)
-                                    )
-                                );
-                                if (renewals.some(renewed => !renewed)) {
+                                if (!(await renewConnectionLeases(conn))) {
                                     ws.close(1013, "Connection lease expired");
                                     void cleanupConnection(connectionId);
                                 }

@@ -1,7 +1,6 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { randomUUID } from "node:crypto";
-import type { Context } from "hono";
-import type { MiddlewareHandler } from "hono";
+import type { Context, MiddlewareHandler } from "hono";
 import { getClientIP } from "./clientIp";
 import { consumeRateLimit } from "./rateLimit";
 
@@ -104,7 +103,17 @@ export async function checkAuthAttemptLimits(
     };
 }
 
-/** Generic response shared by account and IP denials; DB failures fail closed. */
+/** Fail-closed response for a request whose rate-limit decision could not be made. */
+function respondRateLimitUnavailable(c: Context): Response {
+    return c.json({ error: "Request temporarily unavailable" }, 503);
+}
+
+/** Renders a denied rate-limit decision for the window that produced `retryAfterSeconds`. */
+function respondTooManyRequests(c: Context, retryAfterSeconds: number): Response {
+    c.header("Retry-After", String(retryAfterSeconds));
+    return c.json({ error: "Too many requests" }, 429);
+}
+
 export async function enforceAuthAttemptLimit(
     c: Context,
     kind: AuthAttemptKind,
@@ -114,7 +123,7 @@ export async function enforceAuthAttemptLimit(
     let ip = getClientIP(c);
     if (ip === "unknown") {
         if (process.env.NODE_ENV !== "test") {
-            return c.json({ error: "Request temporarily unavailable" }, 503);
+            return respondRateLimitUnavailable(c);
         }
         // app.request has no Node socket. Keep test requests isolated; production always requires a peer IP.
         ip = `test-${randomUUID()}`;
@@ -123,10 +132,9 @@ export async function enforceAuthAttemptLimit(
     try {
         const result = await checkAuthAttemptLimits(kind, accountKey, ip);
         if (result.allowed) return undefined;
-        c.header("Retry-After", String(result.retryAfterSeconds));
-        return c.json({ error: "Too many requests" }, 429);
+        return respondTooManyRequests(c, result.retryAfterSeconds);
     } catch {
-        return c.json({ error: "Request temporarily unavailable" }, 503);
+        return respondRateLimitUnavailable(c);
     }
 }
 
@@ -134,7 +142,7 @@ async function resolveRateLimitIp(c: Context): Promise<string | Response> {
     let ip = getClientIP(c);
     if (ip !== "unknown") return ip;
     if (process.env.NODE_ENV === "test") return `test-${randomUUID()}`;
-    return c.json({ error: "Request temporarily unavailable" }, 503);
+    return respondRateLimitUnavailable(c);
 }
 
 export async function enforceApiRateLimit(
@@ -146,15 +154,14 @@ export async function enforceApiRateLimit(
     const ip = await resolveRateLimitIp(c);
     if (typeof ip !== "string") return ip;
     const subject = kind === "authenticated-api-user" ? userId : ip;
-    if (!subject) return c.json({ error: "Request temporarily unavailable" }, 503);
+    if (!subject) return respondRateLimitUnavailable(c);
     const limit = kind === "authenticated-api-user" ? config.authenticatedUser : config.unauthenticatedIp;
     try {
         const result = await consumeRateLimit(kind, subject, limit, config.windowMs);
         if (result.allowed) return undefined;
-        c.header("Retry-After", String(Math.max(1, Math.ceil((result.resetAt - Date.now()) / 1000))));
-        return c.json({ error: "Too many requests" }, 429);
+        return respondTooManyRequests(c, Math.max(1, Math.ceil((result.resetAt - Date.now()) / 1000)));
     } catch {
-        return c.json({ error: "Request temporarily unavailable" }, 503);
+        return respondRateLimitUnavailable(c);
     }
 }
 

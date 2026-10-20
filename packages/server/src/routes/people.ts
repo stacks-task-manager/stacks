@@ -111,8 +111,7 @@ people.post(
                     activationLink: `/auth/activate/${activationToken}`,
                 });
             } catch {
-                await clearUnqueuedActivation();
-                throw Errors.internal(translate("Registration email could not be queued"));
+                queued = false;
             }
             if (!queued) {
                 await clearUnqueuedActivation();

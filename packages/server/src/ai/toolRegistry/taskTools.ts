@@ -42,7 +42,11 @@ function utcWindowDate(value: string): string {
     return /^\d{4}-\d{2}-\d{2}$/.test(value) ? `${value}T00:00:00.000Z` : new Date(value).toISOString();
 }
 
-function listTasksHasFilter(d: {
+/**
+ * Filter shape shared by the tasks listing tools: the accepted keys of the
+ * `findTasks` / `listTasks` input schema, as seen by the helpers below.
+ */
+type ListTasksFilterInput = {
     project?: string | string[];
     projectId?: string;
     taskIds?: string | string[];
@@ -65,7 +69,9 @@ function listTasksHasFilter(d: {
     dueTo?: string;
     startFrom?: string;
     startTo?: string;
-}): boolean {
+};
+
+function listTasksHasFilter(d: ListTasksFilterInput): boolean {
     const project = d.project ?? d.projectId;
     if (project !== undefined) {
         return true;
@@ -119,30 +125,7 @@ function listTasksHasFilter(d: {
     return false;
 }
 
-function buildListTasksFilters(input: {
-    project?: string | string[];
-    projectId?: string;
-    taskIds?: string | string[];
-    stackId?: string;
-    parentTaskId?: string;
-    searchQuery?: string;
-    from?: string;
-    to?: string;
-    archivedOnly?: boolean;
-    overdueOnly?: boolean;
-    assigneeUserIds?: string | string[];
-    assignedOnly?: boolean;
-    unassignedOnly?: boolean;
-    doneFilter?: "all" | "open" | "done";
-    tagIds?: string | string[];
-    statusTagIds?: string | string[];
-    priority?: "critical" | "high" | "medium" | "low" | "none";
-    progress?: string;
-    dueFrom?: string;
-    dueTo?: string;
-    startFrom?: string;
-    startTo?: string;
-}): GetAllFilters {
+function buildListTasksFilters(input: ListTasksFilterInput): GetAllFilters {
     const f: GetAllFilters = {};
     const project = input.project ?? input.projectId;
     if (project !== undefined) {
@@ -213,30 +196,7 @@ function buildListTasksFilters(input: {
 }
 
 /** Maps findTasks / listTasks tool input to `/tasks` route query string (same keys as the app `Tasks` view). */
-export function findTasksInputToQueryString(input: {
-    project?: string | string[];
-    projectId?: string;
-    taskIds?: string | string[];
-    stackId?: string;
-    parentTaskId?: string;
-    searchQuery?: string;
-    from?: string;
-    to?: string;
-    archivedOnly?: boolean;
-    overdueOnly?: boolean;
-    assigneeUserIds?: string | string[];
-    assignedOnly?: boolean;
-    unassignedOnly?: boolean;
-    doneFilter?: "all" | "open" | "done";
-    tagIds?: string | string[];
-    statusTagIds?: string | string[];
-    priority?: "critical" | "high" | "medium" | "low" | "none";
-    progress?: string;
-    dueFrom?: string;
-    dueTo?: string;
-    startFrom?: string;
-    startTo?: string;
-}): string {
+export function findTasksInputToQueryString(input: ListTasksFilterInput): string {
     const params = new URLSearchParams();
 
     const project = input.project ?? input.projectId;

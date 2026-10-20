@@ -187,8 +187,15 @@ export function createMock(fixture: Fixture) {
     const member = (value: unknown, filter: unknown) =>
         filter === undefined || (Array.isArray(filter) ? filter : [filter]).includes(value);
     /** Normalise a reference argument into a list of ids (single values and arrays are both accepted). */
-    const toIds = (value: unknown) =>
-        Array.isArray(value) ? value.map(String) : value === undefined ? [] : [String(value)];
+    const toIds = (value: unknown) => {
+        if (Array.isArray(value)) {
+            return value.map(String);
+        }
+        if (value === undefined) {
+            return [];
+        }
+        return [String(value)];
+    };
     /** Evaluate a `gt|gte|lt|lte|eq:<percent>` operator against a row value (missing values never match). */
     const matchesOperator = (value: unknown, operator: unknown) => {
         if (operator === undefined || operator === null || operator === false) {

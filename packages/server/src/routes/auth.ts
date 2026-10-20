@@ -7,7 +7,7 @@ import { Op } from "sequelize";
 import { EMAIL_TEMPLATES } from "@stacks/types";
 import * as bcrypt from "bcryptjs";
 import { compare } from "bcryptjs";
-import type { Context } from "hono";
+import type { Context, MiddlewareHandler } from "hono";
 import { Hono } from "hono";
 import { translate } from "@stacks/translations";
 import { deleteCookie, getSignedCookie, setSignedCookie } from "hono/cookie";
@@ -73,6 +73,19 @@ async function takeActivationFlash(c: Context): Promise<string[]> {
 }
 
 /**
+ * Rejects a state-changing browser request that is not same-site.
+ *
+ * The JSON API renders the rejection as the same 403 error every other auth
+ * route uses, so the guard is one middleware shared by the routes below.
+ */
+const requireSameSite: MiddlewareHandler = async (c, next) => {
+    if (!(await browserMutationAllowed(c, "none"))) {
+        throw Errors.forbidden(translate("Cross site request rejected"));
+    }
+    await next();
+};
+
+/**
  * Register a new user account.
  * @param {Object} userData - User registration data
  * @param {string} userData.email - User email address
@@ -102,11 +115,9 @@ auth.post(
         if (!isRegistrationEnabled()) {
             throw Errors.forbidden(translate("Registration is disabled by the administrator"));
         }
-        if (!(await browserMutationAllowed(c, "none"))) {
-            throw Errors.forbidden(translate("Cross site request rejected"));
-        }
         await next();
     },
+    requireSameSite,
     validator(UserRegisterSchema),
     async (c, next) => {
         const userData = c.req.valid("json");
@@ -213,12 +224,7 @@ auth.post(
  */
 auth.post(
     "/login",
-    async (c, next) => {
-        if (!(await browserMutationAllowed(c, "none"))) {
-            throw Errors.forbidden(translate("Cross site request rejected"));
-        }
-        await next();
-    },
+    requireSameSite,
     validator(UserLoginSchema),
     async (c, next) => {
         const { email } = c.req.valid("json");
@@ -434,12 +440,7 @@ auth.get("/email-change/:token", async c => {
 
 auth.post(
     "/email-change/confirm",
-    async (c, next) => {
-        if (!(await browserMutationAllowed(c, "none"))) {
-            throw Errors.forbidden(translate("Cross site request rejected"));
-        }
-        await next();
-    },
+    requireSameSite,
     asyncHandler(async (c: Context) => {
         const form = await c.req.parseBody();
         const parsed = AccountTokenSchema.safeParse(form.token);
@@ -520,12 +521,7 @@ auth.post(
 
 auth.post(
     "/activate",
-    async (c, next) => {
-        if (!(await browserMutationAllowed(c, "none"))) {
-            throw Errors.forbidden(translate("Cross site request rejected"));
-        }
-        await next();
-    },
+    requireSameSite,
     asyncHandler(async (c: Context) => {
         const activationData = await c.req.parseBody();
         const clientIp = getClientIP(c);

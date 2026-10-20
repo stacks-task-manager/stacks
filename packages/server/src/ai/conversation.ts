@@ -262,12 +262,9 @@ export function createExecutionGuard(
             toolName !== "askUserChoice"
         ) {
             try {
-                if (
-                    options.projectId &&
-                    !(input as Record<string, unknown>).projectId &&
-                    ((input as Record<string, unknown>).taskId || (input as Record<string, unknown>).stackId)
-                )
-                    input = { ...(input as Record<string, unknown>), projectId: options.projectId };
+                const fields = input as Record<string, unknown>;
+                if (options.projectId && !fields.projectId && (fields.taskId || fields.stackId))
+                    input = { ...fields, projectId: options.projectId };
                 const resolved = await resolveReferences(
                     input as Record<string, unknown>,
                     session.knownIds,

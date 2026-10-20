@@ -7,7 +7,7 @@ import { Errors } from "../errors";
 import { IPerson, ROLE_SECTIONS } from "@stacks/types";
 import * as bcrypt from "bcryptjs";
 import { randomUUID } from "crypto";
-import { formatISO9075, parseISO } from "date-fns";
+import { parseISO } from "date-fns";
 import { fn, literal, Op, Transaction, where, type WhereOptions } from "sequelize";
 import { invalidateApiCacheForCurrentRequest } from "../utils/cache";
 import { toPublicPerson } from "../utils/publicPerson";

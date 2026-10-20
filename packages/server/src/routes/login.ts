@@ -2,11 +2,11 @@
 /**
  * Session-based login, password recovery, and reset HTML flows (cookies + redirects).
  */
-import { sequelize, TenantEntity, UserEntity } from "@stacks/db";
+import { sequelize, UserEntity } from "@stacks/db";
 import { Op } from "sequelize";
 import { EMAIL_TEMPLATES } from "@stacks/types";
 import { compare, hash } from "bcryptjs";
-import type { Context } from "hono";
+import type { Context, MiddlewareHandler } from "hono";
 import { Hono } from "hono";
 import { deleteCookie, getSignedCookie, setCookie, setSignedCookie } from "hono/cookie";
 import z from "zod/v4";
@@ -68,6 +68,14 @@ async function takeLoginFlash(c: Context): Promise<LoginFlashPayload> {
     }
 }
 
+/** Rejects cross-site form posts before any credential or token work runs. */
+const requireSameSite: MiddlewareHandler = async (c, next) => {
+    if (!(await browserMutationAllowed(c, "none"))) {
+        return c.text(translate("Cross site request rejected"), 403);
+    }
+    await next();
+};
+
 /** GET `/` — Renders login template with query/flash errors. */
 login.get("/", validator(LoginErrorSchema, "query"), async c => {
     try {
@@ -97,10 +105,7 @@ login.get("/", validator(LoginErrorSchema, "query"), async c => {
 });
 
 /** POST `/` — Validates credentials, sets auth cookies, redirects to `/app`. */
-login.post("/", async c => {
-    if (!(await browserMutationAllowed(c, "none"))) {
-        return c.text(translate("Cross site request rejected"), 403);
-    }
+login.post("/", requireSameSite, async c => {
     try {
         const loginData = await c.req.parseBody();
         LoginSchema.parse(loginData);
@@ -179,10 +184,7 @@ login.get("/password-recovery", async c => {
 });
 
 /** POST `/password-recovery` — Queues a reset link without revealing which accounts exist. */
-login.post("/password-recovery", async c => {
-    if (!(await browserMutationAllowed(c, "none"))) {
-        return c.text(translate("Cross site request rejected"), 403);
-    }
+login.post("/password-recovery", requireSameSite, async c => {
     if (!isPasswordRecoveryEnabled()) {
         return c.text(translate("Password recovery is disabled by the administrator"), 403);
     }
@@ -267,10 +269,7 @@ login.get("/password-reset", async c => {
 });
 
 /** POST `/password-reset` — Changes a password after validating the emailed token. */
-login.post("/password-reset", async c => {
-    if (!(await browserMutationAllowed(c, "none"))) {
-        return c.text(translate("Cross site request rejected"), 403);
-    }
+login.post("/password-reset", requireSameSite, async c => {
     if (!isPasswordRecoveryEnabled()) {
         return c.text(translate("Password recovery is disabled by the administrator"), 403);
     }
