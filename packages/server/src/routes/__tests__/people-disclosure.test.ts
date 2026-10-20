@@ -28,6 +28,11 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("@stacks/db", async importOriginal => {
     const actual = (await importOriginal()) as Record<string, any>;
+    actual.sequelize.transaction = async () => ({
+        commit: async () => {},
+        rollback: async () => {},
+        afterCommit: () => {},
+    });
     Object.assign(actual.UserEntity, {
         findAll: mocks.findAll,
         findOne: mocks.findOne,
