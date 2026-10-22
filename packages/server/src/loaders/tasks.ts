@@ -666,15 +666,21 @@ async function removeByProject(project: string, extTransaction?: Transaction): P
     return withTransaction(extTransaction, async transaction => {
         await TimelogsLoader.removeByProject(project, transaction);
 
-        const deletedTasks: ITask[] = await deleteAll<ITask>({
+        const projectTasks = await findAll<ITask>({
             entity: TaskEntity,
             filter: { project },
             transaction,
         });
 
-        for (const task of deletedTasks) {
+        for (const task of projectTasks) {
             await StacksLoader.removeTaskOrder(task.stack, task.id, transaction);
         }
+
+        const deletedTasks: ITask[] = await deleteAll<ITask>({
+            entity: TaskEntity,
+            filter: { project },
+            transaction,
+        });
 
         afterTransactionCommit(transaction, () => {
             for (const task of deletedTasks) {
@@ -708,15 +714,15 @@ async function removeByStack(stack: string, extTransaction?: Transaction): Promi
             transaction
         );
 
+        for (const task of tasks) {
+            await StacksLoader.removeTaskOrder(task.stack, task.id, transaction);
+        }
+
         const deletedTasks: ITask[] = await deleteAll<ITask>({
             entity: TaskEntity,
             filter: { stack },
             transaction,
         });
-
-        for (const task of deletedTasks) {
-            await StacksLoader.removeTaskOrder(task.stack, task.id, transaction);
-        }
 
         afterTransactionCommit(transaction, () => {
             for (const task of deletedTasks) {
@@ -785,6 +791,11 @@ async function update(id: string, data: Partial<ITask>, extTransaction?: Transac
             data,
             transaction,
         });
+
+        if (data.project != null && data.project !== task.project) {
+            await StacksLoader.removeTaskOrder(task.stack, id, transaction);
+            await StacksLoader.addTaskOrder(targetStackId, id, "bottom", transaction);
+        }
 
         /*
             Sending notifications - START

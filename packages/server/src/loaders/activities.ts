@@ -14,6 +14,7 @@ import { TasksLoader } from "./tasks";
 import { sanitizeWhere } from "./utils";
 import { Transaction } from "sequelize";
 import { NOTIFICATION_RECORD_TYPE, ROLE_SECTIONS } from "@stacks/types";
+import { Op } from "sequelize";
 
 /** Inserts an activity; bumps task comment count for message types; invalidates API cache. */
 async function create(data: Omit<IActivity, "id" | "created" | "updated">): Promise<IActivity> {
@@ -88,7 +89,51 @@ async function getAllByResources(resources: string[]) {
     return activities.map(activity => activity.toJSON());
 }
 
+async function getOwnedComment(resourceId: string, activityId: string, transaction: Transaction) {
+    const user = getCurrentUser();
+    await TasksLoader.getOne(resourceId, transaction);
+    if (!canWrite(ROLE_SECTIONS.COMMENTS)) throw Errors.forbidden("User not authorized");
+    const activity = await ActivityEntity.findOne({
+        where: sanitizeWhere({
+            id: activityId,
+            resourceId,
+            resourceType: ACTIVITYRESOURCETYPE.TASK,
+            type: ACTIVITYTYPE.MESSAGE,
+            person: user.id,
+            deleted: { [Op.is]: null },
+        }),
+        transaction,
+        lock: transaction.LOCK.UPDATE,
+    });
+    if (!activity) throw Errors.notFound(translate("Comment not found"));
+    return { user, activity };
+}
+
+/** Updates a comment after checking task visibility, comment access, and authorship. */
+async function update(resourceId: string, activityId: string, content: string): Promise<IActivity> {
+    return withTransaction(undefined, async (transaction: Transaction) => {
+        const { user, activity } = await getOwnedComment(resourceId, activityId, transaction);
+        await activity.update({ content, updatedBy: user.id }, { transaction });
+        invalidateApiCacheForCurrentRequest();
+        return activity.toJSON() as IActivity;
+    });
+}
+
+/** Soft-deletes a comment after checking task visibility, comment access, and authorship. */
+async function remove(resourceId: string, activityId: string): Promise<void> {
+    await withTransaction(undefined, async transaction => {
+        const { user, activity } = await getOwnedComment(resourceId, activityId, transaction);
+        await activity.update(
+            { deleted: new Date(), deletedBy: user.id, updatedBy: user.id },
+            { transaction }
+        );
+        invalidateApiCacheForCurrentRequest();
+    });
+}
+
 export const ActivitiesLoader = {
     create,
     getAllByResources,
+    update,
+    remove,
 };

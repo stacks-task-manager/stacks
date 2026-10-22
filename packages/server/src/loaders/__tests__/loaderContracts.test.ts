@@ -7,7 +7,7 @@ const loadersDir = fileURLToPath(new URL("..", import.meta.url));
 const indexPath = fileURLToPath(new URL("../index.ts", import.meta.url));
 
 const expectedMethodsByFile = {
-    "activities.ts": ["create", "getAllByResources"],
+    "activities.ts": ["create", "getAllByResources", "update", "remove"],
     "bookmarks.ts": ["create", "remove", "getAll"],
     "calendar.ts": [
         "getAll",

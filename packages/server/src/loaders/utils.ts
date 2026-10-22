@@ -255,7 +255,17 @@ export const updateOne = async <T>({
         nest: true,
     });
 
-    if (!updatedRecords[0]) {
+    if (updatedRecords?.[0]) {
+        return updatedRecords[0];
+    }
+
+    // Some Sequelize dialects do not return updated rows even when returning is requested.
+    if (updatedRecords === undefined) {
+        const updatedRecord = await findOne({ entity, id, transaction });
+        if (updatedRecord) return updatedRecord as T;
+    }
+
+    if (!updatedRecords?.[0]) {
         throw Errors.internal(translate("Could not update record"));
     }
 
