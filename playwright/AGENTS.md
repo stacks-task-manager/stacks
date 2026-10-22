@@ -17,6 +17,9 @@ nearest spec and POM, and component under test. If changing UI hooks, also read
 
 ## Isolation and cleanup
 
+- Every record a scenario creates must be torn down at the end of the test. Register `afterAll`
+  or `finally` cleanup before creating records so assertion failures also clean up; delete owned
+  children explicitly before parents rather than assuming document deletion cascades to other entities.
 - Restore previous preference/storage values, including absence, and do nothing when no override
   occurred. Register cleanup so assertion failures also trigger it.
 - Attempt independent record/browser cleanup operations independently and report failures after
