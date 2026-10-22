@@ -51,6 +51,7 @@ export const TaskDetailsMatrix: FunctionComponent<ITaskDetailsMatrixProps> = Rea
                                         onClose={onClose}
                                         vertical
                                         disabled={disabled}
+                                        testIdSuffix="matrix"
                                     />
                                 );
                             })}

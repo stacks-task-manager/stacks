@@ -128,7 +128,7 @@ test.describe("Tasks - Filtered table in-cell edits", () => {
 
     test("updating the priority in a cell updates the table row", async () => {
         // the filtered table hides the priority column by default — enable it for this scenario
-        await tasksTable.openFilteredTasks({ assignees: personId }, [
+        await tasksTable.openFilteredTasks({ assignees: personId, project: projectId }, [
             "title",
             "duedate",
             "priority",
@@ -142,7 +142,7 @@ test.describe("Tasks - Filtered table in-cell edits", () => {
     });
 
     test("setting a due date in a cell updates the table row", async () => {
-        await tasksTable.openFilteredTasks({ assignees: personId });
+        await tasksTable.openFilteredTasks({ assignees: personId, project: projectId });
         await tasksTable.expectRowVisible(taskId);
 
         await tasksTable.setDueDateToTomorrow(taskId);
@@ -261,12 +261,7 @@ test.describe("Tasks - Filtered table in-cell edits", () => {
             [taskId, 0],
             [windowTaskId, 60],
         ] as const) {
-            const response = await page.request.patch(`/api/tasks/${id}`, {
-                data: { duedate: overdueDate, progress },
-            });
-            if (!response.ok()) {
-                throw new Error(`Preparing filtered task failed with HTTP ${response.status()}`);
-            }
+            await tasksTable.setTaskDueDateAndProgressViaApi(id, overdueDate, progress);
         }
 
         const filters = { assignees: personId, overdue: "true", progress: "gt:30" };

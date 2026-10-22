@@ -50,6 +50,7 @@ export interface TipTapEditorProps {
 
 interface TipTapEditorPropsExtended extends TipTapEditorProps {
     spellCheck?: boolean;
+    contentTestId?: string;
     onBoot: (editor: Editor | null) => void;
     onKeyDown?: (event: KeyboardEvent) => boolean | void;
 }
@@ -70,6 +71,7 @@ export const TipTapEditor: React.FC<TipTapEditorPropsExtended> = ({
     onBoot,
     onFileDelete,
     onKeyDown,
+    contentTestId,
 }) => {
     const preventUpdateRef = useRef(false);
     const editor = useEditor({
@@ -145,6 +147,7 @@ export const TipTapEditor: React.FC<TipTapEditorPropsExtended> = ({
         editorProps: {
             attributes: {
                 class: "",
+                "data-testid": "tip-tap-contenteditable",
             },
             handleKeyDown: (view, event) => {
                 return onKeyDown && onKeyDown(event);
@@ -222,8 +225,9 @@ export const TipTapEditor: React.FC<TipTapEditorPropsExtended> = ({
         if (editor) {
             preventUpdateRef.current = true;
             editor.setEditable(!Boolean(disabled));
+            if (contentTestId) editor.view.dom.setAttribute("data-testid", contentTestId);
         }
-    }, [disabled, editor]);
+    }, [contentTestId, disabled, editor]);
 
     if (!editor) return null;
 
@@ -236,7 +240,7 @@ export const TipTapEditor: React.FC<TipTapEditorPropsExtended> = ({
                 className="editor-wrapper"
                 editor={editor}
                 spellCheck={spellCheck}
-                data-testid="tip-tap-editor"
+                data-testid={contentTestId ? "tip-tap-editor-wrapper" : "tip-tap-editor"}
             />
         </>
     );

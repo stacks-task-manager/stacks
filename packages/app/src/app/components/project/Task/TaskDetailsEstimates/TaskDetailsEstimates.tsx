@@ -10,12 +10,16 @@ interface ITaskEstimatesProps {
     value?: number;
     disabled?: boolean;
     minimal?: boolean;
+    testId?: string;
+    inputTestId?: string;
     onChange: (value: number | undefined) => void;
 }
 export const TaskEstimates: FunctionComponent<ITaskEstimatesProps> = ({
     value,
     disabled,
     minimal,
+    testId,
+    inputTestId,
     onChange,
 }) => {
     const handleClear = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -27,6 +31,7 @@ export const TaskEstimates: FunctionComponent<ITaskEstimatesProps> = ({
         <PopupTime
             value={value}
             disabled={disabled}
+            testId={inputTestId}
             labelKey={translate("Estimated time")}
             onChange={onChange}
         >
@@ -38,6 +43,7 @@ export const TaskEstimates: FunctionComponent<ITaskEstimatesProps> = ({
                         tooltip={minimal ? translate("Add estimate") : undefined}
                         icon={minimal ? "clock-plus" : undefined}
                         disabled={disabled}
+                        testId={testId}
                     />
                 )}
                 {Boolean(value) && (
@@ -46,6 +52,7 @@ export const TaskEstimates: FunctionComponent<ITaskEstimatesProps> = ({
                         interactive={!disabled}
                         onRemove={value && !disabled ? handleClear : undefined}
                         intent={Intent.SUCCESS}
+                        data-testid={testId}
                     >
                         {value ? formatStringDuration(value) : translate("Not estimated")}
                     </Tag>

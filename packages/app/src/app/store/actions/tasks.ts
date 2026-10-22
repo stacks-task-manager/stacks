@@ -600,7 +600,7 @@ const alertDetach = async (taskId: string) => {
 
     if (response) {
         await update(taskId, {
-            parent: undefined,
+            parent: null,
         });
     }
 
@@ -1093,9 +1093,10 @@ const archiveAlert = async (taskId: string) => {
         Intent.WARNING
     );
 
-    if (!result) return;
+    if (!result) return false;
 
     await archive(taskId);
+    return true;
 };
 
 const unarchive = async (taskId: string, stackId?: string) => {

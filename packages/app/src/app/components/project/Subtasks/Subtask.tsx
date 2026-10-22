@@ -185,19 +185,22 @@ export const Subtask: FunctionComponent<ISubtaskProps> = ({ subtask, disabled, s
                     testId="subtask-dates-picker-button"
                 />
 
-                <TaskAssignees
-                    assignees={subtask.assignees || []}
-                    max={1}
-                    showEmpty
-                    minimal
-                    disabled={disabled}
-                    className={classNames({ hiddable: !subtask.assignees?.length })}
-                    onToggle={handleToggleAssignees}
-                    onClear={() => TasksActions.setAssignees(subtask.id, [])}
-                />
+                <span data-testid="subtask-assignees">
+                    <TaskAssignees
+                        assignees={subtask.assignees || []}
+                        max={1}
+                        showEmpty
+                        minimal
+                        disabled={disabled}
+                        className={classNames({ hiddable: !subtask.assignees?.length })}
+                        onToggle={handleToggleAssignees}
+                        onClear={() => TasksActions.setAssignees(subtask.id, [])}
+                    />
+                </span>
 
                 {disabled ? null : (
                     <SubtaskMenu
+                        subtaskId={subtask.id}
                         onOpen={handleToggleEdit}
                         onEdit={handleEdit}
                         onAdd={handleAddNewSubtask}
@@ -211,27 +214,42 @@ export const Subtask: FunctionComponent<ISubtaskProps> = ({ subtask, disabled, s
 };
 
 interface SubtaskMenuProps {
+    subtaskId: string;
     onEdit: (event: React.MouseEvent) => void;
     onOpen: (event: React.MouseEvent) => void;
     onDelete: (event: React.MouseEvent) => void;
     onAdd: (event: React.MouseEvent) => void;
     onDetach: (event: React.MouseEvent) => void;
 }
-const SubtaskMenu: FunctionComponent<SubtaskMenuProps> = ({ onEdit, onOpen, onDelete, onAdd, onDetach }) => {
+const SubtaskMenu: FunctionComponent<SubtaskMenuProps> = ({
+    subtaskId,
+    onEdit,
+    onOpen,
+    onDelete,
+    onAdd,
+    onDetach,
+}) => {
     return (
         <Popover
             content={
-                <Menu>
-                    <MenuItem icon={<Icon icon="edit-05" />} text={translate("Edit task")} onClick={onOpen} />
+                <Menu data-testid={`subtask-menu-${subtaskId}`}>
+                    <MenuItem
+                        icon={<Icon icon="edit-05" />}
+                        text={translate("Edit task")}
+                        onClick={onOpen}
+                        data-testid={`subtask-menu-open-task-${subtaskId}`}
+                    />
                     <MenuItem
                         icon={<Icon icon="edit-04" />}
                         text={`${translate("Edit inline")}...`}
                         onClick={onEdit}
+                        data-testid={`subtask-menu-edit-inline-${subtaskId}`}
                     />
                     <MenuItem
                         icon={<Icon icon="edit-04" />}
                         text={translate("Add subtask here")}
                         onClick={onAdd}
+                        data-testid={`subtask-menu-add-here-${subtaskId}`}
                     />
                     <MenuDivider />
                     <MenuItem
@@ -239,6 +257,7 @@ const SubtaskMenu: FunctionComponent<SubtaskMenuProps> = ({ onEdit, onOpen, onDe
                         text={translate("Detach from parent")}
                         onClick={onDetach}
                         intent={Intent.WARNING}
+                        data-testid={`subtask-menu-detach-${subtaskId}`}
                     />
                     <MenuDivider />
                     <MenuItem
@@ -246,13 +265,14 @@ const SubtaskMenu: FunctionComponent<SubtaskMenuProps> = ({ onEdit, onOpen, onDe
                         intent={Intent.DANGER}
                         icon={<Icon icon="trash" />}
                         onClick={onDelete}
+                        data-testid={`subtask-menu-delete-${subtaskId}`}
                     />
                 </Menu>
             }
             className="hiddable"
             placement="bottom-end"
         >
-            <RoundButton dashed icon="dots-vertical" />
+            <RoundButton dashed icon="dots-vertical" testId="subtask-menu-button" />
         </Popover>
     );
 };

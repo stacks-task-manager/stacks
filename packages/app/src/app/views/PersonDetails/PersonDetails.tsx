@@ -1240,6 +1240,7 @@ const FavoritePersonButton: FunctionComponent<IFavoritePersonButtonProps> = ({ p
                 size="small"
                 variant="minimal"
                 id="pd-favorite"
+                data-testid="person-favorite-button"
                 icon={
                     <Icon
                         icon={isFavorite ? "star-filled" : "star"}

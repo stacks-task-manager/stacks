@@ -1,4 +1,4 @@
-import { Locator, Page } from "@playwright/test";
+import { expect, Locator, Page } from "@playwright/test";
 
 export interface ActivityEntry {
     text: string;
@@ -23,11 +23,12 @@ export class ActivityLog {
     }
 
     public async open(): Promise<void> {
-        // The comments block is lazy-rendered inside the task-details scroller, so
-        // scroll the always-present divider into view to trigger the render first.
-        const divider = this.page.locator("#comments");
-        await divider.waitFor({ state: "attached" });
-        await divider.scrollIntoViewIfNeeded();
+        // Trigger lazy comments through the stable task scroller rather than a
+        // divider that can detach while the reloaded task finishes rendering.
+        const scroller = this.page.getByTestId("task-details-scroll-area");
+        await scroller.evaluateAll(elements => {
+            for (const element of elements) element.scrollTop = element.scrollHeight;
+        });
         await this.toggleLogs.waitFor({ state: "visible", timeout: 10000 });
         await this.toggleLogs.click();
         await this.list.waitFor({ state: "visible" });
@@ -35,6 +36,15 @@ export class ActivityLog {
 
     public async countEntries(): Promise<number> {
         return await this.entry.count();
+    }
+
+    public async expectRenameFromAuthor(title: string, author: string): Promise<void> {
+        await expect
+            .poll(async () => {
+                const entries = await this.getEntries();
+                return entries.some(entry => entry.text.includes(title) && entry.text.includes(author));
+            })
+            .toBe(true);
     }
 
     private async textsOf(element: Locator, tag: string): Promise<string[]> {

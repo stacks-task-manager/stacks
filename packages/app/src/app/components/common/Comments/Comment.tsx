@@ -69,12 +69,15 @@ export const Comment = React.memo(function Comment({ resourceId, comment, mine }
     }
 
     return (
-        <div className={classNames("comment", comment.type, mine ? "from-me" : "from-them")}>
+        <div
+            className={classNames("comment", comment.type, mine ? "from-me" : "from-them")}
+            data-testid={`task-comment-${comment.id}`}
+        >
             {comment.assignee && <Avatar person={comment.assignee} />}
 
             <div className="comment-content">
                 <div className="comment-header">
-                    <div className="comment-person">
+                    <div className="comment-person" data-testid={`task-comment-author-${comment.id}`}>
                         {comment.assignee && `${comment.assignee.firstName} ${comment.assignee.lastName}`}
 
                         <div className="comment-timestamp">
@@ -112,7 +115,12 @@ export const Comment = React.memo(function Comment({ resourceId, comment, mine }
                             className="comment-context-button"
                             placement="bottom-end"
                         >
-                            <Button variant="minimal" size="small" icon={<Icon icon="dots-vertical" />} />
+                            <Button
+                                variant="minimal"
+                                size="small"
+                                icon={<Icon icon="dots-vertical" />}
+                                data-testid={`task-comment-menu-${comment.id}`}
+                            />
                         </Popover>
                     ) : null}
                 </div>
@@ -123,6 +131,7 @@ export const Comment = React.memo(function Comment({ resourceId, comment, mine }
                     {comment.type === ACTIVITYTYPE.MESSAGE && isEditing ? (
                         <Grid>
                             <Editor
+                                contentTestId={`task-comment-content-${comment.id}`}
                                 onUpdate={handleChangeMessage}
                                 value={message}
                                 placeholder={translate("Add a comment")}

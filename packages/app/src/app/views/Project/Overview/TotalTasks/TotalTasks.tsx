@@ -16,7 +16,7 @@ export const TotalTasks: FunctionComponent<ITotalTasksProps> = ({ total, stacks 
         <Card>
             <h6 className={Classes.HEADING}>{translate("Total tasks")}</h6>
 
-            <div className="total-tasks">
+            <div className="total-tasks" data-testid="project-overview-total-tasks">
                 <CountUp end={total} duration={showAnimations ? 2 : 0} />
             </div>
 
