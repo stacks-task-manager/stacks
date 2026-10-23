@@ -181,7 +181,8 @@ describe("Activities", () => {
 
     test("Update activity with invalid ID", async () => {
         const updateData = {
-            description: "Updated activity description",
+            resourceId: "00000000-0000-4000-8000-000000000001",
+            content: "Updated activity description",
         };
 
         const res = await app.request("/api/activities/invalid-id", {
@@ -193,27 +194,23 @@ describe("Activities", () => {
             body: JSON.stringify(updateData),
         });
 
-        expect([200, 404]).toContain(res.status);
-        if (res.status === 200) {
-            const bodyInvalidIdPatch = await res.json();
-            expect(bodyInvalidIdPatch.success).toBe(true);
-        }
+        expect(res.status).toBe(400);
     });
 
     test("Delete activity with invalid ID", async () => {
+        const deleteData = {
+            resourceId: "00000000-0000-4000-8000-000000000001",
+        };
         const res = await app.request("/api/activities/invalid-id", {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
             },
+            body: JSON.stringify(deleteData),
         });
 
-        expect([200, 404]).toContain(res.status);
-        if (res.status === 200) {
-            const bodyInvalidIdDelete = await res.json();
-            expect(bodyInvalidIdDelete.success).toBe(true);
-        }
+        expect(res.status).toBe(400);
     });
 
     test("Access activities without authentication", async () => {

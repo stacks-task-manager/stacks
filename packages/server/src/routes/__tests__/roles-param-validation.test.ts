@@ -22,7 +22,7 @@ it("rejects malformed role IDs before update and allows a valid ID through", asy
     mocks.update.mockResolvedValue({ id: "role" });
     const app = mountRoles();
     const headers = { "Content-Type": "application/json" };
-    const body = JSON.stringify({ title: "Editor", access: { projects: { view: true } } });
+    const body = JSON.stringify({ title: "Editor", access: { projects: { read: true } } });
 
     const invalid = await app.request("/api/roles/not-a-uuid", { method: "PATCH", headers, body });
     expect(invalid.status).toBe(400);

@@ -42,8 +42,8 @@ describe("role management authorization", () => {
         const tenant = String(seededUser!.get("tenant"));
         const defaultRole = await RoleEntity.findOne({ where: { title: "User", tenant } });
         expect(defaultRole).not.toBeNull();
-        const defaultAccess = defaultRole!.get("access") as Record<string, { view?: boolean }>;
-        expect(defaultAccess[ROLE_SECTIONS.ROLES]?.view).not.toBe(true);
+        const defaultAccess = defaultRole!.get("access") as Record<string, { read?: boolean }>;
+        expect(defaultAccess[ROLE_SECTIONS.ROLES]?.read).not.toBe(true);
 
         const readOnlyRole = await RoleEntity.create({
             title: `Role read-only ${randomUUID()}`,
@@ -90,7 +90,7 @@ describe("role management authorization", () => {
         const foreignRole = await RoleEntity.create({
             title: `foreign role ${randomUUID()}`,
             description: "temporary security fixture",
-            access: { [ROLE_SECTIONS.PROJECTS]: { view: false } },
+            access: { [ROLE_SECTIONS.PROJECTS]: { read: false } },
             disabled: false,
             tenant: foreignTenantId,
             createdBy: admin.id,
@@ -115,7 +115,7 @@ describe("role management authorization", () => {
             app.request(path, init, { incoming: { socket: { remoteAddress: rateLimitIp } } });
         const roleData = {
             title: `temporary role ${randomUUID()}`,
-            access: { [ROLE_SECTIONS.PROJECTS]: { view: true } },
+            access: { [ROLE_SECTIONS.PROJECTS]: { read: true } },
         };
 
         const viewerListResponse = await request("/api/roles", { headers: viewer.headers });
@@ -149,7 +149,7 @@ describe("role management authorization", () => {
             headers: { ...viewer.headers, "Content-Type": "application/json" },
             body: JSON.stringify({
                 title: "attempted viewer role edit",
-                access: { [ROLE_SECTIONS.PROJECTS]: { view: true } },
+                access: { [ROLE_SECTIONS.PROJECTS]: { read: true } },
             }),
         });
         expect(viewerPatchResponse.status).toBe(403);
@@ -158,7 +158,7 @@ describe("role management authorization", () => {
             headers: { ...readOnly.headers, "Content-Type": "application/json" },
             body: JSON.stringify({
                 title: "attempted read-only role edit",
-                access: { [ROLE_SECTIONS.PROJECTS]: { view: true } },
+                access: { [ROLE_SECTIONS.PROJECTS]: { read: true } },
             }),
         });
         expect(readOnlyPatchResponse.status).toBe(403);
@@ -176,7 +176,7 @@ describe("role management authorization", () => {
             headers: { ...admin.headers, "Content-Type": "application/json" },
             body: JSON.stringify({
                 title: "forged cross-tenant role edit",
-                access: { [ROLE_SECTIONS.PROJECTS]: { view: true, create: true } },
+                access: { [ROLE_SECTIONS.PROJECTS]: { read: true, write: true } },
             }),
         });
         const unknownPatchResponse = await request(`/api/roles/${randomUUID()}`, {
@@ -184,7 +184,7 @@ describe("role management authorization", () => {
             headers: { ...admin.headers, "Content-Type": "application/json" },
             body: JSON.stringify({
                 title: "forged unknown role edit",
-                access: { [ROLE_SECTIONS.PROJECTS]: { view: true, create: true } },
+                access: { [ROLE_SECTIONS.PROJECTS]: { read: true, write: true } },
             }),
         });
         expect(foreignPatchResponse.status).toBe(404);
@@ -217,7 +217,7 @@ describe("role management authorization", () => {
             headers: { ...admin.headers, "Content-Type": "application/json" },
             body: JSON.stringify({
                 title: "updated by role admin",
-                access: { [ROLE_SECTIONS.PROJECTS]: { view: true, create: true } },
+                access: { [ROLE_SECTIONS.PROJECTS]: { read: true, write: true } },
                 tenant: foreignTenantId,
                 createdBy: foreignActorId,
                 updatedBy: foreignActorId,

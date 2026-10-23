@@ -22,7 +22,7 @@ describe("Roles API", () => {
             title: "Test Role",
             description: "Test role description",
             access: {
-                projects: { view: true },
+                projects: { read: true },
             },
         };
 
@@ -46,7 +46,7 @@ describe("Roles API", () => {
                 ...headers,
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ title: "attempted update", access: { projects: { view: true } } }),
+            body: JSON.stringify({ title: "attempted update", access: { projects: { read: true } } }),
         });
         expect(patchRes.status).toBe(403);
     });

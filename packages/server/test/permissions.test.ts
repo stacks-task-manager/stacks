@@ -24,8 +24,8 @@ describe("Roles API", () => {
             title: "Project Manager",
             description: "Manages projects and tasks",
             access: {
-                projects: { create: true, view: true },
-                tasks: { create: true, view: true },
+                projects: { read: true, write: true },
+                tasks: { read: true, write: true },
             },
         };
 
@@ -73,7 +73,7 @@ describe("Roles API", () => {
             body: JSON.stringify({
                 title: "Updater",
                 description: "Updated description",
-                access: { projects: { create: true, view: true } },
+                access: { projects: { read: true, write: true } },
             }),
         });
         expect(res.status).toBe(403);
