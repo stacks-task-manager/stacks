@@ -1,6 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
 
 import globals from "./playwright/config/globals";
+import { e2eBaseUrl } from "./playwright/config/runtime";
 
 /**
  * @see https://playwright.dev/docs/test-configuration
@@ -27,7 +28,7 @@ export default defineConfig({
     ],
     use: {
         actionTimeout: 10000,
-        baseURL: "http://localhost:3000",
+        baseURL: e2eBaseUrl,
         trace: "on-first-retry",
     },
     projects: [

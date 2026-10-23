@@ -48,17 +48,19 @@ export const DateRangeComponent: FunctionComponent<DateRangePickerProps> = ({
         []
     );
 
-    const shortcutsRange: IDatePickerRangeShortcutExtra[] = useMemo(() => {
+    const shortcutsRange = useMemo<(IDatePickerRangeShortcutExtra & { id: string })[]>(() => {
         const now = new Date();
         const resetTime = (date: Date) => setHours(setMinutes(date, 0), 12);
 
         return [
             {
+                id: "this-week",
                 title: translate("This week"),
                 label: `${format(startOfWeek(now), "d")} - ${format(endOfWeek(now), "d MMM")}`,
                 dateRange: [resetTime(startOfWeek(now)), resetTime(endOfWeek(now))],
             },
             {
+                id: "next-week",
                 title: translate("Next week"),
                 label: `${format(startOfWeek(addWeeks(now, 1)), "d")} - ${format(
                     endOfWeek(addWeeks(now, 1)),
@@ -67,11 +69,13 @@ export const DateRangeComponent: FunctionComponent<DateRangePickerProps> = ({
                 dateRange: [resetTime(startOfWeek(addWeeks(now, 1))), resetTime(endOfWeek(addWeeks(now, 1)))],
             },
             {
+                id: "this-month",
                 title: translate("This month"),
                 label: `${format(startOfMonth(now), "d")} - ${format(endOfMonth(now), "d MMM")}`,
                 dateRange: [resetTime(startOfMonth(now)), resetTime(endOfMonth(now))],
             },
             {
+                id: "next-month",
                 title: translate("Next month"),
                 label: `${format(startOfMonth(addMonths(now, 1)), "d")} - ${format(
                     endOfMonth(addMonths(now, 1)),
@@ -115,15 +119,16 @@ export const DateRangeComponent: FunctionComponent<DateRangePickerProps> = ({
                         );
                     })}
                     <MenuDivider title={translate("Date range")} />
-                    {shortcutsRange.map((shortcut: IDatePickerRangeShortcutExtra, index: number) => {
+                    {shortcutsRange.map(shortcut => {
                         return (
                             <MenuItem
-                                key={index}
+                                key={shortcut.id}
                                 text={shortcut.title}
                                 label={shortcut.label}
                                 labelClassName={Classes.TEXT_SMALL}
                                 shouldDismissPopover={false}
                                 onClick={() => handleShortcutRangeSelection(shortcut.dateRange)}
+                                data-testid={`date-range-picker-range-${shortcut.id}`}
                             />
                         );
                     })}

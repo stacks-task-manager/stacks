@@ -54,6 +54,7 @@ import { reorderWithAfter } from "app/utils/array";
 import Dialog from "app/utils/dialog";
 import sound from "app/utils/sound";
 import { stripMd } from "app/utils/string";
+import { shouldLogTaskChange } from "app/utils/taskLog";
 import { CopyMoveStore } from "../copymove";
 import { showPermissions } from "../global";
 import { NavigationStore } from "../navigation";
@@ -599,7 +600,7 @@ const alertDetach = async (taskId: string) => {
 
     if (response) {
         await update(taskId, {
-            parent: undefined,
+            parent: null,
         });
     }
 
@@ -1092,9 +1093,10 @@ const archiveAlert = async (taskId: string) => {
         Intent.WARNING
     );
 
-    if (!result) return;
+    if (!result) return false;
 
     await archive(taskId);
+    return true;
 };
 
 const unarchive = async (taskId: string, stackId?: string) => {
@@ -1447,8 +1449,7 @@ const runRepeatAutomation = async (task: ITask): Promise<void> => {
 
 const TaskLog = (task: ITask, update: Partial<ITask>) => {
     for (const field in update) {
-        if (field == null) continue;
-        if (["updated", "created", "comment"].includes(field)) continue;
+        if (field == null || !shouldLogTaskChange(field)) continue;
 
         let before = task[field as keyof ITask];
         let after = (update as Partial<ITask>)[field as keyof Partial<ITask>];

@@ -542,12 +542,6 @@ const TableCell: FunctionComponent<TablePersistentCellProps<IPerson>> = ({ row, 
                     </Tooltip>
                 )}
 
-                {row.token && row.token.length && (
-                    <Tooltip content="User account not yet activated" placement="top">
-                        <Icon icon="key-01" color={Colors.BLUE3} />
-                    </Tooltip>
-                )}
-
                 <Tooltip
                     content="Click to copy person info"
                     placement="top"

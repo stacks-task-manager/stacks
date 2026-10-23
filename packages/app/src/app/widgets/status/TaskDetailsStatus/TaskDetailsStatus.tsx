@@ -13,6 +13,7 @@ interface ITaskDetailsStatusProps {
     disabled?: boolean;
     canClear?: boolean;
     minimal?: boolean;
+    testId?: string;
 }
 export const TaskDetailsStatus: FunctionComponent<ITaskDetailsStatusProps> = ({
     taskId,
@@ -20,6 +21,7 @@ export const TaskDetailsStatus: FunctionComponent<ITaskDetailsStatusProps> = ({
     disabled,
     canClear,
     minimal,
+    testId,
 }) => {
     useElementHotkey("shift+y", "td-status");
 
@@ -38,16 +40,33 @@ export const TaskDetailsStatus: FunctionComponent<ITaskDetailsStatusProps> = ({
             onToggle={handleSetStatus}
         >
             {value ? (
-                <ProjectStatus
-                    status={value}
-                    interactive
-                    id="td-status"
-                    disabled={disabled}
-                    onRemove={value && canClear ? () => handleSetStatus() : undefined}
-                />
+                <span data-testid={testId} style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
+                    <ProjectStatus
+                        status={value}
+                        interactive
+                        id="td-status"
+                        testId={`${testId}-value`}
+                        disabled={disabled}
+                    />
+                    {canClear && (
+                        <RoundButton
+                            testId={`${testId}-clear`}
+                            icon="cross"
+                            minimal
+                            small
+                            title={translate("Clear status")}
+                            disabled={disabled}
+                            onClick={event => {
+                                event.stopPropagation();
+                                handleSetStatus();
+                            }}
+                        />
+                    )}
+                </span>
             ) : (
                 <RoundButton
                     id="td-status"
+                    testId={testId}
                     dashed
                     title={minimal ? undefined : translate("Add status")}
                     icon={minimal ? "activity" : undefined}

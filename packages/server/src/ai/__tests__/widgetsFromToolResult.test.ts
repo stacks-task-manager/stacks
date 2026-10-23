@@ -21,6 +21,14 @@ const withEnv = (value: string | undefined, fn: () => void) => {
 };
 
 describe("ai.widgetsFromToolResult", () => {
+    it("auto-navigates explicit filtered-task requests with all query parameters", () => {
+        withEnv("true", () => {
+            const hashPath = "/tasks?assignees=user-1&overdue=true";
+            expect(widgetsFromToolResult("findTasks", { hashPath })).toEqual([
+                { type: "redirect", label: "Show tasks", hashPath },
+            ]);
+        });
+    });
     it("returns a link widget for createTask", () => {
         const widgets = widgetsFromToolResult("createTask", {
             id: "task-1",
@@ -43,10 +51,12 @@ describe("ai.widgetsFromToolResult", () => {
     });
 
     it("returns a link widget for findTasks", () => {
-        const widgets = widgetsFromToolResult("findTasks", {
-            hashPath: "/inbox",
+        withEnv(undefined, () => {
+            const widgets = widgetsFromToolResult("findTasks", {
+                hashPath: "/inbox",
+            });
+            expect(widgets).toEqual([{ type: "button", label: "Show tasks", hashPath: "/inbox" }]);
         });
-        expect(widgets).toEqual([{ type: "button", label: "Show tasks", hashPath: "/inbox" }]);
     });
 
     it("returns a button widget for navigate when auto redirect is off", () => {

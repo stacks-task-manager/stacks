@@ -412,6 +412,49 @@ describe("loader CRUD helpers", () => {
         expect(record).toEqual({ id: "row-1", title: "Updated" });
     });
 
+    it("updateOne reloads the record when the dialect omits returned rows", async () => {
+        const entity = {
+            findOne: vi
+                .fn()
+                .mockResolvedValueOnce({
+                    id: "row-1",
+                    title: "Original",
+                    PermissionEntity: {
+                        id: "perm-1",
+                        isPublic: true,
+                        visibleUsers: [],
+                        visibleRoles: [],
+                        owner: "user-1",
+                    },
+                })
+                .mockResolvedValueOnce({
+                    id: "row-1",
+                    title: "Updated",
+                    PermissionEntity: {
+                        id: "perm-1",
+                        isPublic: true,
+                        visibleUsers: [],
+                        visibleRoles: [],
+                        owner: "user-1",
+                    },
+                }),
+            update: vi.fn().mockResolvedValue([1]),
+        };
+
+        const record = await runWithContext(() =>
+            updateOne({
+                entity,
+                id: "row-1",
+                data: { title: "Updated" },
+            })
+        );
+
+        expect(record).toEqual(
+            expect.objectContaining({ id: "row-1", title: "Updated", permissions: expect.any(Object) })
+        );
+        expect(entity.findOne).toHaveBeenCalledTimes(2);
+    });
+
     it("updateOne rejects visible records that are owned by someone else", async () => {
         const entity = {
             findOne: vi.fn().mockResolvedValue({

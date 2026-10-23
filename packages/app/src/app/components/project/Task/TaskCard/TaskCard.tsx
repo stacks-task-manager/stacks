@@ -194,6 +194,7 @@ export const TaskCardComponent: FunctionComponent<TaskCardComponentProps> = prop
             dragType={dragType}
             isDraggable={isDraggable}
             done={task.done}
+            data-id={task.id}
             {...restProps}
         >
             <div id={`task-${task.id}`} className="task-scroll-anchor" />

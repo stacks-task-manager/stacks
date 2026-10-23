@@ -17,7 +17,7 @@ A getting-started guide for new contributors landing in `packages/app`. The goal
 ## 1. Stack in one paragraph
 
 - **Framework**: React 18 + TypeScript, bundled with Webpack 5 (no CRA, no Vite).
-- **Router**: `react-router-dom` v6, mounted under [`HashRouter`](../src/index.tsx) — URLs use `#/…` (e.g. `http://localhost:3000/#/project/abc`).
+- **Router**: `react-router-dom` v6, mounted under [`BrowserRouter`](../src/index.tsx) with basename `/app` — for example, `http://localhost:3000/app/project/abc`. Legacy `#/…` routes are normalized before mounting.
 - **State**: a small in-house entity store (`app/hooks/store`) with [`immer`](https://immerjs.github.io/immer/) for mutations. One slice per domain under `app/store/`.
 - **API**: a single shared Axios instance ([`app/api/request.ts`](../src/app/api/request.ts)) with domain modules in `app/api/`. See [API_CLIENT.md](API_CLIENT.md).
 - **Realtime**: a WebSocket client (`window.updatePoller`) connected to the server's `/ws` endpoint, with REST polling for fallback. See [ARCHITECTURE.md](ARCHITECTURE.md#real-time-updates).
@@ -25,7 +25,7 @@ A getting-started guide for new contributors landing in `packages/app`. The goal
 - **Rich text**: Tiptap 3 with a curated extension set.
 - **Drag & drop**: `@hello-pangea/dnd` for the board, `@minoru/react-dnd-treeview` for the sidebar tree.
 - **Calendar**: FullCalendar. **Gantt**: vendored `rc-gantt` (under `third-party/`).
-- **i18n**: `@stacks/translations` + JSON files under `src/app/locale/`.
+- **i18n**: `@stacks/translations` + UI locale JSON under `packages/server/locales/app/`, managed through `@stacks/locales-tui`.
 - **Tests**: Jest (configured but the test surface is thin — see "Conventions").
 
 ## 2. Boot sequence
@@ -38,7 +38,7 @@ A getting-started guide for new contributors landing in `packages/app`. The goal
 3. Create the realtime client     → window.updatePoller (connects to /ws)
 4. await BootAPI.load()           → translations, license, preferences, aiChat
 5. Hydrate stores                 → LicenseActions.setLicense / PreferencesActions.set / …
-6. createRoot().render(<HashRouter><App /></HashRouter>)
+6. createRoot().render(<BrowserRouter basename="/app"><App /></BrowserRouter>)
 ```
 
 Two implications you'll hit on day one:
@@ -63,14 +63,14 @@ Everything lives under `src/app/`. The folders are not interchangeable — knowi
 | [`views/`](../src/app/views/)                 | Top-level routed pages (`Home/`, `Project/`, `MyTasks/`, …). One folder per route group. The `Project/` folder contains sub-views (`Board`, `Gantt`, `Table`, `Time`, …).                                     |
 | [`utils/`](../src/app/utils/)                 | Stateless helpers — date math, color tokens, dialog wrappers, the `UpdatePoller` class itself, sound effects, storage shims.                                                                                  |
 | [`icons/`](../src/app/icons/)                 | SVG sprite + the React `<Icon>` wrapper. Regenerate the sprite with `yarn workspace @stacks/app sprites` after adding an SVG to `packages/app/svg/`.                                                          |
-| [`locale/`](../src/app/locale/)               | Translation tables, keyed by locale code. Edit with [`@stacks/locales-tui`](../../../docs/packages/locales-tui.md).                                                                                           |
+| [UI locales](../../server/locales/app/)       | Translation tables live in `packages/server/locales/app/`, outside this workspace. Edit with [`@stacks/locales-tui`](../../../docs/packages/locales-tui.md).                                                  |
 | [`styles/`](../src/app/styles/)               | Global SCSS tokens, mixins, Blueprint overrides. Per-component styles live next to the component as `_X.scss`.                                                                                                |
 
 **Import paths use `app/…`, not relative paths.** The webpack config sets `resolve.modules: [src/, node_modules/]`, so `import { TasksAPI } from "app/api"` and `import { useProject } from "app/hooks"` resolve from inside `src/`.
 
 ## 4. How to add a feature (worked example)
 
-Say you want to add a new "Goals" page accessible at `#/goals`. Roughly:
+Say you want to add a new "Goals" page accessible at `/app/goals`. Roughly:
 
 1. **API client** — `src/app/api/goals.ts`:
 
@@ -196,7 +196,7 @@ yarn workspace @stacks/app sprites        # regenerate the SVG icon sprite
 
 ## 6. Conventions & gotchas
 
-- **HashRouter, not BrowserRouter.** Internal links should be relative paths handled by `<Link to="…">`; the `#/` is implicit. If you paste `http://localhost:3000/project/foo` into a browser, the server won't know where to send you — the URL is `http://localhost:3000/#/project/foo`.
+- **BrowserRouter with basename `/app`.** Use router-managed paths such as `<Link to="/project/foo">`; the router supplies `/app`. Direct URLs use `http://localhost:3000/app/project/foo` through the API server. Legacy hash URLs are normalized at boot.
 - **All mutations to store state go through actions.** Components never call `Store.set(...)` directly.
 - **Selectors must pass `shallowEqual`** (or a custom equality) to `Store.use(...)` when they return an object/array, or you'll re-render on every store change.
 - **Don't reach into a store inside a component without `.use()`.** `Store.get()` is for actions and getters; using it inside render won't subscribe the component to updates.
@@ -209,7 +209,7 @@ yarn workspace @stacks/app sprites        # regenerate the SVG icon sprite
 
 ## 7. FAQ
 
-- **Why HashRouter?** The server serves the dev app at `/login` and `/` from the same origin, and HashRouter avoids needing the server to know every client-side route. It also means you can `file://` open a built bundle if you ever need to.
+- **How do direct app URLs work?** The server authenticates `/app` and `/app/*`, proxies them to Webpack in development, and serves the app shell for client routes in production. `BrowserRouter` resolves the path below `/app`; legacy `#/…` URLs are normalized by `normalizeLegacyHashRoute()` before React mounts.
 - **Why a custom entity store instead of Redux / Zustand?** It pre-dates them in this codebase and the API is small enough that switching costs more than it saves. The `entity()` factory is in [`src/app/hooks/store/entity.ts`](../src/app/hooks/store/entity.ts) — read it; it's ~100 lines.
 - **Where does the user come from?** The server's `/api/boot` endpoint returns `{ translations, license, preferences, aiChat }`. The current user is read via the `useMe()` hook (which selects from `PeopleStore`). `PeopleActions.load()` is fired in `App.tsx`'s mount effect.
 - **What is `window.updatePoller`?** A long-lived WebSocket client at `/ws`. It exposes `instanceId` (a UUID used as the `X-Instance-ID` header on every Axios request, so the server can tell which tab/client emitted a write) and an `on(section, callback)` subscription API used by [`useUpdates()`](../src/app/hooks/updates.ts) to keep stores in sync with server-side changes. See [ARCHITECTURE.md → Real-time updates](ARCHITECTURE.md#real-time-updates).

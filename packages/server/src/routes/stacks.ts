@@ -44,6 +44,7 @@ stacks.patch(
     asyncHandler(async (c: Context) => {
         const stacksData = c.req.valid("json");
         const { id } = c.req.param();
+        parseUuidParam(id);
         await StacksLoader.update(id, stacksData);
         return c.replySuccess();
     })
@@ -78,6 +79,7 @@ stacks.get(
     "/:id",
     asyncHandler(async (c: Context) => {
         const { id } = c.req.param();
+        parseUuidParam(id);
         const stack = await StacksLoader.getOne(id);
         return c.replySuccess(stack);
     })

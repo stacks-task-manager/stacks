@@ -2,6 +2,7 @@
 /**
  * AI chat UI store (open, draft, history pointers).
  */
+import { createChatId } from "app/utils/aiChat";
 import { produce } from "immer";
 import type { AiChatWidget } from "@stacks/types";
 import { entity } from "app/hooks/store";
@@ -27,6 +28,7 @@ export interface IAiChatStore {
     activeClientRequestId: string | null;
     streamingAssistantContent: string;
     messages: AiChatMessage[];
+    conversationId: string;
 }
 
 const defaultState: IAiChatStore = {
@@ -36,6 +38,7 @@ const defaultState: IAiChatStore = {
     activeClientRequestId: null,
     streamingAssistantContent: "",
     messages: [],
+    conversationId: createChatId("conversation"),
 };
 
 function trimMessages(list: AiChatMessage[]): AiChatMessage[] {
@@ -49,11 +52,16 @@ export const AiChatStore = entity<IAiChatStore>({ ...defaultState }, [
     {
         init: (origInit, ent) => () => {
             origInit();
-            const stored = getStorage<{ messages?: AiChatMessage[] }>(AI_CHAT_MESSAGES_KEY, true, {});
+            const stored = getStorage<{ messages?: AiChatMessage[]; conversationId?: string }>(
+                AI_CHAT_MESSAGES_KEY,
+                true,
+                {}
+            );
             const messages = trimMessages(Array.isArray(stored?.messages) ? stored.messages : []);
             ent.set(
                 produce((s: IAiChatStore) => {
                     s.messages = messages;
+                    if (typeof stored.conversationId === "string") s.conversationId = stored.conversationId;
                 })
             );
         },

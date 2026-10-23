@@ -2,21 +2,28 @@
 /**
  * Session-based login, password recovery, and reset HTML flows (cookies + redirects).
  */
-import { TenantEntity, UserEntity } from "@stacks/db";
+import { sequelize, UserEntity } from "@stacks/db";
+import { Op } from "sequelize";
 import { EMAIL_TEMPLATES } from "@stacks/types";
 import { compare, hash } from "bcryptjs";
-import type { Context } from "hono";
+import type { Context, MiddlewareHandler } from "hono";
 import { Hono } from "hono";
 import { deleteCookie, getSignedCookie, setCookie, setSignedCookie } from "hono/cookie";
-import { sign } from "hono/jwt";
 import z from "zod/v4";
-import { getCookieSecret, getJwtSecret } from "../config/secrets";
+import { getCookieSecret } from "../config/secrets";
+import { Logger } from "../utils/logger";
+import { authCookieOptions, HINT_COOKIE_OPTS, isSecureCookieRequest } from "../config/session";
+import { browserMutationAllowed, browserRequestToken, rotateBrowserNonce } from "../middleware/auth";
 import { isPasswordRecoveryEnabled, isRegistrationEnabled } from "../config/features";
 import { translate } from "@stacks/translations";
 import { validator } from "../middleware/validator";
 import { EmailsLoader } from "../loaders";
 import { createPasswordResetToken, hashAccountToken } from "../services/accountTokens";
+import { issueSession, revokeAllUserSessions } from "../services/sessions";
 import type { User } from "../types";
+import { getClientIP } from "../utils/clientIp";
+import { enforceAuthAttemptLimit } from "../utils/authRateLimit";
+import { resolveAccountState } from "../middleware/auth";
 import {
     LoginErrorSchema,
     LoginSchema,
@@ -61,6 +68,14 @@ async function takeLoginFlash(c: Context): Promise<LoginFlashPayload> {
     }
 }
 
+/** Rejects cross-site form posts before any credential or token work runs. */
+const requireSameSite: MiddlewareHandler = async (c, next) => {
+    if (!(await browserMutationAllowed(c, "none"))) {
+        return c.text(translate("Cross site request rejected"), 403);
+    }
+    await next();
+};
+
 /** GET `/` — Renders login template with query/flash errors. */
 login.get("/", validator(LoginErrorSchema, "query"), async c => {
     try {
@@ -76,7 +91,9 @@ login.get("/", validator(LoginErrorSchema, "query"), async c => {
             success.push(Buffer.from(query.s, "base64").toString());
         }
 
+        const csrf = await browserRequestToken(c);
         return c.replyHtml("login", {
+            csrf,
             errors,
             success,
             registrationEnabled: isRegistrationEnabled(),
@@ -88,12 +105,14 @@ login.get("/", validator(LoginErrorSchema, "query"), async c => {
 });
 
 /** POST `/` — Validates credentials, sets auth cookies, redirects to `/app`. */
-login.post("/", async c => {
+login.post("/", requireSameSite, async c => {
     try {
         const loginData = await c.req.parseBody();
         LoginSchema.parse(loginData);
 
         const { email, password } = loginData;
+        const limited = await enforceAuthAttemptLimit(c, "login", String(email));
+        if (limited) return limited;
 
         // Find user
         const user = await UserEntity.findOne({ where: { email } });
@@ -110,14 +129,14 @@ login.post("/", async c => {
             return c.redirect("/login");
         }
 
-        // Find tenant
-        const tenant = await TenantEntity.findByPk(user.get("tenant") as unknown as number);
-        if (!tenant) {
+        const account = await resolveAccountState(String(user.get("id")));
+        if (!account.ok) {
             await setLoginFlash(c, { errors: ["Invalid email or password"] });
             return c.redirect("/login");
         }
+        const activeUser = account.user;
 
-        if (user.get("token") && (user.get("token") as string).length > 0) {
+        if (activeUser.get("token") && (activeUser.get("token") as string).length > 0) {
             await setLoginFlash(c, {
                 errors: [
                     "User account not yet activated. Please click on the link in the email to activate your account.",
@@ -125,22 +144,17 @@ login.post("/", async c => {
             });
             return c.redirect("/login");
         }
-        if (user.get("disabled")) {
-            await setLoginFlash(c, { errors: ["User account disabled. Please contact support."] });
-            return c.redirect("/login");
-        }
+        const { token } = await issueSession(String(activeUser.get("id")), String(activeUser.get("tenant")));
 
-        // Generate JWT token
-        const payload = {
-            uid: user.get("id"),
-            exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7, // 7 days
-        };
-        const token = await sign(payload, getJwtSecret());
-
-        // Set cookie with the token
-        await setSignedCookie(c, "auth_token", token, getCookieSecret());
-        await setCookie(c, "uid", `${payload.uid}`);
-        await setCookie(c, "tenant", `${tenant.get("id")}`);
+        await setSignedCookie(
+            c,
+            "auth_token",
+            token,
+            getCookieSecret(),
+            authCookieOptions(token, isSecureCookieRequest(c.req.header("x-forwarded-proto")))
+        );
+        await setCookie(c, "uid", String(activeUser.get("id")), HINT_COOKIE_OPTS);
+        await rotateBrowserNonce(c);
 
         // Redirect to home or dashboard
         return c.redirect("/app");
@@ -162,71 +176,65 @@ login.get("/password-recovery", async c => {
         const errors = [...(flash.errors ?? [])];
         const recoveryToken = flash.recoveryToken;
 
-        return c.replyHtml("password-recovery", { errors, recoveryToken });
+        const csrf = await browserRequestToken(c);
+        return c.replyHtml("password-recovery", { csrf, errors, recoveryToken });
     } catch (error) {
         return c.text("Password recover page not found", 404);
     }
 });
 
-/** POST `/password-recovery` — Starts recovery flow and redirects. */
-login.post("/password-recovery", async c => {
+/** POST `/password-recovery` — Queues a reset link without revealing which accounts exist. */
+login.post("/password-recovery", requireSameSite, async c => {
     if (!isPasswordRecoveryEnabled()) {
         return c.text(translate("Password recovery is disabled by the administrator"), 403);
     }
     try {
         const recoveryData = await c.req.parseBody();
         PasswordRecoverySchema.parse(recoveryData);
+        const limited = await enforceAuthAttemptLimit(c, "recovery", String(recoveryData.email));
+        if (limited) return limited;
 
         const userEntity = await UserEntity.findOne({ where: { email: recoveryData.email } });
+        const eligible =
+            userEntity &&
+            !userEntity.get("disabled") &&
+            !userEntity.get("system") &&
+            !userEntity.get("deleted");
 
-        const recoveryErrors: string[] = [];
-        if (!userEntity) {
-            recoveryErrors.push("Invalid email");
-        } else if (userEntity.get("token") && (userEntity.get("token") as string).length > 0) {
-            recoveryErrors.push(
-                "User account not yet activated. Please click on the link in the email to activate your account."
-            );
-        } else if (userEntity.get("disabled")) {
-            recoveryErrors.push("User account disabled. Please contact support.");
-        } else if (userEntity.get("system")) {
-            recoveryErrors.push("Unauthorized password reset. Please contact support.");
-        }
-
-        if (recoveryErrors.length) {
-            await setLoginFlash(c, { errors: recoveryErrors });
-            return c.redirect("/login/password-recovery");
-        }
-
-        const reset = createPasswordResetToken();
-        userEntity!.set("passwordResetTokenHash", reset.hash);
-        userEntity!.set("passwordResetTokenExpiresAt", reset.expiresAt);
-        await userEntity!.save();
-
-        const queued = await EmailsLoader.queueEmail(
-            String(userEntity!.get("id")),
-            {
-                userName: `${userEntity!.get("firstName")} ${userEntity!.get("lastName")}`,
-                resetLink: `/login/password-reset?token=${reset.token}`,
-                expirationTime: "1 hour",
-                ipAddress: c.req.header("x-forwarded-for"),
-                userAgent: c.req.header("user-agent"),
-            },
-            EMAIL_TEMPLATES.PASSWORD_RESET,
-            c.get("locale") || "en",
-            userEntity!.toJSON() as User
-        );
-        if (!queued) {
-            userEntity!.set("passwordResetTokenHash", null);
-            userEntity!.set("passwordResetTokenExpiresAt", null);
+        if (eligible) {
+            const reset = createPasswordResetToken();
+            userEntity!.set("passwordResetTokenHash", reset.hash);
+            userEntity!.set("passwordResetTokenExpiresAt", reset.expiresAt);
             await userEntity!.save();
-            await setLoginFlash(c, { errors: ["Password recovery email could not be queued"] });
-            return c.redirect("/login/password-recovery");
+
+            const queued = await EmailsLoader.queueEmail(
+                String(userEntity!.get("id")),
+                {
+                    userName: `${userEntity!.get("firstName")} ${userEntity!.get("lastName")}`,
+                    resetLink: `/login/password-reset?token=${reset.token}`,
+                    expirationTime: "1 hour",
+                    ipAddress: getClientIP(c),
+                    userAgent: c.req.header("user-agent"),
+                },
+                EMAIL_TEMPLATES.PASSWORD_RESET,
+                c.get("locale") || "en",
+                userEntity!.toJSON() as User
+            );
+            if (!queued) {
+                userEntity!.set("passwordResetTokenHash", null);
+                userEntity!.set("passwordResetTokenExpiresAt", null);
+                await userEntity!.save();
+                Logger.security(
+                    "Password recovery email could not be queued",
+                    "medium",
+                    { email: recoveryData.email },
+                    c
+                );
+            }
         }
 
-        await setLoginFlash(c, {
-            success: ["Check your email for a password reset link."],
-        });
-        return c.redirect("/login");
+        await setLoginFlash(c, { errors: [translate("Password recovery link sent if the account exists")] });
+        return c.redirect("/login/password-recovery");
     } catch (error) {
         if (error instanceof z.ZodError) {
             await setLoginFlash(c, { errors: error.issues.map(issue => issue.message) });
@@ -253,14 +261,15 @@ login.get("/password-reset", async c => {
         if (!user || !expiresAt || expiresAt.getTime() <= Date.now()) {
             return c.text(translate("Password reset link is invalid or expired"), 400);
         }
-        return c.replyHtml("password-reset", { token, email: user.get("email") });
+        const csrf = await browserRequestToken(c);
+        return c.replyHtml("password-reset", { csrf, token, email: user.get("email") });
     } catch (error) {
         return c.text("Password reset page not found", 404);
     }
 });
 
 /** POST `/password-reset` — Changes a password after validating the emailed token. */
-login.post("/password-reset", async c => {
+login.post("/password-reset", requireSameSite, async c => {
     if (!isPasswordRecoveryEnabled()) {
         return c.text(translate("Password recovery is disabled by the administrator"), 403);
     }
@@ -274,10 +283,35 @@ login.post("/password-reset", async c => {
             return c.text(translate("Password reset link is invalid or expired"), 400);
         }
 
-        user.set("password", await hash(resetData.password1, 10));
-        user.set("passwordResetTokenHash", null);
-        user.set("passwordResetTokenExpiresAt", null);
-        await user.save();
+        const tokenHash = hashAccountToken(resetData.token);
+        const transaction = await sequelize.transaction();
+        try {
+            const [claimed] = await UserEntity.update(
+                {
+                    password: await hash(resetData.password1, 10),
+                    passwordResetTokenHash: null,
+                    passwordResetTokenExpiresAt: null,
+                },
+                {
+                    where: {
+                        id: user.get("id"),
+                        passwordResetTokenHash: tokenHash,
+                        passwordResetTokenExpiresAt: { [Op.gt]: new Date() },
+                    },
+                    returning: false,
+                    transaction,
+                }
+            );
+            if (claimed !== 1) {
+                await transaction.rollback();
+                return c.text(translate("Password reset link is invalid or expired"), 400);
+            }
+            await revokeAllUserSessions(String(user.get("id")), transaction);
+            await transaction.commit();
+        } catch (error) {
+            await transaction.rollback();
+            throw error;
+        }
         await setLoginFlash(c, { success: ["Your password has been reset. You can now log in."] });
         return c.redirect("/login");
     } catch (error) {

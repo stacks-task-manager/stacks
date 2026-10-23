@@ -76,7 +76,9 @@ export const EstimatedSpent: FunctionComponent<IEstimatedSpentProps> = ({
                                 <i className="bg-primary" />
                                 {translate("Total Estimates")}
                             </div>
-                            <strong>{formatDuration(estimatedTotal)}</strong>
+                            <strong data-testid="project-overview-estimated-total">
+                                {formatDuration(estimatedTotal)}
+                            </strong>
                         </div>
                         <div className="overview-legend-row">
                             <div>

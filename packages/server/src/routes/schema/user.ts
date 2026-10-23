@@ -4,11 +4,21 @@
  */
 import { z } from "zod/v4";
 
+import { isAcceptableNewPassword } from "../../utils/passwordPolicy";
+
+/** Account credentials are 32 random bytes rendered as lowercase hex. */
+export const AccountTokenSchema = z.string().regex(/^[0-9a-f]{64}$/);
+
+/** A password being written must satisfy the policy before bcrypt ever sees it. */
+const NewPasswordSchema = z.string().refine(isAcceptableNewPassword, {
+    message: "New password must be at least 12 characters and at most 72 bytes",
+});
+
 /** Public registration against a tenant and default role. */
 export const UserRegisterSchema = z
     .object({
         email: z.email(),
-        password: z.string().min(8),
+        password: NewPasswordSchema,
         tenant: z.guid(),
         firstName: z.string(),
         lastName: z.string(),
@@ -37,16 +47,12 @@ export const NewPersonSchema = z.object({
 /** Completes signup from emailed token and sets password. */
 export const UserActivationSchema = z
     .object({
-        token: z.string(),
-        password1: z.string(),
+        token: AccountTokenSchema,
+        password1: NewPasswordSchema,
         password2: z.string().optional(),
     })
     .refine(({ password1, password2 }) => password1 === password2, {
         message: "Passwords must match",
-        path: ["password"],
-    })
-    .refine(({ password1 }) => password1.length >= 8, {
-        message: "Password must be at least 8 characters long",
         path: ["password"],
     });
 
@@ -68,13 +74,13 @@ export const PasswordRecoverySchema = z.object({
 });
 
 export const PasswordResetQuerySchema = z.object({
-    token: z.string().length(64),
+    token: AccountTokenSchema,
 });
 
 export const PasswordResetSchema = z
     .object({
-        token: z.string().length(64),
-        password1: z.string().min(8),
+        token: AccountTokenSchema,
+        password1: NewPasswordSchema,
         password2: z.string(),
     })
     .refine(({ password1, password2 }) => password1 === password2, {

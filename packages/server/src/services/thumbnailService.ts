@@ -26,6 +26,15 @@ import fs from "fs/promises";
 import path from "path";
 import pdf2pic from "pdf2pic";
 import sharp from "sharp";
+import {
+    assertImageDimensionsWithinLimit,
+    createConcurrencyLimiter,
+    MAX_CONCURRENT_THUMBNAIL_JOBS,
+    MAX_DECODED_IMAGE_PIXELS,
+} from "./imageLimits";
+
+const runThumbnailJob = createConcurrencyLimiter(MAX_CONCURRENT_THUMBNAIL_JOBS);
+const MAX_THUMBNAIL_PROCESSING_SECONDS = 15;
 
 /**
  * Options for thumbnail generation
@@ -269,6 +278,18 @@ export class ThumbnailService {
         mimeType: string,
         options: Partial<ThumbnailOptions> = {}
     ): Promise<BatchThumbnailResult> {
+        return runThumbnailJob(() =>
+            this.generateMultipleThumbnailsInternal(inputPath, outputDir, hash, mimeType, options)
+        );
+    }
+
+    private static async generateMultipleThumbnailsInternal(
+        inputPath: string,
+        outputDir: string,
+        hash: string,
+        mimeType: string,
+        options: Partial<ThumbnailOptions>
+    ): Promise<BatchThumbnailResult> {
         const result: BatchThumbnailResult = {
             small: null,
             large: null,
@@ -351,8 +372,10 @@ export class ThumbnailService {
         backgroundColor: string = "#ffffff"
     ): Promise<string> {
         try {
-            const sharpInstance = sharp(inputPath);
+            const sharpInstance = sharp(inputPath, { limitInputPixels: MAX_DECODED_IMAGE_PIXELS });
+            sharpInstance.timeout({ seconds: MAX_THUMBNAIL_PROCESSING_SECONDS });
             const metadata = await sharpInstance.metadata();
+            assertImageDimensionsWithinLimit(metadata.width, metadata.height);
 
             // Configure resize options
             const resizeOptions: any = {

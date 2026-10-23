@@ -167,9 +167,9 @@ branches. Never push directly to `main`.
    per PR. Large, unfocused PRs are hard to review and slow to merge.
 
 6. **Test and format your changes** before submitting. Make sure existing tests
-   pass and add new tests where appropriate. **Run `yarn format`** after your
-   edits so your changes match the project's Prettier style and stay
-   consistently formatted across the repo. **Update the relevant documentation
+   pass and add new tests where appropriate. **Run `yarn prettier --write <files>`**
+   on the files you changed so formatting stays consistent without unrelated churn.
+   Use `yarn format` when repository-wide formatting is intended. **Update the relevant documentation
    in the same PR** — if you change behavior described in `README.md`, `docs/`,
    a package README, or any `docs/`/`*.md` next to the code you touched, keep
    those files in sync. Docs-only PRs are welcome; behavior-only PRs that leave
@@ -231,6 +231,10 @@ This ensures `dev` never diverges from what is live in `main`.
 ## Development Setup
 
 Local environment setup — Node / Yarn versions, the `.env` files to copy, Postgres + SMTP, the development license, and `yarn dev` — is documented end-to-end in **[docs/INSTALLATION.md](docs/INSTALLATION.md)**. Follow it once, then come back here for the contribution workflow.
+
+Use the [project map](docs/PROJECT_STRUCTURE.md) to find the right package and documentation owner.
+Agents should start with [AGENTS.md](AGENTS.md), follow the scoped instructions for the areas they
+change, and use the [completion workflow](docs/AGENT_WORKFLOW.md) to verify the result.
 
 ---
 

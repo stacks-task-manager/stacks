@@ -12,33 +12,29 @@ if (process.env.NODE_ENV !== "test") {
     initializeEmbeddedIntegrityCheck(true); // Enforce integrity, exit if tampered
 }
 
+import { getTrustedOrigins } from "./config/origins";
+import { assertOriginConfiguration } from "./config/origins";
 import { assertProductionSecretsAtStartup } from "./config/secrets";
 import "./i18n/preload";
 if (process.env.NODE_ENV !== "test") {
     assertProductionSecretsAtStartup();
+    assertOriginConfiguration();
 }
 
 import { Hono } from "hono";
-import { logger } from "hono/logger";
 import { cors } from "hono/cors";
 
-/** Builds strict CORS when `CORS_ORIGINS` is set; otherwise Hono default `cors()`. */
-function createCorsMiddleware() {
-    const raw = process.env.CORS_ORIGINS?.trim();
-    const origins = raw
-        ? raw
-              .split(",")
-              .map(s => s.trim())
-              .filter(Boolean)
-        : [];
-    if (origins.length > 0) {
-        return cors({
-            origin: origins,
-            allowMethods: ["GET", "HEAD", "PUT", "POST", "DELETE", "PATCH", "OPTIONS"],
-            credentials: true,
-        });
-    }
-    return cors();
+/**
+ * CORS for the exact browser origins the deployment trusts. There is no wildcard
+ * fallback: a credentialed response must name one origin, and Hono reflects only
+ * a matching `Origin` and marks the response `Vary: Origin` for it.
+ */
+function createTrustedCorsMiddleware() {
+    return cors({
+        origin: [...getTrustedOrigins()],
+        allowMethods: ["GET", "HEAD", "PUT", "POST", "DELETE", "PATCH", "OPTIONS"],
+        credentials: true,
+    });
 }
 import { prettyJSON } from "hono/pretty-json";
 import { compress } from "hono/compress";
@@ -65,6 +61,10 @@ const LICENSE_EXPIRY_CHECK_INTERVAL_MS = 24 * 60 * 60 * 1000;
 import { translations } from "./middleware/translations";
 import { appPackageVersion, serverPackageVersion } from "./packageVersions";
 import { isPasswordRecoveryEnabled, isRegistrationEnabled } from "./config/features";
+import { unauthenticatedApiRateLimit } from "./utils/authRateLimit";
+import { startRateLimitCounterCleanup } from "./utils/rateLimit";
+import { requestBodyLimit } from "./middleware/requestBodyLimit";
+import { loggingMiddleware } from "./utils/logger";
 
 // Initialize Hono application
 const app = new Hono();
@@ -75,13 +75,15 @@ registerResponseHelpers(app);
 app.onError((err, c) => errorHandler(err, c));
 
 // Global middleware configuration
-app.use("*", logger()); // Request logging
-app.use("*", createCorsMiddleware());
+app.use("*", requestBodyLimit);
+app.use("*", loggingMiddleware()); // Request logging with credential-safe paths
+app.use("*", createTrustedCorsMiddleware());
 app.use("*", prettyJSON()); // JSON response formatting
 app.use("*", secureHeaders()); // Security headers
 app.use("*", timing()); // Request timing
 app.use("*", translations);
 // Route registration
+app.use("/auth/*", unauthenticatedApiRateLimit);
 app.route("/auth", auth);
 app.route("/ping", ping);
 app.route("/login", login);
@@ -132,6 +134,7 @@ const port = Number(process.env.APP_PORT ?? 3000);
 async function bootstrap() {
     if (process.env.NODE_ENV !== "test") {
         await connectDb();
+        startRateLimitCounterCleanup();
         // License must be initialized before seed — seed/tenants.ts & seed/users.ts
         // call getLicense() synchronously, which hard-exits if the cache is empty.
         await initLicense();

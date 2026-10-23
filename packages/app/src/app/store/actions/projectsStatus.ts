@@ -21,6 +21,11 @@ import {
 import { setStorage } from "app/utils/storage";
 import { getCurrentProjectId } from "app/hooks";
 
+/** Reload persisted project views after authenticated bootstrap selects the tenant namespace. */
+const loadSaved = () => {
+    ProjectsStatusStore.init();
+};
+
 /**
  * Toggles the visibility of a view type in the toolbar tabs for a specific project
  * Then saves all of them into the local storage
@@ -196,6 +201,7 @@ const setDefaultStack = async (stackId?: string) => {
 };
 
 export const ProjectsStatusActions = {
+    loadSaved,
     setToggleViewVisibility,
     setCurrentView,
     isLoading,

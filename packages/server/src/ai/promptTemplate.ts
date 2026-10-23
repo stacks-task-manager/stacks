@@ -39,12 +39,17 @@ function normalizePromptWhitespace(text: string): string {
         .trim();
 }
 
-export function template(name: string, variables: Record<string, unknown>): string {
+export function template(name: string, variables: Record<string, unknown>, preserveContent = false): string {
     const path = resolveTemplateFilename(name);
     if (!existsSync(path)) {
         throw new Error(`Prompt template not found: ${path}`);
     }
     const source = readFileSync(path, "utf8");
-    const render = Handlebars.compile(source, { noEscape: true, strict: false });
-    return normalizePromptWhitespace(render(variables));
+    // Normalize the template boundary before interpolation when user content must remain exact.
+    const render = Handlebars.compile(preserveContent ? source.trim() : source, {
+        noEscape: true,
+        strict: false,
+    });
+    const result = render(variables);
+    return preserveContent ? result : normalizePromptWhitespace(result);
 }

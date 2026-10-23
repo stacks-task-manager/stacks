@@ -1120,6 +1120,7 @@ const FavoriteCompanyButton: FunctionComponent<IFavoriteCompanyButtonProps> = ({
                 size="small"
                 variant="minimal"
                 id="cd-favorite"
+                data-testid="company-favorite-button"
                 icon={
                     <Icon
                         icon={isFavorite ? "star-filled" : "star"}

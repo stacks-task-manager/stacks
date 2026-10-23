@@ -380,6 +380,7 @@ projects.post(
     "/:id/archive-completed",
     asyncHandler(async (c: Context) => {
         const { id } = c.req.param();
+        parseUuidParam(id);
         await ProjectsLoader.archiveCompletedTasks(id);
         return c.replySuccess();
     })

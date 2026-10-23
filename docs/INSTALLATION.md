@@ -18,7 +18,7 @@ This guide provides comprehensive instructions for installing Stacks and running
 
 | Requirement               | Version / Notes                                                                                                                                                                                                                                                                                                          |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Node.js**               | 18.0.0 or higher (20 recommended)                                                                                                                                                                                                                                                                                        |
+| **Node.js**               | 22.12.0 or higher                                                                                                                                                                                                                                                                                                        |
 | **Yarn**                  | 3.6.4 — activated via `corepack enable` (ships with Node)                                                                                                                                                                                                                                                                |
 | **PostgreSQL**            | 15 — running locally or reachable from your machine                                                                                                                                                                                                                                                                      |
 | **SMTP server**           | _(optional)_ only needed for outbound email features (password reset, verification). `yarn dev` does **not** start the email worker, so you can run Stacks without configuring SMTP first. [MailHog](https://github.com/mailhog/MailHog) or [Mailpit](https://github.com/axllent/mailpit) work great when you do want it |
@@ -186,6 +186,19 @@ All commands run from the repo root with `yarn <script>`:
 - `yarn release` — create a runnable `releases/` bundle (server + app + email service + db + Docker assets).
 - `yarn run:docker` — run the generated `releases/` bundle via `docker-compose`. See [DOCKER.md](DOCKER.md).
 - `yarn clean` — remove build artifacts and reset the workspace.
+
+`yarn test:server` runs integration tests that recreate the configured database schema. Run it
+only against a disposable database whose name ends in `_test`, with the reset opt-in and an
+explicit connection target set. For example:
+
+```sh
+NODE_ENV=test ALLOW_TEST_DB_RESET=1 \
+POSTGRES_HOST=localhost POSTGRES_PORT=5432 POSTGRES_USER=postgres POSTGRES_PASSWORD=postgres \
+POSTGRES_DB=stacks_test yarn test:server
+```
+
+The test runner refuses to start if these safety requirements are not met. Use
+`yarn test:server:unit` for tests that do not require the integration database.
 
 ## Troubleshooting
 

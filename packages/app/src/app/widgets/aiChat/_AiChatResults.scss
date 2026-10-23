@@ -1,0 +1,14 @@
+.ai-chat-result {
+    display: grid;
+    gap: 8px;
+    dl {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 4px 12px;
+        margin: 4px 0;
+    }
+    dd {
+        margin: 0;
+        white-space: pre-wrap;
+    }
+}

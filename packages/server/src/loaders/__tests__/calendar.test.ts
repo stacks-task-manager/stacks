@@ -193,4 +193,48 @@ describe("CalendarsLoader", () => {
 
         expect(updateCalendarMock).not.toHaveBeenCalled();
     });
+
+    it("rejects non-admin users from making a calendar the tenant default", async () => {
+        findOneCalendarMock.mockResolvedValue(calendarRow() as any);
+
+        await expect(
+            runWithContext(() => CalendarsLoader.update(calendarId, { primary: true }))
+        ).rejects.toThrow(/calendar update not allowed/i);
+
+        expect(updateCalendarMock).not.toHaveBeenCalled();
+    });
+
+    it("rejects non-admin users from creating a tenant default calendar", async () => {
+        await expect(
+            runWithContext(() => CalendarsLoader.create({ title: "Default", primary: true }))
+        ).rejects.toThrow(/calendar update not allowed/i);
+
+        expect(transactionMock).not.toHaveBeenCalled();
+        expect(createCalendarMock).not.toHaveBeenCalled();
+    });
+
+    it("rejects non-admin users from deleting the tenant default calendar", async () => {
+        findOneCalendarMock.mockResolvedValue(calendarRow({ primary: true }) as any);
+
+        await expect(runWithContext(() => CalendarsLoader.remove(calendarId))).rejects.toThrow(
+            /calendar update not allowed/i
+        );
+
+        expect(updateCalendarMock).not.toHaveBeenCalled();
+    });
+
+    it("allows admins to change the tenant default calendar", async () => {
+        findOneCalendarMock.mockImplementation(async () => calendarRow() as any);
+        updateCalendarMock.mockResolvedValue([1, [calendarRow({ primary: true })]] as any);
+
+        await runWithContext(() => CalendarsLoader.update(calendarId, { primary: true }), {
+            id: "admin-1",
+            admin: true,
+        });
+
+        expect(updateCalendarMock).toHaveBeenCalledWith(
+            { primary: false },
+            expect.objectContaining({ where: expect.any(Object) })
+        );
+    });
 });

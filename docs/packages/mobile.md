@@ -12,7 +12,7 @@ The Stacks mobile client. An [Expo](https://expo.dev/) + React Native app using 
 
 ## Environment
 
-This package does not check in a `.env.example`. The server URL the app connects to is stored on-device and managed at runtime — see [`src/config/server.ts`](../../packages/mobile/src/config/server.ts).
+This package does not check in a `.env.example`. The server URL the app connects to is stored on-device and managed at runtime — see [`src/config/server.ts`](../../packages/mobile/src/config/server.ts). The app requires HTTPS, with a development-only HTTP exception for loopback. Changing servers removes the saved session and clears cached tenant data, so the user must sign in again.
 
 ## Development
 

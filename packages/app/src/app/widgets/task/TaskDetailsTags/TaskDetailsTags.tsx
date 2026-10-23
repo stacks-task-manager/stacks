@@ -9,8 +9,14 @@ interface TaskDetailsTagsProps {
     value?: string[];
     disabled?: boolean;
     taskId: string;
+    testId?: string;
 }
-export const TaskDetailsTags: FunctionComponent<TaskDetailsTagsProps> = ({ value, disabled, taskId }) => {
+export const TaskDetailsTags: FunctionComponent<TaskDetailsTagsProps> = ({
+    value,
+    disabled,
+    taskId,
+    testId,
+}) => {
     useElementHotkey("shift+t", "td-tags");
 
     return (
@@ -18,6 +24,7 @@ export const TaskDetailsTags: FunctionComponent<TaskDetailsTagsProps> = ({ value
             value={value || []}
             disabled={disabled}
             id="td-tags"
+            testId={testId}
             max={50}
             onChange={(tags: string[]) => TasksActions.setTags(taskId, tags)}
         />

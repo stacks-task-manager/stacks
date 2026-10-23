@@ -5,9 +5,11 @@
 import type { Context } from "hono";
 import { Hono } from "hono";
 import { translate } from "@stacks/translations";
+import { ROLE_SECTIONS } from "@stacks/types";
 
 import { CompaniesLoader } from "../loaders/companies";
 import { validator } from "../middleware/validator";
+import { requireRoleAccess } from "../middleware/roleAccess";
 import { cacheMiddleware } from "../utils/cache";
 import { Errors } from "../errors";
 import { asyncHandler } from "../utils/errorHandler";
@@ -19,6 +21,7 @@ const companies = new Hono();
 /** GET `/` — Lists all companies (cached ~10 minutes). */
 companies.get(
     "/",
+    requireRoleAccess(ROLE_SECTIONS.COMPANIES),
     cacheMiddleware({ ttl: 600 }),
     asyncHandler(async (c: Context) => {
         const companies = await CompaniesLoader.getAll();
@@ -40,6 +43,7 @@ companies.post(
 /** GET `/:id` — Returns one company by id (cached ~5 minutes). */
 companies.get(
     "/:id",
+    requireRoleAccess(ROLE_SECTIONS.COMPANIES),
     cacheMiddleware({ ttl: 300 }),
     asyncHandler(async (c: Context) => {
         const companyId = c.req.param("id")!;

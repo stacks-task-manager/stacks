@@ -13,12 +13,22 @@ export type AiChatChoiceOption = {
     value?: string;
 };
 
+export type AiChatChoiceReply = { token: string; optionIds: string[] };
+
 export type AiChatWidget =
+    | { type: "status"; label: string; severity: "success" | "warning" | "error" }
+    | {
+          type: "result";
+          label: string;
+          items: { label: string; fields: { label: string; value: string }[]; hashPath?: string }[];
+          truncated?: boolean;
+      }
     | { type: "button"; label: string; hashPath: string }
     | { type: "redirect"; label: string; hashPath: string }
     | {
           type: "choice";
           id: string;
+          pendingActionToken?: string;
           question: string;
           control: AiChatChoiceControl;
           options: AiChatChoiceOption[];

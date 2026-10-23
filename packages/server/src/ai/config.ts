@@ -4,6 +4,7 @@
  */
 
 /** Reads `process.env[name]` trimmed, or empty string when unset. */
+
 function envTrim(name: string): string {
     const v = process.env[name];
     return typeof v === "string" ? v.trim() : "";
@@ -14,16 +15,24 @@ export function isAiChatKillSwitchOn(): boolean {
     return v === "false" || v === "0" || v === "off";
 }
 
-/**
- * True when the server should expose AI chat (API flag + WS handler) and the LLM is configured.
- */
+export function getLlmConfig() {
+    return {
+        baseURL: envTrim("AI_BASE_URL") || envTrim("AI_OPENAI_BASE_URL"),
+        modelId: envTrim("AI_MODEL"),
+        apiKey: envTrim("AI_API_KEY") || envTrim("AI_OPENAI_API_KEY") || "not-needed",
+        cacheNamespace: envTrim("AI_PROMPT_CACHE_NAMESPACE") || "stacks",
+        cacheMode: envTrim("AI_PROMPT_CACHE_MODE") || "auto",
+        cacheRetention: envTrim("AI_PROMPT_CACHE_RETENTION"),
+        cacheProtocol: envTrim("AI_PROMPT_CACHE_PROTOCOL") || "auto",
+        disableThinking: ["true", "1", "yes", "on"].includes(envTrim("AI_DISABLE_THINKING").toLowerCase()),
+    };
+}
+export function isLlmConfigured() {
+    const config = getLlmConfig();
+    return Boolean(config.baseURL && config.modelId);
+}
 export function isAiChatConfigured(): boolean {
-    if (isAiChatKillSwitchOn()) {
-        return false;
-    }
-    const base = envTrim("AI_BASE_URL");
-    const model = envTrim("AI_MODEL");
-    return Boolean(base && model);
+    return !isAiChatKillSwitchOn() && isLlmConfigured();
 }
 
 export function getAiChatPublicConfig(): { enabled: boolean; model: string | null } {

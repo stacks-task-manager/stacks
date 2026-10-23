@@ -13,7 +13,7 @@ const SUMMARIZE_MAX_CHARS = 80_000;
 export const notepadAiTools = [
     defineTool({
         name: "listNotepads",
-        description: `List notepads (id, title, content preview). Optional full-text query.`,
+        description: `Read notepad matches with ids, titles, document ids, and content previews capped at 400 characters. Optional query searches content. Previews are incomplete; use summarizeNotepad for text needed for a summary.`,
         inputSchema: z.object({
             query: z.string().optional().describe("Content substring"),
         }),
@@ -34,9 +34,9 @@ export const notepadAiTools = [
 
     defineTool({
         name: "summarizeNotepad",
-        description: `Load a notepad's full text. Reply with a concise summary (key points, action items). If contentTruncated, note the tail was cut.`,
+        description: `Read a resolved notepad's text for summarization. Returns content, title, original contentLength, and contentTruncated; content is capped at 80,000 characters. Summarize returned facts and action items, noting omitted content when truncated. Does not edit the notepad.`,
         inputSchema: z.object({
-            notepadId: z.string().describe("Notepad UUID"),
+            notepadId: z.string().uuid().describe("Notepad UUID"),
         }),
         execute: async ({ notepadId }) => {
             const n = await NotepadsLoader.getOne(notepadId);

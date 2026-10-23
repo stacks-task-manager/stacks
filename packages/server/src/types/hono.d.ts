@@ -18,6 +18,8 @@ declare module "hono" {
         requestId?: string;
         /** User id; set by `requireAuth` (and by `requireAuthSession` with a thin placeholder user). */
         userId: string;
+        /** Revocable session id set by `requireAuth`. */
+        sid: string;
         /** Fully resolved role; set by `requireAuth` alongside `user`. */
         userRole: IRole;
         /** Tenant id for the authenticated user. */

@@ -5,14 +5,22 @@
 import { Hono } from "hono";
 import type { Context } from "hono";
 import { translate } from "@stacks/translations";
-import { POLLINGACTIONS, POLLINGTYPE } from "@stacks/types";
+import { privateResponse } from "../middleware/privateResponse";
+import { POLLINGACTIONS, POLLINGTYPE, ROLE_ACTIONS, ROLE_SECTIONS } from "@stacks/types";
+import { getCookie, setCookie } from "hono/cookie";
+import { createInlineScriptNonce, scriptSafeJson } from "../utils/scriptContext";
 import { postMessageTargetOrigin } from "../config/postMessageOrigin";
+import { OAUTH_NONCE_COOKIE, oauthNonceCookieOptions } from "../config/oauthAttempts";
+import { isSecureCookieRequest } from "../config/session";
+import { beginOAuthAttempt, redeemOAuthAttempt } from "../services/oauthAttempts";
 import { sendRealtimeUpdateToUser } from "../events";
 import { requireAuth } from "../middleware/auth";
+import { requireRoleAccess } from "../middleware/roleAccess";
 import googleOAuthService from "../services/googleOAuthService";
 import type { User } from "../types/user";
 
 const googleAuth = new Hono();
+googleAuth.use("*", privateResponse);
 
 const sendGoogleCalendarAuthUpdate = (userId: string) => {
     sendRealtimeUpdateToUser(userId, {
@@ -23,18 +31,19 @@ const sendGoogleCalendarAuthUpdate = (userId: string) => {
     });
 };
 
-const popupHtml = (targetOrigin: string, payload: Record<string, unknown>, message: string) => {
-    const safeTargetOrigin = JSON.stringify(targetOrigin);
-    const safePayload = JSON.stringify(payload);
+export const popupHtml = (targetOrigin: string, payload: Record<string, unknown>, message: string) => {
+    const nonce = createInlineScriptNonce();
+    const safeTargetOrigin = scriptSafeJson(targetOrigin);
+    const safePayload = scriptSafeJson(payload);
 
-    return `
+    const html = `
       <!DOCTYPE html>
       <html>
         <head>
           <title>Google OAuth</title>
         </head>
         <body>
-          <script>
+          <script nonce="${nonce}">
             try {
               window.opener && window.opener.postMessage(${safePayload}, ${safeTargetOrigin});
             } finally {
@@ -45,78 +54,143 @@ const popupHtml = (targetOrigin: string, payload: Record<string, unknown>, messa
         </body>
       </html>
     `;
+
+    return { html, headers: { "Content-Security-Policy": `script-src 'nonce-${nonce}'` } };
+};
+
+const popupResponse = (
+    c: Context,
+    targetOrigin: string,
+    payload: Record<string, unknown>,
+    message: string
+) => {
+    const popup = popupHtml(targetOrigin, payload, message);
+    return c.html(popup.html, 200, popup.headers);
 };
 
 /**
- * Get Google OAuth authorization URL
+ * Get Google OAuth authorization URL. The state value, the browser nonce, and the
+ * PKCE verifier belong to the attempt recorded here; only the callback that
+ * presents all three can redeem it.
  */
-googleAuth.get("/auth-url", requireAuth, async c => {
-    try {
-        const authUrl = googleOAuthService.getAuthUrl();
-        return c.replySuccess({ authUrl });
-    } catch (error) {
-        console.error("Error generating auth URL:", error);
-        return c.json({ error: "Failed to generate authorization URL" }, 500);
+googleAuth.get(
+    "/auth-url",
+    requireAuth,
+    requireRoleAccess(ROLE_SECTIONS.CALENDAR, ROLE_ACTIONS.WRITE),
+    async c => {
+        try {
+            const user = c.get("user") as User;
+            const attempt = await beginOAuthAttempt(
+                String(user.id),
+                String(c.get("userTenant")),
+                String(c.get("sid"))
+            );
+            const authUrl = googleOAuthService.getAuthUrl(attempt.state, attempt.challenge);
+
+            await setCookie(
+                c,
+                OAUTH_NONCE_COOKIE,
+                attempt.nonce,
+                oauthNonceCookieOptions(isSecureCookieRequest(c.req.header("x-forwarded-proto")))
+            );
+
+            return c.replySuccess({ authUrl });
+        } catch {
+            console.error("Google OAuth authorization URL creation failed");
+            return c.json({ error: "Failed to generate authorization URL" }, 500);
+        }
     }
-});
+);
 
 /**
  * Handle Google OAuth callback
  */
-const handleCallback = async (c: Context, code?: string, error?: string) => {
+const handleCallback = async (c: Context, code?: string, error?: string, state?: string) => {
     const targetOrigin = postMessageTargetOrigin(c);
     try {
-        if (error) {
-            return c.html(
-                popupHtml(targetOrigin, { type: "GOOGLE_AUTH_ERROR", error }, "Authentication failed.")
+        // Nothing is exchanged or stored until the callback proves it finishes the
+        // flow this browser started, so an unsolicited or replayed callback links
+        // no credentials even when it carries a real code.
+        const user = c.get("user") as User;
+        const attempt = await redeemOAuthAttempt(
+            state,
+            String(user.id),
+            String(c.get("userTenant")),
+            String(c.get("sid")),
+            getCookie(c, OAUTH_NONCE_COOKIE)
+        );
+
+        if (!attempt) {
+            return popupResponse(
+                c,
+                targetOrigin,
+                { type: "GOOGLE_AUTH_ERROR", code: "oauth_error" },
+                "Authentication failed! This window will close automatically."
             );
         }
 
-        const user = c.get("user") as User;
+        if (error) {
+            return popupResponse(
+                c,
+                targetOrigin,
+                { type: "GOOGLE_AUTH_ERROR", code: "oauth_error" },
+                "Authentication failed."
+            );
+        }
+
         if (!code) return c.json({ error: "Authorization code is required" }, 400);
 
-        // Exchange code for tokens
-        const tokens = await googleOAuthService.getTokens(code);
+        // Exchange code for tokens with the verifier that started this attempt
+        const tokens = await googleOAuthService.getTokens(code, attempt.codeVerifier);
 
         // Store tokens for the user
         await googleOAuthService.storeTokens(user.id, tokens);
         sendGoogleCalendarAuthUpdate(user.id);
 
-        return c.html(
-            popupHtml(
-                targetOrigin,
-                { type: "GOOGLE_AUTH_SUCCESS" },
-                "Authentication successful! This window will close automatically."
-            )
+        return popupResponse(
+            c,
+            targetOrigin,
+            { type: "GOOGLE_AUTH_SUCCESS" },
+            "Authentication successful! This window will close automatically."
         );
-    } catch (error) {
-        console.error("Error in Google OAuth callback:", error);
+    } catch {
+        console.error("Google OAuth callback failed");
 
-        return c.html(
-            popupHtml(
-                targetOrigin,
-                { type: "GOOGLE_AUTH_ERROR", error: "Failed to process Google OAuth callback" },
-                "Authentication failed! This window will close automatically."
-            )
+        return popupResponse(
+            c,
+            targetOrigin,
+            { type: "GOOGLE_AUTH_ERROR", code: "oauth_error" },
+            "Authentication failed! This window will close automatically."
         );
     }
 };
 
-googleAuth.get("/callback", requireAuth, async (c: Context) => {
-    const code = c.req.query("code");
-    const error = c.req.query("error");
-    return await handleCallback(c, code, error);
-});
+googleAuth.get(
+    "/callback",
+    requireAuth,
+    requireRoleAccess(ROLE_SECTIONS.CALENDAR, ROLE_ACTIONS.WRITE),
+    async (c: Context) => {
+        const code = c.req.query("code");
+        const error = c.req.query("error");
+        const state = c.req.query("state");
+        return await handleCallback(c, code, error, state);
+    }
+);
 
-googleAuth.post("/callback", requireAuth, async (c: Context) => {
-    const { code } = await c.req.json();
-    return await handleCallback(c, code);
-});
+googleAuth.post(
+    "/callback",
+    requireAuth,
+    requireRoleAccess(ROLE_SECTIONS.CALENDAR, ROLE_ACTIONS.WRITE),
+    async (c: Context) => {
+        const { code, error, state } = await c.req.json();
+        return await handleCallback(c, code, error, state);
+    }
+);
 
 /**
  * Check Google authentication status
  */
-googleAuth.get("/status", requireAuth, async c => {
+googleAuth.get("/status", requireAuth, requireRoleAccess(ROLE_SECTIONS.CALENDAR), async c => {
     try {
         const user = c.get("user") as User;
         const hasValidTokens = await googleOAuthService.hasValidTokens(user.id);
@@ -125,8 +199,8 @@ googleAuth.get("/status", requireAuth, async c => {
             isAuthenticated: hasValidTokens,
             provider: "google",
         });
-    } catch (error) {
-        console.error("Error checking Google auth status:", error);
+    } catch {
+        console.error("Google OAuth status lookup failed");
         return c.replyError(new Error(translate("Google auth check failed")));
     }
 });
@@ -141,19 +215,29 @@ const handleDisconnect = async (c: Context) => {
         sendGoogleCalendarAuthUpdate(user.id);
 
         return c.replySuccess({ disconnected: true }, "Google account disconnected successfully");
-    } catch (error) {
-        console.error("Error disconnecting Google account:", error);
+    } catch {
+        console.error("Google OAuth disconnect failed");
         return c.json({ error: "Failed to disconnect Google account" }, 500);
     }
 };
 
-googleAuth.delete("/disconnect", requireAuth, handleDisconnect);
-googleAuth.post("/disconnect", requireAuth, handleDisconnect);
+googleAuth.delete(
+    "/disconnect",
+    requireAuth,
+    requireRoleAccess(ROLE_SECTIONS.CALENDAR, ROLE_ACTIONS.WRITE),
+    handleDisconnect
+);
+googleAuth.post(
+    "/disconnect",
+    requireAuth,
+    requireRoleAccess(ROLE_SECTIONS.CALENDAR, ROLE_ACTIONS.WRITE),
+    handleDisconnect
+);
 
 /**
  * Get Google calendars
  */
-googleAuth.get("/calendars", requireAuth, async c => {
+googleAuth.get("/calendars", requireAuth, requireRoleAccess(ROLE_SECTIONS.CALENDAR), async c => {
     try {
         const user = c.get("user") as User;
         const calendars = await googleOAuthService.getCalendars(user.id);
@@ -172,8 +256,8 @@ googleAuth.get("/calendars", requireAuth, async c => {
         });
 
         return c.replySuccess(normalized);
-    } catch (error) {
-        console.error("Error fetching Google calendars:", error);
+    } catch {
+        console.error("Google Calendar listing failed");
         return c.json({ error: "Failed to fetch Google calendars" }, 500);
     }
 });

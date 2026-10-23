@@ -2,31 +2,43 @@
 /**
  * JSON API auth: registration, login, activation, password flows, and session helpers.
  */
-import { TenantEntity, UserEntity } from "@stacks/db";
+import { sequelize, TenantEntity, UserEntity } from "@stacks/db";
+import { Op } from "sequelize";
 import { EMAIL_TEMPLATES } from "@stacks/types";
 import * as bcrypt from "bcryptjs";
 import { compare } from "bcryptjs";
-import type { Context } from "hono";
+import type { Context, MiddlewareHandler } from "hono";
 import { Hono } from "hono";
 import { translate } from "@stacks/translations";
 import { deleteCookie, getSignedCookie, setSignedCookie } from "hono/cookie";
-import { sign } from "hono/jwt";
 import z from "zod/v4";
-import { getCookieSecret, getJwtSecret } from "../config/secrets";
+import { getCookieSecret } from "../config/secrets";
+import { HINT_COOKIE_OPTS } from "../config/session";
 import { isRegistrationEnabled } from "../config/features";
 import { EmailsLoader, TenantsLoader } from "../loaders";
 import { validator } from "../middleware/validator";
 import { Errors } from "../errors";
+import {
+    browserMutationAllowed,
+    browserOriginAllowed,
+    browserRequestToken,
+    resolveAuthenticatedIdentity,
+    rotateBrowserNonce,
+} from "../middleware/auth";
 import { asyncHandler } from "../utils/errorHandler";
 import { getClientIP } from "../utils/clientIp";
+import { enforceAuthAttemptLimit } from "../utils/authRateLimit";
+import { toPublicPerson } from "../utils/publicPerson";
 import { Logger } from "../utils/logger";
-import { createActivationToken } from "../services/accountTokens";
+import { privateResponse } from "../middleware/privateResponse";
+import { issueSession, revokeAllUserSessions, revokeSession } from "../services/sessions";
+import { createActivationToken, hashAccountToken } from "../services/accountTokens";
 import { findPublicRegistrationRole } from "../services/registration";
 import type { User } from "../types";
-import { uuidStringSchema } from "./schema/common";
-import { UserActivationSchema, UserLoginSchema, UserRegisterSchema } from "./schema/user";
+import { AccountTokenSchema, UserActivationSchema, UserLoginSchema, UserRegisterSchema } from "./schema/user";
 
 const auth = new Hono();
+auth.use("*", privateResponse);
 
 const ACTIVATION_ERROR_PAGE = "activation-error";
 const ACTIVATION_SUCCESS_PAGE = "activation-success";
@@ -61,6 +73,19 @@ async function takeActivationFlash(c: Context): Promise<string[]> {
 }
 
 /**
+ * Rejects a state-changing browser request that is not same-site.
+ *
+ * The JSON API renders the rejection as the same 403 error every other auth
+ * route uses, so the guard is one middleware shared by the routes below.
+ */
+const requireSameSite: MiddlewareHandler = async (c, next) => {
+    if (!(await browserMutationAllowed(c, "none"))) {
+        throw Errors.forbidden(translate("Cross site request rejected"));
+    }
+    await next();
+};
+
+/**
  * Register a new user account.
  * @param {Object} userData - User registration data
  * @param {string} userData.email - User email address
@@ -68,6 +93,22 @@ async function takeActivationFlash(c: Context): Promise<string[]> {
  * @param {string} userData.tenant - Tenant ID
  * @returns {Promise<IUser>} Created user object
  */
+/**
+ * Hands a browser the one token it may present on a state-changing request.
+ *
+ * The signed nonce cookie is HttpOnly, so a cross-site form cannot read it; the
+ * response is never cacheable because the token is only valid for this browser.
+ */
+auth.get("/csrf", async c => {
+    if (!browserOriginAllowed(c)) {
+        throw Errors.forbidden(translate("Cross site request rejected"));
+    }
+
+    const token = await browserRequestToken(c);
+    c.header("Cache-Control", "no-store");
+    return c.replySuccess({ token });
+});
+
 auth.post(
     "/register",
     async (c, next) => {
@@ -76,7 +117,14 @@ auth.post(
         }
         await next();
     },
+    requireSameSite,
     validator(UserRegisterSchema),
+    async (c, next) => {
+        const userData = c.req.valid("json");
+        const limited = await enforceAuthAttemptLimit(c, "registration", userData.email, userData.tenant);
+        if (limited) return limited;
+        await next();
+    },
     asyncHandler(async (c: Context) => {
         const userData = c.req.valid("json");
         const clientIp = getClientIP(c);
@@ -136,7 +184,7 @@ auth.post(
             password: hashedPassword,
             real: true,
             disabled: true,
-            token: activation.token,
+            activationTokenHash: activation.hash,
             activationTokenExpiresAt: activation.expiresAt,
         });
 
@@ -163,11 +211,7 @@ auth.post(
             clientIp,
         });
 
-        // Remove sensitive data from response
-        const userResponse = newUser.toJSON();
-        delete userResponse.password;
-
-        return c.replySuccess(userResponse);
+        return c.replySuccess(toPublicPerson(newUser.toJSON()));
     })
 );
 
@@ -180,7 +224,14 @@ auth.post(
  */
 auth.post(
     "/login",
+    requireSameSite,
     validator(UserLoginSchema),
+    async (c, next) => {
+        const { email } = c.req.valid("json");
+        const limited = await enforceAuthAttemptLimit(c, "login", email);
+        if (limited) return limited;
+        await next();
+    },
     asyncHandler(async (c: Context) => {
         const { email, password } = c.req.valid("json");
         const clientIp = getClientIP(c);
@@ -270,11 +321,7 @@ auth.post(
             throw Errors.forbidden(translate("Tenant disabled"));
         }
 
-        const payload = {
-            uid: user.get("id"),
-            exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 365 * 10, // 10 years
-        };
-        const token = await sign(payload, getJwtSecret());
+        const { token } = await issueSession(String(user.get("id")), String(user.get("tenant")));
 
         Logger.info("User logged in successfully", {
             userId: user.get("id"),
@@ -302,7 +349,7 @@ auth.get(
             requestId,
         });
 
-        const tokenParse = uuidStringSchema.safeParse(token);
+        const tokenParse = AccountTokenSchema.safeParse(token);
         if (!tokenParse.success) {
             Logger.security(
                 "Invalid activation token format",
@@ -319,7 +366,7 @@ auth.get(
 
         const user = await UserEntity.findOne({
             where: {
-                token,
+                activationTokenHash: hashAccountToken(tokenParse.data),
             },
         });
         if (!user) {
@@ -337,7 +384,7 @@ auth.get(
         }
 
         const activationExpiresAt = user.get("activationTokenExpiresAt") as Date | null;
-        if (activationExpiresAt && activationExpiresAt.getTime() <= Date.now()) {
+        if (!activationExpiresAt || activationExpiresAt.getTime() <= Date.now()) {
             return c.replyHtml(ACTIVATION_ERROR_PAGE);
         }
 
@@ -365,12 +412,116 @@ auth.get(
             requestId,
         });
 
-        return c.replyHtml("activation", { ...user.toJSON(), errors });
+        const csrf = await browserRequestToken(c);
+        return c.replyHtml("activation", {
+            firstName: user.get("firstName"),
+            token,
+            csrf,
+            errors,
+        });
+    })
+);
+
+auth.get("/email-change/:token", async c => {
+    const parsed = AccountTokenSchema.safeParse(c.req.param("token"));
+    if (!parsed.success) return c.replyHtml("email-change-error");
+
+    const user = await UserEntity.findOne({
+        where: {
+            emailChangeTokenHash: hashAccountToken(parsed.data),
+            emailChangeTokenExpiresAt: { [Op.gt]: new Date() },
+        },
+    });
+    if (!user || user.get("disabled") || user.get("deleted")) return c.replyHtml("email-change-error");
+
+    const csrf = await browserRequestToken(c);
+    return c.replyHtml("email-change", { token: parsed.data, csrf });
+});
+
+auth.post(
+    "/email-change/confirm",
+    requireSameSite,
+    asyncHandler(async (c: Context) => {
+        const form = await c.req.parseBody();
+        const parsed = AccountTokenSchema.safeParse(form.token);
+        if (!parsed.success) return c.replyHtml("email-change-error");
+
+        const tokenHash = hashAccountToken(parsed.data);
+        const transaction = await sequelize.transaction();
+        try {
+            const user = await UserEntity.findOne({
+                where: {
+                    emailChangeTokenHash: tokenHash,
+                    emailChangeTokenExpiresAt: { [Op.gt]: new Date() },
+                    disabled: false,
+                    deleted: null,
+                },
+                transaction,
+                lock: transaction.LOCK.UPDATE,
+            });
+            const pendingEmail = user?.get("pendingEmail");
+            if (!user || typeof pendingEmail !== "string") {
+                await transaction.rollback();
+                return c.replyHtml("email-change-error");
+            }
+
+            const tenant = await TenantEntity.findOne({
+                where: { id: user.get("tenant"), disabled: false },
+                transaction,
+                lock: transaction.LOCK.UPDATE,
+            });
+            if (!tenant) {
+                await transaction.rollback();
+                return c.replyHtml("email-change-error");
+            }
+
+            const emailAlreadyUsed = await UserEntity.findOne({
+                where: {
+                    email: pendingEmail,
+                    tenant: user.get("tenant"),
+                    id: { [Op.ne]: user.get("id") },
+                },
+                transaction,
+                lock: transaction.LOCK.UPDATE,
+            });
+            if (emailAlreadyUsed) {
+                await transaction.rollback();
+                return c.replyHtml("email-change-error");
+            }
+
+            const [claimed] = await UserEntity.update(
+                {
+                    email: pendingEmail,
+                    pendingEmail: null,
+                    emailChangeTokenHash: null,
+                    emailChangeTokenExpiresAt: null,
+                },
+                {
+                    where: {
+                        id: user.get("id"),
+                        emailChangeTokenHash: tokenHash,
+                        emailChangeTokenExpiresAt: { [Op.gt]: new Date() },
+                    },
+                    transaction,
+                }
+            );
+            if (claimed !== 1) {
+                await transaction.rollback();
+                return c.replyHtml("email-change-error");
+            }
+            await revokeAllUserSessions(String(user.get("id")), transaction);
+            await transaction.commit();
+            return c.replyHtml("email-change-success");
+        } catch (error) {
+            await transaction.rollback();
+            throw error;
+        }
     })
 );
 
 auth.post(
     "/activate",
+    requireSameSite,
     asyncHandler(async (c: Context) => {
         const activationData = await c.req.parseBody();
         const clientIp = getClientIP(c);
@@ -385,9 +536,10 @@ auth.post(
         try {
             UserActivationSchema.parse(activationData);
 
+            const tokenHash = hashAccountToken(activationData.token as string);
             const user = await UserEntity.findOne({
                 where: {
-                    token: activationData.token,
+                    activationTokenHash: tokenHash,
                 },
             });
 
@@ -406,18 +558,56 @@ auth.post(
             }
 
             const activationExpiresAt = user.get("activationTokenExpiresAt") as Date | null;
-            if (activationExpiresAt && activationExpiresAt.getTime() <= Date.now()) {
+            if (!activationExpiresAt || activationExpiresAt.getTime() <= Date.now()) {
                 return c.replyHtml(ACTIVATION_ERROR_PAGE);
             }
 
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(activationData.password1 as string, salt);
 
-            user.set("password", hashedPassword);
-            user.set("token", null);
-            user.set("activationTokenExpiresAt", null);
-            user.set("disabled", false);
-            await user.save();
+            const transaction = await sequelize.transaction();
+            try {
+                // Conditional claim: the credential is only consumed while its hash and
+                // future expiry still match, so a second concurrent replay changes nothing.
+                const [claimed] = await UserEntity.update(
+                    {
+                        password: hashedPassword,
+                        token: null,
+                        activationTokenHash: null,
+                        activationTokenExpiresAt: null,
+                        disabled: false,
+                    },
+                    {
+                        where: {
+                            id: user.get("id"),
+                            activationTokenHash: tokenHash,
+                            activationTokenExpiresAt: { [Op.gt]: new Date() },
+                        },
+                        returning: false,
+                        transaction,
+                    }
+                );
+                if (claimed !== 1) {
+                    await transaction.rollback();
+                    Logger.security(
+                        "Activation replay for an already-consumed token",
+                        "medium",
+                        {
+                            token: activationData.token,
+                            userId: user.get("id"),
+                            clientIp,
+                            requestId,
+                        },
+                        c
+                    );
+                    return c.replyHtml(ACTIVATION_ERROR_PAGE);
+                }
+                await revokeAllUserSessions(String(user.get("id")), transaction);
+                await transaction.commit();
+            } catch (error) {
+                await transaction.rollback();
+                throw error;
+            }
 
             Logger.info("Account activated successfully", {
                 userId: user.get("id"),
@@ -460,6 +650,51 @@ auth.post(
 
             return c.redirect(`/auth/activate/${activationData.token}`);
         }
+    })
+);
+
+/** Clears the session cookie and the non-authoritative hints together. */
+async function clearSessionCookies(c: Context): Promise<void> {
+    await deleteCookie(c, "auth_token", { path: "/" });
+    await deleteCookie(c, "uid", HINT_COOKIE_OPTS);
+    await deleteCookie(c, "tenant", HINT_COOKIE_OPTS);
+}
+
+auth.post(
+    "/logout",
+    asyncHandler(async (c: Context) => {
+        const identity = await resolveAuthenticatedIdentity(c);
+        if (!identity.ok) {
+            throw Errors.unauthorized(translate("Authentication failed"));
+        }
+
+        if (!(await browserMutationAllowed(c, identity.source))) {
+            throw Errors.forbidden(translate("Cross site request rejected"));
+        }
+
+        const revoked = await revokeSession(String(identity.payload.sid));
+        await clearSessionCookies(c);
+        await rotateBrowserNonce(c);
+        return c.replySuccess({ revoked });
+    })
+);
+
+auth.post(
+    "/logout-all",
+    asyncHandler(async (c: Context) => {
+        const identity = await resolveAuthenticatedIdentity(c);
+        if (!identity.ok) {
+            throw Errors.unauthorized(translate("Authentication failed"));
+        }
+
+        if (!(await browserMutationAllowed(c, identity.source))) {
+            throw Errors.forbidden(translate("Cross site request rejected"));
+        }
+
+        const revoked = await revokeAllUserSessions(String(identity.user.get("id")));
+        await clearSessionCookies(c);
+        await rotateBrowserNonce(c);
+        return c.replySuccess({ revoked });
     })
 );
 

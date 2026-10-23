@@ -483,6 +483,11 @@ function TableRowFlat<T>(props: TableRowFlatProps<T>) {
                                         : undefined
                                 }
                                 hasCheckbox={onSelect != null && !colIndex}
+                                checkboxTestId={
+                                    onSelect != null && !colIndex
+                                        ? `table-${tableId}-row-select-${row.id}`
+                                        : undefined
+                                }
                                 onCheck={onSelect ? () => onSelect(row) : undefined}
                                 isChecked={selected?.includes(row.id)}
                                 dragHandle={

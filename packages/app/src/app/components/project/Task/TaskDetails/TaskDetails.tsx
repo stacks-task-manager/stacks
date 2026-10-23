@@ -45,6 +45,7 @@ import {
     TaskDetailsNotification,
     TaskDetailsTaskPickerDialog,
     TaskDetailsTimer,
+    TaskDependenciesDialog,
 } from "app/widgets";
 import { EditTaskDetailsLayout } from "./EditTaskDetailsLayout";
 import { TaskDetailInfo } from "./TaskDetailInfo";
@@ -56,6 +57,7 @@ export const TaskDetails = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { isLoading, task, projectId, taskId, fullscreen, handleToggleFullscreen } = useTaskDetailsShell();
+    const [dependenciesDialogOpen, setDependenciesDialogOpen] = useState(false);
 
     const tdRef = useRef<HTMLDivElement | null>(null);
 
@@ -92,6 +94,7 @@ export const TaskDetails = () => {
     useOnClickOutside(tdRef, () => PreferencesStore.get().clickOutsideClose && handleClose(100), [
         ".td-keep",
         `.${Classes.PORTAL}`,
+        ".task-dependencies-dialog",
         ".tippy-content",
         ".tiptap-bubble-menu",
     ]);
@@ -118,6 +121,15 @@ export const TaskDetails = () => {
                     onOpenParent={handleOpenParentTask}
                     onClose={handleClose}
                     onFullscreen={handleToggleFullscreen}
+                    onAddDependencies={() => setDependenciesDialogOpen(true)}
+                />
+            )}
+            {dependenciesDialogOpen && task && (
+                <TaskDependenciesDialog
+                    parentId={task.id}
+                    onClose={() => setDependenciesDialogOpen(false)}
+                    onSelect={selectedTasks => TasksActions.setDependencies(task.id, selectedTasks)}
+                    values={task.dependencies}
                 />
             )}
         </div>
@@ -129,6 +141,7 @@ export const TaskDetailsPanel = () => {
     const location = useLocation();
     const backgroundLocation = (location.state as IBackgroundLocationState).backgroundLocation;
     const [open, setOpen] = useState(true);
+    const [dependenciesDialogOpen, setDependenciesDialogOpen] = useState(false);
     const { isLoading, task, taskId, fullscreen, handleToggleFullscreen } = useTaskDetailsShell();
 
     useEffect(() => {
@@ -168,49 +181,74 @@ export const TaskDetailsPanel = () => {
 
     if (PreferencesStore.get().dialogTask) {
         return (
-            <Dialog
-                isOpen={open}
-                onClose={handleDialogClose}
-                onClosed={handleDialogClosed}
-                className={classNames("task-details-dialog", { fullscreen, "has-tint": task?.tint != null })}
-                portalClassName="task-details-portal"
-                style={{ borderColor: task?.tint || undefined }}
-                aria-label={translate("Task details")}
-                data-testid="task-details-drawer"
-            >
-                {isLoading && <TaskDetailsLoading onClose={handleClose} />}
-                {task && !isLoading && (
-                    <Task
-                        task={task}
-                        fullscreen={fullscreen}
-                        onOpenParent={handleOpenParentTask}
-                        onClose={handleClose}
-                        onFullscreen={handleToggleFullscreen}
-                        isDialog
+            <>
+                <Dialog
+                    isOpen={open}
+                    onClose={handleDialogClose}
+                    onClosed={handleDialogClosed}
+                    className={classNames("task-details-dialog", {
+                        fullscreen,
+                        "has-tint": task?.tint != null,
+                    })}
+                    portalClassName="task-details-portal"
+                    style={{ borderColor: task?.tint || undefined }}
+                    aria-label={translate("Task details")}
+                    data-testid="task-details-drawer"
+                >
+                    {isLoading && <TaskDetailsLoading onClose={handleClose} />}
+                    {task && !isLoading && (
+                        <Task
+                            task={task}
+                            fullscreen={fullscreen}
+                            onOpenParent={handleOpenParentTask}
+                            onClose={handleClose}
+                            onFullscreen={handleToggleFullscreen}
+                            onAddDependencies={() => setDependenciesDialogOpen(true)}
+                            isDialog
+                        />
+                    )}
+                </Dialog>
+                {dependenciesDialogOpen && task && (
+                    <TaskDependenciesDialog
+                        parentId={task.id}
+                        onClose={() => setDependenciesDialogOpen(false)}
+                        onSelect={selectedTasks => TasksActions.setDependencies(task.id, selectedTasks)}
+                        values={task.dependencies}
                     />
                 )}
-            </Dialog>
+            </>
         );
     } else {
         return (
-            <Drawer
-                className={classNames("task-details-drawer", { fullscreen })}
-                isOpen={open}
-                onClose={handleDialogClose}
-                onClosed={handleDialogClosed}
-                data-testid="task-details-drawer"
-            >
-                {isLoading && <TaskDetailsLoading onClose={handleClose} />}
-                {task && !isLoading && (
-                    <Task
-                        task={task}
-                        fullscreen={fullscreen}
-                        onOpenParent={handleOpenParentTask}
-                        onClose={handleClose}
-                        onFullscreen={handleToggleFullscreen}
+            <>
+                <Drawer
+                    className={classNames("task-details-drawer", { fullscreen })}
+                    isOpen={open}
+                    onClose={handleDialogClose}
+                    onClosed={handleDialogClosed}
+                    data-testid="task-details-drawer"
+                >
+                    {isLoading && <TaskDetailsLoading onClose={handleClose} />}
+                    {task && !isLoading && (
+                        <Task
+                            task={task}
+                            fullscreen={fullscreen}
+                            onOpenParent={handleOpenParentTask}
+                            onClose={handleClose}
+                            onFullscreen={handleToggleFullscreen}
+                            onAddDependencies={() => setDependenciesDialogOpen(true)}
+                        />
+                    )}
+                </Drawer>
+                {dependenciesDialogOpen && task && (
+                    <TaskDependenciesDialog
+                        parentId={task.id}
+                        onClose={() => setDependenciesDialogOpen(false)}
+                        onSelect={selectedTasks => TasksActions.setDependencies(task.id, selectedTasks)}
+                        values={task.dependencies}
                     />
                 )}
-            </Drawer>
+            </>
         );
     }
 };
@@ -223,10 +261,11 @@ interface ITaskProps {
     onOpenParent: (parentTaskId: string) => void;
     onClose: (delayed?: boolean) => void;
     onFullscreen?: () => void;
+    onAddDependencies: () => void;
 }
 // eslint-disable-next-line react/display-name
 const Task: FunctionComponent<ITaskProps> = React.memo(
-    ({ task, fullscreen, isDialog, onOpenParent, onClose, onFullscreen }) => {
+    ({ task, fullscreen, isDialog, onOpenParent, onClose, onFullscreen, onAddDependencies }) => {
         const { task: parentTask } = useTask(task?.parent);
         const [showTaskPicker, setShowTaskPicker] = useState(false);
 
@@ -291,6 +330,7 @@ const Task: FunctionComponent<ITaskProps> = React.memo(
             <div
                 className={classNames("task-details-header-wrapper", { fullscreen })}
                 data-testid="task-details"
+                data-id={task.id}
                 {...getRootProps()}
                 onFocus={noop}
                 onBlur={noop}
@@ -411,7 +451,13 @@ const Task: FunctionComponent<ITaskProps> = React.memo(
                     ) : null}
                 </div>
                 <div className="task-details-main" data-testid="task-details-body">
-                    <Scroller className={Classes.DRAWER_BODY} thin vertical shadows>
+                    <Scroller
+                        className={Classes.DRAWER_BODY}
+                        scrollerTestId="task-details-scroll-area"
+                        thin
+                        vertical
+                        shadows
+                    >
                         <div id={`task-details-${task.id}`} />
                         <Grid gap={30}>
                             <Row padding={30}>
@@ -491,6 +537,7 @@ const Task: FunctionComponent<ITaskProps> = React.memo(
                                                 onClose={onClose}
                                                 centered
                                                 disabled={disabled}
+                                                testIdSuffix="row"
                                             />
                                         ))}
                                         <TaskDetailsCustomFields
@@ -512,12 +559,22 @@ const Task: FunctionComponent<ITaskProps> = React.memo(
                                 </Col>
                             </Row>
 
-                            {!isDialog && <TaskDetailsTabs task={task} disabled={disabled} />}
+                            {!isDialog && (
+                                <TaskDetailsTabs
+                                    task={task}
+                                    disabled={disabled}
+                                    onAddDependencies={onAddDependencies}
+                                />
+                            )}
                         </Grid>
 
                         {taskDetailsComments && !isDialog ? (
                             <>
-                                <div id="comments" className="task-details-divider" />
+                                <div
+                                    id="comments"
+                                    className="task-details-divider"
+                                    data-testid="task-comments-section"
+                                />
 
                                 <LazyLoad stayRendered>
                                     <Comments resourceId={task.id} disabled={disabled} />
@@ -528,11 +585,26 @@ const Task: FunctionComponent<ITaskProps> = React.memo(
 
                     {!disabled && isDragActive ? <DropZone /> : null}
 
-                    <Scroller parentClassName="task-details-sidebar" vertical thin>
-                        {isDialog && <TaskDetailsTabs task={task} disabled={disabled} />}
+                    <Scroller
+                        parentClassName="task-details-sidebar"
+                        scrollerTestId="task-details-scroll-area"
+                        vertical
+                        thin
+                    >
+                        {isDialog && (
+                            <TaskDetailsTabs
+                                task={task}
+                                disabled={disabled}
+                                onAddDependencies={onAddDependencies}
+                            />
+                        )}
                         {taskDetailsComments && isDialog ? (
                             <>
-                                <div id="comments" className="task-details-divider" />
+                                <div
+                                    id="comments"
+                                    className="task-details-divider"
+                                    data-testid="task-comments-section"
+                                />
 
                                 <LazyLoad stayRendered className="task-details-comments-wrapper">
                                     <Comments resourceId={task.id} disabled={disabled} />

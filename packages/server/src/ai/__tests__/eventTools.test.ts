@@ -21,7 +21,7 @@ describe("ai.eventTools input schemas", () => {
 
     it("accepts null recurrenceRule when updating to remove recurrence", () => {
         const result = updateCalendarEvent?.inputSchema.safeParse({
-            eventId: "event-1",
+            eventId: "11111111-1111-4111-8111-111111111111",
             recurrenceRule: null,
         });
 
@@ -30,7 +30,7 @@ describe("ai.eventTools input schemas", () => {
 
     it("accepts source-safe move payloads", () => {
         const result = moveCalendarEvent?.inputSchema.safeParse({
-            eventId: "event-1",
+            eventId: "11111111-1111-4111-8111-111111111111",
             source: "local",
             calendarId: "550e8400-e29b-41d4-a716-446655440000",
         });

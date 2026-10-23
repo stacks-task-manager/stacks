@@ -49,6 +49,7 @@ export const withRequestContext: MiddlewareHandler = async (c, next) => {
         user,
         instanceId,
         role,
+        sid: c.get("sid"),
         requestId: randomUUID(),
         timestamp: Date.now(),
     };

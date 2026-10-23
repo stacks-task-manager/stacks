@@ -32,9 +32,10 @@ export const TaskDetailsProgress: FunctionComponent<ITaskDetailsProgressProps> =
         <div
             className={classNames("task-details-progress", { disabled })}
             style={{ maxWidth: maxWidth || 200 }}
+            data-testid="task-details-progress"
         >
             <ProgressPicker value={progress || 0} disabled={disabled} onChange={handleSetProgress}>
-                <span id="td-progress">
+                <span id="td-progress" data-testid="task-details-progress-trigger">
                     <ProgressBar
                         stripes={false}
                         value={progress ? progress / 100 : 0}

@@ -93,19 +93,17 @@ export const Search: FunctionComponent<ISearchProps> = ({ onClose }) => {
 
     useEffect(() => {
         setResults([]);
-        if (query.trim().length >= 2) {
-            setIsLoading(true);
+        setIsLoading(query.trim().length >= 2);
 
+        if (query.trim().length >= 2) {
             if (debounce.current) {
                 clearTimeout(debounce.current);
                 debounce.current = null;
             }
 
             debounce.current = setTimeout(search, 500);
-        } else {
-            if (results.length > 0) setResults([]);
         }
-    }, [query, results.length, search]);
+    }, [query, search]);
 
     const filteredResults = useMemo(() => {
         return results.filter(result => {
@@ -291,13 +289,14 @@ export const Search: FunctionComponent<ISearchProps> = ({ onClose }) => {
             lazy
             aria-labelledby="search-dialog"
         >
-            <div id="search">
+            <div id="search" data-testid="search-dialog">
                 <div className="input-wrapper">
                     {!isLoading && <Icon icon="search" size={28} />}
                     {isLoading && <Spinner size={28} />}
                     <input
                         ref={inputRef}
                         autoFocus
+                        data-testid="search-query-input"
                         placeholder={`${translate("Search something")}...`}
                         type="text"
                         value={query}
@@ -307,7 +306,7 @@ export const Search: FunctionComponent<ISearchProps> = ({ onClose }) => {
                 </div>
 
                 {query.length > 1 && !isLoading ? (
-                    <div className="search-types">
+                    <div className="search-types" data-testid="search-types">
                         <small className={Classes.TEXT_DISABLED}>{translate("I m searching for")}</small>
 
                         <TagsWrapper gap={5}>
@@ -315,6 +314,7 @@ export const Search: FunctionComponent<ISearchProps> = ({ onClose }) => {
                                 minimal
                                 round
                                 interactive
+                                data-testid="search-type-all"
                                 intent={type === "all" ? Intent.PRIMARY : Intent.NONE}
                                 endIcon={<HotkeyChip keys={[filteredResults.length]} small />}
                                 onClick={type === "all" ? undefined : () => toggleFilter("all")}
@@ -330,6 +330,7 @@ export const Search: FunctionComponent<ISearchProps> = ({ onClose }) => {
                                             minimal
                                             round
                                             interactive
+                                            data-testid={`search-type-${t.id}`}
                                             icon={<Icon icon={t.icon} size={12} />}
                                             endIcon={
                                                 counters[t.id] ? (
@@ -443,6 +444,7 @@ export const Search: FunctionComponent<ISearchProps> = ({ onClose }) => {
                                                     Classes.TEXT_DISABLED,
                                                     Classes.TEXT_LARGE
                                                 )}
+                                                data-testid="search-no-results"
                                             >
                                                 {translate("No search results")}
                                             </div>
@@ -473,7 +475,10 @@ export const Search: FunctionComponent<ISearchProps> = ({ onClose }) => {
                     <Grid gap={0} paddingTop={60} paddingBottom={100} className="vertical">
                         <Row>
                             <Col justify="center">
-                                <div className={classNames(Classes.TEXT_DISABLED, Classes.TEXT_LARGE)}>
+                                <div
+                                    className={classNames(Classes.TEXT_DISABLED, Classes.TEXT_LARGE)}
+                                    data-testid="search-no-results"
+                                >
                                     {translate("No search results")}
                                 </div>
                             </Col>
@@ -518,6 +523,7 @@ const SearchResultItem: FunctionComponent<ISearchResultItemProps> = ({
             className={classNames("search-results-item", {
                 active,
             })}
+            data-testid={`search-result-${id}`}
             id={`search-result-${id}`}
             onClick={onOpen}
         >

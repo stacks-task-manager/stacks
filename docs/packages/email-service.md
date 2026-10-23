@@ -33,7 +33,7 @@ Database (required — the service reads the queue from Postgres via `@stacks/db
 
 - `POSTGRES_HOST`, `POSTGRES_PORT`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`
 
-If SMTP isn't configured, the service starts in **idle mode** (no processing) until configuration is supplied and the process is restarted.
+If SMTP isn't configured, the service starts in **delivery-idle mode** until configuration is supplied and the process is restarted. Scheduled polls still perform bounded cleanup of expired terminal queue rows; they do not claim or send pending mail.
 
 ## Development
 
@@ -103,7 +103,7 @@ Failures are recorded inside the same transaction that locked the row, so a serv
 
 ### Idle mode
 
-If the required SMTP variables (`SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_FROM_EMAIL`) are missing, the service logs the missing names and sits idle. It does **not** crash, so an orchestrator (Docker / systemd) won't restart it in a loop. Restart the process after editing `.env` to pick up the new configuration.
+If the required SMTP variables (`SMTP_HOST`, `SMTP_PORT`, `SMTP_FROM_EMAIL`) are missing or invalid, the service logs the missing names and sits idle for delivery. Scheduled polls continue the bounded 30-day cleanup of sent and permanently failed queue rows while pending mail remains untouched. It does **not** crash, so an orchestrator (Docker / systemd) won't restart it in a loop. Restart the process after editing `.env` to pick up the new configuration.
 
 ## Multilanguage templates
 

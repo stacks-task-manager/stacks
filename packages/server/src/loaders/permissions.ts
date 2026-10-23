@@ -14,7 +14,8 @@ import {
     sanitizeWherePermissions,
     withTransaction,
 } from "./utils";
-import { sendRealtimeUpdate } from "../events";
+import { sendRealtimeInvalidation, sendRealtimeUpdate } from "../events";
+import { isAudienceNarrowed } from "../utils/realtimeAudience";
 import { translate } from "@stacks/translations";
 import { invalidateApiCacheForCurrentRequest } from "../utils/cache";
 
@@ -27,6 +28,7 @@ export const defaultPermissions: Omit<IPermissions, "id" | "owner" | "type"> = {
 /** Input for creating permission rows (avoids fragile circular IPermissions + Omit inferences). */
 type PermissionCreateInput = {
     isPublic?: boolean;
+    owner?: string;
     visibleUsers?: string[];
     visibleRoles?: string[];
     type: POLLINGTYPE;
@@ -48,8 +50,9 @@ async function create(id: string, permissions?: PermissionCreateInput, extTransa
         if (visibleUsers.length > 500 || visibleRoles.length > 500) {
             throw Errors.badRequest(translate("Permission audience is too large"));
         }
-        await validateAudience(
+        const validated = await validateAudience(
             {
+                owner: permissions?.owner,
                 isPublic: permissions?.isPublic ?? defaultPermissions.isPublic,
                 visibleUsers,
                 visibleRoles,
@@ -59,9 +62,9 @@ async function create(id: string, permissions?: PermissionCreateInput, extTransa
         return await createOne<IPermissions>({
             entity: PermissionEntity,
             data: {
-                owner: user.id,
                 ...defaultPermissions,
                 ...(permissions ?? {}),
+                owner: validated.owner ?? user.id,
                 visibleUsers,
                 visibleRoles,
                 id,
@@ -160,7 +163,34 @@ async function update(id: string, permissions: PermissionUpdateInput, transactio
 
         if (updatedPermissions && updatedPermissions.length) {
             const updatedRow = updatedPermissions[0].toJSON() as IPermissions & { type: POLLINGTYPE };
+            // The audience that was authorized *before* this edit, so a withdrawal can
+            // invalidate exactly those previous recipients without the new ACL or body.
+            const previousAudience = { tenant: user.tenant, permissions: currentPermissions };
+            const currentAudience = { tenant: user.tenant, permissions: updatedRow };
+            const withdrawn = isAudienceNarrowed(previousAudience, currentAudience);
             afterTransactionCommit(activeTransaction, () => {
+                if (withdrawn) {
+                    sendRealtimeInvalidation(id, updatedRow.type, POLLINGACTIONS.DELETED, previousAudience);
+
+                    if ([POLLINGTYPE.PROJECT, POLLINGTYPE.NOTEPAD].includes(updatedRow.type)) {
+                        sendRealtimeInvalidation(
+                            id,
+                            POLLINGTYPE.DOCUMENTS,
+                            POLLINGACTIONS.DELETED,
+                            previousAudience
+                        );
+                    }
+
+                    if (updatedRow.type === POLLINGTYPE.CALENDAR) {
+                        sendRealtimeInvalidation(
+                            id,
+                            POLLINGTYPE.EVENT,
+                            POLLINGACTIONS.DELETED,
+                            previousAudience
+                        );
+                    }
+                }
+
                 sendRealtimeUpdate({
                     type: updatedRow.type,
                     action: POLLINGACTIONS.UPDATE,
@@ -210,8 +240,13 @@ async function remove(id: string, transaction?: Transaction): Promise<boolean> {
         );
 
         if (affectedCount > 0) {
+            const deletedType = (permission as IPermissions & { type: POLLINGTYPE }).type;
+            const previousAudience = { tenant: user.tenant, permissions: permission };
             afterTransactionCommit(activeTransaction, () => {
                 invalidateApiCacheForCurrentRequest();
+
+                // The row is gone: tell the previously authorized recipients to drop it.
+                sendRealtimeInvalidation(id, deletedType, POLLINGACTIONS.DELETED, previousAudience);
             });
         }
         return affectedCount > 0;

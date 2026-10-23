@@ -35,11 +35,14 @@ interface QueuedEmailRow {
     locale: string;
     email: string | null;
     tenant: string | null;
+    recipientDisabled?: boolean;
+    recipientDeleted?: Date | string | null;
 }
 
 const REQUIRED_SMTP_VARS = ["SMTP_HOST", "SMTP_PORT", "SMTP_FROM_EMAIL"] as const;
 const DEFAULT_MAX_ATTEMPTS = 3;
 const SEND_RETRY_LIMIT = 2;
+const TERMINAL_QUEUE_RETENTION_DAYS = 30;
 
 export function parsePositiveInteger(value: string | undefined, fallback: number, maximum: number): number {
     const parsed = Number(value);
@@ -168,6 +171,10 @@ class EmailService {
             throw new Error("SMTP transport is not configured");
         }
 
+        if ([to, subject, this.fromName, this.fromEmail].some(value => /[\r\n]/.test(value))) {
+            throw new Error("Email header values must not contain CR or LF");
+        }
+
         const mailOptions = {
             from: `"${this.fromName}" <${this.fromEmail}>`,
             to,
@@ -197,8 +204,10 @@ class EmailService {
      * eligible again without holding database locks while connecting to SMTP.
      */
     async processQueuedEmails(limit: number = 50): Promise<void> {
+        await this.cleanupExpiredQueueRows();
+
         if (!this.enabled) {
-            logger.debug("SMTP disabled; skipping queue processing");
+            logger.debug("SMTP disabled; skipping email delivery");
             return;
         }
 
@@ -210,7 +219,8 @@ class EmailService {
         try {
             queuedEmails = await sequelize.query<QueuedEmailRow>(
                 `
-                SELECT "queue".*, users.email, users.tenant
+                SELECT "queue".*, COALESCE("queue"."recipientEmail", users.email) AS email, users.tenant,
+                       users.disabled AS "recipientDisabled", users.deleted AS "recipientDeleted"
                 FROM email_queue AS "queue"
                 LEFT JOIN users ON users.id = "queue"."userId"
                 WHERE "queue".status = 'pending'
@@ -262,6 +272,30 @@ class EmailService {
         }
     }
 
+    /** Remove completed rows after their 30-day operational retention window. */
+    private async cleanupExpiredQueueRows(): Promise<void> {
+        try {
+            await sequelize.query(
+                `DELETE FROM email_queue
+                 WHERE id IN (
+                     SELECT id
+                     FROM email_queue
+                     WHERE status IN ('sent', 'failed')
+                       AND COALESCE("sentAt", "updated") < NOW() - (:retentionDays * INTERVAL '1 day')
+                     ORDER BY id ASC
+                     LIMIT 500
+                 )`,
+                {
+                    replacements: { retentionDays: TERMINAL_QUEUE_RETENTION_DAYS },
+                    type: QueryTypes.BULKDELETE,
+                }
+            );
+        } catch (error) {
+            // Cleanup failure must not prevent queued mail from being delivered.
+            logger.error("❌ Failed to remove expired email queue rows:", error);
+        }
+    }
+
     /**
      * Process a single locked queue row inside the supplied transaction.
      * Failures are recorded in a single UPDATE that either reschedules the
@@ -270,6 +304,13 @@ class EmailService {
     private async processQueuedEmail(queuedEmail: QueuedEmailRow): Promise<void> {
         const recipientEmail = queuedEmail.email;
         try {
+            const activationTemplate =
+                queuedEmail.template === EMAIL_TEMPLATES.WELCOME ||
+                queuedEmail.template === EMAIL_TEMPLATES.REGISTRATION;
+            if (queuedEmail.recipientDeleted || (queuedEmail.recipientDisabled && !activationTemplate)) {
+                throw new PermanentEmailError("Recipient is unavailable");
+            }
+
             const emailData = parseEmailData(queuedEmail.data);
             try {
                 emailData.publicUrl = normalizePublicUrl(process.env.PUBLIC_URL);
@@ -306,7 +347,7 @@ class EmailService {
 
             await sequelize.query(
                 `UPDATE email_queue
-                 SET status = 'sent', "sentAt" = NOW()
+                 SET status = 'sent', "sentAt" = NOW(), "updated" = NOW(), "data" = '{}'::jsonb
                  WHERE id = :id`,
                 {
                     replacements: { id: queuedEmail.id },
@@ -355,7 +396,9 @@ class EmailService {
                     `UPDATE email_queue
                      SET status = 'failed',
                          "failureReason" = :failureReason,
-                         "retryCount" = :retryCount
+                         "retryCount" = :retryCount,
+                         "updated" = NOW(),
+                         "data" = '{}'::jsonb
                      WHERE id = :id`,
                     {
                         replacements: {

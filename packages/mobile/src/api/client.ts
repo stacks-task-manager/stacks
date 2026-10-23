@@ -18,10 +18,26 @@ export const api = axios.create({
 
 api.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
     const base = await getServerUrl();
-    if (base) {
-        config.baseURL = base;
+    if (!base) {
+        throw new Error("API requests must target the configured server");
     }
-    const token = await SecureStore.getItemAsync(SECURE_KEYS.authToken);
+
+    const targetUrl = new URL(config.url ?? "", `${base}/`);
+    if (targetUrl.origin !== new URL(base).origin) {
+        throw new Error("API requests must target the configured server");
+    }
+
+    const [token, tokenServerUrl] = await Promise.all([
+        SecureStore.getItemAsync(SECURE_KEYS.authToken),
+        SecureStore.getItemAsync(SECURE_KEYS.authTokenServerUrl),
+    ]);
+    // SecureStore reads can yield while the user switches servers and signs in.
+    // Never combine the first URL snapshot with credentials from a later identity.
+    if ((await getServerUrl()) !== base || (token && tokenServerUrl !== base)) {
+        throw new Error("API requests must target the configured server");
+    }
+
+    config.baseURL = base;
     if (token) {
         config.headers = config.headers ?? {};
         config.headers.Authorization = `Bearer ${token}`;

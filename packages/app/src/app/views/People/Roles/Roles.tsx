@@ -234,7 +234,13 @@ const RoleCell: FC<TablePersistentCellProps<IRole>> = ({ row, column, callback }
         return <>{icons}</>;
     } else if (column === "edit" && row.title !== "System") {
         return (
-            <Button size="small" variant="minimal" icon={<Icon icon="edit-05" />} onClick={callback}>
+            <Button
+                data-testid={`role-edit-${row.id}`}
+                size="small"
+                variant="minimal"
+                icon={<Icon icon="edit-05" />}
+                onClick={callback}
+            >
                 Edit role
             </Button>
         );

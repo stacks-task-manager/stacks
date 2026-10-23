@@ -41,6 +41,9 @@ const AlertService: FunctionComponent<AlertOptions> = ({
         const cancelButton = buttons.item(1);
         confirmButton?.setAttribute("data-testid", "confirm-dialog-confirm-button");
         cancelButton?.setAttribute("data-testid", "confirm-dialog-cancel-button");
+        const checkbox = node.querySelector<HTMLInputElement>('input[type="checkbox"]');
+        checkbox?.setAttribute("data-testid", "confirm-dialog-checkbox-input");
+        checkbox?.closest("label")?.setAttribute("data-testid", "confirm-dialog-checkbox");
     };
 
     let icon: IconName = "info-sign";

@@ -9,7 +9,7 @@ import RegisterPage from "../../pages/register";
 // Requires REGISTRATION_ENABLED=true in packages/server/.env, otherwise GET
 // /register returns a 403 plain-text body and every scenario here fails.
 
-const PASSWORD = "TestPass123";
+const PASSWORD = "E2ERegistrationPass123";
 const EMAIL_PREFIX = "e2e-reg";
 
 const uniqueEmail = () =>
@@ -36,13 +36,9 @@ test.describe("User registration", () => {
         attachVideoContext(context);
     });
 
-    test.afterEach(() => {
-        for (const email of createdEmails) {
-            getDb()
-                .cleanupUser(email)
-                .catch(() => {});
-        }
-        createdEmails.length = 0;
+    test.afterEach(async () => {
+        const emails = createdEmails.splice(0);
+        await Promise.all(emails.map(email => getDb().cleanupUser(email)));
     });
 
     test.afterAll(async () => {
@@ -74,7 +70,7 @@ test.describe("User registration", () => {
         await expect(register.passwordField).toBeVisible();
         await expect(register.submitButton).toBeVisible();
         // There is always a placeholder option plus at least one real tenant.
-        await expect(register.tenantSelect.locator("option")).toHaveCount(2);
+        expect(await register.tenantOptionCount()).toBeGreaterThan(1);
     });
 
     test("successful registration queues an activation email and redirects to login", async () => {
@@ -122,8 +118,7 @@ test.describe("User registration", () => {
         await expect(activation.successMessage).toContainText("successfully activated");
 
         // The activated account logs in with the password chosen at activation.
-        await auth.login(email, PASSWORD);
-        await page.getByTestId("profile-button").waitFor();
+        await auth.loginAndWaitForAuthenticatedRequest(email, PASSWORD);
     });
 
     test("activation rejects mismatched passwords", async () => {
@@ -137,7 +132,7 @@ test.describe("User registration", () => {
         expect(token).toBeTruthy();
 
         await activation.openActivation(token as string);
-        await activation.submitPasswords("TestPass123", "Different123");
+        await activation.submitPasswords("TestPassword123", "DifferentPass456");
 
         await expect(activation.errorMessages).toBeVisible();
     });

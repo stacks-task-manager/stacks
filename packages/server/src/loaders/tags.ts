@@ -9,6 +9,22 @@ import { invalidateApiCacheForCurrentRequest } from "../utils/cache";
 import { getCurrentUser } from "./context";
 import { sanitizeWhere } from "./utils";
 import { translate } from "@stacks/translations";
+import { ProjectsLoader } from "./projects";
+import { canWrite } from "./context";
+import { ROLE_SECTIONS } from "@stacks/types";
+
+function assertTagWriteAccess(section: ITag["section"]) {
+    const roleSection = section === "people" ? ROLE_SECTIONS.PEOPLE : ROLE_SECTIONS.PROJECT_SETTINGS;
+    if (!canWrite(roleSection)) {
+        throw Errors.forbidden(translate("Insufficient permissions"));
+    }
+}
+
+async function assertTagParent(section: ITag["section"], parent?: string | null) {
+    if (!parent) return;
+    if (section !== "projects") throw Errors.notFound(translate("Tag not found"));
+    await ProjectsLoader.getOne(parent);
+}
 
 export const TagsLoader = {
     /** Lists all tags for the tenant alphabetically. */
@@ -22,6 +38,9 @@ export const TagsLoader = {
     /** Creates a tag; rejects duplicate titles in the tenant. */
     async create(data: ITag) {
         const user = getCurrentUser();
+
+        assertTagWriteAccess(data.section);
+        await assertTagParent(data.section, data.parent);
 
         const existingTag = await TagEntity.findOne({
             where: {
@@ -59,6 +78,15 @@ export const TagsLoader = {
             if (!tag) {
                 throw Errors.notFound(translate("Tag not found"));
             }
+
+            const currentSection = tag.get("section") as ITag["section"];
+            assertTagWriteAccess(currentSection);
+            if (data.section !== undefined && data.section !== currentSection) {
+                assertTagWriteAccess(data.section);
+            }
+            const parent = data.parent === undefined ? (tag.get("parent") as string | null) : data.parent;
+            const section = data.section ?? currentSection;
+            await assertTagParent(section, parent);
 
             await tag.update(
                 {

@@ -7,6 +7,7 @@ import { Hono, type Context } from "hono";
 import { TagsLoader } from "../loaders";
 import { validator } from "../middleware/validator";
 import { asyncHandler } from "../utils/errorHandler";
+import { parseUuidParam } from "./schema/common";
 import { TagSchema } from "./schema/tags";
 
 const tags = new Hono();
@@ -27,7 +28,7 @@ tags.patch(
     "/:id",
     validator(TagSchema),
     asyncHandler(async (c: Context) => {
-        const { id } = c.req.param();
+        const id = parseUuidParam(c.req.param("id")!);
         const tagData = c.req.valid("json");
         await TagsLoader.update(id, tagData);
         return c.replySuccess();

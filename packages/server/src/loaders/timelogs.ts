@@ -2,7 +2,14 @@
 /**
  * Timelog persistence, approvals, aggregates on tasks, and realtime polling hooks.
  */
-import { DocumentEntity, PermissionEntity, ProjectEntity, TaskEntity, TimelogEntity } from "@stacks/db";
+import {
+    DocumentEntity,
+    PermissionEntity,
+    ProjectEntity,
+    TaskEntity,
+    TimelogEntity,
+    UserEntity,
+} from "@stacks/db";
 import { Errors } from "../errors";
 import {
     IProject,
@@ -18,14 +25,7 @@ import { getCurrentUser } from "./context";
 import { pgStringLiteral } from "./sqlLiteral";
 import { ProjectsLoader } from "./projects";
 import { TasksLoader } from "./tasks";
-import {
-    afterTransactionCommit,
-    createOne,
-    deleteAll,
-    sanitizeWhere,
-    updateOne,
-    withTransaction,
-} from "./utils";
+import { afterTransactionCommit, createOne, sanitizeWhere, withTransaction } from "./utils";
 import { NotificationsLoader } from "./notifications";
 import { sendRealtimeUpdate } from "../events";
 import { invalidateApiCacheForCurrentRequest } from "../utils/cache";
@@ -68,6 +68,30 @@ interface TimelogFilter {
     status?: TIMELOG_STATUS;
     timelog?: string;
     person?: string;
+}
+
+/** Validate relationship IDs before persisting untrusted timelog input. */
+async function validateRelationships(
+    data: Pick<ITimeLog, "person" | "project" | "task">,
+    transaction: Transaction
+) {
+    const user = getCurrentUser();
+    const person = await UserEntity.findOne({
+        where: sanitizeWhere({ id: data.person, tenant: user.tenant }),
+        transaction,
+    });
+    if (!person) {
+        throw Errors.notFound(translate("Person not found"));
+    }
+    if (!user.admin && data.person !== user.id) {
+        throw Errors.forbidden(translate("Record update not allowed"));
+    }
+
+    const project = await ProjectsLoader.getOne(data.project, transaction);
+    const task = await TasksLoader.getOne(data.task, transaction);
+    if (task.project !== project.id) {
+        throw Errors.notFound(translate("Task not found"));
+    }
 }
 
 /** Single timelog with task/document/project includes; enforces approver/owner visibility. */
@@ -125,7 +149,7 @@ async function getAll(filters: TimelogFilter, extTransaction?: Transaction) {
         const filter: Record<string, any> = {};
         if (filters.task != null) {
             if (Array.isArray(filters.task)) {
-                const tasks = await TasksLoader.getAll({ ids: filters.task });
+                const tasks = await TasksLoader.getAll({ ids: filters.task }, undefined, transaction);
 
                 if (tasks.length !== filters.task.length) {
                     return [];
@@ -209,7 +233,7 @@ async function getAll(filters: TimelogFilter, extTransaction?: Transaction) {
         );
 
         const ids = timelogs.map(timelog => timelog.task);
-        const tasks = await TasksLoader.getAll({ ids });
+        const tasks = await TasksLoader.getAll({ ids }, undefined, transaction);
         const taskIds = tasks.map(task => task.id);
 
         return timelogs.filter(timelog => taskIds.includes(timelog.task));
@@ -219,13 +243,14 @@ async function getAll(filters: TimelogFilter, extTransaction?: Transaction) {
 /** Inserts a timelog, updates task spent time, emits notifications. */
 async function create(data: Omit<ITimeLog, "id" | "created" | "updated">) {
     return withTransaction(undefined, async transaction => {
+        await validateRelationships(data, transaction);
         const newTimelog = await createOne<ITimeLog>({
             entity: TimelogEntity,
             data,
             transaction,
         });
 
-        await updateTotals(newTimelog.task);
+        await updateTotals(newTimelog.task, transaction);
 
         invalidateApiCacheForCurrentRequest();
         return newTimelog;
@@ -245,6 +270,13 @@ async function update(id: string, data: Partial<ITimeLog>) {
             throw Errors.forbidden(translate("Record update not allowed"));
         }
 
+        const relatedData = {
+            person: data.person ?? timelog.person,
+            project: data.project ?? timelog.project,
+            task: data.task ?? timelog.task,
+        };
+        await validateRelationships(relatedData, transaction);
+
         const updateData: Partial<ITimeLog> = { ...data };
         if (timelog.status === TIMELOG_STATUS.REJECTED) {
             updateData.status = TIMELOG_STATUS.PENDING;
@@ -263,26 +295,42 @@ async function update(id: string, data: Partial<ITimeLog>) {
         if (!updatedTimelogEntity) {
             throw Errors.internal(translate("Could not update record"));
         }
-        const udatedTimelog = updatedTimelogEntity.toJSON() as ITimeLog;
+        const updatedTimelog = updatedTimelogEntity.toJSON() as ITimeLog;
 
-        await updateTotals(timelog.task);
+        await updateTotals(timelog.task, transaction);
+        if (updatedTimelog.task !== timelog.task) {
+            await updateTotals(updatedTimelog.task, transaction);
+        }
 
         invalidateApiCacheForCurrentRequest();
-        return udatedTimelog;
+        return updatedTimelog;
     });
 }
 
 /** Hard-deletes many ids inside a transaction. */
-async function removeByIds(id: string[], extTransaction?: Transaction) {
+async function removeByIds(
+    id: string[],
+    extTransaction?: Transaction,
+    constraints: Record<string, unknown> = {}
+) {
     return withTransaction(extTransaction, async (transaction: Transaction) => {
-        const deletedTimelogs = await deleteAll<ITimeLog>({
-            entity: TimelogEntity,
-            filter: { id },
-            transaction,
-        });
+        if (id.length === 0) {
+            return [];
+        }
+
+        const user = getCurrentUser();
+        const [, deletedTimelogEntities] = await TimelogEntity.update(
+            { deleted: new Date(), deletedBy: user.id, updatedBy: user.id },
+            {
+                where: sanitizeWhere({ id, ...constraints }),
+                transaction,
+                returning: true,
+            }
+        );
+        const deletedTimelogs = deletedTimelogEntities.map(entity => entity.toJSON() as ITimeLog);
 
         for (const timelog of deletedTimelogs) {
-            await updateTotals(timelog.task);
+            await updateTotals(timelog.task, transaction);
         }
 
         invalidateApiCacheForCurrentRequest();
@@ -294,7 +342,7 @@ async function removeByIds(id: string[], extTransaction?: Transaction) {
 async function remove(id: string) {
     return withTransaction(undefined, async (transaction: Transaction) => {
         const user = getCurrentUser();
-        const timelog = await getOne(id);
+        const timelog = await getOne(id, transaction);
 
         if (!user.admin && timelog.person !== user.id) {
             throw Errors.forbidden(translate("Timelog delete not allowed"));
@@ -303,7 +351,20 @@ async function remove(id: string) {
             throw Errors.forbidden(translate("Timelog delete not allowed"));
         }
 
-        const success = await removeByIds([id], transaction);
+        const success = await removeByIds(
+            [id],
+            transaction,
+            user.admin
+                ? {}
+                : {
+                      person: user.id,
+                      status: { [Op.notIn]: [TIMELOG_STATUS.INREVIEW, TIMELOG_STATUS.APPROVED] },
+                  }
+        );
+
+        if (success.length === 0) {
+            throw Errors.forbidden(translate("Timelog delete not allowed"));
+        }
 
         return { success, timelog };
     });
@@ -450,17 +511,31 @@ async function updateStatus(
             updateData.rejectReason = null;
         }
 
-        const [affectedCount] = await TimelogEntity.update(updateData, {
-            where: { id },
+        const [affectedCount, updatedRows] = await TimelogEntity.update(updateData, {
+            where: {
+                id,
+                tenant: user.tenant,
+                deleted: null,
+                status: TIMELOG_STATUS.INREVIEW,
+            },
+            returning: true,
             transaction,
         });
 
         if (affectedCount === 0) {
-            throw Errors.internal(translate("Timelog status update failed"));
+            return [];
         }
 
+        const updatedIds = new Set(
+            updatedRows.map(row => {
+                const values = typeof row.toJSON === "function" ? row.toJSON() : row;
+                return String(values.id);
+            })
+        );
+        const updatedTimelogs = timelogs.filter(timelog => updatedIds.has(timelog.id));
+
         // sending notification to each of the timelogs assignees
-        const assignees = [...new Set(timelogs.map(timelog => timelog.person))];
+        const assignees = [...new Set(updatedTimelogs.map(timelog => timelog.person))];
         for (const assignee of assignees) {
             if (assignee === user.id) continue;
             await NotificationsLoader.add(
@@ -469,7 +544,7 @@ async function updateStatus(
                     subject: translate("A timelog where you are assigned to was evaluated"),
                     message: translate("Timelog change to action", { action }),
                     recordType: NOTIFICATION_RECORD_TYPE.TIMELOG,
-                    data: timelogs
+                    data: updatedTimelogs
                         .filter(timelog => timelog.person === assignee)
                         .map((timelog: ITimeLog) => ({
                             recordId: timelog.id,
@@ -482,7 +557,7 @@ async function updateStatus(
         }
 
         invalidateApiCacheForCurrentRequest();
-        return timelogs.map(timelog => ({ ...timelog, ...updateData }));
+        return updatedTimelogs.map(timelog => ({ ...timelog, ...updateData }));
     });
 }
 
@@ -493,7 +568,7 @@ async function updateTotals(taskId: string, extTransaction?: Transaction): Promi
 
         if (task) {
             const timelogsEntities = await TimelogEntity.findAll({
-                where: { task: taskId },
+                where: sanitizeWhere({ task: taskId }),
                 transaction,
             });
             const timelogs: ITimeLog[] = timelogsEntities.map(

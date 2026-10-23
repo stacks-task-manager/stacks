@@ -10,6 +10,10 @@ export const PeopleAPI = {
     async update(personId: string, personData: Partial<IPerson>) {
         return request.patch(`/api/people/${personId}`, personData);
     },
+    /** Request a verified login-email change for the current account. */
+    async requestEmailChange(personId: string, email: string) {
+        return request.post(`/api/people/${personId}/email-change`, { email });
+    },
     /** Lists people. */
     async load(): Promise<IPerson[]> {
         return request.get("/api/people");

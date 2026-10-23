@@ -36,10 +36,20 @@ class BoardView extends Base {
         });
     }
 
-    public async addColumn(columnName: string): Promise<void> {
+    public async addColumn(columnName: string): Promise<string> {
         await this.blankSlateAddButton.or(this.addNewColumnButton).click();
         await this.page.getByTestId("popup-new-generic-input").fill(columnName);
         await this.page.getByTestId("popup-new-generic-button").click();
+        const column = this.getColumnByName(columnName);
+        await expect(column.getByTestId("column-header-title")).toHaveText(columnName);
+        const id = await column.getAttribute("data-id");
+        if (!id) throw new Error(`New board column ${columnName} did not expose its entity ID`);
+        return id;
+    }
+
+    public async gotoProject(projectId: string): Promise<void> {
+        await this.page.goto(`/app/project/${projectId}`);
+        await expect(this.board).toBeVisible();
     }
 
     public async renameColumn(oldColumnName: string, newColumnName: string): Promise<void> {
@@ -54,6 +64,9 @@ class BoardView extends Base {
 
     public async deleteColumn(columnName: string): Promise<void> {
         const column = await this.getColumnByName(columnName);
+        const stackId = await column.getAttribute("data-id");
+        if (!stackId) throw new Error(`Board column ${columnName} did not expose its entity ID`);
+
         await column.getByTestId("column-header-wrapper").hover();
         const menuButton = column.getByTestId("column-header-menu-button");
         await expect(menuButton).toBeVisible();
@@ -61,16 +74,41 @@ class BoardView extends Base {
 
         const deleteMenuItem = this.columnContextMenuItems.filter({ hasText: "Delete stack..." });
         await expect(deleteMenuItem).toBeVisible();
+
+        const responsePromise = this.page.waitForResponse(
+            response =>
+                response.request().method() === "DELETE" && response.url().includes(`/api/stacks/${stackId}`)
+        );
+
         await deleteMenuItem.click();
         const dialog = this.page.getByRole("alertdialog");
         await dialog.getByRole("button", { name: "Yes" }).click();
         await dialog.waitFor({ state: "hidden" });
+
+        const response = await responsePromise;
+        expect(response.ok(), `Deleting column ${columnName} returned ${response.status()}`).toBeTruthy();
     }
 
     public getCardByName(cardName: string): Locator {
         return this.cards.filter({
             has: this.page.getByTestId("task-card-title").filter({ hasText: cardName }),
         });
+    }
+
+    public async expectCardVisible(cardName: string): Promise<void> {
+        await expect(this.getCardByName(cardName)).toBeVisible();
+    }
+
+    public async expectCardAbsent(cardName: string): Promise<void> {
+        await expect(this.getCardByName(cardName)).toHaveCount(0);
+    }
+
+    public async getCardIdByName(cardName: string): Promise<string> {
+        const card = this.getCardByName(cardName);
+        await expect(card).toBeVisible();
+        const id = await card.getAttribute("data-id");
+        if (!id) throw new Error(`Task card ${cardName} did not expose its entity ID`);
+        return id;
     }
 
     public async openCard(cardName: string): Promise<void> {
@@ -102,7 +140,71 @@ class BoardView extends Base {
         const column = await this.getColumnByName(columnName);
         await column.getByTestId("column-add-task-button").click();
         await this.page.getByTestId("new-task-title-input").fill(taskTitle);
+        const responsePromise = this.page.waitForResponse(
+            response => response.request().method() === "POST" && response.url().includes("/api/tasks")
+        );
         await this.page.keyboard.press("Enter");
+        const response = await responsePromise;
+        expect(
+            response.ok(),
+            `Task create returned ${response.status()}: ${await response.text()}`
+        ).toBeTruthy();
+    }
+
+    public async addTaskToStack(stackId: string, taskTitle: string): Promise<void> {
+        const column = this.page.locator(`[data-testid="board-column"][data-id="${stackId}"]`);
+        await column.getByTestId("column-add-task-button").click();
+        await this.page.getByTestId("new-task-title-input").fill(taskTitle);
+        const responsePromise = this.page.waitForResponse(
+            response => response.request().method() === "POST" && response.url().includes("/api/tasks")
+        );
+        await this.page.keyboard.press("Enter");
+        const response = await responsePromise;
+        expect(
+            response.ok(),
+            `Task create returned ${response.status()}: ${await response.text()}`
+        ).toBeTruthy();
+    }
+
+    public async deleteTasksFromColumn(
+        columnName: string,
+        stackId: string,
+        taskIds: string[]
+    ): Promise<void> {
+        const column = this.getColumnByName(columnName);
+        await column.getByTestId("column-header-wrapper").hover();
+        await column.getByTestId("column-header-menu-button").click();
+        await this.columnContextMenuItems.getByText("Delete stack...").click();
+
+        const dialog = this.page.getByRole("alertdialog");
+        await dialog.getByTestId("confirm-dialog-checkbox").click();
+        await expect(dialog.getByTestId("confirm-dialog-checkbox-input")).toBeChecked();
+
+        const deleteResponse = this.page.waitForResponse(
+            response =>
+                response.request().method() === "DELETE" &&
+                response.url().includes(`/api/stacks/${stackId}`) &&
+                response.url().includes("tasks=true")
+        );
+        await dialog.getByRole("button", { name: "Yes" }).click();
+        const response = await deleteResponse;
+        expect(
+            response.ok(),
+            `Deleting stack tasks failed: ${response.status()} ${await response.text()}`
+        ).toBeTruthy();
+
+        const persistedResponse = await this.page.request.get(`/api/tasks?stack=${stackId}`);
+        expect(persistedResponse.ok()).toBeTruthy();
+        const responseBody = await persistedResponse.json();
+        const persistedTasks = responseBody.data ?? responseBody;
+        const persistedIds = persistedTasks.map((task: { id: string }) => task.id);
+        for (const id of taskIds) expect(persistedIds).not.toContain(id);
+
+        await expect(column).toBeVisible();
+        await expect(column.getByTestId("task-card")).toHaveCount(0);
+        await this.page.reload();
+        await expect(this.getColumnByName(columnName)).toBeVisible();
+        await expect(this.getColumnByName(columnName).getByTestId("task-card")).toHaveCount(0);
     }
 
     public async addTaskToColumnByIndex(columnIndex: number, taskTitle: string): Promise<void> {
