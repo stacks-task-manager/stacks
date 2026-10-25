@@ -110,3 +110,6 @@ opencode-swarm.json
 
 # Manual live-model evaluation reports
 ai-eval-reports/
+
+# Generated repository snapshots
+/repomix-output.xml
