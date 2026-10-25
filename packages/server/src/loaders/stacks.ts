@@ -134,17 +134,32 @@ async function update(id: string, data: any, extTransaction?: Transaction): Prom
         assertCanWriteResource(stack, "owner");
 
         if (data.tasksOrder !== undefined) {
-            const requestedTaskIds = [...new Set(data.tasksOrder)];
-            const tasks = await findAll<{ id: string }>({
-                entity: TaskEntity,
-                filter: {
+            const requestedTaskIds = [...new Set<string>(data.tasksOrder)];
+            const taskCount = await TaskEntity.count({
+                where: {
                     id: { [Op.in]: requestedTaskIds },
                     project: stack.project,
+                    tenant: getCurrentUser().tenant,
+                    deleted: null,
                 },
                 transaction,
             });
-            if (tasks.length !== requestedTaskIds.length) {
+            if (taskCount !== requestedTaskIds.length) {
                 throw Errors.notFound(translate("Task not found"));
+            }
+
+            // Retain stored private entries without exposing them; newly added references still need ACL access.
+            const existingTaskIds = new Set(stack.tasksOrder ?? []);
+            const addedTaskIds = requestedTaskIds.filter(taskId => !existingTaskIds.has(taskId));
+            if (addedTaskIds.length > 0) {
+                const visibleTasks = await findAll<{ id: string }>({
+                    entity: TaskEntity,
+                    filter: { id: { [Op.in]: addedTaskIds }, project: stack.project },
+                    transaction,
+                });
+                if (visibleTasks.length !== addedTaskIds.length) {
+                    throw Errors.notFound(translate("Task not found"));
+                }
             }
         }
 
