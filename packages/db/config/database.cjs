@@ -1,4 +1,10 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+const fs = require("node:fs");
+const path = require("node:path");
+
+const envFile = path.join(__dirname, "../.env");
+if (fs.existsSync(envFile)) process.loadEnvFile(envFile);
+
 module.exports = {
     development: {
         username: process.env.POSTGRES_USER ?? "postgres",

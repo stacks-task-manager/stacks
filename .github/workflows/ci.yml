@@ -30,6 +30,9 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
 
+      - name: Test database CLI environment configuration
+        run: node --test packages/db/test/database-config.test.cjs
+
       - name: Build internal packages
         run: yarn build:internal
 

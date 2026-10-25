@@ -24,6 +24,9 @@ Variables:
 - `POSTGRES_HOST`, `POSTGRES_PORT`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`
 - `DEBUG_DB=true` — _(optional)_ enable Sequelize SQL logging
 
+Migration tooling reads `packages/db/.env` regardless of the working directory. Explicitly exported
+environment variables take precedence over that file, including in Docker and CI.
+
 ## Development
 
 This package is a library — it doesn't run as a service. Build it with:
