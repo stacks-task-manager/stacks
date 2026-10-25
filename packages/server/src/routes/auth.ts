@@ -31,7 +31,7 @@ import { enforceAuthAttemptLimit } from "../utils/authRateLimit";
 import { toPublicPerson } from "../utils/publicPerson";
 import { Logger } from "../utils/logger";
 import { privateResponse } from "../middleware/privateResponse";
-import { issueSession, revokeAllUserSessions, revokeSession } from "../services/sessions";
+import { issuePasswordSession, revokeAllUserSessions, revokeSession } from "../services/sessions";
 import { createActivationToken, hashAccountToken } from "../services/accountTokens";
 import { findPublicRegistrationRole } from "../services/registration";
 import type { User } from "../types";
@@ -321,7 +321,9 @@ auth.post(
             throw Errors.forbidden(translate("Tenant disabled"));
         }
 
-        const { token } = await issueSession(String(user.get("id")), String(user.get("tenant")));
+        const session = await issuePasswordSession(String(user.get("id")), user.get("password"));
+        if (!session) throw Errors.unauthorized(translate("Invalid credentials"));
+        const { token } = session;
 
         Logger.info("User logged in successfully", {
             userId: user.get("id"),

@@ -19,7 +19,7 @@ import { translate } from "@stacks/translations";
 import { validator } from "../middleware/validator";
 import { EmailsLoader } from "../loaders";
 import { createPasswordResetToken, hashAccountToken } from "../services/accountTokens";
-import { issueSession, revokeAllUserSessions } from "../services/sessions";
+import { issuePasswordSession, revokeAllUserSessions } from "../services/sessions";
 import type { User } from "../types";
 import { getClientIP } from "../utils/clientIp";
 import { enforceAuthAttemptLimit } from "../utils/authRateLimit";
@@ -144,7 +144,12 @@ login.post("/", requireSameSite, async c => {
             });
             return c.redirect("/login");
         }
-        const { token } = await issueSession(String(activeUser.get("id")), String(activeUser.get("tenant")));
+        const session = await issuePasswordSession(String(activeUser.get("id")), user.get("password"));
+        if (!session) {
+            await setLoginFlash(c, { errors: ["Invalid email or password"] });
+            return c.redirect("/login");
+        }
+        const { token } = session;
 
         await setSignedCookie(
             c,

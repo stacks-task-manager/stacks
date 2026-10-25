@@ -6,7 +6,8 @@
  *
  * The raw bearer token is never stored here; only its claims are signed.
  */
-import { SessionEntity } from "@stacks/db";
+import { sequelize, SessionEntity, TenantEntity, UserEntity } from "@stacks/db";
+import type { Transaction } from "sequelize";
 import { sign } from "hono/jwt";
 import { randomUUID } from "node:crypto";
 import { SESSION_AUDIENCE, SESSION_ISSUER, SESSION_LIFETIME_SECONDS } from "../config/session";
@@ -19,7 +20,8 @@ import { getJwtSecret } from "../config/secrets";
 export async function issueSession(
     userId: string,
     tenant: string,
-    lifetimeSeconds: number = SESSION_LIFETIME_SECONDS
+    lifetimeSeconds: number = SESSION_LIFETIME_SECONDS,
+    transaction?: Transaction
 ): Promise<{ sid: string; token: string }> {
     const sid = randomUUID();
     const issuedAt = Math.floor(Date.now() / 1000);
@@ -37,15 +39,51 @@ export async function issueSession(
         getJwtSecret()
     );
 
-    await SessionEntity.create({
-        id: sid,
-        userId,
-        tenant,
-        createdAt: new Date(issuedAt * 1000),
-        expiresAt: new Date(expiresAt * 1000),
-    });
+    await SessionEntity.create(
+        {
+            id: sid,
+            userId,
+            tenant,
+            createdAt: new Date(issuedAt * 1000),
+            expiresAt: new Date(expiresAt * 1000),
+        },
+        { transaction }
+    );
 
     return { sid, token };
+}
+
+/**
+ * Complete a password login only while the credential that was checked is still
+ * current. Holding the user row until the session insert commits serializes this
+ * operation with password reset: either reset revokes this session, or the login
+ * sees the replacement hash and issues nothing. The user lock is also the first
+ * lock taken by credential changes.
+ */
+export async function issuePasswordSession(
+    userId: string,
+    checkedPasswordHash: string
+): Promise<{ sid: string; token: string } | null> {
+    return sequelize.transaction(async transaction => {
+        const user = await UserEntity.findByPk(userId, { transaction, lock: transaction.LOCK.UPDATE });
+        if (
+            !user ||
+            user.get("password") !== checkedPasswordHash ||
+            user.get("disabled") ||
+            user.get("deleted") ||
+            user.get("token") ||
+            user.get("activationTokenHash")
+        ) {
+            return null;
+        }
+
+        const tenant = await TenantEntity.findByPk(user.get("tenant"), {
+            transaction,
+        });
+        if (!tenant || tenant.get("disabled")) return null;
+
+        return issueSession(userId, String(user.get("tenant")), SESSION_LIFETIME_SECONDS, transaction);
+    });
 }
 
 /**
