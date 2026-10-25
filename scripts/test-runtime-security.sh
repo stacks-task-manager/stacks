@@ -90,6 +90,18 @@ if (!license || (typeof license === "string" ? !license.endsWith(":ro") : licens
     throw new Error("The license key mount must be read-only");
 }
 const email = compose.services.email;
+for (const [key, fallback] of Object.entries({
+    SMTP_REQUIRE_TLS: "false",
+    SMTP_TLS_REJECT_UNAUTHORIZED: "true",
+    SMTP_MAX_CONNECTIONS: "5",
+    EMAIL_MAX_ATTEMPTS: "3",
+    EMAIL_CLAIM_LEASE_MS: "300000",
+    EMAIL_SEND_CONCURRENCY: "5",
+})) {
+    if (getEnvironment(email, key) !== "${" + key + ":-" + fallback + "}") {
+        throw new Error(`The email worker must forward ${key} with its runtime default`);
+    }
+}
 const migration = compose.services.migration;
 if (getEnvironment(service, "POSTGRES_USER") !== "${POSTGRES_APP_USER:-stacks_app}") {
     throw new Error("The API must connect with the restricted application database role");

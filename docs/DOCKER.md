@@ -47,6 +47,12 @@ At minimum, set:
 | `PUBLIC_URL`            | The public HTTPS URL users will hit                                                         |
 | `STACKS_BIND_ADDRESS`   | Host interface for the API port; defaults to `127.0.0.1` and should stay private behind TLS |
 
+For SMTP submission using STARTTLS (typically port 587 with `SMTP_SECURE=false`), set
+`SMTP_REQUIRE_TLS=true` to reject delivery when the SMTP server does not offer STARTTLS.
+`SMTP_TLS_REJECT_UNAUTHORIZED` defaults to `true` and controls certificate verification.
+The email service explicitly forwards these settings from `.env`, along with
+`SMTP_MAX_CONNECTIONS`, `EMAIL_MAX_ATTEMPTS`, `EMAIL_CLAIM_LEASE_MS`, and `EMAIL_SEND_CONCURRENCY`.
+
 The server, email worker, and migration job run as the unprivileged `node` user (UID/GID 1000 by
 default). Set `STACKS_UID` and `STACKS_GID` in `.env` to the host account that owns the persistent
 server directories and license file. Prepare those paths before the first start; for example, on a
