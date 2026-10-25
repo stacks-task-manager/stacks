@@ -197,7 +197,7 @@ export class Subtasks {
         await this.dateRangePicker.wrapper.waitFor({ state: "visible" });
         await this.dateRangePicker.wrapper.getByTestId("date-range-picker-range-next-week").click();
         const selectedRange = (
-            await this.dateRangePicker.wrapper.getByTestId("date-range-picker-wrapper").innerText()
+            await this.dateRangePicker.wrapper.getByTestId("formatted-date-range").innerText()
         ).trim();
         const subtaskId = await this.getSubtaskIdFromRow(subtask);
         const updateResponse = this.page.waitForResponse(
@@ -217,7 +217,7 @@ export class Subtasks {
         await dateButton.click({ force: true });
         await this.dateRangePicker.wrapper.waitFor({ state: "visible" });
         const text = (
-            await this.dateRangePicker.wrapper.getByTestId("date-range-picker-wrapper").innerText()
+            await this.dateRangePicker.wrapper.getByTestId("formatted-date-range").innerText()
         ).trim();
         await this.dateRangePicker.cancelButton.click();
         return text;

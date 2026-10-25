@@ -66,10 +66,11 @@ export class TaskTimer {
 
     public async cancelRunningTimer(): Promise<void> {
         const stop = this.taskDetails.getByTestId("time-tracker-stop");
+        const form = this.page.getByTestId("quick-timelog");
         if (await stop.isVisible().catch(() => false)) {
             await stop.click();
+            await expect(form).toBeVisible();
         }
-        const form = this.page.getByTestId("quick-timelog");
         if (await form.isVisible().catch(() => false)) {
             await this.page.getByTestId("time-tracker-clear").click();
             await expect(form).toBeHidden();
