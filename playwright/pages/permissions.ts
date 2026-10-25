@@ -33,20 +33,29 @@ export class PermissionsPage extends Base {
         });
         expect(calendarResponse.ok()).toBeTruthy();
         const calendarId = (await calendarResponse.json()).data.id as string;
-        const start = new Date();
-        const end = new Date(start.getTime() + 60 * 60 * 1000);
-        const eventResponse = await this.page.request.post("/api/events", {
-            headers: await this.browserMutationHeaders(),
-            data: {
-                title: `${title} event`,
-                start: start.toISOString(),
-                end: end.toISOString(),
-                source: "local",
-                calendar: calendarId,
-            },
-        });
-        expect(eventResponse.ok()).toBeTruthy();
-        return { calendarId, eventId: (await eventResponse.json()).data.id as string };
+        try {
+            const start = new Date();
+            const end = new Date(start.getTime() + 60 * 60 * 1000);
+            const eventResponse = await this.page.request.post("/api/events", {
+                headers: await this.browserMutationHeaders(),
+                data: {
+                    title: `${title} event`,
+                    start: start.toISOString(),
+                    end: end.toISOString(),
+                    source: "local",
+                    calendar: calendarId,
+                },
+            });
+            expect(eventResponse.ok()).toBeTruthy();
+            return { calendarId, eventId: (await eventResponse.json()).data.id as string };
+        } catch (error) {
+            try {
+                await this.deleteCalendar(calendarId);
+            } catch (cleanupError) {
+                throw new AggregateError([error, cleanupError], "Calendar setup cleanup failed");
+            }
+            throw error;
+        }
     }
 
     async reloadWorkspace() {
@@ -106,22 +115,25 @@ export class PermissionsPage extends Base {
     }
 
     async deleteTask(taskId: string) {
-        await this.page.request.delete(`/api/tasks/${taskId}`, {
+        const response = await this.page.request.delete(`/api/tasks/${taskId}`, {
             headers: await this.browserMutationHeaders(),
         });
+        expect(response.ok(), `Task cleanup failed (${response.status()})`).toBeTruthy();
     }
 
     async deleteComment(resourceId: string, commentId: string) {
-        await this.page.request.delete(`/api/activities/${commentId}`, {
+        const response = await this.page.request.delete(`/api/activities/${commentId}`, {
             headers: await this.browserMutationHeaders(),
             data: { resourceId },
         });
+        expect(response.ok(), `Comment cleanup failed (${response.status()})`).toBeTruthy();
     }
 
     async deleteAttachment(attachmentId: string) {
-        await this.page.request.delete(`/api/files/attachment/${attachmentId}`, {
+        const response = await this.page.request.delete(`/api/files/attachment/${attachmentId}`, {
             headers: await this.browserMutationHeaders(),
         });
+        expect(response.ok(), `Attachment cleanup failed (${response.status()})`).toBeTruthy();
     }
 
     async makeFolderPrivate(folderId: string) {
@@ -192,11 +204,24 @@ export class PermissionsPage extends Base {
     }
 
     async deleteDocument(id: string) {
-        await this.page.request.delete(`/api/documents/${id}`);
+        const response = await this.page.request.delete(`/api/documents/${id}`, {
+            headers: await this.browserMutationHeaders(),
+        });
+        expect(response.ok(), `Document cleanup failed (${response.status()})`).toBeTruthy();
     }
 
     async deleteCalendar(id: string) {
-        await this.page.request.delete(`/api/calendars/${id}`);
+        const response = await this.page.request.delete(`/api/calendars/${id}`, {
+            headers: await this.browserMutationHeaders(),
+        });
+        expect(response.ok(), `Calendar cleanup failed (${response.status()})`).toBeTruthy();
+    }
+
+    async deleteEvent(id: string) {
+        const response = await this.page.request.delete(`/api/events/${id}`, {
+            headers: await this.browserMutationHeaders(),
+        });
+        expect(response.ok(), `Event cleanup failed (${response.status()})`).toBeTruthy();
     }
 
     private async openPermissionsMenu(kind: "folder" | "document", resourceId: string) {

@@ -4,6 +4,19 @@ import { bootstrapContext } from "../../fixtures/bootstrapContext";
 import { closeDb, getDb } from "../../fixtures/db";
 import Auth from "../../pages/auth";
 import { PermissionsPage } from "../../pages/permissions";
+import { e2eBaseUrl } from "../../config/runtime";
+
+async function cleanup(actions: Array<() => Promise<unknown>>) {
+    const errors: unknown[] = [];
+    for (const action of actions) {
+        try {
+            await action();
+        } catch (error) {
+            errors.push(error);
+        }
+    }
+    if (errors.length) throw new AggregateError(errors, "Permissions scenario cleanup failed");
+}
 
 test.describe("Hierarchical permissions", () => {
     let browser: Browser;
@@ -27,7 +40,7 @@ test.describe("Hierarchical permissions", () => {
             calendar: { read: true },
         });
 
-        viewerContext = await browser.newContext();
+        viewerContext = await browser.newContext({ baseURL: e2eBaseUrl });
         viewerPage = await viewerContext.newPage();
         await new Auth(viewerPage).loginAndWaitForAuthenticatedRequest(viewerEmail, viewerPassword);
 
@@ -37,29 +50,39 @@ test.describe("Hierarchical permissions", () => {
     });
 
     test.afterAll(async () => {
-        if (viewerContext) await viewerContext.close();
-        if (adminContext) await adminContext.close();
-        if (browser) await browser.close();
-        await getDb().cleanupUser(viewerEmail);
-        if (viewerRoleTitle) await getDb().cleanupRole(viewerRoleTitle);
-        await closeDb();
+        await cleanup([
+            async () => {
+                if (viewerContext) await viewerContext.close();
+            },
+            async () => {
+                if (adminContext) await adminContext.close();
+            },
+            async () => {
+                if (browser) await browser.close();
+            },
+            () => getDb().cleanupUser(viewerEmail),
+            async () => {
+                if (viewerRoleTitle) await getDb().cleanupRole(viewerRoleTitle);
+            },
+            closeDb,
+        ]);
     });
 
     test("a private parent folder hides public nested folders and projects", async () => {
         const suffix = Date.now();
         const folderId = await adminPermissions.createDocument(`Permissions folder ${suffix}`, "folder");
-        const nestedFolderId = await adminPermissions.createDocument(
-            `Public nested folder ${suffix}`,
-            "folder",
-            folderId
-        );
-        const projectId = await adminPermissions.createDocument(
-            `Public child project ${suffix}`,
-            "project",
-            nestedFolderId
-        );
-
         try {
+            const nestedFolderId = await adminPermissions.createDocument(
+                `Public nested folder ${suffix}`,
+                "folder",
+                folderId
+            );
+            const projectId = await adminPermissions.createDocument(
+                `Public child project ${suffix}`,
+                "project",
+                nestedFolderId
+            );
+
             await adminPermissions.reloadWorkspace();
             await adminPermissions.makeFolderPrivate(folderId);
             await viewerPermissions.reloadWorkspace();
@@ -92,14 +115,17 @@ test.describe("Hierarchical permissions", () => {
             await adminPermissions.makeCalendarPrivate(calendarId);
             await viewerPermissions.expectCalendarAndEventHidden(calendarId, eventId);
         } finally {
-            await adminPermissions.deleteCalendar(calendarId);
+            await cleanup([
+                () => adminPermissions.deleteEvent(eventId),
+                () => adminPermissions.deleteCalendar(calendarId),
+            ]);
         }
     });
 
     test("a role without people read access cannot list people", async () => {
         const restrictedEmail = `permissions-restricted-${Date.now()}@example.com`;
         const restrictedPassword = "Restricted123!";
-        const restrictedContext = await browser.newContext();
+        const restrictedContext = await browser.newContext({ baseURL: e2eBaseUrl });
         const restrictedPage = await restrictedContext.newPage();
         let restrictedRoleTitle: string | undefined;
 
@@ -118,9 +144,13 @@ test.describe("Hierarchical permissions", () => {
             await restrictedPermissions.expectPeopleListDenied();
             await viewerPermissions.expectPeopleListLoaded();
         } finally {
-            await restrictedContext.close();
-            await getDb().cleanupUser(restrictedEmail);
-            if (restrictedRoleTitle) await getDb().cleanupRole(restrictedRoleTitle);
+            await cleanup([
+                () => restrictedContext.close(),
+                () => getDb().cleanupUser(restrictedEmail),
+                async () => {
+                    if (restrictedRoleTitle) await getDb().cleanupRole(restrictedRoleTitle);
+                },
+            ]);
         }
     });
 
@@ -132,7 +162,7 @@ test.describe("Hierarchical permissions", () => {
         );
         const foreignEmail = `permissions-foreign-${suffix}@example.com`;
         const foreignPassword = "Foreign123!";
-        const foreignContext = await browser.newContext();
+        const foreignContext = await browser.newContext({ baseURL: e2eBaseUrl });
         const foreignPage = await foreignContext.newPage();
         let foreignTenantId: string | undefined;
         let foreignRoleTitle: string | undefined;
@@ -152,11 +182,17 @@ test.describe("Hierarchical permissions", () => {
             await foreignPermissions.expectDocumentsHidden(projectId);
             await foreignPermissions.expectProjectDenied(projectId);
         } finally {
-            await foreignContext.close();
-            await adminPermissions.deleteDocument(projectId);
-            await getDb().cleanupUser(foreignEmail);
-            if (foreignRoleTitle) await getDb().cleanupRole(foreignRoleTitle);
-            if (foreignTenantId) await getDb().cleanupTenant(foreignTenantId);
+            await cleanup([
+                () => foreignContext.close(),
+                () => adminPermissions.deleteDocument(projectId),
+                () => getDb().cleanupUser(foreignEmail),
+                async () => {
+                    if (foreignRoleTitle) await getDb().cleanupRole(foreignRoleTitle);
+                },
+                async () => {
+                    if (foreignTenantId) await getDb().cleanupTenant(foreignTenantId);
+                },
+            ]);
         }
     });
 
@@ -181,16 +217,19 @@ test.describe("Hierarchical permissions", () => {
             `Inherited access project ${suffix}`,
             "project"
         );
-        const stackId = await adminPermissions.createStack(projectId, "Inbox");
-        const taskId = await adminPermissions.createTask(projectId, stackId, `Inherited task ${suffix}`);
-        const commentId = await adminPermissions.addComment(taskId, "Inherited comment");
-        const attachmentId = await adminPermissions.attachFile(
-            taskId,
-            `inherited-${suffix}.txt`,
-            "inherited payload"
-        );
-
+        let taskId: string | undefined;
+        let commentId: string | undefined;
+        let attachmentId: string | undefined;
         try {
+            const stackId = await adminPermissions.createStack(projectId, "Inbox");
+            taskId = await adminPermissions.createTask(projectId, stackId, `Inherited task ${suffix}`);
+            commentId = await adminPermissions.addComment(taskId, "Inherited comment");
+            attachmentId = await adminPermissions.attachFile(
+                taskId,
+                `inherited-${suffix}.txt`,
+                "inherited payload"
+            );
+
             await viewerPermissions.reloadWorkspace();
             await viewerPermissions.expectTaskVisible(projectId, taskId);
             await viewerPermissions.expectCommentVisible(taskId, commentId);
@@ -206,20 +245,18 @@ test.describe("Hierarchical permissions", () => {
             await viewerPermissions.expectAttachmentDenied(taskId);
             await viewerPermissions.expectTaskWriteDenied(taskId);
         } finally {
-            const cleanupErrors: Error[] = [];
-            const attempt = async (action: () => Promise<unknown>) => {
-                try {
-                    await action();
-                } catch (error) {
-                    cleanupErrors.push(error as Error);
-                }
-            };
-            await attempt(() => adminPermissions.deleteComment(taskId, commentId));
-            await attempt(() => adminPermissions.deleteAttachment(attachmentId));
-            await attempt(() => adminPermissions.deleteTask(taskId));
-            await attempt(() => adminPermissions.deleteDocument(projectId));
-            if (cleanupErrors.length)
-                throw new AggregateError(cleanupErrors, "Inherited access cleanup failed");
+            await cleanup([
+                async () => {
+                    if (taskId && commentId) await adminPermissions.deleteComment(taskId, commentId);
+                },
+                async () => {
+                    if (attachmentId) await adminPermissions.deleteAttachment(attachmentId);
+                },
+                async () => {
+                    if (taskId) await adminPermissions.deleteTask(taskId);
+                },
+                () => adminPermissions.deleteDocument(projectId),
+            ]);
         }
     });
 });

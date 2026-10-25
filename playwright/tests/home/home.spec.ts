@@ -6,11 +6,13 @@ import Bookmarks from "../../pages/bookmarks";
 import Project from "../../pages/project";
 import People from "../../pages/people";
 import { closeDb, getDb } from "../../fixtures/db";
+import Auth from "../../pages/auth";
 
 /**
  * Home favorites, pinned bookmarks and private notes at `/app/home` against the real API.
  *
- * Every record is scenario-owned (`TOKEN`), so the seeded database never decides an outcome. The
+ * Every record and the signed-in user are scenario-owned (`TOKEN`), so existing bookmarks cannot
+ * affect the empty-state assertions. The
  * three Home widgets are app-owned, so rows, avatars and empty states are read through the testids
  * in `packages/app/src/app/views/Home/Home.tsx` (`home-bookmark-<id>`, `home-avatar-<id>`,
  * `home-empty-*`). Favorite projects and favorite companies render through third-party Blueprint
@@ -38,6 +40,7 @@ const FAVORITE_PERSON_LAST = `Person ${TOKEN}`;
 const FAVORITE_PERSON_EMAIL = `home-favs-${TOKEN}@example.com`;
 const FAVORITE_COMPANY_TITLE = `Home favorite company ${TOKEN}`;
 const NOTES_TEXT = `Home private notes ${TOKEN}`;
+const USER_EMAIL = `${TOKEN}@example.com`;
 
 test.describe("Home - Favorites, pinned bookmarks and private notes", () => {
     let browser: Browser;
@@ -51,10 +54,19 @@ test.describe("Home - Favorites, pinned bookmarks and private notes", () => {
     const projectIds: string[] = [];
     const personIds = new Set<string>();
     const companyIds = new Set<string>();
+    let userRoleTitle: string | undefined;
 
-    test.beforeAll(async ({ login }: any) => {
-        ({ browser, context, page } = await bootstrapContext());
-        await login({ page });
+    test.beforeAll(async () => {
+        const password = "HomeFavorites123!";
+        userRoleTitle = await getDb().createActiveUserWithAccess(USER_EMAIL, password, {
+            people: { read: true, write: true },
+            companies: { read: true, write: true },
+            roles: { read: true },
+            calendar: { read: true },
+            project_settings: { read: true, write: true },
+        });
+        ({ browser, context, page } = await bootstrapContext({ ignoreAuth: true }));
+        await new Auth(page).loginAndWaitForAuthenticatedRequest(USER_EMAIL, password);
 
         home = new Home(page);
         bookmarks = new Bookmarks(page);
@@ -103,6 +115,10 @@ test.describe("Home - Favorites, pinned bookmarks and private notes", () => {
         for (const companyId of companyIds) {
             await attempt(`delete company ${companyId}`, () => getDb().cleanupCompany(companyId));
         }
+        if (userRoleTitle) {
+            await attempt("delete scenario user", () => getDb().cleanupUser(USER_EMAIL));
+            await attempt("delete scenario role", () => getDb().cleanupRole(userRoleTitle!));
+        }
         await attempt("close db", () => closeDb());
 
         if (page) await attempt("close page", () => page.close());
@@ -111,7 +127,7 @@ test.describe("Home - Favorites, pinned bookmarks and private notes", () => {
         if (cleanupErrors.length) throw new AggregateError(cleanupErrors, "Home cleanup failed");
     });
 
-    test("Should render the favorite, pin and notes empty states for a fresh browser context", async () => {
+    test("Should render the favorite, pin and notes empty states for a new user", async () => {
         await home.open();
         await expect(home.emptyState("favorite-projects")).toBeVisible();
         await expect(home.emptyState("pinned-bookmarks")).toBeVisible();
@@ -126,13 +142,14 @@ test.describe("Home - Favorites, pinned bookmarks and private notes", () => {
             type: "url",
             pinned: true,
         });
+        bookmarkIds.push(pinnedId);
         const unpinnedId = await bookmarks.createViaApi({
             title: UNPINNED_TITLE,
             url: UNPINNED_URL,
             type: "url",
             pinned: false,
         });
-        bookmarkIds.push(pinnedId, unpinnedId);
+        bookmarkIds.push(unpinnedId);
 
         await home.open();
         await home.reload();
@@ -155,10 +172,11 @@ test.describe("Home - Favorites, pinned bookmarks and private notes", () => {
 
     test("Should list a favorited project on Home and drop it when un-favorited", async () => {
         const favoriteId = await project.addNew({ name: FAVORITE_PROJECT_TITLE });
-        const ordinaryId = await project.addNew({ name: ORDINARY_PROJECT_TITLE });
         if (!favoriteId) throw new Error(`project ${FAVORITE_PROJECT_TITLE} was not created`);
+        projectIds.push(favoriteId);
+        const ordinaryId = await project.addNew({ name: ORDINARY_PROJECT_TITLE });
         if (!ordinaryId) throw new Error(`project ${ORDINARY_PROJECT_TITLE} was not created`);
-        projectIds.push(favoriteId, ordinaryId);
+        projectIds.push(ordinaryId);
 
         await project.goto(`/app/project/${favoriteId}`);
         await project.toggleFavorite();
@@ -183,11 +201,11 @@ test.describe("Home - Favorites, pinned bookmarks and private notes", () => {
             FAVORITE_PERSON_LAST,
             FAVORITE_PERSON_EMAIL
         );
+        if (!personId) throw new Error("scenario person was not created");
+        personIds.add(personId);
         await people.goto("/app/people");
         const companyId = await people.addCompany(FAVORITE_COMPANY_TITLE);
-        if (!personId) throw new Error("scenario person was not created");
         if (!companyId) throw new Error("scenario company was not created");
-        personIds.add(personId);
         companyIds.add(companyId);
 
         await people.openPersonProfile(personId);
