@@ -208,10 +208,18 @@ export function TablePersistent<T>({
         shallowEqual
     );
 
+    const validData = useMemo(
+        () =>
+            (data as (T | TablePersistentGroupData<T>)[]).filter(
+                item => item != null && typeof item === "object" && !Array.isArray(item)
+            ),
+        [data]
+    );
+
     const isDataGrouped = useMemo(() => {
-        const item = data.at(0);
+        const item = validData.at(0);
         return item != null && "groupId" in (item as TablePersistentGroupData<T>);
-    }, [data]);
+    }, [validData]);
 
     const rows = useMemo(() => {
         const compareRows = (A: T, B: T) =>
@@ -223,18 +231,18 @@ export function TablePersistent<T>({
             onSort != null || (Boolean(sortBy) && sortBy !== "none" && columns[sortBy]?.isSortable === true);
 
         if (!shouldSort) {
-            return data;
+            return validData;
         }
 
         if (isDataGrouped) {
-            return (data as TablePersistentGroupData<T>[]).map(group => ({
+            return (validData as TablePersistentGroupData<T>[]).map(group => ({
                 ...group,
                 data: [...group.data].sort(compareRows),
             }));
         }
 
-        return [...(data as T[])].sort(compareRows);
-    }, [columns, data, isDataGrouped, onSort, sortBy, sortDesc]);
+        return [...(validData as T[])].sort(compareRows);
+    }, [columns, validData, isDataGrouped, onSort, sortBy, sortDesc]);
 
     const handleSort = (name: string, desc: boolean) => {
         storeInstance.setSorting(name, desc);
