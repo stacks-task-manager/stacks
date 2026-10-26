@@ -7351,7 +7351,7 @@ __metadata:
     "@testing-library/jest-dom": ^5.16.1
     "@testing-library/react": ^16.3.0
     "@testing-library/user-event": ^13.5.0
-    "@tiptap/core": 3.30.5
+    "@tiptap/core": 3.32.0
     "@tiptap/extension-code-block": 3.30.5
     "@tiptap/extension-code-block-lowlight": 3.30.5
     "@tiptap/extension-color": 3.30.5
@@ -7562,7 +7562,7 @@ __metadata:
     "@react-navigation/native": ^7.0.0
     "@stacks/types": "workspace:*"
     "@tanstack/react-query": ^5.90.12
-    "@tiptap/core": 2.27.3
+    "@tiptap/core": 3.32.0
     "@types/react": ~19.2.3
     axios: ^1.20.0
     babel-plugin-module-resolver: ^5.0.0
@@ -8071,21 +8071,30 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tiptap/core@npm:2.27.3, @tiptap/core@npm:^2.27.2":
-  version: 2.27.3
-  resolution: "@tiptap/core@npm:2.27.3"
-  peerDependencies:
-    "@tiptap/pm": ^2.7.0
-  checksum: 6f4c89c1c98c502b90b4474788393d55ad385f0453d504990f9883422ae684a06edc7d0fb843571106d9c668168a37eff6065a7fd5827be50815075de7ab2458
-  languageName: node
-  linkType: hard
-
 "@tiptap/core@npm:3.30.5":
   version: 3.30.5
   resolution: "@tiptap/core@npm:3.30.5"
   peerDependencies:
     "@tiptap/pm": 3.30.5
   checksum: 34b261c8d6ae2f16c9c1659c0a457641c5b56171a0892d268157200f0668e97848bac3a8c3b5d4a99680c993a5098c9db7a9f20b61ed0a4523c79c95f34c885c
+  languageName: node
+  linkType: hard
+
+"@tiptap/core@npm:3.32.0":
+  version: 3.32.0
+  resolution: "@tiptap/core@npm:3.32.0"
+  peerDependencies:
+    "@tiptap/pm": 3.32.0
+  checksum: 22c40411dba1569cc63c7a542e490de4aa5dfceb4fb7818c479c8b4e5864f5f4b0aa856c29d1f1c5567ce890a9a9e65337a31f0f38c543f9812ddebacfb460e0
+  languageName: node
+  linkType: hard
+
+"@tiptap/core@npm:^2.27.2":
+  version: 2.27.3
+  resolution: "@tiptap/core@npm:2.27.3"
+  peerDependencies:
+    "@tiptap/pm": ^2.7.0
+  checksum: 6f4c89c1c98c502b90b4474788393d55ad385f0453d504990f9883422ae684a06edc7d0fb843571106d9c668168a37eff6065a7fd5827be50815075de7ab2458
   languageName: node
   linkType: hard
 
