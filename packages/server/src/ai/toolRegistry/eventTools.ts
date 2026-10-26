@@ -4,15 +4,40 @@
  */
 import { addDays, endOfDay, endOfMonth, parseISO, startOfDay, startOfMonth, subDays } from "date-fns";
 import { z } from "zod";
-import type { ICalendar, ICalendarEvent } from "@stacks/types";
+import { ROLE_SECTIONS, type ICalendar, type ICalendarEvent } from "@stacks/types";
+import { translate } from "@stacks/translations";
 import { EventsLoader, CalendarsLoader } from "../../loaders";
-import { getCurrentUser } from "../../loaders/context";
+import { canRead, canWrite, getCurrentUser } from "../../loaders/context";
 import { Errors } from "../../errors";
 import googleOAuthService from "../../services/googleOAuthService";
+import { aiDateInput } from "./dateInput";
 import { defineTool } from "./defineTool";
+
+function assertCalendarReadAccess() {
+    if (!canRead(ROLE_SECTIONS.CALENDAR)) {
+        throw Errors.forbidden(translate("Access denied"));
+    }
+}
+
+function assertCalendarWriteAccess() {
+    if (!canWrite(ROLE_SECTIONS.CALENDAR)) {
+        throw Errors.forbidden(translate("Insufficient permissions"));
+    }
+}
 
 const calendarSourceSchema = z.enum(["local", "google"]);
 const eventPatchSourceSchema = z.enum(["local", "google", "microsoft"]);
+const eventIdSchema = z.string().refine(
+    id => {
+        if (z.string().uuid().safeParse(id).success) return true;
+        if (!id.startsWith("google_")) return false;
+
+        const remainder = id.slice("google_".length);
+        const separator = remainder.lastIndexOf("_");
+        return separator > 0 && separator < remainder.length - 1;
+    },
+    { message: "Expected a local UUID or a Google composite event id" }
+);
 
 const eventResponse = (event: ICalendarEvent) => ({
     id: event.id,
@@ -143,8 +168,12 @@ async function assertWritableGoogleCalendar(calendarId: string): Promise<void> {
 const eventCreateSchema = z.object({
     title: z.string().min(1).describe("Event title"),
     description: z.string().optional().describe("Event description"),
-    start: z.string().describe("Event start ISO 8601 date-time"),
-    end: z.string().describe("Event end ISO 8601 date-time"),
+    start: aiDateInput.describe(
+        "Event start as ISO 8601 with explicit UTC/offset for timed events; date-only YYYY-MM-DD for all-day events"
+    ),
+    end: aiDateInput.describe(
+        "Event end as ISO 8601 with explicit UTC/offset for timed events; date-only YYYY-MM-DD for all-day events"
+    ),
     allDay: z.boolean().optional().describe("True for an all-day event"),
     source: calendarSourceSchema.optional().describe("Calendar source; defaults to local"),
     calendar: z
@@ -161,12 +190,25 @@ const eventCreateSchema = z.object({
 });
 
 const eventUpdateSchema = z.object({
-    eventId: z.string().describe("Event UUID, or google_<calendarId>_<eventId> for Google events"),
-    title: z.string().min(1).optional(),
+    eventId: eventIdSchema.describe(
+        "Exact source-specific event id from listCalendarEvents or authorized context; a title is not an event id"
+    ),
+    title: z.string().min(1).optional().describe("New title; omit to preserve the existing title"),
     description: z.string().optional().describe("Event description; pass empty string to clear"),
-    start: z.string().optional().describe("Event start ISO 8601 date-time"),
-    end: z.string().optional().describe("Event end ISO 8601 date-time"),
-    allDay: z.boolean().optional(),
+    start: aiDateInput
+        .optional()
+        .describe(
+            "Event start as ISO 8601 with explicit UTC/offset for timed events; date-only YYYY-MM-DD for all-day events"
+        ),
+    end: aiDateInput
+        .optional()
+        .describe(
+            "Event end as ISO 8601 with explicit UTC/offset for timed events; date-only YYYY-MM-DD for all-day events"
+        ),
+    allDay: z
+        .boolean()
+        .optional()
+        .describe("Set only when changing all-day status; omitted preserves the existing value"),
     location: z.string().optional().describe("Event location; pass empty string to clear"),
     recurrenceRule: z
         .string()
@@ -190,6 +232,7 @@ export const eventAiTools = [
             includeReadOnly: z.boolean().optional().describe("Include read-only calendars; defaults true"),
         }),
         execute: async ({ source, includeReadOnly }) => {
+            assertCalendarReadAccess();
             const calendars: ICalendar[] = [];
             if (!source || source === "local") {
                 calendars.push(
@@ -227,6 +270,7 @@ export const eventAiTools = [
             primary: z.boolean().optional().describe("Set as the default local calendar"),
         }),
         execute: async ({ title, color, primary }) => {
+            assertCalendarWriteAccess();
             const trimmedTitle = title.trim();
             await assertUniqueLocalCalendarTitle(trimmedTitle);
             const calendar = await CalendarsLoader.create({
@@ -243,11 +287,15 @@ export const eventAiTools = [
         description: `Update a local calendar's title, color, or default status. Use listCalendars first if you only know the name.`,
         inputSchema: z.object({
             calendarId: z.string().uuid().describe("Local calendar UUID"),
-            title: z.string().min(1).optional(),
-            color: z.string().optional(),
+            title: z.string().min(1).optional().describe("New title; omit to preserve the existing title"),
+            color: z
+                .string()
+                .optional()
+                .describe("New local calendar color; omitted preserves the existing value"),
             primary: z.boolean().optional().describe("Set as the default local calendar"),
         }),
         execute: async ({ calendarId, title, color, primary }) => {
+            assertCalendarWriteAccess();
             const patch: { title?: string; color?: string; primary?: boolean } = {};
             if (title !== undefined) {
                 const trimmedTitle = title.trim();
@@ -267,11 +315,12 @@ export const eventAiTools = [
 
     defineTool({
         name: "deleteLocalCalendar",
-        description: `Delete a local calendar by id. This does not delete Google calendars.`,
+        description: `Delete a resolved local calendar. Google calendar deletion is unsupported. Returns the deleted calendar reference. Direct MCP execution performs this destructive action immediately; it does not ask for chat confirmation.`,
         inputSchema: z.object({
             calendarId: z.string().uuid().describe("Local calendar UUID"),
         }),
         execute: async ({ calendarId }) => {
+            assertCalendarWriteAccess();
             const deleted = await CalendarsLoader.remove(calendarId);
             return { id: calendarId, deleted };
         },
@@ -279,12 +328,13 @@ export const eventAiTools = [
 
     defineTool({
         name: "listCalendarEvents",
-        description: `Calendar events in a window (day/week/month) around an anchor date (defaults today).`,
+        description: `Read calendar events for a day, week, or month containing the anchor date (defaults to today). Returns event details and source-specific ids. Resolve relative windows to a span and ISO anchor; preserve the returned source and ids for later event actions.`,
         inputSchema: z.object({
             span: z.enum(["day", "week", "month"]).describe("Window size"),
             date: z.string().optional().describe("Anchor ISO yyyy-mm-dd; defaults today"),
         }),
         execute: async ({ span, date }) => {
+            assertCalendarReadAccess();
             const events = (await EventsLoader.getAll(computeRange(span, date))) as ICalendarEvent[];
             return events.map(eventResponse);
         },
@@ -294,9 +344,12 @@ export const eventAiTools = [
         name: "getCalendarEvent",
         description: `Load one local calendar event by id. Google event details are returned by listCalendarEvents; do not call this for google_* ids.`,
         inputSchema: z.object({
-            eventId: z.string().describe("Event UUID, or google_<calendarId>_<eventId> for Google events"),
+            eventId: eventIdSchema.describe(
+                "Exact source-specific event id from listCalendarEvents or authorized context; a title is not an event id"
+            ),
         }),
         execute: async ({ eventId }) => {
+            assertCalendarReadAccess();
             const event = (await EventsLoader.getOne(eventId)) as ICalendarEvent;
             return eventResponse(event);
         },
@@ -307,6 +360,7 @@ export const eventAiTools = [
         description: `Create a local or Google calendar event. For Google, call listCalendars first and choose a writable Google calendar id. Recurrence applies to the whole series.`,
         inputSchema: eventCreateSchema,
         execute: async input => {
+            assertCalendarWriteAccess();
             const source = input.source ?? "local";
             if (source === "google") {
                 if (!input.calendar) {
@@ -333,7 +387,7 @@ export const eventAiTools = [
 
     defineTool({
         name: "updateCalendarEvent",
-        description: `Update an event's fields. Recurring event edits apply to the whole series; individual occurrence edits are not supported.`,
+        description: `Update only requested fields of an existing event using its exact eventId. Omitted fields remain unchanged; empty description/location clears them and null recurrenceRule removes recurrence. Changing recurrenceRule resets recurrence exclusions unless supplied. Recurring edits apply to the whole series, not an individual occurrence. Returns id and updated.`,
         inputSchema: eventUpdateSchema,
         execute: async ({
             eventId,
@@ -346,6 +400,7 @@ export const eventAiTools = [
             recurrenceRule,
             recurrenceExDates,
         }) => {
+            assertCalendarWriteAccess();
             const patch: Partial<ICalendarEvent> = {};
             if (title !== undefined) {
                 patch.title = title;
@@ -382,11 +437,14 @@ export const eventAiTools = [
         name: "moveCalendarEvent",
         description: `Move an event to another calendar within the same source. Local events can only move to local calendars; Google events can only move to writable Google calendars.`,
         inputSchema: z.object({
-            eventId: z.string().describe("Event UUID, or google_<calendarId>_<eventId> for Google events"),
+            eventId: eventIdSchema.describe(
+                "Exact source-specific event id from listCalendarEvents or authorized context; a title is not an event id"
+            ),
             source: eventPatchSourceSchema.describe("Source of the existing event"),
             calendarId: z.string().describe("Destination calendar id"),
         }),
         execute: async ({ eventId, source, calendarId }) => {
+            assertCalendarWriteAccess();
             if (source === "google") {
                 await assertWritableGoogleCalendar(calendarId);
             } else if (source === "local") {
@@ -400,11 +458,14 @@ export const eventAiTools = [
 
     defineTool({
         name: "deleteCalendarEvent",
-        description: `Delete a calendar event by id. For recurring events, this removes all occurrences in the series.`,
+        description: `Delete a resolved calendar event using the exact source-specific eventId returned by an authorized lookup. For recurring events, this removes all occurrences in the series. Direct MCP execution performs deletion immediately without chat confirmation. Do not retry after an uncertain failure.`,
         inputSchema: z.object({
-            eventId: z.string().describe("Event UUID, or google_<calendarId>_<eventId> for Google events"),
+            eventId: eventIdSchema.describe(
+                "Exact source-specific event id from listCalendarEvents or authorized context; a title is not an event id"
+            ),
         }),
         execute: async ({ eventId }) => {
+            assertCalendarWriteAccess();
             const deleted = await EventsLoader.remove(eventId);
             return { id: eventId, deleted };
         },

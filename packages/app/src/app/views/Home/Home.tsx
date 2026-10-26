@@ -169,6 +169,7 @@ const FavoriteProjects = () => {
             {projects.length === 0 && (
                 <Card>
                     <BlankSlate
+                        testId="home-empty-favorite-projects"
                         icon="check-circle"
                         title={translate("No projects")}
                         description={translate("You don t have any favorite projects yet")}
@@ -207,6 +208,7 @@ const PinnedBookmarks = () => {
                 {pinnedBookmarks.length === 0 && (
                     <Card>
                         <BlankSlate
+                            testId="home-empty-pinned-bookmarks"
                             icon="bookmark"
                             title="No bookmarks"
                             description={<div>You haven&apos;t pinned any bookmarks yet.</div>}
@@ -219,13 +221,13 @@ const PinnedBookmarks = () => {
                         <ul className={Classes.MENU} style={{ margin: 1 }}>
                             {pinnedBookmarks.map(bookmark => {
                                 return (
-                                    <li key={bookmark.id}>
+                                    <li key={bookmark.id} data-testid={`home-bookmark-${bookmark.id}`}>
                                         <div className={classNames(Classes.MENU_ITEM, "bookmark")}>
                                             <span className={Classes.MENU_ITEM_ICON}>
                                                 <Icon
                                                     icon={
                                                         APPICONS[
-                                                        bookmark.type.toUpperCase() as unknown as keyof typeof APPICONS
+                                                            bookmark.type.toUpperCase() as unknown as keyof typeof APPICONS
                                                         ]
                                                     }
                                                 />
@@ -296,6 +298,7 @@ const FavoritePeople = () => {
                 </h5>
                 <Card>
                     <BlankSlate
+                        testId="home-empty-favorite-people"
                         icon="users"
                         title="No favorite people"
                         description={<div>You don&apos;t have any favorite people or companies yet.</div>}
@@ -316,6 +319,7 @@ const FavoritePeople = () => {
                         {people.map(person => (
                             <Avatar
                                 person={person}
+                                data-testid={`home-avatar-${person.id}`}
                                 key={person.id}
                                 showTooltip
                                 large

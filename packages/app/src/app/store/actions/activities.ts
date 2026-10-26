@@ -4,7 +4,7 @@
  */
 import { translate } from "@stacks/translations";
 import { produce } from "immer";
-import api, { ActivitiesAPI } from "app/api";
+import { ActivitiesAPI } from "app/api";
 import { ActivitiesStore, IActivitiesStore } from "../activities";
 import { IActivity } from "@stacks/types";
 import Dialog from "app/utils/dialog";
@@ -40,7 +40,7 @@ const remove = async (resourceId: string, activityId: string) => {
         })
     );
 
-    return await api("activities/remove", { resourceId, activityId });
+    return await ActivitiesAPI.remove(resourceId, activityId);
 };
 
 const removeAlert = async (resourceId: string, activityId: string) => {
@@ -69,7 +69,7 @@ const update = async (resourceId: string, activityId: string, content: string) =
         })
     );
 
-    return await api("activities/update", { resourceId, activityId, content });
+    return await ActivitiesAPI.update(resourceId, activityId, content);
 };
 
 export const ActivitiesActions = {

@@ -44,17 +44,27 @@ describe("TemplateCompiler.processTemplateVariables", () => {
         expect(result).toBe("Hello ");
     });
 
-    it("leaves placeholders unchanged when key is not in data", () => {
+    it("escapes untrusted values when rendering an email body", () => {
+        const result = compiler.processTemplateVariables(
+            "Message: %message%",
+            { message: "<script>alert('x')</script>&" },
+            true
+        );
+
+        expect(result).toBe("Message: &lt;script&gt;alert(&#39;x&#39;)&lt;/script&gt;&amp;");
+    });
+
+    it("removes placeholders when their keys are missing from data", () => {
         const result = compiler.processTemplateVariables("Hello %name%, code: %code%", {
             name: "Alice",
         });
-        expect(result).toBe("Hello Alice, code: %code%");
+        expect(result).toBe("Hello Alice, code: ");
     });
 
-    it("leaves template unchanged with empty data object", () => {
+    it("removes placeholders when data is empty", () => {
         const input = "Hello %name%";
         const result = compiler.processTemplateVariables(input, {});
-        expect(result).toBe(input);
+        expect(result).toBe("Hello ");
     });
 
     it("handles string values that look like numbers", () => {

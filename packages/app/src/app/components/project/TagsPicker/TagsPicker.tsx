@@ -154,6 +154,7 @@ export const TagsPicker: FunctionComponent<TagsPickerProps> = ({
                             inputRef={handleFocus}
                             onKeyDown={handleOnKeyDown}
                             onChange={handleQueryChange}
+                            data-testid="tag-picker-search"
                         />
                     </div>
 
@@ -167,6 +168,8 @@ export const TagsPicker: FunctionComponent<TagsPickerProps> = ({
                                             <MenuItem
                                                 key={tag.id}
                                                 id={`tag-${tag.id}`}
+                                                data-testid={`tag-picker-option-${tag.id}`}
+                                                data-selected={String(isActive)}
                                                 icon={
                                                     <Icon
                                                         icon={

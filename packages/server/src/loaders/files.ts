@@ -1,16 +1,16 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
-import { AttachmentEntity, FileEntity } from "@stacks/db";
+import { AttachmentEntity, FileEntity, PermissionEntity, sequelize } from "@stacks/db";
 import { Errors } from "../errors";
-import { FILES_TYPE, type IAttachment } from "@stacks/types";
+import { FILES_TYPE, ROLE_SECTIONS, type IAttachment } from "@stacks/types";
 import crypto, { createHash } from "crypto";
-import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from "fs";
+import { existsSync, mkdirSync, readFileSync, unlinkSync } from "fs";
 import path, { join } from "path";
 import { Transaction } from "sequelize";
 import { ThumbnailService } from "../services/thumbnailService";
 import type { User } from "../types/user";
 import { invalidateApiCacheForCurrentRequest } from "../utils/cache";
-import { getCurrentUser } from "./context";
-import { withTransaction } from "./utils";
+import { canWrite, getCurrentUser } from "./context";
+import { afterTransactionCommit, withTransaction } from "./utils";
 import { formatBytes } from "../utils/files";
 import { translate } from "@stacks/translations";
 import { TasksLoader } from "./tasks";
@@ -19,12 +19,23 @@ import { NotepadsLoader } from "./notepads";
 import { DocumentsLoader } from "./documents";
 import { PeopleLoader } from "./people";
 import { CompaniesLoader } from "./companies";
+import { writeBoundedStreamToFile } from "../utils/boundedStream";
+import { visibleUploadProgress, type UploadProgressRecord } from "../utils/uploadProgress";
+import { canWriteAttachmentParent } from "../utils/attachmentWritePolicy";
+import {
+    countGlobalLiveAttachments,
+    lockContentHash,
+    publishOwnedStorageFile,
+    unlinkOwnedStorageFile,
+    writeOwnedStorageFile,
+} from "../utils/fileStorage";
 
 // Constants for file handling
 const SUPPORTED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+const MAX_UPLOAD_BYTES = 25 * 1024 * 1024;
 
 // Streaming upload progress tracking
-const uploadProgress = new Map<string, { progress: number; total: number; hash?: string }>();
+const uploadProgress = new Map<string, UploadProgressRecord>();
 
 // Set up associations
 if (!AttachmentEntity.associations.File) {
@@ -68,6 +79,41 @@ async function assertAttachmentParentVisible(recordId: string, type: string, tra
     }
     if (type === FILES_TYPE.COMPANY_LOGO) {
         await CompaniesLoader.getOne(recordId);
+    }
+}
+
+async function assertAttachmentParentWritable(recordId: string, type: string, transaction?: Transaction) {
+    await assertAttachmentParentVisible(recordId, type, transaction);
+    const user = getCurrentUser();
+    let ownerId: string | null | undefined;
+    let projectOwnerId: string | null | undefined;
+
+    if (type === FILES_TYPE.PROJECT_DESCRIPTION) {
+        const project = await ProjectsLoader.getOne(recordId, transaction);
+        projectOwnerId = project.projectOwner;
+    } else if (type === FILES_TYPE.AVATAR) {
+        ownerId = recordId;
+    } else if (type !== FILES_TYPE.TASK_COMMENT) {
+        const permission = await PermissionEntity.findOne({
+            where: { id: recordId, tenant: user.tenant, deleted: null },
+            transaction,
+        });
+        ownerId = permission?.get("owner") as string | undefined;
+    }
+
+    if (
+        !canWriteAttachmentParent({
+            type,
+            admin: Boolean(user.admin),
+            userId: String(user.id),
+            ownerId,
+            projectOwnerId,
+            canWriteComments: canWrite(ROLE_SECTIONS.COMMENTS),
+            canWriteCompanies: canWrite(ROLE_SECTIONS.COMPANIES),
+            canWriteProjectSettings: canWrite(ROLE_SECTIONS.PROJECT_SETTINGS),
+        })
+    ) {
+        throw Errors.forbidden(translate("Record update not allowed"));
     }
 }
 
@@ -147,6 +193,14 @@ function formatAttachmentObject(attachment: any, file: any): IAttachment {
  */
 async function softDeleteAttachment(attachment: any, transaction: Transaction): Promise<void> {
     const user = getCurrentUser();
+    const fileId = attachment.get("fileId") as string;
+    const fileEntity = await FileEntity.findByPk(fileId, { transaction });
+
+    if (fileEntity) {
+        const fileHash = fileEntity.get("hash") as string;
+        await lockContentHash(transaction, fileHash);
+    }
+
     // Soft delete the attachment
     await attachment.update(
         {
@@ -156,53 +210,13 @@ async function softDeleteAttachment(attachment: any, transaction: Transaction): 
         { transaction }
     );
 
-    const fileId = attachment.get("fileId") as string;
-
-    // Check if file has other non-deleted attachments
-    const remainingAttachments = await AttachmentEntity.count({
-        where: {
-            fileId,
-            tenant: user.tenant,
-            deleted: null,
-        },
-        transaction,
-    });
+    const remainingAttachments = await countGlobalLiveAttachments(fileId, transaction);
 
     // If no remaining attachments, delete the actual file
     if (remainingAttachments === 0) {
-        const fileEntity = await FileEntity.findOne({
-            where: { id: fileId, tenant: user.tenant },
-            transaction,
-        });
-
         if (fileEntity) {
-            const filePath = join(UPLOAD_DIR, fileEntity.get("hash") as string);
             const fileHash = fileEntity.get("hash") as string;
-
-            // Only delete physical files if DELETE_FILES environment variable is set to true
             const shouldDeleteFiles = process.env.DELETE_FILES === "true";
-
-            if (shouldDeleteFiles) {
-                // Delete main file
-                if (existsSync(filePath)) {
-                    unlinkSync(filePath);
-                }
-
-                // Delete thumbnail files if they exist
-                const uploadsDir = path.dirname(filePath);
-                const thumbnailsDir = path.join(uploadsDir, "previews");
-                const smallThumbnailPath = path.join(thumbnailsDir, `${fileHash}_small.jpg`);
-                const largeThumbnailPath = path.join(thumbnailsDir, `${fileHash}_large.jpg`);
-
-                if (existsSync(smallThumbnailPath)) {
-                    unlinkSync(smallThumbnailPath);
-                }
-
-                if (existsSync(largeThumbnailPath)) {
-                    unlinkSync(largeThumbnailPath);
-                }
-            }
-
             await fileEntity.update(
                 {
                     deleted: new Date(),
@@ -210,6 +224,42 @@ async function softDeleteAttachment(attachment: any, transaction: Transaction): 
                 },
                 { transaction }
             );
+
+            // A rollback must leave the physical object untouched. The cleanup takes the same
+            // hash lock as upload, then checks every live reference after this transaction commits.
+            if (shouldDeleteFiles) {
+                afterTransactionCommit(transaction, async () => {
+                    try {
+                        await sequelize.transaction(async cleanupTransaction => {
+                            await lockContentHash(cleanupTransaction, fileHash);
+                            const fileRows = await FileEntity.findAll({
+                                where: { hash: fileHash },
+                                attributes: ["id", "deleted"],
+                                transaction: cleanupTransaction,
+                            });
+                            if (fileRows.some(row => !row.get("deleted"))) return;
+                            for (const row of fileRows) {
+                                if (
+                                    (await countGlobalLiveAttachments(
+                                        String(row.get("id")),
+                                        cleanupTransaction
+                                    )) > 0
+                                ) {
+                                    return;
+                                }
+                            }
+
+                            await unlinkOwnedStorageFile(UPLOAD_DIR, fileHash);
+                            await unlinkOwnedStorageFile(PREVIEW_DIR, `${fileHash}_small.jpg`);
+                            await unlinkOwnedStorageFile(PREVIEW_DIR, `${fileHash}_large.jpg`);
+                        });
+                    } catch {
+                        // The database row is already committed as deleted. Leave any orphaned
+                        // bytes in place; a later upload can safely reuse or replace them.
+                        console.error("Deferred physical file cleanup failed");
+                    }
+                });
+            }
         }
     }
 }
@@ -242,139 +292,145 @@ async function uploadFile(
         throw Errors.badRequest(translate("Record ID and user are required"));
     }
 
-    return withTransaction(extTransaction, async transaction => {
-        await assertAttachmentParentVisible(recordId, type, transaction);
-        const hash = calculateHash(buffer);
-        const size = buffer.length;
-        // Store file without extension, using only the hash
-        const filePath = join(UPLOAD_DIR, hash);
+    const hash = calculateHash(buffer);
+    return persistUploadedFile(
+        hash,
+        buffer.length,
+        () => writeOwnedStorageFile(UPLOAD_DIR, hash, buffer),
+        originalName,
+        mimeType,
+        recordId,
+        type,
+        user,
+        extTransaction
+    );
+}
 
-        // Check if file already exists
-        let file = await FileEntity.findOne({
-            where: { hash, tenant: user.tenant },
-            transaction,
-        });
+async function persistUploadedFile(
+    hash: string,
+    size: number,
+    publish: () => boolean | Promise<boolean>,
+    originalName: string,
+    mimeType: string,
+    recordId: string,
+    type: string,
+    user: User,
+    extTransaction?: Transaction
+) {
+    if (!Number.isSafeInteger(size) || size <= 0) {
+        throw Errors.badRequest(translate("File buffer is required and cannot be empty"));
+    }
+    if (!recordId || !user) {
+        throw Errors.badRequest(translate("Record ID and user are required"));
+    }
 
-        if (file?.get("deleted")) {
-            // File exists but is marked as deleted, update it to be undeleted
-            await file.update({ deleted: null, deletedBy: null }, { transaction });
-        }
+    let createdFile = false;
+    let publishedStorage = false;
+    try {
+        return await withTransaction(extTransaction, async transaction => {
+            await assertAttachmentParentWritable(recordId, type, transaction);
+            await lockContentHash(transaction, hash);
+            // Store file without extension, using only the hash
+            const filePath = join(UPLOAD_DIR, hash);
 
-        // Initialize hasPreview flag
-        let hasPreview = false;
+            // Hashes identify global physical objects; tenant authorization remains on attachments.
+            let file = await FileEntity.findOne({
+                where: { hash },
+                transaction,
+            });
 
-        if (!file) {
-            // Write file to disk first
-            writeFileSync(filePath, buffer);
-
-            // Generate preview thumbnails for supported image types
-            if (SUPPORTED_IMAGE_TYPES.includes(mimeType)) {
-                try {
-                    const thumbnailResult = await ThumbnailService.generateMultipleThumbnails(
-                        filePath,
-                        PREVIEW_DIR,
-                        hash,
-                        mimeType
-                    );
-                    hasPreview = !!(thumbnailResult?.small || thumbnailResult?.large);
-                } catch (error) {
-                    console.error(`Failed to generate thumbnails for file ${hash}:`, error);
-                    // Continue execution even if thumbnail generation fails
-                }
+            if (file?.get("deleted")) {
+                // File exists but is marked as deleted, update it to be undeleted
+                await file.update({ deleted: null, deletedBy: null }, { transaction });
             }
 
-            // Create new file record
-            file = await FileEntity.create(
+            if (!file) {
+                // Create new file record
+                file = await FileEntity.create(
+                    {
+                        hash,
+                        mimeType,
+                        size,
+                        tenant: user.tenant,
+                        createdBy: user.id,
+                        updatedBy: user.id,
+                    },
+                    { transaction }
+                );
+                createdFile = true;
+            }
+
+            publishedStorage = await publish();
+            if (SUPPORTED_IMAGE_TYPES.includes(mimeType)) {
+                const smallPreviewPath = join(PREVIEW_DIR, `${hash}_small.jpg`);
+                const largePreviewPath = join(PREVIEW_DIR, `${hash}_large.jpg`);
+                if (!existsSync(smallPreviewPath) && !existsSync(largePreviewPath)) {
+                    try {
+                        await ThumbnailService.generateMultipleThumbnails(
+                            filePath,
+                            PREVIEW_DIR,
+                            hash,
+                            mimeType
+                        );
+                    } catch (error) {
+                        console.error(`Failed to generate thumbnails for file ${hash}:`, error);
+                    }
+                }
+            }
+            const hasPreview =
+                existsSync(join(PREVIEW_DIR, `${hash}_small.jpg`)) ||
+                existsSync(join(PREVIEW_DIR, `${hash}_large.jpg`));
+
+            // Create attachment record
+            const attachment = await AttachmentEntity.create(
                 {
-                    hash,
-                    mimeType,
-                    size,
+                    fileId: file.get("id") as unknown as string,
+                    recordId,
+                    originalName: originalName || null,
+                    type: type ?? "file", // Default type
+                    hasPreview,
                     tenant: user.tenant,
                     createdBy: user.id,
                     updatedBy: user.id,
                 },
                 { transaction }
             );
-        }
 
-        // Create attachment record
-        const attachment = await AttachmentEntity.create(
-            {
-                fileId: file.get("id") as unknown as string,
-                recordId,
-                originalName: originalName || null,
-                type: type ?? "file", // Default type
-                hasPreview,
-                tenant: user.tenant,
-                createdBy: user.id,
-                updatedBy: user.id,
-            },
-            { transaction }
-        );
+            // Return the result using the helper function for consistency
+            const result = formatAttachmentObject(attachment, file);
 
-        // Return the result using the helper function for consistency
-        const result = formatAttachmentObject(attachment, file);
-
-        invalidateApiCacheForCurrentRequest();
-        return result;
-    });
-}
-
-/**
- * Check if file with hash exists and create attachment if it does
- * @param hash - File hash to check
- * @param recordId - ID of the record to attach to
- * @param type - Type of attachment
- * @param originalName - Original filename
- * @param user - User creating the attachment
- * @param extTransaction - Optional external transaction
- * @returns Formatted attachment object if file exists, null otherwise
- */
-async function checkExistingFileAndCreateAttachment(
-    hash: string,
-    recordId: string,
-    type: string,
-    originalName: string,
-    user: User,
-    extTransaction?: Transaction
-): Promise<IAttachment | null> {
-    return withTransaction(extTransaction, async transaction => {
-        await assertAttachmentParentVisible(recordId, type, transaction);
-        // Check if file exists and is not deleted
-        const file = await FileEntity.findOne({
-            where: {
-                hash,
-                tenant: user.tenant,
-                deleted: null,
-            },
-            transaction,
+            invalidateApiCacheForCurrentRequest();
+            return result;
         });
-
-        if (!file) {
-            return null;
+    } catch (error) {
+        // A failed standalone upload rolls back its new database row, but its bytes have
+        // already been written. Reacquire the hash lock and remove them only when no
+        // concurrent successful upload left a live attachment behind.
+        if (!extTransaction && (createdFile || publishedStorage)) {
+            try {
+                await sequelize.transaction(async cleanupTransaction => {
+                    await lockContentHash(cleanupTransaction, hash);
+                    const files = await FileEntity.findAll({
+                        where: { hash },
+                        transaction: cleanupTransaction,
+                    });
+                    for (const file of files) {
+                        if (
+                            (await countGlobalLiveAttachments(String(file.get("id")), cleanupTransaction)) > 0
+                        ) {
+                            return;
+                        }
+                    }
+                    await unlinkOwnedStorageFile(UPLOAD_DIR, hash);
+                    await unlinkOwnedStorageFile(PREVIEW_DIR, `${hash}_small.jpg`);
+                    await unlinkOwnedStorageFile(PREVIEW_DIR, `${hash}_large.jpg`);
+                });
+            } catch {
+                console.error("Failed to clean up unreferenced upload file");
+            }
         }
-
-        const hasPreview = SUPPORTED_IMAGE_TYPES.includes(file.get("mimeType") as string);
-
-        // File exists, create new attachment
-        const attachment = await AttachmentEntity.create(
-            {
-                fileId: file.get("id") as unknown as string,
-                recordId,
-                originalName: originalName || null,
-                type: type ?? "file",
-                hasPreview,
-                tenant: user.tenant,
-                createdBy: user.id,
-                updatedBy: user.id,
-            },
-            { transaction }
-        );
-
-        const formatted = formatAttachmentObject(attachment, file);
-        invalidateApiCacheForCurrentRequest();
-        return formatted;
-    });
+        throw error;
+    }
 }
 
 /**
@@ -527,7 +583,7 @@ async function deleteByAttachment(attachmentId: string, extTransaction?: Transac
             throw Errors.notFound(translate("Attachment not found"));
         }
 
-        await assertAttachmentParentVisible(
+        await assertAttachmentParentWritable(
             attachment.get("recordId") as string,
             attachment.get("type") as string,
             transaction
@@ -556,7 +612,7 @@ async function deleteByAttachment(attachmentId: string, extTransaction?: Transac
 async function deleteByRecord(recordId: string, type: FILES_TYPE, extTransaction?: Transaction) {
     const user = getCurrentUser();
     return withTransaction(extTransaction, async transaction => {
-        await assertAttachmentParentVisible(recordId, type, transaction);
+        await assertAttachmentParentWritable(recordId, type, transaction);
         // Get all attachments for the record with the specified type
         const attachments = await AttachmentEntity.findAll({
             where: {
@@ -662,54 +718,51 @@ const uploadFileStream = async (
     recordId: string,
     user: User,
     type: string = "file",
-    extTransaction?: Transaction
+    extTransaction?: Transaction,
+    signal?: AbortSignal
 ): Promise<IAttachment> => {
     const uploadId = crypto.randomUUID();
-    const chunks: Buffer[] = [];
-    let totalSize = 0;
+    const tempPath = join(UPLOAD_DIR, `.upload-${uploadId}.tmp`);
 
     try {
-        // Initialize progress tracking
-        uploadProgress.set(uploadId, { progress: 0, total: 0 });
-
-        // Read stream in chunks
-        const reader = stream.getReader();
-        let done = false;
-
-        while (!done) {
-            const { value, done: streamDone } = await reader.read();
-            done = streamDone;
-
-            if (value) {
-                const chunk = Buffer.from(value);
-                chunks.push(chunk);
-                totalSize += chunk.length;
-
-                // Update progress
-                const progress = uploadProgress.get(uploadId);
-                if (progress) {
-                    progress.progress = totalSize;
-                    uploadProgress.set(uploadId, progress);
-                }
-            }
-        }
-
-        // Combine all chunks into final buffer
-        const buffer = Buffer.concat(chunks);
-
-        // Calculate hash
-        const hash = calculateHash(buffer);
-
+        // Authorize before consuming request bytes, then enforce the limit on actual bytes.
+        await assertAttachmentParentWritable(recordId, type, extTransaction);
+        uploadProgress.set(uploadId, { progress: 0, total: 0, userId: String(user.id), tenant: user.tenant });
+        const { size, hash } = await writeBoundedStreamToFile(
+            stream,
+            tempPath,
+            MAX_UPLOAD_BYTES,
+            progress => {
+                uploadProgress.set(uploadId, {
+                    progress,
+                    total: 0,
+                    userId: String(user.id),
+                    tenant: user.tenant,
+                });
+            },
+            60_000,
+            signal
+        );
         // Update progress with hash
         const progress = uploadProgress.get(uploadId);
         if (progress) {
             progress.hash = hash;
-            progress.total = totalSize;
+            progress.total = size;
             uploadProgress.set(uploadId, progress);
         }
 
-        // Use existing uploadFile logic
-        const result = await uploadFile(buffer, fileName, mimeType, recordId, type, user, extTransaction);
+        // Persist the authorized request-owned file without materializing it in memory.
+        const result = await persistUploadedFile(
+            hash,
+            size,
+            () => publishOwnedStorageFile(UPLOAD_DIR, tempPath, hash, size),
+            fileName,
+            mimeType,
+            recordId,
+            type,
+            user,
+            extTransaction
+        );
 
         // Clean up progress tracking
         uploadProgress.delete(uploadId);
@@ -719,23 +772,31 @@ const uploadFileStream = async (
         // Clean up progress tracking on error
         uploadProgress.delete(uploadId);
         throw error;
+    } finally {
+        try {
+            unlinkSync(tempPath);
+        } catch (error: any) {
+            if (error.code !== "ENOENT") throw error;
+        }
     }
 };
 
 // Get streaming upload progress
 const getStreamUploadProgress = (
-    uploadId: string
+    uploadId: string,
+    userId: string,
+    tenant: string
 ): { progress: number; total: number; hash?: string } | null => {
-    return uploadProgress.get(uploadId) || null;
+    return visibleUploadProgress(uploadProgress.get(uploadId), userId, tenant);
 };
 
 // Export all file-related operations
 export const FilesLoader = {
+    assertAttachmentParentWritable,
     // File upload operations
     uploadFile,
     uploadFileStream,
     getStreamUploadProgress,
-    checkExistingFileAndCreateAttachment,
 
     // File retrieval operations
     getAttachments,

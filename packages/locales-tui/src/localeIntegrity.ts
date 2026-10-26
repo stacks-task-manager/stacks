@@ -128,12 +128,13 @@ export function findNearDuplicates(
         for (const [entryKey, entryValue] of entries) {
             if (entryKey === candidateKey) continue;
             const entryStr = valueToString(entryValue);
-            const sim = Math.round(
-                100 *
-                    (1 -
-                        levenshtein(candidateStr, entryStr) /
-                            Math.max(candidateStr.length, entryStr.length, 1))
-            );
+            const maxLength = Math.max(candidateStr.length, entryStr.length, 1);
+            // Scores are rounded, so a distance just beyond the unrounded
+            // cutoff can still qualify at the displayed threshold.
+            const maxDistance = Math.floor((maxLength * (100.5 - threshold)) / 100);
+            const distance = levenshteinWithinDistance(candidateStr, entryStr, maxDistance);
+            if (distance == null) continue;
+            const sim = Math.round(100 * (1 - distance / maxLength));
             if (sim >= threshold) {
                 similarEntries.push({ entryKey, entryValue: entryStr, similarity: sim });
             }
@@ -145,6 +146,51 @@ export function findNearDuplicates(
     }
 
     return results;
+}
+
+/** Return the exact distance when it is within the limit, otherwise stop once it cannot qualify. */
+function levenshteinWithinDistance(a: string, b: string, maxDistance: number): number | null {
+    if (a === b) return 0;
+    if (maxDistance < 0 || Math.abs(a.length - b.length) > maxDistance) return null;
+    if (a.length === 0) return b.length <= maxDistance ? b.length : null;
+    if (b.length === 0) return a.length <= maxDistance ? a.length : null;
+
+    // Keep the dynamic-programming row as short as possible.
+    if (a.length < b.length) [a, b] = [b, a];
+
+    const infinity = maxDistance + 1;
+    let previous = new Array<number>(b.length + 1).fill(infinity);
+    let current = new Array<number>(b.length + 1).fill(infinity);
+    for (let j = 0; j <= Math.min(b.length, maxDistance); j++) previous[j] = j;
+
+    for (let i = 1; i <= a.length; i++) {
+        const start = Math.max(1, i - maxDistance);
+        const end = Math.min(b.length, i + maxDistance);
+        if (i <= maxDistance) current[0] = i;
+        else current[0] = infinity;
+
+        // Clear only the cells adjacent to this row's active band. Other cells
+        // are never read by the recurrence, and clearing the whole row would
+        // restore O(n²) work even when the edit-distance band is narrow.
+        if (start > 1) current[start - 1] = infinity;
+        if (end < b.length) current[end + 1] = infinity;
+
+        let rowMinimum = current[0]!;
+
+        for (let j = start; j <= end; j++) {
+            current[j] = Math.min(
+                previous[j]! + 1,
+                current[j - 1]! + 1,
+                previous[j - 1]! + (a[i - 1] === b[j - 1] ? 0 : 1)
+            );
+            rowMinimum = Math.min(rowMinimum, current[j]!);
+        }
+
+        if (rowMinimum > maxDistance) return null;
+        [previous, current] = [current, previous];
+    }
+
+    return previous[b.length]! <= maxDistance ? previous[b.length]! : null;
 }
 
 /**

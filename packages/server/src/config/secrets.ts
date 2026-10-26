@@ -6,7 +6,13 @@
 const WEAK_SECRETS = new Set(["s3cr3t", "your-very-secret-key"]);
 
 function isWeak(value: string): boolean {
-    return WEAK_SECRETS.has(value.trim());
+    const normalized = value.trim();
+    const characters = Array.from(normalized);
+    return (
+        Buffer.byteLength(normalized, "utf8") < 32 ||
+        WEAK_SECRETS.has(normalized) ||
+        (characters.length > 1 && characters.every(character => character === characters[0]))
+    );
 }
 
 function mustEnforceStrictSecrets(env: NodeJS.ProcessEnv): boolean {
@@ -34,7 +40,10 @@ export function validateProductionSecrets(env: NodeJS.ProcessEnv = process.env):
         return "JWT_SECRET and COOKIE_SECRET must be set and non-empty in production (or when REQUIRE_SECRETS=1).";
     }
     if (isWeak(jwt) || isWeak(cookie)) {
-        return "JWT_SECRET and COOKIE_SECRET must not use default or placeholder values.";
+        return "JWT_SECRET and COOKIE_SECRET must each be at least 32 UTF-8 bytes and not use default or repeated-character values.";
+    }
+    if (jwt === cookie) {
+        return "JWT_SECRET and COOKIE_SECRET must be different values.";
     }
     return null;
 }

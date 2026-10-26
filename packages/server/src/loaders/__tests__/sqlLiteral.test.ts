@@ -11,6 +11,10 @@ describe("pgStringLiteral", () => {
         expect(pgStringLiteral("O'Brien")).toBe("'O''Brien'");
     });
 
+    it("keeps SQL-shaped input inside a single quoted literal", () => {
+        expect(pgStringLiteral("' OR 1=1 --")).toBe("''' OR 1=1 --'");
+    });
+
     it("stringifies non-string values before quoting them", () => {
         expect(pgStringLiteral(42)).toBe("'42'");
     });

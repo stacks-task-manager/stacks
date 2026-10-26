@@ -13,8 +13,8 @@ import PasswordResetPage from "../../pages/passwordReset";
 // DB (borrowing the admin user's tenant/role), so the admin password is never
 // touched and the created user is removed in afterAll.
 
-const ORIGINAL_PASSWORD = "OldPass123";
-const NEW_PASSWORD = "NewPass456";
+const ORIGINAL_PASSWORD = "OldPassword123";
+const NEW_PASSWORD = "NewPassword456";
 const EMAIL_PREFIX = "e2e-recovery";
 const uniqueEmail = () =>
     `${EMAIL_PREFIX}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}@example.com`;
@@ -72,20 +72,24 @@ test.describe("Password recovery", () => {
         await expect(recovery.card).toBeVisible();
     });
 
-    test("recovery for an unknown email shows an error", async () => {
+    test("recovery for an unknown email shows the generic confirmation", async () => {
         await recovery.open();
         await recovery.submitEmail(`${EMAIL_PREFIX}-unknown@example.com`);
 
         await expect(recovery.errorMessages).toBeVisible();
-        await expect(recovery.errorMessages).toContainText("Invalid email");
+        await expect(recovery.errorMessages).toContainText(
+            "If an account matches that email, a password reset link has been sent."
+        );
     });
 
-    test("recovery for a known email queues a reset email and returns to login", async () => {
+    test("recovery for a known email queues a reset email and shows the generic confirmation", async () => {
         await recovery.open();
         await recovery.submitEmail(userEmail);
 
-        await auth.loginCard.waitFor();
-        await expect(auth.successMessages).toContainText("Check your email");
+        await expect(recovery.card).toBeVisible();
+        await expect(recovery.errorMessages).toContainText(
+            "If an account matches that email, a password reset link has been sent."
+        );
 
         const resetLink = await getDb().getPasswordResetLink(userEmail);
         expect(resetLink).toContain("/login/password-reset?token=");
@@ -95,7 +99,7 @@ test.describe("Password recovery", () => {
         await recovery.open();
         await recovery.submitEmail(userEmail);
 
-        await auth.loginCard.waitFor();
+        await expect(recovery.card).toBeVisible();
         const resetLink = await getDb().getPasswordResetLink(userEmail);
         expect(resetLink).toBeTruthy();
 
@@ -107,8 +111,7 @@ test.describe("Password recovery", () => {
         await expect(auth.successMessages).toContainText("password has been reset");
 
         // The new password works; the old one no longer does.
-        await auth.login(userEmail, NEW_PASSWORD);
-        await page.getByTestId("profile-button").waitFor();
+        await auth.loginAndWaitForAuthenticatedRequest(userEmail, NEW_PASSWORD);
     });
 
     test("an invalid reset token is rejected", async () => {

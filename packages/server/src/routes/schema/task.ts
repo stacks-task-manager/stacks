@@ -43,7 +43,7 @@ export const TaskUpdateSchema = z.object({
     duedate: z.union([z.string(), z.null()]).optional(),
     dodate: z.union([z.string(), z.null()]).optional(),
     tags: z.uuid().array().optional(),
-    status: z.uuid().optional(),
+    status: z.union([z.uuid(), z.null()]).optional(),
     estimate: z.union([z.number().min(0), z.null()]).optional(),
     progress: z.number().min(0).max(100).optional(),
     priority: z.enum(["none", "low", "medium", "high", "critical"]).optional(),
@@ -55,6 +55,7 @@ export const TaskUpdateSchema = z.object({
     subtasksOrder: z.array(z.string()).optional(),
     project: z.uuid().optional(),
     stack: z.uuid().optional(),
+    parent: z.uuid().nullable().optional(),
     hourlyRate: z.union([z.number().min(0), z.null()]).optional(),
     cover: z.union([z.string(), z.null()]).optional(),
     dependencies: z.uuid().array().optional(),
@@ -76,11 +77,23 @@ export const TasksFilteredSchema = z
         archived: z.enum(["true"]).optional(),
         completed: z.enum(["true"]).optional(),
         open: z.enum(["true"]).optional(),
+        overdue: z.enum(["true"]).optional(),
         assigned: z.enum(["true"]).optional(),
         unassigned: z.enum(["true"]).optional(),
         assignees: z.union([z.uuid(), z.array(z.uuid())]).optional(),
         parent: z.uuid().optional(),
         query: z.string().optional(),
+        tags: z.union([z.array(z.uuid()), z.uuid()]).optional(),
+        status: z.union([z.array(z.uuid()), z.uuid()]).optional(),
+        priority: z.enum(["critical", "high", "medium", "low", "none"]).optional(),
+        progress: z
+            .string()
+            .regex(/^(?:gt|gte|lt|lte|eq):(?:[1-9]|[1-9][0-9]|100|0)$/)
+            .optional(),
+        dueFrom: z.iso.datetime().optional(),
+        dueTo: z.iso.datetime().optional(),
+        startFrom: z.iso.datetime().optional(),
+        startTo: z.iso.datetime().optional(),
         limit: z.coerce.number().int().positive().max(500).optional(),
     })
     .strict()

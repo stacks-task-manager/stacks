@@ -129,6 +129,8 @@ export const CommentsInput: FunctionComponent<ICommentsInputProps> = ({ resource
                     <Col gap={10}>
                         {currentUser && <Avatar person={currentUser} small />}
                         <Editor
+                            testId="task-comment-input"
+                            contentTestId="task-comment-content"
                             value={message}
                             onUpdate={handleChangeMessage}
                             placeholder={translate("Add a comment")}

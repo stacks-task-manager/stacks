@@ -3,6 +3,7 @@ import { afterEach, describe, test, expect } from "vitest";
 import { EmailQueueEntity, RoleEntity, TenantEntity, UserEntity } from "@stacks/db";
 import { EMAIL_TEMPLATES } from "@stacks/types";
 import app from "../src/index";
+import { hashAccountToken } from "../src/services/accountTokens";
 
 describe("Register HTML", () => {
     afterEach(() => {
@@ -32,6 +33,9 @@ describe("Register HTML", () => {
         expect(text).toContain('action="/register"');
         expect(text).toContain('name="firstName"');
         expect(text).toContain('name="lastName"');
+        expect(text).toMatch(/<input(?=[^>]*name="email")(?=[^>]*autocomplete="username")[^>]*>/s);
+        expect(text).toMatch(/<input(?=[^>]*name="firstName")(?=[^>]*autocomplete="given-name")[^>]*>/s);
+        expect(text).toMatch(/<input(?=[^>]*name="lastName")(?=[^>]*autocomplete="family-name")[^>]*>/s);
         expect(text).not.toContain('name="role"');
         expect(text).toContain("Please select a tenant");
     });
@@ -60,7 +64,7 @@ describe("Register HTML", () => {
         const email = `register-form-${Date.now()}@example.com`;
         const body = new URLSearchParams({
             email,
-            password: "password1",
+            password: "Strong-test-password-2026!",
             firstName: "Form",
             lastName: "User",
             tenant: String(tenant!.get("id")),
@@ -78,22 +82,24 @@ describe("Register HTML", () => {
             expect(user).not.toBeNull();
             expect(user!.get("disabled")).toBe(true);
             expect(user!.get("role")).toBe(role!.get("id"));
-            expect(user!.get("token")).toBeTruthy();
+            expect(user!.get("token")).toBeNull();
+            expect(user!.get("activationTokenHash")).toMatch(/^[a-f0-9]{64}$/);
             const emailRow = await EmailQueueEntity.findOne({
                 where: { userId: user!.get("id"), template: EMAIL_TEMPLATES.REGISTRATION },
             });
             expect(emailRow).not.toBeNull();
-            expect(emailRow!.get("data")).toMatchObject({
-                verificationLink: `/auth/activate/${user!.get("token")}`,
-            });
+            const verificationLink = (emailRow!.get("data") as { verificationLink: string }).verificationLink;
+            const activationToken = verificationLink.split("/").at(-1)!;
+            expect(verificationLink).toBe(`/auth/activate/${activationToken}`);
+            expect(user!.get("activationTokenHash")).toBe(hashAccountToken(activationToken));
 
             const activation = await app.request("/auth/activate", {
                 method: "POST",
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body: new URLSearchParams({
-                    token: String(user!.get("token")),
-                    password1: "activated1",
-                    password2: "activated1",
+                    token: activationToken,
+                    password1: "Activated-strong-password-2026!",
+                    password2: "Activated-strong-password-2026!",
                 }).toString(),
             });
             expect(activation.status).toBe(200);

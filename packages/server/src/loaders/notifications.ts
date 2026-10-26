@@ -2,7 +2,7 @@
 /**
  * In-app notifications for the signed-in recipient (read/delete scoped to owner).
  */
-import { NotificationEntity } from "@stacks/db";
+import { NotificationEntity, UserEntity } from "@stacks/db";
 import { translate } from "@stacks/translations";
 import { INotification, POLLINGACTIONS, POLLINGTYPE } from "@stacks/types";
 import { Transaction } from "sequelize";
@@ -36,6 +36,16 @@ type NotificationData = Omit<
 async function add(data: NotificationData, extTransaction?: Transaction) {
     return withTransaction(extTransaction, async (transaction: Transaction) => {
         const user = getCurrentUser();
+
+        const recipient = await UserEntity.findOne({
+            where: { id: data.recipient, tenant: user.tenant, deleted: null },
+            attributes: ["id"],
+            transaction,
+        });
+
+        if (!recipient) {
+            throw Errors.notFound(translate("Notification not found"));
+        }
 
         const newNotificationEntity = await NotificationEntity.create(
             { ...data, tenant: user.tenant, createdBy: user.id, updatedBy: user.id },
@@ -75,7 +85,7 @@ async function read(id: string, extTransaction?: Transaction) {
         }
 
         if (notification?.get("recipient") !== user.id) {
-            throw Errors.forbidden(translate("Notification update not allowed"));
+            throw Errors.notFound(translate("Notification not found"));
         }
 
         await notification.update(
@@ -110,7 +120,7 @@ async function remove(id: string, extTransaction?: Transaction) {
         }
 
         if (notification?.get("recipient") !== user.id) {
-            throw Errors.forbidden(translate("Notification update not allowed"));
+            throw Errors.notFound(translate("Notification not found"));
         }
 
         await notification.destroy({ transaction });

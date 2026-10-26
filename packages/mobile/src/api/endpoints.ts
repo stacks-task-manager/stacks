@@ -53,6 +53,17 @@ export async function loginRequest(email: string, password: string): Promise<Log
     return unwrap(res);
 }
 
+/**
+ * Revokes the current session server-side. The guard header is the browser CSRF
+ * guard; a native client sends it too so the endpoint has one policy.
+ */
+export async function logoutRequest(): Promise<{ revoked: boolean }> {
+    const res = await api.post<ApiSuccess<{ revoked: boolean }>>("/auth/logout", null, {
+        headers: { "x-stacks-csrf": "1" },
+    });
+    return unwrap(res);
+}
+
 export type DocumentsResponse = {
     documents: TreeNode[];
     tags: unknown[];

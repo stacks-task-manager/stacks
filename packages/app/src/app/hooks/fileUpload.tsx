@@ -3,21 +3,10 @@
  * FileUpload hooks and selectors.
  */
 import React, { useCallback, useRef, useEffect } from "react";
-import { sha256 } from "hash-wasm";
 import { FilesAPI } from "../api/files";
 import { FILES_TYPE, IAttachment } from "@stacks/types";
 import { OverlayToaster, ProgressBar, Toaster, ToastProps } from "@blueprintjs/core";
 import { Grid } from "app/components/common";
-
-/**
- * Calculate file hash for resumable uploads using sha.js (works in all environments)
- */
-const calculateHash = async (file: File): Promise<string> => {
-    const buffer = await file.arrayBuffer();
-    const uint8Array = new Uint8Array(buffer);
-    const hash = await sha256(uint8Array);
-    return hash;
-};
 
 export interface IUploadConfig {
     allowMultiple?: boolean;
@@ -186,26 +175,6 @@ export const useUpload = (config?: IUploadConfig): IUploadHook => {
         };
     }, []);
 
-    // Helper functions
-    const checkExistingFile = async (
-        hash: string,
-        recordId: string,
-        fileName: string
-    ): Promise<IAttachment | null> => {
-        try {
-            const existingAttachment = await FilesAPI.checkExistingFile(
-                hash,
-                recordId,
-                uploadType.current ?? FILES_TYPE.FILE,
-                fileName
-            );
-
-            return existingAttachment;
-        } catch {
-            return null;
-        }
-    };
-
     const updateProgress = (progress: number, fileName?: string): void => {
         progressRef.current = progress;
         onProgressRef.current?.(progress);
@@ -279,16 +248,6 @@ export const useUpload = (config?: IUploadConfig): IUploadHook => {
                 }
 
                 const file = files[i];
-                const hash = await calculateHash(file);
-
-                // Check if file already exists to avoid duplicate uploads
-                const existingAttachment = await checkExistingFile(hash, currentRecordId, file.name);
-                if (existingAttachment) {
-                    uploadedFiles.push(existingAttachment);
-                    updateCompletedProgress(i, totalFiles, file.name);
-                    continue;
-                }
-
                 // Upload file using streaming (works for all file sizes)
                 const result = await uploadSingleFile(file, currentRecordId, i, totalFiles);
                 uploadedFiles.push(result);

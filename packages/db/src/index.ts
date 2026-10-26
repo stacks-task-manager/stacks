@@ -25,3 +25,7 @@ export { default as TaskEntity } from "./entities/Task.js";
 export { default as TenantEntity } from "./entities/Tenant.js";
 export { default as TimelogEntity } from "./entities/Timelog.js";
 export { default as UserEntity } from "./entities/User.js";
+export { default as SessionEntity } from "./entities/Session.js";
+export { default as OAuthAttemptEntity } from "./entities/OAuthAttempt.js";
+export { default as RateLimitCounterEntity } from "./entities/RateLimitCounter.js";
+export { default as RateLimitLeaseEntity } from "./entities/RateLimitLease.js";

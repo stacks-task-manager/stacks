@@ -84,6 +84,7 @@ export const TaskDetailsMenu: FunctionComponent<ITaskDetailsMenuProps> = ({
                 icon={<Icon icon={task?.done ? "circle" : "check-circle"} />}
                 onClick={handleToggleComplete}
                 data-testid="task-details-menu-toggle-complete"
+                data-done={String(Boolean(task?.done))}
             />
 
             <MenuDivider />

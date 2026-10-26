@@ -1,6 +1,6 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { describe, test, expect, beforeEach } from "vitest";
-import { requestContext } from "../../src/services/requestContext";
+import { requestContext } from "./requestContext";
 
 const makeContext = () => ({
     user: { id: "user-1", tenant: "tenant-1", admin: false } as any,
@@ -59,7 +59,7 @@ describe("RequestContextService", () => {
 
     test("getInstanceId returns the instance ID from context", () => {
         const ctx = makeContext();
-        let instanceId: string;
+        let instanceId = "";
         requestContext.run(ctx, () => {
             instanceId = requestContext.getInstanceId();
         });
@@ -85,7 +85,7 @@ describe("RequestContextService", () => {
 
     test("getRequestId returns the request ID from context", () => {
         const ctx = makeContext();
-        let reqId: string;
+        let reqId = "";
         requestContext.run(ctx, () => {
             reqId = requestContext.getRequestId();
         });
@@ -111,6 +111,55 @@ describe("RequestContextService", () => {
 
         expect(outer).toBe("req-1");
         expect(inner).toBe("req-2");
+    });
+
+    test("isolates user and tenant context across overlapping asynchronous requests", async () => {
+        const contextA = {
+            ...makeContext(),
+            user: { id: "user-a", tenant: "tenant-a", admin: false } as any,
+            requestId: "request-a",
+        };
+        const contextB = {
+            ...makeContext(),
+            user: { id: "user-b", tenant: "tenant-b", admin: false } as any,
+            requestId: "request-b",
+        };
+        let arrivals = 0;
+        let release!: () => void;
+        const bothArrived = new Promise<void>(resolve => {
+            release = resolve;
+        });
+        const observeAfterInterleave = async () => {
+            arrivals += 1;
+            if (arrivals === 2) release();
+            await bothArrived;
+            const context = requestContext.getContext();
+            return {
+                userId: requestContext.getCurrentUser().id,
+                tenant: requestContext.getCurrentUser().tenant,
+                requestId: requestContext.getRequestId(),
+                sameContext: context?.user.id === requestContext.getCurrentUser().id,
+            };
+        };
+
+        const [resultA, resultB] = await Promise.all([
+            requestContext.run(contextA, observeAfterInterleave),
+            requestContext.run(contextB, observeAfterInterleave),
+        ]);
+
+        expect(resultA).toEqual({
+            userId: "user-a",
+            tenant: "tenant-a",
+            requestId: "request-a",
+            sameContext: true,
+        });
+        expect(resultB).toEqual({
+            userId: "user-b",
+            tenant: "tenant-b",
+            requestId: "request-b",
+            sameContext: true,
+        });
+        expect(requestContext.getContext()).toBeUndefined();
     });
 
     test("singleton returns the same instance", () => {

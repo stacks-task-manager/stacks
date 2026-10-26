@@ -48,6 +48,7 @@ See [`scripts/release-signing/README.md`](../../../scripts/release-signing/READM
 | `NODE_ENV=test`                                                 | Skipped in `index.ts` (tests may import helpers directly).                                                                                           |
 | Entry file ends in `.ts`/`.tsx` (e.g. `tsx watch src/index.ts`) | Skipped unless `FORCE_INTEGRITY_CHECK=1`. Placeholders are only replaced by the esbuild integrity plugin, so a TS entry can never be a built bundle. |
 | Built bundle (`dist/index.js` or similar)                       | Runs at startup; exits the process on failure.                                                                                                       |
+| Production bundle build without either release-signing key      | The esbuild integrity plugin fails the build; it must not emit an unsigned bundle that will fail at startup.                                         |
 
 `NODE_ENV` is intentionally **not** an override on a built bundle: a production server must not be
 downgradable by editing `.env`. The only ways to skip the check on a built bundle are running tests

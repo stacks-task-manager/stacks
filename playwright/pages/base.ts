@@ -1,4 +1,5 @@
 import { expect, type Locator, type Page } from "@playwright/test";
+import { e2eBaseUrl } from "../config/runtime";
 
 class Base {
     public page: Page;
@@ -7,6 +8,20 @@ class Base {
     constructor(page: Page) {
         this.page = page;
         this.tooltip = page.locator('[class*="tooltip"] [class*="popover-content"]');
+    }
+
+    protected async browserMutationHeaders(): Promise<Record<string, string>> {
+        const csrfResponse = await this.page.request.get("/auth/csrf");
+        if (!csrfResponse.ok()) {
+            throw new Error(`Could not obtain a CSRF token (HTTP ${csrfResponse.status()})`);
+        }
+
+        const csrfToken = (await csrfResponse.json()).data?.token;
+        if (typeof csrfToken !== "string" || csrfToken.length === 0) {
+            throw new Error("Could not obtain a CSRF token");
+        }
+
+        return { Origin: new URL(e2eBaseUrl).origin, "x-csrf-token": csrfToken };
     }
 
     async open(): Promise<void> {
@@ -35,6 +50,13 @@ class Base {
 
                 return url.pathname === pathname && paramsMatch;
             })
+            .toBe(true);
+    }
+
+    /** Asserts the current URL no longer carries any of the given query parameters. */
+    async expectParamsAbsent(keys: string[]) {
+        await expect
+            .poll(() => keys.every(key => new URL(this.page.url()).searchParams.get(key) === null))
             .toBe(true);
     }
 

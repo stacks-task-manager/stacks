@@ -2,19 +2,19 @@
 import * as SecureStore from "expo-secure-store";
 
 import { SECURE_KEYS } from "./keys";
+import { normalizeBaseUrl } from "./serverUrl";
 
-export function normalizeBaseUrl(raw: string): string {
-    const t = raw.trim().replace(/\/+$/, "");
-    return t;
-}
+export { normalizeBaseUrl } from "./serverUrl";
+
+const allowInsecureLocal = typeof __DEV__ !== "undefined" && __DEV__;
 
 export async function getServerUrl(): Promise<string | null> {
     const v = await SecureStore.getItemAsync(SECURE_KEYS.serverUrl);
-    return v ? normalizeBaseUrl(v) : null;
+    return v ? normalizeBaseUrl(v, allowInsecureLocal) : null;
 }
 
 export async function setServerUrl(url: string): Promise<void> {
-    await SecureStore.setItemAsync(SECURE_KEYS.serverUrl, normalizeBaseUrl(url));
+    await SecureStore.setItemAsync(SECURE_KEYS.serverUrl, normalizeBaseUrl(url, allowInsecureLocal));
 }
 
 export async function clearServerUrl(): Promise<void> {

@@ -1,7 +1,6 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 const esbuild = require("esbuild");
 const fs = require("fs");
-const path = require("path");
 const { integrityPlugin } = require("./esbuild-integrity-plugin");
 
 // Read package.json to get all dependencies
@@ -55,7 +54,7 @@ const buildConfig = {
     entryPoints: ["src/index.ts"],
     bundle: true,
     platform: "node",
-    target: "node18",
+    target: "node22",
     format: "cjs",
     outfile: "dist/server.js",
     external: [...externalDependencies, ...allNodeBuiltins],
@@ -77,25 +76,6 @@ const secureBuildConfig = {
     plugins: [integrityPlugin()],
 };
 
-// Function to copy .env file to dist directory
-function copyEnvFile() {
-    const envPath = path.join(__dirname, ".env");
-    const distDir = path.dirname(buildConfig.outfile);
-    const distEnvPath = path.join(distDir, ".env");
-
-    if (fs.existsSync(envPath)) {
-        // Ensure dist directory exists
-        if (!fs.existsSync(distDir)) {
-            fs.mkdirSync(distDir, { recursive: true });
-        }
-
-        fs.copyFileSync(envPath, distEnvPath);
-        console.log("📄 Copied .env file to dist directory");
-    } else {
-        console.log("⚠️  No .env file found to copy");
-    }
-}
-
 // Build function
 async function build() {
     try {
@@ -104,9 +84,6 @@ async function build() {
         console.log(`🔗 External: ${externalDependencies.length} dependencies`);
 
         await esbuild.build(buildConfig);
-
-        // Copy .env file after successful build
-        copyEnvFile();
 
         console.log("✅ Build completed successfully!");
         console.log(`📁 Output: ${buildConfig.outfile}`);
@@ -125,9 +102,6 @@ async function buildSecure() {
         console.log("🔐 Integrity data will be embedded in the bundle");
 
         await esbuild.build(secureBuildConfig);
-
-        // Copy .env file after successful build
-        copyEnvFile();
 
         console.log("✅ Secure build completed successfully!");
         console.log(`📁 Output: ${secureBuildConfig.outfile}`);

@@ -63,6 +63,13 @@ function assertCanManageCalendar(calendar: ILocalCalendar) {
     }
 }
 
+function assertCanChangeTenantDefault() {
+    const user = getCurrentUser();
+    if (!user.admin) {
+        throw Errors.forbidden(translate("Calendar update not allowed"));
+    }
+}
+
 async function getAll(): Promise<ILocalCalendar[]> {
     const user = getCurrentUser();
     return findAll<ILocalCalendar>({
@@ -100,6 +107,9 @@ async function create(data: {
 }): Promise<ILocalCalendar> {
     const user = getCurrentUser();
     const primary = getPrimaryFlag(data);
+    if (primary) {
+        assertCanChangeTenantDefault();
+    }
 
     return withTransaction(undefined, async transaction => {
         // If setting as default, unset any existing default for this tenant
@@ -157,6 +167,9 @@ async function update(
     const calendar = await getOne(id);
     assertCanManageCalendar(calendar);
     const primary = getPrimaryFlag(data);
+    if (data.primary != null || data.isDefault != null) {
+        assertCanChangeTenantDefault();
+    }
 
     // If setting as default, unset any existing default for this tenant
     if (primary) {
@@ -194,6 +207,9 @@ async function remove(id: string): Promise<boolean> {
     const user = getCurrentUser();
     const calendar = await getOne(id);
     assertCanManageCalendar(calendar);
+    if (calendar.primary) {
+        assertCanChangeTenantDefault();
+    }
 
     // Don't allow deleting the default calendar if it's the only one
     const calendars = await getAll();

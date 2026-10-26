@@ -2,16 +2,16 @@
 import { describe, test, expect, beforeAll } from "vitest";
 import app from "../src/index";
 import { getAuthToken } from "./helpers/authHelper";
+import { CompanyEntity } from "@stacks/db";
 
 describe("Companies", () => {
     let token: string = "";
-    let companyId: string = "";
 
     beforeAll(async () => {
         token = await getAuthToken();
     });
 
-    test("Get all companies", async () => {
+    test("denies company list and detail reads without company read permission", async () => {
         const res = await app.request("/api/companies", {
             method: "GET",
             headers: {
@@ -20,13 +20,22 @@ describe("Companies", () => {
             },
         });
 
-        expect(res.status).toBe(200);
+        expect(res.status).toBe(403);
         const body = await res.json();
-        expect(body.success).toBe(true);
-        expect(Array.isArray(body.data)).toBe(true);
+        expect(body.success).toBe(false);
+        expect(body.code).toBe("FORBIDDEN");
+
+        const detail = await app.request("/api/companies/11111111-1111-4111-8111-111111111111", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        expect(detail.status).toBe(403);
     });
 
-    test("Create a company", async () => {
+    test("denies company creation without company write permission", async () => {
         const companyData = {
             title: "Test Company",
             website: "https://testcompany.com",
@@ -42,12 +51,12 @@ describe("Companies", () => {
             body: JSON.stringify(companyData),
         });
 
-        expect(res.status).toBe(200);
+        expect(res.status).toBe(403);
         const body = await res.json();
-        expect(body.success).toBe(true);
-        expect(body.data).toHaveProperty("id");
-        expect(body.data.title).toBe("Test Company");
-        companyId = body.data.id;
+        expect(body.success).toBe(false);
+        expect(body.code).toBe("FORBIDDEN");
+        expect(body.message).not.toContain("Test Company");
+        expect(await CompanyEntity.findOne({ where: { title: companyData.title } })).toBeNull();
     });
 
     test("Create company with missing required fields", async () => {
@@ -87,8 +96,8 @@ describe("Companies", () => {
             body: JSON.stringify(companyData),
         });
 
-        // Email is not validated by schema; allow success or validation error
-        expect([200, 400]).toContain(res.status);
+        // This fixture's role has read-only company access.
+        expect(res.status).toBe(403);
     });
 
     test("Access companies without authentication", async () => {
@@ -116,10 +125,10 @@ describe("Companies", () => {
             },
         });
 
-        // Should fail with invalid token
+        // Invalid credentials share a generic response to avoid token-state disclosure.
         expect(res.status).toBe(401);
         const body = await res.json();
         expect(body.success).toBe(false);
-        expect(body.code).toBe("INVALID_TOKEN");
+        expect(body.code).toBe("UNAUTHORIZED");
     });
 });

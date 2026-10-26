@@ -10,6 +10,7 @@ import { BookmarksLoader } from "../loaders/bookmarks";
 import { validator } from "../middleware/validator";
 import { Errors } from "../errors";
 import { asyncHandler } from "../utils/errorHandler";
+import { parseUuidParam } from "./schema/common";
 import { BookmarkSchema } from "./schema/bookmark";
 
 const bookmarks = new Hono();
@@ -39,7 +40,7 @@ bookmarks.delete(
     "/:id",
     asyncHandler(async (c: Context) => {
         const { id } = c.req.param();
-        const deleted = await BookmarksLoader.remove(id);
+        const deleted = await BookmarksLoader.remove(parseUuidParam(id));
 
         if (!deleted) {
             throw Errors.notFound(translate("Bookmark not found"));

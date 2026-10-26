@@ -10,7 +10,7 @@ test.describe("Auth", () => {
     let auth: Auth;
 
     test.beforeAll(async () => {
-        ({ browser, context, page } = await bootstrapContext());
+        ({ browser, context, page } = await bootstrapContext({ ignoreAuth: true }));
 
         auth = new Auth(page);
     });

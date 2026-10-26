@@ -12,7 +12,18 @@ export function getBrowserLocale(): string {
 }
 
 export function openInNewTab(url: string) {
-    window.open(url, "_blank");
+    if (typeof url !== "string" || url.trim().length === 0) return;
+
+    let parsedUrl: URL;
+    try {
+        parsedUrl = new URL(url, window.location.href);
+    } catch {
+        return;
+    }
+
+    if (!["http:", "https:", "mailto:", "tel:"].includes(parsedUrl.protocol)) return;
+
+    window.open(url, "_blank", "noopener,noreferrer");
 }
 
 export async function setClipboard(text: string) {

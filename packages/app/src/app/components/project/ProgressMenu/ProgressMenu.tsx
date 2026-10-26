@@ -57,6 +57,7 @@ export const ProgressMenu: FunctionComponent<IProgressMenuProps> = ({
                                 onClick={(event: React.MouseEvent) => onChange(p, event)}
                                 shouldDismissPopover={shouldDismiss}
                                 active={selected === p / 10}
+                                data-selected={String(value === p)}
                                 data-testid={`progress-menu-item-${p}`}
                             />
                         ))}

@@ -17,6 +17,7 @@ export interface StatusChipProps {
     fill?: boolean;
     showParent?: boolean;
     tagId?: string; // used to set a specific element ID on the tag in order to be clickable from the hotkey manager
+    testId?: string;
     onRemove?: (tagId: string) => void;
     onChange?: (tag: Partial<ITag>) => void;
 }
@@ -28,6 +29,7 @@ export const StatusChip: FunctionComponent<StatusChipProps> = ({
     fill,
     showParent,
     tagId,
+    testId,
     onRemove,
     onChange,
 }) => {
@@ -58,6 +60,7 @@ export const StatusChip: FunctionComponent<StatusChipProps> = ({
             interactive={(interactive || onChange != null) && !disabled}
             onRemove={onRemove && handleRemove}
             className="status-chip"
+            data-testid={testId}
             minimal
             round
             id={tagId}

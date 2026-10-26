@@ -9,6 +9,8 @@ interface ITableBodyCellProps extends React.TdHTMLAttributes<HTMLTableCellElemen
     children?: React.ReactNode;
     align?: "center" | "right";
     menu?: React.ReactNode;
+    menuTestId?: string;
+    checkboxTestId?: string;
     secondary?: boolean;
     hasCheckbox?: boolean;
     isChecked?: boolean;
@@ -28,6 +30,8 @@ export const TableBodyCell: FunctionComponent<ITableBodyCellProps> = ({
     children,
     align,
     menu,
+    menuTestId,
+    checkboxTestId,
     secondary,
     hasCheckbox,
     isChecked,
@@ -71,6 +75,7 @@ export const TableBodyCell: FunctionComponent<ITableBodyCellProps> = ({
                             active={isOpen}
                             {...props}
                             className="table-menu-button"
+                            data-testid={menuTestId}
                         />
                     )}
                 />
@@ -110,14 +115,20 @@ export const TableBodyCell: FunctionComponent<ITableBodyCellProps> = ({
                 }}
             >
                 {hasCheckbox && (
-                    <Tooltip content={checkboxTooltip} placement="top" disabled={checkboxTooltip == null}>
-                        <Checkbox
-                            type="checkbox"
-                            // defaultChecked={defaultChecked}
-                            checked={isChecked}
-                            onChange={handleCheck}
-                        />
-                    </Tooltip>
+                    <div
+                        data-testid={checkboxTestId ? `${checkboxTestId}-click-target` : undefined}
+                        style={{ display: "contents" }}
+                    >
+                        <Tooltip content={checkboxTooltip} placement="top" disabled={checkboxTooltip == null}>
+                            <Checkbox
+                                type="checkbox"
+                                data-testid={checkboxTestId}
+                                // defaultChecked={defaultChecked}
+                                checked={isChecked}
+                                onChange={handleCheck}
+                            />
+                        </Tooltip>
+                    </div>
                 )}
                 {children}
             </div>

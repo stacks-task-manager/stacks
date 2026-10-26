@@ -3,6 +3,7 @@ import { translate } from "@stacks/translations";
 import React, { useEffect } from "react";
 import { Intent, Dialog, Classes, Button, Checkbox, Card, H5 } from "@blueprintjs/core";
 import Storage from "app/utils/storage";
+import { sanitizeRichHtml } from "app/utils/safeHtml";
 import { usePreferences } from "app/hooks";
 import { WebsiteAPI } from "app/api";
 import { PreferencesActions } from "app/store/actions/preferences";
@@ -142,7 +143,7 @@ export const Announcement = () => {
         >
             <div className={Classes.DIALOG_BODY} style={{ maxHeight: 500, overflow: "auto", padding: 1 }}>
                 {announcement && announcement.message && (
-                    <div dangerouslySetInnerHTML={{ __html: announcement?.message }} />
+                    <div dangerouslySetInnerHTML={{ __html: sanitizeRichHtml(announcement.message) }} />
                 )}
                 {announcement && announcement.question && (
                     <div>

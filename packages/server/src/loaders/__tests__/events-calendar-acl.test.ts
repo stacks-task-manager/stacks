@@ -12,6 +12,7 @@ vi.mock("@stacks/db", () => ({
         count: vi.fn(),
     },
     EventEntity: {
+        name: "Event",
         hasOne: vi.fn(),
         findAll: vi.fn(),
         findOne: vi.fn(),
@@ -29,6 +30,30 @@ vi.mock("@stacks/db", () => ({
         transaction: vi.fn(),
     },
 }));
+
+const { updateOneMock } = vi.hoisted(() => ({ updateOneMock: vi.fn() }));
+
+vi.mock("../utils", async importOriginal => {
+    const actual = await importOriginal<typeof import("../utils")>();
+    return {
+        ...actual,
+        findOne: (args: any) =>
+            args.entity.name === "Event"
+                ? Promise.resolve({
+                      id: args.id,
+                      source: "local",
+                      calendar: visibleCalendarId,
+                      permissions: {
+                          owner: "user-1",
+                          isPublic: true,
+                          visibleUsers: [],
+                          visibleRoles: [],
+                      },
+                  })
+                : actual.findOne(args),
+        updateOne: updateOneMock,
+    };
+});
 
 vi.mock("../../events", () => ({
     sendRealtimeUpdate: vi.fn(),
@@ -72,6 +97,7 @@ const runWithContext = <T>(fn: () => T, overrides: Partial<User> = {}) =>
 
 const visibleCalendarId = "11111111-1111-4111-8111-111111111111";
 const inaccessibleCalendarId = "22222222-2222-4222-8222-222222222222";
+const anotherVisibleCalendarId = "33333333-3333-4333-8333-333333333333";
 
 const calendarRow = (id: string) => ({
     id,
@@ -99,6 +125,7 @@ describe("EventsLoader calendar ACL", () => {
         vi.clearAllMocks();
         findAllCalendarMock.mockResolvedValue([calendarRow(visibleCalendarId)] as any);
         findAllEventMock.mockResolvedValue([] as any);
+        updateOneMock.mockResolvedValue(true);
     });
 
     it("intersects requested local calendar filters with visible calendars", async () => {
@@ -135,6 +162,30 @@ describe("EventsLoader calendar ACL", () => {
         ).rejects.toThrow(/calendar not found/i);
 
         expect(createEventMock).not.toHaveBeenCalled();
+    });
+
+    it("rejects updating an event into a local calendar the user cannot see", async () => {
+        findOneCalendarMock
+            .mockResolvedValueOnce(calendarRow(visibleCalendarId) as any)
+            .mockResolvedValueOnce(null);
+
+        await expect(
+            runWithContext(() => EventsLoader.update("event-1", { calendar: inaccessibleCalendarId }))
+        ).rejects.toThrow(/calendar not found/i);
+
+        expect(updateOneMock).not.toHaveBeenCalled();
+    });
+
+    it("allows updating an event into a visible local calendar", async () => {
+        findOneCalendarMock
+            .mockResolvedValueOnce(calendarRow(visibleCalendarId) as any)
+            .mockResolvedValueOnce(calendarRow(anotherVisibleCalendarId) as any);
+
+        await runWithContext(() => EventsLoader.update("event-1", { calendar: anotherVisibleCalendarId }));
+
+        expect(updateOneMock).toHaveBeenCalledWith(
+            expect.objectContaining({ data: { calendar: anotherVisibleCalendarId } })
+        );
     });
 
     it("counts only events in visible calendars through the event ACL join", async () => {

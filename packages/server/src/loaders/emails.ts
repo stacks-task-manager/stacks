@@ -5,19 +5,6 @@ import { Transaction } from "sequelize";
 import type { User } from "../types";
 import { withTransaction } from "./utils";
 
-// Import email service utilities
-// Note: These would need to be available as a shared package or API call
-// For now, we'll define the interface and implementation can be adjusted
-interface EmailQueueData {
-    userId: string;
-    template: EMAIL_TEMPLATES;
-    data?: Record<string, any>;
-    scheduledAt?: Date;
-    locale?: string;
-    tenant: string;
-    createdBy: string;
-}
-
 /**
  * Queue an email for sending through the email service
  * @param destinationUserId - The user ID to send the email to
@@ -34,30 +21,51 @@ async function queueEmail(
     locale: string,
     user: User,
     scheduleAt?: Date,
-    extTransaction?: Transaction
+    extTransaction?: Transaction,
+    recipientEmail?: string
 ) {
-    return withTransaction(extTransaction, async () => {
+    if (
+        recipientEmail !== undefined &&
+        (template !== EMAIL_TEMPLATES.EMAIL_CHANGE || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipientEmail))
+    ) {
+        return false;
+    }
+
+    return withTransaction(extTransaction, async transaction => {
         // Fetch the destination user to get their email
-        const destinationUser = await UserEntity.findByPk(destinationUserId);
+        const destinationUser = await UserEntity.findByPk(destinationUserId, { transaction });
 
         if (!destinationUser) {
             return false;
         }
 
+        const sender = await UserEntity.findByPk(user.id, {
+            attributes: ["id", "tenant", "system"],
+            transaction,
+        });
+        if (!sender) return false;
+
+        const senderTenant = String(sender.get("tenant"));
+        const recipientTenant = String(destinationUser.get("tenant"));
+        if (senderTenant !== String(user.tenant)) return false;
+        if (!sender.get("system") && senderTenant !== recipientTenant) return false;
+
         try {
-            await EmailQueueEntity.create({
-                userId: destinationUserId,
-                template,
-                data,
-                scheduledAt: scheduleAt || new Date(),
-                locale, // Default locale, could be enhanced to use user preference
-                tenant: user.tenant,
-                createdBy: user.id,
-            });
+            await EmailQueueEntity.create(
+                {
+                    userId: destinationUserId,
+                    recipientEmail: recipientEmail ?? null,
+                    template,
+                    data,
+                    scheduledAt: scheduleAt || new Date(),
+                    locale, // Default locale, could be enhanced to use user preference
+                },
+                { transaction }
+            );
 
             return true;
-        } catch (error) {
-            console.error("❌ Error queueing email:", error);
+        } catch {
+            console.error("Email queue insert failed");
             return false;
         }
     });

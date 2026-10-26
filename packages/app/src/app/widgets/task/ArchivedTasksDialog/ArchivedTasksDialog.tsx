@@ -76,7 +76,7 @@ export const ArchivedTasksDialog = ({ onClose }: { onClose: () => void }) => {
             onClosed={onClose}
             style={{ width: "90vw", height: "90vh" }}
         >
-            <div className={Classes.DIALOG_BODY}>
+            <div className={Classes.DIALOG_BODY} data-testid="archived-tasks-dialog">
                 {tasks.length > 0 ? (
                     <TasksTable
                         id="archived-tasks-table"
@@ -99,6 +99,7 @@ export const ArchivedTasksDialog = ({ onClose }: { onClose: () => void }) => {
                             icon={APPICONS.ARCHIVED}
                             title={translate("No archived tasks")}
                             description={translate("No archived tasks in project")}
+                            testId="archived-tasks-empty"
                         />
                     </Grid>
                 )}
@@ -113,18 +114,22 @@ export const ArchivedTasksDialog = ({ onClose }: { onClose: () => void }) => {
                                 intent={Intent.DANGER}
                                 icon={<Icon icon="trash" />}
                                 onClick={handleDelete}
+                                data-testid="archived-tasks-delete"
                             >
                                 {translate("Delete selected", { count: selected.length })}
                             </Button>
                         )}
                     </div>
                     <div>
-                        <Button onClick={() => setIsOpen(false)}>{translate("Close")}</Button>
+                        <Button data-testid="archived-tasks-close" onClick={() => setIsOpen(false)}>
+                            {translate("Close")}
+                        </Button>
                         <ButtonGroup>
                             <Button
                                 intent={Intent.PRIMARY}
                                 disabled={selected.length === 0}
                                 onClick={() => handleUnarchive()}
+                                data-testid="archived-tasks-restore"
                             >
                                 Restore{selected.length ? ` ${selected.length}` : ""} tasks
                             </Button>

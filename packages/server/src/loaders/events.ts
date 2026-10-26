@@ -6,9 +6,16 @@ import { Op } from "sequelize";
 import { addDays, endOfDay, format as formatDate, startOfDay } from "date-fns";
 import { Errors } from "../errors";
 import { parseISO } from "date-fns";
-import { PermissionEntity, EventEntity } from "@stacks/db";
+import { PermissionEntity, EventEntity, UserEntity } from "@stacks/db";
 import { RRule } from "rrule";
-import { deleteOne, findAll, findOne, sanitizeWhere, sanitizeWherePermissions, updateOne } from "./utils";
+import {
+    assertCanWriteResource,
+    deleteOne,
+    findAll,
+    findOne,
+    sanitizeWherePermissions,
+    updateOne,
+} from "./utils";
 import googleOAuthService, { type GoogleCalendarEvent } from "../services/googleOAuthService";
 import { CalendarsLoader } from "./calendar";
 
@@ -16,6 +23,7 @@ import { ICalendarEvent, POLLINGACTIONS, POLLINGTYPE, type IPermissions } from "
 import { getCurrentUser } from "./context";
 import { sendRealtimeUpdate } from "../events";
 import { PermissionsLoader } from "./permissions";
+import { translate } from "@stacks/translations";
 
 EventEntity.hasOne(PermissionEntity, { foreignKey: "id", constraints: false });
 PermissionEntity.belongsTo(EventEntity, { foreignKey: "id", constraints: false });
@@ -96,6 +104,19 @@ function resolveGoogleDeleteTarget(
     }
 
     return parseGoogleCompositeEventId(id);
+}
+
+async function assertEventAssigneesBelongToTenant(userIds: Array<string | null | undefined>, tenant: string) {
+    const requestedIds = [...new Set(userIds.filter((id): id is string => Boolean(id)))];
+    if (requestedIds.length === 0) return;
+
+    const users = await UserEntity.findAll({
+        where: { id: { [Op.in]: requestedIds }, tenant, deleted: null },
+        attributes: ["id"],
+    });
+    if (users.length !== requestedIds.length) {
+        throw Errors.notFound(translate("Event not found"));
+    }
 }
 
 /**
@@ -387,6 +408,7 @@ async function countAll(filters?: { from?: string; to?: string }): Promise<numbe
 async function create(data: Partial<ICalendarEvent>) {
     const user = getCurrentUser();
     try {
+        await assertEventAssigneesBelongToTenant(data.assignees ?? [], user.tenant);
         const source = data.source ?? "local";
         let calendar = data.calendar ?? (source === "local" ? "local" : undefined);
 
@@ -473,8 +495,8 @@ async function create(data: Partial<ICalendarEvent>) {
 
 async function update(id: string, data: Partial<ICalendarEvent>) {
     try {
+        const user = getCurrentUser();
         if (id.startsWith("google_")) {
-            const user = getCurrentUser();
             const parsed = parseGoogleCompositeEventId(id);
             if (!parsed) {
                 throw Errors.invalidInput("Invalid Google event id");
@@ -545,6 +567,12 @@ async function update(id: string, data: Partial<ICalendarEvent>) {
         }
 
         const event = await getOne(id);
+        assertCanWriteResource(event, "owner");
+        await assertEventAssigneesBelongToTenant(data.assignees ?? [], user.tenant);
+
+        if (event.source === "local" && data.calendar !== undefined) {
+            await CalendarsLoader.getOne(data.calendar);
+        }
 
         await updateOne({
             entity: EventEntity,
@@ -568,16 +596,9 @@ async function move(id: string, calendar: string, source: ICalendarEvent["source
 
             const event = await getOne(id);
             await CalendarsLoader.getOne(calendar);
-            const [affectedCount] = await EventEntity.update(
-                { calendar },
-                {
-                    where: sanitizeWhere({ id, source: "local" }),
-                }
-            );
-            if (affectedCount > 0) {
-                await sendEventRealtimeUpdate(id, POLLINGACTIONS.UPDATE, (event as any).permissions);
-            }
-            return affectedCount > 0;
+            await updateOne({ entity: EventEntity, id, data: { calendar } });
+            await sendEventRealtimeUpdate(id, POLLINGACTIONS.UPDATE, (event as any).permissions);
+            return true;
         }
 
         if (source === "google") {

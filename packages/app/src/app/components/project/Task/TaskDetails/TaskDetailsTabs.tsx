@@ -11,13 +11,18 @@ import { TaskDetailsTimelogsTab } from "../TaskDetailsTimeLogs/TaskDetailsTimeLo
 interface TaskDetailsTabsProps {
     task: ITask;
     disabled?: boolean;
+    onAddDependencies: () => void;
 }
 /**
  * Renders the task-details tab bar and the active tab's panel (files, subtasks,
  * locations, links, time, attachments, dependencies). Which tabs are available
  * is driven by the user's `taskDetails*` preferences.
  */
-export const TaskDetailsTabs: FunctionComponent<TaskDetailsTabsProps> = ({ task, disabled }) => {
+export const TaskDetailsTabs: FunctionComponent<TaskDetailsTabsProps> = ({
+    task,
+    disabled,
+    onAddDependencies,
+}) => {
     const [activeTab, setActiveTab] = useState("files");
 
     const {
@@ -61,66 +66,72 @@ export const TaskDetailsTabs: FunctionComponent<TaskDetailsTabsProps> = ({ task,
     };
 
     return (
-        <Tabs
-            id="options"
-            selectedTabId={activeTab}
-            renderActiveTabPanelOnly
-            onChange={handleTabChange}
-            data-testid="task-details-tabs"
-        >
-            {task && taskDetailsAttachments ? (
-                <Tab
-                    id="files"
-                    title={translate("Files")}
-                    panel={<TaskDetailsAttachments taskId={task.id} disabled={disabled} />}
-                />
-            ) : null}
-            {taskDetailsDependencies && (
-                <Tab
-                    id="dependencies"
-                    title={translate("Dependencies")}
-                    panel={<TaskDetailsDependencies taskId={task.id} disabled={disabled} />}
-                />
-            )}
-            {taskDetailsTime ? (
-                <Tab
-                    id="timelogs"
-                    title={translate("Time entries")}
-                    panel={
-                        <TaskDetailsTimelogsTab
-                            taskId={task.id}
-                            projectId={task.project}
-                            disabled={disabled}
-                        />
-                    }
-                />
-            ) : null}
-            {taskDetailsLinks ? (
-                <Tab
-                    id="links"
-                    title={translate("Links")}
-                    tagContent={task && task.links && task.links.length > 0 ? task.links.length : undefined}
-                    panel={<TaskDetailsLinks taskId={task.id} links={task.links} disabled={disabled} />}
-                />
-            ) : null}
-            {taskDetailsLocations ? (
-                <Tab
-                    id="locations"
-                    title={translate("Locations")}
-                    tagContent={
-                        task && task.locations && task.locations.length > 0
-                            ? task?.locations.length
-                            : undefined
-                    }
-                    panel={
-                        <TaskDetailsLocations
-                            taskId={task.id}
-                            locations={task.locations}
-                            disabled={disabled}
-                        />
-                    }
-                />
-            ) : null}
-        </Tabs>
+        <div data-testid="task-details-tabs">
+            <Tabs id="options" selectedTabId={activeTab} renderActiveTabPanelOnly onChange={handleTabChange}>
+                {task && taskDetailsAttachments ? (
+                    <Tab
+                        id="files"
+                        title={translate("Files")}
+                        panel={<TaskDetailsAttachments taskId={task.id} disabled={disabled} />}
+                    />
+                ) : null}
+                {taskDetailsDependencies && (
+                    <Tab
+                        id="dependencies"
+                        title={translate("Dependencies")}
+                        panel={
+                            <TaskDetailsDependencies
+                                taskId={task.id}
+                                disabled={disabled}
+                                onAddDependencies={onAddDependencies}
+                            />
+                        }
+                        data-testid="task-details-tab-dependencies"
+                    />
+                )}
+                {taskDetailsTime ? (
+                    <Tab
+                        id="timelogs"
+                        title={translate("Time entries")}
+                        data-testid="task-details-tab-timelogs"
+                        panel={
+                            <TaskDetailsTimelogsTab
+                                taskId={task.id}
+                                projectId={task.project}
+                                disabled={disabled}
+                            />
+                        }
+                    />
+                ) : null}
+                {taskDetailsLinks ? (
+                    <Tab
+                        id="links"
+                        title={translate("Links")}
+                        tagContent={
+                            task && task.links && task.links.length > 0 ? task.links.length : undefined
+                        }
+                        panel={<TaskDetailsLinks taskId={task.id} links={task.links} disabled={disabled} />}
+                    />
+                ) : null}
+                {taskDetailsLocations ? (
+                    <Tab
+                        id="locations"
+                        title={translate("Locations")}
+                        tagContent={
+                            task && task.locations && task.locations.length > 0
+                                ? task?.locations.length
+                                : undefined
+                        }
+                        panel={
+                            <TaskDetailsLocations
+                                taskId={task.id}
+                                locations={task.locations}
+                                disabled={disabled}
+                            />
+                        }
+                    />
+                ) : null}
+            </Tabs>
+        </div>
     );
 };

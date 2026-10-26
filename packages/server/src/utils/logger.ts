@@ -1,6 +1,7 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { Context } from "hono";
 import { getClientIP as resolveRequestClientIp } from "./clientIp";
+import { redactLogMetadata, redactLogPath, redactLogText } from "./logRedaction";
 
 /**
  * Log levels enum
@@ -141,7 +142,7 @@ export class Logger {
 
         this.info("HTTP Request", {
             method: context.req.method,
-            path: context.req.path,
+            path: redactLogPath(context.req.path),
             userAgent: context.req.header("User-Agent"),
             ip: this.getClientIP(context),
             duration,
@@ -164,7 +165,7 @@ export class Logger {
             this.log(level, message, {
                 metadata: {
                     method: context.req.method,
-                    path: context.req.path,
+                    path: redactLogPath(context.req.path),
                     statusCode,
                     duration,
                     requestId,
@@ -305,15 +306,15 @@ export class Logger {
             requestId: context?.get("requestId"),
             userId: context?.get("user")?.id,
             method: context?.req.method,
-            path: context?.req.path,
-            metadata,
+            path: context?.req.path ? redactLogPath(context.req.path) : undefined,
+            metadata: metadata ? redactLogMetadata(metadata) : undefined,
         };
 
         if (error) {
             entry.error = {
                 name: error.name,
-                message: error.message,
-                stack: this.config.includeStack ? error.stack : undefined,
+                message: redactLogText(error.message),
+                stack: this.config.includeStack && error.stack ? redactLogText(error.stack) : undefined,
             };
         }
 
@@ -469,7 +470,7 @@ export const loggingMiddleware = () => {
                 error as Error,
                 {
                     method: c.req.method,
-                    path: c.req.path,
+                    path: redactLogPath(c.req.path),
                     duration,
                 },
                 c

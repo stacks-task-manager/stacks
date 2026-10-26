@@ -4,10 +4,17 @@
  */
 import { CompanyEntity } from "@stacks/db";
 import { Errors } from "../errors";
-import type { ICompany } from "@stacks/types";
+import { ROLE_SECTIONS, type ICompany } from "@stacks/types";
+import { translate } from "@stacks/translations";
 import { invalidateApiCacheForCurrentRequest } from "../utils/cache";
-import { getCurrentUser } from "./context";
+import { canWrite, getCurrentUser } from "./context";
 import { sanitizeWhere } from "./utils";
+
+function assertCompanyWriteAccess() {
+    if (!canWrite(ROLE_SECTIONS.COMPANIES)) {
+        throw Errors.forbidden(translate("Insufficient permissions"));
+    }
+}
 
 /** All companies visible to the current tenant, sorted by title. */
 async function getAll() {
@@ -33,6 +40,7 @@ async function getOne(id: string) {
 async function create(data: object) {
     const user = getCurrentUser();
     try {
+        assertCompanyWriteAccess();
         const newCompany = await CompanyEntity.create({
             ...data,
             tenant: user.tenant,
@@ -51,6 +59,7 @@ async function create(data: object) {
 async function update(id: string, data: Partial<ICompany>) {
     const user = getCurrentUser();
     try {
+        assertCompanyWriteAccess();
         await getOne(id);
 
         const [affectedRows] = await CompanyEntity.update(

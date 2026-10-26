@@ -17,6 +17,9 @@ module.exports = {
         "^@stacks/translations$": "<rootDir>/../translations/dist/index.js",
     },
     modulePaths: ["<rootDir>/src"],
+    // The real component graph pulls in ESM-only packages (nanoid, lowlight, @blueprintjs/*, …),
+    // so node_modules is transpiled as well; the allowlist kept growing per dependency.
+    transformIgnorePatterns: [],
     setupFilesAfterEnv: ["<rootDir>/src/setupTests.ts"],
     transform: {
         "^.+\\.(js|jsx|mjs|ts|tsx)$": "babel-jest",

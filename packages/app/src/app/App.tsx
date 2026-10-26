@@ -154,7 +154,7 @@ const MainAppRoutesPure: FunctionComponent<MainAppRoutesProps> = ({ location }) 
             </Routes>
         );
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [location.pathname]);
+    }, [location.pathname, location.search]);
 
     return memoizedAppRoutes;
 };

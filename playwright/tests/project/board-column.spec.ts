@@ -6,6 +6,7 @@ import Sidebar from "../../pages/sidebar";
 import BoardView from "../../pages/boardView";
 import Preferences from "../../pages/preferences";
 import { hexToRgb, metaOrControl } from "../../utils";
+import { closeDb, getDb } from "../../fixtures/db";
 
 const TEST_PROJECT = "Column project";
 const MAIN_COLUMN = "Column 1";
@@ -47,13 +48,21 @@ test.describe("Project - Board column", () => {
     });
 
     test.afterAll(async () => {
-        try {
-            if (page && !page.isClosed() && projectId) await project.deleteById(projectId);
-        } finally {
-            if (page && !page.isClosed()) await page.close();
-            if (context) await context.close();
-            if (browser) await browser.close();
-        }
+        const errors: unknown[] = [];
+        const attempt = async (action: () => Promise<unknown>) => {
+            try {
+                await action();
+            } catch (error) {
+                errors.push(error);
+            }
+        };
+        if (projectId) await attempt(() => getDb().cleanupProjectTaskRecords(projectId));
+        if (page && !page.isClosed() && projectId) await attempt(() => project.deleteById(projectId));
+        await attempt(closeDb);
+        if (page && !page.isClosed()) await attempt(() => page.close());
+        if (context) await attempt(() => context.close());
+        if (browser) await attempt(() => browser.close());
+        if (errors.length) throw new AggregateError(errors, "Board column fixture cleanup failed");
     });
 
     test("Should rename column", async () => {
@@ -399,7 +408,7 @@ test.describe("Project - Board column", () => {
 
     test("Should delete only the tasks", async () => {
         const COLUMN_NAME = "Delete tasks";
-        await board.addColumn(COLUMN_NAME);
+        const stackId = await board.addColumn(COLUMN_NAME);
 
         const column = await board.getColumnByName(COLUMN_NAME);
 
@@ -412,27 +421,10 @@ test.describe("Project - Board column", () => {
                 },
             });
         }
-
-        await column.getByTestId("column-header-wrapper").hover();
-        await expect(column.getByTestId("column-header-menu-button")).toBeVisible();
-
-        await column.getByTestId("column-header-menu-button").click();
-        await expect(board.columnContextMenu).toBeVisible();
-
-        await board.columnContextMenuItems.getByText("Delete stack...").click();
-
-        const confirmationDialog = page.getByRole("alertdialog");
-        await expect(confirmationDialog).toBeVisible();
-
-        await confirmationDialog.getByText("No, just delete all tasks").click();
-        await expect(
-            confirmationDialog.getByRole("checkbox", { name: "No, just delete all tasks" })
-        ).toBeChecked();
-        await confirmationDialog.getByRole("button", { name: "Yes" }).click();
-        await expect(confirmationDialog).toBeHidden();
-
-        await expect(column).toBeVisible();
-        await expect(column.getByTestId("task-card")).toHaveCount(0);
+        const taskIds = await Promise.all(
+            ["Task 2", "Task 3", "Task 4"].map(title => board.getCardIdByName(title))
+        );
+        await board.deleteTasksFromColumn(COLUMN_NAME, stackId, taskIds);
         await board.deleteColumn(COLUMN_NAME);
     });
 

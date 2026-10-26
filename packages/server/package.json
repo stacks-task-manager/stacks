@@ -4,25 +4,26 @@
     "type": "commonjs",
     "license": "AGPL-3.0-only",
     "scripts": {
-        "build": "tsc --project tsconfig.json && node -e \"const fs=require('fs'),p=require('path');const s=p.join('src','ai','prompts'),d=p.join('dist','ai','prompts');if(fs.existsSync(s)){fs.mkdirSync(p.dirname(d),{recursive:true});fs.cpSync(s,d,{recursive:true});}\"",
+        "build": "node -e \"require('fs').rmSync('dist', {recursive:true, force:true})\" && tsc --project tsconfig.json && node -e \"const fs=require('fs'),p=require('path');const s=p.join('src','ai','prompts'),d=p.join('dist','ai','prompts');if(fs.existsSync(s)){fs.mkdirSync(p.dirname(d),{recursive:true});fs.cpSync(s,d,{recursive:true});}\"",
         "build:translations": "cd ../translations && yarn install && yarn build",
         "bundle": "yarn build:translations && yarn pre-bundle && node -e \"require('./esbuild.config.js').buildSecure()\" && yarn post-bundle",
-        "bundle-unsecure": "node esbuild.config.js",
-        "pre-bundle": "node pre-build.js",
+        "bundle-unsecure": "yarn build && node esbuild.config.js",
+        "pre-bundle": "yarn build && node pre-build.js",
         "post-bundle": "node post-build.js",
         "setup": "yarn install",
-        "dev": "tsx watch --include \"./src/**/*.ts\" --include \"../translations/src/**/*.ts\" --include \"../db/src/**/*.ts\" --include \"../types/src/**/*.ts\" --include \"../license/src/**/*.ts\" --tsconfig tsconfig.dev.json --inspect --env-file=.env src/index.ts",
+        "dev": "RATE_LIMIT_API_WINDOW_MS=60000 RATE_LIMIT_AUTH_API_USER_MAX=2000 tsx watch --include \"./src/**/*.ts\" --include \"../translations/src/**/*.ts\" --include \"../db/src/**/*.ts\" --include \"../types/src/**/*.ts\" --include \"../license/src/**/*.ts\" --tsconfig tsconfig.dev.json --inspect --env-file=.env src/index.ts",
         "export:preview": "tsx scripts/export-preview.ts",
         "ai:debug": "tsx --env-file=.env src/ai/debugServer.ts",
         "test": "vitest run",
-        "test:unit": "vitest run --config vitest.unit.config.js"
+        "test:unit": "vitest run --config vitest.unit.config.js",
+        "ai:evaluate": "tsx --env-file=.env --tsconfig tsconfig.dev.json scripts/evaluate-ai.ts"
     },
     "dependencies": {
         "@ai-sdk/openai": "^3.0.50",
         "@hono/node-server": "^1.14.1",
         "@hono/node-ws": "^1.1.4",
         "@hono/zod-validator": "^0.4.3",
-        "@modelcontextprotocol/sdk": "^1.15.0",
+        "@modelcontextprotocol/sdk": "^1.31.0",
         "@stacks/translations": "workspace:*",
         "@types/lodash": "^4.17.24",
         "ai": "^6.0.206",
@@ -32,18 +33,18 @@
         "exceljs": "^4.4.0",
         "google-auth-library": "^10.9.0",
         "googleapis": "^154.1.0",
-        "handlebars": "^4.7.8",
-        "hono": "^4.12.23",
+        "handlebars": "^4.7.10",
+        "hono": "^4.13.13",
         "lodash": "^4.17.23",
         "mime-types": "^3.0.2",
-        "multer": "^2.0.2",
+        "multer": "^2.3.0",
         "pdf2pic": "^3.2.0",
         "pg": "^8.15.6",
         "playwright": "^1.58.0",
         "rrule": "^2.8.1",
         "sanitize-html": "^2.17.7",
         "sequelize": "^6.37.7",
-        "sharp": "^0.34.3",
+        "sharp": "^0.35.5",
         "typescript": "^5.8.3",
         "uuid": "^9.0.1",
         "zod": "^3.25.32"
@@ -63,6 +64,9 @@
         "esbuild": "^0.25.8",
         "sequelize-cli": "^6.6.3",
         "tsx": "^4.7.1",
-        "vitest": "^1.6.1"
+        "vitest": "^3.2.6"
+    },
+    "engines": {
+        "node": ">=22.12.0"
     }
 }
