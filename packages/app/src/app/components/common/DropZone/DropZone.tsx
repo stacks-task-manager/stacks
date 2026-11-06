@@ -51,7 +51,12 @@ export class DropZone2 extends React.Component<IDropZoneProps> {
     render() {
         return (
             <React.Fragment>
-                <div className="drop-zone" ref={(el: HTMLElement | null) => (this.dropZoneEl = el)}>
+                <div
+                    className="drop-zone"
+                    ref={(el: HTMLElement | null) => {
+                        this.dropZoneEl = el;
+                    }}
+                >
                     <div className="drop-zone-inner">
                         <div className="drop-area">
                             <Icon icon="folder" size={24} />
@@ -59,7 +64,12 @@ export class DropZone2 extends React.Component<IDropZoneProps> {
                         </div>
                     </div>
                 </div>
-                <div className="drop-zone-content" ref={(el: HTMLElement | null) => (this.childrenEl = el)}>
+                <div
+                    className="drop-zone-content"
+                    ref={(el: HTMLElement | null) => {
+                        this.childrenEl = el;
+                    }}
+                >
                     {this.props.children}
                 </div>
             </React.Fragment>

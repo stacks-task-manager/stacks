@@ -16,12 +16,12 @@ const DRAG_SPACE = 20;
 /**
  * Calls the handler when a click occurs outside the given element (ignoring small drag movements).
  * @template T - The type of the referenced HTMLElement.
- * @param {RefObject<T>} ref - Ref to the element to test clicks against.
+ * @param {RefObject<T | null>} ref - Ref to the element to test clicks against.
  * @param {(event: Event) => void} handler - Callback invoked when the click is outside the element.
  * @param {string[]} [selectors] - Optional CSS selectors whose containing targets are excluded from outside clicks.
  */
 export const useOnClickOutside = <T extends HTMLElement = HTMLElement>(
-    ref: RefObject<T>,
+    ref: RefObject<T | null>,
     handler: (event: Event) => void,
     selectors?: string[]
 ) => {

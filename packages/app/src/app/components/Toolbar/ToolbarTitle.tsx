@@ -3,8 +3,8 @@ import React, { FunctionComponent } from "react";
 import { Tooltip } from "@blueprintjs/core";
 
 interface IToolbarTitleProps {
-    title: string | JSX.Element;
-    subtitle?: string | JSX.Element;
+    title: string | React.JSX.Element;
+    subtitle?: string | React.JSX.Element;
     icon?: React.ReactNode;
 }
 

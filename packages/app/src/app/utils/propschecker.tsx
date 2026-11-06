@@ -73,7 +73,7 @@ function compFNSelection(compType: ComparaisonTypes, verbose = false) {
  */
 export function ReactFnCompPropsChecker<T extends Props>(props: PropsCheckerProps<T>) {
     const { children, childrenProps, compType = "SIMPLE", verbose } = props;
-    const oldPropsRef = React.useRef<T>();
+    const oldPropsRef = React.useRef<T | undefined>(undefined);
     React.useEffect(() => {
         // propschecker is a development-only debugging aid; logging is gated on `verbose`.
         if (!verbose) {

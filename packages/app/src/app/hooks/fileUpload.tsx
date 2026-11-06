@@ -79,8 +79,8 @@ export const useUpload = (config?: IUploadConfig): IUploadHook => {
     const recordIdRef = useRef<string | null>(null);
 
     // Toast notification refs
-    const progressToast = useRef<Toaster | undefined>();
-    const toastKey = useRef<string | undefined>();
+    const progressToast = useRef<Toaster | undefined>(undefined);
+    const toastKey = useRef<string | undefined>(undefined);
 
     useEffect(() => {
         (async () => {

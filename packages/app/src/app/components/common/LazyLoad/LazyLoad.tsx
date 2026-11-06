@@ -137,12 +137,12 @@ const LazyLoadPure: ForwardRefRenderFunction<HTMLDivElement | null, Props> = (
             disabled || isVisible || (stayRendered && wasVisible.current)
                 ? children
                 : loadingElement
-                ? loadingElement
-                : React.createElement(placeholderElement, {
-                      className: placeholderClasses,
-                      style: placeholderStyle,
-                      ...placeholderElementProps,
-                  }),
+                  ? loadingElement
+                  : React.createElement(placeholderElement, {
+                        className: placeholderClasses,
+                        style: placeholderStyle,
+                        ...placeholderElementProps,
+                    }),
         ref: intersectionRef,
         className: rootClasses,
         ...restProps,
@@ -163,7 +163,7 @@ interface LazyProps extends HTMLDivProps {
     stayRendered?: boolean;
     root?: HTMLElement | null;
     /** E.g. 'span', 'tbody'. Default = 'div' */
-    rootElement?: keyof JSX.IntrinsicElements;
+    rootElement?: string;
     loadingElement?: React.ReactNode;
 }
 const LazyPure: ForwardRefRenderFunction<HTMLDivElement, LazyProps> = (

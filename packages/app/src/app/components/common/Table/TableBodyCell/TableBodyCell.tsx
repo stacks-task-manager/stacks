@@ -15,7 +15,7 @@ interface ITableBodyCellProps extends React.TdHTMLAttributes<HTMLTableCellElemen
     hasCheckbox?: boolean;
     isChecked?: boolean;
     // defaultChecked?: boolean;
-    checkboxTooltip?: string | JSX.Element;
+    checkboxTooltip?: string | React.JSX.Element;
     gap?: number;
     span?: number;
     width?: number | string;
