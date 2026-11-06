@@ -53,18 +53,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ahooksjs/use-request@npm:^2.8.14":
-  version: 2.8.15
-  resolution: "@ahooksjs/use-request@npm:2.8.15"
-  dependencies:
-    lodash.debounce: ^4.0.8
-    lodash.throttle: ^4.1.1
-  peerDependencies:
-    react: ^16.8.0 || ^17.0.0
-  checksum: de11f7e421a972dca395146b7552fb363c988d42ec0f2b4bc13380d926e18024ca40de45c63f474031fe9e23db60d8ec8993639116d154e23cdba4887005f3c4
-  languageName: node
-  linkType: hard
-
 "@ai-sdk/gateway@npm:3.0.132":
   version: 3.0.132
   resolution: "@ai-sdk/gateway@npm:3.0.132"
@@ -2033,13 +2021,6 @@ __metadata:
   version: 7.29.2
   resolution: "@babel/runtime@npm:7.29.2"
   checksum: d5548d1165de8995f8afc93a5694b8625409be16cd1f2250ac13e331335858ddac3cb9fd278e6c43956a130101a2203f09417938a1a96f9fb70f02b4b4172e1d
-  languageName: node
-  linkType: hard
-
-"@babel/runtime@npm:^7.26.10":
-  version: 7.29.10
-  resolution: "@babel/runtime@npm:7.29.10"
-  checksum: b0ea4fdc84105e46d4a22fe6af7f835397294b0291795f9c0c3e1ad917a5bfdbd38914ea717007e12904ec4ccb8b5a4b05a1acd45ccae3e424cdc0ef2df4912a
   languageName: node
   linkType: hard
 
@@ -7438,7 +7419,6 @@ __metadata:
     postcss: ^8.4.49
     postcss-loader: ^8.1.1
     qs: ^6.14.0
-    rc-gantt: ../../third-party/rc-gantt/rc-gantt-0.3.3.tgz
     react: ^18.3.1
     react-color: ^2.19.3
     react-colorful: ^5.8.0
@@ -9334,13 +9314,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/js-cookie@npm:^2.2.6":
-  version: 2.2.7
-  resolution: "@types/js-cookie@npm:2.2.7"
-  checksum: 851f47e94ca1fc43661d8f51614d67a613e7810c91b876d0a3b311ce72f7df800107fd02a08cb6948184e12c120b4f058edca2f50424d8798bdcffd6627281e3
-  languageName: node
-  linkType: hard
-
 "@types/jsdom@npm:^21.1.7":
   version: 21.1.7
   resolution: "@types/jsdom@npm:21.1.7"
@@ -10806,26 +10779,6 @@ __metadata:
   bin:
     agent-cli-detector: dist/cli.js
   checksum: cc665f35d6ed543185b36c79df7dd01dd5f87eb08ea811d4499aa15950838785ee405b2badae03dc6f17c0a46dc111cb13bd1803f542e6ed6b83f195b76c1333
-  languageName: node
-  linkType: hard
-
-"ahooks@npm:^2.9.2":
-  version: 2.10.14
-  resolution: "ahooks@npm:2.10.14"
-  dependencies:
-    "@ahooksjs/use-request": ^2.8.14
-    "@types/js-cookie": ^2.2.6
-    dayjs: ^1.9.1
-    intersection-observer: ^0.7.0
-    js-cookie: ^2.2.1
-    lodash.debounce: ^4.0.8
-    lodash.isequal: ^4.5.0
-    lodash.throttle: ^4.1.1
-    resize-observer-polyfill: ^1.5.1
-    screenfull: ^5.0.0
-  peerDependencies:
-    react: ^16.8.6 || ^17.0
-  checksum: bf58e7b7b05c0aca98fffaf031e4c0062d86edb4700a0e3e5e017e299d3342fd6ba167898adf8d1aa608db1dba2f46c17d749b8555097e2d8913677669be51f8
   languageName: node
   linkType: hard
 
@@ -12392,7 +12345,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"classnames@npm:*, classnames@npm:^2.2.6, classnames@npm:^2.3.1, classnames@npm:^2.5.1":
+"classnames@npm:*, classnames@npm:^2.3.1, classnames@npm:^2.5.1":
   version: 2.5.1
   resolution: "classnames@npm:2.5.1"
   checksum: da424a8a6f3a96a2e87d01a432ba19315503294ac7e025f9fece656db6b6a0f7b5003bb1fbb51cbb0d9624d964f1b9bb35a51c73af9b2434c7b292c42231c1e5
@@ -13477,7 +13430,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dayjs@npm:^1.8.34, dayjs@npm:^1.9.1, dayjs@npm:^1.9.7":
+"dayjs@npm:^1.8.34":
   version: 1.11.20
   resolution: "dayjs@npm:1.11.20"
   checksum: 26f4867c4ae1315885ac3e560906d3f8c49cb6a1303e6fdd5f87ace3b814b07a45f036facad70299cea36f3eb62ee2070dd239079c56d8f55e4e684afb752a67
@@ -17452,13 +17405,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"intersection-observer@npm:^0.7.0":
-  version: 0.7.0
-  resolution: "intersection-observer@npm:0.7.0"
-  checksum: e1bf9c15ecfe8b4c59a813135348ddc0467e40b0a57d43bfe188f92c8548f804caea2effdb5dabd64ef100679da6489a31d85043766ca21ba4330ac9ca88adc6
-  languageName: node
-  linkType: hard
-
 "invariant@npm:2.2.4, invariant@npm:^2.2.4":
   version: 2.2.4
   resolution: "invariant@npm:2.2.4"
@@ -19332,7 +19278,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash-es@npm:^4.17.15, lodash-es@npm:^4.17.21, lodash-es@npm:^4.18.0":
+"lodash-es@npm:^4.17.15, lodash-es@npm:^4.17.21":
   version: 4.18.1
   resolution: "lodash-es@npm:4.18.1"
   checksum: 578993943cfa779e784aeed96766484ec6ab15cd855e52c79631de6371ac49fadd6dd9f4719f8d1223ab2bcb0dfbece484f548191dd34d3dd8b39e1af712a343
@@ -19458,7 +19404,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash@npm:^4.0.1, lodash@npm:^4.17.15, lodash@npm:^4.17.20, lodash@npm:^4.17.21, lodash@npm:^4.17.23, lodash@npm:^4.18.0":
+"lodash@npm:^4.0.1, lodash@npm:^4.17.15, lodash@npm:^4.17.20, lodash@npm:^4.17.21, lodash@npm:^4.17.23":
   version: 4.18.1
   resolution: "lodash@npm:4.18.1"
   checksum: bb5f5b49aad29614e709af02b64c56b0f8b78c6a81434a3c1ae527d2f0f78ca08f9d9fb22aa825a053876c9d2166e9c01f31c356014b5e2bdc0556c057433102
@@ -20457,23 +20403,6 @@ __metadata:
   bin:
     mkdirp: bin/cmd.js
   checksum: a96865108c6c3b1b8e1d5e9f11843de1e077e57737602de1b82030815f311be11f96f09cce59bd5b903d0b29834733e5313f9301e3ed6d6f6fba2eae0df4298f
-  languageName: node
-  linkType: hard
-
-"mobx-react-lite@npm:1.5.2":
-  version: 1.5.2
-  resolution: "mobx-react-lite@npm:1.5.2"
-  peerDependencies:
-    mobx: ^4.0.0 || ^5.0.0
-    react: ^16.8.0
-  checksum: 0f42927b4dad28d3c8973d7788caac359faaf44d396e4fd435c8811b5f8bc835094751719ecc838cd527cb8895d1a83788b70288757759686c19785f51d65e4a
-  languageName: node
-  linkType: hard
-
-"mobx@npm:4.7.0":
-  version: 4.7.0
-  resolution: "mobx@npm:4.7.0"
-  checksum: a6eb95405e073ed466025e302c47a2fa5a8a04c9485056157e3748216b839a8530cb4d22ecab11c294018b096422924cee6c9364d5810936cb214a6a1b473379
   languageName: node
   linkType: hard
 
@@ -22946,25 +22875,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rc-gantt@file:../../third-party/rc-gantt/rc-gantt-0.3.3.tgz::locator=%40stacks%2Fapp%40workspace%3Apackages%2Fapp":
-  version: 0.3.3
-  resolution: "rc-gantt@file:../../third-party/rc-gantt/rc-gantt-0.3.3.tgz::locator=%40stacks%2Fapp%40workspace%3Apackages%2Fapp"
-  dependencies:
-    "@babel/runtime": ^7.26.10
-    ahooks: ^2.9.2
-    classnames: ^2.2.6
-    dayjs: ^1.9.7
-    lodash: ^4.18.0
-    lodash-es: ^4.18.0
-    mobx: 4.7.0
-    mobx-react-lite: 1.5.2
-  peerDependencies:
-    react: ">=16"
-    react-dom: ">=16"
-  checksum: c293e3bd62538436115f0ea1ed6b7ec580c93406b20ab9dda99cc4b68bdfb57a676f12621eec3d0120c3d156c42867ef4cec19d38bdfad7ae1e161820be457e0
-  languageName: node
-  linkType: hard
-
 "react-color@npm:^2.19.3":
   version: 2.19.3
   resolution: "react-color@npm:2.19.3"
@@ -23953,13 +23863,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"resize-observer-polyfill@npm:^1.5.1":
-  version: 1.5.1
-  resolution: "resize-observer-polyfill@npm:1.5.1"
-  checksum: 57e7f79489867b00ba43c9c051524a5c8f162a61d5547e99333549afc23e15c44fd43f2f318ea0261ea98c0eb3158cca261e6f48d66e1ed1cd1f340a43977094
-  languageName: node
-  linkType: hard
-
 "resolve-cwd@npm:^3.0.0":
   version: 3.0.0
   resolution: "resolve-cwd@npm:3.0.0"
@@ -24573,13 +24476,6 @@ __metadata:
     ajv-formats: ^2.1.1
     ajv-keywords: ^5.1.0
   checksum: 4e20404962fd45d5feb5942f7c9ab334a3d3dab94e15001049bd49e2959015f2c59089353953d4976fe664462c79121dea50392968182d4e2c4b75803f822fa3
-  languageName: node
-  linkType: hard
-
-"screenfull@npm:^5.0.0":
-  version: 5.2.0
-  resolution: "screenfull@npm:5.2.0"
-  checksum: 21eae33b780eb4679ea0ea2d14734b11168cf35049c45a2bf24ddeb39c67a788e7a8fb46d8b61ca6d8367fd67ce9dd4fc8bfe476489249c7189c2a79cf83f51a
   languageName: node
   linkType: hard
 

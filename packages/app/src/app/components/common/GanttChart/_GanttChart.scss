@@ -1,0 +1,287 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+@import "@blueprintjs/core/lib/scss/variables";
+
+.stacks-gantt {
+    --gantt-surface: #{$white};
+    --gantt-border: #{$light-gray2};
+    --gantt-muted: #{$gray1};
+    --gantt-weekend: #{rgba($gray3, 0.07)};
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+    min-height: 200px;
+    height: 100%;
+    overflow: hidden;
+    background: var(--gantt-surface);
+    .bp6-dark & {
+        --gantt-surface: #{$dark-gray3};
+        --gantt-border: #{$dark-gray1};
+        --gantt-muted: #{$gray5};
+        --gantt-weekend: #{rgba($gray3, 0.12)};
+    }
+    button:focus-visible,
+    [tabindex]:focus-visible {
+        outline: 2px solid $blue3;
+        outline-offset: -2px;
+    }
+}
+.stacks-gantt-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    border-bottom: 1px solid var(--gantt-border);
+}
+.stacks-gantt-body {
+    position: relative;
+    display: flex;
+    flex: 1;
+    min-height: 0;
+}
+.stacks-gantt-viewport {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    overflow-anchor: none;
+}
+.stacks-gantt-content {
+    min-height: 100%;
+}
+.stacks-gantt-header {
+    height: 56px;
+    display: flex;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: var(--gantt-surface);
+    border-bottom: 1px solid var(--gantt-border);
+}
+.stacks-gantt-task-heading,
+.stacks-gantt-task {
+    position: sticky;
+    left: 0;
+    flex-shrink: 0;
+    background: var(--gantt-surface);
+    border-right: 1px solid var(--gantt-border);
+    z-index: 3;
+}
+.stacks-gantt-task-heading {
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    font-weight: 600;
+}
+.stacks-gantt-axis {
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+}
+.stacks-gantt-major {
+    position: absolute;
+    top: 0;
+    height: 28px;
+    padding: 6px 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    color: var(--gantt-muted);
+}
+.stacks-gantt-tick {
+    position: absolute;
+    bottom: 0;
+    height: 28px;
+    border-left: 1px solid var(--gantt-border);
+    padding: 6px 8px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.stacks-gantt-rows {
+    position: relative;
+}
+.stacks-gantt-row {
+    position: absolute;
+    width: 100%;
+    display: flex;
+    border-bottom: 1px solid var(--gantt-border);
+}
+.stacks-gantt-task {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding-right: 4px;
+}
+.stacks-gantt-indent {
+    width: 24px;
+    flex-shrink: 0;
+}
+.stacks-gantt-task-title {
+    flex: 1;
+    min-width: 0;
+    background: none;
+    border: 0;
+    padding: 0;
+    text-align: left;
+    cursor: pointer;
+    color: inherit;
+    > span,
+    > small {
+        display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    small {
+        color: var(--gantt-muted);
+        font-size: 11px;
+    }
+    i {
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        margin-right: 4px;
+    }
+}
+.stacks-gantt-track {
+    position: relative;
+    flex-shrink: 0;
+}
+.stacks-gantt-grid {
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+    > div {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        border-left: 1px solid var(--gantt-border);
+    }
+    .stacks-gantt-weekend {
+        background: var(--gantt-weekend);
+    }
+    .stacks-gantt-today-line {
+        border-color: $blue3;
+        z-index: 1;
+    }
+}
+.stacks-gantt-bar-group {
+    position: absolute;
+    top: 8px;
+    height: 20px;
+    min-width: 10px;
+    &[data-pending] {
+        opacity: 0.6;
+    }
+}
+.stacks-gantt-bar {
+    display: block;
+    width: 100%;
+    height: 20px;
+    border: 1px solid rgba($black, 0.25);
+    background: $gray3;
+    color: $white;
+    border-radius: 3px;
+    cursor: grab;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding: 0 8px;
+    font-size: 11px;
+    text-shadow: 0 1px 2px $black;
+    touch-action: none;
+}
+.stacks-gantt-handle {
+    position: absolute;
+    top: 0;
+    height: 20px;
+    width: 7px;
+    border: 0;
+    padding: 0;
+    background: rgba($black, 0.15);
+    cursor: ew-resize;
+    touch-action: none;
+}
+.stacks-gantt-handle-left {
+    left: 0;
+}
+.stacks-gantt-handle-right {
+    right: 0;
+}
+.stacks-gantt-date-text {
+    position: absolute;
+    top: 22px;
+    font-size: 10px;
+    color: var(--gantt-muted);
+    white-space: nowrap;
+    pointer-events: none;
+}
+.stacks-gantt-schedule {
+    position: absolute;
+    top: 8px;
+    height: 32px;
+    background: none;
+    color: var(--gantt-muted);
+    border: 1px dashed var(--gantt-border);
+    text-align: left;
+    padding-left: 16px;
+    cursor: crosshair;
+    touch-action: none;
+    opacity: 0;
+    &:hover,
+    &:focus-visible {
+        opacity: 1;
+    }
+}
+.stacks-gantt-reveal {
+    position: absolute;
+    top: 10px;
+}
+.stacks-gantt-divider {
+    position: absolute;
+    top: 0;
+    bottom: 16px;
+    z-index: 7;
+    width: 6px;
+    cursor: col-resize;
+    touch-action: none;
+    &:hover {
+        background: rgba($blue3, 0.3);
+    }
+}
+@media (max-width: 600px) {
+    .stacks-gantt-toolbar {
+        gap: 4px;
+    }
+    .stacks-gantt-date-text {
+        font-size: 9px;
+    }
+}
+
+.stacks-gantt-links {
+    position: absolute;
+    z-index: 2;
+    pointer-events: none;
+    overflow: hidden;
+    color: var(--gantt-muted);
+    > path {
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.5;
+    }
+    marker path {
+        fill: currentColor;
+    }
+}
+.stacks-gantt-tree-arrow {
+    position: absolute;
+    top: 0;
+    pointer-events: none;
+    fill: none;
+    stroke: var(--gantt-muted);
+    stroke-width: 1;
+}

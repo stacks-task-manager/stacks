@@ -22,3 +22,23 @@ describe("convertToGantt", () => {
         expect(result[0].children.map(item => item.id)).toEqual(["child-first", "child-last"]);
     });
 });
+
+describe("Gantt date fallbacks", () => {
+    it("retains undated tasks and fills a single missing endpoint", () => {
+        const date = new Date(2026, 9, 26, 10);
+        const result = convertToGantt(
+            [
+                { ...task("due", "A"), duedate: date },
+                { ...task("start", "B"), startdate: date },
+                task("undated", "C"),
+            ],
+            []
+        );
+        expect(result[0].startDate?.getHours()).toBe(0);
+        expect(result[0].endDate).toEqual(date);
+        expect(result[1].startDate).toEqual(date);
+        expect(result[1].endDate?.getHours()).toBe(23);
+        expect(result[2].startDate).toBeNull();
+        expect(result[2].endDate).toBeNull();
+    });
+});
