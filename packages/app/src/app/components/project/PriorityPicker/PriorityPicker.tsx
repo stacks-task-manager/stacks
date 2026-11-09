@@ -15,7 +15,7 @@ interface IPriorityPickerProps {
     canClear?: boolean;
     minimal?: boolean;
     short?: boolean;
-    tooltip?: string | JSX.Element;
+    tooltip?: string | React.JSX.Element;
     onChange?: (priority: PRIORITY | null) => void;
 }
 export const PriorityPicker = React.memo(function PriorityPicker({

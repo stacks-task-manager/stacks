@@ -15,7 +15,7 @@ interface IHotkeyTooltipProps {
     className?: string;
     children?: React.ReactNode;
     disabled?: boolean;
-    renderTarget?: (props: PopoverTargetProps) => JSX.Element;
+    renderTarget?: (props: PopoverTargetProps) => React.JSX.Element;
 }
 export const HotkeyTooltip: FunctionComponent<IHotkeyTooltipProps> = ({
     title,

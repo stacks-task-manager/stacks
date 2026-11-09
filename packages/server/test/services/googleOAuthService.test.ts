@@ -9,26 +9,28 @@ describe("GoogleOAuthService", () => {
 
     describe("getAuthUrl", () => {
         test("returns an OAuth URL string", () => {
-            const url = googleOAuthService.getAuthUrl();
+            // PKCE args mirror the production call site (routes/googleAuth.ts);
+            // values are the RFC 7636 appendix B example verifier/challenge pair.
+            const url = googleOAuthService.getAuthUrl("test-state", "E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM");
             expect(typeof url).toBe("string");
             expect(url).toContain("accounts.google.com");
             expect(url).toContain("oauth2/v2/auth");
         });
 
         test("includes required scopes", () => {
-            const url = googleOAuthService.getAuthUrl();
+            const url = googleOAuthService.getAuthUrl("test-state", "E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM");
             expect(url).toContain("calendar.readonly");
             expect(url).toContain("userinfo.email");
             expect(url).toContain("userinfo.profile");
         });
 
         test("includes offline access type for refresh tokens", () => {
-            const url = googleOAuthService.getAuthUrl();
+            const url = googleOAuthService.getAuthUrl("test-state", "E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM");
             expect(url).toContain("access_type=offline");
         });
 
         test("includes consent prompt", () => {
-            const url = googleOAuthService.getAuthUrl();
+            const url = googleOAuthService.getAuthUrl("test-state", "E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM");
             expect(url).toContain("prompt=consent");
         });
     });

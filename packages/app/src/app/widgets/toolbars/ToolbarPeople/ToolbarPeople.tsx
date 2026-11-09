@@ -206,7 +206,7 @@ export const ToolbarPeople = () => {
     };
 
     return (
-        <ResizeSensor targetRef={toolbarRef} onResize={handleResize}>
+        <ResizeSensor targetRef={toolbarRef as React.RefObject<HTMLElement>} onResize={handleResize}>
             <div className="main-toolbar" ref={toolbarRef}>
                 <div className="section-toolbar">
                     <div className="section-toolbar-side side">
@@ -695,7 +695,7 @@ const PeopleGroupingToggle = () => {
                     <Icon
                         icon={
                             PEOPLE_GROUPING_TYPE_ICONS[
-                            grouping.toUpperCase() as unknown as keyof typeof PEOPLE_GROUPING_TYPE_ICONS
+                                grouping.toUpperCase() as unknown as keyof typeof PEOPLE_GROUPING_TYPE_ICONS
                             ]
                         }
                     />

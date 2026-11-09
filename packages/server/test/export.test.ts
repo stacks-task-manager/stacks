@@ -138,6 +138,7 @@ describe("Export API", () => {
 
     test(
         "POST /api/export — pdf",
+        { timeout: 120_000 },
         async () => {
             const headers = await getAuthenticatedHeaders();
             const res = await app.request("/api/export", {
@@ -154,7 +155,6 @@ describe("Export API", () => {
             expect(res.headers.get("Content-Disposition")).toMatch(/export-task.*\.pdf/);
             const text = new TextDecoder().decode((await res.arrayBuffer()).slice(0, 4));
             expect(text.startsWith("%PDF")).toBe(true);
-        },
-        { timeout: 120_000 }
+        }
     );
 });
