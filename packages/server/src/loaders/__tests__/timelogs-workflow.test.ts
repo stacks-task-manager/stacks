@@ -132,7 +132,7 @@ describe("TimelogsLoader review workflow", () => {
         const first = timelog("66666666-6666-4666-8666-666666666666");
         const second = timelog("77777777-7777-4777-8777-777777777777");
         findAllMock.mockResolvedValue([row(first), row(second)] as any);
-        updateMock.mockResolvedValue([2] as any);
+        updateMock.mockResolvedValue([2, [row(first), row(second)]] as any);
 
         const result = await TimelogsLoader.updateStatus(TIMELOG_STATUS.APPROVED, {
             person: ownerId,
@@ -171,5 +171,41 @@ describe("TimelogsLoader review workflow", () => {
 
         expect(updateMock).not.toHaveBeenCalled();
         expect(notificationAddMock).not.toHaveBeenCalled();
+    });
+
+    it("only commits and notifies timelogs still awaiting review", async () => {
+        vi.mocked(getCurrentUser).mockReturnValue({
+            id: reviewerId,
+            tenant: "tenant-1",
+            admin: false,
+        } as any);
+        const current = timelog("99999999-9999-4999-8999-999999999991");
+        const alreadyReviewed = timelog("99999999-9999-4999-8999-999999999992");
+        findAllMock.mockResolvedValue([row(current), row(alreadyReviewed)] as any);
+        updateMock.mockResolvedValue([1, [row(current)]] as any);
+
+        const result = await TimelogsLoader.updateStatus(TIMELOG_STATUS.APPROVED, { person: ownerId });
+
+        expect(updateMock).toHaveBeenCalledWith(
+            expect.objectContaining({ status: TIMELOG_STATUS.APPROVED }),
+            expect.objectContaining({
+                returning: true,
+                where: {
+                    id: [current.id, alreadyReviewed.id],
+                    status: TIMELOG_STATUS.INREVIEW,
+                    tenant: "tenant-1",
+                    deleted: null,
+                },
+            })
+        );
+        expect(result.map(item => item.id)).toEqual([current.id]);
+        expect(notificationAddMock).toHaveBeenCalledTimes(1);
+        expect(notificationAddMock).toHaveBeenCalledWith(
+            expect.objectContaining({
+                recipient: ownerId,
+                data: [expect.objectContaining({ recordId: current.id })],
+            }),
+            { id: "transaction" }
+        );
     });
 });

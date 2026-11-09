@@ -6,8 +6,8 @@ import classNames from "classnames";
 import { HotkeyTooltip, Icon } from "app/components/common";
 
 interface IToolbarDropdownButtonProps {
-    tooltip: string | JSX.Element;
-    children: string | JSX.Element | undefined;
+    tooltip: string | React.JSX.Element;
+    children: string | React.JSX.Element | undefined;
     icon: string;
     iconColor?: string;
     title?: string | React.ReactNode;
@@ -35,38 +35,38 @@ const ToolbarDropdownButtonPure: ForwardRefRenderFunction<
     },
     ref
 ) => {
-        const buttonRef = useRef<HTMLButtonElement | null>(null);
-        useImperativeHandle(ref, () => buttonRef.current!, []);
+    const buttonRef = useRef<HTMLButtonElement | null>(null);
+    useImperativeHandle(ref, () => buttonRef.current!, []);
 
-        return (
-            <Popover
-                content={children}
-                placement={dropdownPlacement || placement}
-                renderTarget={({ isOpen: isPopoverOpen, ref: ref1, ...popoverProps }) => (
-                    <Tooltip
-                        content={tooltip}
-                        placement={tooltipPlacement || placement}
-                        disabled={isPopoverOpen}
-                        openOnTargetFocus={false}
-                        renderTarget={({ isOpen, ref: ref2, ...tooltipProps }) => (
-                            <Button
-                                {...popoverProps}
-                                {...tooltipProps}
-                                variant="minimal"
-                                size="small"
-                                icon={<Icon icon={icon} color={iconColor} />}
-                                active={isPopoverOpen}
-                                ref={mergeRefs(ref1, ref2, buttonRef)}
-                                text={title}
-                            />
-                        )}
-                    />
-                )}
-                onClosed={onClose}
-                onOpening={onOpen}
-            />
-        );
-    };
+    return (
+        <Popover
+            content={children}
+            placement={dropdownPlacement || placement}
+            renderTarget={({ isOpen: isPopoverOpen, ref: ref1, ...popoverProps }) => (
+                <Tooltip
+                    content={tooltip}
+                    placement={tooltipPlacement || placement}
+                    disabled={isPopoverOpen}
+                    openOnTargetFocus={false}
+                    renderTarget={({ isOpen, ref: ref2, ...tooltipProps }) => (
+                        <Button
+                            {...popoverProps}
+                            {...tooltipProps}
+                            variant="minimal"
+                            size="small"
+                            icon={<Icon icon={icon} color={iconColor} />}
+                            active={isPopoverOpen}
+                            ref={mergeRefs(ref1, ref2, buttonRef)}
+                            text={title}
+                        />
+                    )}
+                />
+            )}
+            onClosed={onClose}
+            onOpening={onOpen}
+        />
+    );
+};
 
 interface IToolbarButtonProps {
     title?: string | React.ReactNode;

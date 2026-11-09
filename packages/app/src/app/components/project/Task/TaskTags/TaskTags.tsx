@@ -13,6 +13,7 @@ interface ITaskTagsProps {
     nowrap?: boolean;
     children?: React.ReactNode;
     id?: string;
+    testId?: string;
     max?: number;
     onChange: (tags: string[]) => void;
 }
@@ -23,6 +24,7 @@ const TaskTagsRaw: FunctionComponent<ITaskTagsProps> = ({
     nowrap,
     children,
     id,
+    testId,
     max,
     onChange,
 }) => {
@@ -56,6 +58,7 @@ const TaskTagsRaw: FunctionComponent<ITaskTagsProps> = ({
                     ) : (
                         <RoundButton
                             id={id}
+                            testId={testId}
                             dashed
                             disabled={disabled}
                             title={value.length > 0 || minimal ? undefined : translate("Add tags")}

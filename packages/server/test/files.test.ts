@@ -8,7 +8,7 @@ import { join } from "path";
 describe("Files API", () => {
     test("GET /api/files - should require authentication", async () => {
         const res = await app.request("/api/files");
-        expect([401, 404]).toContain(res.status);
+        expect(res.status).toBe(401);
     });
 
     test("GET /api/files - should return files list for authenticated users", async () => {

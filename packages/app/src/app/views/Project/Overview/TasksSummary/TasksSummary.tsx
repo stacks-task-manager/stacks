@@ -35,7 +35,7 @@ export const TasksSummary: FunctionComponent<ITasksSummaryProps> = ({
                 </div> */}
                 <div>
                     <div className="project-overview-count">
-                        <span className="text-alert">
+                        <span className="text-alert" data-testid="project-overview-tasks-idle">
                             <CountUp end={idle} duration={showAnimations ? 2 : 0} />
                         </span>{" "}
                         <Tooltip content={`Based on the total tasks count (${total})`} placement="top">
@@ -46,7 +46,7 @@ export const TasksSummary: FunctionComponent<ITasksSummaryProps> = ({
                 </div>
                 <div>
                     <div className="project-overview-count">
-                        <span className="text-primary">
+                        <span className="text-primary" data-testid="project-overview-tasks-in-progress">
                             <CountUp end={inProgress} duration={showAnimations ? 2 : 0} />
                         </span>{" "}
                         <Tooltip content={`Based on the total tasks count (${total})`} placement="top">
@@ -59,7 +59,7 @@ export const TasksSummary: FunctionComponent<ITasksSummaryProps> = ({
                 </div>
                 <div>
                     <div className="project-overview-count">
-                        <span className="text-success">
+                        <span className="text-success" data-testid="project-overview-tasks-completed">
                             <CountUp end={completed} duration={showAnimations ? 2 : 0} />
                         </span>{" "}
                         <Tooltip content={`Based on the total tasks count (${total})`} placement="top">

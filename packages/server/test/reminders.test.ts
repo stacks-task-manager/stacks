@@ -1,6 +1,16 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { describe, test, expect } from "vitest";
 import { randomUUID } from "crypto";
+import {
+    DocumentEntity,
+    PermissionEntity,
+    ProjectEntity,
+    StackEntity,
+    TaskEntity,
+    UserEntity,
+} from "@stacks/db";
+import { RECORDTYPE } from "@stacks/types";
+import { readFileSync } from "node:fs";
 import app from "../src/index";
 import { getAuthenticatedHeaders } from "./helpers/authHelper";
 
@@ -12,7 +22,68 @@ describe("Reminders API", () => {
 
     test("POST /api/reminders - should create and delete a reminder", async () => {
         const headers = await getAuthenticatedHeaders();
+        const { email } = JSON.parse(readFileSync("testUser.json", "utf8")) as { email: string };
+        const user = await UserEntity.findOne({ where: { email } });
+        expect(user).not.toBeNull();
+        const userId = String(user!.get("id"));
+        const tenant = String(user!.get("tenant"));
+        const projectId = randomUUID();
         const recordId = randomUUID();
+        const stackId = randomUUID();
+        await DocumentEntity.create({
+            id: projectId,
+            title: "Reminder API test project",
+            type: RECORDTYPE.PROJECT,
+            order: 0,
+            tenant,
+            createdBy: userId,
+            updatedBy: userId,
+        });
+        await ProjectEntity.create({
+            id: projectId,
+            projectOwner: userId,
+            tenant,
+            createdBy: userId,
+            updatedBy: userId,
+        });
+        await PermissionEntity.create({
+            id: projectId,
+            owner: userId,
+            isPublic: false,
+            visibleUsers: [],
+            visibleRoles: [],
+            tenant,
+            createdBy: userId,
+            updatedBy: userId,
+        });
+        await StackEntity.create({
+            id: stackId,
+            title: "Reminder API test stack",
+            project: projectId,
+            tenant,
+            createdBy: userId,
+            updatedBy: userId,
+        });
+        await TaskEntity.create({
+            id: recordId,
+            title: "Reminder API test task",
+            project: projectId,
+            stack: stackId,
+            assignees: [userId],
+            tenant,
+            createdBy: userId,
+            updatedBy: userId,
+        });
+        await PermissionEntity.create({
+            id: recordId,
+            owner: userId,
+            isPublic: false,
+            visibleUsers: [],
+            visibleRoles: [],
+            tenant,
+            createdBy: userId,
+            updatedBy: userId,
+        });
 
         const createRes = await app.request("/api/reminders", {
             method: "POST",
@@ -54,5 +125,11 @@ describe("Reminders API", () => {
         expect(verified.success).toBe(true);
         expect(Array.isArray(verified.data)).toBe(true);
         expect(verified.data.some((r: any) => r.id === reminderId)).toBe(false);
+
+        await TaskEntity.destroy({ where: { id: recordId }, force: true });
+        await StackEntity.destroy({ where: { id: stackId }, force: true });
+        await PermissionEntity.destroy({ where: { id: [recordId, projectId] }, force: true });
+        await ProjectEntity.destroy({ where: { id: projectId }, force: true });
+        await DocumentEntity.destroy({ where: { id: projectId }, force: true });
     });
 });

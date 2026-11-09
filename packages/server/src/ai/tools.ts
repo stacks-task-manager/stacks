@@ -7,6 +7,7 @@ export {
     AI_TOOL_REGISTRY,
     buildAiTools,
     type AiToolExecuteOverride,
+    type AiToolName,
     defineTool,
     eventAiTools,
     MCP_AI_TOOL_NAMES,

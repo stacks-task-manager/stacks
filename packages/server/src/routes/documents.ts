@@ -9,6 +9,7 @@ import { validator } from "../middleware/validator";
 import { DocumentsLoader } from "../loaders/documents";
 import { TagsLoader } from "../loaders/tags";
 import { asyncHandler } from "../utils/errorHandler";
+import { parseUuidParam } from "./schema/common";
 import { DocumentCreateSchema, DocumentUpdateSchema } from "./schema/document";
 
 const documents = new Hono();
@@ -39,7 +40,7 @@ documents.patch(
     "/:id",
     validator(DocumentUpdateSchema),
     asyncHandler(async (c: Context) => {
-        const { id } = c.req.param();
+        const id = parseUuidParam(c.req.param("id")!);
         const documentData = c.req.valid("json");
         await DocumentsLoader.update(id, documentData);
         return c.replySuccess();
@@ -50,7 +51,7 @@ documents.patch(
 documents.delete(
     "/:id",
     asyncHandler(async (c: Context) => {
-        const { id } = c.req.param();
+        const id = parseUuidParam(c.req.param("id")!);
         await DocumentsLoader.remove(id);
         return c.replySuccess({ success: true });
     })
@@ -60,7 +61,7 @@ documents.delete(
 documents.post(
     "/:id/archive",
     asyncHandler(async (c: Context) => {
-        const { id } = c.req.param();
+        const id = parseUuidParam(c.req.param("id")!);
         await DocumentsLoader.update(id, { archived: new Date() });
         return c.replySuccess();
     })
@@ -70,7 +71,7 @@ documents.post(
 documents.post(
     "/:id/unarchive",
     asyncHandler(async (c: Context) => {
-        const { id } = c.req.param();
+        const id = parseUuidParam(c.req.param("id")!);
         await DocumentsLoader.update(id, { archived: null });
         return c.replySuccess();
     })

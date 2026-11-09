@@ -4,6 +4,7 @@ import { Hono } from "hono";
 import { Errors, ErrorCode } from "../../errors";
 import { errorHandler } from "../errorHandler";
 import { registerResponseHelpers } from "../../services/response";
+import { ApiMessageKeys } from "../../apiMessageKeys";
 
 describe("errorHandler", () => {
     it("formats AppError with translated message", async () => {
@@ -34,5 +35,21 @@ describe("errorHandler", () => {
         expect(res.status).toBe(404);
         const body = (await res.json()) as { success: boolean; message: string };
         expect(body.message).toBe("Project not found");
+    });
+
+    it("hides private details from direct internal replyError calls", async () => {
+        const app = new Hono();
+        registerResponseHelpers(app);
+        app.get("/direct", c =>
+            c.replyError(new Error("SELECT * FROM users WHERE token=secret"), undefined, 500)
+        );
+
+        const res = await app.request("/direct", { headers: { Locale: "en" } });
+        const body = (await res.json()) as { message: string; code?: string; errors?: unknown };
+        expect(res.status).toBe(500);
+        expect(body.message).toBe(ApiMessageKeys.internalServerError);
+        expect(body.code).toBe("INTERNAL_ERROR");
+        expect(body.errors).toBeUndefined();
+        expect(JSON.stringify(body)).not.toContain("secret");
     });
 });

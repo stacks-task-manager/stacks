@@ -1,7 +1,7 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { AnchorButton, Classes, Tooltip } from "@blueprintjs/core";
 import classNames from "classnames";
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useMemo } from "react";
 
 import { HotkeyTooltip, Icon } from "app/components/common";
 import { useElementHotkey, useNav, useStack, useStackTasks } from "app/hooks";
@@ -10,14 +10,19 @@ import { TasksActions } from "app/store/actions";
 import { setSelection } from "app/store/navigation";
 import { PreferencesStore } from "app/store/preferences";
 import { scrollIntoView } from "app/utils/dom";
+import { sortByIdOrder } from "app/utils/taskOrder";
 
 interface TaskDetailsNavigationProps {
     taskId: string;
     stackId: string;
 }
 export const TaskDetailsNavigation: FunctionComponent<TaskDetailsNavigationProps> = ({ taskId, stackId }) => {
-    const tasks = useStackTasks(stackId);
+    const stackTasks = useStackTasks(stackId);
     const stack = useStack(stackId);
+    const tasks = useMemo(
+        () => sortByIdOrder(stackTasks, stack?.tasksOrder ?? [], task => task.id),
+        [stackTasks, stack?.tasksOrder]
+    );
 
     const navigate = useNav();
     useElementHotkey("j", "td-next");
@@ -84,6 +89,7 @@ export const TaskDetailsNavigation: FunctionComponent<TaskDetailsNavigationProps
                         icon={<Icon icon="chevron-up" />}
                         disabled={position === 0}
                         onClick={previousNext}
+                        data-testid="task-details-previous-task"
                     />
                 </HotkeyTooltip>
                 <HotkeyTooltip title="Next task" placement="bottom" keys={["J"]} disabled={disabled}>
@@ -94,6 +100,7 @@ export const TaskDetailsNavigation: FunctionComponent<TaskDetailsNavigationProps
                         icon={<Icon icon="chevron-down" />}
                         disabled={disabled}
                         onClick={handleNext}
+                        data-testid="task-details-next-task"
                     />
                 </HotkeyTooltip>
             </div>

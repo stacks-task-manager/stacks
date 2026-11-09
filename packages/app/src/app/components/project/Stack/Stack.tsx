@@ -192,6 +192,7 @@ const StackPure: FunctionComponent<IStackProps> = ({ stackIndex, stackId }) => {
             })}
             id={`stack-${stackId}`}
             data-testid="board-column"
+            data-id={stackId}
             // onClick={handleSelect}
         >
             <StackSelected stackId={stackId} />

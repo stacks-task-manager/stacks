@@ -3,11 +3,21 @@
  * AI tools: people directory search and profile updates.
  */
 import { z } from "zod";
+import { ROLE_SECTIONS } from "@stacks/types";
 import { PeopleLoader, RolesLoader } from "../../loaders";
-import { getCurrentUser } from "../../loaders/context";
+import { canRead, getCurrentUser } from "../../loaders/context";
+import { Errors } from "../../errors";
+import { translate } from "@stacks/translations";
 import { defineTool } from "./defineTool";
 
+function assertCanReadPeople() {
+    if (!canRead(ROLE_SECTIONS.PEOPLE)) {
+        throw Errors.forbidden(translate("Access denied"));
+    }
+}
+
 async function roleIdToTitleMap(): Promise<Map<string, string>> {
+    if (!canRead(ROLE_SECTIONS.ROLES)) return new Map();
     const roles = await RolesLoader.getAll();
     return new Map(roles.map(r => [r.id, r.title]));
 }
@@ -85,9 +95,10 @@ export const peopleAiTools = [
         name: "getPerson",
         description: `Load one person by user id. Use when a person id is in the UI block. Never pass a UUID to searchPeople.`,
         inputSchema: z.object({
-            personId: z.string().min(1).describe("Person / user UUID"),
+            personId: z.string().uuid().describe("Person / user UUID"),
         }),
         execute: async ({ personId }) => {
+            assertCanReadPeople();
             const p = await PeopleLoader.getOne(personId);
             const roleTitles = await roleIdToTitleMap();
             const roleTitle = p.role ? roleTitles.get(p.role) ?? null : null;
@@ -115,10 +126,15 @@ export const peopleAiTools = [
         name: "openProfile",
         description: `Open a person's profile page in the app. Omit personId to open the current user's own profile ("my profile"). Returns a path the UI can navigate to.`,
         inputSchema: z.object({
-            personId: z.string().optional().describe("Person UUID. Omit for the current user's own profile."),
+            personId: z
+                .string()
+                .uuid()
+                .optional()
+                .describe("Person UUID. Omit for the current user's own profile."),
         }),
         execute: async ({ personId }) => {
             const isSelf = !personId;
+            if (!isSelf && String(personId) !== String(getCurrentUser().id)) assertCanReadPeople();
             const id = personId ?? getCurrentUser().id;
             return {
                 personId: id,
@@ -134,6 +150,7 @@ export const peopleAiTools = [
         description: `Search & filter the workspace directory. Combine filters in ONE call (all ANDed): query (name/email), jobTitle, company, city, country, roleTitle (workspace role like "Admin"/"Designer"), hasEmail/hasCellPhone/hasOfficePhone, birthdayMonth (1-12). Deactivated users are excluded unless includeDisabled is true. Returns { total, returned, truncated, people } — check "truncated" before telling the user "those are all". Never pass a UUID here (use getPerson). At least one filter is required.`,
         inputSchema: searchPeopleInput,
         execute: async input => {
+            assertCanReadPeople();
             const limit = Math.min(input.limit ?? 50, 200);
             const includeDisabled = input.includeDisabled ?? false;
 

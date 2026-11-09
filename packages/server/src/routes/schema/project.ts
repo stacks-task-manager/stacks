@@ -23,5 +23,5 @@ export const ProjectSchema = z.object({
     approvers: z.string().array().optional(),
     estimate: z.union([z.number().min(0), z.null()]).optional(),
     notes: z.string().optional(),
-    stacksOrder: z.array(z.string()).optional(),
+    stacksOrder: z.array(z.uuid()).optional(),
 });

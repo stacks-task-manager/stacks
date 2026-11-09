@@ -67,6 +67,7 @@ export const ToolbarBookmarks = () => {
                         placeholder={translate("Search bookmark")}
                         round
                         type="search"
+                        data-testid="bookmarks-search-input"
                         onChange={BookmarksActions.setQuery}
                     />
 

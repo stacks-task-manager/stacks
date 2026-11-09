@@ -1,0 +1,93 @@
+diff --git a/lib/compile.js b/lib/compile.js
+--- a/lib/compile.js
++++ b/lib/compile.js
+@@ -3,8 +3,13 @@
+ const fill = require('fill-range');
+ const utils = require('./utils');
+ 
++const MAX_DEPTH = 100;
++
+ const compile = (ast, options = {}) => {
+-  const walk = (node, parent = {}) => {
++  const walk = (node, parent = {}, depth = 0) => {
++    if (depth > MAX_DEPTH) {
++      throw new SyntaxError(`Input nesting exceeds max depth (${MAX_DEPTH})`);
++    }
+     const invalidBlock = utils.isInvalidBrace(parent);
+     const invalidNode = node.invalid === true && options.escapeInvalid === true;
+     const invalid = invalidBlock === true || invalidNode === true;
+@@ -47,7 +52,7 @@
+ 
+     if (node.nodes) {
+       for (const child of node.nodes) {
+-        output += walk(child, node);
++        output += walk(child, node, depth + 1);
+       }
+     }
+ 
+diff --git a/lib/expand.js b/lib/expand.js
+--- a/lib/expand.js
++++ b/lib/expand.js
+@@ -3,6 +3,8 @@
+ const fill = require('fill-range');
+ const stringify = require('./stringify');
+ const utils = require('./utils');
++
++const MAX_DEPTH = 100;
+ 
+ const append = (queue = '', stash = '', enclose = false) => {
+   const result = [];
+@@ -33,7 +35,10 @@
+ const expand = (ast, options = {}) => {
+   const rangeLimit = options.rangeLimit === undefined ? 1000 : options.rangeLimit;
+ 
+-  const walk = (node, parent = {}) => {
++  const walk = (node, parent = {}, depth = 0) => {
++    if (depth > MAX_DEPTH) {
++      throw new SyntaxError(`Input nesting exceeds max depth (${MAX_DEPTH})`);
++    }
+     node.queue = [];
+ 
+     let p = parent;
+@@ -100,7 +105,7 @@
+       }
+ 
+       if (child.nodes) {
+-        walk(child, node);
++        walk(child, node, depth + 1);
+       }
+     }
+ 
+diff --git a/lib/parse.js b/lib/parse.js
+--- a/lib/parse.js
++++ b/lib/parse.js
+@@ -24,6 +24,9 @@
+   CHAR_ZERO_WIDTH_NOBREAK_SPACE
+ } = require('./constants');
+ 
++// Bound recursive AST walkers even when an input stays within MAX_LENGTH.
++const MAX_DEPTH = 100;
++
+ /**
+  * parse
+  */
+@@ -143,6 +146,9 @@
+      */
+ 
+     if (value === CHAR_LEFT_PARENTHESES) {
++      if (stack.length >= MAX_DEPTH) {
++        throw new SyntaxError(`Input nesting exceeds max depth (${MAX_DEPTH})`);
++      }
+       block = push({ type: 'paren', nodes: [] });
+       stack.push(block);
+       push({ type: 'text', value });
+@@ -195,6 +201,9 @@
+      */
+ 
+     if (value === CHAR_LEFT_CURLY_BRACE) {
++      if (stack.length >= MAX_DEPTH) {
++        throw new SyntaxError(`Input nesting exceeds max depth (${MAX_DEPTH})`);
++      }
+       depth++;
+ 
+       const dollar = prev.value && prev.value.slice(-1) === '$' || block.dollar === true;

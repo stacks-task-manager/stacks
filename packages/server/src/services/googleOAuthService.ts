@@ -1,6 +1,7 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
-import { UserEntity } from "@stacks/db";
+import { sequelize, UserEntity } from "@stacks/db";
 import { google } from "googleapis";
+import { CodeChallengeMethod } from "google-auth-library";
 
 interface GoogleOAuthConfig {
     clientId: string;
@@ -58,8 +59,20 @@ interface GoogleCalendarEvent {
 }
 
 class GoogleOAuthService {
-    private oauth2Client: any;
     private config: GoogleOAuthConfig;
+
+    /**
+     * A provider client per operation. The googleapis client remembers the
+     * credentials it was last given, so one shared instance would let a call for
+     * one user run with another user's tokens.
+     */
+    private client(): any {
+        return new google.auth.OAuth2(
+            this.config.clientId,
+            this.config.clientSecret,
+            this.config.redirectUri
+        );
+    }
 
     private mapGoogleEvent(event: any): GoogleCalendarEvent {
         return {
@@ -117,18 +130,12 @@ class GoogleOAuthService {
             clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
             redirectUri: process.env.GOOGLE_REDIRECT_URI || `${appOrigin}/api/google/callback`,
         };
-
-        this.oauth2Client = new google.auth.OAuth2(
-            this.config.clientId,
-            this.config.clientSecret,
-            this.config.redirectUri
-        );
     }
 
     /**
      * Generate Google OAuth authorization URL
      */
-    getAuthUrl(): string {
+    getAuthUrl(state: string, codeChallenge: string): string {
         const scopes = [
             "https://www.googleapis.com/auth/calendar.readonly",
             "https://www.googleapis.com/auth/calendar.events",
@@ -136,19 +143,22 @@ class GoogleOAuthService {
             "https://www.googleapis.com/auth/userinfo.profile",
         ];
 
-        return this.oauth2Client.generateAuthUrl({
+        return this.client().generateAuthUrl({
             access_type: "offline",
             scope: scopes,
             prompt: "consent",
+            state,
+            code_challenge: codeChallenge,
+            code_challenge_method: CodeChallengeMethod.S256,
         });
     }
 
     /**
      * Exchange authorization code for tokens
      */
-    async getTokens(code: string): Promise<GoogleTokens> {
+    async getTokens(code: string, codeVerifier: string): Promise<GoogleTokens> {
         try {
-            const { tokens } = await this.oauth2Client.getToken(code);
+            const { tokens } = await this.client().getToken({ code, codeVerifier });
             return {
                 access_token: tokens.access_token,
                 refresh_token: tokens.refresh_token,
@@ -156,8 +166,8 @@ class GoogleOAuthService {
                 token_type: tokens.token_type,
                 expiry_date: tokens.expiry_date,
             };
-        } catch (error) {
-            console.error("Error getting tokens:", error);
+        } catch {
+            console.error("Google OAuth token exchange failed");
             throw new Error("Failed to exchange authorization code for tokens");
         }
     }
@@ -167,20 +177,25 @@ class GoogleOAuthService {
      */
     async storeTokens(userId: string, tokens: GoogleTokens): Promise<void> {
         try {
-            const user = await UserEntity.findByPk(userId);
-            if (!user) {
-                throw new Error("User not found");
-            }
+            await sequelize.transaction(async transaction => {
+                const user = await UserEntity.findByPk(userId, {
+                    transaction,
+                    lock: transaction.LOCK.UPDATE,
+                });
+                if (!user) {
+                    throw new Error("User not found");
+                }
 
-            const currentTokens = (user.get("oauthTokens") as any) || {};
-            const updatedTokens = {
-                ...currentTokens,
-                google: tokens,
-            };
+                const currentTokens = (user.get("oauthTokens") as any) || {};
+                const updatedTokens = {
+                    ...currentTokens,
+                    google: tokens,
+                };
 
-            await user.update({ oauthTokens: updatedTokens });
-        } catch (error) {
-            console.error("Error storing tokens:", error);
+                await user.update({ oauthTokens: updatedTokens }, { transaction });
+            });
+        } catch {
+            console.error("Google OAuth token storage failed");
             throw new Error("Failed to store Google tokens");
         }
     }
@@ -197,8 +212,8 @@ class GoogleOAuthService {
 
             const oauthTokens = user.get("oauthTokens") as any;
             return oauthTokens?.google || null;
-        } catch (error) {
-            console.error("Error getting stored tokens:", error);
+        } catch {
+            console.error("Google OAuth stored-token lookup failed");
             return null;
         }
     }
@@ -223,11 +238,12 @@ class GoogleOAuthService {
             }
 
             // Token needs refresh
-            this.oauth2Client.setCredentials({
+            const client = this.client();
+            client.setCredentials({
                 refresh_token: tokens.refresh_token,
             });
 
-            const { credentials } = await this.oauth2Client.refreshAccessToken();
+            const { credentials } = await client.refreshAccessToken();
             const refreshedTokens: GoogleTokens = {
                 access_token: credentials.access_token,
                 refresh_token: credentials.refresh_token || tokens.refresh_token,
@@ -236,12 +252,48 @@ class GoogleOAuthService {
                 expiry_date: credentials.expiry_date || Date.now() + 3600000,
             };
 
-            await this.storeTokens(userId, refreshedTokens);
+            const stored = await this.storeRefreshedTokens(userId, tokens, refreshedTokens);
+            if (!stored) return null;
             return refreshedTokens;
-        } catch (error) {
-            console.error("Error refreshing token:", error);
+        } catch {
+            console.error("Google OAuth token refresh failed");
             return null;
         }
+    }
+
+    /**
+     * Persist a refresh only while the account still has the credentials that
+     * initiated it. The row lock serializes this check with disconnect so a
+     * late provider response cannot reconnect an account the user removed.
+     */
+    private async storeRefreshedTokens(
+        userId: string,
+        expectedTokens: GoogleTokens,
+        refreshedTokens: GoogleTokens
+    ): Promise<boolean> {
+        return sequelize.transaction(async transaction => {
+            const user = await UserEntity.findByPk(userId, {
+                transaction,
+                lock: transaction.LOCK.UPDATE,
+            });
+            if (!user) return false;
+
+            const currentTokens = (user.get("oauthTokens") as any) || {};
+            const currentGoogleTokens = currentTokens.google as GoogleTokens | undefined;
+            if (
+                !currentGoogleTokens ||
+                currentGoogleTokens.access_token !== expectedTokens.access_token ||
+                currentGoogleTokens.refresh_token !== expectedTokens.refresh_token
+            ) {
+                return false;
+            }
+
+            await user.update(
+                { oauthTokens: { ...currentTokens, google: refreshedTokens } },
+                { transaction }
+            );
+            return true;
+        });
     }
 
     /**
@@ -259,12 +311,13 @@ class GoogleOAuthService {
                 throw new Error("No valid Google tokens found");
             }
 
-            this.oauth2Client.setCredentials({
+            const client = this.client();
+            client.setCredentials({
                 access_token: tokens.access_token,
                 refresh_token: tokens.refresh_token,
             });
 
-            const calendar = google.calendar({ version: "v3", auth: this.oauth2Client });
+            const calendar = google.calendar({ version: "v3", auth: client });
 
             const response = await calendar.events.list({
                 calendarId,
@@ -279,8 +332,8 @@ class GoogleOAuthService {
             return events
                 .filter(event => event.id) // Filter out events without id
                 .map(event => this.mapGoogleEvent(event)) as GoogleCalendarEvent[];
-        } catch (error) {
-            console.error("Error fetching calendar events:", error);
+        } catch {
+            console.error("Google Calendar event lookup failed");
             throw new Error("Failed to fetch Google Calendar events");
         }
     }
@@ -295,17 +348,18 @@ class GoogleOAuthService {
                 throw new Error("No valid Google tokens found");
             }
 
-            this.oauth2Client.setCredentials({
+            const client = this.client();
+            client.setCredentials({
                 access_token: tokens.access_token,
                 refresh_token: tokens.refresh_token,
             });
 
-            const calendar = google.calendar({ version: "v3", auth: this.oauth2Client });
+            const calendar = google.calendar({ version: "v3", auth: client });
 
             const response = await calendar.calendarList.list();
             return response.data.items || [];
-        } catch (error) {
-            console.error("Error fetching calendars:", error);
+        } catch {
+            console.error("Google Calendar list lookup failed");
             throw new Error("Failed to fetch Google Calendars");
         }
     }
@@ -329,12 +383,13 @@ class GoogleOAuthService {
                 throw new Error("No valid Google tokens found");
             }
 
-            this.oauth2Client.setCredentials({
+            const client = this.client();
+            client.setCredentials({
                 access_token: tokens.access_token,
                 refresh_token: tokens.refresh_token,
             });
 
-            const calendar = google.calendar({ version: "v3", auth: this.oauth2Client });
+            const calendar = google.calendar({ version: "v3", auth: client });
             const response = await calendar.events.patch({
                 calendarId,
                 eventId,
@@ -342,9 +397,9 @@ class GoogleOAuthService {
             });
 
             return this.mapGoogleEvent(response.data);
-        } catch (error) {
-            console.error("Error updating calendar event:", error);
-            throw error;
+        } catch {
+            console.error("Google Calendar event update failed");
+            throw new Error("Failed to update Google Calendar event");
         }
     }
 
@@ -366,21 +421,22 @@ class GoogleOAuthService {
                 throw new Error("No valid Google tokens found");
             }
 
-            this.oauth2Client.setCredentials({
+            const client = this.client();
+            client.setCredentials({
                 access_token: tokens.access_token,
                 refresh_token: tokens.refresh_token,
             });
 
-            const calendar = google.calendar({ version: "v3", auth: this.oauth2Client });
+            const calendar = google.calendar({ version: "v3", auth: client });
             const response = await calendar.events.insert({
                 calendarId,
                 requestBody: payload as any,
             });
 
             return this.mapGoogleEvent(response.data);
-        } catch (error) {
-            console.error("Error creating calendar event:", error);
-            throw error;
+        } catch {
+            console.error("Google Calendar event creation failed");
+            throw new Error("Failed to create Google Calendar event");
         }
     }
 
@@ -396,12 +452,13 @@ class GoogleOAuthService {
                 throw new Error("No valid Google tokens found");
             }
 
-            this.oauth2Client.setCredentials({
+            const client = this.client();
+            client.setCredentials({
                 access_token: tokens.access_token,
                 refresh_token: tokens.refresh_token,
             });
 
-            const calendar = google.calendar({ version: "v3", auth: this.oauth2Client });
+            const calendar = google.calendar({ version: "v3", auth: client });
             const response = await calendar.events.move({
                 calendarId: sourceCalendarId,
                 eventId,
@@ -409,9 +466,9 @@ class GoogleOAuthService {
             });
 
             return this.mapGoogleEvent(response.data);
-        } catch (error) {
-            console.error("Error moving calendar event:", error);
-            throw error;
+        } catch {
+            console.error("Google Calendar event move failed");
+            throw new Error("Failed to move Google Calendar event");
         }
     }
 
@@ -422,19 +479,20 @@ class GoogleOAuthService {
                 throw new Error("No valid Google tokens found");
             }
 
-            this.oauth2Client.setCredentials({
+            const client = this.client();
+            client.setCredentials({
                 access_token: tokens.access_token,
                 refresh_token: tokens.refresh_token,
             });
 
-            const calendar = google.calendar({ version: "v3", auth: this.oauth2Client });
+            const calendar = google.calendar({ version: "v3", auth: client });
             await calendar.events.delete({
                 calendarId,
                 eventId,
             });
-        } catch (error) {
-            console.error("Error deleting calendar event:", error);
-            throw error;
+        } catch {
+            console.error("Google Calendar event deletion failed");
+            throw new Error("Failed to delete Google Calendar event");
         }
     }
 
@@ -445,12 +503,13 @@ class GoogleOAuthService {
                 throw new Error("No valid Google tokens found");
             }
 
-            this.oauth2Client.setCredentials({
+            const client = this.client();
+            client.setCredentials({
                 access_token: tokens.access_token,
                 refresh_token: tokens.refresh_token,
             });
 
-            const calendar = google.calendar({ version: "v3", auth: this.oauth2Client });
+            const calendar = google.calendar({ version: "v3", auth: client });
             await calendar.events.patch({
                 calendarId,
                 eventId,
@@ -458,9 +517,9 @@ class GoogleOAuthService {
                     status: "cancelled",
                 } as any,
             });
-        } catch (error) {
-            console.error("Error cancelling recurring calendar event instance:", error);
-            throw error;
+        } catch {
+            console.error("Google Calendar instance cancellation failed");
+            throw new Error("Failed to cancel Google Calendar event instance");
         }
     }
 
@@ -469,19 +528,23 @@ class GoogleOAuthService {
      */
     async removeTokens(userId: string): Promise<void> {
         try {
-            const user = await UserEntity.findByPk(userId);
-            if (!user) {
-                throw new Error("User not found");
-            }
+            await sequelize.transaction(async transaction => {
+                const user = await UserEntity.findByPk(userId, {
+                    transaction,
+                    lock: transaction.LOCK.UPDATE,
+                });
+                if (!user) {
+                    throw new Error("User not found");
+                }
 
-            const currentTokens = (user.get("oauthTokens") as any) || {};
-            const remainingTokens = { ...currentTokens };
-            delete remainingTokens.google;
+                const currentTokens = (user.get("oauthTokens") as any) || {};
+                const remainingTokens = { ...currentTokens };
+                delete remainingTokens.google;
 
-            this.oauth2Client.setCredentials({});
-            await user.update({ oauthTokens: remainingTokens });
-        } catch (error) {
-            console.error("Error removing tokens:", error);
+                await user.update({ oauthTokens: remainingTokens }, { transaction });
+            });
+        } catch {
+            console.error("Google OAuth token removal failed");
             throw new Error("Failed to remove Google tokens");
         }
     }

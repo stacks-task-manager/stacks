@@ -12,6 +12,7 @@
             <div class="flex--item">
                 <div class="s-card ws3 bs-lg mb24" data-testid="login-card">
                     <form method="post" action="/login">
+                        <input type="hidden" name="csrf" value="{{csrf}}" />
                         <div class="d-flex jc-center mb24 mt24">
                             <svg data-spot="SpotForYouLg" class="fc-blue-400"></svg>
                         </div>
@@ -48,13 +49,14 @@
                                     id="email"
                                     name="email"
                                     type="email"
+                                    autocomplete="username"
                                     placeholder="Your email"
                                     required
                                 />
                             </div>
                             <div class="d-flex gy4 fd-column">
                                 <div class="d-flex ai-center ps-relative jc-space-between">
-                                    <label class="s-label" for="password2">Password</label>
+                                    <label class="s-label" for="password">Password</label>
                                     {{#if passwordRecoveryEnabled}}<a
                                         class="flex--item s-link fs-caption"
                                         href="/login/password-recovery"
@@ -68,6 +70,7 @@
                                     id="password"
                                     name="password"
                                     type="password"
+                                    autocomplete="current-password"
                                     placeholder="Password"
                                     required
                                 />

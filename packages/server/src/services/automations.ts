@@ -7,9 +7,9 @@
  * directly via Sequelize — no HTTP round-trips.
  */
 import { addDays, isBefore } from "date-fns";
-import { Transaction } from "sequelize";
+import { Op, Transaction } from "sequelize";
 
-import { ProjectEntity, StackEntity, TaskEntity } from "@stacks/db";
+import { ProjectEntity, StackEntity, TagEntity, TaskEntity, UserEntity } from "@stacks/db";
 import {
     AUTOMATION_DO,
     AUTOMATION_EVENT,
@@ -21,6 +21,7 @@ import {
 
 import { Errors } from "../errors";
 import { afterTransactionCommit, findOne, updateOne } from "../loaders/utils";
+import { getCurrentUser } from "../loaders/context";
 import { ProjectsLoader, StacksLoader } from "src/loaders";
 import { sendRealtimeUpdate } from "src/events";
 
@@ -114,6 +115,36 @@ function filterAutomations(
     );
 }
 
+async function assertAutomationAssigneesBelongToTenant(userIds: string[], transaction?: Transaction) {
+    const requestedIds = [...new Set(userIds)];
+    if (requestedIds.length === 0) return;
+
+    const user = getCurrentUser();
+    const users = await UserEntity.findAll({
+        where: { id: { [Op.in]: requestedIds }, tenant: user.tenant, deleted: null },
+        attributes: ["id"],
+        transaction,
+    });
+    if (users.length !== requestedIds.length) {
+        throw Errors.notFound("Task not found");
+    }
+}
+
+async function assertAutomationTagsBelongToTenant(tagIds: string[], transaction?: Transaction) {
+    const requestedIds = [...new Set(tagIds)];
+    if (requestedIds.length === 0) return;
+
+    const user = getCurrentUser();
+    const tags = await TagEntity.findAll({
+        where: { id: { [Op.in]: requestedIds }, tenant: user.tenant, deleted: null },
+        attributes: ["id"],
+        transaction,
+    });
+    if (tags.length !== requestedIds.length) {
+        throw Errors.notFound("Task not found");
+    }
+}
+
 /**
  * Execute a single automation action on a task via direct Sequelize update.
  */
@@ -123,7 +154,11 @@ async function executeAction(
     extTransaction?: Transaction
 ): Promise<void> {
     switch (action.do) {
-        case AUTOMATION_DO.ASSIGN:
+        case AUTOMATION_DO.ASSIGN: {
+            if (!Array.isArray(action.value) || action.value.some(id => typeof id !== "string")) {
+                throw Errors.badRequest("Invalid automation assignees");
+            }
+            await assertAutomationAssigneesBelongToTenant(action.value as string[], extTransaction);
             await updateOne({
                 entity: TaskEntity,
                 id: taskId,
@@ -131,8 +166,13 @@ async function executeAction(
                 transaction: extTransaction,
             });
             break;
+        }
 
-        case AUTOMATION_DO.UNASSIGN:
+        case AUTOMATION_DO.UNASSIGN: {
+            if (!Array.isArray(action.value) || action.value.some(id => typeof id !== "string")) {
+                throw Errors.badRequest("Invalid automation assignees");
+            }
+            await assertAutomationAssigneesBelongToTenant(action.value as string[], extTransaction);
             await updateOne({
                 entity: TaskEntity,
                 id: taskId,
@@ -140,6 +180,7 @@ async function executeAction(
                 transaction: extTransaction,
             });
             break;
+        }
 
         case AUTOMATION_DO.UNASSIGNALL:
             await updateOne({
@@ -177,7 +218,11 @@ async function executeAction(
             break;
         }
 
-        case AUTOMATION_DO.ADDTAG:
+        case AUTOMATION_DO.ADDTAG: {
+            if (!Array.isArray(action.value) || action.value.some(id => typeof id !== "string")) {
+                throw Errors.badRequest("Invalid automation tags");
+            }
+            await assertAutomationTagsBelongToTenant(action.value as string[], extTransaction);
             await updateOne({
                 entity: TaskEntity,
                 id: taskId,
@@ -185,6 +230,7 @@ async function executeAction(
                 transaction: extTransaction,
             });
             break;
+        }
 
         case AUTOMATION_DO.REMOVETAG: {
             const currentTags = (
@@ -214,6 +260,10 @@ async function executeAction(
             break;
 
         case AUTOMATION_DO.ADDSTATUS:
+            if (typeof action.value !== "string") {
+                throw Errors.badRequest("Invalid automation status");
+            }
+            await assertAutomationTagsBelongToTenant([action.value], extTransaction);
             await updateOne({
                 entity: TaskEntity,
                 id: taskId,
@@ -249,7 +299,16 @@ async function executeAction(
             });
             break;
 
-        case AUTOMATION_DO.MOVE:
+        case AUTOMATION_DO.MOVE: {
+            if (typeof action.value !== "string") {
+                throw Errors.badRequest("Invalid automation stack");
+            }
+            const task = await findOne({ entity: TaskEntity, id: taskId, transaction: extTransaction });
+            if (!task) throw Errors.notFound("Task not found");
+            const destinationStack = await StacksLoader.getOne(action.value, extTransaction);
+            if (destinationStack.project !== task.project) {
+                throw Errors.notFound("Task not found");
+            }
             await updateOne({
                 entity: TaskEntity,
                 id: taskId,
@@ -282,6 +341,7 @@ async function executeAction(
             });
 
             break;
+        }
 
         case AUTOMATION_DO.PROGRESS:
             await updateOne({

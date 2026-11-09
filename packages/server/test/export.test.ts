@@ -10,7 +10,22 @@ describe("Export API", () => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ format: "json", type: "task", data: [] }),
         });
-        expect([401, 404]).toContain(res.status);
+        expect(res.status).toBe(401);
+    });
+
+    test("POST /api/export — rejects oversized PDF requests before parsing", async () => {
+        const headers = await getAuthenticatedHeaders();
+        const res = await app.request("/api/export", {
+            method: "POST",
+            headers: { ...headers, "Content-Type": "application/json" },
+            body: JSON.stringify({
+                format: "pdf",
+                type: "notepad",
+                data: { html: "x".repeat(1_048_576) },
+            }),
+        });
+
+        expect(res.status).toBe(413);
     });
 
     test("POST /api/export — rejects invalid format", async () => {
@@ -123,6 +138,7 @@ describe("Export API", () => {
 
     test(
         "POST /api/export — pdf",
+        { timeout: 120_000 },
         async () => {
             const headers = await getAuthenticatedHeaders();
             const res = await app.request("/api/export", {
@@ -139,7 +155,6 @@ describe("Export API", () => {
             expect(res.headers.get("Content-Disposition")).toMatch(/export-task.*\.pdf/);
             const text = new TextDecoder().decode((await res.arrayBuffer()).slice(0, 4));
             expect(text.startsWith("%PDF")).toBe(true);
-        },
-        { timeout: 120_000 }
+        }
     );
 });

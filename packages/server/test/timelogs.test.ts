@@ -291,7 +291,12 @@ describe("Timelogs", () => {
 
     test("Update timelog with invalid ID", async () => {
         const updateData = {
+            date: new Date().toISOString(),
+            person: "11111111-1111-4111-8111-111111111111",
+            project: projectId,
+            task: taskId,
             description: "Updated timelog description",
+            duration: 3600,
         };
 
         const res = await app.request("/api/timelogs/invalid-id", {
@@ -303,10 +308,10 @@ describe("Timelogs", () => {
             body: JSON.stringify(updateData),
         });
 
-        expect([400, 404, 500]).toContain(res.status);
+        expect(res.status).toBe(400);
         const body = await res.json();
         expect(body.success).toBe(false);
-        expect(body.errors?.errorCode).toBe("VALIDATION_ERROR");
+        expect(body.code).toBe("VALIDATION_ERROR");
     });
 
     test("Delete timelog with invalid ID", async () => {
@@ -318,7 +323,7 @@ describe("Timelogs", () => {
             },
         });
 
-        expect(res.status).toBe(500);
+        expect(res.status).toBe(400);
     });
 
     test("Access timelogs without authentication", async () => {

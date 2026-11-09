@@ -13,8 +13,10 @@ import { PreferencesActions } from "app/store/actions/preferences";
 import { BootAPI } from "app/api";
 import { AiChatActions } from "app/store/actions/aiChat";
 import { CalendarActions } from "app/store/actions/calendar";
-import { LicenseActions, ProjectFiltersActions } from "app/store/actions";
+import { LicenseActions, ProjectFiltersActions, ProjectsStatusActions } from "app/store/actions";
 import { getBrowserLocale } from "app/utils/browser";
+import { setStorageTenant } from "app/utils/storage";
+import { PeopleStore } from "app/store/people";
 
 const App = React.lazy(() => import("./app/App"));
 
@@ -43,7 +45,10 @@ window.addEventListener("beforeunload", () => {
 });
 
 void (async () => {
-    const { translations, license, preferences, aiChat, integrations } = await BootAPI.load();
+    const { session, translations, license, preferences, aiChat, integrations } = await BootAPI.load();
+    setStorageTenant(session.tenantId);
+    ProjectsStatusActions.loadSaved();
+    PeopleStore.set(state => ({ ...state, me: session.userId }));
     setTranslations(translations, { locale: getBrowserLocale() });
     LicenseActions.setLicense(license);
     PreferencesActions.set(preferences);

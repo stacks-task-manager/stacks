@@ -11,12 +11,16 @@ import { CalendarCreateSchema, CalendarUpdateSchema } from "./schema/calendar";
 import { validator } from "../middleware/validator";
 import { Errors } from "../errors";
 import { asyncHandler } from "../utils/errorHandler";
+import { parseUuidParam } from "./schema/common";
+import { ROLE_ACTIONS, ROLE_SECTIONS } from "@stacks/types";
+import { requireRoleAccess } from "../middleware/roleAccess";
 
 const calendars = new Hono();
 
 /** GET `/` — Lists all local calendars for the current tenant. */
 calendars.get(
     "/",
+    requireRoleAccess(ROLE_SECTIONS.CALENDAR),
     asyncHandler(async (c: Context) => {
         const loadedCalendars = await CalendarsLoader.getAll();
         return c.replySuccess(loadedCalendars);
@@ -26,6 +30,7 @@ calendars.get(
 /** POST `/` — Creates a new local calendar. */
 calendars.post(
     "/",
+    requireRoleAccess(ROLE_SECTIONS.CALENDAR, ROLE_ACTIONS.WRITE),
     validator(CalendarCreateSchema),
     asyncHandler(async (c: Context) => {
         const calendarData = c.req.valid("json");
@@ -37,8 +42,9 @@ calendars.post(
 /** GET `/:id` — Gets a specific calendar by ID. */
 calendars.get(
     "/:id",
+    requireRoleAccess(ROLE_SECTIONS.CALENDAR),
     asyncHandler(async (c: Context) => {
-        const { id } = c.req.param();
+        const id = parseUuidParam(c.req.param("id")!);
         const calendar = await CalendarsLoader.getOne(id);
         return c.replySuccess(calendar);
     })
@@ -47,10 +53,11 @@ calendars.get(
 /** PATCH `/:id` — Updates a calendar. */
 calendars.patch(
     "/:id",
+    requireRoleAccess(ROLE_SECTIONS.CALENDAR, ROLE_ACTIONS.WRITE),
     validator(CalendarUpdateSchema),
     asyncHandler(async (c: Context) => {
         const calendarData = c.req.valid("json");
-        const { id } = c.req.param();
+        const id = parseUuidParam(c.req.param("id")!);
         const updated = await CalendarsLoader.update(id, calendarData);
         return c.replySuccess(updated);
     })
@@ -59,8 +66,9 @@ calendars.patch(
 /** DELETE `/:id` — Deletes a calendar. */
 calendars.delete(
     "/:id",
+    requireRoleAccess(ROLE_SECTIONS.CALENDAR, ROLE_ACTIONS.WRITE),
     asyncHandler(async (c: Context) => {
-        const { id } = c.req.param();
+        const id = parseUuidParam(c.req.param("id")!);
         const deleted = await CalendarsLoader.remove(id);
         if (!deleted) {
             throw Errors.notFound(translate("Calendar not found"));

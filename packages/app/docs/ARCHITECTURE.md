@@ -19,10 +19,10 @@ A reference for _how_ `@stacks/app` is wired together. Read [ONBOARDING.md](ONBO
 
 ## App shell
 
-[`src/index.tsx`](../src/index.tsx) is the entry. It mounts `<App />` inside a `<HashRouter>` after `BootAPI.load()` resolves. [`src/app/App.tsx`](../src/app/App.tsx) is the shell component — it wraps the page in `<DragDropProvider>`, syncs dark-mode and scrollbar preferences onto the body element, registers the global `useUpdates()` realtime subscriptions, and renders the route table.
+[`src/index.tsx`](../src/index.tsx) is the entry. It normalizes legacy hash URLs and mounts `<App />` inside a `<BrowserRouter basename="/app">` after `BootAPI.load()` resolves. [`src/app/App.tsx`](../src/app/App.tsx) is the shell component — it wraps the page in `<DragDropProvider>`, syncs dark-mode and scrollbar preferences onto the body element, registers the global `useUpdates()` realtime subscriptions, and renders the route table.
 
 ```
-<HashRouter>
+<BrowserRouter basename="/app">
   <App>
     <ErrorBoundary>
       <DragDropProvider>
@@ -36,12 +36,12 @@ A reference for _how_ `@stacks/app` is wired together. Read [ONBOARDING.md](ONBO
       </DragDropProvider>
     </ErrorBoundary>
   </App>
-</HashRouter>
+</BrowserRouter>
 ```
 
 ## Routing
 
-The route table is `MainAppRoutes` inside [`App.tsx`](../src/app/App.tsx). The router uses `HashRouter` so the live URL is `http://localhost:3000/#/<path>` (substitute your `APP_PORT` if you changed it — see [INSTALLATION.md](../../../docs/INSTALLATION.md#2-open-the-app)).
+The route table is `MainAppRoutes` inside [`App.tsx`](../src/app/App.tsx). The router uses `BrowserRouter` with basename `/app`, so the live URL is `http://localhost:3000/app/<path>` (substitute your `APP_PORT` if you changed it — see [INSTALLATION.md](../../../docs/INSTALLATION.md#2-open-the-app)). Route definitions and router links omit the basename. The server proxies app paths to Webpack in development and serves the authenticated app shell for client routes in production. [`normalizeLegacyHashRoute()`](../src/app/hooks/router.ts) converts legacy `#/…` links before React mounts.
 
 Top-level routes (paraphrased — see `App.tsx` for the truth):
 

@@ -77,15 +77,23 @@ function integrityPlugin(options = {}) {
                     }
 
                     if (!fs.existsSync(privateKeyPath)) {
-                        console.error("🚨 Release-signing private key not found:", privateKeyPath);
-                        console.error("🚨 Run scripts/release-signing/generate-keys.sh to create one.");
-                        return;
+                        return {
+                            errors: [
+                                {
+                                    text: "Release-signing private key not found. Run scripts/release-signing/generate-keys.sh to create one.",
+                                },
+                            ],
+                        };
                     }
 
                     if (!fs.existsSync(publicKeyPath)) {
-                        console.error("🚨 Release-signing public key not found:", publicKeyPath);
-                        console.error("🚨 Run scripts/release-signing/generate-keys.sh to create one.");
-                        return;
+                        return {
+                            errors: [
+                                {
+                                    text: "Release-signing public key not found. Run scripts/release-signing/generate-keys.sh to create one.",
+                                },
+                            ],
+                        };
                     }
 
                     const privateKey = fs.readFileSync(privateKeyPath, "utf8");

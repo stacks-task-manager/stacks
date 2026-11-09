@@ -93,6 +93,7 @@ const MyTasksBlankSlate = () => {
     return (
         <Grid vertical>
             <BlankSlate
+                testId="my-tasks-blank-slate"
                 title={translate(hasFilters ? "No tasks" : "No tasks assigned")}
                 icon="check-circle"
                 description={translate(
@@ -102,6 +103,7 @@ const MyTasksBlankSlate = () => {
                 )}
                 action={
                     <Button
+                        data-testid="my-tasks-clear-filters"
                         text={translate(hasFilters ? "Clear filters" : "Add task")}
                         intent="primary"
                         onClick={hasFilters ? ProjectFiltersActions.reset : toggleNewTask}

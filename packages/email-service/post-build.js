@@ -41,7 +41,7 @@ async function postBuild() {
                         entryPoints: [sourcePath],
                         bundle: true,
                         platform: "node",
-                        target: "node18",
+                        target: "node22",
                         format: "cjs",
                         outfile: destPath,
                         external: ["react", "@react-email/components", "@react-email/render"],

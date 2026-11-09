@@ -39,8 +39,8 @@ export const useTaskMenuActions = (task: ITask, options?: IUseTaskMenuActionsOpt
      * Archives the task (with confirmation) and closes the menu.
      */
     const handleArchive = async () => {
-        await TasksActions.archiveAlert(task.id);
-        onClose?.(true);
+        const archived = await TasksActions.archiveAlert(task.id);
+        if (archived) onClose?.(true);
     };
 
     /**

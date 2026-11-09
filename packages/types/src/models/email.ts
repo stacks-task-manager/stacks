@@ -3,6 +3,7 @@ export enum EMAIL_TEMPLATES {
     WELCOME = "welcome",
     PASSWORD_RESET = "password-reset",
     REGISTRATION = "registration",
+    EMAIL_CHANGE = "email-change",
     NOTIFICATION = "notification",
 }
 
@@ -45,6 +46,15 @@ export interface RegistrationEmailTemplate extends BaseEmailTemplate {
     };
 }
 
+export interface EmailChangeTemplate extends BaseEmailTemplate {
+    template: EMAIL_TEMPLATES.EMAIL_CHANGE;
+    data: {
+        userName: string;
+        verificationLink: string;
+        expirationTime: string;
+    };
+}
+
 // Notification email interface
 export interface NotificationEmailTemplate extends BaseEmailTemplate {
     template: EMAIL_TEMPLATES.NOTIFICATION;
@@ -63,6 +73,7 @@ export type EmailTemplate =
     | WelcomeEmailTemplate
     | PasswordResetEmailTemplate
     | RegistrationEmailTemplate
+    | EmailChangeTemplate
     | NotificationEmailTemplate;
 
 // Type mapping for template data based on template type
@@ -72,6 +83,8 @@ export type EmailTemplateData<T extends EMAIL_TEMPLATES> = T extends EMAIL_TEMPL
     ? PasswordResetEmailTemplate["data"]
     : T extends EMAIL_TEMPLATES.REGISTRATION
     ? RegistrationEmailTemplate["data"]
+    : T extends EMAIL_TEMPLATES.EMAIL_CHANGE
+    ? EmailChangeTemplate["data"]
     : T extends EMAIL_TEMPLATES.NOTIFICATION
     ? NotificationEmailTemplate["data"]
     : never;

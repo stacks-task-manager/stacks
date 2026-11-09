@@ -13,6 +13,7 @@ import { Icon } from "app/components/common";
 interface EditorProps extends TipTapEditorProps {
     maxHeight?: number;
     testId?: string;
+    contentTestId?: string;
     onLoadHistory?: () => Promise<IAttachment[]>;
     onFileAdd?: (callback: (files: IAttachment[]) => void) => void;
     onFileDelete?: (attachmentId: string) => void;

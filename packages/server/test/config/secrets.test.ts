@@ -6,8 +6,8 @@ describe("validateProductionSecrets", () => {
     it("accepts strong distinct secrets", () => {
         expect(
             validateProductionSecrets({
-                JWT_SECRET: "a".repeat(40),
-                COOKIE_SECRET: "b".repeat(40),
+                JWT_SECRET: "jwt-secret-0123456789-abcdefghijklmnopqrstuv",
+                COOKIE_SECRET: "cookie-secret-9876543210-vutsrqponmlkjihgfedcba",
             } as NodeJS.ProcessEnv)
         ).toBeNull();
     });

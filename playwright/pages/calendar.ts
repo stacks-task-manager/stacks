@@ -1,4 +1,4 @@
-import { expect, Locator, Page } from "@playwright/test";
+import { expect, Locator, Page, Route } from "@playwright/test";
 import { addDays, format, subDays } from "date-fns";
 import Base from "./base";
 import Sidebar from "./sidebar";
@@ -23,6 +23,9 @@ class Calendar extends Base {
     public detailsCloseButton: Locator;
     public detailsMenuButton: Locator;
     public detailsDeleteMenuItem: Locator;
+    public integrationsButton: Locator;
+    public connectMenuItem: Locator;
+    public googleConnectButton: Locator;
 
     constructor(page: Page) {
         super(page);
@@ -44,11 +47,78 @@ class Calendar extends Base {
         this.detailsCloseButton = this.details.getByTestId("calendar-event-details-close");
         this.detailsMenuButton = this.details.getByTestId("calendar-event-menu-button");
         this.detailsDeleteMenuItem = page.getByTestId("calendar-event-delete-menu-item");
+        this.integrationsButton = page.getByTestId("calendar-integrations-button");
+        this.connectMenuItem = page.getByTestId("calendar-integrations-menu");
+        this.googleConnectButton = page.getByTestId("calendar-google-connect");
     }
 
     async open() {
         await this.sidebar.go("Calendar");
         await this.surface.waitFor({ state: "visible" });
+    }
+
+    async denyGoogleOAuth(): Promise<{
+        callbackStatus: number;
+        popupClosed: boolean;
+        isAuthenticated: boolean;
+    }> {
+        let callbackWasMocked = false;
+        const providerRoute = async (route: Route) => {
+            const authUrl = new URL(route.request().url());
+            const redirectUri = authUrl.searchParams.get("redirect_uri");
+            const state = authUrl.searchParams.get("state");
+            if (authUrl.hostname !== "accounts.google.com" || !redirectUri || !state) {
+                await route.abort();
+                return;
+            }
+
+            const callbackUrl = new URL(redirectUri);
+            if (
+                callbackUrl.origin !== new URL(this.page.url()).origin ||
+                callbackUrl.pathname !== "/api/google/callback"
+            ) {
+                await route.abort();
+                return;
+            }
+
+            callbackUrl.searchParams.set("error", "access_denied");
+            callbackUrl.searchParams.set("state", state);
+            callbackWasMocked = true;
+            const safeHref = callbackUrl.toString().replace(/&/g, "&amp;").replace(/\"/g, "&quot;");
+            await route.fulfill({
+                contentType: "text/html",
+                body: `<a data-testid="oauth-consent-deny" href="${safeHref}">Deny access</a>`,
+            });
+        };
+
+        await this.page.context().route("https://accounts.google.com/**", providerRoute);
+        try {
+            await this.integrationsButton.click();
+            await this.connectMenuItem.click();
+            const popupPromise = this.page.waitForEvent("popup");
+            await this.googleConnectButton.click();
+            const popup = await popupPromise;
+            const closePromise = popup.waitForEvent("close");
+            const callbackResponsePromise = popup.waitForResponse(response => {
+                return new URL(response.url()).pathname === "/api/google/callback";
+            });
+            const denialClick = popup.getByTestId("oauth-consent-deny").click({ noWaitAfter: true });
+            const callbackResponse = await callbackResponsePromise;
+            await closePromise;
+            await denialClick;
+
+            const statusResponse = await this.page
+                .context()
+                .request.get(new URL("/api/integrations/google/status", this.page.url()).toString());
+            const statusBody = await statusResponse.json();
+            return {
+                callbackStatus: callbackResponse.status(),
+                popupClosed: callbackWasMocked && popup.isClosed(),
+                isAuthenticated: statusBody?.data?.isAuthenticated ?? statusBody?.isAuthenticated ?? true,
+            };
+        } finally {
+            await this.page.context().unroute("https://accounts.google.com/**", providerRoute);
+        }
     }
 
     viewButton(view: CalendarView) {
@@ -179,7 +249,19 @@ class Calendar extends Base {
     }
 
     async deleteEventByApi(eventId: string) {
-        await this.page.request.delete(`/api/events/${eventId}`);
+        const csrfResponse = await this.page
+            .context()
+            .request.get(new URL("/auth/csrf", this.page.url()).toString());
+        expect(csrfResponse.ok()).toBe(true);
+        const csrfToken = (await csrfResponse.json())?.data?.token;
+        expect(typeof csrfToken).toBe("string");
+
+        const response = await this.page
+            .context()
+            .request.delete(new URL(`/api/events/${eventId}`, this.page.url()).toString(), {
+                headers: { "x-csrf-token": csrfToken },
+            });
+        expect(response.ok()).toBe(true);
     }
 
     async expectPersistedEvent(eventId: string, expected: Record<string, unknown>) {

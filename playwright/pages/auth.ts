@@ -37,5 +37,20 @@ class Auth extends Base {
         await this.passwordField.fill(password);
         await this.submitButton.click();
     }
+
+    async loginAndWaitForAuthenticatedRequest(email: string, password: string): Promise<void> {
+        const authenticatedRequest = this.page.waitForResponse(response => {
+            const url = new URL(response.url());
+            return url.pathname === "/api/boot" && response.request().method() === "GET";
+        });
+        await this.login(email, password);
+        await this.page.waitForURL(url => new URL(url).pathname === "/app");
+        const response = await authenticatedRequest;
+        if (response.status() !== 200) {
+            throw new Error(
+                `Expected authenticated boot request to return 200, received ${response.status()}`
+            );
+        }
+    }
 }
 export default Auth;

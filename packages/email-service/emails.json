@@ -9,6 +9,9 @@
         "registration": {
             "en": "Confirm your %appName% account"
         },
+        "email-change": {
+            "en": "Verify your new %appName% email address"
+        },
         "notification": {
             "en": "%title%"
         }

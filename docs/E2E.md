@@ -49,6 +49,14 @@ yarn dev:server
 Then run Playwright in another terminal. Alternatively, keep `yarn dev` running and Playwright will
 reuse its frontend process. The relevant `playwright.config.ts` settings are:
 
+### Request budget
+
+`yarn dev:server` prefixes `RATE_LIMIT_API_WINDOW_MS=60000 RATE_LIMIT_AUTH_API_USER_MAX=2000` to the
+dev process so a whole spec can issue its requests without exhausting the per-user auth budget. Without
+it, repeated local runs hit HTTP 429 at `/login`, which shows a "Too many requests" toast and crashes
+the app mid-spec. The prefix is dev-only — `build` and `bundle` keep the deployed defaults, so CI must
+either use the dev script or export both variables before starting the server.
+
 ```ts
 use: {
   baseURL: "http://localhost:3000",

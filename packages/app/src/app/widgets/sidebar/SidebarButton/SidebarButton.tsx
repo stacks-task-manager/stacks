@@ -76,7 +76,7 @@ export const SidebarButton: FunctionComponent<ISidebarButtonProps> = ({
 
     if (isEditing) {
         return (
-            <div className="sidebar-button-wrapper editing">
+            <div {...props} className="sidebar-button-wrapper editing">
                 <div className="sidebar-button">
                     <div
                         className="sidebar-button-title-wrapper"
@@ -84,6 +84,7 @@ export const SidebarButton: FunctionComponent<ISidebarButtonProps> = ({
                     >
                         <input
                             ref={inputRef}
+                            data-testid="sidebar-button-input"
                             defaultValue={title}
                             onKeyDown={handleKeyDown}
                             onBlur={handleBlur}

@@ -40,6 +40,18 @@ tasks.get(
     })
 );
 
+/** GET `/count` — Count of tasks matching filters. Registered before `/:id` so the static path wins. */
+tasks.get(
+    "/count",
+    validator(TasksFilteredSchema, "query"),
+    cacheMiddleware({ ttl: 60 }),
+    asyncHandler(async (c: Context) => {
+        const filters = c.req.valid("query");
+        const count = await TasksLoader.countAll(filters);
+        return c.replySuccess(count);
+    })
+);
+
 /** GET `/:id` — One task by id. */
 tasks.get(
     "/:id",
@@ -67,18 +79,6 @@ tasks.get(
         }
 
         return c.replySuccess(tasks);
-    })
-);
-
-/** GET `/count` — Count of tasks matching filters. */
-tasks.get(
-    "/count",
-    validator(TasksFilteredSchema, "query"),
-    cacheMiddleware({ ttl: 60 }),
-    asyncHandler(async (c: Context) => {
-        const filters = c.req.valid("query");
-        const count = await TasksLoader.countAll(filters);
-        return c.replySuccess(count);
     })
 );
 

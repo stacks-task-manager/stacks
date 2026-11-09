@@ -31,6 +31,7 @@ export const TaskDetailsAddTime: FunctionComponent<TaskDetailsAddTimeProps> = ({
                         {...props}
                         ref={ref}
                         id="td-log-time"
+                        data-testid="task-details-log-time"
                         size="small"
                         variant="minimal"
                         disabled={disabled}

@@ -4,6 +4,17 @@ import { parseClientRoute } from "../clientRoute";
 import { CORE_TOOLS, TOPIC_TOOLS, selectPromptContext } from "../promptContext";
 
 describe("promptContext.selectPromptContext", () => {
+    it.each([
+        ["Show reminders for Buy milk this week", "listReminders"],
+        ["Show activity for Buy milk this week", "listActivities"],
+        ["Show comments on Buy milk this week", "listActivities"],
+        ["List my documents", "listNotepads"],
+        ["Schedule a task", "createTask"],
+        ["Show today's schedule", "listCalendarEvents"],
+        ["I need notes from the meeting", "listNotepads"],
+    ])("preserves needed tools for competing/missed keywords: %s", (request, tool) => {
+        expect(selectPromptContext({ newUserMessage: request }).allowedTools).toContain(tool);
+    });
     it("always includes the core fragment and core tools", () => {
         const sel = selectPromptContext({ newUserMessage: "hi" });
         expect(sel.promptFragments[0]).toBe("system-core.md");
@@ -122,5 +133,52 @@ describe("promptContext.selectPromptContext", () => {
         expect(sel.promptFragments).toEqual(
             expect.arrayContaining(["system-tasks.md", "system-projects.md"])
         );
+    });
+});
+
+describe("follow-up context", () => {
+    it("exposes task and column creation for a dependent batch", () => {
+        const result = selectPromptContext({
+            newUserMessage: 'Create a column Todos and add a task called "Hello world" in it',
+        });
+        expect(result.allowedTools).toEqual(
+            expect.arrayContaining(["createStack", "createTask", "listStacks"])
+        );
+    });
+    it("allows a calendar follow-up after switching away from the route", () => {
+        const result = selectPromptContext({
+            newUserMessage: "Rename that one",
+            routeSection: "home",
+            history: [{ role: "user", content: "List calendars" }],
+        });
+        expect(result.allowedTools).toContain("updateLocalCalendar");
+    });
+});
+
+it.each(["calendars", "columns", "stacks"])("recognizes plural domain names: %s", noun => {
+    const selection = selectPromptContext({ newUserMessage: `List ${noun}` });
+    expect(selection.topics).toContain(noun === "calendars" ? "calendar" : "projects");
+});
+
+describe("explicit unsupported operation filtering", () => {
+    it.each([
+        "Create a notepad named Meeting notes",
+        "Set a reminder for Buy milk tomorrow",
+        "Create a Google calendar named Work",
+        "Delete project Website permanently",
+        "Rename project Website to Launch",
+        "Make Alex a workspace administrator",
+    ])("does not expose unrelated mutations for %s", request => {
+        const result = selectPromptContext({ newUserMessage: request });
+        expect(result.unsupportedReason).toBeTruthy();
+        expect(result.allowedTools.some(name => /^(create|update|delete|move)/.test(name))).toBe(false);
+    });
+    it.each([
+        'Create task "New notepad" in Website',
+        "Create an event in Google calendar Work",
+        'Set task Buy milk description to "Create a notepad"',
+        "Create a project and add a task in it",
+    ])("preserves supported/mixed requests: %s", request => {
+        expect(selectPromptContext({ newUserMessage: request }).unsupportedReason).toBeUndefined();
     });
 });

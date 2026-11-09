@@ -83,7 +83,12 @@ export const ToolbarCalendar = () => {
                             }
                             placement="bottom"
                         >
-                            <Button size="small" variant="minimal" icon={<Icon icon="chevron-down" />} />
+                            <Button
+                                size="small"
+                                variant="minimal"
+                                icon={<Icon icon="chevron-down" />}
+                                data-testid="calendar-integrations-button"
+                            />
                         </Popover>
                     </div>
                 </div>
@@ -378,7 +383,11 @@ const AuthButtons = () => {
     };
 
     return (
-        <MenuItem text={translate("Connect")} icon={<Icon icon="calendar-plus-01" />}>
+        <MenuItem
+            text={translate("Connect")}
+            icon={<Icon icon="calendar-plus-01" />}
+            data-testid="calendar-integrations-menu"
+        >
             {isGoogleAuthenticated ? (
                 <MenuItem
                     text={translate("Log out from Google")}
@@ -391,6 +400,7 @@ const AuthButtons = () => {
                     text={translate("Log in with Google")}
                     icon={<Icon icon="google" />}
                     onClick={handleLogin}
+                    data-testid="calendar-google-connect"
                 />
             )}
         </MenuItem>

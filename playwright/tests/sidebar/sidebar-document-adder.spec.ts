@@ -5,6 +5,8 @@ import Sidebar from "../../pages/sidebar";
 import Project from "../../pages/project";
 import Notepad from "../../pages/notepad";
 
+const TEST_FOLDER = `E2E folder ${crypto.randomUUID()}`;
+
 test.describe("Sidebar - Document adder", () => {
     let browser: Browser;
     let context: BrowserContext;
@@ -12,6 +14,7 @@ test.describe("Sidebar - Document adder", () => {
     let sidebar: Sidebar;
     let project: Project;
     let notepad: Notepad;
+    let folderCreated = false;
 
     test.beforeAll(async ({ login }: any) => {
         ({ browser, context, page } = await bootstrapContext());
@@ -27,17 +30,22 @@ test.describe("Sidebar - Document adder", () => {
     });
 
     test.afterAll(async () => {
-        if (page && !page.isClosed()) {
-            await page.close();
+        const errors: unknown[] = [];
+        const attempt = async (action: () => Promise<unknown>) => {
+            try {
+                await action();
+            } catch (error) {
+                errors.push(error);
+            }
+        };
+        if (folderCreated && page && !page.isClosed()) {
+            await attempt(() => sidebar.deleteFolder(TEST_FOLDER));
+            await attempt(() => sidebar.expectFolderCount(TEST_FOLDER, 0));
         }
-
-        if (context) {
-            await context.close();
-        }
-
-        if (browser) {
-            await browser.close();
-        }
+        if (page && !page.isClosed()) await attempt(() => page.close());
+        if (context) await attempt(() => context.close());
+        if (browser) await attempt(() => browser.close());
+        if (errors.length) throw new AggregateError(errors, "Sidebar document adder cleanup failed");
     });
 
     test("Should show the quick add menu", async () => {
@@ -59,14 +67,10 @@ test.describe("Sidebar - Document adder", () => {
     });
 
     test("Should add a new folder", async () => {
-        const TEST_FOLDER = "Test Folder";
-        await sidebar.addNewFolder(TEST_FOLDER);
-        const matchingFolders = sidebar.documentsTreeItems.filter({ hasText: TEST_FOLDER });
-        await expect(matchingFolders).toHaveCount(1);
-
-        // delete the folder
-        await sidebar.deleteFolder(TEST_FOLDER);
-        await expect(matchingFolders).toHaveCount(0);
+        await sidebar.addNewFolder(TEST_FOLDER, () => {
+            folderCreated = true;
+        });
+        await sidebar.expectFolderCount(TEST_FOLDER, 1);
     });
 
     test("Should add documents using the quick add menu hotkeys", async () => {

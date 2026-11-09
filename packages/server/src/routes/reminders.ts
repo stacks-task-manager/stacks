@@ -4,8 +4,10 @@
  */
 import type { Context } from "hono";
 import { Hono } from "hono";
+import { Errors } from "../errors";
 import { RemindersLoader } from "../loaders";
 import { validator } from "../middleware/validator";
+import { translate } from "@stacks/translations";
 import { asyncHandler } from "../utils/errorHandler";
 import { NewReminderSchema } from "./schema/reminders";
 import { parseUuidParam } from "./schema/common";
@@ -42,7 +44,8 @@ reminders.delete(
     asyncHandler(async (c: Context) => {
         const id = parseUuidParam(c.req.param("id")!);
 
-        await RemindersLoader.remove(id);
+        const removed = await RemindersLoader.remove(id);
+        if (!removed) throw Errors.notFound(translate("Reminder not found"));
 
         return c.replySuccess();
     })

@@ -6,7 +6,14 @@
  */
 import { DropEvent } from "react-dropzone";
 
-export const getFilesFromEvent = async (event: DropEvent): Promise<File[]> => {
+export const getFilesFromEvent = async (
+    event: DropEvent | FileSystemFileHandle[]
+): Promise<(File | DataTransferItem)[]> => {
+    if (Array.isArray(event)) {
+        // The browser provided file handles instead of files.
+        return Promise.all(event.map(handle => handle.getFile()));
+    }
+
     const { dataTransfer } = event as React.DragEvent<HTMLElement>;
 
     const files = Array.from(dataTransfer.files).map(file => ({

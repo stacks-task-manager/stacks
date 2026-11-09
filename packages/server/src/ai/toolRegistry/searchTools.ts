@@ -10,7 +10,7 @@ import { defineTool } from "./defineTool";
 export const searchAiTools = [
     defineTool({
         name: "globalSearch",
-        description: `Cross-entity search (people, tasks, notepads). Use for vague names/phrases.`,
+        description: `Search across people, tasks, and notepads when the entity type is unclear. Returns typed matches with ids, titles, and parent context; use the type to distinguish records before acting. Prefer a domain lookup when the type is known.`,
         inputSchema: z.object({
             query: z.string().min(1).describe("Search text"),
         }),

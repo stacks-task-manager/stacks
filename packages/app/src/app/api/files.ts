@@ -60,29 +60,6 @@ export const FilesAPI = {
         });
     },
 
-    /** Returns existing attachment for content hash or null on 404. */
-    async checkExistingFile(
-        hash: string,
-        recordId: string,
-        type: FILES_TYPE,
-        originalName: string
-    ): Promise<IAttachment | null> {
-        try {
-            return await request.post(`/api/files/check-existing`, {
-                hash,
-                recordId,
-                type,
-                originalName,
-            });
-        } catch (error: any) {
-            // If file doesn't exist, API will return 404, which we handle as null
-            if (error.response?.status === 404) {
-                return null;
-            }
-            throw error;
-        }
-    },
-
     /** Deletes one attachment by id. */
     async deleteByAttachment(attachmentId: string): Promise<IAttachment> {
         return request.delete(`/api/files/attachment/${attachmentId}`);

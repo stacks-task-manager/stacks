@@ -2,8 +2,9 @@
 import { afterEach, describe, test, expect, beforeEach } from "vitest";
 import { randomUUID } from "crypto";
 import app from "../src/index";
-import { connectDb, EmailQueueEntity, RoleEntity, TenantEntity, UserEntity } from "@stacks/db";
+import { connectDb, EmailQueueEntity, RoleEntity, SessionEntity, TenantEntity, UserEntity } from "@stacks/db";
 import { EMAIL_TEMPLATES } from "@stacks/types";
+import { translate } from "@stacks/translations";
 import { compare, hash } from "bcryptjs";
 
 const cookieHeaderFromSetCookie = (setCookies: string[]): string => {
@@ -43,6 +44,9 @@ describe("Login HTML", () => {
         const text = await res.text();
         expect(text).toContain('data-testid="login-card"');
         expect(text).toContain("Forgot password?");
+        expect(text).toMatch(/<input(?=[^>]*name="email")(?=[^>]*autocomplete="username")[^>]*>/s);
+        expect(text).toMatch(/<input(?=[^>]*name="password")(?=[^>]*autocomplete="current-password")[^>]*>/s);
+        expect(text).toContain('<label class="s-label" for="password">Password</label>');
     });
 
     test("GET /login?e=<base64> appends error to flash messages", async () => {
@@ -59,6 +63,7 @@ describe("Login HTML", () => {
         expect(res.headers.get("content-type")).toMatch(/text\/html/);
         const text = await res.text();
         expect(text).toContain("Password recovery");
+        expect(text).toMatch(/<input(?=[^>]*name="email")(?=[^>]*autocomplete="username")[^>]*>/s);
     });
 
     test("GET /login/password-reset rejects requests without an emailed token", async () => {
@@ -142,7 +147,7 @@ describe("Login HTML", () => {
                 body: "email=cris@stacks.rocks",
             });
             expect(res.status).toBe(302);
-            expect(res.headers.get("location")).toBe("/login");
+            expect(res.headers.get("location")).toBe("/login/password-recovery");
 
             const emailRow = await EmailQueueEntity.findOne({
                 where: { userId: user!.get("id"), template: EMAIL_TEMPLATES.PASSWORD_RESET },
@@ -162,7 +167,14 @@ describe("Login HTML", () => {
 
             const page = await app.request(resetLink);
             expect(page.status).toBe(200);
-            expect(await page.text()).toContain("Recover account for <strong>cris@stacks.rocks</strong>");
+            const pageHtml = await page.text();
+            expect(pageHtml).toContain("Recover account for <strong>cris@stacks.rocks</strong>");
+            expect(pageHtml).toMatch(
+                /<input(?=[^>]*name="password1")(?=[^>]*autocomplete="new-password")[^>]*>/s
+            );
+            expect(pageHtml).toMatch(
+                /<input(?=[^>]*name="password2")(?=[^>]*autocomplete="new-password")[^>]*>/s
+            );
 
             const reset = await app.request("/login/password-reset", {
                 method: "POST",
@@ -224,7 +236,7 @@ describe("Login HTML", () => {
         });
         expect(get.status).toBe(200);
         const html = await get.text();
-        expect(html).toContain("Invalid email");
+        expect(html).toContain(translate("Password recovery link sent if the account exists"));
     });
 });
 
@@ -354,5 +366,48 @@ describe("Login HTML — edge cases", () => {
         expect(html).toContain("User account not yet activated");
 
         await UserEntity.destroy({ where: { id: user.get("id") as unknown as string } });
+    });
+
+    test.each([
+        ["deleted user", "user"],
+        ["disabled tenant", "tenant"],
+    ])("POST /login does not issue a session for a %s", async (_caseName, inactiveState) => {
+        const tenant =
+            inactiveState === "tenant"
+                ? await TenantEntity.create({
+                      title: `Disabled login tenant ${randomUUID()}`,
+                      expiry: new Date(Date.now() + 60 * 60 * 1000),
+                      disabled: true,
+                  })
+                : await TenantEntity.findByPk(tenantId);
+        if (!tenant) throw new Error("Tenant fixture unavailable");
+
+        const user = await UserEntity.create({
+            email: `inactive-login-${randomUUID()}@test.com`,
+            password: hashedPassword,
+            firstName: "Inactive",
+            lastName: "Login",
+            disabled: false,
+            deleted: inactiveState === "user" ? new Date() : null,
+            system: false,
+            tenant: String(tenant.get("id")),
+            role: roleId,
+        });
+
+        try {
+            const response = await app.request("/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: `email=${encodeURIComponent(String(user.get("email")))}&password=12345678`,
+            });
+            expect(response.status).toBe(302);
+            expect(response.headers.getSetCookie().join(";")).not.toContain("auth_token=");
+            expect(await SessionEntity.count({ where: { userId: String(user.get("id")) } })).toBe(0);
+        } finally {
+            await UserEntity.destroy({ where: { id: user.get("id") } });
+            if (inactiveState === "tenant") {
+                await TenantEntity.destroy({ where: { id: tenant.get("id") } });
+            }
+        }
     });
 });

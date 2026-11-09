@@ -24,7 +24,7 @@ class App extends Base {
         this.helpMenu = page.getByTestId("help-menu");
         this.globalSearchButton = page.getByTestId("global-search-button");
         this.globalSearchDialog = page.locator('[aria-labelledby="search-dialog"]');
-        this.globalSearchInput = page.getByTestId("global-search-input");
+        this.globalSearchInput = page.getByTestId("search-query-input");
     }
 
     async clickMenuItem(name: string | RegExp) {

@@ -7,13 +7,14 @@ import { translate } from "@stacks/translations";
 import { Errors } from "../errors";
 import { ACTIVITYRESOURCETYPE, ACTIVITYTYPE, type IActivity } from "../types";
 import { canWrite, getCurrentUser } from "./context";
-import { withTransaction } from "./utils";
+import { assertCanWriteResource, withTransaction } from "./utils";
 import { invalidateApiCacheForCurrentRequest } from "../utils/cache";
 import { NotificationsLoader } from "./notifications";
 import { TasksLoader } from "./tasks";
 import { sanitizeWhere } from "./utils";
 import { Transaction } from "sequelize";
 import { NOTIFICATION_RECORD_TYPE, ROLE_SECTIONS } from "@stacks/types";
+import { Op } from "sequelize";
 
 /** Inserts an activity; bumps task comment count for message types; invalidates API cache. */
 async function create(data: Omit<IActivity, "id" | "created" | "updated">): Promise<IActivity> {
@@ -23,13 +24,16 @@ async function create(data: Omit<IActivity, "id" | "created" | "updated">): Prom
         if (data.resourceType !== ACTIVITYRESOURCETYPE.TASK) {
             throw Errors.badRequest(translate("Invalid activity resource type"));
         }
-        await TasksLoader.getOne(data.resourceId, transaction);
+        const task = await TasksLoader.getOne(data.resourceId, transaction);
 
         if (data.type === ACTIVITYTYPE.MESSAGE) {
             const canCreateComments = canWrite(ROLE_SECTIONS.COMMENTS);
             if (!canCreateComments) {
                 throw Errors.forbidden("User not authorized");
             }
+        } else {
+            // Task log entries represent changes made through owner-authorized task mutations.
+            assertCanWriteResource(task, "owner");
         }
 
         data.person = user.id;
@@ -48,30 +52,19 @@ async function create(data: Omit<IActivity, "id" | "created" | "updated">): Prom
             newActivity.resourceType === ACTIVITYRESOURCETYPE.TASK &&
             newActivity.type === ACTIVITYTYPE.MESSAGE
         ) {
-            const task = await TasksLoader.getOne(newActivity.resourceId, transaction);
-            if (task) {
-                await TasksLoader.update(
-                    newActivity.resourceId,
+            for (const assignee of task.assignees ?? []) {
+                if (assignee === user.id) continue;
+                await NotificationsLoader.add(
                     {
-                        comments: task.comments + 1,
+                        recipient: assignee,
+                        subject: translate("New comment on a task"),
+                        message: newActivity.content,
+                        recordType: NOTIFICATION_RECORD_TYPE.COMMENT,
+                        recordId: newActivity.id,
+                        data: newActivity as any,
                     },
                     transaction
                 );
-
-                for (const assignee of task.assignees ?? []) {
-                    if (assignee === user.id) continue;
-                    await NotificationsLoader.add(
-                        {
-                            recipient: assignee,
-                            subject: translate("New comment on a task"),
-                            message: newActivity.content,
-                            recordType: NOTIFICATION_RECORD_TYPE.COMMENT,
-                            recordId: newActivity.id,
-                            data: newActivity as any,
-                        },
-                        transaction
-                    );
-                }
             }
         }
 
@@ -96,7 +89,51 @@ async function getAllByResources(resources: string[]) {
     return activities.map(activity => activity.toJSON());
 }
 
+async function getOwnedComment(resourceId: string, activityId: string, transaction: Transaction) {
+    const user = getCurrentUser();
+    await TasksLoader.getOne(resourceId, transaction);
+    if (!canWrite(ROLE_SECTIONS.COMMENTS)) throw Errors.forbidden("User not authorized");
+    const activity = await ActivityEntity.findOne({
+        where: sanitizeWhere({
+            id: activityId,
+            resourceId,
+            resourceType: ACTIVITYRESOURCETYPE.TASK,
+            type: ACTIVITYTYPE.MESSAGE,
+            person: user.id,
+            deleted: { [Op.is]: null },
+        }),
+        transaction,
+        lock: transaction.LOCK.UPDATE,
+    });
+    if (!activity) throw Errors.notFound(translate("Comment not found"));
+    return { user, activity };
+}
+
+/** Updates a comment after checking task visibility, comment access, and authorship. */
+async function update(resourceId: string, activityId: string, content: string): Promise<IActivity> {
+    return withTransaction(undefined, async (transaction: Transaction) => {
+        const { user, activity } = await getOwnedComment(resourceId, activityId, transaction);
+        await activity.update({ content, updatedBy: user.id }, { transaction });
+        invalidateApiCacheForCurrentRequest();
+        return activity.toJSON() as IActivity;
+    });
+}
+
+/** Soft-deletes a comment after checking task visibility, comment access, and authorship. */
+async function remove(resourceId: string, activityId: string): Promise<void> {
+    await withTransaction(undefined, async transaction => {
+        const { user, activity } = await getOwnedComment(resourceId, activityId, transaction);
+        await activity.update(
+            { deleted: new Date(), deletedBy: user.id, updatedBy: user.id },
+            { transaction }
+        );
+        invalidateApiCacheForCurrentRequest();
+    });
+}
+
 export const ActivitiesLoader = {
     create,
     getAllByResources,
+    update,
+    remove,
 };

@@ -4,7 +4,17 @@
  */
 import { IPerson } from "@stacks/types";
 
+/**
+ * Server-only session user: the public person shape plus credentials and account state that
+ * must never be serialized into a person response.
+ */
 export interface User extends IPerson {
+    password?: string;
+    token?: string | null;
+    activationTokenHash?: string | null;
+    activationTokenExpiresAt?: string | null;
+    passwordResetTokenHash?: string | null;
+    passwordResetTokenExpiresAt?: string | null;
     oauthTokens?: {
         google?: {
             access_token: string;

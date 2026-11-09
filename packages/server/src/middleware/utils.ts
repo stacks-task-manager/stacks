@@ -17,8 +17,8 @@ export const getAuthToken = async (c: Context): Promise<string | undefined> => {
     try {
         const result = await getAuthTokenWithSource(c);
         return result.token;
-    } catch (error) {
-        console.error("Error extracting auth token:", error);
+    } catch {
+        console.error("Error extracting auth token");
         return undefined;
     }
 };
@@ -48,11 +48,11 @@ export const getAuthTokenWithSource = async (c: Context): Promise<TokenResult> =
         return {
             source: "none",
         };
-    } catch (error) {
-        console.error("Error extracting auth token with source:", error);
+    } catch {
+        console.error("Error extracting auth token with source");
         return {
             source: "none",
-            error: error instanceof Error ? error.message : "Unknown error",
+            error: "Token extraction failed",
         };
     }
 };

@@ -60,7 +60,7 @@ export const TimeboxCalendar = (props: TimeboxCalendarBaseProps) => {
 export const TimeboxCalendarWrapper = ({ start, end, onShowPicker }: TimeboxCalendarProps) => {
     const { tasks } = usePeriodFilteredMyTasks(start, end);
     const events = useMemo(() => tasksToEvents(tasks), [tasks]);
-    const calendarRef = useRef<CalendarApi>();
+    const calendarRef = useRef<CalendarApi | null>(null);
     const calendarView = MyTasksStore.use(state => state.calendarView, shallowEqual);
 
     const handleUpdateDates = async ({ event }: EventDropArg | EventResizeDoneArg) => {

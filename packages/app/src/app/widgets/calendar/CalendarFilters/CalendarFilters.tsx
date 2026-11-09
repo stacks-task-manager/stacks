@@ -4,7 +4,7 @@ import { Button, Checkbox, Classes, FormGroup, InputGroup, Menu, MenuItem, Popov
 import React, { useState } from "react";
 import { ICalendar } from "@stacks/types";
 import { Col, Icon, Row } from "app/components/common";
-import { useCalendars, useCalendarsFilters } from "app/hooks";
+import { useCalendars, useCalendarsFilters, useMe } from "app/hooks";
 import { shallowEqual } from "app/hooks/store";
 import { CalendarActions } from "app/store/actions";
 import { CalendarStore } from "app/store/calendar";
@@ -74,6 +74,7 @@ export const CalendarFilters = () => {
 const LocalCalendarFilterRow = ({ calendar, checked }: { calendar: ICalendar; checked: boolean }) => {
     const [title, setTitle] = useState(calendar.title);
     const [color, setColor] = useState(calendar.color ?? "#FF8C00");
+    const me = useMe();
 
     const canEdit = Boolean(calendar.permissions);
 
@@ -147,13 +148,15 @@ const LocalCalendarFilterRow = ({ calendar, checked }: { calendar: ICalendar; ch
                                     data-testid={`calendar-save-button-${calendar.id}`}
                                 />
                             </li>
-                            <MenuItem
-                                text={translate("Set as default")}
-                                icon={<Icon icon="check" />}
-                                disabled={calendar.primary}
-                                onClick={handleSetDefault}
-                                data-testid={`calendar-default-button-${calendar.id}`}
-                            />
+                            {me.admin && (
+                                <MenuItem
+                                    text={translate("Set as default")}
+                                    icon={<Icon icon="check" />}
+                                    disabled={calendar.primary}
+                                    onClick={handleSetDefault}
+                                    data-testid={`calendar-default-button-${calendar.id}`}
+                                />
+                            )}
                             <MenuItem
                                 text={translate("Permissions")}
                                 icon={<Icon icon="lock-01" />}

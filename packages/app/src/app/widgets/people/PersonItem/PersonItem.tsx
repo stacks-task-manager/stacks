@@ -28,7 +28,11 @@ export const PersonItem: FunctionComponent<IPersonItemProps> = ({
     onClick,
 }) => {
     return (
-        <li id={`person-${person.id}`}>
+        <li
+            id={`person-${person.id}`}
+            data-testid={me ? "person-item-current-user" : `person-item-${person.id}`}
+            data-selected={selected}
+        >
             <a
                 role="menuitem"
                 tabIndex={-1}

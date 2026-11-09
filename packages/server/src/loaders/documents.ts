@@ -89,7 +89,7 @@ async function create(data: IDocumentCreate, extTransaction?: Transaction) {
 
         // If the document is a Project, create the associated project data
         if (data.type === RECORDTYPE.PROJECT) {
-            await ProjectsLoader.create({ id: newDocument.id, ...data.data }, transaction);
+            await ProjectsLoader.create({ ...data.data, id: newDocument.id, deleted: null }, transaction);
             permissionType = POLLINGTYPE.PROJECT;
         }
         // If the document is a Notepad, create the associated notepad data
@@ -273,6 +273,22 @@ async function update(id: string, data: any, extTransaction?: Transaction): Prom
 
         if (newParent && newParent !== ROOT_DOCUMENT_ID && newParent !== oldParent) {
             await getOne(newParent, transaction);
+
+            const visited = new Set<string>();
+            let ancestorId: string | null = newParent;
+            while (ancestorId && ancestorId !== ROOT_DOCUMENT_ID) {
+                if (ancestorId === id || visited.has(ancestorId)) {
+                    throw Errors.notFound(translate("Document not found"));
+                }
+                visited.add(ancestorId);
+                const ancestor = await findOne({
+                    entity: DocumentEntity,
+                    id: ancestorId,
+                    transaction,
+                });
+                if (!ancestor) throw Errors.notFound(translate("Document not found"));
+                ancestorId = ancestor.parent;
+            }
         }
 
         // Clamp destination index to valid sibling range

@@ -78,7 +78,7 @@ export const FormattedDateRange: React.FC<FormattedDateRangeProps> = ({
     const [start, end] = range;
 
     return (
-        <Row>
+        <Row data-testid="formatted-date-range">
             <Col align="center" vertical gap={5}>
                 <div>Start date</div>
                 <FormattedDateTag date={start} showTime={showTime} onClear={onClearStart} />

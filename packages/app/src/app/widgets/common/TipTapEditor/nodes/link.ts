@@ -2,13 +2,14 @@
 import Link from "@tiptap/extension-link";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
 import { getAttributes } from "@tiptap/core";
+import { openInNewTab } from "app/utils/browser";
 
 export const ControlClickLink = Link.extend({
     addOptions() {
         return {
             ...this.parent!(),
             openOnClick: false,
-            protocols: ["ftp", "mailto", "file"],
+            protocols: ["mailto", "tel"],
         };
     },
     addProseMirrorPlugins() {
@@ -24,7 +25,7 @@ export const ControlClickLink = Link.extend({
                     const keyPressed = event.ctrlKey || event.metaKey;
 
                     if (keyPressed && link && attrs.href) {
-                        window.open(attrs.href, attrs.target);
+                        openInNewTab(attrs.href);
 
                         return true;
                     }

@@ -1,122 +1,56 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
-import { describe, test, expect } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 import { getClientIP } from "../../src/utils/clientIp";
 
-const withEnv = (value: string | undefined, fn: () => void) => {
-    const orig = process.env.TRUST_PROXY_HEADERS;
-    if (value === undefined) {
-        delete process.env.TRUST_PROXY_HEADERS;
-    } else {
-        process.env.TRUST_PROXY_HEADERS = value;
-    }
-    try {
-        fn();
-    } finally {
-        if (orig === undefined) {
-            delete process.env.TRUST_PROXY_HEADERS;
-        } else {
-            process.env.TRUST_PROXY_HEADERS = orig;
-        }
-    }
-};
+const originalTrustProxy = process.env.TRUST_PROXY_HEADERS;
+
+afterEach(() => {
+    if (originalTrustProxy === undefined) delete process.env.TRUST_PROXY_HEADERS;
+    else process.env.TRUST_PROXY_HEADERS = originalTrustProxy;
+});
+
+const context = (remoteAddress?: string, headers: Record<string, string> = {}) => ({
+    env: remoteAddress === undefined ? {} : { incoming: { socket: { remoteAddress } } },
+    req: { header: (name: string) => headers[name.toLowerCase()] },
+});
 
 describe("getClientIP", () => {
-    test("returns 'unknown' when no forwarding headers and TRUST_PROXY_HEADERS is not set", () => {
-        withEnv(undefined, () => {
-            const ctx = {
-                req: {
-                    header: (name: string) => {
-                        if (name === "x-forwarded-for") return "1.2.3.4";
-                        if (name === "x-real-ip") return "5.6.7.8";
-                        if (name === "cf-connecting-ip") return "9.10.11.12";
-                        return undefined;
-                    },
-                },
-            } as any;
-
-            expect(getClientIP(ctx)).toBe("unknown");
-        });
+    it("uses the Node peer address and ignores spoofed forwarding headers by default", () => {
+        delete process.env.TRUST_PROXY_HEADERS;
+        expect(
+            getClientIP(
+                context("192.0.2.10", {
+                    "x-forwarded-for": "203.0.113.99",
+                    "x-real-ip": "203.0.113.98",
+                    "cf-connecting-ip": "203.0.113.97",
+                }) as any
+            )
+        ).toBe("192.0.2.10");
     });
 
-    test("returns x-forwarded-for first IP when TRUST_PROXY_HEADERS=1", () => {
-        withEnv("1", () => {
-            const ctx = {
-                req: {
-                    header: (name: string) => {
-                        if (name === "x-forwarded-for") return "10.0.0.1, 10.0.0.2, 192.168.1.1";
-                        if (name === "x-real-ip") return "5.6.7.8";
-                        if (name === "cf-connecting-ip") return "9.10.11.12";
-                        return undefined;
-                    },
-                },
-            } as any;
-
-            expect(getClientIP(ctx)).toBe("10.0.0.1");
-        });
+    it("uses a single valid forwarded address only when proxy headers are explicitly enabled", () => {
+        process.env.TRUST_PROXY_HEADERS = "1";
+        expect(getClientIP(context("192.0.2.10", { "x-forwarded-for": "203.0.113.99" }) as any)).toBe(
+            "203.0.113.99"
+        );
     });
 
-    test("trims whitespace from x-forwarded-for", () => {
-        withEnv("1", () => {
-            const ctx = {
-                req: {
-                    header: (name: string) => {
-                        if (name === "x-forwarded-for") return "  10.0.0.1  , 10.0.0.2";
-                        return undefined;
-                    },
-                },
-            } as any;
-
-            expect(getClientIP(ctx)).toBe("10.0.0.1");
-        });
+    it("does not trust an arbitrary first address in a forwarded chain", () => {
+        process.env.TRUST_PROXY_HEADERS = "1";
+        expect(
+            getClientIP(context("192.0.2.10", { "x-forwarded-for": "203.0.113.99, 192.0.2.20" }) as any)
+        ).toBe("192.0.2.10");
     });
 
-    test("falls back to x-real-ip when x-forwarded-for is absent", () => {
-        withEnv("1", () => {
-            const ctx = {
-                req: {
-                    header: (name: string) => {
-                        if (name === "x-forwarded-for") return undefined;
-                        if (name === "x-real-ip") return "5.6.7.8";
-                        if (name === "cf-connecting-ip") return "9.10.11.12";
-                        return undefined;
-                    },
-                },
-            } as any;
-
-            expect(getClientIP(ctx)).toBe("5.6.7.8");
-        });
+    it("ignores malformed forwarded addresses and falls back to the Node peer", () => {
+        process.env.TRUST_PROXY_HEADERS = "1";
+        expect(getClientIP(context("192.0.2.10", { "x-forwarded-for": "not-an-ip" }) as any)).toBe(
+            "192.0.2.10"
+        );
     });
 
-    test("falls back to cf-connecting-ip when both forwarded headers are absent", () => {
-        withEnv("1", () => {
-            const ctx = {
-                req: {
-                    header: (name: string) => {
-                        if (name === "x-forwarded-for") return undefined;
-                        if (name === "x-real-ip") return undefined;
-                        if (name === "cf-connecting-ip") return "9.10.11.12";
-                        return undefined;
-                    },
-                },
-            } as any;
-
-            expect(getClientIP(ctx)).toBe("9.10.11.12");
-        });
-    });
-
-    test("prefers x-forwarded-for over x-real-ip", () => {
-        withEnv("1", () => {
-            const ctx = {
-                req: {
-                    header: (name: string) => {
-                        if (name === "x-forwarded-for") return "1.2.3.4";
-                        if (name === "x-real-ip") return "5.6.7.8";
-                        return undefined;
-                    },
-                },
-            } as any;
-
-            expect(getClientIP(ctx)).toBe("1.2.3.4");
-        });
+    it("returns unknown only when neither trusted forwarding nor a peer address is available", () => {
+        process.env.TRUST_PROXY_HEADERS = "0";
+        expect(getClientIP(context(undefined, { "x-forwarded-for": "203.0.113.99" }) as any)).toBe("unknown");
     });
 });

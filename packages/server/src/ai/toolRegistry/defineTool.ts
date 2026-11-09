@@ -4,8 +4,8 @@ import { z } from "zod";
 /**
  * One AI tool row: Zod input + handler. Use in domain files like `projectTools.ts`, then spread into {@link AI_TOOL_REGISTRY}.
  */
-export function defineTool<TSchema extends z.ZodType>(def: {
-    name: string;
+export function defineTool<TSchema extends z.ZodType, const TName extends string>(def: {
+    name: TName;
     description: string;
     inputSchema: TSchema;
     execute: (input: z.infer<TSchema>) => Promise<unknown>;

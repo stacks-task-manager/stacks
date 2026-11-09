@@ -50,7 +50,7 @@ interface IPos {
 
 const BoardPure = () => {
     const nav = useNav();
-    const navToastRef = useRef<string>();
+    const navToastRef = useRef<string | undefined>(undefined);
 
     const pos = useRef<IPos>({
         top: 0,

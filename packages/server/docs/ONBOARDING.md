@@ -16,7 +16,7 @@ something looks stale.
 
 ## 1. Stack in one paragraph
 
-- HTTP framework: [Hono](https://hono.dev/) + `@hono/node-server` (Node 20).
+- HTTP framework: [Hono](https://hono.dev/) + `@hono/node-server` (Node 22.12+).
 - WebSockets: `@hono/node-ws`.
 - ORM / DB: Sequelize on PostgreSQL, models in `@stacks/db`.
 - Auth: JWT (HS256) via Authorization header or signed cookie.

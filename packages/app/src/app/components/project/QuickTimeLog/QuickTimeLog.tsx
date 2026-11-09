@@ -180,6 +180,11 @@ export const QuickTimeLog: FunctionComponent<IQuickTimeLogProps> = ({
                 <Col>
                     <FormGroup label={translate("Date")} style={{ width: "100%" }}>
                         <DateInput
+                            inputProps={
+                                {
+                                    "data-testid": "quick-timelog-date",
+                                } as unknown as React.ComponentProps<typeof DateInput>["inputProps"]
+                            }
                             formatDate={formatDate}
                             parseDate={parseDate}
                             showTimezoneSelect={false}
@@ -193,7 +198,11 @@ export const QuickTimeLog: FunctionComponent<IQuickTimeLogProps> = ({
 
                 <Col width={115}>
                     <FormGroup label={translate("Duration")}>
-                        <DurationInput value={duration} onChange={setDuration} />
+                        <DurationInput
+                            testId="quick-timelog-duration"
+                            value={duration}
+                            onChange={setDuration}
+                        />
                     </FormGroup>
                 </Col>
             </Row>
@@ -206,6 +215,7 @@ export const QuickTimeLog: FunctionComponent<IQuickTimeLogProps> = ({
 
             <FormGroup label={translate("Description")}>
                 <TextArea
+                    data-testid="quick-timelog-description"
                     rows={2}
                     placeholder={translate("Add a description")}
                     fill
@@ -251,6 +261,7 @@ export const QuickTimeLog: FunctionComponent<IQuickTimeLogProps> = ({
                             onClick={onClear}
                             intent={Intent.WARNING}
                             className={Classes.POPOVER_DISMISS}
+                            data-testid="time-tracker-clear"
                         >
                             {translate("Clear timer")}
                         </Button>

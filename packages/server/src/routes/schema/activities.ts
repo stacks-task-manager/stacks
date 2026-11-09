@@ -14,3 +14,9 @@ export const NewActivitySchema = z.object({
     content: z.string().optional(),
     change: z.union([z.string(), z.json()]).optional(),
 });
+
+/** Payload for updating or deleting an owned task comment. */
+export const CommentMutationSchema = z.object({
+    resourceId: z.uuid(),
+    content: z.string().min(1).optional(),
+});

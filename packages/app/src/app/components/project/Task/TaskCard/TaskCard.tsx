@@ -4,7 +4,7 @@ import { Classes, Collapse, Colors, Popover, Tooltip } from "@blueprintjs/core";
 import { default as classNames, default as classnames } from "classnames";
 import noop from "lodash/noop";
 import React, { FunctionComponent, useCallback, useEffect, useMemo, useState } from "react";
-import { FileWithPath, useDropzone } from "react-dropzone";
+import { useDropzone } from "react-dropzone";
 import { IReminder, IRepeats, ITask, PRIORITY, TAGSECTION, TAGTYPE } from "@stacks/types";
 import { Draggable } from "app/components/draggable";
 import { ClickStop, Col, DropZone, Grid, Icon, LazyLoad, RoundButton, Row } from "app/components/common";
@@ -143,7 +143,7 @@ export const TaskCardComponent: FunctionComponent<TaskCardComponentProps> = prop
         [taskId]
     );
 
-    const onDrop = useCallback(async (_acceptedFiles: FileWithPath[]) => {
+    const onDrop = useCallback((_acceptedFiles: File[]) => {
         // Drop-to-attach is wired up in TaskDetails. The card-level drop handler is
         // a no-op until file-on-card uploads are implemented.
     }, []);
@@ -194,6 +194,7 @@ export const TaskCardComponent: FunctionComponent<TaskCardComponentProps> = prop
             dragType={dragType}
             isDraggable={isDraggable}
             done={task.done}
+            data-id={task.id}
             {...restProps}
         >
             <div id={`task-${task.id}`} className="task-scroll-anchor" />

@@ -16,7 +16,7 @@ import {
 import React, { useEffect, useMemo, useState } from "react";
 import { COPYMOVEACTION, COPYMOVETYPE, IStack, TreeNode } from "@stacks/types";
 import { getProjectStacks, useCurrentProject, useProjectDocuments } from "app/hooks";
-import { StacksActions, TasksActions } from "app/store/actions";
+import { ProjectsActions, StacksActions, TasksActions } from "app/store/actions";
 import { CopyMoveActions } from "app/store/actions/copymove";
 import { CopyMoveStore } from "app/store/copymove";
 import { Col, Icon, Row } from "../common";
@@ -70,10 +70,16 @@ const CopyMove = () => {
         if (project == null) {
             setStacks([]);
         } else {
-            (async () => {
+            let isCurrentProject = true;
+            void (async () => {
+                await ProjectsActions.load([project], { silent: true, force: true });
                 const loadedStacks = getProjectStacks(project);
-                setStacks(loadedStacks);
+                if (isCurrentProject) setStacks(loadedStacks);
             })();
+
+            return () => {
+                isCurrentProject = false;
+            };
         }
     }, [project, type]);
 
@@ -165,7 +171,7 @@ const CopyMove = () => {
             title={dialogTitle}
             style={{ width: 300 }}
         >
-            <div className={Classes.DIALOG_BODY}>
+            <div className={Classes.DIALOG_BODY} data-testid="copymove-dialog">
                 <FormGroup label={translate("Select action")}>
                     <Row gutter={15}>
                         <Col>

@@ -12,6 +12,7 @@ interface IScrollerProps extends React.HTMLProps<HTMLDivElement> {
     shadows?: boolean;
     thin?: boolean;
     parentClassName?: string;
+    scrollerTestId?: string;
     onScroll?: (event: React.UIEvent) => void;
 }
 export const Scroller: FunctionComponent<IScrollerProps> = ({
@@ -25,6 +26,7 @@ export const Scroller: FunctionComponent<IScrollerProps> = ({
     thin,
     className,
     parentClassName,
+    scrollerTestId,
     onScroll,
     ...props
 }) => {
@@ -84,6 +86,7 @@ export const Scroller: FunctionComponent<IScrollerProps> = ({
                     vertical: vertical && !horizontal,
                     thin,
                 })}
+                data-testid={scrollerTestId}
                 ref={scrollerRef}
                 onScroll={onScroll}
             >

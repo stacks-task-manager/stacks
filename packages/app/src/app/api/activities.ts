@@ -14,4 +14,12 @@ export const ActivitiesAPI = {
     async add(activity: Omit<IActivity, "id" | "created" | "updated">): Promise<IActivity> {
         return request.post("/api/activities", activity);
     },
+    /** PATCH an owned comment. */
+    async update(resourceId: string, activityId: string, content: string): Promise<IActivity> {
+        return request.patch(`/api/activities/${activityId}`, { resourceId, content });
+    },
+    /** DELETE an owned comment. */
+    async remove(resourceId: string, activityId: string): Promise<void> {
+        return request.delete(`/api/activities/${activityId}`, { data: { resourceId } });
+    },
 };

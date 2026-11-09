@@ -178,7 +178,7 @@ describe("Bookmarks", () => {
             },
         });
 
-        expect([400, 404, 500]).toContain(res.status);
+        expect(res.status).toBe(400);
     });
 
     test("Access bookmarks without authentication", async () => {

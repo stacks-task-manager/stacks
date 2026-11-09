@@ -7,6 +7,7 @@ import { EMAIL_TEMPLATES } from "@stacks/types";
 class EmailQueue extends Model {
     declare id: number;
     declare userId: string;
+    declare recipientEmail?: string | null;
     declare template: EMAIL_TEMPLATES;
     declare data: object;
     declare status: "pending" | "sent" | "failed";
@@ -30,6 +31,7 @@ EmailQueue.init(
             type: DataTypes.UUID,
             allowNull: false,
         },
+        recipientEmail: { type: DataTypes.STRING, allowNull: true },
         template: {
             type: DataTypes.STRING(50),
             allowNull: false,

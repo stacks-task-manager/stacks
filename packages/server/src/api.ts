@@ -9,6 +9,8 @@ import { serveStatic } from "@hono/node-server/serve-static";
 
 import { requireAuth, requireAuthSession } from "./middleware/auth";
 import { withRequestContext } from "./middleware/requestContext";
+import { authenticatedApiRateLimit, unauthenticatedApiRateLimit } from "./utils/authRateLimit";
+import { privateResponse } from "./middleware/privateResponse";
 import type { User } from "./types";
 import activities from "./routes/activities";
 import bookmarks from "./routes/bookmarks";
@@ -39,6 +41,14 @@ import mcp from "./routes/mcp";
 import calendars from "./routes/calendars";
 
 const APP_STATIC_ROOT = "./app";
+const APP_PUBLIC_ASSETS = [
+    "/favicon.ico",
+    "/manifest.json",
+    "/logo192.png",
+    "/logo512.png",
+    "/robots.txt",
+    "/notepad.css",
+];
 
 function getAppProxyHeaders(c: Context) {
     return {
@@ -65,10 +75,13 @@ function isAppAssetRequest(path: string): boolean {
  * In production (NODE_ENV=production or any other value):
  * - Serves static files from ../app/build directory
  * - Handles SPA routing by falling back to index.html for /app/* routes
- * - /app/* uses JWT-only auth (no per-request DB load for each asset); /api/* loads full user + role
+ * - /app/* validates the live session and account state; /api/* loads the full user + role
  */
 export const registerApiRoutes = (app: Hono) => {
     const isDevelopment = process.env.NODE_ENV === "development";
+
+    // Public APIs are bounded by peer IP. Authenticated routers add a user budget below.
+    app.use("/api/*", unauthenticatedApiRateLimit);
 
     if (isDevelopment) {
         // Development: Proxy to React dev server
@@ -101,9 +114,9 @@ export const registerApiRoutes = (app: Hono) => {
             });
         });
 
-        app.all("/manifest.json", () => {
-            return proxy(`http://localhost:3001/manifest.json`);
-        });
+        for (const asset of APP_PUBLIC_ASSETS) {
+            app.use(asset, serveStatic({ root: "../app/public" }));
+        }
     } else {
         // Serve other static files by extension (CSS, JS, images, etc.)
         app.use("*", async (c, next) => {
@@ -150,7 +163,7 @@ export const registerApiRoutes = (app: Hono) => {
      */
     const mountAuthenticated = (path: string, router: Hono) => {
         const guarded = new Hono();
-        guarded.use("*", requireAuth, withRequestContext);
+        guarded.use("*", requireAuth, withRequestContext, authenticatedApiRateLimit, privateResponse);
         guarded.route("/", router);
         app.route(`/api/${path}`, guarded);
     };

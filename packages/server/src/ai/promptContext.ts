@@ -3,8 +3,8 @@
  * Dynamic prompt + tool selector.
  *
  * Goal: per turn, assemble only the system prompt fragments and expose only the
- * tools that the current intent actually needs. Cheaper in tokens, easier for
- * the model to stay on-task, and still capable — because the "core" fragment +
+ * tools that the current intent needs. Context size is not a hard limit; selection helps
+ * the model stay on-task while the "core" fragment and
  * core tools always cover identity, navigation, and common getters.
  *
  * The selector is **pure** (no I/O). Inputs: latest user message, recent chat
@@ -23,12 +23,8 @@ export const PROMPT_TOPICS = ["tasks", "projects", "notepads", "calendar", "org"
 export type PromptTopic = (typeof PROMPT_TOPICS)[number];
 
 /**
- * Tools that are always available regardless of topic. Chosen for two reasons:
- *   1. They're tiny (descriptions measured in a few dozen tokens each) so the
- *      cost of always including them is negligible.
- *   2. They unblock navigation, identity resolution, and single-record reads
- *      from anywhere, which keeps the assistant conversational even when no
- *      topic matches (e.g. a pure "who am I" turn).
+ * Tools available across topics for navigation, identity resolution, and common reads,
+ * including requests that do not match a domain keyword.
  */
 export const CORE_TOOLS: readonly string[] = [
     "askUserChoice",
@@ -54,6 +50,7 @@ export const TOPIC_TOOLS: Record<PromptTopic, readonly string[]> = {
     tasks: [
         "findTasks",
         "listTasks",
+        "deleteTask",
         "createTask",
         "updateTask",
         "moveTask",
@@ -62,7 +59,7 @@ export const TOPIC_TOOLS: Record<PromptTopic, readonly string[]> = {
         "listActivities",
         "listReminders",
     ],
-    projects: ["createProject", "listStacks", "createStack", "updateStack"],
+    projects: ["createProject", "listStacks", "createStack", "updateStack", "deleteStack"],
     notepads: ["listNotepads"],
     calendar: [
         "listCalendars",
@@ -82,16 +79,16 @@ export const TOPIC_TOOLS: Record<PromptTopic, readonly string[]> = {
 /**
  * Keyword patterns used to detect topic intent in free-form user text.
  *
- * Favor recall over precision: a false positive just adds a few tools that
- * won't be called, but a false negative means the model can't answer. The
+ * Favor recall over precision: false positives add tool schemas and prompt
+ * fragments (token cost and possible model distraction); false negatives hide
+ * tools needed to answer. The
  * matchers intentionally use word boundaries and common synonyms.
  */
 const TOPIC_KEYWORDS: Record<PromptTopic, RegExp> = {
-    tasks: /\b(task|tasks|todo|to-?do|assign(?:ee|ed)?|due\s*date|due|complete[ds]?|mark(?: as)? (?:done|todo)|backlog|ticket)\b/i,
-    projects: /\b(project|projects|board|column|stack|kanban|lane|pipeline|milestone)\b/i,
-    notepads: /\b(note|notes|notepad|notepads|doc|document(?!ation)|memo)\b/i,
-    calendar:
-        /\b(calendar|event|events|meeting|meetings|schedule[ds]?|appointment|today'?s schedule|this week)\b/i,
+    tasks: /\b(task|tasks|todo|to-?do|assign(?:ee|ed)?|due\s*date|due|complete[ds]?|mark(?: as)? (?:done|todo)|backlog|ticket|reminders?|comments?|activit(?:y|ies))\b/i,
+    projects: /\b(projects?|boards?|columns?|stacks?|kanban|lanes?|pipelines?|milestones?)\b/i,
+    notepads: /\b(note|notes|notepad|notepads|docs?|documents?(?!ation)|memo)\b/i,
+    calendar: /\b(calendars?|events?|meetings?|schedule[ds]?|appointment|today'?s schedule|this week)\b/i,
     org: /\b(compan(?:y|ies)|org|organi[sz]ation|tag|tags|label|labels|bookmark|bookmarks|pinned)\b/i,
 };
 
@@ -120,6 +117,7 @@ const ROUTE_TOPICS: Record<string, PromptTopic[]> = {
 
 export type PromptContextInputs = {
     newUserMessage: string;
+    strategy?: "targeted" | "full";
     history?: AiChatClientMessage[];
     parsedRoute?: ParsedClientRoute | null;
     /** Routing section (e.g. `"project"`, `"mytasks"`). */
@@ -128,6 +126,7 @@ export type PromptContextInputs = {
 
 export type PromptContextSelection = {
     topics: PromptTopic[];
+    unsupportedReason?: string;
     /** Names of tools to expose this turn (core ∪ selected topic tools). */
     allowedTools: string[];
     /** Ordered list of prompt template names to concatenate (core first). */
@@ -149,8 +148,8 @@ function matchKeywords(text: string): { topic: PromptTopic; matched: string }[] 
 
 function stickyTopicsFromHistory(history: AiChatClientMessage[]): PromptTopic[] {
     // Look at the last 3 turns (user+assistant combined text). Short window so
-    // stale intent doesn't dominate — if the user changes topic, one fresh
-    // keyword-free turn drops the old sticky topic.
+    // stale intent drops out after three newer messages, while short follow-ups
+    // retain the tools needed to finish the previous request.
     const tail = history
         .slice(-3)
         .map(m => m.content)
@@ -173,6 +172,58 @@ function uniq<T>(values: readonly T[]): T[] {
  * core tools can also answer pure navigation / identity questions, so this
  * is a safe fallback (vs. enabling nothing and getting stuck).
  */
+/** Restrict only explicit single-operation requests; mixed requests remain available to the planner. */
+export function unsupportedRequestReason(message: string): string | undefined {
+    const text = message.replace(/"[^"\n]*"|'[^'\n]*'/g, " ").trim();
+    if (/\b(?:and|then)\b|[;\n]/i.test(text)) return undefined;
+    if (
+        /^(?:(?:please|can you|could you|would you)\s+)?(?:create|add|set|update|edit|rename|delete|remove|replace|make)\s+(?:(?:a|an|the|my|this|new)\s+)?(?:task|event|column|stack|local calendar)\b/i.test(
+            text
+        )
+    )
+        return undefined;
+    const start = "^(?:(?:please|can you|could you|would you)\\s+)?";
+    const noun = "(?:(?:a|an|the|my|this|new)\\s+)*";
+    const rules: [RegExp, string][] = [
+        [
+            new RegExp(
+                start + "(?:create|add|set)\\s+" + noun + "(?:notepad|tag|bookmark|comment|reminder)\\b",
+                "i"
+            ),
+            "Creating notepads, tags, bookmarks, comments or reminders is unavailable through chat.",
+        ],
+        [
+            new RegExp(start + "create\\s+" + noun + "Google\\s+calendar\\b", "i"),
+            "Creating Google calendars is unavailable through chat.",
+        ],
+        [
+            new RegExp(start + "(?:delete|remove|rename)\\s+" + noun + "project\\b", "i"),
+            "Renaming and deleting projects is unavailable through chat.",
+        ],
+        [
+            new RegExp(start + "(?:replace|edit|update)\\s+.*\\bnotepad\\b", "i"),
+            "Editing notepad content is unavailable through chat.",
+        ],
+        [
+            new RegExp(
+                start +
+                    "(?:make|promote|demote)\\s+.*\\b(?:admin|administrator|moderator|workspace owner)\\b",
+                "i"
+            ),
+            "Changing user roles is unavailable through chat.",
+        ],
+        [
+            new RegExp(start + "(?:invite|export|upload|download)\\b", "i"),
+            "Invitations and file import/export operations are unavailable through chat.",
+        ],
+        [
+            new RegExp(start + "(?:start|stop)\\s+(?:tracking|a timer)\\b", "i"),
+            "Time tracking is unavailable through chat.",
+        ],
+    ];
+    return rules.find(([pattern]) => pattern.test(text))?.[1];
+}
+
 export function selectPromptContext(inputs: PromptContextInputs): PromptContextSelection {
     const reasons: Record<string, string[]> = {};
     const activate = (topic: PromptTopic, reason: string) => {
@@ -220,6 +271,9 @@ export function selectPromptContext(inputs: PromptContextInputs): PromptContextS
         activate(topic, "sticky from recent chat");
     }
 
+    if (inputs.strategy === "full")
+        for (const topic of PROMPT_TOPICS) activate(topic, "full context evaluation");
+
     let topics = PROMPT_TOPICS.filter(t => reasons[t] && reasons[t].length > 0);
 
     if (topics.length === 0) {
@@ -236,10 +290,14 @@ export function selectPromptContext(inputs: PromptContextInputs): PromptContextS
 
     const promptFragments = ["system-core.md", ...topics.map(t => `system-${t}.md`)];
 
+    const unsupportedReason = unsupportedRequestReason(inputs.newUserMessage);
     return {
+        unsupportedReason,
         topics: uniq(topics),
-        allowedTools: Array.from(toolSet),
-        promptFragments,
+        allowedTools: Array.from(toolSet).filter(
+            name => !unsupportedReason || !/^(create|update|delete|move)/.test(name)
+        ),
+        promptFragments: unsupportedReason ? ["system-core.md"] : promptFragments,
         reasons,
     };
 }

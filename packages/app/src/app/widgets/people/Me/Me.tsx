@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { Avatar, Icon } from "app/components/common";
+import { AuthAPI } from "app/api/auth";
 import { usePerson } from "app/hooks";
 import { PeopleStore } from "app/store/people";
 import { isSameDay } from "date-fns";
@@ -37,13 +38,36 @@ export const Me = () => {
         });
     };
 
-    const handleLogout = () => {
+    /** Drops the session cookie and the non-authoritative hints, then returns to login. */
+    const clearLocalSession = () => {
         for (const cookie of ["auth_token", "tenant", "uid"]) {
             document.cookie = `${cookie}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; secure; sameSite=`;
         }
 
-        // Redirect to login page
         window.location.href = "/login";
+    };
+
+    /** Revokes the current session server-side; local state is cleared either way. */
+    const handleLogout = async () => {
+        let serverAccepted = false;
+        try {
+            await AuthAPI.revokeCurrentSession();
+            serverAccepted = true;
+        } catch {
+            serverAccepted = false;
+        }
+
+        clearLocalSession();
+
+        if (!serverAccepted) {
+            window.toaster.show({
+                message: translate(
+                    "You are signed out on this device but the server could not revoke your session"
+                ),
+                intent: Intent.DANGER,
+                icon: "error",
+            });
+        }
     };
 
     if (isLoading || !person) {

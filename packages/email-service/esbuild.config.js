@@ -46,7 +46,7 @@ const buildConfig = {
     entryPoints: ["src/index.ts"],
     bundle: true,
     platform: "node",
-    target: "node18",
+    target: "node22",
     format: "cjs",
     outfile: "dist/email-service.js",
     external: [...externalDependencies, ...allNodeBuiltins],

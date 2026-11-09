@@ -3,18 +3,27 @@ import { describe, expect, it } from "vitest";
 import { template } from "../promptTemplate";
 
 describe("promptTemplate", () => {
-    it("interpolates variables from system-core.md", () => {
-        const out = template("system-core", {
+    it("keeps core and task fragments consistent about default task-list navigation", () => {
+        for (const name of ["system-core", "system-tasks"]) {
+            const text = template(name, { currentUserId: "user" });
+            expect(text).toContain("Task-list requests default to `findTasks`");
+            expect(text).toMatch(/(?:Enumerate|enumerate) task rows.*(?:explicitly|only when)/);
+            expect(text).not.toContain("Default tool for task data is `listTasks`");
+            expect(text).not.toContain("Only call `findTasks` when the user explicitly");
+        }
+    });
+    it("interpolates variables in request context", () => {
+        const out = template("request-context", {
             todaysDate: "Mon Jan 1 2024",
             todaysDateISO: "2024-01-01T00:00:00.000Z",
         });
         expect(out).toContain("Mon Jan 1 2024");
         expect(out).toContain("2024-01-01T00:00:00.000Z");
-        expect(out).toContain("navigate");
+        expect(out).toContain("Current request context");
     });
 
     it("accepts .md suffix in name", () => {
-        const out = template("system-core.md", { todaysDate: "x", todaysDateISO: "y" });
+        const out = template("request-context.md", { todaysDate: "x", todaysDateISO: "y" });
         expect(out).toContain("x");
         expect(out).toContain("y");
     });
@@ -24,11 +33,12 @@ describe("promptTemplate", () => {
         expect(tasks).toContain("findTasks");
         expect(tasks).toContain("listTasks");
         expect(tasks).toContain("moveTask");
-        expect(tasks).toContain("u-1");
+        expect(tasks).not.toContain("u-1");
+        expect(tasks).toContain("authenticated user id");
     });
 
     it("collapses excessive blank lines from templates", () => {
-        const out = template("system-core", {
+        const out = template("request-context", {
             todaysDate: "d",
             todaysDateISO: "i",
         });
@@ -46,4 +56,11 @@ describe("promptTemplate", () => {
         expect(out).toContain("home");
         expect(out).not.toMatch(/\n{3,}/);
     });
+});
+
+it("preserves user whitespace and template-looking text even with route context", () => {
+    const message = "  Keep this code:\n\n\n```txt\n  {{literal}}  \n```\n  ";
+    expect(
+        template("client-chat", { newUserMessage: message, hasClientRoute: true, projectId: "p" }, true)
+    ).toBe(message);
 });

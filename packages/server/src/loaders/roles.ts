@@ -4,14 +4,18 @@
  */
 import { RoleEntity } from "@stacks/db";
 import { Errors } from "../errors";
-import { IRole, UUID } from "@stacks/types";
-import { getCurrentUser } from "./context";
+import { IRole, ROLE_SECTIONS, UUID } from "@stacks/types";
+import { canRead, getCurrentUser } from "./context";
 import { createOne, sanitizeWhere, withTransaction } from "./utils";
 import { Transaction } from "sequelize";
 import { invalidateApiCacheForCurrentRequest } from "../utils/cache";
 
 /** All roles in the tenant ordered by title. */
 async function getAll() {
+    if (!canRead(ROLE_SECTIONS.ROLES)) {
+        throw Errors.forbidden("Insufficient permissions");
+    }
+
     const roles = await RoleEntity.findAll({
         where: sanitizeWhere(),
         order: [["title", "ASC"]],
@@ -22,6 +26,10 @@ async function getAll() {
 
 /** Inserts one role via {@link createOne} inside a transaction boundary. */
 async function create(role: IRole, extTransaction?: Transaction): Promise<IRole> {
+    if (!getCurrentUser().admin) {
+        throw Errors.forbidden("User not authorized");
+    }
+
     return withTransaction(extTransaction, async transaction => {
         return await createOne<IRole>({
             entity: RoleEntity,

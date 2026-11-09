@@ -11,6 +11,7 @@ interface DurationInputProps {
     disabled?: boolean;
     showHelp?: boolean;
     placement?: Placement;
+    testId?: string;
     onChange?: (value: number | undefined) => void;
 }
 
@@ -20,6 +21,7 @@ export const DurationInput: FunctionComponent<DurationInputProps> = ({
     disabled = false,
     showHelp = true,
     placement = "top",
+    testId,
     onChange,
 }) => {
     const [isValid, setIsValid] = useState(true);
@@ -60,6 +62,8 @@ export const DurationInput: FunctionComponent<DurationInputProps> = ({
             value={inputValue}
             intent={isValid ? Intent.NONE : Intent.DANGER}
             placeholder={placeholder}
+            data-testid={testId}
+            data-valid={String(isValid)}
             disabled={disabled}
             onChange={handleChange}
             onBlur={handleSubmit}

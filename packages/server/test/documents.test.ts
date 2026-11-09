@@ -77,6 +77,46 @@ describe("Documents", () => {
         }
     });
 
+    test("Rejects moving a document under one of its descendants", async () => {
+        const headers = {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        };
+        const createFolder = async (title: string) => {
+            const response = await app.request("/api/documents", {
+                method: "POST",
+                headers,
+                body: JSON.stringify({ title, type: "folder", parent: null }),
+            });
+            expect(response.status).toBe(200);
+            return (await response.json()).data.id as string;
+        };
+
+        const parentId = await createFolder("Cycle test parent");
+        const childId = await createFolder("Cycle test child");
+
+        const allowedMove = await app.request(`/api/documents/${childId}`, {
+            method: "PATCH",
+            headers,
+            body: JSON.stringify({ parent: parentId }),
+        });
+        expect(allowedMove.status).toBe(200);
+
+        const cycleMove = await app.request(`/api/documents/${parentId}`, {
+            method: "PATCH",
+            headers,
+            body: JSON.stringify({ parent: childId }),
+        });
+        expect(cycleMove.status).toBe(404);
+
+        const list = await app.request("/api/documents", { headers });
+        const documents = (await list.json()).data.documents as Array<{ id: string; parent: string }>;
+        expect(documents.find(document => document.id === parentId)?.parent).toBe(
+            "00000000-0000-0000-0000-000000000000"
+        );
+        expect(documents.find(document => document.id === childId)?.parent).toBe(parentId);
+    });
+
     test("Delete a document", async () => {
         const res = await app.request(`/api/documents/${documentId}`, {
             method: "DELETE",
@@ -123,7 +163,7 @@ describe("Documents", () => {
             body: JSON.stringify(updateData),
         });
 
-        expect([400, 404, 500]).toContain(res.status);
+        expect(res.status).toBe(400);
     });
 
     test("Delete document with invalid ID", async () => {
@@ -135,7 +175,7 @@ describe("Documents", () => {
             },
         });
 
-        expect([400, 404, 500]).toContain(res.status);
+        expect(res.status).toBe(400);
     });
 
     test("Access documents without authentication", async () => {

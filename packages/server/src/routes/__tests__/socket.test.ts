@@ -388,9 +388,11 @@ describe("User-Specific Messaging", () => {
         expect(emitSpy).toHaveBeenCalledWith(
             Events.AppEvents.DATA_UPDATE,
             expect.objectContaining({
-                ...payload,
-                targetUserId: userId,
-                timestamp: expect.any(Number),
+                update: expect.objectContaining({
+                    ...payload,
+                    targetUserId: userId,
+                    timestamp: expect.any(Number),
+                }),
             })
         );
     });
@@ -414,9 +416,11 @@ describe("User-Specific Messaging", () => {
         expect(emitSpy2).toHaveBeenCalledWith(
             Events.AppEvents.DATA_UPDATE,
             expect.objectContaining({
-                ...payload,
-                targetUserId: userId,
-                timestamp: expect.any(Number),
+                update: expect.objectContaining({
+                    ...payload,
+                    targetUserId: userId,
+                    timestamp: expect.any(Number),
+                }),
             })
         );
     });

@@ -7,6 +7,7 @@ import { StackEntity, TaskEntity, TimelogEntity } from "@stacks/db";
 import { Op } from "sequelize";
 
 import { ProjectsLoader } from "../loaders/projects";
+import { getCurrentUser } from "../loaders/context";
 
 export async function getProjects() {
     return await ProjectsLoader.getAll();
@@ -16,8 +17,10 @@ export async function fetchTasksByProjects(
     projectIds: string[],
     updatedRange?: { start: Date; end: Date }
 ): Promise<ITask[]> {
+    const user = getCurrentUser();
     const where: Record<string, unknown> = {
         project: projectIds,
+        tenant: user.tenant,
     };
     if (updatedRange) {
         where.updated = { [Op.between]: [updatedRange.start, updatedRange.end] };
@@ -42,13 +45,11 @@ export async function fetchTasksGrouped(
 }
 
 export async function fetchTimelogs(options: {
-    projectIds?: string[];
+    projectIds: string[];
     dateRange?: { start: Date; end: Date };
 }): Promise<ITimeLog[]> {
-    const where: Record<string, unknown> = {};
-    if (options.projectIds) {
-        where.project = options.projectIds;
-    }
+    const user = getCurrentUser();
+    const where: Record<string, unknown> = { tenant: user.tenant, project: options.projectIds };
     if (options.dateRange) {
         where.date = { [Op.between]: [options.dateRange.start, options.dateRange.end] };
     }
@@ -72,17 +73,25 @@ export async function fetchTimelogsByTask(
 }
 
 export async function getStacks(projectIds: string[]) {
+    const user = getCurrentUser();
     const stacksEntities = await StackEntity.findAll({
         where: {
             project: projectIds,
+            tenant: user.tenant,
         },
     });
     return stacksEntities.map(stack => stack.toJSON()) as IStack[];
 }
 
 /** Tasks with at least one assignee; optional `updated` window for span. */
-export async function fetchTasksWithAssignees(updatedRange?: { start: Date; end: Date }): Promise<ITask[]> {
+export async function fetchTasksWithAssignees(
+    projectIds: string[],
+    updatedRange?: { start: Date; end: Date }
+): Promise<ITask[]> {
+    const user = getCurrentUser();
     const where: Record<string, unknown> = {
+        tenant: user.tenant,
+        project: projectIds,
         assignees: {
             [Op.ne]: "[]",
         },

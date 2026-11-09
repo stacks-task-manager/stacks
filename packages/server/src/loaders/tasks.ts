@@ -3,7 +3,15 @@ import { addDays, endOfDay, startOfDay } from "date-fns";
 import uniq from "lodash/uniq";
 import { Op, Transaction } from "sequelize";
 
-import { AttachmentEntity, DocumentEntity, PermissionEntity, sequelize, TaskEntity } from "@stacks/db";
+import {
+    AttachmentEntity,
+    DocumentEntity,
+    PermissionEntity,
+    sequelize,
+    TagEntity,
+    TaskEntity,
+    UserEntity,
+} from "@stacks/db";
 import {
     AUTOMATION_EVENT,
     NOTIFICATION_RECORD_TYPE,
@@ -24,6 +32,7 @@ import { StacksLoader } from "./stacks";
 import { TimelogsLoader } from "./timelogs";
 import {
     afterTransactionCommit,
+    assertCanWriteResource,
     createOne,
     deleteAll,
     deleteOne,
@@ -47,6 +56,64 @@ if (!(TaskEntity as any)[TASKS_ASSOC_KEY]) {
     (TaskEntity as any)[TASKS_ASSOC_KEY] = true;
 }
 
+async function assertRelatedTasksVisible(
+    taskIds: Array<string | null | undefined>,
+    transaction: Transaction
+) {
+    const requestedIds = [...new Set(taskIds.filter((id): id is string => Boolean(id)))];
+    if (requestedIds.length === 0) return;
+
+    const relatedTasks = await findAll<ITask>({
+        entity: TaskEntity,
+        filter: { id: { [Op.in]: requestedIds } },
+        transaction,
+    });
+    if (relatedTasks.length !== requestedIds.length) {
+        throw Errors.notFound(translate("Task not found"));
+    }
+
+    const visibleProjectIds = new Set((await ProjectsLoader.getAll(transaction)).map(project => project.id));
+    if (relatedTasks.some(task => !visibleProjectIds.has(task.project))) {
+        throw Errors.notFound(translate("Task not found"));
+    }
+}
+
+async function assertTaskTagsBelongToTenant(
+    tagIds: Array<string | null | undefined>,
+    tenant: string,
+    transaction: Transaction
+) {
+    const requestedIds = [...new Set(tagIds.filter((id): id is string => Boolean(id)))];
+    if (requestedIds.length === 0) return;
+
+    const tags = await TagEntity.findAll({
+        where: { id: { [Op.in]: requestedIds }, tenant, deleted: null },
+        attributes: ["id"],
+        transaction,
+    });
+    if (tags.length !== requestedIds.length) {
+        throw Errors.notFound(translate("Task not found"));
+    }
+}
+
+async function assertTaskAssigneesBelongToTenant(
+    userIds: Array<string | null | undefined>,
+    tenant: string,
+    transaction: Transaction
+) {
+    const requestedIds = [...new Set(userIds.filter((id): id is string => Boolean(id)))];
+    if (requestedIds.length === 0) return;
+
+    const users = await UserEntity.findAll({
+        where: { id: { [Op.in]: requestedIds }, tenant, deleted: null },
+        attributes: ["id"],
+        transaction,
+    });
+    if (users.length !== requestedIds.length) {
+        throw Errors.notFound(translate("Task not found"));
+    }
+}
+
 /**
  * Create a new task.
  * @param data Task data
@@ -55,13 +122,18 @@ if (!(TaskEntity as any)[TASKS_ASSOC_KEY]) {
 async function create(data: Partial<ITask>, positionInStack?: "top" | "bottom") {
     return withTransaction(undefined, async transaction => {
         const user = getCurrentUser();
+        await assertRelatedTasksVisible([data.parent], transaction);
+        const project = await ProjectsLoader.getOne(data.project!, transaction);
+        const stack = await StacksLoader.getOne(data.stack!, transaction);
+        if (stack.project !== project.id) {
+            throw Errors.notFound(translate("Task not found"));
+        }
+
         const newTask = await createOne<ITask>({
             entity: TaskEntity,
             data: data,
             transaction,
         });
-
-        const project = await ProjectsLoader.getOne(newTask.project, transaction);
 
         // create permissions for the new task
         const permissions = await PermissionsLoader.create(
@@ -165,6 +237,7 @@ export interface GetAllFilters {
     from?: string; // ISO date — start of range; matches tasks whose startdate or duedate falls in the window (see server TasksLoader)
     to?: string; // ISO date — end of range (paired with from)
     completed?: "true" | true; // Only tasks with `done: true` (matches REST `completed=true`).
+    overdue?: "true" | true; // Incomplete tasks with a due date strictly before now.
     open?: "true" | true; // Only tasks with `done: false` (not completed).
     archived?: "true" | true; // Only tasks with `archived: null` (not archived).
     assigned?: "true" | true; // Only tasks with assignees (matches REST `assigned=true`).
@@ -172,10 +245,140 @@ export interface GetAllFilters {
     assignees?: string | string[]; // Assignee UUID(s)
     parent?: string; // Parent task UUID
     query?: string; // Query (title or description)
+    tags?: string | string[]; // Tag UUID(s); matches tasks carrying at least one of them (OR, like `assignees`)
+    status?: string | string[]; // Status tag UUID(s); the task `status` column holds a single tag UUID
+    priority?: "critical" | "high" | "medium" | "low" | "none"; // Exact priority match
+    progress?: string; // Progress operator `gt:60` | `gte:60` | `lt:20` | `lte:20` | `eq:0`; tasks with no progress never match
+    dueFrom?: string; // ISO date-time — first day of the due-date window (whole UTC day; resolve "due today / this week / next week" to a window)
+    dueTo?: string; // ISO date-time — last day of the due-date window (paired with dueFrom)
+    startFrom?: string; // ISO date-time — first day of the start-date window (resolve "starts today / next week" to a window)
+    startTo?: string; // ISO date-time — last day of the start-date window (paired with startFrom)
     limit?: number; // Limit the number of tasks returned
 }
 
 type TaskOrdering = [string, "ASC" | "DESC"][];
+
+/**
+ * Parse a progress operator (`gt|gte|lt|lte|eq:<0-100>`) into a Sequelize clause for the `progress` column.
+ * SQL `NULL` comparisons are false, so tasks without a progress value never match any operator.
+ * @param raw Raw operator string, or undefined when no progress filter was requested
+ * @returns Sequelize clause, or null when no filter was requested
+ */
+function buildProgressClause(raw?: string): object | null {
+    if (raw == null) {
+        return null;
+    }
+
+    const match = /^(gt|gte|lt|lte|eq):(\d{1,3})$/.exec(raw);
+    if (!match) {
+        // The accepted grammar stays in the response context, not in the translatable message
+        throw Errors.badRequest(translate("Invalid progress filter"), {
+            progress: raw,
+            expected: "gt | gte | lt | lte | eq with a 0-100 value",
+        });
+    }
+
+    const percent = Number(match[2]);
+    if (percent > 100) {
+        throw Errors.badRequest(translate("Invalid progress filter value"), { progress: raw });
+    }
+
+    switch (match[1]) {
+        case "gt":
+            return { [Op.gt]: percent };
+        case "gte":
+            return { [Op.gte]: percent };
+        case "lt":
+            return { [Op.lt]: percent };
+        case "lte":
+            return { [Op.lte]: percent };
+        default:
+            return { [Op.eq]: percent };
+    }
+}
+
+/** Milliseconds in a calendar day, used to close whole-day window bounds. */
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+/**
+ * Read a date-window bound as an instant, reading values without an explicit timezone as UTC.
+ * @param value ISO date (`2026-10-12`) or ISO date-time (`2026-10-12T00:00:00.000Z`)
+ * @returns Date, or null when the value is not a real ISO date
+ */
+function parseWindowInstant(value: string): Date | null {
+    // One grammar, no fallthrough: anything outside an ISO date or ISO date-time (a space-separated
+    // form, a month name) is rejected rather than handed to `new Date`, which reads those shapes
+    // against the host clock and silently moves the bound to another day.
+    const shape =
+        /^(\d{4}-\d{2}-\d{2})(?:T(\d{2}:\d{2}(?::\d{2}(?:\.\d{1,3})?)?)(Z|[+-]\d{2}:\d{2})?)?$/.exec(value);
+    if (!shape) {
+        return null;
+    }
+
+    const iso = shape[2] ? `${shape[1]}T${shape[2]}${shape[3] ?? "Z"}` : `${shape[1]}T00:00:00.000Z`;
+    const parsed = new Date(iso);
+    if (!Number.isFinite(parsed.getTime())) {
+        return null;
+    }
+
+    // Reject impossible calendar dates (JS rolls `2026-02-30` over to the next month otherwise)
+    const calendarDay = new Date(`${value.slice(0, 10)}T00:00:00.000Z`);
+    if (
+        !Number.isFinite(calendarDay.getTime()) ||
+        calendarDay.toISOString().slice(0, 10) !== value.slice(0, 10)
+    ) {
+        return null;
+    }
+
+    return parsed;
+}
+
+/**
+ * Inclusive UTC calendar-day bounds for one date-window bound (`dueFrom`, `dueTo`, `startFrom`, `startTo`).
+ * Windows name whole days in UTC, so `dueFrom: 2026-10-12T00:00:00.000Z` with `dueTo:
+ * 2026-10-18T23:59:59.999Z` selects 2026-10-12 through 2026-10-18 in the host's timezone as well:
+ * the bounds are derived from the UTC calendar date, never from the host-local day, which would
+ * widen the window into the next day for hosts west/east of UTC.
+ * @param value ISO date or date-time bound
+ * @returns `[00:00:00.000, 23:59:59.999]` of the bound's UTC calendar day, or null when invalid
+ */
+function utcDayBounds(value: string): [Date, Date] | null {
+    const instant = parseWindowInstant(value);
+    if (!instant) {
+        return null;
+    }
+
+    const dayStart = new Date(
+        Date.UTC(instant.getUTCFullYear(), instant.getUTCMonth(), instant.getUTCDate())
+    );
+    return [dayStart, new Date(dayStart.getTime() + DAY_MS - 1)];
+}
+
+/**
+ * Build a date column clause from a `[from, to]` window of inclusive whole days.
+ * @param from ISO bound naming the first day of the window
+ * @param to ISO bound naming the last day of the window
+ * @returns Sequelize clause, or null when neither bound was requested
+ */
+function buildDateWindowClause(from?: string, to?: string): object | null {
+    if (!from && !to) {
+        return null;
+    }
+
+    const lower = from ? utcDayBounds(from)?.[0] : null;
+    const upper = to ? utcDayBounds(to)?.[1] : null;
+    if ((from && !lower) || (to && !upper)) {
+        throw Errors.badRequest(translate("Invalid date window"), { from, to });
+    }
+
+    if (lower && upper) {
+        return { [Op.between]: [lower, upper] };
+    }
+    if (lower) {
+        return { [Op.gte]: lower };
+    }
+    return { [Op.lte]: upper };
+}
 
 function buildTaskListFilter(filters: GetAllFilters): object {
     let filter: any = {
@@ -198,7 +401,7 @@ function buildTaskListFilter(filters: GetAllFilters): object {
     if (filters.assignees) {
         if (Array.isArray(filters.assignees)) {
             filter.assignees = {
-                [Op.overlap]: filters.assignees,
+                [Op.or]: filters.assignees.map(id => ({ [Op.contains]: [id] })),
             };
         } else {
             filter.assignees = {
@@ -237,7 +440,38 @@ function buildTaskListFilter(filters: GetAllFilters): object {
         filter.parent = filters.parent;
     }
 
+    // Filter by tags (any of the requested tag UUIDs)
+    if (filters.tags) {
+        if (Array.isArray(filters.tags)) {
+            filter.tags = {
+                [Op.or]: filters.tags.map(id => ({ [Op.contains]: [id] })),
+            };
+        } else {
+            filter.tags = {
+                [Op.contains]: [filters.tags],
+            };
+        }
+    }
+
+    // Filter by status (single tag UUID per task; a list becomes an IN match)
+    if (filters.status) {
+        filter.status = filters.status;
+    }
+
+    // Filter by priority
+    if (filters.priority) {
+        filter.priority = filters.priority;
+    }
+
+    const progressClause = buildProgressClause(filters.progress);
+    if (progressClause) {
+        filter.progress = progressClause;
+    }
+
     const andClauses: object[] = [];
+    if (filters.overdue === "true" || filters.overdue === true) {
+        andClauses.push({ done: false, duedate: { [Op.lt]: new Date() } });
+    }
 
     // Filter by query (title or description)
     if (filters.query && filters.query.length) {
@@ -259,6 +493,17 @@ function buildTaskListFilter(filters: GetAllFilters): object {
 
     // Filter by date range (startdate or duedate falls in the window)
     if (filters.from || filters.to) {
+        // Reject malformed bounds before they reach SQL; the day wrapping below stays host-local
+        if (
+            (filters.from && !parseWindowInstant(filters.from)) ||
+            (filters.to && !parseWindowInstant(filters.to))
+        ) {
+            throw Errors.badRequest(translate("Invalid date range"), {
+                from: filters.from,
+                to: filters.to,
+            });
+        }
+
         const fromDate: Date = startOfDay(new Date(filters.from || new Date().toISOString()));
         const toDate: Date = endOfDay(new Date(filters.to || addDays(new Date(), 10)));
 
@@ -274,6 +519,18 @@ function buildTaskListFilter(filters: GetAllFilters): object {
                 },
             ],
         });
+    }
+
+    // Filter by due-date window (`dueFrom`/`dueTo`)
+    const dueWindowClause = buildDateWindowClause(filters.dueFrom, filters.dueTo);
+    if (dueWindowClause) {
+        andClauses.push({ duedate: dueWindowClause });
+    }
+
+    // Filter by start-date window (`startFrom`/`startTo`)
+    const startWindowClause = buildDateWindowClause(filters.startFrom, filters.startTo);
+    if (startWindowClause) {
+        andClauses.push({ startdate: startWindowClause });
     }
 
     if (andClauses.length >= 1) {
@@ -300,7 +557,7 @@ async function countAll(filters: GetAllFilters, extTransaction?: Transaction): P
                 },
             ],
             distinct: true,
-            col: "TaskEntity.id",
+            col: "id",
             transaction,
         });
     });
@@ -409,15 +666,21 @@ async function removeByProject(project: string, extTransaction?: Transaction): P
     return withTransaction(extTransaction, async transaction => {
         await TimelogsLoader.removeByProject(project, transaction);
 
-        const deletedTasks: ITask[] = await deleteAll<ITask>({
+        const projectTasks = await findAll<ITask>({
             entity: TaskEntity,
             filter: { project },
             transaction,
         });
 
-        for (const task of deletedTasks) {
+        for (const task of projectTasks) {
             await StacksLoader.removeTaskOrder(task.stack, task.id, transaction);
         }
+
+        const deletedTasks: ITask[] = await deleteAll<ITask>({
+            entity: TaskEntity,
+            filter: { project },
+            transaction,
+        });
 
         afterTransactionCommit(transaction, () => {
             for (const task of deletedTasks) {
@@ -444,18 +707,22 @@ async function removeByProject(project: string, extTransaction?: Transaction): P
  */
 async function removeByStack(stack: string, extTransaction?: Transaction): Promise<ITask[]> {
     return withTransaction(extTransaction, async transaction => {
+        // Totals must be recalculated while the tasks still exist in this transaction.
+        const tasks = await findAll<ITask>({ entity: TaskEntity, filter: { stack }, transaction });
+        await TimelogsLoader.removeByTasks(
+            tasks.map(task => task.id),
+            transaction
+        );
+
+        for (const task of tasks) {
+            await StacksLoader.removeTaskOrder(task.stack, task.id, transaction);
+        }
+
         const deletedTasks: ITask[] = await deleteAll<ITask>({
             entity: TaskEntity,
             filter: { stack },
             transaction,
         });
-
-        const taskIds = deletedTasks.map(task => task.id);
-        await TimelogsLoader.removeByTasks(taskIds, transaction);
-
-        for (const task of deletedTasks) {
-            await StacksLoader.removeTaskOrder(task.stack, task.id, transaction);
-        }
 
         afterTransactionCommit(transaction, () => {
             for (const task of deletedTasks) {
@@ -484,17 +751,25 @@ async function update(id: string, data: Partial<ITask>, extTransaction?: Transac
     const user = getCurrentUser();
     return withTransaction(extTransaction, async transaction => {
         const task = await getOne(id, transaction);
+        assertCanWriteResource(task, "owner");
+        await assertRelatedTasksVisible(
+            [data.parent, ...(data.dependencies ?? []), ...(data.subtasksOrder ?? [])],
+            transaction
+        );
+        await assertTaskTagsBelongToTenant([...(data.tags ?? []), data.status], user.tenant, transaction);
+        await assertTaskAssigneesBelongToTenant(data.assignees ?? [], user.tenant, transaction);
 
-        // if the user changes the task project
-        // we make sure we actually have access to that project
+        const targetProjectId = data.project ?? task.project;
+        const targetStackId = data.stack ?? task.stack;
+
         if (data.project != null) {
             await ProjectsLoader.getOne(data.project, transaction);
         }
-
-        // if the user changes the task stack
-        // we make sure we actually have access to that stack
-        if (data.stack != null) {
-            await StacksLoader.getOne(data.stack, transaction);
+        if (data.project != null || data.stack != null) {
+            const targetStack = await StacksLoader.getOne(targetStackId, transaction);
+            if (targetStack.project !== targetProjectId) {
+                throw Errors.notFound(translate("Task not found"));
+            }
         }
 
         const prevTaskSnapshot = {
@@ -516,6 +791,11 @@ async function update(id: string, data: Partial<ITask>, extTransaction?: Transac
             data,
             transaction,
         });
+
+        if (data.project != null && data.project !== task.project) {
+            await StacksLoader.removeTaskOrder(task.stack, id, transaction);
+            await StacksLoader.addTaskOrder(targetStackId, id, "bottom", transaction);
+        }
 
         /*
             Sending notifications - START
@@ -702,6 +982,9 @@ const move = async (
     return withTransaction(extTransaction, async transaction => {
         const task = await getOne(taskId, transaction);
         const stack = await StacksLoader.getOne(stackId, transaction);
+        if (stack.project !== task.project) {
+            throw Errors.notFound(translate("Task not found"));
+        }
         const isSameStack = stackId === task.stack;
         const order = stack.tasksOrder;
 

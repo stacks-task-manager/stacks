@@ -31,6 +31,7 @@ interface ITaskDetailInfoProps {
     centered?: boolean;
     disabled?: boolean;
     onClose: (delayed?: boolean) => void;
+    testIdSuffix: string;
 }
 /**
  * Renders a single task-details section (assignees, start/due dates, estimates,
@@ -39,7 +40,7 @@ interface ITaskDetailInfoProps {
  */
 // eslint-disable-next-line react/display-name
 export const TaskDetailInfo: FunctionComponent<ITaskDetailInfoProps> = React.memo(
-    ({ task, section, vertical, centered, disabled, onClose }) => {
+    ({ task, section, vertical, centered, disabled, onClose, testIdSuffix }) => {
         switch (section) {
             case TASKDETAILMATRIX.ASSIGNEES:
                 return (
@@ -75,6 +76,7 @@ export const TaskDetailInfo: FunctionComponent<ITaskDetailInfoProps> = React.mem
                             value={task.status}
                             canClear
                             disabled={disabled}
+                            testId={`task-details-status-trigger-${testIdSuffix}`}
                         />
                     </TaskDetailsSection>
                 );
@@ -145,7 +147,12 @@ export const TaskDetailInfo: FunctionComponent<ITaskDetailInfoProps> = React.mem
             case TASKDETAILMATRIX.TAGS:
                 return (
                     <TaskDetailsSection title={translate("Tags")} vertical={vertical} centered={centered}>
-                        <TaskDetailsTags value={task.tags} disabled={disabled} taskId={task.id} />
+                        <TaskDetailsTags
+                            value={task.tags}
+                            disabled={disabled}
+                            taskId={task.id}
+                            testId={`task-details-tags-trigger-${testIdSuffix}`}
+                        />
                     </TaskDetailsSection>
                 );
             case TASKDETAILMATRIX.ESTIMATE:
@@ -154,6 +161,8 @@ export const TaskDetailInfo: FunctionComponent<ITaskDetailInfoProps> = React.mem
                         <TaskEstimates
                             value={task.estimate}
                             disabled={disabled}
+                            testId="task-estimate-trigger"
+                            inputTestId="task-estimate-input"
                             onChange={(value: number | undefined) => TasksActions.setEstimate(task.id, value)}
                         />
                     </TaskDetailsSection>

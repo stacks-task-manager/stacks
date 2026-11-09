@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v7
 
       - name: Set up Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: yarn
@@ -29,6 +29,9 @@ jobs:
 
       - name: Install dependencies
         run: yarn install --immutable
+
+      - name: Test database CLI environment configuration
+        run: node --test packages/db/test/database-config.test.cjs
 
       - name: Build internal packages
         run: yarn build:internal
@@ -66,7 +69,7 @@ jobs:
       - uses: actions/checkout@v7
 
       - name: Set up Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: yarn
@@ -92,7 +95,7 @@ jobs:
       - uses: actions/checkout@v7
 
       - name: Set up Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: yarn
@@ -124,7 +127,7 @@ jobs:
       - uses: actions/checkout@v7
 
       - name: Set up Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: yarn
@@ -170,6 +173,7 @@ jobs:
           --health-retries 10
     env:
       NODE_ENV: test
+      ALLOW_TEST_DB_RESET: "1"
       POSTGRES_HOST: localhost
       POSTGRES_PORT: "5432"
       POSTGRES_USER: postgres
@@ -179,7 +183,7 @@ jobs:
       - uses: actions/checkout@v7
 
       - name: Set up Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: yarn
@@ -224,7 +228,7 @@ jobs:
       - uses: actions/checkout@v7
 
       - name: Set up Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: yarn

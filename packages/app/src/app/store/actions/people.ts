@@ -16,7 +16,6 @@ import {
 } from "@stacks/types";
 import { default as API, CompaniesAPI, ExportAPI, PeopleAPI, RolesAPI } from "app/api";
 import { Confirm } from "app/components/common";
-import { getCookie } from "app/utils/cookie";
 import Dialog from "app/utils/dialog";
 import Storage from "app/utils/storage";
 import { createDebouncedCallback, patchFilterField } from "../actionHelpers";
@@ -40,7 +39,7 @@ const load = async () => {
         })
     );
 
-    const uid = getCookie("uid");
+    const uid = PeopleStore.get().me;
     const people = await PeopleAPI.load();
     const roles = await RolesAPI.load();
     let canViewCompanies = false;
@@ -265,6 +264,10 @@ const update = async (id: string, updatedPerson: Partial<IPerson>) => {
     );
 
     await PeopleAPI.update(id, updatedPerson);
+};
+
+const requestEmailChange = async (id: string, email: string) => {
+    return PeopleAPI.requestEmailChange(id, email);
 };
 
 const updateOnlineStatus = (personId: string, onlineStatus: USER_ONLINE_STATUS) => {
@@ -639,6 +642,7 @@ export const PeopleActions = {
     resetFilters,
     getMe,
     update,
+    requestEmailChange,
     updateOnlineStatus,
     toggleCompany,
     remove,

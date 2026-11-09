@@ -8,6 +8,7 @@ interface IPopupTimeProps {
     labelKey: string;
     value?: number;
     disabled?: boolean;
+    testId?: string;
     children?: React.ReactNode;
     onChange: (value: number | undefined) => void;
 }
@@ -15,6 +16,7 @@ export const PopupTime: FunctionComponent<IPopupTimeProps> = ({
     labelKey,
     value,
     disabled,
+    testId,
     children,
     onChange,
 }) => {
@@ -34,7 +36,7 @@ export const PopupTime: FunctionComponent<IPopupTimeProps> = ({
         <Popover
             content={
                 <FormGroup label={translate(labelKey)} style={{ marginBottom: 0, width: 120 }}>
-                    <DurationInput value={value} onChange={onChange} />
+                    <DurationInput value={value} testId={testId} onChange={onChange} />
                     <button
                         ref={closePopoverBtn}
                         className={Classes.POPOVER_DISMISS}

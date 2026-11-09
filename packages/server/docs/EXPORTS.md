@@ -36,6 +36,8 @@ Invalid format/type combinations return `400`. Filenames use a sanitized title p
 
 Chromium runs with JavaScript disabled and aborts HTTP, HTTPS, WebSocket, and secure WebSocket requests. CSS and the logo are inlined. Notepad HTML is sanitized with a print-focused allowlist: scripts, styles, embedded documents, forms, event handlers, remote images, and unsafe URLs are removed. Only safe links plus inline or bundled images are retained.
 
+Document setup and PDF printing each have a 60-second deadline. A stalled PDF print rejects and runs the normal page/browser cleanup path instead of holding a render open indefinitely.
+
 The HTML response also sends a restrictive Content Security Policy. Renderer failures log the underlying server-side error and return only a localized, non-sensitive message.
 
 ## Playwright Chromium and fonts

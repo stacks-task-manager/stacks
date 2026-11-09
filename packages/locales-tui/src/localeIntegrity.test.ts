@@ -15,6 +15,26 @@ import {
 import { listLocaleJsonFiles, readLocaleJson, enJsonPath, stringifyLocaleFile } from "./localeOps.js";
 import { sectionLocalesAbsPath, TRANSLATION_SECTIONS } from "./sections.js";
 import { repoRootFromModuleUrl } from "./repoRoot.js";
+import { similarityPercent } from "./similarity.js";
+
+function expectedNearDuplicates(data: Record<string, string>, threshold: number) {
+    return Object.entries(data)
+        .map(([candidateKey, candidateValue]) => {
+            const similarEntries = Object.entries(data)
+                .filter(([entryKey]) => entryKey !== candidateKey)
+                .map(([entryKey, entryValue]) => ({
+                    entryKey,
+                    entryValue,
+                    similarity: similarityPercent(candidateValue, entryValue),
+                }))
+                .filter(entry => entry.similarity >= threshold);
+
+            return similarEntries.length > 0
+                ? { localeId: "en", filePath: "/en.json", candidateKey, candidateValue, similarEntries }
+                : null;
+        })
+        .filter((entry): entry is NonNullable<typeof entry> => entry != null);
+}
 
 const tmpDir = join(dirname(fileURLToPath(import.meta.url)), "__tmp_integrity__");
 
@@ -206,6 +226,70 @@ describe("findNearDuplicates", () => {
         // Both directions: Hello finds Greetings and Greetings finds Hello
         expect(result).toHaveLength(2);
         expect(result[0]!.similarEntries).toHaveLength(1);
+    });
+
+    it("keeps every matching entry in source order when values repeat", () => {
+        const data = {
+            First: "Hello",
+            FirstDuplicate: "Hello",
+            Other: "Hella",
+            OtherDuplicate: "Hella",
+        };
+        const result = findNearDuplicates("en", "/en.json", data, 80);
+
+        expect(result[0]!.candidateKey).toBe("First");
+        expect(result[0]!.similarEntries).toEqual([
+            { entryKey: "FirstDuplicate", entryValue: "Hello", similarity: 100 },
+            { entryKey: "Other", entryValue: "Hella", similarity: 80 },
+            { entryKey: "OtherDuplicate", entryValue: "Hella", similarity: 80 },
+        ]);
+    });
+
+    it("matches the full-distance result across length and threshold boundaries", () => {
+        const data = {
+            Empty: "",
+            A: "a",
+            AB: "ab",
+            BA: "ba",
+            ABB: "abb",
+            Phrase: "an example phrase",
+            PhraseVariant: "an example phase",
+        };
+
+        for (const threshold of [0, 50, 67, 80, 85, 90, 95, 99, 100]) {
+            expect(findNearDuplicates("en", "/en.json", data, threshold)).toEqual(
+                expectedNearDuplicates(data, threshold)
+            );
+        }
+    });
+
+    it("keeps rounded-threshold matches for long values", () => {
+        const original = "a".repeat(400);
+        const changed = `${"b".repeat(61)}${"a".repeat(339)}`;
+        const result = findNearDuplicates("en", "/en.json", { Original: original, Changed: changed }, 85);
+
+        expect(result).toHaveLength(2);
+        expect(result[0]!.similarEntries[0]).toEqual({
+            entryKey: "Changed",
+            entryValue: changed,
+            similarity: 85,
+        });
+    });
+
+    it("matches the full-distance result for every short binary string pair", () => {
+        const values = [""];
+        for (let length = 1; length <= 4; length++) {
+            for (let bits = 0; bits < 2 ** length; bits++) {
+                values.push(bits.toString(2).padStart(length, "0").replace(/0/g, "a").replace(/1/g, "b"));
+            }
+        }
+        const data = Object.fromEntries(values.map((value, index) => [`Value${index}`, value]));
+
+        for (const threshold of [0, 50, 80, 85, 100]) {
+            expect(findNearDuplicates("en", "/en.json", data, threshold)).toEqual(
+                expectedNearDuplicates(data, threshold)
+            );
+        }
     });
 
     it("respects the threshold", () => {

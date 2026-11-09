@@ -1,6 +1,14 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import Log from "app/utils/log";
-import { getCookie } from "./cookie";
+
+let storageTenant = "uninitialized";
+
+/** Sets the tenant namespace from authenticated bootstrap data. */
+export const setStorageTenant = (tenantId: string): void => {
+    const normalizedTenantId = tenantId.trim();
+    if (!normalizedTenantId) throw new Error("Storage tenant ID is required");
+    storageTenant = normalizedTenantId;
+};
 
 // by default will prepend the current workspace id unless it's a global key
 const GLOBAL_KEYS = [
@@ -16,9 +24,8 @@ const GLOBAL_KEYS = [
 ];
 const getKey = (key: string, prefix?: string) => {
     if (GLOBAL_KEYS.includes(key)) return key;
-    const tenant = getCookie("tenant");
     const thePrefix = prefix ? `${prefix}_` : "";
-    return `${tenant}/${thePrefix}${key}`;
+    return `${storageTenant}/${thePrefix}${key}`;
 };
 
 /**

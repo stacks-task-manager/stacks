@@ -9,6 +9,7 @@ interface ProjectStatusProps {
     interactive?: boolean;
     disabled?: boolean;
     id?: string;
+    testId?: string;
     onRemove?: () => void;
 }
 export const ProjectStatus: FunctionComponent<ProjectStatusProps> = ({
@@ -16,6 +17,7 @@ export const ProjectStatus: FunctionComponent<ProjectStatusProps> = ({
     interactive,
     disabled,
     id,
+    testId,
     onRemove,
 }) => {
     const currentStatus = useMemo(() => {
@@ -29,6 +31,7 @@ export const ProjectStatus: FunctionComponent<ProjectStatusProps> = ({
         <StatusChip
             tag={currentStatus}
             tagId={id}
+            testId={testId}
             interactive={interactive}
             disabled={disabled}
             onRemove={onRemove}

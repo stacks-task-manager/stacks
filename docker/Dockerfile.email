@@ -1,5 +1,7 @@
 # Email Service Dockerfile
-FROM node:20-bullseye
+FROM node:22-bullseye
+
+RUN node -e 'const [major, minor] = process.versions.node.split(".").map(Number); if (major < 22 || (major === 22 && minor < 12)) process.exit(1)'
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -20,8 +22,11 @@ COPY email-service/ .
 RUN rm -rf node_modules && yarn install --production
 
 # AGPL-3.0 — ship LICENSE + NOTICE alongside the binary.
-COPY email-service/LICENSE /email-service/LICENSE
-COPY email-service/NOTICE /email-service/NOTICE
+COPY --chmod=0444 email-service/legal/LICENSE /email-service/legal/LICENSE
+COPY --chmod=0444 email-service/legal/NOTICE /email-service/legal/NOTICE
+
+# Keep the queue worker unprivileged.
+USER node
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \

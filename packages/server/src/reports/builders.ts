@@ -467,7 +467,9 @@ export async function buildLoggedTimeUserReport(ctx: ReportLoadContext) {
     };
 
     const dateRange = timelogDateRange(ctx);
-    const timelogs = await fetchTimelogs({ dateRange });
+    const projects = await getProjects();
+    const projectIds = projects.map(project => project.id);
+    const timelogs = await fetchTimelogs({ projectIds, dateRange });
     const people = await PeopleLoader.getAll({});
 
     for (const person of people) {
@@ -528,9 +530,10 @@ export async function buildLoggedTimeProjectReport(ctx: ReportLoadContext) {
         data: [] as any[],
     };
 
-    const dateRange = timelogDateRange(ctx);
-    const timelogs = await fetchTimelogs({ dateRange });
     const projects = await getProjects();
+    const projectIds = projects.map(project => project.id);
+    const dateRange = timelogDateRange(ctx);
+    const timelogs = await fetchTimelogs({ projectIds, dateRange });
 
     for (const project of projects) {
         const row = {
@@ -818,9 +821,10 @@ export async function buildUserWorkloadDistributionReport(ctx: ReportLoadContext
     };
 
     const updatedRange = taskUpdatedRange(ctx);
-    const tasks = await fetchTasksWithAssignees(updatedRange);
     const people = await PeopleLoader.getAll({});
     const projects = await getProjects();
+    const projectIds = projects.map(project => project.id);
+    const tasks = await fetchTasksWithAssignees(projectIds, updatedRange);
     const today = new Date();
 
     for (const person of people) {

@@ -26,16 +26,17 @@ export const StackSchema = z.object({
 });
 
 /** PATCH fields for stack header, ordering, and task ids. */
-export const StackUpdateSchema = z.object({
-    title: z.string().optional(),
-    tint: z.string().optional(),
-    collapsed: z.boolean().optional(),
-    maxTasks: z.number().optional(),
-    sorting: z.string().optional(),
-    tasks: z.array(z.string()).optional(),
-    project: z.uuid().optional(),
-    tasksOrder: z.array(z.string()).optional(),
-});
+export const StackUpdateSchema = z
+    .object({
+        title: z.string().optional(),
+        tint: z.string().optional(),
+        collapsed: z.boolean().optional(),
+        maxTasks: z.number().optional(),
+        sorting: z.string().optional(),
+        tasks: z.array(z.string()).optional(),
+        tasksOrder: z.array(z.uuid()).optional(),
+    })
+    .strict();
 
 /** Bulk task move between projects/stacks with full order arrays. */
 export const StackTasksSchema = z.object({

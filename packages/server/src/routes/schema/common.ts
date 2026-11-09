@@ -16,3 +16,16 @@ export function parseUuidParam(id: string, messageKey = translate("Invalid ID fo
     }
     return r.data;
 }
+
+/** Parse a local UUID or the composite id used for Google Calendar events. */
+export function parseEventIdParam(id: string): string {
+    if (uuidStringSchema.safeParse(id).success) return id;
+
+    if (id.startsWith("google_")) {
+        const remainder = id.slice("google_".length);
+        const separator = remainder.lastIndexOf("_");
+        if (separator > 0 && separator < remainder.length - 1) return id;
+    }
+
+    throw Errors.badRequest(translate("Invalid ID format"));
+}

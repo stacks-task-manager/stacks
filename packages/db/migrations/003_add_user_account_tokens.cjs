@@ -5,24 +5,15 @@ module.exports = {
     async up(queryInterface, Sequelize) {
         const transaction = await queryInterface.sequelize.transaction();
         try {
-            await queryInterface.addColumn(
-                "users",
-                "activationTokenExpiresAt",
-                { type: Sequelize.DATE, allowNull: true },
-                { transaction }
-            );
-            await queryInterface.addColumn(
-                "users",
-                "passwordResetTokenHash",
-                { type: Sequelize.STRING, allowNull: true },
-                { transaction }
-            );
-            await queryInterface.addColumn(
-                "users",
-                "passwordResetTokenExpiresAt",
-                { type: Sequelize.DATE, allowNull: true },
-                { transaction }
-            );
+            const columns = await queryInterface.describeTable("users", { transaction });
+            for (const [name, definition] of Object.entries({
+                activationTokenExpiresAt: { type: Sequelize.DATE, allowNull: true },
+                passwordResetTokenHash: { type: Sequelize.STRING, allowNull: true },
+                passwordResetTokenExpiresAt: { type: Sequelize.DATE, allowNull: true },
+            })) {
+                if (!columns[name])
+                    await queryInterface.addColumn("users", name, definition, { transaction });
+            }
             await transaction.commit();
         } catch (error) {
             await transaction.rollback();
@@ -33,9 +24,17 @@ module.exports = {
     async down(queryInterface) {
         const transaction = await queryInterface.sequelize.transaction();
         try {
-            await queryInterface.removeColumn("users", "passwordResetTokenExpiresAt", { transaction });
-            await queryInterface.removeColumn("users", "passwordResetTokenHash", { transaction });
-            await queryInterface.removeColumn("users", "activationTokenExpiresAt", { transaction });
+            let columns = await queryInterface.describeTable("users", { transaction });
+            for (const name of [
+                "passwordResetTokenExpiresAt",
+                "passwordResetTokenHash",
+                "activationTokenExpiresAt",
+            ]) {
+                if (columns[name]) {
+                    await queryInterface.removeColumn("users", name, { transaction });
+                    columns = await queryInterface.describeTable("users", { transaction });
+                }
+            }
             await transaction.commit();
         } catch (error) {
             await transaction.rollback();

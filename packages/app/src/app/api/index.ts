@@ -3,6 +3,7 @@
  * Re-exports domain API clients and a legacy no-op default loader.
  */
 export * from "./activities";
+export * from "./auth";
 export * from "./bookmarks";
 export * from "./companies";
 export * from "./documents";

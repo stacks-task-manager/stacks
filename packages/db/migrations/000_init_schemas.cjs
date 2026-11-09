@@ -1015,6 +1015,7 @@ var init_email = __esm({
       EMAIL_TEMPLATES2["WELCOME"] = "welcome";
       EMAIL_TEMPLATES2["PASSWORD_RESET"] = "password-reset";
       EMAIL_TEMPLATES2["REGISTRATION"] = "registration";
+      EMAIL_TEMPLATES2["EMAIL_CHANGE"] = "email-change";
       EMAIL_TEMPLATES2["NOTIFICATION"] = "notification";
     })(EMAIL_TEMPLATES || (EMAIL_TEMPLATES = {}));
   }
@@ -1767,6 +1768,7 @@ var init_EmailQueue = __esm({
           type: import_sequelize9.DataTypes.UUID,
           allowNull: false
         },
+        recipientEmail: { type: import_sequelize9.DataTypes.STRING, allowNull: true },
         template: {
           type: import_sequelize9.DataTypes.STRING(50),
           allowNull: false,
@@ -2500,9 +2502,13 @@ var init_User = __esm({
         disabled: { type: import_sequelize26.DataTypes.BOOLEAN, allowNull: true, defaultValue: false },
         system: { type: import_sequelize26.DataTypes.BOOLEAN, allowNull: true, defaultValue: false },
         token: { type: import_sequelize26.DataTypes.STRING, allowNull: true, defaultValue: null },
+        activationTokenHash: { type: import_sequelize26.DataTypes.STRING, allowNull: true },
         activationTokenExpiresAt: { type: import_sequelize26.DataTypes.DATE, allowNull: true },
         passwordResetTokenHash: { type: import_sequelize26.DataTypes.STRING, allowNull: true },
         passwordResetTokenExpiresAt: { type: import_sequelize26.DataTypes.DATE, allowNull: true },
+        pendingEmail: { type: import_sequelize26.DataTypes.STRING, allowNull: true },
+        emailChangeTokenHash: { type: import_sequelize26.DataTypes.STRING, allowNull: true },
+        emailChangeTokenExpiresAt: { type: import_sequelize26.DataTypes.DATE, allowNull: true },
         oauthTokens: { type: import_sequelize26.DataTypes.JSONB, allowNull: true, defaultValue: {} },
         deletedBy: { type: import_sequelize26.DataTypes.UUID, allowNull: true },
         lastOnline: { type: import_sequelize26.DataTypes.DATE, allowNull: true },
@@ -2527,6 +2533,132 @@ var init_User = __esm({
   }
 });
 
+// src/entities/Session.ts
+var import_sequelize27, SessionEntity, Session_default;
+var init_Session = __esm({
+  "src/entities/Session.ts"() {
+    "use strict";
+    import_sequelize27 = require("sequelize");
+    init_db();
+    SessionEntity = class extends import_sequelize27.Model {
+    };
+    SessionEntity.init(
+      {
+        id: { type: import_sequelize27.DataTypes.UUID, defaultValue: import_sequelize27.DataTypes.UUIDV4, primaryKey: true },
+        userId: { type: import_sequelize27.DataTypes.UUID, allowNull: false },
+        tenant: { type: import_sequelize27.DataTypes.UUID, allowNull: false },
+        createdAt: { type: import_sequelize27.DataTypes.DATE, allowNull: false, defaultValue: import_sequelize27.DataTypes.NOW },
+        expiresAt: { type: import_sequelize27.DataTypes.DATE, allowNull: false },
+        revokedAt: { type: import_sequelize27.DataTypes.DATE, allowNull: true }
+      },
+      {
+        sequelize,
+        modelName: "Session",
+        tableName: "auth_sessions",
+        timestamps: false,
+        indexes: [
+          {
+            name: "auth_sessions_by_user",
+            fields: ["userId"]
+          }
+        ]
+      }
+    );
+    Session_default = SessionEntity;
+  }
+});
+
+// src/entities/OAuthAttempt.ts
+var import_sequelize28, OAuthAttemptEntity, OAuthAttempt_default;
+var init_OAuthAttempt = __esm({
+  "src/entities/OAuthAttempt.ts"() {
+    "use strict";
+    import_sequelize28 = require("sequelize");
+    init_db();
+    OAuthAttemptEntity = class extends import_sequelize28.Model {
+    };
+    OAuthAttemptEntity.init(
+      {
+        id: { type: import_sequelize28.DataTypes.UUID, defaultValue: import_sequelize28.DataTypes.UUIDV4, primaryKey: true },
+        userId: { type: import_sequelize28.DataTypes.UUID, allowNull: false },
+        tenant: { type: import_sequelize28.DataTypes.UUID, allowNull: false },
+        sid: { type: import_sequelize28.DataTypes.UUID, allowNull: false },
+        stateHash: { type: import_sequelize28.DataTypes.STRING(64), allowNull: false, unique: true },
+        nonceHash: { type: import_sequelize28.DataTypes.STRING(64), allowNull: false },
+        codeVerifier: { type: import_sequelize28.DataTypes.TEXT, allowNull: false },
+        createdAt: { type: import_sequelize28.DataTypes.DATE, allowNull: false, defaultValue: import_sequelize28.DataTypes.NOW },
+        expiresAt: { type: import_sequelize28.DataTypes.DATE, allowNull: false },
+        consumedAt: { type: import_sequelize28.DataTypes.DATE, allowNull: true }
+      },
+      {
+        sequelize,
+        modelName: "OAuthAttempt",
+        tableName: "oauth_attempts",
+        timestamps: false
+      }
+    );
+    OAuthAttempt_default = OAuthAttemptEntity;
+  }
+});
+
+// src/entities/RateLimitCounter.ts
+var import_sequelize29, RateLimitCounterEntity, RateLimitCounter_default;
+var init_RateLimitCounter = __esm({
+  "src/entities/RateLimitCounter.ts"() {
+    "use strict";
+    import_sequelize29 = require("sequelize");
+    init_db();
+    RateLimitCounterEntity = class extends import_sequelize29.Model {
+    };
+    RateLimitCounterEntity.init(
+      {
+        keyHash: { type: import_sequelize29.DataTypes.STRING(64), primaryKey: true, allowNull: false },
+        windowStart: { type: import_sequelize29.DataTypes.BIGINT, primaryKey: true, allowNull: false },
+        hits: { type: import_sequelize29.DataTypes.INTEGER, allowNull: false, defaultValue: 0 },
+        expiresAt: { type: import_sequelize29.DataTypes.DATE, allowNull: false }
+      },
+      {
+        sequelize,
+        modelName: "RateLimitCounter",
+        tableName: "rate_limit_counters",
+        timestamps: false,
+        indexes: [{ name: "rate_limit_counters_expiry", fields: ["expiresAt"] }]
+      }
+    );
+    RateLimitCounter_default = RateLimitCounterEntity;
+  }
+});
+
+// src/entities/RateLimitLease.ts
+var import_sequelize30, RateLimitLeaseEntity, RateLimitLease_default;
+var init_RateLimitLease = __esm({
+  "src/entities/RateLimitLease.ts"() {
+    "use strict";
+    import_sequelize30 = require("sequelize");
+    init_db();
+    RateLimitLeaseEntity = class extends import_sequelize30.Model {
+    };
+    RateLimitLeaseEntity.init(
+      {
+        id: { type: import_sequelize30.DataTypes.UUID, defaultValue: import_sequelize30.DataTypes.UUIDV4, primaryKey: true },
+        keyHash: { type: import_sequelize30.DataTypes.STRING(64), allowNull: false },
+        expiresAt: { type: import_sequelize30.DataTypes.DATE, allowNull: false }
+      },
+      {
+        sequelize,
+        modelName: "RateLimitLease",
+        tableName: "rate_limit_leases",
+        timestamps: false,
+        indexes: [
+          { name: "rate_limit_leases_key_expiry", fields: ["keyHash", "expiresAt"] },
+          { name: "rate_limit_leases_expiry", fields: ["expiresAt"] }
+        ]
+      }
+    );
+    RateLimitLease_default = RateLimitLeaseEntity;
+  }
+});
+
 // src/index.ts
 var index_exports = {};
 __export(index_exports, {
@@ -2543,12 +2675,16 @@ __export(index_exports, {
   FileEntity: () => File_default,
   NotepadEntity: () => Notepad_default,
   NotificationEntity: () => Notification_default,
+  OAuthAttemptEntity: () => OAuthAttempt_default,
   PermissionEntity: () => Permission_default,
   PreferenceEntity: () => Preference_default,
   ProjectEntity: () => Project_default,
+  RateLimitCounterEntity: () => RateLimitCounter_default,
+  RateLimitLeaseEntity: () => RateLimitLease_default,
   ReminderEntity: () => Reminder_default,
   ReportEntity: () => Report_default,
   RoleEntity: () => Role_default,
+  SessionEntity: () => Session_default,
   StackEntity: () => Stack_default,
   TagEntity: () => Tag_default,
   TaskEntity: () => Task_default,
@@ -2587,6 +2723,10 @@ var init_index = __esm({
     init_Tenant();
     init_Timelog();
     init_User();
+    init_Session();
+    init_OAuthAttempt();
+    init_RateLimitCounter();
+    init_RateLimitLease();
   }
 });
 

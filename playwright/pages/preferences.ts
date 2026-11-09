@@ -264,6 +264,34 @@ class Preferences extends Base {
         });
     }
 
+    public async getTaskDetailsMatrix(): Promise<string[]> {
+        const preferences = await this.snapshotPreferences();
+        const matrix = preferences.taskDetailsMatrix;
+        if (!Array.isArray(matrix)) throw new Error("Task details matrix preference is unavailable");
+        return matrix as string[];
+    }
+
+    public async setTaskDetailsMatrix(matrix: string[]): Promise<void> {
+        const result = await this.page.evaluate(async taskDetailsMatrix => {
+            const bootResponse = await fetch("/api/boot");
+            const bootBody = await bootResponse.json();
+            const preferences = (bootBody.data ?? bootBody).preferences;
+            const csrfResponse = await fetch("/auth/csrf");
+            const csrfBody = await csrfResponse.json();
+            const response = await fetch("/api/preferences", {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-csrf-token": csrfBody.data?.token,
+                },
+                body: JSON.stringify({ ...preferences, taskDetailsMatrix }),
+            });
+            return { ok: response.ok, body: await response.text() };
+        }, matrix);
+        expect(result.ok, result.body).toBeTruthy();
+        await this.page.reload();
+    }
+
     public async restorePreferences(preferences: Record<string, unknown>) {
         await this.page.evaluate(async restoredPreferences => {
             await fetch("/api/preferences", {

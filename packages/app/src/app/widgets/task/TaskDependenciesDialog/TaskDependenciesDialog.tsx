@@ -55,6 +55,7 @@ const renderProject: ItemRenderer<TreeNode> = (project, { handleClick, handleFoc
             onFocus={handleFocus}
             roleStructure="listoption"
             text={project.title}
+            data-testid={`task-dependency-project-option-${project.id}`}
         />
     );
 };
@@ -74,6 +75,7 @@ export const TaskDependenciesDialog = ({
 }: TaskDependenciesDialogProps) => {
     const [isOpen, setIsOpen] = useState(true);
     const [query, setQuery] = useState("");
+    const [dialogBodyElement, setDialogBodyElement] = useState<HTMLDivElement | null>(null);
     const [selectedProject, setSelectedProject] = useStorage<string | undefined>(
         "task-dependencies-project",
         false,
@@ -129,10 +131,15 @@ export const TaskDependenciesDialog = ({
             title="Add dependencies"
             isOpen={isOpen}
             className="task-dependencies-dialog"
+            canOutsideClickClose={false}
             onClose={() => setIsOpen(false)}
             onClosed={onClose}
         >
-            <div className={Classes.DIALOG_BODY}>
+            <div
+                className={Classes.DIALOG_BODY}
+                data-testid="task-dependencies-dialog"
+                ref={setDialogBodyElement}
+            >
                 <div>
                     <Select<TreeNode>
                         items={projects}
@@ -141,6 +148,7 @@ export const TaskDependenciesDialog = ({
                         noResults={<MenuItem disabled={true} text={translate("No results")} />}
                         onItemSelect={handleSelectProject}
                         fill
+                        popoverProps={{ portalContainer: dialogBodyElement ?? undefined }}
                     >
                         <ProjectButton projectId={selectedProject} />
                     </Select>
@@ -179,6 +187,7 @@ export const TaskDependenciesDialog = ({
                         leftIcon="search"
                         value={query}
                         onChange={e => setQuery(e.target.value)}
+                        data-testid="task-dependencies-search"
                     />
 
                     <TasksPanel
@@ -191,14 +200,18 @@ export const TaskDependenciesDialog = ({
             </div>
             <div className={Classes.DIALOG_FOOTER}>
                 <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-                    <Button variant="minimal" onClick={() => setIsOpen(false)}>
+                    <Button
+                        variant="minimal"
+                        onClick={() => setIsOpen(false)}
+                        data-testid="task-dependencies-cancel"
+                    >
                         {translate("Cancel")}
                     </Button>
                     <Button
                         text={`Select tasks ${selectedTasks.length > 0 ? `(${selectedTasks.length})` : ""}`}
                         intent="primary"
-                        disabled={selectedTasks.length === 0 && onSelect != null}
                         onClick={handleOnSelect}
+                        data-testid="task-dependencies-select"
                     />
                 </div>
             </div>
@@ -214,6 +227,7 @@ const ProjectButton = ({ projectId }: { projectId?: string }) => {
             fill
             endIcon="double-caret-vertical"
             alignText="left"
+            data-testid="task-dependencies-project-picker"
         />
     );
 };
@@ -242,7 +256,12 @@ const StackItem = ({ stackId, selected, onClick }: StackItemProps) => {
                 </Tag>
             }
             active={selected}
-            onClick={() => onClick(stackId)}
+            onClick={event => {
+                event.stopPropagation();
+                onClick(stackId);
+            }}
+            data-testid={`task-dependency-stack-option-${stackId}`}
+            data-selected={String(selected)}
         />
     );
 };
@@ -313,7 +332,13 @@ const TaskItem = ({ taskId, selected, disabled, onClick }: TaskItemProps) => {
             }
             disabled={disabled}
             multiline
-            onClick={() => onClick(taskId)}
+            onMouseDown={event => event.stopPropagation()}
+            onClick={event => {
+                event.stopPropagation();
+                onClick(taskId);
+            }}
+            data-testid={`task-dependency-task-${taskId}`}
+            data-selected={String(selected)}
             labelElement={
                 <Row align="center" gutter={5}>
                     {priority && priority !== PRIORITY.NONE && <PriorityChip priority={priority} />}

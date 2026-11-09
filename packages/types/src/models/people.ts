@@ -33,6 +33,14 @@ export enum USER_ONLINE_STATUS {
     IDLE = "idle",
 }
 
+/**
+ * Public person shape: the profile fields a person response may carry.
+ *
+ * Credentials and server-side bookkeeping (password, activation token, reset/OAuth state,
+ * `system`, `createdBy`/`updatedBy`/`deletedBy`, soft-delete state) are NOT part of this
+ * interface; the server keeps them on its own `User` type and serializes responses through
+ * `toPublicPerson`.
+ */
 export interface IPerson extends ICommonBase {
     avatar: string | null;
     firstName: string | null;
@@ -70,9 +78,7 @@ export interface IPerson extends ICommonBase {
     real: boolean;
     admin: boolean;
     disabled: boolean;
-    token: string | null;
     onlineStatus: USER_ONLINE_STATUS;
-    password: string; // used for the online server when registering a new user
 
     // Hourly rates
     hourlyRates: { [currency: string]: number };

@@ -213,10 +213,14 @@ describe("Events Utility Functions", () => {
 
             sendRealtimeUpdate(updateData);
 
-            expect(mockHandler).toHaveBeenCalledWith({
-                ...updateData,
-                timestamp: expect.any(Number),
-            });
+            expect(mockHandler).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    update: expect.objectContaining({
+                        ...updateData,
+                        timestamp: expect.any(Number),
+                    }),
+                })
+            );
         });
 
         test("should handle multiple event listeners", () => {
@@ -239,14 +243,22 @@ describe("Events Utility Functions", () => {
 
             sendRealtimeUpdate(updateData);
 
-            expect(mockHandler1).toHaveBeenCalledWith({
-                ...updateData,
-                timestamp: expect.any(Number),
-            });
-            expect(mockHandler2).toHaveBeenCalledWith({
-                ...updateData,
-                timestamp: expect.any(Number),
-            });
+            expect(mockHandler1).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    update: expect.objectContaining({
+                        ...updateData,
+                        timestamp: expect.any(Number),
+                    }),
+                })
+            );
+            expect(mockHandler2).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    update: expect.objectContaining({
+                        ...updateData,
+                        timestamp: expect.any(Number),
+                    }),
+                })
+            );
         });
 
         test("should handle event emission errors gracefully", () => {
@@ -300,10 +312,14 @@ describe("Events Utility Functions", () => {
             };
 
             sendRealtimeUpdate(updateData);
-            expect(mockHandler).toHaveBeenCalledWith({
-                ...updateData,
-                timestamp: expect.any(Number),
-            });
+            expect(mockHandler).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    update: expect.objectContaining({
+                        ...updateData,
+                        timestamp: expect.any(Number),
+                    }),
+                })
+            );
         });
 
         test("should broadcast updates to all event listeners", () => {
@@ -327,14 +343,22 @@ describe("Events Utility Functions", () => {
             // Broadcast to all users
             sendRealtimeUpdate(updateData);
 
-            expect(mockHandler1).toHaveBeenCalledWith({
-                ...updateData,
-                timestamp: expect.any(Number),
-            });
-            expect(mockHandler2).toHaveBeenCalledWith({
-                ...updateData,
-                timestamp: expect.any(Number),
-            });
+            expect(mockHandler1).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    update: expect.objectContaining({
+                        ...updateData,
+                        timestamp: expect.any(Number),
+                    }),
+                })
+            );
+            expect(mockHandler2).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    update: expect.objectContaining({
+                        ...updateData,
+                        timestamp: expect.any(Number),
+                    }),
+                })
+            );
         });
     });
 
@@ -401,13 +425,13 @@ describe("Events Utility Functions", () => {
             };
 
             // Queue a message for the connection
-            queueMessage(connectionId, message);
+            queueMessage(connectionId, message, null);
 
             // Retrieve queued messages
             const queuedMessages = getQueuedMessages(connectionId);
 
             expect(queuedMessages).toHaveLength(1);
-            expect(queuedMessages[0]).toEqual(message);
+            expect(queuedMessages[0].frame).toEqual(message);
         });
 
         test("should limit queue size for connections", () => {
@@ -422,15 +446,15 @@ describe("Events Utility Functions", () => {
                     action: "create" as any,
                     timestamp: Date.now(),
                 };
-                queueMessage(connectionId, message);
+                queueMessage(connectionId, message, null);
             }
 
             const queuedMessages = getQueuedMessages(connectionId);
 
             // Should only keep the last 100 messages (queue limit)
             expect(queuedMessages).toHaveLength(100);
-            expect(queuedMessages[0].record).toBe("notification-50"); // First message should be notification-50
-            expect(queuedMessages[99].record).toBe("notification-149"); // Last message should be notification-149
+            expect(queuedMessages[0].frame.record).toBe("notification-50"); // First message should be notification-50
+            expect(queuedMessages[99].frame.record).toBe("notification-149"); // Last message should be notification-149
         });
 
         test("should clear message queue after retrieval", () => {
@@ -444,7 +468,7 @@ describe("Events Utility Functions", () => {
             };
 
             // Queue message
-            queueMessage(connectionId, message);
+            queueMessage(connectionId, message, null);
 
             // Verify message is queued
             let queuedMessages = getQueuedMessages(connectionId);

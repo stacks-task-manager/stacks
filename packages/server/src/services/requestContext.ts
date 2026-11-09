@@ -17,6 +17,7 @@ interface RequestContext {
     user: User;
     instanceId: string;
     role: IRole;
+    sid?: string;
     requestId: string;
     timestamp: number;
 }

@@ -57,6 +57,7 @@ export const Comments: FunctionComponent<ICommentsProps> = ({ resourceId, disabl
                                     icon={<Icon icon={showLogs ? "eye-off" : "eye"} />}
                                     intent={showLogs ? Intent.PRIMARY : Intent.NONE}
                                     onClick={handleToggleLogsVisibility}
+                                    data-testid="comments-toggle-logs"
                                 />
                             </Tooltip>
                         }
@@ -80,7 +81,7 @@ export const Comments: FunctionComponent<ICommentsProps> = ({ resourceId, disabl
                         {comments.length > 0 && (
                             <Row>
                                 <Col>
-                                    <div className="messages">
+                                    <div className="messages" data-testid="comments-list">
                                         {comments.map(comment => {
                                             return (
                                                 <Comment

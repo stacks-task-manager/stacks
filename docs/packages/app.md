@@ -15,6 +15,7 @@ The Stacks web client. A React 18 + TypeScript app, bundled with Webpack, that r
 `packages/app/.env` (no `env.example` is checked in — create it manually if you need to override defaults):
 
 - `PORT` — dev server port (default `3001` in this repo)
+- `HOST` — bind address (defaults to `127.0.0.1`; override only on a trusted network because the dev server exposes the source bundle)
 - `BROWSER` — set to `none` to prevent auto-opening a browser
 - `GENERATE_SOURCEMAP` — enable / disable source maps
 
@@ -40,7 +41,7 @@ Output lands in `packages/app/build/`. `yarn release` copies it into the runnabl
 These live next to the source under [`packages/app/docs/`](../../packages/app/docs/):
 
 - [Web app onboarding](../../packages/app/docs/ONBOARDING.md) — stack overview, boot sequence, code layout, **"add a feature" walkthrough**, conventions, FAQ
-- [Web app architecture](../../packages/app/docs/ARCHITECTURE.md) — routing model (HashRouter, background-route panels), state pattern, real-time updates, drag-and-drop, theming, the global user-feedback surface
+- [Web app architecture](../../packages/app/docs/ARCHITECTURE.md) — routing model (BrowserRouter under `/app`, background-route panels), state pattern, real-time updates, drag-and-drop, theming, the global user-feedback surface
 - [API client](../../packages/app/docs/API_CLIENT.md) — the shared Axios instance, date round-tripping, `X-Instance-ID`, error handling, per-domain modules
 
 ## Related

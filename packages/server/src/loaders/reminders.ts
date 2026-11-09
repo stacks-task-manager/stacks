@@ -4,13 +4,26 @@
  */
 import { ReminderEntity } from "@stacks/db";
 import { Transaction } from "sequelize";
+import { Errors } from "../errors";
+import { translate } from "@stacks/translations";
 import { invalidateApiCacheForCurrentRequest } from "../utils/cache";
 import { getCurrentUser } from "./context";
 import { sanitizeWhere } from "./utils";
+import { TasksLoader } from "./tasks";
+
+/** Resolve visibility and owner-write policy through the canonical task loader. */
+async function assertTaskWritable(recordId: string, transaction?: Transaction) {
+    const task = await TasksLoader.getOne(recordId, transaction);
+    const user = getCurrentUser();
+    if (!user.admin && task.permissions?.owner !== user.id) {
+        throw Errors.forbidden(translate("Record update not allowed"));
+    }
+    return task;
+}
 
 /** All reminders for a record id in the current tenant. */
 async function getAll(recordId: string) {
-    const user = getCurrentUser();
+    await TasksLoader.getOne(recordId);
     const reminders = await ReminderEntity.findAll({
         where: sanitizeWhere({ recordId }),
     });
@@ -21,6 +34,7 @@ async function getAll(recordId: string) {
 /** Persists a reminder; optional Sequelize transaction for batch flows. */
 async function create(data: any, transaction?: Transaction) {
     const user = getCurrentUser();
+    await assertTaskWritable(data.recordId, transaction);
     try {
         const newReminder = await ReminderEntity.create(
             { ...data, tenant: user.tenant, createdBy: user.id, updatedBy: user.id },
@@ -38,6 +52,13 @@ async function create(data: any, transaction?: Transaction) {
 /** Soft-deletes by id; returns whether a row was updated. */
 async function remove(id: string, transaction?: Transaction) {
     const user = getCurrentUser();
+    const reminder = await ReminderEntity.findOne({
+        where: sanitizeWhere({ id }),
+        transaction,
+    });
+    if (!reminder) return false;
+
+    await assertTaskWritable(String(reminder.get("recordId")), transaction);
     const [affectedCount] = await ReminderEntity.update(
         {
             deleted: new Date(),

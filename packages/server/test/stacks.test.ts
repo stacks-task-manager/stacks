@@ -200,7 +200,7 @@ describe("Stacks", () => {
             },
         });
 
-        expect([400, 404, 500]).toContain(res.status);
+        expect(res.status).toBe(400);
     });
 
     test("Update stack with invalid ID", async () => {
@@ -217,7 +217,7 @@ describe("Stacks", () => {
             body: JSON.stringify(updateData),
         });
 
-        expect([400, 404, 500]).toContain(res.status);
+        expect(res.status).toBe(400);
     });
 
     test("Delete stack with invalid ID", async () => {
@@ -229,7 +229,7 @@ describe("Stacks", () => {
             },
         });
 
-        expect([400, 404]).toContain(res.status);
+        expect(res.status).toBe(400);
     });
 
     test("Access stacks without authentication", async () => {
@@ -241,7 +241,6 @@ describe("Stacks", () => {
             },
         });
 
-        // Should fail without authentication or route missing
-        expect([401, 404]).toContain(res.status);
+        expect(res.status).toBe(401);
     });
 });

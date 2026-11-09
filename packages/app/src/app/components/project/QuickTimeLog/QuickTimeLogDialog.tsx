@@ -9,7 +9,7 @@ import { IQuickTimeLogProps, QuickTimeLog } from "./QuickTimeLog";
 
 export const QuickTimeLogDialog: FunctionComponent<IQuickTimeLogProps> = ({ onSave, onClose, ...props }) => {
     const [open, setOpen] = useState(true);
-    const anotherRef = useRef<boolean | undefined>();
+    const anotherRef = useRef<boolean | undefined>(undefined);
 
     const handleCloseDialog = () => {
         setOpen(false);

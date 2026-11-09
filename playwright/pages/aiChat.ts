@@ -1,5 +1,6 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 import Base from "./base";
+import type { AiChatWidget } from "@stacks/types";
 
 export type ChoiceControl = "buttons" | "radio" | "checkbox";
 export type SeedChoiceWidget = {
@@ -13,7 +14,7 @@ export type SeedChatMessage = {
     id: string;
     role: "user" | "assistant";
     content: string;
-    widgets?: Array<{ type: "choice" } & SeedChoiceWidget>;
+    widgets?: AiChatWidget[];
 };
 
 class AiChat extends Base {
@@ -22,8 +23,21 @@ class AiChat extends Base {
 
     constructor(page: Page) {
         super(page);
-        this.assistantButton = page.getByLabel("Open AI assistant");
+        this.assistantButton = page.getByTestId("ai-chat-open");
         this.panel = page.getByTestId("ai-chat-panel");
+    }
+
+    async expectResult(label: string) {
+        await expect(this.page.getByTestId("ai-chat-result")).toContainText(label);
+    }
+    async expectStatus(label: string) {
+        await expect(this.page.getByTestId("ai-chat-status")).toContainText(label);
+    }
+    async openResult() {
+        await this.page.getByTestId("ai-chat-result-link").first().click();
+    }
+    async expectPath(path: string) {
+        await expect(this.page).toHaveURL(new RegExp(path));
     }
 
     choice(id: string): Locator {
@@ -96,7 +110,7 @@ class AiChat extends Base {
 
     async expectDisabled(id: string) {
         const root = this.option(id);
-        const input = root.locator("input");
+        const input = this.page.getByTestId(`ai-chat-choice-input-${id}`);
         if (await input.count()) {
             await expect(input).toBeDisabled();
         } else {

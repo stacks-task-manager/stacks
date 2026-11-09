@@ -4,7 +4,12 @@ import React, { FunctionComponent } from "react";
 interface ITableRowProps {
     children: React.ReactNode;
     className?: string;
+    testId?: string;
 }
-export const TableRow: FunctionComponent<ITableRowProps> = ({ children, className }) => {
-    return <tr className={className}>{children}</tr>;
+export const TableRow: FunctionComponent<ITableRowProps> = ({ children, className, testId }) => {
+    return (
+        <tr className={className} data-testid={testId}>
+            {children}
+        </tr>
+    );
 };

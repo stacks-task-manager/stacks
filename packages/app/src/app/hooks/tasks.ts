@@ -128,7 +128,7 @@ export function buildTaskPredicates(
 
     if (filters.query && filters.query.length > 0) {
         const q = filters.query.toLowerCase();
-        preds.push(t => t.title.toLowerCase().includes(q) || t.description.toLowerCase().includes(q));
+        preds.push(t => t.title.toLowerCase().includes(q) || (t.description ?? "").toLowerCase().includes(q));
     }
 
     if (filters.state !== "all") {

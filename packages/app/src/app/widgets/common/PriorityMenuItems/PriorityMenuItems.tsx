@@ -23,6 +23,7 @@ export const PriorityMenuItems: FunctionComponent<PriorityMenuItemsProps> = ({
         <>
             <MenuItem
                 id={`priority-${PRIORITY.NONE}`}
+                data-testid={`priority-${PRIORITY.NONE}`}
                 text={translate("None")}
                 labelElement={
                     <Icon icon={!value || (value && value === PRIORITY.NONE) ? "check" : undefined} />
@@ -34,6 +35,7 @@ export const PriorityMenuItems: FunctionComponent<PriorityMenuItemsProps> = ({
             {showDivider && <MenuDivider />}
             <MenuItem
                 id={`priority-${PRIORITY.CRITICAL}`}
+                data-testid={`priority-${PRIORITY.CRITICAL}`}
                 text={translate("Critical")}
                 icon={<Icon icon={PRIORITYICON.CRITICAL} />}
                 intent={Intent.DANGER}
@@ -44,6 +46,7 @@ export const PriorityMenuItems: FunctionComponent<PriorityMenuItemsProps> = ({
             />
             <MenuItem
                 id={`priority-${PRIORITY.HIGH}`}
+                data-testid={`priority-${PRIORITY.HIGH}`}
                 text={translate("High")}
                 icon={<Icon icon={PRIORITYICON.HIGH} />}
                 intent={Intent.DANGER}
@@ -54,6 +57,7 @@ export const PriorityMenuItems: FunctionComponent<PriorityMenuItemsProps> = ({
             />
             <MenuItem
                 id={`priority-${PRIORITY.MEDIUM}`}
+                data-testid={`priority-${PRIORITY.MEDIUM}`}
                 text={translate("Medium")}
                 icon={<Icon icon={PRIORITYICON.MEDIUM} />}
                 intent={Intent.WARNING}
@@ -65,6 +69,7 @@ export const PriorityMenuItems: FunctionComponent<PriorityMenuItemsProps> = ({
 
             <MenuItem
                 id={`priority-${PRIORITY.LOW}`}
+                data-testid={`priority-${PRIORITY.LOW}`}
                 text={translate("Low")}
                 icon={<Icon icon={PRIORITYICON.LOW} />}
                 intent={Intent.SUCCESS}

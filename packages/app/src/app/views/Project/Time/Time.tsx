@@ -185,7 +185,7 @@ export const Time = () => {
                         </TableHead>
                         <TableBody>
                             {sortedTimelogs.map((log: ITimeLog) => (
-                                <TableRow key={`${log.id}-`}>
+                                <TableRow key={`${log.id}-`} testId={`project-time-entry-${log.id}`}>
                                     {editing === log.id && params.id && (
                                         <QuickTimeLogDialog
                                             taskId={log.task}
@@ -285,7 +285,9 @@ export const Time = () => {
                                     </Col>
                                     <Col width={100} justify="right" align="center">
                                         <Tag minimal intent={totalTimeLoggedIntent}>
-                                            {formatDuration(total)}
+                                            <span data-testid="project-time-total-logged">
+                                                {formatDuration(total)}
+                                            </span>
                                         </Tag>
                                     </Col>
                                 </Row>

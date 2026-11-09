@@ -5,6 +5,7 @@
 import { Hono } from "hono";
 import type { Context } from "hono";
 
+import { Errors } from "../errors";
 import { RolesLoader } from "../loaders";
 import { validator } from "../middleware/validator";
 import { asyncHandler } from "../utils/errorHandler";
@@ -41,7 +42,10 @@ roles.patch(
         const { id } = c.req.param();
         const roleData = c.req.valid("json");
         parseUuidParam(id);
-        await RolesLoader.update(id, roleData);
+        const updated = await RolesLoader.update(id, roleData);
+        if (!updated) {
+            throw Errors.notFound("Role not found");
+        }
         return c.replySuccess();
     })
 );

@@ -200,6 +200,7 @@ export const TimeTracker: FunctionComponent<ITimeTrackerProps> = React.memo(
             return (
                 <RoundButton
                     id={id}
+                    testId="time-tracker-start"
                     dashed
                     tooltip="Log time"
                     icon="play"
@@ -226,6 +227,7 @@ export const TimeTracker: FunctionComponent<ITimeTrackerProps> = React.memo(
                         icon={<Icon icon="play" />}
                         disabled={disabled}
                         onClick={handleStartTimer}
+                        data-testid="time-tracker-start"
                     />
                 )}
             />

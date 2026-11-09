@@ -1,6 +1,7 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { describe, test, expect, beforeAll } from "vitest";
 import app from "../src/index";
+import { RoleEntity } from "@stacks/db";
 import { getAuthToken } from "./helpers/authHelper";
 
 describe("People", () => {
@@ -69,16 +70,8 @@ describe("People", () => {
     });
 
     test("Create a person", async () => {
-        const rolesRes = await app.request("/api/roles", {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-        });
-        expect(rolesRes.status).toBe(200);
-        const rolesBody = await rolesRes.json();
-        const roleId = rolesBody.data[0]?.id;
+        const role = await RoleEntity.findOne({ where: { title: "User" } });
+        expect(role).not.toBeNull();
         const res = await app.request("/api/people", {
             method: "POST",
             headers: {
@@ -89,7 +82,7 @@ describe("People", () => {
                 firstName: "John",
                 lastName: "Doe",
                 email: "john.doe@example.com",
-                role: roleId,
+                role: role!.id,
                 real: false,
             }),
         });
@@ -97,7 +90,7 @@ describe("People", () => {
         expect([200, 403, 500]).toContain(res.status);
     });
 
-    test("Get people roles", async () => {
+    test("Role listing is unavailable to users without role visibility", async () => {
         const res = await app.request("/api/roles", {
             method: "GET",
             headers: {
@@ -106,10 +99,7 @@ describe("People", () => {
             },
         });
 
-        expect(res.status).toBe(200);
-        const body = await res.json();
-        expect(body.success).toBe(true);
-        expect(Array.isArray(body.data)).toBe(true);
+        expect(res.status).toBe(403);
     });
 
     test("Get people birthdays with invalid date format", async () => {
@@ -178,10 +168,10 @@ describe("People", () => {
             },
         });
 
-        // Should fail with invalid token
+        // Invalid credentials share a generic response to avoid token-state disclosure.
         expect(res.status).toBe(401);
         const invalidBody = await res.json();
         expect(invalidBody.success).toBe(false);
-        expect(invalidBody.code).toBe("INVALID_TOKEN");
+        expect(invalidBody.code).toBe("UNAUTHORIZED");
     });
 });

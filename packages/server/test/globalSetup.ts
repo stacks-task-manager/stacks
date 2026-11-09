@@ -1,4 +1,5 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+import { formatTestDatabaseErrors, validateTestDatabaseTarget } from "./helpers/testDatabaseSafety";
 import { setupInitialUser, teardownTestData, getAuthToken } from "./helpers/authHelper";
 import { connectDb, sequelize } from "@stacks/db";
 import { seedDatabase } from "../src/seed/index";
@@ -7,6 +8,12 @@ import { TEST_LICENSE } from "./helpers/testLicense";
 
 // This function will be called by Vitest before tests run
 export async function setup() {
+    // Gate destructive DB setup BEFORE any import/connection/sync side effects.
+    const dbSafetyErrors = validateTestDatabaseTarget(process.env);
+    if (dbSafetyErrors.length > 0) {
+        throw new Error(formatTestDatabaseErrors(dbSafetyErrors));
+    }
+
     process.env.NODE_ENV = "test";
     console.log("Global Setup: Starting...");
     // Initialize database connection and seed data before tests

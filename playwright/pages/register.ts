@@ -36,6 +36,10 @@ class RegisterPage extends Base {
         await this.tenantSelect.selectOption(firstValue as string);
     }
 
+    async tenantOptionCount(): Promise<number> {
+        return this.tenantSelect.locator("option").count();
+    }
+
     async fill(email: string, firstName: string, lastName: string, password: string): Promise<void> {
         await this.emailField.fill(email);
         await this.firstNameField.fill(firstName);

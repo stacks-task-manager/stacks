@@ -2,6 +2,7 @@ import { chromium } from "@playwright/test";
 import { TEMP_VIDEOS_DIR } from "./attachVideoContext";
 import fs from "fs";
 import path from "path";
+import { e2eBaseUrl } from "../config/runtime";
 
 const authFile = path.resolve(__dirname, "../../playwright/.auth/user.json");
 const shouldRecordVideo = process.env.E2E_RECORD_VIDEO !== "false";
@@ -26,7 +27,7 @@ export const bootstrapContext = async (options?: { ignoreAuth?: boolean }) => {
     const context = await browser.newContext({
         recordVideo: shouldRecordVideo ? { dir: TEMP_VIDEOS_DIR } : undefined,
         storageState,
-        baseURL: "http://localhost:3000",
+        baseURL: e2eBaseUrl,
     });
     const page = await context.newPage();
 

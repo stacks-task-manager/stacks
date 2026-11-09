@@ -148,4 +148,33 @@ test.describe("AI Chat interactive widgets", () => {
         await aiChat.expectDisabled("prio-high");
         await aiChat.expectDisabled("tag-frontend");
     });
+    test("renders and persists assistant results without prose", async () => {
+        test.skip(!aiEnabled, "AI chat is not enabled on the running server");
+        await aiChat.seed([
+            {
+                id: "dry-result",
+                role: "assistant",
+                content: "",
+                widgets: [
+                    {
+                        type: "result",
+                        label: "Projects",
+                        items: [
+                            {
+                                label: "Website",
+                                fields: [{ label: "Status", value: "Open" }],
+                                hashPath: "/home",
+                            },
+                        ],
+                    },
+                    { type: "status", label: "Completed", severity: "success" },
+                ],
+            },
+        ]);
+        await aiChat.expectResult("Website");
+        await aiChat.expectStatus("Completed");
+        await aiChat.openResult();
+        await aiChat.expectPath("/home");
+        await aiChat.seed(seedMessages);
+    });
 });

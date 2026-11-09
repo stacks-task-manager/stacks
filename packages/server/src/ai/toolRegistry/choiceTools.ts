@@ -5,7 +5,11 @@ import { z } from "zod";
 import { defineTool } from "./defineTool";
 
 const choiceOptionSchema = z.object({
-    id: z.string().min(1),
+    id: z
+        .string()
+        .min(1)
+        .optional()
+        .describe("Optional option id; the server generates unique ids when omitted or duplicated"),
     label: z.string().min(1),
     value: z.string().optional(),
 });
@@ -26,7 +30,13 @@ export const choiceAiTools = [
             id: randomUUID(),
             question,
             control,
-            options,
+            options: options.map(option => ({
+                ...option,
+                id:
+                    options.every(o => o.id) && new Set(options.map(o => o.id)).size === options.length
+                        ? option.id!
+                        : randomUUID(),
+            })),
             ...(submitLabel ? { submitLabel } : {}),
         }),
     }),

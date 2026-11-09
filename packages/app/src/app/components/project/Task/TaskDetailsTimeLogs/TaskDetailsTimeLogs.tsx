@@ -89,28 +89,31 @@ export const TaskDetailsTimeLogs: FunctionComponent<ITaskDetailsTimeLogsProps> =
 
     if (!entries || (entries && entries.length === 0)) {
         return (
-            <Row>
-                <Col justify="center">
-                    <BlankSlate
-                        icon={APPICONS.TIMELOG}
-                        title={translate("No time logged")}
-                        description={translate(
-                            "This task does not have any logged time yet Click the button bellow to add the first one"
-                        )}
-                        small
-                        maxWidth={250}
-                    >
-                        <QuickTimeLogPopover taskId={taskId} projectId={projectId} placement="bottom-end">
-                            <RoundButton
-                                title={translate("Log time")}
-                                minimal
-                                icon="clock-plus"
-                                disabled={disabled || loading || !canLogTime}
-                            />
-                        </QuickTimeLogPopover>
-                    </BlankSlate>
-                </Col>
-            </Row>
+            <div data-testid="task-time-logs-empty">
+                <Row>
+                    <Col justify="center">
+                        <BlankSlate
+                            icon={APPICONS.TIMELOG}
+                            title={translate("No time logged")}
+                            description={translate(
+                                "This task does not have any logged time yet Click the button bellow to add the first one"
+                            )}
+                            small
+                            maxWidth={250}
+                        >
+                            <QuickTimeLogPopover taskId={taskId} projectId={projectId} placement="bottom-end">
+                                <RoundButton
+                                    title={translate("Log time")}
+                                    minimal
+                                    icon="clock-plus"
+                                    testId="task-time-logs-add-entry"
+                                    disabled={disabled || loading || !canLogTime}
+                                />
+                            </QuickTimeLogPopover>
+                        </BlankSlate>
+                    </Col>
+                </Row>
+            </div>
         );
     }
 
@@ -157,7 +160,7 @@ export const TaskDetailsTimeLogs: FunctionComponent<ITaskDetailsTimeLogsProps> =
                     {!loading &&
                         entries &&
                         entries.map((entry: ITimeLog) => (
-                            <TableRow key={entry.id}>
+                            <TableRow key={entry.id} testId={`task-time-log-${entry.id}`}>
                                 <TableBodyCell>{format(entry.date, "P")}</TableBodyCell>
                                 {/* <TableBodyCell>
                                     <OverflowTextCell>{getDocument(entry.project)?.text}</OverflowTextCell>
@@ -185,11 +188,13 @@ export const TaskDetailsTimeLogs: FunctionComponent<ITaskDetailsTimeLogsProps> =
                                 </TableBodyCell>
                                 <TableBodyCell>{entry.status}</TableBodyCell>
                                 <TableBodyCell
+                                    menuTestId={`task-time-log-menu-${entry.id}`}
                                     menu={
                                         <Menu>
                                             <MenuItem
                                                 text={translate("Edit")}
                                                 icon={<Icon icon="edit-05" />}
+                                                data-testid={`task-time-log-edit-${entry.id}`}
                                                 disabled={[
                                                     TIMELOG_STATUS.INREVIEW,
                                                     TIMELOG_STATUS.APPROVED,
@@ -201,6 +206,7 @@ export const TaskDetailsTimeLogs: FunctionComponent<ITaskDetailsTimeLogsProps> =
                                                 text={translate("Delete")}
                                                 intent={Intent.DANGER}
                                                 icon={<Icon icon="trash" />}
+                                                data-testid={`task-time-log-delete-${entry.id}`}
                                                 disabled={entry.status === TIMELOG_STATUS.APPROVED}
                                                 onClick={() => TimelogsActions.remove(entry.id)}
                                             />
@@ -247,7 +253,7 @@ export const TaskDetailsTimeLogs: FunctionComponent<ITaskDetailsTimeLogsProps> =
                         {loading ? (
                             <div className={Classes.SKELETON}>12345678</div>
                         ) : (
-                            <Tag intent={Intent.SUCCESS} minimal>
+                            <Tag intent={Intent.SUCCESS} minimal data-testid="task-time-logs-total">
                                 {formatStringDuration(total)}
                             </Tag>
                         )}

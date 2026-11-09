@@ -1,6 +1,6 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import * as crypto from "crypto";
-import { mkdtempSync, readFileSync, writeFileSync } from "fs";
+import { mkdtempSync, readFileSync, rmSync, unlinkSync, writeFileSync } from "fs";
 import { tmpdir } from "os";
 import { join, resolve } from "path";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -15,6 +15,14 @@ import {
 const esbuild = require("esbuild");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { integrityPlugin } = require("../esbuild-integrity-plugin");
+const integrityBuildDirectories: string[] = [];
+
+afterEach(() => {
+    for (const directory of integrityBuildDirectories) {
+        rmSync(directory, { recursive: true, force: true });
+    }
+    integrityBuildDirectories.length = 0;
+});
 
 /** Build a bundle body and matching hash/signature/public PEM (mirrors esbuild plugin semantics). */
 function buildSignedIntegrityFixture(): {
@@ -174,7 +182,9 @@ describe("integrity build plugin (end-to-end)", () => {
      * these tests hermetic, we generate an ephemeral unencrypted keypair per fixture and pass
      * its paths to the plugin instead of using the production keys.
      */
-    async function buildIntegrityFixture(): Promise<{
+    async function buildIntegrityFixture(
+        options: { omitPrivateKey?: boolean; omitPublicKey?: boolean } = {}
+    ): Promise<{
         bundlePath: string;
         bundleContent: string;
         embeddedHash: string;
@@ -182,6 +192,7 @@ describe("integrity build plugin (end-to-end)", () => {
         publicKey: string;
     }> {
         const outDir = mkdtempSync(join(tmpdir(), "stacks-integ-build-"));
+        integrityBuildDirectories.push(outDir);
         const bundlePath = join(outDir, "server.js");
 
         const { publicKey, privateKey } = crypto.generateKeyPairSync("rsa", {
@@ -193,6 +204,8 @@ describe("integrity build plugin (end-to-end)", () => {
         const publicKeyPath = join(outDir, "public.pem");
         writeFileSync(privateKeyPath, privateKey as string, "utf8");
         writeFileSync(publicKeyPath, publicKey as string, "utf8");
+        if (options.omitPrivateKey) unlinkSync(privateKeyPath);
+        if (options.omitPublicKey) unlinkSync(publicKeyPath);
 
         await esbuild.build({
             entryPoints: [entryPath],
@@ -244,6 +257,18 @@ describe("integrity build plugin (end-to-end)", () => {
         const f = await buildIntegrityFixture();
         expect(verifyBundleIntegrityAtPath(f.bundlePath, f.embeddedHash, f.embeddedSig, f.publicKey)).toBe(
             true
+        );
+    });
+
+    it("fails the build when the release-signing private key is missing", async () => {
+        await expect(buildIntegrityFixture({ omitPrivateKey: true })).rejects.toThrow(
+            /Release-signing private key not found/
+        );
+    });
+
+    it("fails the build when the release-signing public key is missing", async () => {
+        await expect(buildIntegrityFixture({ omitPublicKey: true })).rejects.toThrow(
+            /Release-signing public key not found/
         );
     });
 

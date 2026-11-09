@@ -2,6 +2,7 @@ import { expect, Locator, Page } from "@playwright/test";
 import Base from "./base";
 import { QuickTimelog } from "./components/QuickTimelog";
 import Sidebar from "./sidebar";
+import type { IRoleAccess, IRole } from "@stacks/types";
 
 type MockTimesheetStatus = "approved" | "inreview" | "pending" | "rejected";
 
@@ -9,6 +10,7 @@ const MOCK_TIMELOG_IDS = ["11111111-1111-4111-8111-111111111111", "55555555-5555
 const MOCK_PROJECT_ID = "22222222-2222-4222-8222-222222222222";
 const MOCK_TASK_ID = "33333333-3333-4333-8333-333333333333";
 const MOCK_PERSON_ID = "44444444-4444-4444-8444-444444444444";
+const TIMESHEET_ROUTE = /\/api\/timelogs(?:\/review)?(?:\?.*)?$/;
 
 class People extends Base {
     public sidebar: Sidebar;
@@ -153,6 +155,84 @@ class People extends Base {
         await expect(this.rolesView).toBeVisible();
     }
 
+    public async createRole(title: string, access: IRoleAccess): Promise<IRole> {
+        const response = await this.page.request.post("/api/roles", {
+            headers: await this.browserMutationHeaders(),
+            data: { title, description: "Scenario role", access },
+        });
+        expect(
+            response.ok(),
+            `Role creation returned ${response.status()}: ${await response.text()}`
+        ).toBeTruthy();
+        return (await response.json()).data;
+    }
+
+    /** Posts a role body missing the required title and asserts the server rejects it. */
+    public async expectRoleWithoutTitleRejected(): Promise<void> {
+        const response = await this.page.request.post("/api/roles", {
+            headers: await this.browserMutationHeaders(),
+            data: { description: "Scenario role", access: { people: { read: true } } },
+        });
+        expect(
+            response.status(),
+            `Role without a title returned ${response.status()}: ${await response.text()}`
+        ).toBe(400);
+    }
+
+    public async loadRole(id: string): Promise<IRole> {
+        const response = await this.page.request.get("/api/roles");
+        expect(response.ok()).toBeTruthy();
+        const role = (await response.json()).data.find((item: IRole) => item.id === id);
+        expect(role, `Role ${id} should persist`).toBeDefined();
+        return role;
+    }
+
+    public async editRole(id: string) {
+        await this.openRoles();
+        await this.page.getByTestId(`role-edit-${id}`).click();
+        await expect(this.page.getByTestId("role-title-input")).toBeVisible();
+    }
+
+    public async setRolePeopleWrite(enabled: boolean) {
+        // Blueprint's visible control indicator overlays its native input.
+        // setChecked still verifies that the resulting native checked state changed.
+        await this.page.getByTestId("role-access-people-write").setChecked(enabled, { force: true });
+    }
+
+    public async saveRole(id: string) {
+        const responsePromise = this.page.waitForResponse(
+            response =>
+                response.request().method() === "PATCH" &&
+                new URL(response.url()).pathname === `/api/roles/${id}`
+        );
+        await this.page.getByTestId("role-edit-save-button").click();
+        const response = await responsePromise;
+        expect(
+            response.ok(),
+            `Role update returned ${response.status()}: ${await response.text()}`
+        ).toBeTruthy();
+        await expect(this.page.getByTestId("role-title-input")).toBeHidden();
+    }
+
+    public async cancelRoleTitleEdit(title: string) {
+        await this.page.getByTestId("role-title-input").fill(title);
+        await this.page.getByTestId("role-edit-cancel-button").click();
+        await expect(this.page.getByTestId("role-title-input")).toBeHidden();
+    }
+
+    public async expectPersonCreationAllowed(allowed: boolean) {
+        if (allowed) await expect(this.addPersonButton).toBeVisible();
+        else await expect(this.addPersonButton).toBeHidden();
+    }
+
+    public async expectPersonCreationDenied(email: string, roleId: string) {
+        const response = await this.page.request.post("/api/people", {
+            headers: await this.browserMutationHeaders(),
+            data: { email, role: roleId, firstName: "E2E", lastName: "Denied", real: false, gender: "other" },
+        });
+        expect(response.status()).toBe(403);
+    }
+
     public async openTimesheet() {
         await this.timesheetTab.click();
         await expect(this.timesheetTab).toHaveClass(/active/);
@@ -205,7 +285,7 @@ class People extends Base {
         const date = monday.toISOString();
         let submitted = false;
 
-        await this.page.route("**/api/timelogs*", async route => {
+        await this.page.route(TIMESHEET_ROUTE, async route => {
             const request = route.request();
             if (request.method() === "PATCH" && request.url().endsWith("/api/timelogs/review")) {
                 submitted = true;
@@ -295,20 +375,24 @@ class People extends Base {
     }
 
     public async clearTimesheetMock() {
-        await this.page.unroute("**/api/timelogs*");
+        await this.page.unroute(TIMESHEET_ROUTE);
     }
 
     public async submitTimesheetForReview() {
         await expect(this.timesheetSubmitReviewButton).toBeEnabled();
-        const requestPromise = this.page.waitForRequest(
-            request => request.method() === "PATCH" && request.url().endsWith("/api/timelogs/review")
+        const responsePromise = this.page.waitForResponse(
+            response =>
+                response.request().method() === "PATCH" && response.url().endsWith("/api/timelogs/review")
         );
         await this.timesheetSubmitReviewButton.click();
         await expect(this.page.getByTestId("confirm-dialog-title")).toBeVisible();
         await this.page.getByTestId("confirm-dialog-confirm-button").click();
-        const request = await requestPromise;
-        await this.page.unroute("**/api/timelogs*");
-        return request.postDataJSON() as { start: string; end: string };
+        const response = await responsePromise;
+        expect(response.ok()).toBeTruthy();
+        // submitReview reloads after PATCH. Keep the mock installed until that
+        // reload renders, otherwise a real empty response can overwrite the next scenario.
+        await this.expectInReviewStatus();
+        return response.request().postDataJSON() as { start: string; end: string };
     }
 
     public async navigateApprovalInterval() {
@@ -427,6 +511,38 @@ class People extends Base {
         await this.waitForCompanyRowLoaded(id);
         await this.companyNameCell(id).click();
         await this.companyEditButton.waitFor({ state: "visible" });
+    }
+
+    /** Opens a person's details from their People contacts row and waits for the favorite star. */
+    public async openPersonProfile(id: string) {
+        await this.goto("/app/people");
+        await this.openContacts();
+        await this.waitForPersonRowLoaded(id);
+        await this.personNameCell(id).click();
+        await this.page.getByTestId("person-favorite-button").waitFor({ state: "visible" });
+    }
+
+    /**
+     * Toggles a person's favorite state from their details toolbar. Client-side only
+     * (`store/actions/people.ts` writes browser localStorage; no server route), so nothing
+     * is awaited from the network here.
+     */
+    public async toggleFavoritePerson() {
+        await this.page.getByTestId("person-favorite-button").click();
+    }
+
+    /** Opens a company's details from its People companies row and waits for the favorite star. */
+    public async openCompanyProfile(id: string) {
+        await this.goto("/app/people");
+        await this.openCompanies();
+        await this.waitForCompanyRowLoaded(id);
+        await this.companyNameCell(id).click();
+        await this.page.getByTestId("company-favorite-button").waitFor({ state: "visible" });
+    }
+
+    /** Toggles a company's favorite state from its details toolbar (client-side only). */
+    public async toggleFavoriteCompany() {
+        await this.page.getByTestId("company-favorite-button").click();
     }
 
     public async expectPersonDetailsMode(embedded: boolean) {

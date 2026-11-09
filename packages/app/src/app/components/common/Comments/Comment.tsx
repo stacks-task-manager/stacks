@@ -4,20 +4,13 @@ import { Button, Classes, Intent, Menu, MenuItem, Popover, Tag } from "@blueprin
 import classNames from "classnames";
 import React, { useEffect, useMemo, useState } from "react";
 
-import {
-    ACTIVITYTYPE,
-    FILES_TYPE,
-    IActivity,
-    IActivityChange,
-    IComment,
-    PRIORITY,
-    TAGSECTION,
-} from "@stacks/types";
+import { ACTIVITYTYPE, FILES_TYPE, IActivity, IComment, PRIORITY, TAGSECTION } from "@stacks/types";
 import { Avatar, Col, DateChip, Grid, Icon, Row } from "app/components/common";
 import { PriorityChip, TIRepeats } from "app/components/project";
 import { getPeople, getStack, getTag } from "app/hooks";
 import { ActivitiesActions, FilesActions } from "app/store/actions";
 import { formatDuration, timeSince } from "app/utils/date";
+import { diffActivitySegments } from "app/utils/activityDiff";
 import { Assignees, Editor, HTMLRenderer, StatusChip, Tags, TipTapEditorContent } from "app/widgets";
 interface ICommentProps {
     resourceId: string;
@@ -58,7 +51,7 @@ export const Comment = React.memo(function Comment({ resourceId, comment, mine }
 
     if (comment.type === ACTIVITYTYPE.LOG) {
         return (
-            <div className={classNames("comment", comment.type)}>
+            <div className={classNames("comment", comment.type)} data-testid="activity-log-entry">
                 <div>
                     {comment.assignee && (
                         <span style={{ fontWeight: "600" }}>
@@ -76,12 +69,15 @@ export const Comment = React.memo(function Comment({ resourceId, comment, mine }
     }
 
     return (
-        <div className={classNames("comment", comment.type, mine ? "from-me" : "from-them")}>
+        <div
+            className={classNames("comment", comment.type, mine ? "from-me" : "from-them")}
+            data-testid={`task-comment-${comment.id}`}
+        >
             {comment.assignee && <Avatar person={comment.assignee} />}
 
             <div className="comment-content">
                 <div className="comment-header">
-                    <div className="comment-person">
+                    <div className="comment-person" data-testid={`task-comment-author-${comment.id}`}>
                         {comment.assignee && `${comment.assignee.firstName} ${comment.assignee.lastName}`}
 
                         <div className="comment-timestamp">
@@ -119,7 +115,12 @@ export const Comment = React.memo(function Comment({ resourceId, comment, mine }
                             className="comment-context-button"
                             placement="bottom-end"
                         >
-                            <Button variant="minimal" size="small" icon={<Icon icon="dots-vertical" />} />
+                            <Button
+                                variant="minimal"
+                                size="small"
+                                icon={<Icon icon="dots-vertical" />}
+                                data-testid={`task-comment-menu-${comment.id}`}
+                            />
                         </Popover>
                     ) : null}
                 </div>
@@ -130,6 +131,7 @@ export const Comment = React.memo(function Comment({ resourceId, comment, mine }
                     {comment.type === ACTIVITYTYPE.MESSAGE && isEditing ? (
                         <Grid>
                             <Editor
+                                contentTestId={`task-comment-content-${comment.id}`}
                                 onUpdate={handleChangeMessage}
                                 value={message}
                                 placeholder={translate("Add a comment")}
@@ -280,12 +282,19 @@ const ActivityLogRenderer = ({ activity }: { activity: IActivity }) => {
                 // AFTER
                 else if (part === "{after}") {
                     if (field === "title") {
-                        return (
-                            <span
-                                key={index}
-                                dangerouslySetInnerHTML={{ __html: highlightDifferences(change) }}
-                            />
-                        );
+                        return diffActivitySegments(change).map((segment, position) => {
+                            if (segment.kind === "removed") {
+                                return (
+                                    <del key={position} className={Classes.TEXT_DISABLED}>
+                                        {segment.text}
+                                    </del>
+                                );
+                            }
+                            if (segment.kind === "inserted") {
+                                return <ins key={position}>{segment.text}</ins>;
+                            }
+                            return segment.text;
+                        });
                     } else {
                         return <ActivityParser key={index} field={field} value={after} />;
                     }
@@ -301,37 +310,3 @@ const ActivityLogRenderer = ({ activity }: { activity: IActivity }) => {
         </>
     );
 };
-
-function highlightDifferences(diff: IActivityChange): string {
-    // If no before value is provided, treat the entire after string as new
-    if (!diff.before) {
-        return `<ins>${diff.after}</ins>`;
-    }
-
-    const before = diff.before;
-    const after = diff.after;
-
-    // Find the common prefix
-    let i = 0;
-    while (i < before.length && i < after.length && before[i] === after[i]) {
-        i++;
-    }
-
-    // Find the common suffix
-    let j = 1;
-    while (
-        j <= before.length - i &&
-        j <= after.length - i &&
-        before[before.length - j] === after[after.length - j]
-    ) {
-        j++;
-    }
-    j--;
-
-    const prefix = before.slice(0, i);
-    const oldPart = before.slice(i, before.length - j);
-    const newPart = after.slice(i, after.length - j);
-    const suffix = before.slice(before.length - j);
-
-    return `${prefix}<del class="${Classes.TEXT_DISABLED}">${oldPart}</del>${newPart}${suffix}`;
-}

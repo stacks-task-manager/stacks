@@ -77,6 +77,7 @@ export const Bookmarks = () => {
                                             return (
                                                 <li key={bookmark.id}>
                                                     <div
+                                                        data-testid={`bookmark-row-${bookmark.id}`}
                                                         className={classNames(Classes.MENU_ITEM, "bookmark")}
                                                     >
                                                         <span className={Classes.MENU_ITEM_ICON}>
@@ -117,6 +118,7 @@ export const Bookmarks = () => {
                                                             placement="top-end"
                                                         >
                                                             <Button
+                                                                data-testid={`bookmark-pin-toggle-${bookmark.id}`}
                                                                 size="small"
                                                                 variant="minimal"
                                                                 icon={
@@ -146,6 +148,7 @@ export const Bookmarks = () => {
                                                                             bookmark.pinned ? "Unpin" : "Pin"
                                                                         }
                                                                         icon={<Icon icon="pin" />}
+                                                                        data-testid={`bookmark-menu-pin-${bookmark.id}`}
                                                                         onClick={() =>
                                                                             BookmarksActions.togglePinned(
                                                                                 bookmark.id
@@ -156,6 +159,7 @@ export const Bookmarks = () => {
                                                                         text="Delete"
                                                                         icon={<Icon icon="trash" />}
                                                                         intent={Intent.DANGER}
+                                                                        data-testid={`bookmark-menu-delete-${bookmark.id}`}
                                                                         onClick={() =>
                                                                             BookmarksActions.remove(
                                                                                 bookmark.id
@@ -170,6 +174,7 @@ export const Bookmarks = () => {
                                                                 size="small"
                                                                 variant="minimal"
                                                                 icon={<Icon icon="dots-vertical" />}
+                                                                data-testid={`bookmark-menu-button-${bookmark.id}`}
                                                             />
                                                         </Popover>
                                                     </div>

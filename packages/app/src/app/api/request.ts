@@ -37,6 +37,18 @@ const instance = axios.create({
     paramsSerializer: params => qs.stringify(params, { arrayFormat: "repeat" }),
 });
 
+/**
+ * Cached browser CSRF token. `GET /auth/csrf` hands the browser a nonce cookie
+ * and the token derived from it; a cross-site form cannot read that cookie, so
+ * presenting the token proves the request came from this app.
+ */
+let csrfToken: string | null = null;
+
+/** Drops the cached token so the next mutating request asks for a new one. */
+export const clearCsrfToken = (): void => {
+    csrfToken = null;
+};
+
 instance.interceptors.request.use(
     config => {
         // Add instance ID header to all requests
@@ -89,6 +101,30 @@ instance.interceptors.request.use(
     }
 );
 
+/** Adds the browser CSRF token to every state-changing request. */
+instance.interceptors.request.use(async config => {
+    const method = (config.method || "get").toLowerCase();
+    if (method === "get" || method === "head" || method === "options") {
+        return config;
+    }
+
+    if (!csrfToken) {
+        try {
+            const issued = await axios.get("/auth/csrf", { withCredentials: true });
+            csrfToken = issued.data?.data?.token ?? null;
+        } catch {
+            csrfToken = null;
+        }
+    }
+
+    if (csrfToken) {
+        config.headers = config.headers || {};
+        config.headers["x-csrf-token"] = csrfToken;
+    }
+
+    return config;
+});
+
 instance.interceptors.response.use(
     response => {
         // Blob callers need response headers to preserve server-provided filenames.
@@ -102,6 +138,10 @@ instance.interceptors.response.use(
     },
     async error => {
         if (error.response) {
+            if (error.status === 401 || error.status === 403) {
+                // The cached token is no longer usable; ask for a new one next time.
+                clearCsrfToken();
+            }
             if (error.status === 401) {
                 window.location.href = "/login";
             }

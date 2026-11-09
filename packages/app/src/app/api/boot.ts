@@ -21,6 +21,10 @@ export type IntegrationsBootConfig = {
 export const BootAPI = {
     /** GET `/api/boot` aggregated payload. */
     async load(): Promise<{
+        session: {
+            userId: string;
+            tenantId: string;
+        };
         license: ILicense;
         translations: Record<string, TranslationValue>;
         preferences: IPreferences;

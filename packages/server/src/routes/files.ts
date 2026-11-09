@@ -10,12 +10,19 @@ import { translate } from "@stacks/translations";
 import { FilesLoader } from "../loaders/files";
 import { validator } from "../middleware/validator";
 import type { User } from "../types";
-import { Errors } from "../errors";
+import { ErrorCode, Errors } from "../errors";
+import { attachmentDownloadDisposition } from "../utils/attachmentHeader";
+import { StreamLimitExceededError } from "../utils/boundedStream";
+import { validUploadMetadata } from "../utils/uploadMetadata";
 import { asyncHandler } from "../utils/errorHandler";
 import { parseUuidParam } from "./schema/common";
 import { FilesFilterSchema } from "./schema/files";
 
 const files = new Hono();
+files.use("*", async (c, next) => {
+    await next();
+    c.header("Cache-Control", "private, no-store");
+});
 
 /** Client-reported MIME is untrusted; reconcile with file name when possible. */
 function resolveUploadMimeType(clientMime: string | undefined, fileName: string): string {
@@ -44,18 +51,39 @@ files.post(
         }
 
         const fileName = c.req.header("x-file-name");
-        const mimeType = resolveUploadMimeType(c.req.header("x-file-type"), fileName ?? "");
         const recordIdRaw = c.req.header("x-record-id");
         const type = c.req.header("x-file-category") || "file";
 
         if (!fileName || !recordIdRaw) {
             throw Errors.badRequest(translate("Missing required headers"));
         }
+        if (!validUploadMetadata(fileName, type)) {
+            throw Errors.badRequest(translate("Invalid upload metadata"));
+        }
+
+        const mimeType = resolveUploadMimeType(c.req.header("x-file-type"), fileName);
 
         const recordId = recordIdRaw;
         parseUuidParam(recordId);
 
-        const result = await FilesLoader.uploadFileStream(body, fileName, mimeType, recordId, user, type);
+        let result;
+        try {
+            result = await FilesLoader.uploadFileStream(
+                body,
+                fileName,
+                mimeType,
+                recordId,
+                user,
+                type,
+                undefined,
+                c.req.raw.signal
+            );
+        } catch (error) {
+            if (error instanceof StreamLimitExceededError) {
+                return c.replyError("Payload Too Large", undefined, 413, ErrorCode.BAD_REQUEST);
+            }
+            throw error;
+        }
         return c.replySuccess(result);
     })
 );
@@ -64,7 +92,8 @@ files.post(
 files.get("/stream-progress/:uploadId", async c => {
     const uploadId = c.req.param("uploadId");
     try {
-        const progress = FilesLoader.getStreamUploadProgress(uploadId);
+        const user = c.get("user") as User;
+        const progress = FilesLoader.getStreamUploadProgress(uploadId, String(user.id), user.tenant);
         if (!progress) {
             return c.replyError(Errors.notFound(translate("Upload not found")));
         }
@@ -74,25 +103,27 @@ files.get("/stream-progress/:uploadId", async c => {
     }
 });
 
-/** POST `/check-existing` — Reuses an existing file by hash by creating a fresh attachment row. */
+/** POST `/check-existing` — Validated compatibility no-op; never exposes hash existence. */
 files.post("/check-existing", async c => {
     try {
-        const user = c.get("user") as User;
-        const { hash, recordId, type, originalName } = await c.req.json();
-
-        if (!hash || !recordId || !type || !originalName) {
+        const input: unknown = await c.req.json();
+        if (!input || typeof input !== "object") {
             return c.replyError(Errors.badRequest(translate("Missing required parameters")));
         }
-
-        const existingAttachment = await FilesLoader.checkExistingFileAndCreateAttachment(
-            hash,
-            recordId,
-            type,
-            originalName,
-            user
-        );
-
-        return c.replySuccess(existingAttachment ?? null);
+        const { hash, recordId, type, originalName } = input as Record<string, unknown>;
+        if (
+            typeof hash !== "string" ||
+            !/^[a-f\d]{64}$/i.test(hash) ||
+            typeof recordId !== "string" ||
+            typeof type !== "string" ||
+            typeof originalName !== "string" ||
+            !validUploadMetadata(originalName, type)
+        ) {
+            return c.replyError(Errors.badRequest(translate("Invalid upload metadata")));
+        }
+        parseUuidParam(recordId);
+        await FilesLoader.assertAttachmentParentWritable(recordId, type);
+        return c.replySuccess(null);
     } catch (error) {
         return c.replyError(error as Error);
     }
@@ -149,7 +180,7 @@ files.get(
         return c.body(new Uint8Array(previewData.buffer), 200, {
             "Content-Type": previewData.mimeType,
             "Content-Length": previewData.buffer.length.toString(),
-            "Cache-Control": "public, max-age=3600",
+            "Cache-Control": "private, no-store",
         });
     })
 );
@@ -168,8 +199,10 @@ files.get(
 
         return c.body(new Uint8Array(fileData.buffer), 200, {
             "Content-Type": fileData.mimeType,
-            "Content-Disposition": `attachment; filename="${fileData.originalName}"`,
+            "Content-Disposition": attachmentDownloadDisposition(fileData.originalName),
             "Content-Length": fileData.buffer.length.toString(),
+            "Cache-Control": "private, no-store",
+            "X-Content-Type-Options": "nosniff",
         });
     })
 );

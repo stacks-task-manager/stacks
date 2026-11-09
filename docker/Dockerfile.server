@@ -1,4 +1,6 @@
-FROM node:20-bookworm
+FROM node:22-bookworm
+
+RUN node -e 'const [major, minor] = process.versions.node.split(".").map(Number); if (major < 22 || (major === 22 && minor < 12)) process.exit(1)'
 
 # Install system dependencies for canvas with specific versions
 RUN apt-get update && apt-get install -y \
@@ -19,6 +21,7 @@ RUN apt-get update && apt-get install -y \
 ENV PYTHON=/usr/bin/python3
 ENV npm_config_cache_max=0
 ENV CANVAS_PREBUILT=1
+ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 
 # Set working directory
 WORKDIR /server
@@ -37,15 +40,20 @@ COPY server .
 RUN rm -rf node_modules && yarn install --production
 
 # Install the browser version matched to the production Playwright package and its Linux dependencies.
-RUN yarn playwright install --with-deps chromium
+RUN yarn playwright install --with-deps chromium && chown -R node:node /ms-playwright
 
 # AGPL-3.0 — ship LICENSE + NOTICE alongside the binary so operators and end users
 # running this container have on-disk access to the terms and source pointer.
-COPY server/LICENSE /server/LICENSE
-COPY server/NOTICE /server/NOTICE
+COPY --chmod=0444 server/legal/LICENSE /server/legal/LICENSE
+COPY --chmod=0444 server/legal/NOTICE /server/legal/NOTICE
 
 # Create necessary directories
-RUN mkdir -p /server/uploads /server/previews
+RUN mkdir -p /server/uploads /server/previews /server/.ai-chat-debug \
+    && chown -R node:node /server/uploads /server/previews /server/.ai-chat-debug
+
+# Keep the application process unprivileged. Compose can override this UID/GID to match
+# host-owned bind mounts; the default matches the node user in the official Node image.
+USER node
 
 # Expose port
 EXPOSE 3000

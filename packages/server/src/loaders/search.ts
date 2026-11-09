@@ -6,7 +6,8 @@ import { IPerson, RECORDTYPE, ITask, ISearchResult, INotepad } from "@stacks/typ
 import { PeopleLoader } from "./people";
 import { TasksLoader } from "./tasks";
 import { NotepadsLoader } from "./notepads";
-import { getCurrentUser } from "./context";
+import { canRead, getCurrentUser } from "./context";
+import { ROLE_SECTIONS } from "@stacks/types";
 
 /** Runs scoped loaders and normalizes rows into {@link ISearchResult} items. */
 async function query(query: string) {
@@ -14,20 +15,22 @@ async function query(query: string) {
     const results: ISearchResult[] = [];
 
     // People
-    const people: IPerson[] = await PeopleLoader.getAll({ query });
-    results.push(
-        ...people.map(person => ({
-            id: person.id,
-            type: RECORDTYPE.PERSON,
-            title: `${person.firstName} ${person.lastName}`,
-            parentId: "people",
-            parentTitle: "People",
-            parentType: RECORDTYPE.PERSON,
-            data: person,
-            url: "",
-            thumbnail: person.avatar ?? "",
-        }))
-    );
+    if (canRead(ROLE_SECTIONS.PEOPLE)) {
+        const people: IPerson[] = await PeopleLoader.getAll({ query });
+        results.push(
+            ...people.map(person => ({
+                id: person.id,
+                type: RECORDTYPE.PERSON,
+                title: `${person.firstName} ${person.lastName}`,
+                parentId: "people",
+                parentTitle: "People",
+                parentType: RECORDTYPE.PERSON,
+                data: person,
+                url: "",
+                thumbnail: person.avatar ?? "",
+            }))
+        );
+    }
 
     // Tasks
     const tasks: ITask[] = await TasksLoader.getAll({ query, limit: 20 });

@@ -4,6 +4,7 @@ import { NewProjectDialog } from "./components/NewProjectDialog";
 import Sidebar from "./sidebar";
 import { NewTaskDialog } from "./components/NewTaskDialog";
 import { TimelogDialog } from "./components/TimelogDialog";
+import type { IProjectOverview } from "@stacks/types";
 
 export const PROJECT_VIEW_IDS = [
     "board",
@@ -99,9 +100,31 @@ class Project extends Base {
     }
 
     public async deleteById(projectId: string) {
-        const response = await this.page.request.delete(`/api/documents/${projectId}`);
-        if (!response.ok()) {
-            throw new Error(`Project cleanup failed with HTTP ${response.status()}`);
+        const headers = await this.browserMutationHeaders();
+        for (let attempt = 0; attempt < 3; attempt++) {
+            const response = await this.page.request.delete(`/api/documents/${projectId}`, { headers });
+            if (response.status() === 429 && attempt < 2) {
+                const retryAfter = Number(response.headers()["retry-after"]);
+                if (!Number.isFinite(retryAfter) || retryAfter < 1) {
+                    throw new Error("Project cleanup was rate limited without a valid Retry-After header");
+                }
+                await new Promise(resolve => setTimeout(resolve, retryAfter * 1000));
+                continue;
+            }
+            if (response.status() === 404) {
+                const lookup = await this.page.request.get("/api/documents");
+                if (!lookup.ok()) {
+                    throw new Error(`Project cleanup verification failed with HTTP ${lookup.status()}`);
+                }
+                const body = await lookup.json();
+                const documents = body.data?.documents ?? body.data;
+                if (Array.isArray(documents) && !documents.some(document => document.id === projectId))
+                    return;
+            }
+            if (!response.ok()) {
+                throw new Error(`Project cleanup failed for ${projectId} with HTTP ${response.status()}`);
+            }
+            return;
         }
     }
 
@@ -223,6 +246,16 @@ class Project extends Base {
         await requestPromise;
     }
 
+    /**
+     * Toggles the current project's favorite state from its toolbar star. This is a
+     * client-side-only mutation (`store/actions/projects.ts:306 toggleFavorite` writes
+     * browser localStorage; no server route), so nothing is awaited from the network here.
+     */
+    public async toggleFavorite() {
+        await this.favoriteButton.waitFor({ state: "visible" });
+        await this.favoriteButton.click();
+    }
+
     public async rename(title: string) {
         const responsePromise = this.page.waitForResponse(
             response => response.url().includes("/api/documents/") && response.request().method() === "PATCH"
@@ -267,6 +300,38 @@ class Project extends Base {
         for (const view of PROJECT_VIEW_IDS) {
             await expect(this.viewTab(view)).toBeVisible();
         }
+    }
+
+    public async expectOverviewAfterReload(
+        projectId: string,
+        expected: Pick<
+            IProjectOverview,
+            "tasksTotal" | "tasksIdle" | "tasksInProgress" | "tasksCompleted" | "timeEstimatedTotal"
+        >,
+        estimateLabel: string
+    ) {
+        const responsePromise = this.page.waitForResponse(
+            response =>
+                response.request().method() === "GET" &&
+                new URL(response.url()).pathname === `/api/projects/${projectId}/overview`
+        );
+        await this.page.reload();
+        const response = await responsePromise;
+        expect(response.ok(), `Overview returned ${response.status()}`).toBeTruthy();
+        expect((await response.json()).data).toMatchObject(expected);
+        await expect(this.page.getByTestId("project-overview-total-tasks")).toHaveText(
+            String(expected.tasksTotal)
+        );
+        await expect(this.page.getByTestId("project-overview-tasks-idle")).toHaveText(
+            String(expected.tasksIdle)
+        );
+        await expect(this.page.getByTestId("project-overview-tasks-in-progress")).toHaveText(
+            String(expected.tasksInProgress)
+        );
+        await expect(this.page.getByTestId("project-overview-tasks-completed")).toHaveText(
+            String(expected.tasksCompleted)
+        );
+        await expect(this.page.getByTestId("project-overview-estimated-total")).toHaveText(estimateLabel);
     }
 
     public async expectEmptyView(view: EmptyProjectViewId) {

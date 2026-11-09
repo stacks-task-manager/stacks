@@ -1,6 +1,6 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { RoleEntity, sequelize, TenantEntity, UserEntity } from "@stacks/db";
-import { EMAIL_TEMPLATES, ROLE_SECTIONS } from "@stacks/types";
+import { EMAIL_TEMPLATES, ROLE_ACTIONS, ROLE_SECTIONS } from "@stacks/types";
 import * as bcrypt from "bcryptjs";
 import { randomUUID } from "crypto";
 import { getLicense } from "@stacks/license";
@@ -70,7 +70,9 @@ export const seedUsers = async () => {
          */
         for (const tenant of license.tenants) {
             // Check if tenant exists
-            const [tenantResults] = await sequelize.query(`SELECT * FROM tenants WHERE id = '${tenant.id}'`);
+            const [tenantResults] = await sequelize.query("SELECT * FROM tenants WHERE id = :tenantId", {
+                replacements: { tenantId: tenant.id },
+            });
 
             if (tenantResults.length === 0) {
                 console.log(`➡️ Seeding license tenant: ${tenant.name}`);
@@ -92,7 +94,9 @@ export const seedUsers = async () => {
              * ----------------
              */
             // Check if default role exists
-            const [roleResults] = await sequelize.query(`SELECT * FROM roles WHERE tenant = '${tenant.id}'`);
+            const [roleResults] = await sequelize.query("SELECT * FROM roles WHERE tenant = :tenantId", {
+                replacements: { tenantId: tenant.id },
+            });
 
             if (roleResults.length === 0) {
                 console.log("➡️ Seeding default role...");
@@ -166,19 +170,19 @@ export const seedUsers = async () => {
                     description: "User role",
                     access: {
                         [ROLE_SECTIONS.PEOPLE]: {
-                            view: true,
+                            [ROLE_ACTIONS.READ]: true,
                         },
                         [ROLE_SECTIONS.CALENDAR]: {
-                            view: true,
-                            create: true,
+                            [ROLE_ACTIONS.READ]: true,
+                            [ROLE_ACTIONS.WRITE]: true,
                         },
                         [ROLE_SECTIONS.COMMENTS]: {
-                            view: true,
-                            create: true,
+                            [ROLE_ACTIONS.READ]: true,
+                            [ROLE_ACTIONS.WRITE]: true,
                         },
                         [ROLE_SECTIONS.TIMELOGS]: {
-                            view: true,
-                            create: true,
+                            [ROLE_ACTIONS.READ]: true,
+                            [ROLE_ACTIONS.WRITE]: true,
                         },
                     },
                     disabled: false,

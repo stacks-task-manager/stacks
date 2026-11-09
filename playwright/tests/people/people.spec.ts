@@ -3,6 +3,7 @@ import { test, expect } from "../../fixtures";
 import { bootstrapContext } from "../../fixtures/bootstrapContext";
 import People from "../../pages/people";
 import Preferences from "../../pages/preferences";
+import { closeDb, getDb } from "../../fixtures/db";
 
 test.describe("People and Companies", () => {
     let browser: Browser;
@@ -10,6 +11,8 @@ test.describe("People and Companies", () => {
     let page: Page;
     let people: People;
     let preferences: Preferences;
+    const personIds = new Set<string>();
+    const companyIds = new Set<string>();
 
     test.beforeAll(async ({ login: loginPage }: any) => {
         ({ browser, context, page } = await bootstrapContext());
@@ -28,9 +31,21 @@ test.describe("People and Companies", () => {
     });
 
     test.afterAll(async () => {
-        if (page && !page.isClosed()) await page.close();
-        if (context) await context.close();
-        if (browser) await browser.close();
+        const errors: unknown[] = [];
+        const attempt = async (action: () => Promise<unknown>) => {
+            try {
+                await action();
+            } catch (error) {
+                errors.push(error);
+            }
+        };
+        for (const id of personIds) await attempt(() => getDb().cleanupPerson(id));
+        for (const id of companyIds) await attempt(() => getDb().cleanupCompany(id));
+        await attempt(closeDb);
+        if (page && !page.isClosed()) await attempt(() => page.close());
+        if (context) await attempt(() => context.close());
+        if (browser) await attempt(() => browser.close());
+        if (errors.length) throw new AggregateError(errors, "People fixture cleanup failed");
     });
 
     test("Should navigate tabs, search, group, filter, and open toolbar menu", async () => {
@@ -134,6 +149,7 @@ test.describe("People and Companies", () => {
         const updatedFirstName = `Edited${suffix}`;
 
         const personId = await people.addPerson(firstName, lastName, `e2e-person-${suffix}@example.com`);
+        personIds.add(personId);
         await people.updatePerson({
             firstName: updatedFirstName,
             lastName,
@@ -154,6 +170,7 @@ test.describe("People and Companies", () => {
         const updatedCompanyName = `Edited Company ${suffix}`;
 
         const companyId = await people.addCompany(companyName);
+        companyIds.add(companyId);
         await expect(people.companyRow(companyId)).toBeVisible();
 
         await people.openCompany(companyId);
@@ -180,8 +197,10 @@ test.describe("People and Companies", () => {
                 "Person",
                 `embedded-person-${suffix}@example.com`
             );
+            personIds.add(personId);
             await people.goto("/app/people");
             const companyId = await people.addCompany(`Embedded Company ${suffix}`);
+            companyIds.add(companyId);
 
             await preferences.setPref("peopleEmbeddedPerson", true);
             await people.goto("/app/people");

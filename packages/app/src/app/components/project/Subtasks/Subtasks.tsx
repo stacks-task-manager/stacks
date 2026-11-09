@@ -101,13 +101,13 @@ const SubtasksCounter = ({ parentId }: { parentId: string }) => {
 
     const completedPercentage = useMemo(() => {
         return (completedCount * 100) / subtasks.length / 100;
-    }, [completedCount]);
+    }, [completedCount, subtasks.length]);
 
     return (
-        <>
+        <span data-testid="subtasks-counter">
             {translate("Subtasks")}
             {subtasks.length > 0 ? <SubtasksProgress percent={completedPercentage} /> : null}
-        </>
+        </span>
     );
 };
 
@@ -262,7 +262,9 @@ export const NewSubtaskInput: FunctionComponent<NewSubtaskInputProps> = ({ small
 const SubtasksProgress = ({ percent }: { percent: number }) => {
     return (
         <span className="subtasks-progress">
-            <HotkeyChip keys={[`${Math.round((percent || 0) * 100)}%`]} light />
+            <span data-testid="subtasks-progress-value">
+                <HotkeyChip keys={[`${Math.round((percent || 0) * 100)}%`]} light />
+            </span>
 
             <Tooltip
                 content={translate("The progress is based on the immediate children subtasks")}
@@ -272,6 +274,7 @@ const SubtasksProgress = ({ percent }: { percent: number }) => {
                     value={percent}
                     stripes={false}
                     intent={percent >= 1 ? Intent.SUCCESS : Intent.PRIMARY}
+                    data-testid="subtasks-progress-bar"
                 />
             </Tooltip>
         </span>

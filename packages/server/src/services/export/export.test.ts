@@ -1,5 +1,6 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { beforeAll, describe, expect, test } from "vitest";
+import ExcelJS from "exceljs";
 import { EXPORT_ENTITY_TYPES } from "@stacks/types";
 import { setTranslations } from "@stacks/translations";
 import { ExportBodySchema } from "../../routes/schema/export";
@@ -12,6 +13,7 @@ import { getMergedTranslationsForLocale, preloadLocales } from "../../i18n/local
 import { presentPdfExport } from "./presenters";
 import { renderExportHtml } from "./renderExportHtml";
 import { normalizeExportRows } from "./normalizeExportRows";
+import { generateExcel } from "./generateExcel";
 import { sanitizeNotepadHtml } from "./sanitizeHtml";
 import { PDF_TEMPLATE_REGISTRY } from "./templateRegistry";
 
@@ -174,9 +176,11 @@ describe("notepad sanitization", () => {
         '<a href="JaVaScRiPt:alert(1)">unsafe</a>',
         '<a href="//tracker.invalid/path">unsafe</a>',
         '<img src="data:image/svg+xml;base64,PHN2Zz4=">',
+        '<a href="file:///etc/passwd">unsafe</a><img src="file:///etc/passwd">',
+        '<style>@import url(https://tracker.invalid/x.css)</style><iframe src="https://tracker.invalid"></iframe>',
     ])("rejects unsafe URL form %#", input => {
         const html = sanitizeNotepadHtml(input);
-        expect(html).not.toMatch(/javascript:|tracker\.invalid|svg\+xml/i);
+        expect(html).not.toMatch(/javascript:|tracker\.invalid|svg\+xml|file:/i);
     });
 
     test("preserves editorial markup and safe table spans", () => {
@@ -220,4 +224,21 @@ describe("Excel row normalization", () => {
             ],
         });
     });
+
+    test.each(["=1+1", "+1+1", "-1+1", "@SUM(1,1)"])(
+        "keeps spreadsheet formula sentinel %s as a text cell",
+        async value => {
+            const { columns, rows } = normalizeExportRows([{ untrusted: value }]);
+            const workbook = new ExcelJS.Workbook();
+            const output = await generateExcel(columns, rows);
+            const arrayBuffer = new ArrayBuffer(output.byteLength);
+            new Uint8Array(arrayBuffer).set(output);
+            await workbook.xlsx.load(arrayBuffer);
+
+            const cell = workbook.worksheets[0]!.getCell("A2");
+            expect(cell.value).toBe(value);
+            expect(cell.type).toBe(ExcelJS.ValueType.String);
+            expect(cell.model.formula).toBeUndefined();
+        }
+    );
 });
