@@ -6,13 +6,14 @@ const mocks = vi.hoisted(() => ({
     findOne: vi.fn(),
     visibleTasks: vi.fn(),
     countTasks: vi.fn(),
+    findTasks: vi.fn(),
     update: vi.fn(),
     authorize: vi.fn(),
 }));
 vi.mock("@stacks/db", () => ({
     StackEntity: { hasOne: vi.fn() },
     PermissionEntity: { belongsTo: vi.fn() },
-    TaskEntity: { count: mocks.countTasks },
+    TaskEntity: { count: mocks.countTasks, findAll: mocks.findTasks },
 }));
 vi.mock("../context", () => ({ getCurrentUser: () => ({ id: "owner", tenant: "tenant" }) }));
 vi.mock("../projects", () => ({ ProjectsLoader: { getOne: vi.fn(async () => ({ id: "project" })) } }));
@@ -36,6 +37,7 @@ let tasks: Array<{ id: string; tenant: string; project: string; deleted: Date | 
 
 beforeEach(() => {
     vi.resetAllMocks();
+    stack.tasksOrder = ["private", "visible"];
     tasks = [
         { id: "private", tenant: "tenant", project: "project", deleted: null, visible: false },
         { id: "visible", tenant: "tenant", project: "project", deleted: null, visible: true },
@@ -47,6 +49,9 @@ beforeEach(() => {
         tasks.filter(
             task => filter.id[Op.in].includes(task.id) && task.project === filter.project && task.visible
         )
+    );
+    mocks.findTasks.mockImplementation(async ({ where }) =>
+        tasks.filter(task => where.id[Op.in].includes(task.id)).map(task => ({ id: task.id }))
     );
     mocks.countTasks.mockImplementation(
         async ({ where }) =>
@@ -81,6 +86,16 @@ describe("stack task order authorization", () => {
         ).resolves.toMatchObject({
             tasksOrder: ["visible", "private"],
         });
+    });
+
+    it("drops orphaned stored task ids when adding a visible task", async () => {
+        stack.tasksOrder = ["missing", "visible"];
+
+        await expect(StacksLoader.addTaskOrder("stack", "new", "bottom", transaction)).resolves.toMatchObject(
+            {
+                tasksOrder: ["visible", "new"],
+            }
+        );
     });
 
     it("rejects inserting a private task that was not in the stored order", async () => {
