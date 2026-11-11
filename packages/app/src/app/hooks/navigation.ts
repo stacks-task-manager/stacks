@@ -3,7 +3,7 @@
  * Navigation hooks and selectors.
  */
 import { NavigationStore } from "app/store/navigation";
-import { strictEqual } from "./store";
+import { shallowEqual, strictEqual } from "./store";
 
 /**
  * Returns whether the given task is currently part of the navigation selection.
@@ -14,6 +14,19 @@ export const useTaskNavigation = (taskId: string) => {
     return NavigationStore.use(state => {
         return state.tasks.includes(taskId);
     }, strictEqual);
+};
+
+/**
+ * Returns the selected state and selection count for a task.
+ */
+export const useTaskNavigationInfo = (taskId: string) => {
+    return NavigationStore.use(state => {
+        const selected = state.tasks.includes(taskId);
+        return {
+            selected,
+            selectionCount: selected ? state.tasks.length : 0,
+        };
+    }, shallowEqual);
 };
 
 /**

@@ -9,9 +9,6 @@ import {
 
 jest.mock("app/hooks", () => ({ useStorage: () => [[], jest.fn()] }));
 jest.mock("app/components/common", () => ({ Icon: () => null, BlankSlate: () => null }));
-jest.mock("react-intersection-observer", () => ({
-    useInView: () => ({ ref: jest.fn(), inView: true }),
-}));
 jest.mock("app/components/common/Table/TableColumnPicker/TableColumnPicker", () => ({
     TableColumnPicker: () => null,
 }));
@@ -100,5 +97,25 @@ describe("TablePersistent invalid rows", () => {
         );
 
         expect(container.querySelectorAll("tbody tr")).toHaveLength(0);
+    });
+});
+
+describe("TablePersistent sorting ownership", () => {
+    it("does not mutate supplied grouped row arrays while sorting", () => {
+        const first = { id: "z", title: "Zebra" };
+        const second = { id: "a", title: "Alpha" };
+        const groupedData = [first, second];
+        const group: TablePersistentGroupData<Row> = {
+            groupId: "group",
+            title: "Group",
+            defaultExpanded: true,
+            data: groupedData,
+        };
+
+        render(<TablePersistent<Row> id="test" columns={columns} data={[group]} enableReorder={false} />);
+
+        expect(group.data).toEqual([first, second]);
+        expect(group.data[0]).toBe(first);
+        expect(group.data[1]).toBe(second);
     });
 });
