@@ -25,7 +25,7 @@ export function ChartToolbar({
 }) {
     return (
         <div className="stacks-gantt-toolbar">
-            <Button small data-testid="gantt-today" onClick={onToday}>
+            <Button small intent="primary" data-testid="gantt-today" onClick={onToday}>
                 {translate("Today")}
             </Button>
             <HTMLSelect
@@ -33,14 +33,13 @@ export function ChartToolbar({
                 aria-label={translate("Gantt scale")}
                 value={scale}
                 onChange={event => onScale(event.target.value as GanttScale)}
-                options={[
-                    { value: "day", label: translate("Day") },
-                    { value: "week", label: translate("Week") },
-                    { value: "month", label: translate("Month") },
-                    { value: "quarter", label: translate("Quarter") },
-                    { value: "halfYear", label: translate("Half year") },
-                ]}
-            />
+            >
+                <option value="day">{translate("Day")}</option>
+                <option value="week">{translate("Week")}</option>
+                <option value="month">{translate("Month")}</option>
+                <option value="quarter">{translate("Quarter")}</option>
+                <option value="halfYear">{translate("Half year")}</option>
+            </HTMLSelect>
             <Button small minimal data-testid="gantt-expand-all" onClick={onExpand}>
                 {translate("Expand all")}
             </Button>

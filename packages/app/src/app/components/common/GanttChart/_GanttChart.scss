@@ -14,8 +14,11 @@
     min-height: 200px;
     height: 100%;
     overflow: hidden;
+    border: 1px solid $light-gray3;
+    border-radius: 3px;
     background: var(--gantt-surface);
     .bp6-dark & {
+        border-color: $gray1;
         --gantt-surface: #{$dark-gray3};
         --gantt-border: #{$dark-gray1};
         --gantt-muted: #{$gray5};
@@ -33,7 +36,12 @@
     align-items: center;
     gap: 8px;
     padding: 8px;
+    border-radius: 3px 3px 0 0;
     border-bottom: 1px solid var(--gantt-border);
+    background-color: $light-gray5;
+    .bp6-dark & {
+        background-color: $dark-gray4;
+    }
 }
 .stacks-gantt-body {
     position: relative;

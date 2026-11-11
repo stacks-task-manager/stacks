@@ -36,7 +36,7 @@ import { shallowEqual } from "./hooks/store";
 import { NotificationsActions, PeopleActions } from "./store/actions";
 import { PeopleStore } from "./store/people";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const currencies = require("../assets/currencies.json");
 window["currencies"] = currencies;
 

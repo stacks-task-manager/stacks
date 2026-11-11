@@ -23,6 +23,13 @@ const row = (id: string, children: GanttRow[] = []): GanttRow => ({
     children,
 });
 
+it("uses Blueprint controls for the toolbar actions and scale", () => {
+    render(<GanttChart rows={[row("task")]} onActivate={jest.fn()} onDatesChange={jest.fn()} />);
+
+    expect(screen.getByRole("button", { name: "Today" })).toHaveClass("bp6-button", "bp6-intent-primary");
+    expect(screen.getByTestId("gantt-scale").closest(".bp6-html-select")).not.toBeNull();
+});
+
 it("renders only a viewport of a thousand tasks and reaches later rows", () => {
     render(
         <GanttChart

@@ -1,5 +1,5 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
-/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/no-require-imports */
 const fs = require("fs");
 const path = require("path");
 const webpack = require("webpack");
@@ -382,6 +382,7 @@ module.exports = (env, argv) => {
                   compress: true,
                   port: process.env.PORT ? Number(process.env.PORT) : 3001,
                   host: process.env.HOST || "127.0.0.1",
+                  allowedHosts: ["localhost"],
                   client: { overlay: { errors: true, warnings: false } },
               }
             : undefined,
