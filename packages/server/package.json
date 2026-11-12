@@ -34,7 +34,7 @@
         "google-auth-library": "^10.9.0",
         "googleapis": "^154.1.0",
         "handlebars": "^4.7.10",
-        "hono": "^4.13.13",
+        "hono": "^4.13.17",
         "lodash": "^4.17.23",
         "mime-types": "^3.0.2",
         "multer": "^2.3.0",
