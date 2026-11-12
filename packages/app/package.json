@@ -31,7 +31,7 @@
         "@fullcalendar/rrule": "^6.1.20",
         "@fullcalendar/timegrid": "^6.1.20",
         "@hello-pangea/dnd": "^18.0.0",
-        "@minoru/react-dnd-treeview": "^3.5.3",
+        "@minoru/react-dnd-treeview": "^3.5.4",
         "@stacks/translations": "workspace:*",
         "@tiptap/core": "3.32.0",
         "@tiptap/extension-code-block": "3.32.0",
