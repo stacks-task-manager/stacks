@@ -7057,7 +7057,7 @@ __metadata:
     "@tiptap/extension-text-style": 3.32.0
     "@tiptap/extension-typography": 3.32.0
     "@tiptap/extension-underline": 3.32.0
-    "@tiptap/extension-youtube": 3.32.0
+    "@tiptap/extension-youtube": 3.33.0
     "@tiptap/extensions": 3.32.0
     "@tiptap/pm": 3.32.0
     "@tiptap/react": 3.32.0
@@ -8403,12 +8403,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tiptap/extension-youtube@npm:3.32.0":
-  version: 3.32.0
-  resolution: "@tiptap/extension-youtube@npm:3.32.0"
+"@tiptap/extension-youtube@npm:3.33.0":
+  version: 3.33.0
+  resolution: "@tiptap/extension-youtube@npm:3.33.0"
   peerDependencies:
-    "@tiptap/core": 3.32.0
-  checksum: 92a67845dc76949c635d0b9af92989a3ecde72992af48e0d61c6a5d8322183a8b4ce7a6adaef5aae1995d1556178e3e9a677e2e195c8c0b32728dc9177320250
+    "@tiptap/core": 3.33.0
+  checksum: da50d803919f26f3493f3e07a00d8e5b747c5caa666b488a0150f4b3230690f28fc4fe3256f2e3832783d125665afa1231b4636c4c9010d8a57b0886be0227a0
   languageName: node
   linkType: hard
 
