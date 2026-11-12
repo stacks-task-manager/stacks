@@ -1,4 +1,5 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+import { translate } from "@stacks/translations";
 import React, { useMemo } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { BlankSlate, Grid } from "app/components/common";
@@ -35,6 +36,7 @@ export const Gantt = () => {
         );
     return (
         <GanttChart
+            title={translate("Tasks")}
             rows={rows}
             onActivate={openTask}
             onDatesChange={(id, range) => rescheduleGanttTask(id, range)}

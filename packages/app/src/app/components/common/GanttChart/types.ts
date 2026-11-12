@@ -18,6 +18,7 @@ export interface DateRange {
 }
 
 export interface GanttChartProps {
+    title: string;
     rows: GanttRow[];
     onActivate: (id: string) => void;
     onDatesChange: (id: string, range: DateRange) => Promise<void>;

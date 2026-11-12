@@ -46,18 +46,24 @@ export function editDates(start: Date, end: Date, kind: DateEdit, days: number):
     };
 }
 
-export function flattenRows(
-    rows: GanttRow[],
-    collapsed: ReadonlySet<string>
-): { row: GanttRow; depth: number }[] {
-    const result: { row: GanttRow; depth: number }[] = [];
-    const visit = (items: GanttRow[], depth: number) => {
-        for (const row of items) {
-            result.push({ row, depth });
-            if (!collapsed.has(row.id)) visit(row.children, depth + 1);
+export function flattenRows(rows: GanttRow[], collapsed: ReadonlySet<string>) {
+    const result: {
+        row: GanttRow;
+        depth: number;
+        guides: number[];
+        hasNextSibling: boolean;
+    }[] = [];
+    const visit = (items: GanttRow[], depth: number, guides: number[]) => {
+        for (const [index, row] of items.entries()) {
+            const hasNextSibling = index < items.length - 1;
+            result.push({ row, depth, guides, hasNextSibling });
+            if (!collapsed.has(row.id)) {
+                const childGuides = hasNextSibling && depth > 0 ? [...guides, depth] : guides;
+                visit(row.children, depth + 1, childGuides);
+            }
         }
     };
-    visit(rows, 0);
+    visit(rows, 0, []);
     return result;
 }
 
@@ -83,8 +89,8 @@ export function timelineTicks(origin: Date, left: number, width: number, scale: 
         scale === "day"
             ? first
             : scale === "week"
-            ? startOfWeek(first, { weekStartsOn: 1 })
-            : startOfMonth(first);
+              ? startOfWeek(first, { weekStartsOn: 1 })
+              : startOfMonth(first);
     if (scale === "quarter")
         cursor = new Date(cursor.getFullYear(), Math.floor(cursor.getMonth() / 3) * 3, 1);
     if (scale === "halfYear")
@@ -95,8 +101,8 @@ export function timelineTicks(origin: Date, left: number, width: number, scale: 
             scale === "day"
                 ? addDays(cursor, 1)
                 : scale === "week"
-                ? addDays(cursor, 7)
-                : addMonths(cursor, scale === "month" ? 1 : scale === "quarter" ? 3 : 6);
+                  ? addDays(cursor, 7)
+                  : addMonths(cursor, scale === "month" ? 1 : scale === "quarter" ? 3 : 6);
         ticks.push({
             left: differenceInCalendarDays(cursor, origin) * unit,
             width: differenceInCalendarDays(next, cursor) * unit,
@@ -104,12 +110,12 @@ export function timelineTicks(origin: Date, left: number, width: number, scale: 
                 scale === "day"
                     ? format(cursor, "d")
                     : scale === "week"
-                    ? format(cursor, "dd MMM")
-                    : scale === "month"
-                    ? format(cursor, "MMM")
-                    : scale === "quarter"
-                    ? format(cursor, "'Q'Q")
-                    : format(cursor, "MMM"),
+                      ? format(cursor, "dd MMM")
+                      : scale === "month"
+                        ? format(cursor, "MMM")
+                        : scale === "quarter"
+                          ? format(cursor, "'Q'Q")
+                          : format(cursor, "MMM"),
             major: scale === "day" || scale === "week" ? format(cursor, "MMMM yyyy") : format(cursor, "yyyy"),
             weekend: scale === "day" && isWeekend(cursor),
         });

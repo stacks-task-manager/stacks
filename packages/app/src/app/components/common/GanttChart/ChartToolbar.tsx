@@ -9,8 +9,6 @@ export function ChartToolbar({
     paneVisible,
     onScale,
     onToday,
-    onExpand,
-    onCollapse,
     onPane,
     onTop,
 }: {
@@ -18,8 +16,6 @@ export function ChartToolbar({
     paneVisible: boolean;
     onScale: (scale: GanttScale) => void;
     onToday: () => void;
-    onExpand: () => void;
-    onCollapse: () => void;
     onPane: () => void;
     onTop: () => void;
 }) {
@@ -40,12 +36,6 @@ export function ChartToolbar({
                 <option value="quarter">{translate("Quarter")}</option>
                 <option value="halfYear">{translate("Half year")}</option>
             </HTMLSelect>
-            <Button small minimal data-testid="gantt-expand-all" onClick={onExpand}>
-                {translate("Expand all")}
-            </Button>
-            <Button small minimal data-testid="gantt-collapse-all" onClick={onCollapse}>
-                {translate("Collapse all")}
-            </Button>
             <Button small minimal data-testid="gantt-pane-toggle" aria-pressed={paneVisible} onClick={onPane}>
                 {translate("Task pane")}
             </Button>

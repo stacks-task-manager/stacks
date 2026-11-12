@@ -3,13 +3,14 @@ import { Button } from "@blueprintjs/core";
 import { translate } from "@stacks/translations";
 import { differenceInCalendarDays, format, isValid } from "date-fns";
 import React from "react";
-import { Icon } from "app/components/common/Icon/Icon";
 import { barGeometry, ROW_HEIGHT } from "app/components/common/GanttChart/geometry";
 import { DateEdit, DateRange, GanttRow } from "app/components/common/GanttChart/types";
 
 interface Props {
     row: GanttRow;
     depth: number;
+    guides: number[];
+    hasNextSibling: boolean;
     index: number;
     collapsed: boolean;
     paneWidth: number;
@@ -27,9 +28,14 @@ interface Props {
     onBegin: (event: React.PointerEvent<HTMLElement>, kind: DateEdit | "create") => void;
 }
 
+const TREE_LINE_OFFSET = 15;
+const TREE_LEVEL_GAP = 20;
+
 export function TaskRow({
     row,
     depth,
+    guides,
+    hasNextSibling,
     index,
     collapsed,
     paneWidth,
@@ -64,6 +70,19 @@ export function TaskRow({
         >
             {paneWidth > 0 && (
                 <div className="stacks-gantt-task" style={{ width: paneWidth, paddingLeft: 8 + depth * 20 }}>
+                    {guides.map(level => (
+                        <svg
+                            key={level}
+                            className="stacks-gantt-tree-guide"
+                            data-testid={`gantt-tree-guide-${row.id}-${level}`}
+                            aria-hidden="true"
+                            width="1"
+                            height={ROW_HEIGHT}
+                            style={{ left: TREE_LINE_OFFSET + (level - 1) * TREE_LEVEL_GAP }}
+                        >
+                            <path d={`M 0.5 0 V ${ROW_HEIGHT}`} />
+                        </svg>
+                    ))}
                     {depth > 0 && (
                         <svg
                             className="stacks-gantt-tree-arrow"
@@ -71,23 +90,28 @@ export function TaskRow({
                             aria-hidden="true"
                             width="32"
                             height="48"
-                            style={{ left: 20 + (depth - 1) * 20 }}
+                            style={{ left: TREE_LINE_OFFSET + (depth - 1) * TREE_LEVEL_GAP }}
                         >
-                            <path d="M 0.5 0 V 24.5 H 28.5 M 23.5 19.5 L 28.5 24.5 L 23.5 29.5" />
+                            <path
+                            d={`M 0.5 0 V ${hasNextSibling ? ROW_HEIGHT : 24.5} M 0.5 24.5 H 10 M 20.5 ${row.children.length > 0 ? 38 : 48} V 48`}
+                            />
                         </svg>
                     )}
                     {row.children.length > 0 ? (
-                        <Button
-                            minimal
-                            small
+                        <button
+                            type="button"
+                            className="stacks-gantt-tree-toggle"
                             data-testid={`gantt-toggle-${row.id}`}
                             aria-label={row.name}
                             aria-expanded={!collapsed}
                             onClick={onToggle}
-                            icon={<Icon icon={collapsed ? "chevron-right" : "chevron-down"} size={12} />}
-                        />
+                        >
+                            <svg aria-hidden="true" viewBox="0 0 12 12">
+                                <path d={collapsed ? "M 4 2 L 8 6 L 4 10" : "M 2 4 L 6 8 L 10 4"} />
+                            </svg>
+                        </button>
                     ) : (
-                        <span className="stacks-gantt-indent" />
+                        depth === 0 && <span className="stacks-gantt-indent" />
                     )}
                     <button
                         className="stacks-gantt-task-title"
@@ -95,13 +119,14 @@ export function TaskRow({
                         onClick={onActivate}
                         title={row.name}
                     >
-                        <span>
-                            {row.name}
-                            {row.children.length > 0 && <small> ({row.children.length})</small>}
-                        </span>
+                        <span>{row.name}</span>
                         {row.secondaryLabel && (
                             <small>
-                                <i style={{ backgroundColor: row.color }} />
+                                <i
+                                    data-testid={`gantt-task-color-${row.id}`}
+                                    className={row.color ? undefined : "stacks-gantt-default-tint"}
+                                    style={row.color ? { backgroundColor: row.color } : undefined}
+                                />
                                 {row.secondaryLabel}
                             </small>
                         )}

@@ -11,10 +11,14 @@ jest.mock("react-router-dom", () => ({
 }));
 jest.mock("app/components/common", () => ({ Grid: () => null, BlankSlate: () => null }));
 jest.mock("app/components/common/GanttChart/GanttChart", () => ({
-    GanttChart: ({ onActivate }: { onActivate: (id: string) => void }) => (
-        <button data-testid="open-task" onClick={() => onActivate("task")} />
+    GanttChart: ({ title, onActivate }: { title: string; onActivate: (id: string) => void }) => (
+        <>
+            <div data-testid="gantt-title">{title}</div>
+            <button data-testid="open-task" onClick={() => onActivate("task")} />
+        </>
     ),
 }));
+jest.mock("@stacks/translations", () => ({ translate: (key: string) => key }));
 jest.mock("app/hooks", () => ({
     useFilteredProjectTasks: () => [{ id: "task", title: "Task", project: "project", stack: "stack" }],
     useProjectStacks: () => [{ id: "stack", title: "Stack", tint: "red" }],
@@ -32,6 +36,7 @@ beforeEach(() => mockNavigate.mockClear());
 it("opens tasks in the project when the mockEmbedded preference is enabled", () => {
     mockEmbedded = true;
     render(<Gantt />);
+    expect(screen.getByTestId("gantt-title")).toHaveTextContent("Tasks");
     fireEvent.click(screen.getByTestId("open-task"));
     expect(mockNavigate).toHaveBeenCalledWith("/project/project/task");
 });

@@ -5,6 +5,7 @@
     --gantt-surface: #{$white};
     --gantt-border: #{$light-gray2};
     --gantt-muted: #{$gray1};
+    --gantt-default-tint: #{$gray3};
     --gantt-weekend: #{rgba($gray3, 0.07)};
     position: relative;
     display: flex;
@@ -22,6 +23,7 @@
         --gantt-surface: #{$dark-gray3};
         --gantt-border: #{$dark-gray1};
         --gantt-muted: #{$gray5};
+        --gantt-default-tint: #{$gray5};
         --gantt-weekend: #{rgba($gray3, 0.12)};
     }
     button:focus-visible,
@@ -79,8 +81,23 @@
 .stacks-gantt-task-heading {
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    gap: 8px;
     padding: 0 16px;
     font-weight: 600;
+}
+.stacks-gantt-task-heading-title {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.stacks-gantt-toggle-icon {
+    display: block;
+    width: 16px;
+    font-size: 16px;
+    line-height: 1;
+    text-align: center;
 }
 .stacks-gantt-axis {
     flex-shrink: 0;
@@ -99,9 +116,13 @@
 .stacks-gantt-tick {
     position: absolute;
     bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     height: 28px;
+    border-top: 1px solid var(--gantt-border);
     border-left: 1px solid var(--gantt-border);
-    padding: 6px 8px;
+    padding: 0;
     overflow: hidden;
     white-space: nowrap;
 }
@@ -121,8 +142,30 @@
     padding-right: 4px;
 }
 .stacks-gantt-indent {
-    width: 24px;
+    width: 10px;
     flex-shrink: 0;
+}
+.stacks-gantt-tree-toggle {
+    display: flex;
+    flex: 0 0 16px;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--gantt-muted);
+    cursor: pointer;
+    svg {
+        width: 10px;
+        height: 10px;
+        fill: none;
+        stroke: currentColor;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 1.5;
+    }
 }
 .stacks-gantt-task-title {
     flex: 1;
@@ -150,6 +193,9 @@
         height: 6px;
         border-radius: 50%;
         margin-right: 4px;
+    }
+    .stacks-gantt-default-tint {
+        background-color: var(--gantt-default-tint);
     }
 }
 .stacks-gantt-track {
@@ -285,11 +331,12 @@
         fill: currentColor;
     }
 }
-.stacks-gantt-tree-arrow {
+.stacks-gantt-tree-arrow,
+.stacks-gantt-tree-guide {
     position: absolute;
     top: 0;
     pointer-events: none;
     fill: none;
-    stroke: var(--gantt-muted);
+    stroke: var(--gantt-border);
     stroke-width: 1;
 }

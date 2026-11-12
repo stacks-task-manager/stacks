@@ -70,6 +70,22 @@ describe("Gantt visible hierarchy", () => {
             "sibling",
         ]);
     });
+    it("tracks sibling continuation guides for nested rows", () => {
+        const rows = [
+            row("root-a", [row("sibling-a", [row("grandchild")]), row("sibling-b")]),
+            row("root-b"),
+        ];
+
+        expect(
+            flattenRows(rows, new Set()).map(item => [item.row.id, item.guides, item.hasNextSibling])
+        ).toEqual([
+            ["root-a", [], true],
+            ["sibling-a", [], true],
+            ["grandchild", [1], false],
+            ["sibling-b", [], false],
+            ["root-b", [], false],
+        ]);
+    });
     it("bounds rendered rows for a thousand-row project", () => {
         const window = visibleWindow(24000, 600, 1000);
         expect(window.end - window.start).toBeLessThan(30);

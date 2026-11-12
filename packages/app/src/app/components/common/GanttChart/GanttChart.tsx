@@ -1,4 +1,5 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+import { Button } from "@blueprintjs/core";
 import { translate } from "@stacks/translations";
 import { addDays, differenceInCalendarDays, startOfDay } from "date-fns";
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
@@ -22,7 +23,7 @@ import { DateRange, GanttChartProps, GanttRow, GanttScale } from "app/components
 import { useBarGesture } from "app/components/common/GanttChart/useBarGesture";
 import "./_GanttChart.scss";
 
-export function GanttChart({ rows, onActivate, onDatesChange }: GanttChartProps) {
+export function GanttChart({ title, rows, onActivate, onDatesChange }: GanttChartProps) {
     const scroller = useRef<HTMLDivElement>(null);
     const [today] = useState(() => startOfDay(new Date()));
     const [scale, setScale] = useState<GanttScale>("day");
@@ -41,6 +42,11 @@ export function GanttChart({ rows, onActivate, onDatesChange }: GanttChartProps)
     const chartWidth = Math.max(80, viewport.width - taskWidth);
     const allRows = useMemo(() => flattenRows(rows, new Set()), [rows]);
     const visibleRows = useMemo(() => flattenRows(rows, collapsed), [rows, collapsed]);
+    const expandableIds = useMemo(
+        () => allRows.filter(({ row }) => row.children.length).map(({ row }) => row.id),
+        [allRows]
+    );
+    const allCollapsed = expandableIds.length > 0 && expandableIds.every(id => collapsed.has(id));
     const { origin, timelineWidth } = useMemo(() => {
         let first = addDays(today, -3650);
         let last = addDays(today, 3650);
@@ -139,12 +145,6 @@ export function GanttChart({ rows, onActivate, onDatesChange }: GanttChartProps)
                     anchor.current = dateAt(origin, viewport.left, unit);
                     setScale(next);
                 }}
-                onExpand={() => setCollapsed(new Set())}
-                onCollapse={() =>
-                    setCollapsed(
-                        new Set(allRows.filter(item => item.row.children.length).map(item => item.row.id))
-                    )
-                }
                 onPane={() => setHidePane(value => !value)}
                 onTop={() => {
                     if (scroller.current) scroller.current.scrollTop = 0;
@@ -163,7 +163,22 @@ export function GanttChart({ rows, onActivate, onDatesChange }: GanttChartProps)
                         <div className="stacks-gantt-header">
                             {taskWidth > 0 && (
                                 <div className="stacks-gantt-task-heading" style={{ width: taskWidth }}>
-                                    {translate("Task")}
+                                    <span className="stacks-gantt-task-heading-title">{title}</span>
+                                    <Button
+                                        small
+                                        minimal
+                                        disabled={!expandableIds.length}
+                                        icon={
+                                            <span className="stacks-gantt-toggle-icon" aria-hidden>
+                                                {allCollapsed ? "+" : "−"}
+                                            </span>
+                                        }
+                                        aria-label={translate(allCollapsed ? "Expand all" : "Collapse all")}
+                                        data-testid="gantt-toggle-all"
+                                        onClick={() =>
+                                            setCollapsed(allCollapsed ? new Set() : new Set(expandableIds))
+                                        }
+                                    />
                                 </div>
                             )}
                             <TimelineHeader ticks={ticks} width={timelineWidth} left={viewport.left} />
@@ -204,11 +219,13 @@ export function GanttChart({ rows, onActivate, onDatesChange }: GanttChartProps)
                             />
                             {visibleRows
                                 .slice(rowWindow.start, rowWindow.end)
-                                .map(({ row, depth }, offset) => (
+                                .map(({ row, depth, guides, hasNextSibling }, offset) => (
                                     <TaskRow
                                         key={row.id}
                                         row={row}
                                         depth={depth}
+                                        guides={guides}
+                                        hasNextSibling={hasNextSibling}
                                         index={rowWindow.start + offset}
                                         collapsed={collapsed.has(row.id)}
                                         paneWidth={taskWidth}
