@@ -5,7 +5,7 @@ import { default as classNames, default as classnames } from "classnames";
 import noop from "lodash/noop";
 import React, { FunctionComponent, useCallback, useEffect, useMemo, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { IReminder, IRepeats, ITask, PRIORITY, TAGSECTION, TAGTYPE } from "@stacks/types";
+import { IPreferences, IReminder, IRepeats, ITask, PRIORITY, TAGSECTION, TAGTYPE } from "@stacks/types";
 import { Draggable } from "app/components/draggable";
 import { ClickStop, Col, DropZone, Grid, Icon, LazyLoad, RoundButton, Row } from "app/components/common";
 import {
@@ -17,17 +17,19 @@ import {
     TaskCover,
     TaskState,
 } from "app/components/project";
-import { useNav, usePreferences, useSubscribe, useSubtasks, useTask, useTaskNavigation } from "app/hooks";
+import { useNav, usePreferences, useSubscribe, useSubtasks, useTask, useTaskNavigationInfo } from "app/hooks";
 import { snapshotTaskModalBackground } from "app/hooks/router";
 import { TasksActions } from "app/store/actions";
-import { NavigationStore, setSelection } from "app/store/navigation";
+import { setSelection } from "app/store/navigation";
 import { PreferencesStore } from "app/store/preferences";
+import { setBoundedMapValue } from "app/utils/boundedMap";
 import { colorToRGBA } from "app/utils/colors";
 import { scrollIntoView } from "app/utils/dom";
 import { stripHTML, truncateEnd } from "app/utils/string";
 import { getFilesFromEvent } from "app/utils/drop";
 
-/** Survives TaskCard remounts (e.g. after DnD list reconciliation). */
+/** Survives TaskCard remounts (e.g. after DnD list reconciliation) without growing without bound. */
+const TASK_CARD_EXPANDED_STATE_LIMIT = 500;
 const taskCardSubtasksExpanded = new Map<string, boolean>();
 import {
     CircularProgress,
@@ -65,7 +67,8 @@ const DraggableTaskCard: FunctionComponent<DraggableTaskCardProps> = props => {
         children,
         ...restProps
     } = props;
-    const { as: _omitAsFromDraggable, ...restForDraggable } = restProps;
+    const { as: asProp, ...restForDraggable } = restProps;
+    void asProp;
 
     const dragContainerId = containerId ?? (stackId ? `stack-column-${stackId}` : undefined);
 
@@ -126,24 +129,38 @@ export const TaskCardComponent: FunctionComponent<TaskCardComponentProps> = prop
         isDraggable,
         ...restProps
     } = props;
-    const { fixedCoverHeight } = usePreferences(["fixedCoverHeight"]);
+    const preferences = usePreferences([
+        "fixedCoverHeight",
+        "showAssignees",
+        "showDates",
+        "showComments",
+        "showSubtasks",
+        "showPriority",
+        "showProgress",
+        "showRepeats",
+        "showNotifications",
+        "showExtendedStatus",
+        "showDescription",
+        "showExtendedPriority",
+    ]);
+    const { fixedCoverHeight } = preferences;
     const isComplete = task.done;
     const navigate = useNav();
-    const selected = useTaskNavigation(taskId);
-    const { subtasks } = useSubtasks(taskId, false);
+    const { selected, selectionCount } = useTaskNavigationInfo(taskId);
+    const { subtasks } = useSubtasks(taskId, false, preferences.showSubtasks === true);
     const [isSubtasksVisible, setIsSubtasksVisible] = useState(
         () => taskCardSubtasksExpanded.get(taskId) ?? false
     );
 
     const setSubtasksVisible = useCallback(
         (visible: boolean) => {
-            taskCardSubtasksExpanded.set(taskId, visible);
+            setBoundedMapValue(taskCardSubtasksExpanded, taskId, visible, TASK_CARD_EXPANDED_STATE_LIMIT);
             setIsSubtasksVisible(visible);
         },
         [taskId]
     );
 
-    const onDrop = useCallback((_acceptedFiles: File[]) => {
+    const onDrop = useCallback(() => {
         // Drop-to-attach is wired up in TaskDetails. The card-level drop handler is
         // a no-op until file-on-card uploads are implemented.
     }, []);
@@ -154,37 +171,74 @@ export const TaskCardComponent: FunctionComponent<TaskCardComponentProps> = prop
         getFilesFromEvent,
     });
 
-    const openTask = (taskId: string) => {
-        if (PreferencesStore.get().embeddedTask) {
-            navigate(`/project/${task.project}/${taskId}`);
-            setTimeout(() => {
-                scrollIntoView(document.getElementById(`task-${taskId}`), { behavior: "smooth" });
-            }, 500);
-        } else {
-            navigate(`/task/${taskId}`, {
-                state: {
-                    backgroundLocation: snapshotTaskModalBackground(),
-                },
-            });
-        }
-    };
+    const openTask = useCallback(
+        (taskId: string) => {
+            if (PreferencesStore.get().embeddedTask) {
+                navigate(`/project/${task.project}/${taskId}`);
+                setTimeout(() => {
+                    scrollIntoView(document.getElementById(`task-${taskId}`), { behavior: "smooth" });
+                }, 500);
+            } else {
+                navigate(`/task/${taskId}`, {
+                    state: {
+                        backgroundLocation: snapshotTaskModalBackground(),
+                    },
+                });
+            }
+        },
+        [navigate, task.project]
+    );
 
-    const handleOpenTask = (event: React.MouseEvent) => {
-        if (disabled) return;
-        event.stopPropagation();
+    const handleOpenTask = useCallback(
+        (event: React.MouseEvent) => {
+            if (disabled) return;
+            event.stopPropagation();
 
-        const { highlightTask, highlightStack, clickSelectTask } = PreferencesStore.get();
+            const { highlightTask, highlightStack, clickSelectTask } = PreferencesStore.get();
 
-        if (event.metaKey || event.ctrlKey || (highlightTask && clickSelectTask)) {
-            setSelection(highlightStack && stackId ? stackId : "", task.id, event.metaKey || event.ctrlKey);
-        }
+            if (event.metaKey || event.ctrlKey || (highlightTask && clickSelectTask)) {
+                setSelection(
+                    highlightStack && stackId ? stackId : "",
+                    task.id,
+                    event.metaKey || event.ctrlKey
+                );
+            }
 
-        if (event.metaKey || event.ctrlKey) {
-            return;
-        }
+            if (event.metaKey || event.ctrlKey) {
+                return;
+            }
 
-        openTask(task.id);
-    };
+            openTask(task.id);
+        },
+        [disabled, openTask, stackId, task.id]
+    );
+
+    const taskCardClassName = useMemo(
+        () =>
+            classnames("task-card", {
+                selected,
+                tinted: task.tint != null,
+                hasCover: task.cover,
+            }),
+        [selected, task.cover, task.tint]
+    );
+
+    const taskCardStyle = useMemo(
+        () =>
+            ({
+                ["--task-tint" as string]: task.tint,
+                ["--task-tint-rgb" as string]: task.tint && colorToRGBA(task.tint, 5),
+            } as React.CSSProperties),
+        [task.tint]
+    );
+
+    const innerWrapperClassName = useMemo(
+        () =>
+            classnames("task-card-inner-wrapper", [Classes.POPOVER_DISMISS], {
+                hasStatus: task.status != null,
+            }),
+        [task.status]
+    );
 
     return (
         <DraggableTaskCard
@@ -198,31 +252,21 @@ export const TaskCardComponent: FunctionComponent<TaskCardComponentProps> = prop
             {...restProps}
         >
             <div id={`task-${task.id}`} className="task-scroll-anchor" />
-            <SelectionCounter task={taskId} />
+            <SelectionCounter count={selectionCount} />
 
             <LazyLoad
-                stayRendered
                 threshold={0.2}
                 defaultHeight={100}
                 initialVisible={initialVisible}
                 loadingElement={<div style={{ height: 100 }} className={Classes.SKELETON} />}
-                className={classnames("task-card", {
-                    selected,
-                    tinted: task.tint != null,
-                    hasCover: task.cover,
-                })}
-                style={{
-                    ["--task-tint" as string]: task.tint,
-                    ["--task-tint-rgb" as string]: task.tint && colorToRGBA(task.tint, 5),
-                }}
+                className={taskCardClassName}
+                style={taskCardStyle}
                 onClick={handleOpenTask}
                 data-testid="task-card-click-target"
                 data-selected={selected}
             >
                 <div
-                    className={classnames("task-card-inner-wrapper", [Classes.POPOVER_DISMISS], {
-                        hasStatus: task.status != null,
-                    })}
+                    className={innerWrapperClassName}
                     {...getRootProps()}
                     onFocus={noop}
                     onBlur={noop}
@@ -251,10 +295,15 @@ export const TaskCardComponent: FunctionComponent<TaskCardComponentProps> = prop
                             </div>
 
                             <ActiveTags taskId={task.id} tags={task.tags} disabled={disabled || isComplete} />
-                            <TaskMidSection task={task} disabled={disabled || isComplete} />
+                            <TaskMidSection
+                                task={task}
+                                preferences={preferences}
+                                disabled={disabled || isComplete}
+                            />
 
                             <TaskFooter
                                 task={task}
+                                preferences={preferences}
                                 disabled={disabled || isComplete}
                                 isSubtasksVisible={isSubtasksVisible}
                                 onToggleSubtaskVisibility={setSubtasksVisible}
@@ -280,23 +329,20 @@ const TaskSubtasks = ({ parentId, subtasks }: { parentId: string; subtasks: ITas
 
 const TaskFooter = ({
     task,
+    preferences,
     disabled,
     isSubtasksVisible,
     onToggleSubtaskVisibility,
     subtasks,
 }: {
     task: ITask;
+    preferences: Partial<IPreferences>;
     disabled?: boolean;
     isSubtasksVisible: boolean;
     onToggleSubtaskVisibility: (visible: boolean) => void;
     subtasks: ITask[];
 }) => {
-    const { showAssignees, showDates, showComments, showSubtasks } = usePreferences([
-        "showAssignees",
-        "showDates",
-        "showComments",
-        "showSubtasks",
-    ]);
+    const { showAssignees, showDates, showComments, showSubtasks } = preferences;
     const commentsCount = task.comments;
 
     const showLeft = showAssignees || showDates;
@@ -319,7 +365,7 @@ const TaskFooter = ({
                 </ClickStop>
             </Tooltip>
         );
-    }, [task.permissions.isPublic]);
+    }, [task.id, task.permissions.isPublic]);
 
     if (!shouldShowFooter) return null;
 
@@ -415,7 +461,15 @@ const ActiveTags: FunctionComponent<IActiveTagsProps> = ({ taskId, tags, disable
     );
 };
 
-const TaskMidSection = ({ task, disabled }: { task: ITask; disabled?: boolean }) => {
+const TaskMidSection = ({
+    task,
+    preferences,
+    disabled,
+}: {
+    task: ITask;
+    preferences: Partial<IPreferences>;
+    disabled?: boolean;
+}) => {
     const {
         showPriority,
         showProgress,
@@ -423,14 +477,7 @@ const TaskMidSection = ({ task, disabled }: { task: ITask; disabled?: boolean })
         showNotifications,
         showExtendedStatus,
         showDescription,
-    } = usePreferences([
-        "showPriority",
-        "showProgress",
-        "showRepeats",
-        "showNotifications",
-        "showExtendedStatus",
-        "showDescription",
-    ]);
+    } = preferences;
     const [availableReminders, setAvailableReminders] = useState<Date[]>(
         (task.reminders ?? []).map(r => new Date(r))
     );
@@ -441,10 +488,13 @@ const TaskMidSection = ({ task, disabled }: { task: ITask; disabled?: boolean })
         }
     }, [task.reminders]);
 
-    useSubscribe("task:reminder:changed", (event: { taskId: string; reminders: IReminder[] }) => {
-        if (event.taskId !== task.id) return;
-        setAvailableReminders(event.reminders.map(n => n.date));
-    });
+    useSubscribe(
+        "task:reminder:changed",
+        (event: { taskId: string; reminders: IReminder[] }) => {
+            setAvailableReminders(event.reminders.map(n => n.date));
+        },
+        task.id
+    );
 
     const hasStatus = task.status != null;
     const hasPriority = task.priority != null && task.priority !== PRIORITY.NONE;
@@ -475,7 +525,12 @@ const TaskMidSection = ({ task, disabled }: { task: ITask; disabled?: boolean })
             ) : null}
 
             {hasPriority && showPriority ? (
-                <TaskPriority taskId={task.id} priority={task.priority} disabled={disabled} />
+                <TaskPriority
+                    taskId={task.id}
+                    priority={task.priority}
+                    showExtendedPriority={preferences.showExtendedPriority}
+                    disabled={disabled}
+                />
             ) : null}
 
             {showNotifications && hasReminders ? (
@@ -523,14 +578,14 @@ const TaskProgress = ({
 const TaskPriority = ({
     taskId,
     priority,
+    showExtendedPriority,
     disabled,
 }: {
     taskId: string;
     priority: PRIORITY | null;
+    showExtendedPriority?: boolean;
     disabled?: boolean;
 }) => {
-    const { showExtendedPriority } = usePreferences(["showExtendedPriority"]);
-
     const hasPriority = priority != null && priority !== PRIORITY.NONE;
     if (!hasPriority) return null;
 
@@ -584,11 +639,10 @@ const TaskDescription = ({ description }: { description: string }) => {
 };
 
 interface ISelectionCounterProps {
-    task: string;
+    count: number;
 }
-const SelectionCounter: FunctionComponent<ISelectionCounterProps> = ({ task }) => {
-    const { tasks } = NavigationStore.use();
-    if (tasks.length <= 1 || !tasks.includes(task)) return null;
+const SelectionCounter: FunctionComponent<ISelectionCounterProps> = ({ count }) => {
+    if (count <= 1) return null;
 
     return (
         <>
@@ -596,7 +650,7 @@ const SelectionCounter: FunctionComponent<ISelectionCounterProps> = ({ task }) =
                 <div className="task-selection-shadow-1" />
                 <div className="task-selection-shadow-2" />
             </div>
-            <div className="task-selection-count">{tasks.length}</div>
+            <div className="task-selection-count">{count}</div>
         </>
     );
 };

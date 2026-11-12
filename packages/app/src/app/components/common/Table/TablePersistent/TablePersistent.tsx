@@ -386,7 +386,7 @@ function TableContentRenderer<T>({ groupId, rows, ...props }: TableContentRender
                     index={i}
                     level={item.level}
                     parentId={item.parentId}
-                    isLast={item.isLast}
+                    lastAtDepth={item.lastAtDepth}
                     {...props}
                 />
             ))}
@@ -407,7 +407,7 @@ interface TableRowFlatProps<T> {
     selected?: string[];
     draggable?: boolean;
     canReorder?: boolean;
-    isLast: boolean;
+    lastAtDepth: boolean[];
     level: number;
     onClick?: (row: T, column: string, event: React.MouseEvent<HTMLTableCellElement>) => void;
     onSelect?: (row: T) => void;
@@ -420,12 +420,13 @@ function TableRowFlat<T>(props: TableRowFlatProps<T>) {
         tableId,
         columns,
         visibleColumns,
+        lazy,
         cellComponent,
         cellCallback,
         selected,
         draggable,
         canReorder,
-        isLast,
+        lastAtDepth,
         level,
         onClick,
         onSelect,
@@ -433,97 +434,126 @@ function TableRowFlat<T>(props: TableRowFlatProps<T>) {
 
     return (
         <Draggable draggableId={row.id} index={index} isDragDisabled={!Boolean(draggable)}>
-            {(provided, snapshot) => (
-                <Lazy
-                    rootElement="tr"
-                    initialVisible={index < 50}
-                    loadingElement={
-                        <TableRowPlaceholder
-                            provided={provided}
-                            cols={visibleColumns.length + (canReorder ? 1 : 0)}
-                        />
-                    }
-                    ref={provided.innerRef}
-                    className={classNames(`table-row row-level-${level}`, {
-                        "is-dragging": snapshot.isDragging,
-                        "is-draggable": draggable,
-                    })}
-                    data-source-index={index}
-                    data-parent={parentId}
-                    data-testid={`table-${tableId}-row-${row.id}`}
-                    stayRendered
-                    {...provided.draggableProps}
-                >
-                    {visibleColumns.map((col: string, colIndex: number) => {
-                        const column = columns[col];
+            {(provided, snapshot) => {
+                const rowClassName = classNames(`table-row row-level-${level}`, {
+                    "is-dragging": snapshot.isDragging,
+                    "is-draggable": draggable,
+                });
+                const cells = (
+                    <>
+                        {visibleColumns.map((col: string, colIndex: number) => {
+                            const column = columns[col];
 
-                        if (!column) {
-                            return null;
-                        }
+                            if (!column) {
+                                return null;
+                            }
 
-                        let content: React.ReactNode | string = row[col as keyof T] as string;
+                            let content: React.ReactNode | string = row[col as keyof T] as string;
 
-                        if (cellComponent != null) {
-                            const CellRendered = cellComponent;
-                            content = (
-                                <CellRendered
-                                    tableId={tableId}
-                                    row={row}
-                                    column={col}
-                                    callback={
-                                        cellCallback
-                                            ? () => cellCallback({ tableId, row, column: col })
+                            if (cellComponent != null) {
+                                const CellRendered = cellComponent;
+                                content = (
+                                    <CellRendered
+                                        tableId={tableId}
+                                        row={row}
+                                        column={col}
+                                        callback={
+                                            cellCallback
+                                                ? () => cellCallback({ tableId, row, column: col })
+                                                : undefined
+                                        }
+                                    />
+                                );
+                            }
+
+                            return (
+                                <TableBodyCell
+                                    className={classNames(`cell-${col} col-index-${colIndex}`)}
+                                    key={`${index}-${col}`}
+                                    data-testid={`table-${tableId}-cell-${row.id}-${col}`}
+                                    onClick={
+                                        column.clickable && onClick
+                                            ? (event: React.MouseEvent<HTMLTableCellElement>) =>
+                                                  onClick(row, col, event)
                                             : undefined
                                     }
-                                />
+                                    hasCheckbox={onSelect != null && !colIndex}
+                                    checkboxTestId={
+                                        onSelect != null && !colIndex
+                                            ? `table-${tableId}-row-select-${row.id}`
+                                            : undefined
+                                    }
+                                    onCheck={onSelect ? () => onSelect(row) : undefined}
+                                    isChecked={selected?.includes(row.id)}
+                                    dragHandle={
+                                        draggable && colIndex === 0 ? (
+                                            <span
+                                                className="table-row-drag-handle"
+                                                {...provided.dragHandleProps}
+                                            >
+                                                <Icon icon="drag" size={14} />
+                                            </span>
+                                        ) : undefined
+                                    }
+                                    paddingLeft={colIndex === 0 ? 30 * level : 0}
+                                    levelIndicator={
+                                        colIndex === 0 ? (
+                                            <TableLevelIndicator
+                                                level={level}
+                                                lastAtDepth={lastAtDepth}
+                                                isParent={Boolean(row.children && row.children.length > 0)}
+                                                testId={`table-${tableId}-level-indicator-${row.id}`}
+                                            />
+                                        ) : undefined
+                                    }
+                                >
+                                    <ContentRenderer content={content} />
+                                </TableBodyCell>
                             );
-                        }
+                        })}
+                        <TableBodyCell />
+                        {canReorder && <TableBodyCell className="menu-cell">&nbsp;</TableBodyCell>}
+                    </>
+                );
 
-                        return (
-                            <TableBodyCell
-                                className={classNames(`cell-${col} col-index-${colIndex}`)}
-                                key={`${index}-${col}`}
-                                data-testid={`table-${tableId}-cell-${row.id}-${col}`}
-                                onClick={
-                                    column.clickable && onClick
-                                        ? (event: React.MouseEvent<HTMLTableCellElement>) =>
-                                              onClick(row, col, event)
-                                        : undefined
-                                }
-                                hasCheckbox={onSelect != null && !colIndex}
-                                checkboxTestId={
-                                    onSelect != null && !colIndex
-                                        ? `table-${tableId}-row-select-${row.id}`
-                                        : undefined
-                                }
-                                onCheck={onSelect ? () => onSelect(row) : undefined}
-                                isChecked={selected?.includes(row.id)}
-                                dragHandle={
-                                    draggable && colIndex === 0 ? (
-                                        <span className="table-row-drag-handle" {...provided.dragHandleProps}>
-                                            <Icon icon="drag" size={14} />
-                                        </span>
-                                    ) : undefined
-                                }
-                                paddingLeft={colIndex === 0 ? 30 * level : 0}
-                                levelIndicator={
-                                    colIndex === 0 ? (
-                                        <TableLevelIndicator
-                                            level={level}
-                                            isLast={isLast}
-                                            isParent={Boolean(row.children && row.children.length > 0)}
-                                        />
-                                    ) : undefined
-                                }
-                            >
-                                <ContentRenderer content={content} />
-                            </TableBodyCell>
-                        );
-                    })}
-                    <TableBodyCell />
-                    {canReorder && <TableBodyCell className="menu-cell">&nbsp;</TableBodyCell>}
-                </Lazy>
-            )}
+                if (!lazy) {
+                    return (
+                        <tr
+                            ref={provided.innerRef}
+                            className={rowClassName}
+                            data-source-index={index}
+                            data-level={level}
+                            data-parent={parentId}
+                            data-testid={`table-${tableId}-row-${row.id}`}
+                            {...provided.draggableProps}
+                        >
+                            {cells}
+                        </tr>
+                    );
+                }
+
+                return (
+                    <Lazy
+                        rootElement="tr"
+                        initialVisible={index < 50}
+                        loadingElement={
+                            <TableRowPlaceholder
+                                provided={provided}
+                                cols={visibleColumns.length + (canReorder ? 1 : 0)}
+                            />
+                        }
+                        ref={provided.innerRef}
+                        className={rowClassName}
+                        data-source-index={index}
+                        data-level={level}
+                        data-parent={parentId}
+                        data-testid={`table-${tableId}-row-${row.id}`}
+                        {...provided.draggableProps}
+                    >
+                        {cells}
+                    </Lazy>
+                );
+            }}
         </Draggable>
     );
 }
@@ -564,6 +594,9 @@ interface TableGroupRendererProps<T> {
     onSelect?: (row: T) => void;
     onGroupSelect?: (groupId: string) => void;
 }
+
+const countTableRows = <T,>(rows: TablePersistentData<T>[]): number =>
+    rows.reduce((count, row) => count + 1 + countTableRows(row.children ?? []), 0);
 
 function TableGroupRenderer<T>({
     tableId,
@@ -636,7 +669,7 @@ function TableGroupRenderer<T>({
                                     <GroupAppendComponent
                                         groupId={group.groupId}
                                         title={group.title}
-                                        count={group.data.length}
+                                        count={countTableRows(group.data)}
                                     />
                                 ) : undefined
                             }
@@ -645,7 +678,7 @@ function TableGroupRenderer<T>({
                                     <GroupPrependComponent
                                         groupId={group.groupId}
                                         title={group.title}
-                                        count={group.data.length}
+                                        count={countTableRows(group.data)}
                                     />
                                 ) : undefined
                             }
