@@ -7313,7 +7313,7 @@ __metadata:
     google-auth-library: ^10.9.0
     googleapis: ^154.1.0
     handlebars: ^4.7.10
-    hono: ^4.13.13
+    hono: ^4.13.17
     lodash: ^4.17.23
     mime-types: ^3.0.2
     multer: ^2.3.0
@@ -16122,10 +16122,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hono@npm:^4.11.4, hono@npm:^4.13.13":
+"hono@npm:^4.11.4":
   version: 4.13.13
   resolution: "hono@npm:4.13.13"
   checksum: fd60e0f0f5a00fe7ac1a5d853ac14a141e0af396099288d626dff5faadfd5bb43a0ae488af46102a9bb1a1009bd388d07577b78b11ea407d0b7bd501eb0e48c5
+  languageName: node
+  linkType: hard
+
+"hono@npm:^4.13.17":
+  version: 4.13.17
+  resolution: "hono@npm:4.13.17"
+  checksum: ffb1ac35f82306ae2b643849c7b9180130ac4c9223dff7c41e9ba0b9d1262786560c5196898136736fea150115b6397af30dded37085e42f7c77d3475229c86a
   languageName: node
   linkType: hard
 
