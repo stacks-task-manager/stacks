@@ -16,19 +16,17 @@ import {
 } from "app/hooks";
 import { defaultFilters } from "app/store/projectFilters";
 import { ProjectsActions } from "app/store/actions/projects";
-import {
-    Attachments,
-    Board,
-    Gantt,
-    Links,
-    Overview,
-    ProjectSettings,
-    TableView,
-    Time,
-    World,
-} from "app/views";
 import { AppView, AppViewContent, ProjectToolbar, ProjectToolbarLoading } from "app/widgets";
+import { Attachments } from "./Attachments/Attachments";
+import { Board } from "./Board/Board";
+import { Gantt } from "./Gantt/Gantt";
+import { Links } from "./Links/Links";
 import { Notes } from "./Notes/Notes";
+import { Overview } from "./Overview/Overview";
+import { ProjectSettings } from "./ProjectSettings/ProjectSettings";
+import { TableView } from "./Table/TableView";
+import { Time } from "./Time/Time";
+import { World } from "./World/World";
 
 const ProjectLoading = () => {
     return (

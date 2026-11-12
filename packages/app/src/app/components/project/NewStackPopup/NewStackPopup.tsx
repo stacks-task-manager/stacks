@@ -66,7 +66,9 @@ export class NewStackPopup extends React.PureComponent<INewStackPopupProps, INew
                         placeholder={translate("Untitled stack")}
                         rightElement={this.renderStacksMenu()}
                         style={{ width: 360 }}
-                        inputRef={(node: HTMLInputElement | null) => (this.inputRef = node)}
+                        inputRef={(node: HTMLInputElement | null) => {
+                            this.inputRef = node;
+                        }}
                         onChange={this.handleTitleChange}
                         onKeyDown={this.handleSaveEnter}
                         data-testid="new-stack-title-input"
@@ -85,7 +87,9 @@ export class NewStackPopup extends React.PureComponent<INewStackPopupProps, INew
                         className={Classes.POPOVER_DISMISS}
                         disabled={!canSave}
                         onClick={this.handleSave}
-                        ref={(node: HTMLButtonElement | null) => (this.buttonRef = node)}
+                        ref={(node: HTMLButtonElement | null) => {
+                            this.buttonRef = node;
+                        }}
                         data-testid="new-stack-save-button"
                     >
                         {translate("Save stack")}
@@ -102,7 +106,9 @@ export class NewStackPopup extends React.PureComponent<INewStackPopupProps, INew
     private renderStacksMenu = () => {
         const { tint } = this.state;
 
-        const buttonIcon: JSX.Element | null = tint ? <FullCircle color={tint || Colors.GRAY3} /> : null;
+        const buttonIcon: React.JSX.Element | null = tint ? (
+            <FullCircle color={tint || Colors.GRAY3} />
+        ) : null;
 
         return (
             <Popover

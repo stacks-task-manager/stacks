@@ -1,5 +1,5 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
-import React, { useId, useRef } from "react";
+import React, { useCallback, useId, useRef } from "react";
 import classNames from "classnames";
 import { HTMLDivProps, ResizeSensor } from "@blueprintjs/core";
 
@@ -16,19 +16,13 @@ export const Body: React.FC<IBodyProps> = ({ children, noPadding, flexed, onClic
     const divEl = useRef<HTMLDivElement | null>(null);
     const id = useId();
 
-    const handleResize = () => {
-        setHasScrollbars();
-    };
-
-    const setHasScrollbars = () => {
+    const setHasScrollbars = useCallback(() => {
         if (divEl.current) {
-            if (hasScrollbar(divEl.current)) {
-                divEl.current.classList.add("has-scrollbar");
-            } else {
-                divEl.current.classList.remove("has-scrollbar");
-            }
+            divEl.current.classList.toggle("has-scrollbar", hasScrollbar(divEl.current));
         }
-    };
+    }, []);
+
+    const handleResize = useCallback(() => setHasScrollbars(), [setHasScrollbars]);
 
     return (
         <ResizeSensor onResize={handleResize}>

@@ -7,7 +7,7 @@ import { Icon } from "app/components/common";
 
 interface IRoundButtonProps {
     title?: string | React.ReactNode;
-    tooltip?: string | JSX.Element;
+    tooltip?: string | React.JSX.Element;
     placement?: Placement;
     disabled?: boolean;
     dashed?: boolean;
@@ -46,7 +46,7 @@ export const RoundButton: FunctionComponent<IRoundButtonProps> = ({
 }) => {
     // Fallback test id derived from the visible title (or icon), so each round
     // button is addressable in tests unless an explicit `testId` is provided.
-    const defaultTestId = testId ?? `round-button-${typeof title === "string" ? title : icon ?? "default"}`;
+    const defaultTestId = testId ?? `round-button-${typeof title === "string" ? title : (icon ?? "default")}`;
 
     return (
         <Tooltip
@@ -75,7 +75,7 @@ export const RoundButton: FunctionComponent<IRoundButtonProps> = ({
                             count
                         ) : (
                             <Icon
-                                icon={disabled ? icon ?? "minus" : icon ?? "plus"}
+                                icon={disabled ? (icon ?? "minus") : (icon ?? "plus")}
                                 size={minimal ? iconSize || undefined : iconSize || 12}
                             />
                         )}

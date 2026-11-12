@@ -1,5 +1,6 @@
 import React from "react";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { addDays, format, startOfDay } from "date-fns";
 import { GanttChart } from "app/components/common/GanttChart/GanttChart";
 import { GanttRow } from "app/components/common/GanttChart/types";
 
@@ -57,7 +58,9 @@ it("preserves expansion state when refreshed task data arrives", () => {
 });
 
 it("leaves the editor open and restores the bar after a failed save", async () => {
-    const dates = { ...row("task"), startDate: new Date(2026, 9, 27), endDate: new Date(2026, 9, 29) };
+    const startDate = startOfDay(addDays(new Date(), -1));
+    const endDate = addDays(startDate, 2);
+    const dates = { ...row("task"), startDate, endDate };
     render(
         <GanttChart
             rows={[dates]}
@@ -70,7 +73,10 @@ it("leaves the editor open and restores the bar after a failed save", async () =
     fireEvent.click(screen.getByTestId("gantt-date-save"));
     await waitFor(() => expect(screen.getByTestId("gantt-date-save")).not.toHaveClass("bp6-loading"));
     expect(screen.getByTestId("gantt-date-editor")).toBeInTheDocument();
-    expect(screen.getByTestId("gantt-bar-task")).toHaveAttribute("data-start", "2026-10-27");
+    expect(screen.getByTestId("gantt-bar-task")).toHaveAttribute(
+        "data-start",
+        format(startDate, "yyyy-MM-dd")
+    );
 });
 
 it("preserves the visible calendar date when a distant task changes the timeline origin", () => {

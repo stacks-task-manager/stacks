@@ -42,7 +42,7 @@ interface IFilterSectionProps {
     padded?: boolean;
     main?: boolean;
     active?: boolean;
-    accessory?: JSX.Element | undefined;
+    accessory?: React.JSX.Element | undefined;
     children?: React.ReactNode;
     onToggle?: () => void;
 }

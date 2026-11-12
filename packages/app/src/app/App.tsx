@@ -1,44 +1,60 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { Classes, Spinner, SpinnerSize } from "@blueprintjs/core";
-import React, { FunctionComponent, useEffect, useMemo } from "react";
+import React, { FunctionComponent, Suspense, lazy, useEffect, useMemo } from "react";
 import { Location, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 
 import { Announcement, ErrorBoundary, Feedback, Grid } from "app/components/common";
 import { DragDropProvider } from "app/components/draggable/context/DragDropContext";
 import { TaskDetails, TaskDetailsPanel } from "app/components/project";
-import {
-    Bookmarks,
-    Calendar,
-    CompanyDetails,
-    CompanyDetailsPanel,
-    File,
-    Goal,
-    Home,
-    Inbox,
-    MyTasks,
-    Notepad,
-    People,
-    PersonDetails,
-    PersonDetailsPanel,
-    Preferences,
-    Project,
-    Reports,
-    ReportType,
-    Sidebar,
-    SplitView,
-    Tasks,
-    Watermark,
-    Workspaces,
-} from "app/views";
+import { Home } from "app/views/Home/Home";
+import { Preferences } from "app/views/Preferences/Preferences";
+import { Project } from "app/views/Project/Project";
+import { Sidebar } from "app/views/Sidebar/Sidebar";
+import { SplitView } from "app/views/SplitView/SplitView";
+import { Watermark } from "app/views/Watermark/Watermark";
+import { Workspaces } from "app/views/Workspaces/Workspaces";
 import { AiChat } from "app/widgets/aiChat/AiChat";
 import { useMousetrap, usePreferences, useSubscribe, useUpdates } from "./hooks";
 import { shallowEqual } from "./hooks/store";
 import { NotificationsActions, PeopleActions } from "./store/actions";
 import { PeopleStore } from "./store/people";
+import currencies from "../assets/currencies.json";
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const currencies = require("../assets/currencies.json");
 window["currencies"] = currencies;
+
+const Bookmarks = lazy(() =>
+    import("app/views/Bookmarks/Bookmarks").then(module => ({ default: module.Bookmarks }))
+);
+const Calendar = lazy(() =>
+    import("app/views/Calendar/Calendar").then(module => ({ default: module.Calendar }))
+);
+const CompanyDetails = lazy(() =>
+    import("app/views/CompanyDetails/CompanyDetails").then(module => ({ default: module.CompanyDetails }))
+);
+const CompanyDetailsPanel = lazy(() =>
+    import("app/views/CompanyDetails/CompanyDetails").then(module => ({
+        default: module.CompanyDetailsPanel,
+    }))
+);
+const File = lazy(() => import("app/views/File/File").then(module => ({ default: module.File })));
+const Goal = lazy(() => import("app/views/Goal/Goal").then(module => ({ default: module.Goal })));
+const Inbox = lazy(() => import("app/views/Inbox/Inbox").then(module => ({ default: module.Inbox })));
+const MyTasks = lazy(() => import("app/views/MyTasks/MyTasks").then(module => ({ default: module.MyTasks })));
+const Notepad = lazy(() => import("app/views/Notepad/Notepad").then(module => ({ default: module.Notepad })));
+const People = lazy(() => import("app/views/People/People").then(module => ({ default: module.People })));
+const PersonDetails = lazy(() =>
+    import("app/views/PersonDetails/PersonDetails").then(module => ({ default: module.PersonDetails }))
+);
+const PersonDetailsPanel = lazy(() =>
+    import("app/views/PersonDetails/PersonDetails").then(module => ({
+        default: module.PersonDetailsPanel,
+    }))
+);
+const Reports = lazy(() => import("app/views/Reports/Reports").then(module => ({ default: module.Reports })));
+const ReportType = lazy(() =>
+    import("app/views/Reports/ReportType").then(module => ({ default: module.ReportType }))
+);
+const Tasks = lazy(() => import("app/views/Tasks/Tasks").then(module => ({ default: module.Tasks })));
 
 const App = () => {
     const isLoadingPeople = PeopleStore.use(state => state.isLoading, shallowEqual);
@@ -81,12 +97,22 @@ const App = () => {
                         <Workspaces />
                         <SplitView
                             left={isLoadingPeople ? <Loading small /> : <Sidebar />}
-                            right={isLoadingPeople ? <Loading /> : <RoutedMainAppRoutes />}
+                            right={
+                                isLoadingPeople ? (
+                                    <Loading />
+                                ) : (
+                                    <Suspense fallback={<Loading />}>
+                                        <RoutedMainAppRoutes />
+                                    </Suspense>
+                                )
+                            }
                         />
                     </div>
                 </div>
 
-                <RoutedOverlayRoutes />
+                <Suspense fallback={null}>
+                    <RoutedOverlayRoutes />
+                </Suspense>
                 <AiChat />
             </DragDropProvider>
         </ErrorBoundary>

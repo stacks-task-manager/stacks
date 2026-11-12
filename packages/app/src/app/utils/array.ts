@@ -72,30 +72,36 @@ export interface FlattenedItem<T> {
     data: GenericTreeNode<T>;
     level: number;
     parentId?: string;
-    isLast: boolean;
+    lastAtDepth: boolean[];
 }
 
-// Flattens a tree (depth-first) and annotates each item with level, parentId, and last-child flag
+// Flattens a tree depth-first and records the last-child state for every ancestor depth.
 export const flattenTree = <T>(nodes: GenericTreeNode<T>[]): FlattenedItem<T>[] => {
     const result: FlattenedItem<T>[] = [];
 
-    const walk = (arr: GenericTreeNode<T>[], level: number, parentId?: string) => {
+    const walk = (
+        arr: GenericTreeNode<T>[],
+        level: number,
+        parentId: string | undefined,
+        ancestorsLastAtDepth: boolean[]
+    ) => {
         arr.forEach((node, idx) => {
+            const lastAtDepth = [...ancestorsLastAtDepth, idx === arr.length - 1];
             result.push({
                 id: node.id,
                 data: node,
                 level,
                 parentId,
-                isLast: idx === arr.length - 1,
+                lastAtDepth,
             });
 
             if (node.children && node.children.length) {
-                walk(node.children, level + 1, node.id);
+                walk(node.children, level + 1, node.id, lastAtDepth);
             }
         });
     };
 
-    walk(nodes, 0);
+    walk(nodes, 0, undefined, []);
     return result;
 };
 

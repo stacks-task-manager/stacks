@@ -16,7 +16,7 @@ interface Gesture {
 }
 
 export function useBarGesture(
-    scroller: React.RefObject<HTMLDivElement>,
+    scroller: React.RefObject<HTMLDivElement | null>,
     origin: Date,
     unit: number,
     paneWidth: number,
@@ -104,8 +104,8 @@ export function useBarGesture(
                 gesture.latestX > rect.right - 32
                     ? 12
                     : gesture.latestX < rect.left + paneWidth + 32
-                    ? -12
-                    : 0;
+                      ? -12
+                      : 0;
             if (delta && gesture.moved) {
                 viewport.scrollLeft += delta;
                 update();

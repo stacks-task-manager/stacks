@@ -134,7 +134,7 @@ export const ProjectToolbar = () => {
     }
 
     return (
-        <ResizeSensor targetRef={toolbarRef} onResize={handleResize}>
+        <ResizeSensor targetRef={toolbarRef as React.RefObject<HTMLElement>} onResize={handleResize}>
             <div className="main-toolbar" ref={toolbarRef} data-testid="project-toolbar">
                 <div className="section-toolbar">
                     <div className="section-toolbar-side side">
@@ -816,7 +816,7 @@ const TableGroupingToggle = () => {
                     <Icon
                         icon={
                             GROUPING_TYPE_ICONS[
-                            grouping.toUpperCase() as unknown as keyof typeof GROUPING_TYPE_ICONS
+                                grouping.toUpperCase() as unknown as keyof typeof GROUPING_TYPE_ICONS
                             ]
                         }
                     />

@@ -103,11 +103,8 @@ const loadSegment = async (taskIds: string[], forceReload?: boolean): Promise<IT
     // if we do not force reload the requested tasks
     // then build an array of tasks to reload
     if (!forceReload) {
-        const loadedTasksIds = TasksStore.get().tasks.map(task => task.id);
-        const loadingTaskIds = TasksStore.get().loadingChunk;
-        tasksToLoad = taskIds.filter(
-            taskId => !loadedTasksIds.includes(taskId) && !loadingTaskIds.includes(taskId)
-        );
+        const { loadingChunk, tasksById } = TasksStore.get();
+        tasksToLoad = taskIds.filter(taskId => !tasksById.has(taskId) && !loadingChunk.includes(taskId));
     }
 
     // if there are tasks to be loaded
@@ -345,7 +342,7 @@ const update = async (taskId: string, updatedTask: Partial<ITask>, skipSave?: bo
         TaskLog(previousTask, updatedTaskData);
     }
 
-    const newUpdatedTask = TasksStore.get().tasks.find(task => task.id === taskId);
+    const newUpdatedTask = TasksStore.get().tasksById.get(taskId);
     publish("task:updated", newUpdatedTask);
 
     return newUpdatedTask!;
@@ -614,7 +611,7 @@ const alertDetach = async (taskId: string) => {
  * @returns ITask | undefined
  */
 export const getTask = async (taskId: string): Promise<ITask> => {
-    const localTask = TasksStore.get().tasks.find((task: ITask) => task.id === taskId);
+    const localTask = TasksStore.get().tasksById.get(taskId);
     if (localTask) return localTask;
 
     // if the requested task is in the loading queue
@@ -642,7 +639,11 @@ export const getTask = async (taskId: string): Promise<ITask> => {
  * @returns ITask[]
  */
 export const getTasks = (taskIds: string[]): ITask[] => {
-    return TasksStore.get().tasks.filter((task: ITask) => taskIds.includes(task.id));
+    const { tasksById } = TasksStore.get();
+    return taskIds.flatMap(taskId => {
+        const task = tasksById.get(taskId);
+        return task ? [task] : [];
+    });
 };
 
 /**
@@ -960,10 +961,10 @@ const setSubtaskPosition = async (
 ) => {
     TasksStore.set(
         produce((state: ITasksStore) => {
-            const parent = state.tasks.find(t => t.id === parentId);
+            const parent = state.tasksById.get(parentId);
             if (!parent) return;
 
-            const childIds = state.tasks.filter(t => t.parent === parentId).map(t => t.id);
+            const childIds = [...(state.subtaskIdsByParent.get(parentId) ?? [])];
             const childSet = new Set(childIds);
 
             let order = [...(parent.subtasksOrder?.length ? parent.subtasksOrder : childIds)];
@@ -1256,7 +1257,7 @@ const exportTask = async (taskId: string, format: "json" | "pdf" | "excel") => {
 
     const fileTitle = kebabCase(stripMd(task.title).substring(0, 30));
 
-    const subtasks = TasksStore.get().tasks.filter(subtask => subtask.parent === task.id);
+    const subtasks = getSubtasks(task.id);
     const project = await ProjectsActions.getProject(task.project);
 
     await ExportAPI.export({

@@ -281,6 +281,13 @@ class Project extends Base {
         await expect(this.page.getByTestId(`project-view-${view}`)).toBeVisible();
     }
 
+    public async openListView(projectId: string, searchParams: Record<string, string> = {}) {
+        const query = new URLSearchParams(searchParams).toString();
+        await this.goto(`/app/project/${projectId}${query ? `?${query}` : ""}`);
+        await this.project.waitFor({ state: "visible" });
+        await this.switchView("list");
+    }
+
     public async enableAllViews() {
         await this.viewsButton.click();
         await this.viewsMenu.waitFor({ state: "visible" });

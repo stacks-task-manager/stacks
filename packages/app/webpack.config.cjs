@@ -383,7 +383,10 @@ module.exports = (env, argv) => {
                   port: process.env.PORT ? Number(process.env.PORT) : 3001,
                   host: process.env.HOST || "127.0.0.1",
                   allowedHosts: ["localhost"],
-                  client: { overlay: { errors: true, warnings: false } },
+                  client: {
+                      overlay: { errors: true, warnings: false },
+                      webSocketURL: { hostname: "localhost" },
+                  },
               }
             : undefined,
     };
