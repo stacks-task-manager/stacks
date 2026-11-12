@@ -1,13 +1,11 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
-import { Button, HTMLSelect } from "@blueprintjs/core";
+import { Button } from "@blueprintjs/core";
 import { translate } from "@stacks/translations";
 import React from "react";
 import { GanttScale } from "app/components/common/GanttChart/types";
 
 export function ChartToolbar({
-    scale,
     paneVisible,
-    onScale,
     onToday,
     onPane,
     onTop,
@@ -24,18 +22,7 @@ export function ChartToolbar({
             <Button small intent="primary" data-testid="gantt-today" onClick={onToday}>
                 {translate("Today")}
             </Button>
-            <HTMLSelect
-                data-testid="gantt-scale"
-                aria-label={translate("Gantt scale")}
-                value={scale}
-                onChange={event => onScale(event.target.value as GanttScale)}
-            >
-                <option value="day">{translate("Day")}</option>
-                <option value="week">{translate("Week")}</option>
-                <option value="month">{translate("Month")}</option>
-                <option value="quarter">{translate("Quarter")}</option>
-                <option value="halfYear">{translate("Half year")}</option>
-            </HTMLSelect>
+
             <Button small minimal data-testid="gantt-pane-toggle" aria-pressed={paneVisible} onClick={onPane}>
                 {translate("Task pane")}
             </Button>

@@ -341,3 +341,36 @@
     stroke: var(--gantt-border);
     stroke-width: 1;
 }
+
+.stacks-gantt-scale-wrapper {
+    position: sticky;
+    right: 0;
+    background-color: $white;
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    border-left: 1px solid var(--gantt-border);
+    min-width: 80px;
+
+    button {
+        border: none;
+        background-color: transparent;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 0;
+        min-width: 0;
+        max-width: 100%;
+        white-space: nowrap;
+    }
+
+    .stacks-gantt-scale-label {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .stacks-gantt-scale-icon {
+        flex: 0 0 auto;
+    }
+}

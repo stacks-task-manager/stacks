@@ -33,6 +33,20 @@ it("uses Blueprint controls for the toolbar actions and scale", () => {
     expect(screen.getByTestId("gantt-scale").closest(".bp6-html-select")).not.toBeNull();
 });
 
+it("shows the translated selected scale in the header picker", async () => {
+    render(
+        <GanttChart title="Tasks" rows={[row("task")]} onActivate={jest.fn()} onDatesChange={jest.fn()} />
+    );
+
+    const picker = screen.getByTestId("gantt-scale-picker");
+    expect(picker).toHaveTextContent("Day");
+
+    fireEvent.click(picker);
+    fireEvent.click(await screen.findByRole("menuitem", { name: "Week" }));
+
+    await waitFor(() => expect(picker).toHaveTextContent("Week"));
+});
+
 it("renders the task heading title supplied by its consumer", () => {
     render(
         <GanttChart title="Tasks" rows={[row("task")]} onActivate={jest.fn()} onDatesChange={jest.fn()} />

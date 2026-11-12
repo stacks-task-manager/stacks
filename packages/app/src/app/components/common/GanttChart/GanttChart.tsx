@@ -19,6 +19,7 @@ import {
     visibleWindow,
 } from "app/components/common/GanttChart/geometry";
 import { TaskRow } from "app/components/common/GanttChart/TaskRow";
+import { ScalePicker } from "app/components/common/GanttChart/ScalePicker";
 import { DateRange, GanttChartProps, GanttRow, GanttScale } from "app/components/common/GanttChart/types";
 import { useBarGesture } from "app/components/common/GanttChart/useBarGesture";
 import "./_GanttChart.scss";
@@ -165,8 +166,8 @@ export function GanttChart({ title, rows, onActivate, onDatesChange }: GanttChar
                                 <div className="stacks-gantt-task-heading" style={{ width: taskWidth }}>
                                     <span className="stacks-gantt-task-heading-title">{title}</span>
                                     <Button
-                                        small
-                                        minimal
+                                        size="small"
+                                        variant="minimal"
                                         disabled={!expandableIds.length}
                                         icon={
                                             <span className="stacks-gantt-toggle-icon" aria-hidden>
@@ -182,6 +183,13 @@ export function GanttChart({ title, rows, onActivate, onDatesChange }: GanttChar
                                 </div>
                             )}
                             <TimelineHeader ticks={ticks} width={timelineWidth} left={viewport.left} />
+                            <ScalePicker
+                                scale={scale}
+                                onScale={next => {
+                                    anchor.current = dateAt(origin, viewport.left, unit);
+                                    setScale(next);
+                                }}
+                            />
                         </div>
                         <div
                             className="stacks-gantt-rows"
