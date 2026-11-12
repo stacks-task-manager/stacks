@@ -62,6 +62,10 @@ export function TaskRow({
               differenceInCalendarDays(end, start) + 1
           } ${translate("days")}`
         : translate("Edit dates");
+
+    const firstPadding = row.children.length ? 8 : 15;
+    const padding = (depth === 0 ? firstPadding : 8) + depth * 20;
+
     return (
         <div
             className="stacks-gantt-row"
@@ -69,7 +73,7 @@ export function TaskRow({
             style={{ top: index * ROW_HEIGHT, height: ROW_HEIGHT }}
         >
             {paneWidth > 0 && (
-                <div className="stacks-gantt-task" style={{ width: paneWidth, paddingLeft: 8 + depth * 20 }}>
+                <div className="stacks-gantt-task" style={{ width: paneWidth, paddingLeft: padding }}>
                     {guides.map(level => (
                         <svg
                             key={level}
@@ -83,6 +87,18 @@ export function TaskRow({
                             <path d={`M 0.5 0 V ${ROW_HEIGHT}`} />
                         </svg>
                     ))}
+                    {row.children.length > 0 && (
+                        <svg
+                            className="stacks-gantt-tree-child-line"
+                            data-testid={`gantt-tree-child-line-${row.id}`}
+                            aria-hidden="true"
+                            width="1"
+                            height={ROW_HEIGHT}
+                            style={{ left: TREE_LINE_OFFSET + depth * TREE_LEVEL_GAP }}
+                        >
+                            <path d="M 0.5 38 V 48" />
+                        </svg>
+                    )}
                     {depth > 0 && (
                         <svg
                             className="stacks-gantt-tree-arrow"
@@ -92,9 +108,7 @@ export function TaskRow({
                             height="48"
                             style={{ left: TREE_LINE_OFFSET + (depth - 1) * TREE_LEVEL_GAP }}
                         >
-                            <path
-                            d={`M 0.5 0 V ${hasNextSibling ? ROW_HEIGHT : 24.5} M 0.5 24.5 H 10 M 20.5 ${row.children.length > 0 ? 38 : 48} V 48`}
-                            />
+                            <path d={`M 0.5 0 V ${hasNextSibling ? ROW_HEIGHT : 24.5} M 0.5 24.5 H 10`} />
                         </svg>
                     )}
                     {row.children.length > 0 ? (
@@ -132,8 +146,8 @@ export function TaskRow({
                         )}
                     </button>
                     <Button
-                        minimal
-                        small
+                        variant="minimal"
+                        size="small"
                         disabled={pending}
                         data-testid={`gantt-edit-${row.id}`}
                         aria-label={`${translate("Edit dates")} · ${row.name}`}

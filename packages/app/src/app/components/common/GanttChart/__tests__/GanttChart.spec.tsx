@@ -109,6 +109,22 @@ it("only adds the lower tree connector segment for subtasks with children", () =
     const arrow = screen.getByTestId("gantt-tree-arrow-child");
     expect(arrow).toHaveStyle({ left: "15px" });
     expect(arrow.querySelector("path")).toHaveAttribute("d", "M 0.5 0 V 24.5 M 0.5 24.5 H 10");
+    expect(screen.queryByTestId("gantt-tree-child-line-child")).not.toBeInTheDocument();
+});
+
+it("adds the lower tree connector segment for level 0 task parents", () => {
+    render(
+        <GanttChart
+            title="Tasks"
+            rows={[row("parent", [row("child")])]}
+            onActivate={jest.fn()}
+            onDatesChange={jest.fn()}
+        />
+    );
+
+    const childLine = screen.getByTestId("gantt-tree-child-line-parent");
+    expect(childLine).toHaveStyle({ left: "15px" });
+    expect(childLine.querySelector("path")).toHaveAttribute("d", "M 0.5 38 V 48");
 });
 
 it("adds the lower tree connector segment below subtasks with children", () => {
@@ -121,10 +137,9 @@ it("adds the lower tree connector segment below subtasks with children", () => {
         />
     );
 
-    expect(screen.getByTestId("gantt-tree-arrow-child").querySelector("path")).toHaveAttribute(
-        "d",
-        "M 0.5 0 V 24.5 M 0.5 24.5 H 10 M 20 38 V 48"
-    );
+    const childLine = screen.getByTestId("gantt-tree-child-line-child");
+    expect(childLine).toHaveStyle({ left: "35px" });
+    expect(childLine.querySelector("path")).toHaveAttribute("d", "M 0.5 38 V 48");
 });
 
 it("places a single expand and collapse toggle in the task heading", async () => {

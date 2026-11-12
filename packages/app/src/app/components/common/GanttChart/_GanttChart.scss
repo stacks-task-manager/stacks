@@ -332,7 +332,8 @@
     }
 }
 .stacks-gantt-tree-arrow,
-.stacks-gantt-tree-guide {
+.stacks-gantt-tree-guide,
+.stacks-gantt-tree-child-line {
     position: absolute;
     top: 0;
     pointer-events: none;
