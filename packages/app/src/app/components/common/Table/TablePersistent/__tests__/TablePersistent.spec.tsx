@@ -119,3 +119,55 @@ describe("TablePersistent sorting ownership", () => {
         expect(group.data[1]).toBe(second);
     });
 });
+
+describe("TablePersistent nested rows", () => {
+    it("renders five levels and counts descendants in the group total", () => {
+        const data = [
+            {
+                groupId: "group",
+                title: "Nested",
+                defaultExpanded: true,
+                data: [
+                    {
+                        id: "level-1",
+                        title: "Level 1",
+                        children: [
+                            {
+                                id: "level-2",
+                                title: "Level 2",
+                                children: [
+                                    {
+                                        id: "level-3",
+                                        title: "Level 3",
+                                        children: [
+                                            {
+                                                id: "level-4",
+                                                title: "Level 4",
+                                                children: [{ id: "level-5", title: "Level 5" }],
+                                            },
+                                        ],
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+        ];
+
+        const { container } = render(
+            <TablePersistent<Row>
+                id="test-nested"
+                columns={columns}
+                data={data}
+                components={{ groupAppend: ({ count }) => <span>{`Rows: ${count}`}</span> }}
+                enableReorder={false}
+            />
+        );
+
+        expect(screen.getByText("Rows: 5")).toBeInTheDocument();
+        for (let level = 0; level < 5; level++) {
+            expect(container.querySelectorAll(`.row-level-${level}`)).toHaveLength(1);
+        }
+    });
+});

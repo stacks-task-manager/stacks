@@ -386,7 +386,7 @@ function TableContentRenderer<T>({ groupId, rows, ...props }: TableContentRender
                     index={i}
                     level={item.level}
                     parentId={item.parentId}
-                    isLast={item.isLast}
+                    lastAtDepth={item.lastAtDepth}
                     {...props}
                 />
             ))}
@@ -407,7 +407,7 @@ interface TableRowFlatProps<T> {
     selected?: string[];
     draggable?: boolean;
     canReorder?: boolean;
-    isLast: boolean;
+    lastAtDepth: boolean[];
     level: number;
     onClick?: (row: T, column: string, event: React.MouseEvent<HTMLTableCellElement>) => void;
     onSelect?: (row: T) => void;
@@ -426,7 +426,7 @@ function TableRowFlat<T>(props: TableRowFlatProps<T>) {
         selected,
         draggable,
         canReorder,
-        isLast,
+        lastAtDepth,
         level,
         onClick,
         onSelect,
@@ -500,8 +500,9 @@ function TableRowFlat<T>(props: TableRowFlatProps<T>) {
                                         colIndex === 0 ? (
                                             <TableLevelIndicator
                                                 level={level}
-                                                isLast={isLast}
+                                                lastAtDepth={lastAtDepth}
                                                 isParent={Boolean(row.children && row.children.length > 0)}
+                                                testId={`table-${tableId}-level-indicator-${row.id}`}
                                             />
                                         ) : undefined
                                     }
@@ -521,6 +522,7 @@ function TableRowFlat<T>(props: TableRowFlatProps<T>) {
                             ref={provided.innerRef}
                             className={rowClassName}
                             data-source-index={index}
+                            data-level={level}
                             data-parent={parentId}
                             data-testid={`table-${tableId}-row-${row.id}`}
                             {...provided.draggableProps}
@@ -543,6 +545,7 @@ function TableRowFlat<T>(props: TableRowFlatProps<T>) {
                         ref={provided.innerRef}
                         className={rowClassName}
                         data-source-index={index}
+                        data-level={level}
                         data-parent={parentId}
                         data-testid={`table-${tableId}-row-${row.id}`}
                         {...provided.draggableProps}
@@ -591,6 +594,9 @@ interface TableGroupRendererProps<T> {
     onSelect?: (row: T) => void;
     onGroupSelect?: (groupId: string) => void;
 }
+
+const countTableRows = <T,>(rows: TablePersistentData<T>[]): number =>
+    rows.reduce((count, row) => count + 1 + countTableRows(row.children ?? []), 0);
 
 function TableGroupRenderer<T>({
     tableId,
@@ -663,7 +669,7 @@ function TableGroupRenderer<T>({
                                     <GroupAppendComponent
                                         groupId={group.groupId}
                                         title={group.title}
-                                        count={group.data.length}
+                                        count={countTableRows(group.data)}
                                     />
                                 ) : undefined
                             }
@@ -672,7 +678,7 @@ function TableGroupRenderer<T>({
                                     <GroupPrependComponent
                                         groupId={group.groupId}
                                         title={group.title}
-                                        count={group.data.length}
+                                        count={countTableRows(group.data)}
                                     />
                                 ) : undefined
                             }

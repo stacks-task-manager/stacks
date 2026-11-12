@@ -5,8 +5,10 @@ import { Location, Route, Routes, useLocation, useNavigate } from "react-router-
 
 import { Announcement, ErrorBoundary, Feedback, Grid } from "app/components/common";
 import { DragDropProvider } from "app/components/draggable/context/DragDropContext";
+import { TaskDetails, TaskDetailsPanel } from "app/components/project";
 import { Home } from "app/views/Home/Home";
 import { Preferences } from "app/views/Preferences/Preferences";
+import { Project } from "app/views/Project/Project";
 import { Sidebar } from "app/views/Sidebar/Sidebar";
 import { SplitView } from "app/views/SplitView/SplitView";
 import { Watermark } from "app/views/Watermark/Watermark";
@@ -16,21 +18,10 @@ import { useMousetrap, usePreferences, useSubscribe, useUpdates } from "./hooks"
 import { shallowEqual } from "./hooks/store";
 import { NotificationsActions, PeopleActions } from "./store/actions";
 import { PeopleStore } from "./store/people";
+import currencies from "../assets/currencies.json";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports
-const currencies = require("../assets/currencies.json");
 window["currencies"] = currencies;
 
-const TaskDetails = lazy(() =>
-    import("app/components/project/Task/TaskDetails/TaskDetails").then(module => ({
-        default: module.TaskDetails,
-    }))
-);
-const TaskDetailsPanel = lazy(() =>
-    import("app/components/project/Task/TaskDetails/TaskDetails").then(module => ({
-        default: module.TaskDetailsPanel,
-    }))
-);
 const Bookmarks = lazy(() =>
     import("app/views/Bookmarks/Bookmarks").then(module => ({ default: module.Bookmarks }))
 );
@@ -59,7 +50,6 @@ const PersonDetailsPanel = lazy(() =>
         default: module.PersonDetailsPanel,
     }))
 );
-const Project = lazy(() => import("app/views/Project/Project").then(module => ({ default: module.Project })));
 const Reports = lazy(() => import("app/views/Reports/Reports").then(module => ({ default: module.Reports })));
 const ReportType = lazy(() =>
     import("app/views/Reports/ReportType").then(module => ({ default: module.ReportType }))
