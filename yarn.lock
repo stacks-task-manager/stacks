@@ -7247,7 +7247,7 @@ __metadata:
     "@react-navigation/drawer": ^7.5.0
     "@react-navigation/native": ^7.0.0
     "@stacks/types": "workspace:*"
-    "@tanstack/react-query": ^5.90.12
+    "@tanstack/react-query": ^5.107.1
     "@tiptap/core": 3.32.0
     "@types/react": ~19.3.0
     axios: ^1.20.0
@@ -7675,21 +7675,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/query-core@npm:5.100.9":
-  version: 5.100.9
-  resolution: "@tanstack/query-core@npm:5.100.9"
-  checksum: 247b5e3ef259d2ea1e1ea2f5a94e2486f1e5481afe1945336bd3aeefdab52b27f16874513aa13cff7b4074e232ec21c98bbe1ef3eb3a5c3fe9947e773ffacdd9
+"@tanstack/query-core@npm:5.107.1":
+  version: 5.107.1
+  resolution: "@tanstack/query-core@npm:5.107.1"
+  checksum: 035c4771d57ec6d1a7c2c2bd1cd80b1cf34679b8081d094e0525b5c1eeb828c79203e026ae3a788d56fecc8f474e1349c8ebaaa589029c08acd1b75acf902ef6
   languageName: node
   linkType: hard
 
-"@tanstack/react-query@npm:^5.90.12":
-  version: 5.100.9
-  resolution: "@tanstack/react-query@npm:5.100.9"
+"@tanstack/react-query@npm:^5.107.1":
+  version: 5.107.1
+  resolution: "@tanstack/react-query@npm:5.107.1"
   dependencies:
-    "@tanstack/query-core": 5.100.9
+    "@tanstack/query-core": 5.107.1
   peerDependencies:
+    "@types/react": ^18 || ^19
     react: ^18 || ^19
-  checksum: 4bf9e8eb04c4e653002e39763e05e0571c5390682c17f36d56810ada1aec4957bc897cd5d7c05c0520ef232eaa1605f94fe17eadf906e1b7e16d9a881bfae4f9
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: acacdfd7d74040f810f0d3b004599823b2e55ad425570c7368eade7bda92933b566032310b59c8c2656f0843a7c3a780d6fb9d25344fc5f4796e60cf3112de06
   languageName: node
   linkType: hard
 

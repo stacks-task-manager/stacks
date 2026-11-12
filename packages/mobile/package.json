@@ -25,7 +25,7 @@
         "@react-navigation/drawer": "^7.5.0",
         "@react-navigation/native": "^7.0.0",
         "@stacks/types": "workspace:*",
-        "@tanstack/react-query": "^5.90.12",
+        "@tanstack/react-query": "^5.107.1",
         "@tiptap/core": "3.32.0",
         "axios": "^1.20.0",
         "clsx": "^2.1.1",
