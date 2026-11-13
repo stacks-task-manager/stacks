@@ -3,7 +3,7 @@ import React, { FunctionComponent } from "react";
 import { Intent, MaybeElement, Placement, Tooltip } from "@blueprintjs/core";
 import classnames from "classnames";
 
-import { Icon } from "app/components/common";
+import { Icon } from "app/components/common/Icon/Icon";
 
 interface IRoundButtonProps {
     title?: string | React.ReactNode;

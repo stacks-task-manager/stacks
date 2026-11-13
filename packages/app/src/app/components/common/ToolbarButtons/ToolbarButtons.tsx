@@ -3,7 +3,8 @@ import React, { ForwardRefRenderFunction, FunctionComponent, useImperativeHandle
 import { AnchorButton, Button, Intent, Placement, Popover, Tooltip, mergeRefs } from "@blueprintjs/core";
 import classNames from "classnames";
 
-import { HotkeyTooltip, Icon } from "app/components/common";
+import { HotkeyTooltip } from "app/components/common/HotkeyTooltip/HotkeyTooltip";
+import { Icon } from "app/components/common/Icon/Icon";
 
 interface IToolbarDropdownButtonProps {
     tooltip: string | React.JSX.Element;

@@ -29,14 +29,16 @@ jest.mock("app/components/common", () => ({
         </button>
     ),
 }));
-jest.mock("app/components/project", () => {
+jest.mock("app/components/project/PriorityChip/PriorityChip", () => ({
+    PriorityChip: ({ priority, onRemove, id, testId }: any) => (
+        <button id={id} data-testid={testId ?? "priority-chip"} onClick={onRemove}>
+            {priority}
+        </button>
+    ),
+}));
+jest.mock("app/components/project/PriorityMenu/PriorityMenu", () => {
     const { PRIORITY } = jest.requireActual("@stacks/types");
     return {
-        PriorityChip: ({ priority, onRemove, id, testId }: any) => (
-            <button id={id} data-testid={testId ?? "priority-chip"} onClick={onRemove}>
-                {priority}
-            </button>
-        ),
         PriorityMenu: ({ onChange }: any) => (
             <button data-testid="select-high" onClick={event => onChange(PRIORITY.HIGH, event)}>
                 High

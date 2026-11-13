@@ -3,7 +3,8 @@ import { translate } from "@stacks/translations";
 import { Intent, Placement, Tag, Tooltip } from "@blueprintjs/core";
 import { format, isThisYear, isToday, isTomorrow, isYesterday } from "date-fns";
 import React, { useMemo } from "react";
-import { Icon, RoundButton } from "app/components/common";
+import { Icon } from "app/components/common/Icon/Icon";
+import { RoundButton } from "app/components/common/RoundButton/RoundButton";
 import { formatDate } from "app/utils/date";
 
 interface IDateChipProps {

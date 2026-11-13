@@ -13,7 +13,7 @@ import {
     Position,
 } from "@blueprintjs/core";
 import { IStack, StackTemplate } from "@stacks/types";
-import { TintPicker } from "app/components/project";
+import { TintPicker } from "app/components/project/TintPicker/TintPicker";
 import { FullCircle } from "@blueprintjs/icons";
 
 interface INewStackPopupProps {

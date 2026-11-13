@@ -6,7 +6,7 @@
  */
 import { APPICONS } from "@stacks/types";
 import { useEffect, useState } from "react";
-import { useCurrentTask } from "app/hooks";
+import { useCurrentTask } from "app/hooks/tasks";
 import { RecentsActions } from "app/store/actions/recents";
 
 /**

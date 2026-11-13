@@ -6,7 +6,7 @@ import React, { FunctionComponent, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { HotkeyTooltip, Icon, RoundButton } from "app/components/common";
-import { QuickTimeLogDialog } from "app/components/project";
+import { QuickTimeLogDialog } from "app/components/project/QuickTimeLog/QuickTimeLogDialog";
 import { useMe, useTask } from "app/hooks";
 import { snapshotTaskModalBackground } from "app/hooks/router";
 import { ITimeLog } from "@stacks/types";

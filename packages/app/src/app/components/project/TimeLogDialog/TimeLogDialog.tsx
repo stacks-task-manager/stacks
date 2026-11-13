@@ -14,7 +14,7 @@ import {
 } from "@blueprintjs/core";
 
 import { Grid, Textarea, Icon, RoundButton, Row, Col } from "app/components/common";
-import { TaskDetailsSection } from "app/components/project";
+import { TaskDetailsSection } from "app/components/project/Task/TaskDetailsSection/TaskDetailsSection";
 import { TimelogsActions } from "app/store/actions";
 import { PeopleStore } from "app/store/people";
 import { shallowEqual } from "app/hooks/store";
