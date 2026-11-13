@@ -16,7 +16,7 @@
         "ink-select-input": "^5.0.0",
         "ink-text-input": "^6.0.0",
         "react": "^19.3.1",
-        "typescript": "^5.7.3"
+        "typescript": "^7.0.2"
     },
     "devDependencies": {
         "@types/node": "^26.6.5",
