@@ -36,6 +36,7 @@ export function GanttChart({ title, rows, onActivate, onDatesChange }: GanttChar
     const [pending, setPending] = useState<Record<string, DateRange>>({});
     const saving = useRef(new Set<string>());
     const mounted = useRef(true);
+    const viewportReadFrame = useRef<number | null>(null);
     const anchor = useRef<Date | null>(today);
     const initialScroll = useRef(true);
     const unit = pixelsPerDay[scale];
@@ -62,22 +63,43 @@ export function GanttChart({ title, rows, onActivate, onDatesChange }: GanttChar
     }, [allRows, today, unit, chartWidth]);
     const readViewport = useCallback(() => {
         const element = scroller.current;
-        if (element)
-            setViewport({
-                width: element.clientWidth,
-                height: element.clientHeight,
-                left: element.scrollLeft,
-                top: element.scrollTop,
-            });
+        if (!element) return;
+        const next = {
+            width: element.clientWidth,
+            height: element.clientHeight,
+            left: element.scrollLeft,
+            top: element.scrollTop,
+        };
+        setViewport(current =>
+            current.width === next.width &&
+            current.height === next.height &&
+            current.left === next.left &&
+            current.top === next.top
+                ? current
+                : next
+        );
     }, []);
+    const scheduleViewportRead = useCallback(() => {
+        if (viewportReadFrame.current !== null) return;
+        viewportReadFrame.current = window.requestAnimationFrame(() => {
+            viewportReadFrame.current = null;
+            readViewport();
+        });
+    }, [readViewport]);
     useLayoutEffect(() => {
         const element = scroller.current;
         if (!element) return;
-        const observer = new ResizeObserver(readViewport);
+        const observer = new ResizeObserver(scheduleViewportRead);
         observer.observe(element);
         readViewport();
-        return () => observer.disconnect();
-    }, [readViewport]);
+        return () => {
+            observer.disconnect();
+            if (viewportReadFrame.current !== null) {
+                window.cancelAnimationFrame(viewportReadFrame.current);
+                viewportReadFrame.current = null;
+            }
+        };
+    }, [readViewport, scheduleViewportRead]);
     const previousOrigin = useRef(origin);
     useLayoutEffect(() => {
         if (anchor.current && scroller.current) {

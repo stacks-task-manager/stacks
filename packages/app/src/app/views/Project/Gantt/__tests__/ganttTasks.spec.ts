@@ -1,9 +1,9 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
-import { ITask } from "@stacks/types";
+import { IPerson, ITask } from "@stacks/types";
 import { convertToGantt } from "app/views/Project/Gantt/ganttTasks";
 
 const task = (id: string, title: string, parent: string | null = null, subtasksOrder: string[] = []): ITask =>
-    ({ id, title, parent, subtasksOrder, project: "project", stack: "stack" } as ITask);
+    ({ id, title, parent, subtasksOrder, project: "project", stack: "stack" }) as ITask;
 
 describe("convertToGantt", () => {
     it("builds the hierarchy once and preserves persisted subtask order", () => {
@@ -20,6 +20,23 @@ describe("convertToGantt", () => {
 
         expect(result.map(item => item.id)).toEqual(["root-a", "root-b"]);
         expect(result[0].children.map(item => item.id)).toEqual(["child-first", "child-last"]);
+    });
+});
+
+describe("Gantt assignees", () => {
+    it("resolves assigned task people and ignores unknown ids", () => {
+        const person = {
+            id: "person-1",
+            firstName: "Ada",
+            lastName: "Lovelace",
+        } as IPerson;
+        const result = convertToGantt(
+            [{ ...task("assigned", "Assigned"), assignees: [person.id, "missing"] }],
+            [],
+            [person]
+        );
+
+        expect(result[0].assignees).toEqual([person]);
     });
 });
 

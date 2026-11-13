@@ -144,7 +144,16 @@
     display: flex;
     align-items: center;
     gap: 4px;
-    padding-right: 4px;
+    padding-right: 10px;
+}
+.stacks-gantt-assignees {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+
+    .assignees {
+        align-items: center;
+    }
 }
 .stacks-gantt-indent {
     width: 10px;
@@ -393,6 +402,7 @@
     padding: 5px 10px;
     display: flex;
     align-items: center;
+    justify-content: center;
     border-left: 1px solid var(--gantt-border);
     min-width: 80px;
 

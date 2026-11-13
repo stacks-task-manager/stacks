@@ -10,8 +10,9 @@ App-local React/TypeScript task timeline. The project view converts shared task/
   pending previews and restores the current row data if saving rejects; the API layer reports errors.
 - Rows and timeline headers render within the visible viewport with overscan. Expansion state survives
   row updates, and scale/origin changes preserve the visible calendar date.
-- Task names and bars open details. The row's date button opens a keyboard-accessible date editor;
-  focused bars also support F2. Expanders expose `aria-expanded`; the divider supports arrow keys.
+- Task names and bars open details. Assigned people appear as avatars in the task pane. Focused bars
+  open the date editor with F2, and unscheduled rows expose the same editor by keyboard. Expanders
+  expose `aria-expanded`; the divider supports arrow keys.
 - Pointer gestures move, resize, or schedule an existing undated task. Escape cancels; edge scrolling
   begins after movement. The task pane can be resized or hidden independently of the timeline.
 - The scroll viewport is keyboard-focusable. Sticky header controls expose Today while the current

@@ -5,6 +5,7 @@ import { differenceInCalendarDays, format, isValid } from "date-fns";
 import React from "react";
 import { barGeometry, ROW_HEIGHT } from "app/components/common/GanttChart/geometry";
 import { DateEdit, DateRange, GanttRow } from "app/components/common/GanttChart/types";
+import { Assignees } from "app/widgets/people/Assignees/Assignees";
 
 interface Props {
     row: GanttRow;
@@ -145,16 +146,17 @@ export function TaskRow({
                             </small>
                         )}
                     </button>
-                    <Button
-                        variant="minimal"
-                        size="small"
-                        disabled={pending}
-                        data-testid={`gantt-edit-${row.id}`}
-                        aria-label={`${translate("Edit dates")} · ${row.name}`}
-                        onClick={onEdit}
-                    >
-                        …
-                    </Button>
+                    {row.assignees?.length ? (
+                        <div className="stacks-gantt-assignees">
+                            <Assignees
+                                assignees={row.assignees}
+                                max={3}
+                                small
+                                narrow
+                                testId={`gantt-assignees-${row.id}`}
+                            />
+                        </div>
+                    ) : null}
                 </div>
             )}
             <div className="stacks-gantt-track" style={{ width: timelineWidth }}>

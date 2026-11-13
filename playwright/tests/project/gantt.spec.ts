@@ -67,6 +67,11 @@ test.describe("Project - Internal Gantt", () => {
     test("schedules, moves and resizes dates with reload persistence and failure recovery", async () => {
         const errors: string[] = [];
         page.on("pageerror", error => errors.push(error.message));
+        page.on("console", message => {
+            if (message.type() === "error" && message.text().includes("ResizeObserver loop")) {
+                errors.push(message.text());
+            }
+        });
         changedVisual = true;
         await gantt.setVisualSettings(cleanup, { darkMode: false, embeddedTask: false });
         await gantt.reload();

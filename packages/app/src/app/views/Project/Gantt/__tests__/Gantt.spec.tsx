@@ -22,6 +22,7 @@ jest.mock("@stacks/translations", () => ({ translate: (key: string) => key }));
 jest.mock("app/hooks", () => ({
     useFilteredProjectTasks: () => [{ id: "task", title: "Task", project: "project", stack: "stack" }],
     useProjectStacks: () => [{ id: "stack", title: "Stack", tint: "red" }],
+    usePeople: () => [],
     useNav: () => mockNavigate,
 }));
 jest.mock("app/store/preferences", () => ({

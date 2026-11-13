@@ -22,7 +22,15 @@ export default class Gantt extends Base {
         return (await response.json()).data.id;
     }
     async editDates(id: string, start: string, end: string, succeeds = true) {
-        await this.page.getByTestId(`gantt-edit-${id}`).click();
+        const bar = this.bar(id);
+        if (await bar.count()) {
+            await bar.focus();
+            await this.page.keyboard.press("F2");
+        } else {
+            const schedule = this.page.getByTestId(`gantt-schedule-${id}`);
+            await schedule.focus();
+            await this.page.keyboard.press("Enter");
+        }
         await this.page.getByTestId("gantt-date-start").fill(start);
         await this.page.getByTestId("gantt-date-end").fill(end);
         const response = this.page.waitForResponse(
@@ -80,8 +88,8 @@ export default class Gantt extends Base {
         await this.page.mouse.up();
         expect((await saved).ok()).toBeTruthy();
     }
-    async expectBarOpensWithoutSaving(id: string, scale: string) {
-        await this.page.getByTestId("gantt-scale").selectOption(scale);
+    async expectBarOpensWithoutSaving(id: string, scale: "day" | "week" | "month" | "quarter" | "halfYear") {
+        await this.setScale(scale);
         let saves = 0;
         const record = (request: import("@playwright/test").Request) => {
             if (new URL(request.url()).pathname === `/api/tasks/${id}` && request.method() === "PATCH")
@@ -125,27 +133,34 @@ export default class Gantt extends Base {
         await expect(this.page.getByTestId(`gantt-row-${child}`)).toBeVisible();
         await this.page.getByTestId(`gantt-toggle-${parent}`).click();
         await expect(this.page.getByTestId(`gantt-row-${child}`)).toBeHidden();
-        await this.page.getByTestId("gantt-expand-all").click();
+        await this.page.getByTestId("gantt-toggle-all").click();
         await expect(this.page.getByTestId(`gantt-row-${child}`)).toBeVisible();
-        await this.page.getByTestId("gantt-collapse-all").click();
+        await this.page.getByTestId("gantt-toggle-all").click();
         await expect(this.page.getByTestId(`gantt-row-${child}`)).toBeHidden();
-        await this.page.getByTestId("gantt-expand-all").click();
+        await this.page.getByTestId("gantt-toggle-all").click();
+    }
+    async setScale(scale: "day" | "week" | "month" | "quarter" | "halfYear") {
+        await this.page.getByTestId("gantt-scale-picker").click();
+        await this.page.getByTestId(`gantt-scale-option-${scale}`).click();
     }
     async scalesAndPane() {
-        for (const scale of ["week", "month", "quarter", "halfYear", "day"]) {
-            await this.page.getByTestId("gantt-scale").selectOption(scale);
-            await expect(this.page.getByTestId("gantt-scale")).toHaveValue(scale);
+        for (const scale of ["week", "month", "quarter", "halfYear", "day"] as const) {
+            await this.setScale(scale);
         }
-        const divider = this.page.getByTestId("gantt-divider");
+        const divider = this.page.getByTestId("gantt-divider-handle");
         const initial = Number(await divider.getAttribute("aria-valuenow"));
         await divider.focus();
         await this.page.keyboard.press("ArrowRight");
         await expect(divider).toHaveAttribute("aria-valuenow", String(initial + 20));
         await this.page.getByTestId("gantt-pane-toggle").click();
-        await expect(divider).toBeHidden();
+        await expect(divider).toHaveCount(0);
         await this.page.getByTestId("gantt-pane-toggle").click();
         await expect(divider).toBeVisible();
+        await this.page.getByTestId("gantt-viewport").evaluate(element => {
+            element.scrollLeft = 0;
+        });
         await this.page.getByTestId("gantt-today").click();
+        await expect(this.page.getByTestId("gantt-today")).toHaveCount(0);
     }
     async expectTaskNavigation(id: string) {
         await this.page.getByTestId(`gantt-task-${id}`).click();

@@ -24,6 +24,7 @@ export function ScalePicker({ scale, onScale }: { scale: GanttScale; onScale: (s
                         {SCALE_OPTIONS.map(option => (
                             <MenuItem
                                 key={option.value}
+                                data-testid={`gantt-scale-option-${option.value}`}
                                 text={translate(option.label)}
                                 onClick={() => onScale(option.value)}
                             />

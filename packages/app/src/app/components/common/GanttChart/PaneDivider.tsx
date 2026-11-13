@@ -62,6 +62,7 @@ export function PaneDivider({
             {!collapsed && (
                 <div
                     className="stacks-gantt-divider-handle"
+                    data-testid="gantt-divider-handle"
                     role="separator"
                     aria-label={translate("Task pane")}
                     aria-orientation="vertical"

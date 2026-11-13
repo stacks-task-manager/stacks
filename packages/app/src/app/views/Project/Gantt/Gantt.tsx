@@ -4,7 +4,7 @@ import React, { useMemo } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { BlankSlate, Grid } from "app/components/common";
 import { GanttChart } from "app/components/common/GanttChart/GanttChart";
-import { useFilteredProjectTasks, useNav, useProjectStacks } from "app/hooks";
+import { useFilteredProjectTasks, useNav, usePeople, useProjectStacks } from "app/hooks";
 import { rescheduleGanttTask } from "app/store/actions/gantt";
 import { PreferencesStore } from "app/store/preferences";
 import { convertToGantt } from "app/views/Project/Gantt/ganttTasks";
@@ -13,10 +13,12 @@ export const Gantt = () => {
     const tasks = useFilteredProjectTasks({ includeSubtasks: true });
     const { id } = useParams();
     const stacks = useProjectStacks(id);
+    const assigneeIds = useMemo(() => [...new Set(tasks.flatMap(task => task.assignees ?? []))], [tasks]);
+    const assignees = usePeople(assigneeIds);
     const embeddedTask = PreferencesStore.use(state => state.embeddedTask);
     const location = useLocation();
     const nav = useNav();
-    const rows = useMemo(() => convertToGantt(tasks, stacks), [tasks, stacks]);
+    const rows = useMemo(() => convertToGantt(tasks, stacks, assignees), [tasks, stacks, assignees]);
     const openTask = (id: string) => {
         const task = tasks.find(item => item.id === id);
         if (!task) return;

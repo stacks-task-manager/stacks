@@ -1,13 +1,19 @@
 import React from "react";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { addDays, format, startOfDay } from "date-fns";
+import { IPerson } from "@stacks/types";
 import { GanttChart } from "app/components/common/GanttChart/GanttChart";
 import { GanttRow } from "app/components/common/GanttChart/types";
 
 jest.mock("@stacks/translations", () => ({ translate: (key: string) => key }));
 
+let resizeObserverCallback: ResizeObserverCallback = () => {};
+
 beforeAll(() => {
     global.ResizeObserver = class {
+        constructor(callback: ResizeObserverCallback) {
+            resizeObserverCallback = callback;
+        }
         observe() {}
         unobserve() {}
         disconnect() {}
@@ -87,6 +93,41 @@ it("toggles the task pane from the floating divider button", async () => {
         expect(screen.getByRole("separator", { name: "Task pane" })).toBeInTheDocument();
         expect(toggle.querySelector(".icon-chevron-left")).toBeInTheDocument();
     });
+});
+
+it("coalesces resize observer notifications into one frame read", () => {
+    const requestFrame = jest.spyOn(window, "requestAnimationFrame").mockImplementation(() => 1);
+    render(
+        <GanttChart title="Tasks" rows={[row("task")]} onActivate={jest.fn()} onDatesChange={jest.fn()} />
+    );
+    requestFrame.mockClear();
+
+    act(() => {
+        resizeObserverCallback([], {} as ResizeObserver);
+        resizeObserverCallback([], {} as ResizeObserver);
+    });
+
+    expect(requestFrame).toHaveBeenCalledTimes(1);
+    requestFrame.mockRestore();
+});
+
+it("shows assignees in place of the row edit button when available", () => {
+    const assignee = {
+        id: "person-1",
+        firstName: "Ada",
+        lastName: "Lovelace",
+    } as IPerson;
+    render(
+        <GanttChart
+            title="Tasks"
+            rows={[{ ...row("task"), assignees: [assignee] }]}
+            onActivate={jest.fn()}
+            onDatesChange={jest.fn()}
+        />
+    );
+
+    expect(screen.getByTestId("gantt-assignees-task")).toHaveTextContent("AL");
+    expect(screen.queryByTestId("gantt-edit-task")).not.toBeInTheDocument();
 });
 
 it("renders the task heading title supplied by its consumer", () => {
@@ -302,7 +343,7 @@ it("leaves the editor open and restores the bar after a failed save", async () =
             onDatesChange={jest.fn().mockRejectedValue(new Error("rejected"))}
         />
     );
-    fireEvent.click(screen.getByTestId("gantt-edit-task"));
+    fireEvent.keyDown(screen.getByTestId("gantt-bar-task"), { key: "F2" });
     fireEvent.change(screen.getByTestId("gantt-date-start"), { target: { value: "2026-10-28" } });
     fireEvent.click(screen.getByTestId("gantt-date-save"));
     await waitFor(() => expect(screen.getByTestId("gantt-date-save")).not.toHaveClass("bp6-loading"));
