@@ -227,15 +227,18 @@ export function filterTask(
  * Returns an array of tasks for the current project
  * @returns
  */
-export const useFilteredProjectTasks = () => {
+export const useFilteredProjectTasks = ({ includeSubtasks = false }: { includeSubtasks?: boolean } = {}) => {
     const { filters } = useProjectFilters();
     const tasks = TasksStore.use(state => state.tasks, shallowEqual);
     const currentUserId = PeopleStore.use(state => state.me, shallowEqual);
 
     return useMemo(() => {
-        const preds = buildTaskPredicates(filters, currentUserId);
+        const preds = buildTaskPredicates(
+            includeSubtasks ? { ...filters, showSubtasks: true } : filters,
+            currentUserId
+        );
         return tasks.filter(task => preds.every(p => p(task)) && !task.archived);
-    }, [tasks, filters, currentUserId]);
+    }, [tasks, filters, currentUserId, includeSubtasks]);
 };
 
 /**

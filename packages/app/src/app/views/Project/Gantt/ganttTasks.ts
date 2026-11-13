@@ -1,25 +1,20 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { endOfDay, startOfDay } from "date-fns";
 
-import { IStack, ITask } from "@stacks/types";
+import { IPerson, IStack, ITask } from "@stacks/types";
+import { GanttRow } from "app/components/common/GanttChart/types";
 import { sortByIdOrder } from "app/utils/taskOrder";
 
-export interface GanttTask {
-    id: string;
-    name: string;
-    startDate: Date | null;
-    endDate: Date | null;
-    content?: string;
+export interface GanttTask extends GanttRow {
     parent: string | null;
     stack?: IStack;
     project: string;
-    subtasksCount?: number;
     children: GanttTask[];
-    collapsed?: boolean;
 }
 
-export function convertToGantt(tasks: ITask[], stacks: IStack[]): GanttTask[] {
+export function convertToGantt(tasks: ITask[], stacks: IStack[], people: IPerson[] = []): GanttTask[] {
     const stacksById = new Map(stacks.map(stack => [stack.id, stack]));
+    const peopleById = new Map(people.map(person => [person.id, person]));
     const childrenByParent = new Map<string, ITask[]>();
     const roots: ITask[] = [];
 
@@ -45,8 +40,12 @@ export function convertToGantt(tasks: ITask[], stacks: IStack[]): GanttTask[] {
             parent: task.parent,
             stack: stacksById.get(task.stack),
             project: task.project,
+            color: stacksById.get(task.stack)?.tint || undefined,
+            secondaryLabel: stacksById.get(task.stack)?.title,
+            assignees: (task.assignees ?? [])
+                .map(id => peopleById.get(id))
+                .filter((person): person is IPerson => person !== undefined),
             children: sortByIdOrder(children, task.subtasksOrder ?? [], child => child.id),
-            collapsed: false,
         };
     };
 

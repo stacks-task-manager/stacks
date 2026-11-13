@@ -1,5 +1,5 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
-/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/no-require-imports */
 import { PreferencesStore } from "app/store/preferences";
 
 const complete = require("assets/sounds/complete.mp3");

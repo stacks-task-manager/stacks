@@ -86,7 +86,7 @@ const KEYS: IKeys = Object.freeze({
     backspace: "Backspace",
 });
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const shortcuts: IHotkeySection[] = require("./hotkeys.json");
 
 interface IHotkeysDialogProps {

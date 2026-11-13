@@ -4,7 +4,7 @@ import { Position, Tooltip } from "@blueprintjs/core";
 import classnames from "classnames";
 
 import { IPerson } from "@stacks/types";
-import { Avatar } from "app/components/common";
+import { Avatar } from "app/components/common/Avatar/Avatar";
 import { PeopleStore } from "app/store/people";
 
 interface IAssigneesProps {

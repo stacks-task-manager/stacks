@@ -6,19 +6,24 @@
  */
 jest.mock("app/components/common", () => ({}));
 jest.mock("app/store/actions", () => ({ TasksActions: {} }));
-jest.mock("app/store/people", () => ({ PeopleStore: {} }));
+jest.mock("app/store/people", () => ({
+    PeopleStore: { use: (select: (state: { me: string }) => unknown) => select({ me: "user-1" }) },
+}));
 jest.mock("app/store/projectFilters", () => ({ defaultFilters: {}, ProjectFiltersStore: {} }));
-jest.mock("app/store/tasks", () => ({ TasksStore: {} }));
+jest.mock("app/store/tasks", () => ({
+    TasksStore: { use: (select: (state: { tasks: ITask[] }) => unknown) => select({ tasks: mockTasks }) },
+}));
 jest.mock("app/views/Project/Table/store", () => ({ TableStore: {} }));
 jest.mock("app/hooks/project", () => ({ useCurrentProject: () => null }));
-jest.mock("app/hooks/projectFilters", () => ({ useProjectFilters: () => null }));
+jest.mock("app/hooks/projectFilters", () => ({ useProjectFilters: () => ({ filters: mockFilters }) }));
 jest.mock("app/hooks/router", () => ({ getHashPathname: () => null }));
 jest.mock("app/hooks/stacks", () => ({ useStack: () => null, useStacks: () => null }));
 jest.mock("app/hooks/store", () => ({ shallowEqual: (a: any, b: any) => a === b }));
 jest.mock("app/utils/date", () => ({ isAfterToday: () => false, isOverdue: () => false }));
 jest.mock("app/utils/taskOrder", () => ({ sortByIdOrder: (items: any[]) => items }));
 
-import { buildTaskPredicates } from "app/hooks/tasks";
+import { renderHook } from "@testing-library/react";
+import { buildTaskPredicates, useFilteredProjectTasks } from "app/hooks/tasks";
 import type { ITask } from "@stacks/types";
 import { POLLINGTYPE } from "@stacks/types";
 import type { IFilters } from "app/store/projectFilters";
@@ -91,5 +96,33 @@ describe("task filter predicates", () => {
     it("does not match an unrelated title when the description is null", () => {
         const preds = buildTaskPredicates({ ...filters, query: "no-such-word" }, null);
         expect(preds.every(predicate => predicate(taskWithoutDescription))).toBe(false);
+    });
+});
+
+let mockTasks: ITask[] = [];
+let mockFilters: IFilters = filters;
+
+describe("hierarchical project task views", () => {
+    beforeEach(() => {
+        mockFilters = { ...filters, project: "project-1", showSubtasks: false };
+        mockTasks = [
+            { ...taskWithoutDescription, id: "parent", parent: null },
+            { ...taskWithoutDescription, id: "child", parent: "parent" },
+            { ...taskWithoutDescription, id: "archived", parent: "parent", archived: new Date() },
+            { ...taskWithoutDescription, id: "other-project", project: "other" },
+        ];
+    });
+    it("keeps subtasks hidden for default board consumers", () => {
+        expect(renderHook(() => useFilteredProjectTasks()).result.current.map(task => task.id)).toEqual([
+            "parent",
+        ]);
+    });
+    it("includes Gantt subtasks independently of the board toggle without changing filters", () => {
+        expect(
+            renderHook(() => useFilteredProjectTasks({ includeSubtasks: true })).result.current.map(
+                task => task.id
+            )
+        ).toEqual(["parent", "child"]);
+        expect(mockFilters.showSubtasks).toBe(false);
     });
 });

@@ -51,8 +51,6 @@ lerna-debug.log*
 packages/app/src/app/locale/translations-backup.zip
 packages/types/dist/
 packages/types/*.tgz
-third-party/rc-gantt/node_modules
-third-party/rc-gantt/src/.umi
 .yarn/install-state.gz
 packages/server/uploads/
 packages/server/previews/
@@ -81,7 +79,6 @@ coverage/
 **/build/
 *.tsbuildinfo
 *.tgz
-!third-party/rc-gantt/rc-gantt-0.3.3.tgz
 
 # editor scratch / swap files
 *.bak
