@@ -74,7 +74,8 @@ describe("task status characterization", () => {
 
         expect(mockUseElementHotkey).toHaveBeenCalledWith("shift+y", "td-status");
         expect(screen.getByTestId("status-field")).toBeInTheDocument();
-        fireEvent.click(screen.getByTestId("status-field-clear"));
+        expect(screen.queryByTestId("status-field-clear")).not.toBeInTheDocument();
+        fireEvent.click(screen.getByTestId("status-field-value"));
         expect(mockSetStatus).toHaveBeenCalledWith("task-1", undefined);
     });
 });

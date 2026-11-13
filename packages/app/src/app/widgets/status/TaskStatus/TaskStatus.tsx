@@ -69,21 +69,8 @@ export const TaskStatus: FunctionComponent<ITaskStatusProps> = ({
                                 id="td-status"
                                 testId={testId ? `${testId}-value` : undefined}
                                 disabled={disabled}
+                                onRemove={canClear ? () => handleSetStatus() : undefined}
                             />
-                            {canClear && (
-                                <RoundButton
-                                    testId={testId ? `${testId}-clear` : undefined}
-                                    icon="cross"
-                                    minimal
-                                    small
-                                    title={translate("Clear status")}
-                                    disabled={disabled}
-                                    onClick={event => {
-                                        event.stopPropagation();
-                                        handleSetStatus();
-                                    }}
-                                />
-                            )}
                         </span>
                     ) : (
                         <RoundButton
