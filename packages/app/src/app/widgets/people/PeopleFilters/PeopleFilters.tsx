@@ -1,5 +1,4 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
-import { translate } from "@stacks/translations";
 import {
     Alignment,
     Button,
@@ -13,17 +12,20 @@ import {
     Popover,
     Tag,
 } from "@blueprintjs/core";
+import { translate } from "@stacks/translations";
+import { ICompany, ITag, PEOPLE_GENDER, TAGSECTION } from "@stacks/types";
 import { xor } from "lodash";
-import React, { useMemo } from "react";
+import { useMemo } from "react";
+
+import { Icon } from "app/components/common";
 import { StatusesMenu, TagsMenu } from "app/components/project";
-import { QueryFilter } from "app/components/project/filters/QueryFilter";
 import { usePeopleHasFilters, usePeopleStatuses, usePeopleTags } from "app/hooks";
 import { shallowEqual } from "app/hooks/store";
-import { ICompany, ITag, PEOPLE_GENDER, TAGSECTION } from "@stacks/types";
 import { PeopleActions } from "app/store/actions";
 import { PeopleStore } from "app/store/people";
 import { FiltersSidebar, StatusChip, Tags, TagsWrapper } from "app/widgets/common";
-import { Icon } from "app/components/common";
+import { QueryFilter } from "app/widgets/task/TaskFilter/QueryFilter";
+
 
 export const PeopleFilter = () => {
     const { filtersVisible, query, viewType } = PeopleStore.use(

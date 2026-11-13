@@ -1,29 +1,39 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+import { Classes, InputGroup, Menu, MenuDivider, MenuItem } from "@blueprintjs/core";
 import { translate } from "@stacks/translations";
-import { Classes, InputGroup, Menu, MenuItem } from "@blueprintjs/core";
+import type { TreeNode } from "@stacks/types";
 import classnames from "classnames";
 import React, { FunctionComponent, useEffect, useMemo, useRef, useState } from "react";
 import { Icon, BlankSlate, Scroller } from "app/components/common";
-import { TreeNode } from "@stacks/types";
-import { RecordActions } from "app/store/actions";
+import { useProjectDocuments } from "app/hooks";
 import { scrollIntoView } from "app/utils/dom";
 
-interface ProjectPickerProps {
-    value?: string;
+interface ProjectPickerBaseProps {
     contained?: boolean;
     shouldDismissPopover?: boolean;
-    onChange: (projectId: string) => void;
     onClose?: () => void;
+    showProjectIcon?: boolean;
 }
-export const ProjectPicker: FunctionComponent<ProjectPickerProps> = ({
-    value,
-    contained,
-    shouldDismissPopover,
-    onChange,
-    onClose,
-}) => {
+
+interface SingleProjectPickerProps extends ProjectPickerBaseProps {
+    multiple?: false;
+    value?: string;
+    onChange: (projectId: string) => void;
+}
+
+interface MultipleProjectPickerProps extends ProjectPickerBaseProps {
+    multiple: true;
+    value?: string[];
+    onChange: (projectIds: string[]) => void;
+    showAnyProject?: boolean;
+}
+
+type ProjectPickerProps = SingleProjectPickerProps | MultipleProjectPickerProps;
+
+export const ProjectPicker: FunctionComponent<ProjectPickerProps> = props => {
+    const { contained, shouldDismissPopover, onClose, showProjectIcon } = props;
     const [query, setQuery] = useState("");
-    const [projects, setProjects] = useState<TreeNode[]>([]);
+    const projects = useProjectDocuments();
     const selectedRef = useRef<number | undefined>(undefined);
     const [selected, setSelected] = useState<number | undefined>();
     const debounce = useRef<NodeJS.Timeout | null>(null);
@@ -39,14 +49,10 @@ export const ProjectPicker: FunctionComponent<ProjectPickerProps> = ({
 
     useEffect(() => {
         if (selected == null) return;
-        const projectEl = document.getElementById(`project-menu-item-${projects[selected].id}`);
+        const project = filteredProjects[selected];
+        const projectEl = project && document.getElementById(`project-menu-item-${project.id}`);
         scrollIntoView(projectEl);
-    }, [selected]);
-
-    useEffect(() => {
-        const projects = RecordActions.getProjects();
-        setProjects(projects);
-    }, [query]);
+    }, [filteredProjects, selected]);
 
     const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (debounce.current) {
@@ -60,12 +66,29 @@ export const ProjectPicker: FunctionComponent<ProjectPickerProps> = ({
     };
 
     const handleSelectProject = (project: TreeNode) => {
-        onChange(`${project.id}`);
+        if (props.multiple) {
+            const selectedProjects = new Set(props.value ?? []);
+            if (selectedProjects.has(project.id)) {
+                selectedProjects.delete(project.id);
+            } else {
+                selectedProjects.add(project.id);
+            }
+            props.onChange([...selectedProjects]);
+        } else {
+            props.onChange(project.id);
+        }
+    };
+
+    const handleClearProjects = () => {
+        if (props.multiple) {
+            props.onChange([]);
+        }
     };
 
     const selectActive = () => {
-        if (selected != null) {
-            handleSelectProject(filteredProjects[selected]);
+        const project = selected == null ? undefined : filteredProjects[selected];
+        if (project) {
+            handleSelectProject(project);
         }
     };
 
@@ -103,7 +126,7 @@ export const ProjectPicker: FunctionComponent<ProjectPickerProps> = ({
             gotoPrevItem();
         } else if (event.key === "Enter") {
             selectActive();
-            if (dismissRef.current) {
+            if (!props.multiple && dismissRef.current) {
                 dismissRef.current.click();
             }
         } else if (event.key === "Escape") {
@@ -149,13 +172,28 @@ export const ProjectPicker: FunctionComponent<ProjectPickerProps> = ({
             ) : (
                 <Scroller maxHeight={300} vertical thin>
                     <Menu>
+                        {props.multiple && props.showAnyProject && (
+                            <>
+                                <MenuItem
+                                    text={translate("Any project")}
+                                    icon={<Icon icon="grid-view" />}
+                                    labelElement={!props.value?.length ? <Icon icon="check" /> : undefined}
+                                    shouldDismissPopover={shouldDismissPopover || false}
+                                    onClick={handleClearProjects}
+                                />
+                                <MenuDivider />
+                            </>
+                        )}
                         {filteredProjects.map((project: TreeNode, index: number) => {
-                            const isActive = value === project.id;
+                            const isActive = props.multiple
+                                ? props.value?.includes(project.id)
+                                : props.value === project.id;
                             return (
                                 <MenuItem
                                     key={project.id}
                                     id={`project-menu-item-${project.id}`}
                                     text={project.title}
+                                    icon={showProjectIcon ? <Icon icon="folder" /> : undefined}
                                     shouldDismissPopover={shouldDismissPopover || false}
                                     labelElement={isActive ? <Icon icon="check" /> : undefined}
                                     active={selected === index}

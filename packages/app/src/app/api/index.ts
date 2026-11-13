@@ -27,6 +27,7 @@ export * from "./statuses";
 export * from "./tags";
 export * from "./tasks";
 export * from "./website";
+export * from "./workbooks";
 export * from "./roles";
 export * from "./export";
 

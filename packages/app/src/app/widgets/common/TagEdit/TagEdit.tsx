@@ -1,5 +1,4 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
-import { translate } from "@stacks/translations";
 import {
     Button,
     Checkbox,
@@ -10,14 +9,18 @@ import {
     Placement,
     Popover,
 } from "@blueprintjs/core";
-import classNames from "classnames";
-import React, { FunctionComponent, useMemo, useState } from "react";
-import { Col, Grid, Icon, Row } from "app/components/common";
-import { TintPicker } from "app/components/project";
+import { translate } from "@stacks/translations";
 import { ITag, TAGSECTION, TAGTYPE } from "@stacks/types";
+import { Icon } from "app/components/common/Icon/Icon";
+import { Col } from "app/components/common/Layout/Col/Col";
+import { Grid } from "app/components/common/Layout/Grid/Grid";
+import { Row } from "app/components/common/Layout/Row/Row";
+import { TintPicker } from "app/components/project/TintPicker/TintPicker";
+import { getCurrentProjectId } from "app/hooks";
+import classNames from "classnames";
+import { FunctionComponent, useMemo, useState } from "react";
 import { StatusChip } from "../StatusChip/StatusChip";
 import { TagChip } from "../TagChip/TagChip";
-import { getCurrentProjectId } from "app/hooks";
 
 export interface TagEditProps {
     hasParent?: boolean;

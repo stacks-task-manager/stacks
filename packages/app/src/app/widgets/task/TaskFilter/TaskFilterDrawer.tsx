@@ -1,37 +1,53 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
-import { translate } from "@stacks/translations";
 import { Button, Classes, FormGroup, InputGroup, Intent, Menu, MenuItem, Popover } from "@blueprintjs/core";
-import React, { FunctionComponent } from "react";
-import { ToolbarDropdownButton } from "app/components/common";
+import { translate } from "@stacks/translations";
+import { ToolbarDropdownButton } from "app/components/common/ToolbarButtons/ToolbarButtons";
 import { useHasFilters } from "app/hooks";
 import { useMyTasksFilters, useProjectFilters, useSavedFilters } from "app/hooks/projectFilters";
 import { ProjectFiltersActions } from "app/store/actions";
-import { IFilters } from "app/store/projectFilters";
+import type { IFilters } from "app/store/projectFilters";
 import { uuidv4 } from "app/utils/uuid";
-import { FiltersSidebar } from "app/widgets";
-import { ProjectFilter } from "./ProjectFilter";
+import { FiltersSidebar } from "app/widgets/common/FiltersSidebar/FiltersSidebar";
+import React, { FunctionComponent } from "react";
 
-export const ProjectFilterDrawer = () => {
+import { TaskFilter } from "./TaskFilter";
+import type { ProjectFilterActions } from "./TaskFilterActions";
+
+const projectFilterActions: ProjectFilterActions = {
+    set: (key, value) => ProjectFiltersActions.set(key, value),
+    setMultiple: values => ProjectFiltersActions.setMultiple(values),
+    setQuery: query => ProjectFiltersActions.setQuery(query),
+    hide: () => ProjectFiltersActions.hide(),
+};
+
+interface ITaskFilterDrawerProps {
+    myTasks?: boolean;
+}
+
+export const TaskFilterDrawer: FunctionComponent<ITaskFilterDrawerProps> = ({ myTasks = false }) =>
+    myTasks ? <MyTasksTaskFilterDrawer /> : <ProjectTaskFilterDrawer />;
+
+const ProjectTaskFilterDrawer = () => {
     const { filters, isVisible } = useProjectFilters();
     if (!isVisible) return null;
-    return <FilterDrawer filters={filters} />;
+    return <FilterDrawer mode="project" filters={filters} />;
 };
 
-export const MyTasksFilterDrawer = () => {
+const MyTasksTaskFilterDrawer = () => {
     const { filters, isVisible } = useMyTasksFilters();
-
     if (!isVisible) return null;
-    return <FilterDrawer myTasks filters={filters} />;
+    return <FilterDrawer mode="myTasks" filters={filters} />;
 };
 
-interface IProjectFilterDrawerProps {
-    myTasks?: boolean;
+interface IFilterDrawerProps {
+    mode: "project" | "myTasks";
     filters: IFilters;
 }
 
-const FilterDrawer: FunctionComponent<IProjectFilterDrawerProps> = ({ myTasks, filters }) => {
+const FilterDrawer: FunctionComponent<IFilterDrawerProps> = ({ mode, filters }) => {
     const hasFilters = useHasFilters();
     const savedFilters: IFilters[] = useSavedFilters();
+    const myTasks = mode === "myTasks";
 
     const handleSaveOrUpdateFilter = () => {
         if (filters.id != null) {
@@ -130,7 +146,7 @@ const FilterDrawer: FunctionComponent<IProjectFilterDrawerProps> = ({ myTasks, f
                 ) : null
             }
         >
-            <ProjectFilter filters={filters} myTasks={myTasks} />
+            <TaskFilter mode={mode} filters={filters} actions={projectFilterActions} />
         </FiltersSidebar>
     );
 };

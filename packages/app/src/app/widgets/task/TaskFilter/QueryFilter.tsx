@@ -1,8 +1,8 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { FormGroup, InputGroup } from "@blueprintjs/core";
 import { translate } from "@stacks/translations";
-import { Icon } from "app/components/common";
-import React, { FunctionComponent, useEffect, useRef, useState } from "react";
+import { Icon } from "app/components/common/Icon/Icon";
+import React, { FunctionComponent, memo, useEffect, useRef, useState } from "react";
 
 interface IQueryFilterProps {
     term: string;
@@ -12,25 +12,24 @@ interface IQueryFilterProps {
     onChange: (query: string) => void;
     onHide: () => void;
 }
+
 /**
- * Shared filter search box: local term mirror, autofocus, and Escape / Cmd-F handling.
- * The caller supplies the store actions for setting the query and hiding the filters.
+ * Shared filter search box with a local term mirror, autofocus, and Escape / Cmd-F handling.
+ * The caller supplies the query action and drawer visibility callback.
  */
-export const QueryFilter: FunctionComponent<IQueryFilterProps> = ({
+export const QueryFilter: FunctionComponent<IQueryFilterProps> = memo(function QueryFilter({
     term,
     placeholder = "Enter a keyword",
     helperText,
     label = translate("Search"),
     onChange,
     onHide,
-}) => {
+}) {
     const [query, setQuery] = useState(term);
     const queryInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
-        if (queryInputRef.current) {
-            queryInputRef.current.focus();
-        }
+        queryInputRef.current?.focus();
     }, []);
 
     useEffect(() => {
@@ -39,7 +38,7 @@ export const QueryFilter: FunctionComponent<IQueryFilterProps> = ({
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === "Escape" || ((event.metaKey || event.ctrlKey) && event.key === "f")) {
-            if (query?.length) {
+            if (query.length) {
                 setQuery("");
                 onChange("");
             } else {
@@ -49,8 +48,9 @@ export const QueryFilter: FunctionComponent<IQueryFilterProps> = ({
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setQuery(event.currentTarget.value);
-        onChange(event.currentTarget.value);
+        const value = event.currentTarget.value;
+        setQuery(value);
+        onChange(value);
     };
 
     return (
@@ -68,4 +68,4 @@ export const QueryFilter: FunctionComponent<IQueryFilterProps> = ({
             />
         </FormGroup>
     );
-};
+});

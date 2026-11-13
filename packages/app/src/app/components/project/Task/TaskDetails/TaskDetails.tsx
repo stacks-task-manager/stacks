@@ -77,6 +77,11 @@ export const TaskDetails = () => {
             navigate({ pathname: "/tasks", search: search || undefined });
             return;
         }
+        if (getHashPathname().startsWith("/workbooks/")) {
+            const segments = getHashPathname().split("/").filter(Boolean);
+            navigate(`/workbooks/${segments[1]}`);
+            return;
+        }
 
         if (location.pathname === getHashPathname()) {
             navigate(`/project/${projectId}`);
@@ -100,6 +105,11 @@ export const TaskDetails = () => {
     ]);
 
     const handleOpenParentTask = async (parentId: string) => {
+        if (getHashPathname().startsWith("/workbooks/")) {
+            const workbookId = getHashPathname().split("/").filter(Boolean)[1];
+            navigate(`/workbooks/${workbookId}/${parentId}`);
+            return;
+        }
         navigate(`/project/${projectId}/${parentId}`);
     };
 

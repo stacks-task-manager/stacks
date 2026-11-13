@@ -28,6 +28,7 @@ export enum POLLINGTYPE {
     TIMELOG = "timelog",
     NOTIFICATION = "notification",
     PERMISSION = "permission",
+    WORKBOOK = "workbook",
 }
 
 export interface IUpdate {

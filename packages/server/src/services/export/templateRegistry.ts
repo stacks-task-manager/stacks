@@ -11,6 +11,7 @@ export const PDF_TEMPLATE_REGISTRY: Readonly<Record<ExportEntityType, string>> =
     company: "company.html",
     bookmark: "bookmark.html",
     notepad: "notepad.html",
+    workbook: "workbook.html",
 });
 
 /** Resolves the bundled export asset directory in source and production layouts. */

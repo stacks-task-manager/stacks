@@ -1,7 +1,8 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { Alignment, Button, FormGroup, Intent, Placement, Popover } from "@blueprintjs/core";
-import { Icon } from "app/components/common";
-import React, { FunctionComponent, useMemo } from "react";
+import { Icon } from "app/components/common/Icon/Icon";
+import React, { FunctionComponent, memo, useMemo } from "react";
+
 import { DateMenu, formatDates } from "./DateMenu";
 
 interface IDateFilterProps {
@@ -22,14 +23,12 @@ interface IDateFilterProps {
     /** Tint the trigger PRIMARY while a date is selected (default true — project filter style). */
     highlightWhenSet?: boolean;
 }
+
 /**
  * Shared single date-filter button (start / do / due / time-logged).
- * The caller supplies the localized empty label and the store action. Callers
- * that need the plain-popover presentation (e.g. the timelogs drawer) can opt
- * out of the project-filter styling via the `minimal` / `matchTargetWidth` /
- * `placement` / `highlightWhenSet` props.
+ * The caller supplies the localized label and persistence callback.
  */
-export const DateFilter: FunctionComponent<IDateFilterProps> = ({
+export const DateFilter: FunctionComponent<IDateFilterProps> = memo(function DateFilter({
     date,
     emptyLabel,
     label,
@@ -39,11 +38,8 @@ export const DateFilter: FunctionComponent<IDateFilterProps> = ({
     matchTargetWidth = true,
     placement = "bottom",
     highlightWhenSet = true,
-}) => {
-    const buttonLabel = useMemo(() => {
-        if (!date) return emptyLabel;
-        return formatDates(date);
-    }, [date, emptyLabel]);
+}) {
+    const buttonLabel = useMemo(() => (date ? formatDates(date) : emptyLabel), [date, emptyLabel]);
 
     return (
         <FormGroup label={label ?? emptyLabel}>
@@ -56,7 +52,7 @@ export const DateFilter: FunctionComponent<IDateFilterProps> = ({
                 <Button
                     fill
                     icon={<Icon icon="calendar-date" />}
-                    alignText={Alignment.END}
+                    alignText={Alignment.START}
                     endIcon={<Icon icon="chevron-down" />}
                     intent={date != null && highlightWhenSet ? Intent.PRIMARY : Intent.NONE}
                     data-testid={testId ? `${testId}-button` : undefined}
@@ -66,4 +62,4 @@ export const DateFilter: FunctionComponent<IDateFilterProps> = ({
             </Popover>
         </FormGroup>
     );
-};
+});

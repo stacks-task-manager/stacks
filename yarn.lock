@@ -2287,6 +2287,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@date-fns/tz@npm:^1.5.0":
+  version: 1.5.0
+  resolution: "@date-fns/tz@npm:1.5.0"
+  checksum: c202d96d18490b46f2caa79decaa3092a9e266816d01618c8450b59d52d75948258c53fcad0093021050edaf7dae65fea83602dc4f72c243c9e560e756cd7b8f
+  languageName: node
+  linkType: hard
+
 "@discoveryjs/json-ext@npm:^0.5.0":
   version: 0.5.7
   resolution: "@discoveryjs/json-ext@npm:0.5.7"
@@ -7019,6 +7026,7 @@ __metadata:
     "@blueprintjs/datetime": ^6.0.1
     "@blueprintjs/icons": ^6.10.0
     "@blueprintjs/select": ^6.0.1
+    "@date-fns/tz": ^1.5.0
     "@floating-ui/dom": ^1.8.0
     "@fullcalendar/core": ^6.1.20
     "@fullcalendar/daygrid": ^6.1.20

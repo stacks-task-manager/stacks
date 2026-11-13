@@ -9,7 +9,7 @@ import { ITag } from "@stacks/types";
 import { getTextColor } from "app/utils/colors";
 import Dialog from "app/utils/dialog";
 import { TagEditPopover } from "../TagEditPopover/TagEditPopover";
-import { Icon } from "app/components/common";
+import { Icon } from "app/components/common/Icon/Icon";
 
 interface TagChipProps {
     tag: ITag;

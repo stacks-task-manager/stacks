@@ -17,7 +17,7 @@ import {
 import classNames from "classnames";
 import xor from "lodash/xor";
 import React, { FunctionComponent, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import {
     APPICONS,
@@ -37,6 +37,8 @@ import { strictEqual } from "app/hooks/store";
 import { RecordActions, TasksActions } from "app/store/actions";
 import { GlobalStore, toggleNewTask } from "app/store/global";
 import { PeopleStore } from "app/store/people";
+import { ProjectsStore } from "app/store/projects";
+import { WorkbooksStore } from "app/store/workbooks";
 import dialog from "app/utils/dialog";
 import { StackSelect, Tags, TagsPickerPopupSync, TaskAssignees, TaskDate, TaskStatus } from "app/widgets";
 import { PriorityPicker } from "../../../components/project/PriorityPicker/PriorityPicker";
@@ -49,6 +51,7 @@ interface INewTaskPopupProps {
     defaultStack?: string;
     parent?: string;
     defaultPriority?: PRIORITY;
+    defaultProject?: string;
     onClose: (tasks?: ITask[]) => void;
 }
 
@@ -59,11 +62,13 @@ export const NewTaskPopup: FunctionComponent<INewTaskPopupProps> = ({
     canChangeProject,
     top,
     defaultPriority,
+    defaultProject,
     onClose,
 }) => {
     const currentProject = getCurrentProject();
     const projectId = currentProject?.id;
-    const projectStacks = projectId ? getProjectStacks(projectId) : [];
+    const initialProject = defaultProject ?? projectId;
+    const projectStacks = initialProject ? getProjectStacks(initialProject) : [];
     const [open, setOpen] = useState(true);
     const [minimized, setMinimized] = useState(false);
     const [saving, setSaving] = useState(false);
@@ -76,7 +81,7 @@ export const NewTaskPopup: FunctionComponent<INewTaskPopupProps> = ({
     const [startDate, setStartDate] = useState<Date | null>(null);
     const [dueDate, setDueDate] = useState<Date | null>(null);
     const [doDate, setDoDate] = useState<Date | null>(null);
-    const [project, setProject] = useState<string | null>(projectId ?? null);
+    const [project, setProject] = useState<string | null>(initialProject ?? null);
     const [stack, setStack] = useState<string | undefined>(
         defaultStack ?? projectStacks.at(0)?.id ?? undefined
     );
@@ -95,12 +100,6 @@ export const NewTaskPopup: FunctionComponent<INewTaskPopupProps> = ({
         dates: true,
     });
 
-    // useEffect(() => {
-    //     if (defaultStack != null && defaultStack !== stack) {
-    //         setStack(defaultStack);
-    //     }
-    // }, [defaultStack]);
-
     useEffect(() => {
         if (projectId === "mytasks") {
             const { me } = PeopleStore.get();
@@ -112,7 +111,7 @@ export const NewTaskPopup: FunctionComponent<INewTaskPopupProps> = ({
         return () => {
             if (titleRef.current) hide(titleRef.current);
         };
-    }, []);
+    }, [hide, projectId]);
 
     onSelect(
         (selectedItem: IAutocompleteSelectedItem<ITag | string | PRIORITY | IPerson | IAutocompelteDate>) => {
@@ -661,6 +660,8 @@ const InfoPopup: FunctionComponent<IInfoPopupProps> = ({ small }) => {
 
 export const NewTaskWrapper = () => {
     const isNewTaskVisible = GlobalStore.use(state => state.isNewTaskVisible, strictEqual);
+    const location = useLocation();
+    const workbooks = WorkbooksStore.use(state => state.workbooks);
 
     const handleClose = () => {
         toggleNewTask();
@@ -668,5 +669,15 @@ export const NewTaskWrapper = () => {
 
     if (!isNewTaskVisible) return null;
 
-    return <NewTaskPopup onClose={handleClose} canMinimize canChangeProject />;
+    const match = location.pathname.match(/^\/workbooks\/([^/]+)/);
+    const workbook = match ? workbooks.find(item => item.id === match[1]) : undefined;
+    const defaultProject = workbook
+        ? workbook.filters.projects.length === 1
+            ? workbook.filters.projects[0]
+            : ProjectsStore.get().projects.find(project => project.inbox)?.id
+        : undefined;
+
+    return (
+        <NewTaskPopup onClose={handleClose} canMinimize canChangeProject defaultProject={defaultProject} />
+    );
 };

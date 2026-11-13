@@ -36,6 +36,7 @@ import {
     SidebarButton,
     SidebarButtonSkelton,
     SidebarDivider,
+    WorkbooksButton,
 } from "app/widgets";
 
 const SidebarToggle = () => {
@@ -249,6 +250,10 @@ const SidebarItems: ISidebarItems = Object.freeze({
     reports: {
         icon: SIDEBARICON.reports,
         component: <ReportsButton />,
+    },
+    workbooks: {
+        icon: SIDEBARICON.workbooks,
+        component: <WorkbooksButton />,
     },
 });
 

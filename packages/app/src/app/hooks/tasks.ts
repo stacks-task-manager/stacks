@@ -3,22 +3,15 @@
  * Tasks hooks and selectors.
  */
 import {
-    addDays,
-    addMonths,
     addWeeks,
     endOfDay,
-    endOfMonth,
     isBefore,
-    isSameDay,
     isSameWeek,
     isToday,
     isTomorrow,
     isValid,
     isWithinInterval,
     startOfDay,
-    startOfMonth,
-    subDays,
-    subMonths,
 } from "date-fns";
 import intersection from "lodash/intersection";
 import { useEffect, useMemo } from "react";
@@ -30,7 +23,7 @@ import { TasksActions } from "app/store/actions";
 import { PeopleStore } from "app/store/people";
 import { IFilters } from "app/store/projectFilters";
 import { TasksStore, orderTasksWithFallback } from "app/store/tasks";
-import { isAfterToday, isOverdue } from "app/utils/date";
+import { getNamedDateFilterRange, isAfterToday, isOverdue, toCalendarDateKey } from "app/utils/date";
 import { sortByIdOrder } from "app/utils/taskOrder";
 import { TableStore } from "app/views/Project/Table/store";
 import { useCurrentProjectValue } from "./project";
@@ -71,30 +64,11 @@ export function taskInDateRange(task: ITask, dateFrom: Date, dateTo: Date, loose
 function filterByDate(filterDate: string, date?: Date | null, loose = false) {
     if (!date) return true;
 
-    if (filterDate === "today") {
-        return !isSameDay(new Date(), new Date(date));
-    } else if (filterDate === "yesterday") {
-        return !isSameDay(subDays(new Date(), 1), new Date(date));
-    } else if (filterDate === "tomorrow") {
-        return !isSameDay(addDays(new Date(), 1), new Date(date));
-    } else if (filterDate === "thisWeek") {
-        return !isSameWeek(new Date(), new Date(date));
-    } else if (filterDate === "lastWeek") {
-        return !isSameWeek(subDays(new Date(), 7), new Date(date));
-    } else if (filterDate === "nextWeek") {
-        return !isSameWeek(addDays(new Date(), 7), new Date(date));
-    } else if (filterDate === "thisMonth") {
-        const start = startOfMonth(new Date());
-        const finish = endOfMonth(new Date());
-        return !isWithinInterval(new Date(date), { start, end: finish });
-    } else if (filterDate === "lastMonth") {
-        const start = startOfMonth(subMonths(new Date(), 1));
-        const finish = endOfMonth(subMonths(new Date(), 1));
-        return !isWithinInterval(new Date(date), { start, end: finish });
-    } else if (filterDate === "nextMonth") {
-        const start = startOfMonth(addMonths(new Date(), 1));
-        const finish = endOfMonth(addMonths(new Date(), 1));
-        return !isWithinInterval(new Date(date), { start, end: finish });
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
+    const namedRange = getNamedDateFilterRange(filterDate, new Date(), timeZone);
+    if (namedRange) {
+        const key = toCalendarDateKey(new Date(date), timeZone);
+        return key < namedRange[0] || key > namedRange[1];
     }
 
     const dates = filterDate.split("|");
@@ -399,8 +373,9 @@ export const getCurrentTaskId = () => {
     const match1 = matchPath("/task/:id", path);
     const match2 = matchPath("/project/:id/:tid", path);
     const match3 = matchPath("/mytasks/:id", path);
+    const match4 = matchPath("/workbooks/:id/:tid", path);
 
-    return match1?.params.id ?? match2?.params.tid ?? match3?.params.id ?? "";
+    return match1?.params.id ?? match2?.params.tid ?? match3?.params.id ?? match4?.params.tid ?? "";
 };
 
 /**
@@ -973,7 +948,7 @@ export const useStackTasksFromStack = (stack?: IStack): ITask[] => {
             orderTasksWithFallback(
                 tasksById,
                 stack?.tasksOrder ?? [],
-                stack ? taskIdsByStack.get(stack.id) ?? [] : []
+                stack ? (taskIdsByStack.get(stack.id) ?? []) : []
             ).filter(task => task.stack === stack?.id && !task.archived),
         [stack, taskIdsByStack, tasksById]
     );
@@ -1007,7 +982,7 @@ export const useTasksByPeriod = (from: Date, to: Date, loose = false) => {
  */
 export const useArchivedTasks = (projectId?: string): { tasks: ITask[]; isLoading: boolean } => {
     return TasksStore.use(state => {
-        const taskIds = projectId ? state.taskIdsByProject.get(projectId) ?? [] : [];
+        const taskIds = projectId ? (state.taskIdsByProject.get(projectId) ?? []) : [];
         const tasks = taskIds.flatMap(taskId => {
             const task = state.tasksById.get(taskId);
             return task?.archived ? [task] : [];

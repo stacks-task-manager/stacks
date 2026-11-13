@@ -241,6 +241,8 @@ const TableCellPure: FunctionComponent<TablePersistentCellProps<ITask>> = ({ row
     const handleOpenTask = (taskId: string, projectId: string) => {
         if (tableId === "mytasks") {
             navigate(`/mytasks/${taskId}`);
+        } else if (tableId.startsWith("workbook:")) {
+            navigate(`/workbooks/${tableId.slice("workbook:".length)}/${taskId}`);
         } else if (tableId === "home-my-tasks") {
             navigate(`/project/${projectId}/${taskId}`);
         } else if (PreferencesStore.get().embeddedTask) {

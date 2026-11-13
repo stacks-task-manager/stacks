@@ -1,0 +1,73 @@
+.workbook-list-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+
+    &__icon {
+        display: grid;
+        place-items: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 6px;
+        color: $blue3;
+        background: rgba($blue3, 0.1);
+    }
+
+    &__body {
+        display: flex;
+        flex: 1;
+        min-width: 0;
+        flex-direction: column;
+        gap: 3px;
+
+        span,
+        small {
+            color: $gray1;
+        }
+    }
+
+    &__title {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+}
+
+.workbook-dialog {
+    width: min(320px, calc(100vw - 40px));
+
+    &__footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        padding: 12px 20px 20px;
+    }
+}
+
+.workbook-overview {
+    display: grid;
+    gap: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+
+    &__metrics {
+        display: grid;
+        gap: 12px;
+        grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+    }
+
+    &__metric {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+
+        strong {
+            font-size: 22px;
+        }
+
+        span {
+            color: $gray1;
+            font-size: 12px;
+        }
+    }
+}

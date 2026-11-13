@@ -1,9 +1,14 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+import { tz } from "@date-fns/tz";
 import {
+    addDays,
+    addMonths,
     differenceInMilliseconds,
+    endOfMonth,
     format,
     formatDistanceToNow,
     formatRelative,
+    getDefaultOptions,
     intervalToDuration,
     isAfter,
     isBefore,
@@ -14,6 +19,8 @@ import {
     parseISO,
     setDefaultOptions,
     startOfDay,
+    startOfMonth,
+    startOfWeek,
 } from "date-fns";
 
 export const timeAgo = (date: Date) => {
@@ -135,6 +142,84 @@ export const formatDate = (theDate: string | Date | undefined | null, formatStr 
     const parsedDate = typeof theDate === "string" ? parseISO(theDate) : theDate;
     if (!isValid(parsedDate)) return "";
     return format(parsedDate, formatStr);
+};
+
+/** Formats an instant as a yyyy-MM-dd calendar key in the requested time zone. */
+export const toCalendarDateKey = (date: Date, timeZone: string): string => {
+    try {
+        return format(tz(timeZone)(date), "yyyy-MM-dd");
+    } catch {
+        const year = date.getUTCFullYear();
+        const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+        const day = String(date.getUTCDate()).padStart(2, "0");
+        return `${year}-${month}-${day}`;
+    }
+};
+
+const calendarKeyDate = (key: string): Date => tz("UTC")(key);
+
+const formatCalendarKey = (date: Date): string => format(tz("UTC")(date), "yyyy-MM-dd");
+
+const addCalendarDays = (key: string, amount: number): string =>
+    formatCalendarKey(addDays(calendarKeyDate(key), amount));
+
+const calendarMonthBound = (key: string, offset: number, end: boolean): string => {
+    const value = addMonths(startOfMonth(calendarKeyDate(key)), offset);
+    return formatCalendarKey(end ? endOfMonth(value) : value);
+};
+
+const calendarWeekBounds = (
+    key: string,
+    offset: number,
+    weekStartsOn: 0 | 1 | 2 | 3 | 4 | 5 | 6
+): [string, string] => {
+    const value = addDays(startOfWeek(calendarKeyDate(key), { weekStartsOn }), offset * 7);
+    return [formatCalendarKey(value), formatCalendarKey(addDays(value, 6))];
+};
+
+const defaultWeekStartsOn = (): 0 | 1 | 2 | 3 | 4 | 5 | 6 => {
+    const options = getDefaultOptions() as {
+        weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
+        locale?: Locale;
+    };
+    return options.weekStartsOn ?? options.locale?.options?.weekStartsOn ?? 0;
+};
+
+/** Resolves a named task date filter to inclusive yyyy-MM-dd calendar bounds. */
+export const getNamedDateFilterRange = (
+    filter: string,
+    now: Date,
+    timeZone: string,
+    weekStartsOn: 0 | 1 | 2 | 3 | 4 | 5 | 6 = defaultWeekStartsOn()
+): [string, string] | null => {
+    const today = toCalendarDateKey(now, timeZone);
+
+    switch (filter) {
+        case "today":
+            return [today, today];
+        case "yesterday": {
+            const day = addCalendarDays(today, -1);
+            return [day, day];
+        }
+        case "tomorrow": {
+            const day = addCalendarDays(today, 1);
+            return [day, day];
+        }
+        case "thisWeek":
+            return calendarWeekBounds(today, 0, weekStartsOn);
+        case "lastWeek":
+            return calendarWeekBounds(today, -1, weekStartsOn);
+        case "nextWeek":
+            return calendarWeekBounds(today, 1, weekStartsOn);
+        case "thisMonth":
+            return [calendarMonthBound(today, 0, false), calendarMonthBound(today, 0, true)];
+        case "lastMonth":
+            return [calendarMonthBound(today, -1, false), calendarMonthBound(today, -1, true)];
+        case "nextMonth":
+            return [calendarMonthBound(today, 1, false), calendarMonthBound(today, 1, true)];
+        default:
+            return null;
+    }
 };
 
 interface DurationUnits {

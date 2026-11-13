@@ -55,6 +55,12 @@ const ReportType = lazy(() =>
     import("app/views/Reports/ReportType").then(module => ({ default: module.ReportType }))
 );
 const Tasks = lazy(() => import("app/views/Tasks/Tasks").then(module => ({ default: module.Tasks })));
+const Workbooks = lazy(() =>
+    import("app/views/Workbooks/Workbooks").then(module => ({ default: module.Workbooks }))
+);
+const Workbook = lazy(() =>
+    import("app/views/Workbooks/Workbook").then(module => ({ default: module.Workbook }))
+);
 
 const App = () => {
     const isLoadingPeople = PeopleStore.use(state => state.isLoading, shallowEqual);
@@ -164,6 +170,10 @@ const MainAppRoutesPure: FunctionComponent<MainAppRoutesProps> = ({ location }) 
                     <Route path=":tid" element={<TaskDetails />} />
                 </Route>
                 <Route path="/bookmarks" element={<Bookmarks />} />
+                <Route path="/workbooks" element={<Workbooks />} />
+                <Route path="/workbooks/:id" element={<Workbook />}>
+                    <Route path=":tid" element={<TaskDetails />} />
+                </Route>
                 <Route path="/calendar" element={<Calendar />} />
                 <Route path="/people" element={<People />}>
                     <Route path="person/:id" element={<PersonDetails />} />

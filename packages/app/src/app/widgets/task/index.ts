@@ -32,4 +32,5 @@ export * from "./TaskStatusBar/TaskStatusBar";
 export * from "./TaskItems/TaskItems";
 export * from "./TaskDependenciesDialog/TaskDependenciesDialog";
 export * from "./TaskPicker2/TaskPicker2";
+export * from "./TaskFilter";
 export * from "./ArchivedTasksDialog/ArchivedTasksDialog";

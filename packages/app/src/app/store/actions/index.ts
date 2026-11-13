@@ -29,3 +29,4 @@ export * from "./stacks";
 export * from "./tasks";
 export * from "./timelogs";
 export * from "./timesheetApprovals";
+export * from "./workbooks";

@@ -2,12 +2,12 @@
 import { Menu, MenuDivider, MenuItem } from "@blueprintjs/core";
 import { DateRange, DateRangePicker } from "@blueprintjs/datetime";
 import { translate } from "@stacks/translations";
-import { Icon } from "app/components/common";
+import { Icon } from "app/components/common/Icon/Icon";
 import { usePreferences } from "app/hooks";
 import { DATES_LABELS } from "app/locale/dynamic-messages";
 import { formatDate } from "app/utils/date";
 import { isThisYear } from "date-fns";
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, memo } from "react";
 
 interface IDateMenuProps {
     date?: string;
@@ -15,7 +15,12 @@ interface IDateMenuProps {
     /** Unique prefix for every item's test id, e.g. "start-date-filter-clear". */
     "data-testid"?: string;
 }
-export const DateMenu: FunctionComponent<IDateMenuProps> = ({ date, onChange, "data-testid": testId }) => {
+
+export const DateMenu: FunctionComponent<IDateMenuProps> = memo(function DateMenu({
+    date,
+    onChange,
+    "data-testid": testId,
+}) {
     const { dateLocale } = usePreferences(["dateLocale"]);
     const itemTestId = (key: string) => (testId ? `${testId}-${key}` : undefined);
 
@@ -112,7 +117,7 @@ export const DateMenu: FunctionComponent<IDateMenuProps> = ({ date, onChange, "d
             </MenuItem>
         </Menu>
     );
-};
+});
 
 export const formatDates = (date: string) => {
     if (
@@ -135,19 +140,19 @@ export const formatDates = (date: string) => {
     const datesFormats: string[] = [];
 
     if (dates[0]) {
-        if (isThisYear(new Date(dates[0]))) {
-            datesFormats.push(formatDate(dates[0], "d MMM"));
-        } else {
-            datesFormats.push(formatDate(dates[0], "d MMM, yyyy"));
-        }
+        datesFormats.push(
+            isThisYear(new Date(dates[0]))
+                ? formatDate(dates[0], "d MMM")
+                : formatDate(dates[0], "d MMM, yyyy")
+        );
     }
 
     if (dates[1]) {
-        if (isThisYear(new Date(dates[1]))) {
-            datesFormats.push(formatDate(dates[1], "d MMM"));
-        } else {
-            datesFormats.push(formatDate(dates[1], "d MMM, yyyy"));
-        }
+        datesFormats.push(
+            isThisYear(new Date(dates[1]))
+                ? formatDate(dates[1], "d MMM")
+                : formatDate(dates[1], "d MMM, yyyy")
+        );
     }
 
     return datesFormats.join(" - ");

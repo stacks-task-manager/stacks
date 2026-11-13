@@ -7,7 +7,7 @@ import { adjustColor, colorToRGBA } from "app/utils/colors";
 import Dialog from "app/utils/dialog";
 import { TagEditPopover } from "../TagEditPopover/TagEditPopover";
 import { FullCircle } from "@blueprintjs/icons";
-import { Icon } from "app/components/common";
+import { Icon } from "app/components/common/Icon/Icon";
 
 export interface StatusChipProps {
     tag: ITag;

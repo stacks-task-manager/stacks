@@ -1,7 +1,15 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 
 /** Entity presenters supported by the shared export endpoint. */
-export const EXPORT_ENTITY_TYPES = ["task", "project", "person", "company", "bookmark", "notepad"] as const;
+export const EXPORT_ENTITY_TYPES = [
+    "task",
+    "project",
+    "person",
+    "company",
+    "bookmark",
+    "notepad",
+    "workbook",
+] as const;
 
 /** Entity type accepted by an export request. */
 export type ExportEntityType = (typeof EXPORT_ENTITY_TYPES)[number];

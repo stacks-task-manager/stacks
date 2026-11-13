@@ -16,7 +16,7 @@ Paths below are relative to `src/app/`:
 - `components/<Name>/`: reusable UI; `widgets/`: composed feature blocks.
 - Keep per-component `_Name.scss` beside the component; global tokens belong in `_vars.scss`.
 
-Use `app/…` imports within the app, not relative paths. Use `@stacks/types` for shared shapes.
+Before adding or extending UI, check [COMPONENTS.md](COMPONENTS.md) for reusable components and [UTILS.md](UTILS.md) for helpers, hooks, and store primitives. Use `app/…` imports within the app, not relative paths. Use `@stacks/types` for shared shapes.
 The router is `BrowserRouter` with basename `/app`; use router links rather than manually adding
 the basename. Legacy `#/…` URLs are normalized before React mounts.
 

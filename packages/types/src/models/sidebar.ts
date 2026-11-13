@@ -10,6 +10,7 @@ export enum SIDEBARITEMS {
     CALENDAR = "calendar",
     MYTASKS = "mytasks",
     REPORTS = "reports",
+    WORKBOOKS = "workbooks",
 }
 
 export type ISidebarTypeKeys = SIDEBARITEMS;
@@ -27,4 +28,5 @@ export const SIDEBARICON: ISidebarIcon = {
     mytasks: "check-circle",
     // planner: "calendar-minus-01",
     reports: APPICONS.REPORTS,
+    workbooks: "book-open-01",
 };
