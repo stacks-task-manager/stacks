@@ -153,9 +153,9 @@ export default class Gantt extends Base {
         await this.page.keyboard.press("ArrowRight");
         await expect(divider).toHaveAttribute("aria-valuenow", String(initial + 20));
         await this.page.getByTestId("gantt-pane-toggle").click();
-        await expect(divider).toHaveCount(0);
+        await expect(divider).not.toHaveAttribute("role", "separator");
         await this.page.getByTestId("gantt-pane-toggle").click();
-        await expect(divider).toBeVisible();
+        await expect(divider).toHaveAttribute("role", "separator");
         await this.page.getByTestId("gantt-viewport").evaluate(element => {
             element.scrollLeft = 0;
         });

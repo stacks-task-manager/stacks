@@ -53,6 +53,8 @@ describe("Gantt calendar geometry", () => {
         expect(clampPaneWidth(20, 1000)).toBe(MIN_PANE_WIDTH);
         expect(clampPaneWidth(2000, 1000)).toBe(880);
         expect(clampPaneWidth(300, 200)).toBe(MIN_PANE_WIDTH);
+        expect(clampPaneWidth(300.4, 1000)).toBe(300);
+        expect(clampPaneWidth(300.5, 1000)).toBe(301);
     });
     it("creates bounded ticks for every scale in the visible viewport", () => {
         for (const scale of Object.keys(pixelsPerDay) as GanttScale[]) {

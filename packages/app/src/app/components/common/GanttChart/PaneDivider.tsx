@@ -21,7 +21,7 @@ export function PaneDivider({
     useEffect(() => () => cleanup.current(), []);
     const collapsed = width === 0;
     const beginResize = (event: React.PointerEvent<HTMLDivElement>) => {
-        if (event.button !== 0) return;
+        if (collapsed || event.button !== 0) return;
         event.preventDefault();
         cleanup.current();
         const x = event.clientX;
@@ -59,41 +59,40 @@ export function PaneDivider({
             data-testid="gantt-divider"
             style={{ left: collapsed ? 0 : width - 3 }}
         >
-            {!collapsed && (
-                <div
-                    className="stacks-gantt-divider-handle"
-                    data-testid="gantt-divider-handle"
-                    role="separator"
-                    aria-label={translate("Task pane")}
-                    aria-orientation="vertical"
-                    aria-valuemin={MIN_PANE_WIDTH}
-                    aria-valuemax={Math.max(MIN_PANE_WIDTH, availableWidth - MIN_PANE_WIDTH)}
-                    aria-valuenow={Math.round(width)}
-                    tabIndex={0}
-                    onPointerDown={beginResize}
-                    onKeyDown={event => {
-                        if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
-                            event.preventDefault();
-                            onResize(
-                                clampPaneWidth(
-                                    width + (event.key === "ArrowRight" ? 20 : -20),
-                                    availableWidth
-                                )
-                            );
-                        }
-                    }}
-                />
-            )}
-            <button
-                type="button"
-                className="stacks-gantt-pane-toggle"
-                data-testid="gantt-pane-toggle"
-                aria-label={translate("Task pane")}
-                aria-pressed={!collapsed}
-                onClick={onTogglePane}
+            <div
+                className="stacks-gantt-divider-handle"
+                data-testid="gantt-divider-handle"
+                role={collapsed ? undefined : "separator"}
+                aria-label={collapsed ? undefined : translate("Task pane")}
+                aria-orientation={collapsed ? undefined : "vertical"}
+                aria-valuemin={collapsed ? undefined : MIN_PANE_WIDTH}
+                aria-valuemax={
+                    collapsed ? undefined : Math.max(MIN_PANE_WIDTH, availableWidth - MIN_PANE_WIDTH)
+                }
+                aria-valuenow={collapsed ? undefined : Math.round(width)}
+                tabIndex={collapsed ? -1 : 0}
+                onPointerDown={beginResize}
+                onKeyDown={event => {
+                    if (collapsed) return;
+                    if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+                        event.preventDefault();
+                        onResize(
+                            clampPaneWidth(width + (event.key === "ArrowRight" ? 20 : -20), availableWidth)
+                        );
+                    }
+                }}
             >
-                <Icon icon={collapsed ? "chevron-right" : "chevron-left"} size={12} />
-            </button>
+                <button
+                    type="button"
+                    className="stacks-gantt-pane-toggle"
+                    data-testid="gantt-pane-toggle"
+                    aria-label={translate("Task pane")}
+                    aria-pressed={!collapsed}
+                    onClick={onTogglePane}
+                >
+                    <Icon icon={collapsed ? "chevron-right" : "chevron-left"} size={12} />
+                </button>
+            </div>
         </div>
     );
 }

@@ -25,7 +25,7 @@ export const pixelsPerDay: Record<GanttScale, number> = {
 
 export function clampPaneWidth(width: number, availableWidth: number): number {
     const max = Math.max(MIN_PANE_WIDTH, availableWidth - MIN_PANE_WIDTH);
-    return Math.max(MIN_PANE_WIDTH, Math.min(max, width));
+    return Math.round(Math.max(MIN_PANE_WIDTH, Math.min(max, width)));
 }
 
 export function dateAt(origin: Date, x: number, unit: number): Date {
