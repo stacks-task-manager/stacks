@@ -7,6 +7,7 @@ import {
     MIN_PANE_WIDTH,
     editDates,
     visibleWindow,
+    timelinePeriod,
     timelineTicks,
     pixelsPerDay,
 } from "app/components/common/GanttChart/geometry";
@@ -55,6 +56,22 @@ describe("Gantt calendar geometry", () => {
         expect(clampPaneWidth(300, 200)).toBe(MIN_PANE_WIDTH);
         expect(clampPaneWidth(300.4, 1000)).toBe(300);
         expect(clampPaneWidth(300.5, 1000)).toBe(301);
+    });
+    it("centers each scale's timeline period independently", () => {
+        const date = new Date(2026, 4, 15, 12);
+        const expectedWidths: Record<GanttScale, number> = {
+            day: 30,
+            week: 98,
+            month: 124,
+            quarter: 136.5,
+            halfYear: 135.75,
+        };
+
+        for (const scale of Object.keys(expectedWidths) as GanttScale[]) {
+            const period = timelinePeriod(origin, date, scale);
+            expect(period.width).toBe(expectedWidths[scale]);
+            expect(period.left + period.width / 2).toBeGreaterThan(period.left);
+        }
     });
     it("creates bounded ticks for every scale in the visible viewport", () => {
         for (const scale of Object.keys(pixelsPerDay) as GanttScale[]) {

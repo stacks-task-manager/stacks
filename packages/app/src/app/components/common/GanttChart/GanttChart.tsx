@@ -15,6 +15,7 @@ import {
     HEADER_HEIGHT,
     pixelsPerDay,
     ROW_HEIGHT,
+    timelinePeriod,
     timelineTicks,
     visibleWindow,
 } from "app/components/common/GanttChart/geometry";
@@ -160,6 +161,8 @@ export function GanttChart({ title, rows, onActivate, onDatesChange }: GanttChar
         [origin, viewport.left, chartWidth, scale]
     );
     const todayX = differenceInCalendarDays(today, origin) * unit;
+    const todayPeriod = timelinePeriod(origin, today, scale);
+    const todayLineX = todayPeriod.left + todayPeriod.width / 2;
     const todayColumnVisible = todayX + unit > viewport.left && todayX < viewport.left + chartWidth;
     const reveal = (x: number) => {
         const element = scroller.current;
@@ -282,7 +285,7 @@ export function GanttChart({ title, rows, onActivate, onDatesChange }: GanttChar
                                 <div
                                     className="stacks-gantt-today-line"
                                     data-testid="gantt-today-line"
-                                    style={{ left: todayX + unit / 2 }}
+                                    style={{ left: todayLineX }}
                                 />
                             </div>
                             <HierarchyLinks

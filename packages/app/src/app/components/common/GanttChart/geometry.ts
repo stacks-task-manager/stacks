@@ -89,19 +89,33 @@ export interface TimelineTick {
     weekend: boolean;
 }
 
+export function timelinePeriodStart(date: Date, scale: GanttScale): Date {
+    if (scale === "day") return startOfDay(date);
+    let start = scale === "week" ? startOfWeek(date, { weekStartsOn: 1 }) : startOfMonth(date);
+    if (scale === "quarter") start = new Date(start.getFullYear(), Math.floor(start.getMonth() / 3) * 3, 1);
+    if (scale === "halfYear") start = new Date(start.getFullYear(), Math.floor(start.getMonth() / 6) * 6, 1);
+    return start;
+}
+
+export function timelinePeriod(origin: Date, date: Date, scale: GanttScale) {
+    const unit = pixelsPerDay[scale];
+    const start = timelinePeriodStart(date, scale);
+    const end =
+        scale === "day"
+            ? addDays(start, 1)
+            : scale === "week"
+              ? addDays(start, 7)
+              : addMonths(start, scale === "month" ? 1 : scale === "quarter" ? 3 : 6);
+    return {
+        left: differenceInCalendarDays(start, origin) * unit,
+        width: differenceInCalendarDays(end, start) * unit,
+    };
+}
+
 export function timelineTicks(origin: Date, left: number, width: number, scale: GanttScale): TimelineTick[] {
     const unit = pixelsPerDay[scale];
     const first = dateAt(origin, left, unit);
-    let cursor =
-        scale === "day"
-            ? first
-            : scale === "week"
-              ? startOfWeek(first, { weekStartsOn: 1 })
-              : startOfMonth(first);
-    if (scale === "quarter")
-        cursor = new Date(cursor.getFullYear(), Math.floor(cursor.getMonth() / 3) * 3, 1);
-    if (scale === "halfYear")
-        cursor = new Date(cursor.getFullYear(), Math.floor(cursor.getMonth() / 6) * 6, 1);
+    let cursor = timelinePeriodStart(first, scale);
     const ticks: TimelineTick[] = [];
     while (differenceInCalendarDays(cursor, origin) * unit < left + width) {
         const next =
