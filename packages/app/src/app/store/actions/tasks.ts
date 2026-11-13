@@ -5,6 +5,7 @@
 import { translate } from "@stacks/translations";
 import { Intent } from "@blueprintjs/core";
 import { produce } from "immer";
+import isEqual from "lodash/isEqual";
 import kebabCase from "lodash/kebabCase";
 import union from "lodash/union";
 import without from "lodash/without";
@@ -372,10 +373,17 @@ const replaceTask = (replacedTask: ITask, skipSave?: boolean) => {
  */
 const upsertTasks = async (tasks: ITask[]) => {
     const newTaskIds = tasks.map((task: ITask) => task.id);
+    const existingTasksById = new Map(TasksStore.get().tasks.map(task => [task.id, task]));
+    // Preserve existing task references when the fetched task is identical so
+    // task-details subscribers do not re-render merely because a project reloads.
+    const storedTasks = tasks.map(task => {
+        const existingTask = existingTasksById.get(task.id);
+        return existingTask && isEqual(existingTask, task) ? existingTask : task;
+    });
 
     TasksStore.set(
         produce((state: ITasksStore) => {
-            state.tasks = upsertById(state.tasks, tasks);
+            state.tasks = upsertById(state.tasks, storedTasks);
             state.loadingChunk = without(state.loadingChunk, ...newTaskIds);
             state.isLoading = false;
             state.isLoadingArchived = false;

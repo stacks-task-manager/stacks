@@ -19,7 +19,6 @@ import { TintPicker } from "app/components/project/TintPicker/TintPicker";
 import { getCurrentProjectId } from "app/hooks";
 import classNames from "classnames";
 import { FunctionComponent, useMemo, useState } from "react";
-import { StatusChip } from "../StatusChip/StatusChip";
 import { TagChip } from "../TagChip/TagChip";
 
 export interface TagEditProps {
@@ -99,7 +98,8 @@ export const TagEdit: FunctionComponent<TagEditProps> = ({
                     </span>
 
                     {previewStatus ? (
-                        <StatusChip
+                        <TagChip
+                            variant="status"
                             tag={{
                                 id: "preview",
                                 parent: "",

@@ -67,7 +67,9 @@ export const TaskDetails = () => {
         }, 100);
     }, [taskId]);
 
-    const closeTask = () => {
+    const handleAddDependencies = useCallback(() => setDependenciesDialogOpen(true), []);
+
+    const closeTask = useCallback(() => {
         if (getHashPathname().startsWith("/mytasks")) {
             navigate("/mytasks");
             return;
@@ -86,15 +88,18 @@ export const TaskDetails = () => {
         if (location.pathname === getHashPathname()) {
             navigate(`/project/${projectId}`);
         }
-    };
+    }, [location.pathname, navigate, projectId]);
 
-    const handleClose = (delayed?: boolean | number) => {
-        if (delayed) {
-            setTimeout(closeTask, typeof delayed === "number" ? delayed : 500);
-        } else {
-            closeTask();
-        }
-    };
+    const handleClose = useCallback(
+        (delayed?: boolean | number) => {
+            if (delayed) {
+                setTimeout(closeTask, typeof delayed === "number" ? delayed : 500);
+            } else {
+                closeTask();
+            }
+        },
+        [closeTask]
+    );
 
     useOnClickOutside(tdRef, () => PreferencesStore.get().clickOutsideClose && handleClose(100), [
         ".td-keep",
@@ -104,14 +109,17 @@ export const TaskDetails = () => {
         ".tiptap-bubble-menu",
     ]);
 
-    const handleOpenParentTask = async (parentId: string) => {
-        if (getHashPathname().startsWith("/workbooks/")) {
-            const workbookId = getHashPathname().split("/").filter(Boolean)[1];
-            navigate(`/workbooks/${workbookId}/${parentId}`);
-            return;
-        }
-        navigate(`/project/${projectId}/${parentId}`);
-    };
+    const handleOpenParentTask = useCallback(
+        async (parentId: string) => {
+            if (getHashPathname().startsWith("/workbooks/")) {
+                const workbookId = getHashPathname().split("/").filter(Boolean)[1];
+                navigate(`/workbooks/${workbookId}/${parentId}`);
+                return;
+            }
+            navigate(`/project/${projectId}/${parentId}`);
+        },
+        [navigate, projectId]
+    );
 
     return (
         <div
@@ -131,7 +139,7 @@ export const TaskDetails = () => {
                     onOpenParent={handleOpenParentTask}
                     onClose={handleClose}
                     onFullscreen={handleToggleFullscreen}
-                    onAddDependencies={() => setDependenciesDialogOpen(true)}
+                    onAddDependencies={handleAddDependencies}
                 />
             )}
             {dependenciesDialogOpen && task && (
@@ -161,11 +169,9 @@ export const TaskDetailsPanel = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [taskId]);
 
-    const handleDialogClose = () => {
-        handleClose();
-    };
+    const handleAddDependencies = useCallback(() => setDependenciesDialogOpen(true), []);
 
-    const handleClose = (delayed?: boolean) => {
+    const handleClose = useCallback((delayed?: boolean) => {
         if (delayed) {
             setTimeout(() => {
                 setOpen(false);
@@ -173,21 +179,26 @@ export const TaskDetailsPanel = () => {
         } else {
             setOpen(false);
         }
-    };
+    }, []);
 
-    const handleDialogClosed = () => {
+    const handleDialogClose = useCallback(() => handleClose(), [handleClose]);
+
+    const handleDialogClosed = useCallback(() => {
         navigate({
             pathname: backgroundLocation.pathname || "/",
             search: backgroundLocation.search,
             hash: backgroundLocation.hash,
         });
-    };
+    }, [backgroundLocation, navigate]);
 
-    const handleOpenParentTask = (parentId: string) => {
-        navigate(`/task/${parentId}`, {
-            state: { backgroundLocation },
-        });
-    };
+    const handleOpenParentTask = useCallback(
+        (parentId: string) => {
+            navigate(`/task/${parentId}`, {
+                state: { backgroundLocation },
+            });
+        },
+        [backgroundLocation, navigate]
+    );
 
     if (PreferencesStore.get().dialogTask) {
         return (
@@ -213,7 +224,7 @@ export const TaskDetailsPanel = () => {
                             onOpenParent={handleOpenParentTask}
                             onClose={handleClose}
                             onFullscreen={handleToggleFullscreen}
-                            onAddDependencies={() => setDependenciesDialogOpen(true)}
+                            onAddDependencies={handleAddDependencies}
                             isDialog
                         />
                     )}
@@ -246,7 +257,7 @@ export const TaskDetailsPanel = () => {
                             onOpenParent={handleOpenParentTask}
                             onClose={handleClose}
                             onFullscreen={handleToggleFullscreen}
-                            onAddDependencies={() => setDependenciesDialogOpen(true)}
+                            onAddDependencies={handleAddDependencies}
                         />
                     )}
                 </Drawer>

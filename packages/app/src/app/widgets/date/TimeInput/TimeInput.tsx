@@ -4,10 +4,10 @@ import { Icon, Scroller } from "app/components/common";
 import React, { FunctionComponent, useEffect, useMemo, useState } from "react";
 import { scrollIntoView } from "app/utils/dom";
 
-interface DateTimePickerProps {
+interface TimeInputProps {
     value: string;
     is24Hour?: boolean;
-    span?: 5 | 10 | 15 | 20;
+    span?: 5 | 10 | 15 | 20 | 30;
     min?: string;
     max?: string;
     disabled?: boolean;
@@ -15,9 +15,10 @@ interface DateTimePickerProps {
     onChange: (time: string) => void;
 }
 
-export const DateTimePicker: FunctionComponent<DateTimePickerProps> = ({
+export const TimeInput: FunctionComponent<TimeInputProps> = ({
     value,
     is24Hour,
+    span,
     min,
     max,
     disabled,
@@ -48,17 +49,25 @@ export const DateTimePicker: FunctionComponent<DateTimePickerProps> = ({
     };
 
     const items = useMemo(() => {
-        const hours = generateTimeSlots(Boolean(is24Hour));
+        const hours = generateTimeSlots(Boolean(is24Hour), span || 15);
         const isValid = isValidTimeSlot(time, Boolean(is24Hour));
+        const minMinutes = min ? timeToMinutes(min) : undefined;
+        const maxMinutes = max ? timeToMinutes(max) : undefined;
 
         return hours.filter(t => {
             if (time != null && !isValid) {
                 return t.toLowerCase().startsWith(time.toLowerCase());
             }
 
-            return t;
+            const slotMinutes = timeToMinutes(t);
+            if (slotMinutes == null) return false;
+
+            if (minMinutes != null && slotMinutes < minMinutes) return false;
+            if (maxMinutes != null && slotMinutes > maxMinutes) return false;
+
+            return true;
         });
-    }, [time, min, max]);
+    }, [time, min, max, is24Hour, span]);
 
     useEffect(() => {
         if (selected == null) return;
@@ -91,13 +100,13 @@ export const DateTimePicker: FunctionComponent<DateTimePickerProps> = ({
                 }
             }
         } else if (event.key === "Enter") {
-            if (selected) {
-                setTime(items[selected]);
-                // setSelected(undefined);
+            const selectedTime = selected != null && selected >= 0 ? items[selected] : undefined;
+            if (selectedTime != null) {
+                setTime(selectedTime);
                 setOpen(false);
             }
 
-            handleOnChange(selected ? items[selected] : time);
+            handleOnChange(selectedTime ?? time);
         }
     };
 
@@ -133,13 +142,15 @@ export const DateTimePicker: FunctionComponent<DateTimePickerProps> = ({
     const handleOpened = () => {
         if (value == null) return;
         const timeIndex = items.indexOf(value);
+        const selectedIndex = timeIndex >= 0 ? timeIndex : undefined;
 
-        setSelected(timeIndex);
+        setSelected(selectedIndex);
 
-        const timeEl = document.getElementById(`time-${timeIndex}`);
-
-        if (timeEl) {
-            scrollIntoView(timeEl);
+        if (selectedIndex != null) {
+            const timeEl = document.getElementById(`time-${selectedIndex}`);
+            if (timeEl) {
+                scrollIntoView(timeEl);
+            }
         }
     };
 
@@ -242,6 +253,29 @@ function isValidTimeSlot(timeSlot: string, is24HourFormat: boolean): boolean {
     } else {
         return time12HourPattern.test(timeSlot);
     }
+}
+
+function timeToMinutes(timeSlot: string): number | null {
+    const match = timeSlot
+        .trim()
+        .toUpperCase()
+        .match(/^(?:(\d{1,2}):(\d{2}))\s*(AM|PM)?$/);
+
+    if (!match) return null;
+
+    let hours = Number(match[1]);
+    const minutes = Number(match[2]);
+
+    if (match[3]) {
+        if (hours > 12) return null;
+
+        hours %= 12;
+        if (match[3] === "PM") hours += 12;
+    } else if (hours > 23) {
+        return null;
+    }
+
+    return hours * 60 + minutes;
 }
 
 function completeTimeSlot(input: string, is24HourFormat: boolean): string {

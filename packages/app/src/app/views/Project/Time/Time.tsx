@@ -24,7 +24,7 @@ import { PreferencesStore } from "app/store/preferences";
 import { TimelogsStore } from "app/store/timelogs";
 import { formatDate, formatDuration } from "app/utils/date";
 import { snapshotTaskModalBackground } from "app/hooks/router";
-import { AssigneesSync } from "app/widgets";
+import { Assignees } from "app/widgets";
 import { useNavigate, useParams } from "react-router-dom";
 
 interface IAssigneeLog {
@@ -203,11 +203,11 @@ export const Time = () => {
                                         Missing task title
                                     </TableBodyCell>
                                     <TableBodyCell>
-                                        {/* <AssigneesSync assignees={log.task.assignees} max={3} small /> */}
+                                        {/* <Assignees hideWhenEmpty assignees={log.task.assignees} max={3} small /> */}
                                         Missing task assignees
                                     </TableBodyCell>
                                     <TableBodyCell>
-                                        <AssigneesSync assignees={[log.person]} max={3} small />
+                                        <Assignees hideWhenEmpty assignees={[log.person]} max={3} small />
                                     </TableBodyCell>
                                     <TableBodyCell>
                                         <Tag intent={Intent.SUCCESS} minimal>

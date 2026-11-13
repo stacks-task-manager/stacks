@@ -18,7 +18,6 @@ export * from "./ReminderButton/ReminderButton";
 export * from "./PopupDeleteWidget/PopupDeleteWidget";
 export * from "./PriorityMenuItems/PriorityMenuItems";
 export * from "./Status/Status";
-export * from "./StatusChip/StatusChip";
 export * from "./Statuses/Statuses";
 export * from "./TableSkeleton/TableSkeleton";
 export * from "./TagChip/TagChip";

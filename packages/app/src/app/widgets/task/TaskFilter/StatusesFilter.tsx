@@ -14,7 +14,7 @@ import { translate } from "@stacks/translations";
 import { ITag, TAGSECTION } from "@stacks/types";
 import { Icon } from "app/components/common/Icon/Icon";
 import { StatusesMenu } from "app/components/project/StatusesMenu/StatusesMenu";
-import { StatusChip } from "app/widgets/common/StatusChip/StatusChip";
+import { TagChip } from "app/widgets/common/TagChip/TagChip";
 import { TagsWrapper } from "app/widgets/common/TagsWrapper/TagsWrapper";
 import React, { FunctionComponent, memo, useCallback, useMemo } from "react";
 
@@ -115,7 +115,8 @@ export const StatusesFilter: FunctionComponent<IStatusesFilterProps> = memo(func
                 <div style={{ marginTop: 10 }}>
                     <TagsWrapper>
                         {selectedStatuses.map(status => (
-                            <StatusChip
+                            <TagChip
+                                variant="status"
                                 key={status.id}
                                 tag={status}
                                 fill

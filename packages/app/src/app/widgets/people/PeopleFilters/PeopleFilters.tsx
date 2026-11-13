@@ -23,9 +23,8 @@ import { usePeopleHasFilters, usePeopleStatuses, usePeopleTags } from "app/hooks
 import { shallowEqual } from "app/hooks/store";
 import { PeopleActions } from "app/store/actions";
 import { PeopleStore } from "app/store/people";
-import { FiltersSidebar, StatusChip, Tags, TagsWrapper } from "app/widgets/common";
+import { FiltersSidebar, TagChip, Tags, TagsWrapper } from "app/widgets/common";
 import { QueryFilter } from "app/widgets/task/TaskFilter/QueryFilter";
-
 
 export const PeopleFilter = () => {
     const { filtersVisible, query, viewType } = PeopleStore.use(
@@ -194,7 +193,7 @@ const StatusesFilter = () => {
 
             {selectedStatus != null && (
                 <div style={{ marginTop: 10 }}>
-                    <StatusChip tag={selectedStatus} fill onRemove={handleRemoveStatus} />
+                    <TagChip variant="status" tag={selectedStatus} fill onRemove={handleRemoveStatus} />
                 </div>
             )}
         </FormGroup>

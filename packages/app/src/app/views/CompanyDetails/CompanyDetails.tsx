@@ -252,9 +252,7 @@ const CompanyEditing: FunctionComponent<ICompanyEditingProps> = ({ company, onCl
                                     <FormGroup label="Industry">
                                         <IndustryPicker
                                             defaultValue={updatedCompany?.industry}
-                                            onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                                                update("industry", e.currentTarget.value)
-                                            }
+                                            onChange={value => update("industry", value)}
                                         />
                                     </FormGroup>
                                 </Col>
@@ -368,9 +366,7 @@ const CompanyEditing: FunctionComponent<ICompanyEditingProps> = ({ company, onCl
                                     <FormGroup label={translate("Country")} labelFor="country">
                                         <CountryPicker
                                             defaultValue={updatedCompany?.country ?? undefined}
-                                            onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                                                update("country", e.currentTarget.value)
-                                            }
+                                            onChange={value => update("country", value)}
                                         />
                                     </FormGroup>
                                 </Col>
@@ -531,9 +527,7 @@ const CompanyEditing: FunctionComponent<ICompanyEditingProps> = ({ company, onCl
                                             defaultValue={
                                                 updatedCompany?.registeredOfficeCountry ?? undefined
                                             }
-                                            onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                                                update("registeredOfficeCountry", e.currentTarget.value)
-                                            }
+                                            onChange={value => update("registeredOfficeCountry", value)}
                                         />
                                     </FormGroup>
                                 </Col>
@@ -611,9 +605,7 @@ const CompanyEditing: FunctionComponent<ICompanyEditingProps> = ({ company, onCl
                                     <FormGroup label={translate("Country")}>
                                         <CountryPicker
                                             defaultValue={updatedCompany?.billingCountry ?? undefined}
-                                            onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                                                update("billingCountry", e.currentTarget.value)
-                                            }
+                                            onChange={value => update("billingCountry", value)}
                                         />
                                     </FormGroup>
                                 </Col>
@@ -691,9 +683,7 @@ const CompanyEditing: FunctionComponent<ICompanyEditingProps> = ({ company, onCl
                                     <FormGroup label={translate("Country")}>
                                         <CountryPicker
                                             defaultValue={updatedCompany?.shippingCountry ?? undefined}
-                                            onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                                                update("shippingCountry", e.currentTarget.value)
-                                            }
+                                            onChange={value => update("shippingCountry", value)}
                                         />
                                     </FormGroup>
                                 </Col>

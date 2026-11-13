@@ -28,7 +28,7 @@ import { APPICONS, IBookmark, ISearchResult, ITask, RECORDTYPE, TAGSECTION } fro
 import { openInNewTab } from "app/utils/browser";
 import { scrollIntoView } from "app/utils/dom";
 import { ProjectStatus, Tags, TagsWrapper } from "app/widgets";
-import { AssigneesSync } from "app/widgets/people/Assignees/Assignees";
+import { Assignees } from "app/widgets/people/Assignees/Assignees";
 
 interface Counters {
     [key: string]: number;
@@ -615,7 +615,7 @@ const TaskSearchResult: FunctionComponent<IGenericSearchResultProps> = ({ item, 
         if (task) {
             return (
                 <>
-                    {task.assignees && <AssigneesSync assignees={task.assignees} small max={3} />}
+                    {task.assignees && <Assignees hideWhenEmpty assignees={task.assignees} small max={3} />}
                     {task.tags && (
                         <TagsWrapper>
                             <Tags value={task.tags} max={3} section={TAGSECTION.PROJECTS} />
@@ -655,7 +655,7 @@ const TimeboxSearchResult: FunctionComponent<IGenericSearchResultProps> = ({ ite
         if (task) {
             return (
                 <>
-                    {task.assignees && <AssigneesSync assignees={task.assignees} small max={3} />}
+                    {task.assignees && <Assignees hideWhenEmpty assignees={task.assignees} small max={3} />}
                     {task.tags && (
                         <TagsWrapper>
                             <Tags value={task.tags} max={3} section={TAGSECTION.PROJECTS} />

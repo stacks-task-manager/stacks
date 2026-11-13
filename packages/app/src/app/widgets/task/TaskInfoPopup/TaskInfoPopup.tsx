@@ -7,14 +7,14 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Col, Grid, Row, Scroller } from "app/components/common";
 import {
     TaskDetailsAssignees,
-    TaskDetailsPriority,
     TaskDetailsProjects,
     TaskDetailsSection,
     TaskDetailsStack,
     TaskState,
 } from "app/components/project";
 import { useTask } from "app/hooks";
-import { TaskDetailsStatus } from "app/widgets/status";
+import { PriorityPicker } from "app/components/project/PriorityPicker/PriorityPicker";
+import { TaskStatus } from "app/widgets/status";
 import { TaskDetailsTags } from "../TaskDetailsTags/TaskDetailsTags";
 
 interface TaskInfoPopupProps {
@@ -75,7 +75,7 @@ export const TaskInfo: FunctionComponent<TaskInfoProps> = ({ taskId }) => {
                             </TaskDetailsSection>
 
                             <TaskDetailsSection title={translate("Status")} width={100}>
-                                <TaskDetailsStatus value={task.status} disabled taskId={task.id} />
+                                <TaskStatus variant="detail" value={task.status} disabled taskId={task.id} />
                             </TaskDetailsSection>
 
                             <TaskDetailsSection title={translate("Tags")} width={100}>
@@ -83,12 +83,15 @@ export const TaskInfo: FunctionComponent<TaskInfoProps> = ({ taskId }) => {
                             </TaskDetailsSection>
 
                             <TaskDetailsSection title={translate("Priority")} width={100}>
-                                <TaskDetailsPriority
+                                <PriorityPicker
                                     value={task.priority}
                                     showEmpty
                                     canClear
                                     disabled
                                     taskId={task.id}
+                                    id="td-priority"
+                                    testId="task-details-priority"
+                                    hotkey="shift+p"
                                 />
                             </TaskDetailsSection>
 

@@ -3,7 +3,7 @@ import { translate } from "@stacks/translations";
 import { Plus } from "@blueprintjs/icons";
 import classNames from "classnames";
 import React, { FunctionComponent } from "react";
-import { PopupNewGeneric } from "app/components/common";
+import { NewGeneric } from "app/components/common";
 import { getCurrentProjectId, usePreferences } from "app/hooks";
 import { StacksActions } from "app/store/actions";
 
@@ -21,7 +21,8 @@ export const NewStack: FunctionComponent<INewStackProps> = ({ narrow }) => {
     };
 
     return (
-        <PopupNewGeneric
+        <NewGeneric
+            presentation="popover"
             placeholder={translate("Untitled stack")}
             matchTargetWidth={!narrow}
             fill={narrow}
@@ -31,6 +32,6 @@ export const NewStack: FunctionComponent<INewStackProps> = ({ narrow }) => {
                 <Plus size={28} />
                 <div>{translate("Add a new stack")}</div>
             </div>
-        </PopupNewGeneric>
+        </NewGeneric>
     );
 };

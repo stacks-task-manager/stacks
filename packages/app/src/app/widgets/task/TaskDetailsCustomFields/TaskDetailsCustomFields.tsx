@@ -14,7 +14,6 @@ import {
     FieldTypeSwitch,
     FieldTypeText,
     FieldTypeTextArea,
-    FieldTypeUrl,
 } from "./fields";
 
 const FIELDS_BY_TYPE = {
@@ -27,7 +26,7 @@ const FIELDS_BY_TYPE = {
     [FIELDTYPE.RADIO]: FieldTypeRadio,
     [FIELDTYPE.SWITCH]: FieldTypeSwitch,
     [FIELDTYPE.SLIDER]: FieldTypeSlider,
-    [FIELDTYPE.URL]: FieldTypeUrl,
+    [FIELDTYPE.URL]: FieldTypeText,
 };
 
 interface TaskDetailsCustomFieldsProps {

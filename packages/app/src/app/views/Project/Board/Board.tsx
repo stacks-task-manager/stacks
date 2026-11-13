@@ -4,7 +4,7 @@ import { Button, Classes, Intent } from "@blueprintjs/core";
 import { Plus } from "@blueprintjs/icons";
 import type { ExtendedKeyboardEvent } from "mousetrap";
 import React, { useMemo, useRef } from "react";
-import { BlankSlate, Grid, PopupNewGeneric } from "app/components/common";
+import { BlankSlate, Grid, NewGeneric } from "app/components/common";
 import { Container } from "app/components/draggable";
 import { NewStack, Stack } from "app/components/project";
 import {
@@ -301,7 +301,11 @@ export const BoardNoColumns = () => {
                 description="This project does not have any columns just yet. Add your first column now."
                 icon="board-view"
                 action={
-                    <PopupNewGeneric placeholder={translate("Untitled stack")} onAdd={handleCreateStack}>
+                    <NewGeneric
+                        presentation="popover"
+                        placeholder={translate("Untitled stack")}
+                        onAdd={handleCreateStack}
+                    >
                         <Button
                             variant="minimal"
                             intent={Intent.PRIMARY}
@@ -310,7 +314,7 @@ export const BoardNoColumns = () => {
                         >
                             {translate("Add a new stack")}
                         </Button>
-                    </PopupNewGeneric>
+                    </NewGeneric>
                 }
             />
         </Grid>

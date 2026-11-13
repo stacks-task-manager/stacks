@@ -26,7 +26,7 @@ import {
     TAGSECTION,
     TIMELOG_STATUS,
 } from "@stacks/types";
-import { Icon, PopupNewGeneric, ReloadButton, ToolbarButton } from "app/components/common";
+import { Icon, NewGeneric, ReloadButton, ToolbarButton } from "app/components/common";
 import { useCanAccess, useMousetrap, usePeopleHasFilters, useTimelogsInterval, useViewType } from "app/hooks";
 import { PeopleActions, PersonTimesheetActions, TimesheetApprovalActions } from "app/store/actions";
 import { PeopleStore, PeopleViewType } from "app/store/people";
@@ -747,7 +747,8 @@ const FilterButton = () => {
 
 const AddCompanyButton = () => {
     return (
-        <PopupNewGeneric
+        <NewGeneric
+            presentation="popover"
             placeholder={translate("Untitled company")}
             placement="bottom-end"
             buttonText="Add"
@@ -762,7 +763,7 @@ const AddCompanyButton = () => {
                 active
                 data-testid="people-add-company-button"
             />
-        </PopupNewGeneric>
+        </NewGeneric>
     );
 };
 

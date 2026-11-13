@@ -40,7 +40,7 @@ import { PeopleStore } from "app/store/people";
 import { ProjectsStore } from "app/store/projects";
 import { WorkbooksStore } from "app/store/workbooks";
 import dialog from "app/utils/dialog";
-import { StackSelect, Tags, TagsPickerPopupSync, TaskAssignees, TaskDate, TaskStatus } from "app/widgets";
+import { StackSelect, Tags, TagsPickerPopup, TaskAssignees, TaskDate, TaskStatus } from "app/widgets";
 import { PriorityPicker } from "../../../components/project/PriorityPicker/PriorityPicker";
 import { TagsWrapper } from "../../common/TagsWrapper/TagsWrapper";
 
@@ -407,24 +407,26 @@ export const NewTaskPopup: FunctionComponent<INewTaskPopupProps> = ({
                                 )}
 
                                 {tags.length === 0 ? (
-                                    <TagsPickerPopupSync
+                                    <TagsPickerPopup
+                                        commitMode="onClose"
                                         type={TAGTYPE.TAG}
                                         value={tags}
                                         section={TAGSECTION.PROJECTS}
                                         onToggle={setTags}
                                     >
                                         <RoundButton dashed icon="tag" tooltip={translate("Add tags")} />
-                                    </TagsPickerPopupSync>
+                                    </TagsPickerPopup>
                                 ) : (
                                     <TagsWrapper>
-                                        <TagsPickerPopupSync
+                                        <TagsPickerPopup
+                                            commitMode="onClose"
                                             type={TAGTYPE.TAG}
                                             value={tags}
                                             section={TAGSECTION.PROJECTS}
                                             onToggle={setTags}
                                         >
                                             <RoundButton dashed small tooltip={translate("Add more tags")} />
-                                        </TagsPickerPopupSync>
+                                        </TagsPickerPopup>
                                         <Tags
                                             value={tags}
                                             section={TAGSECTION.PROJECTS}

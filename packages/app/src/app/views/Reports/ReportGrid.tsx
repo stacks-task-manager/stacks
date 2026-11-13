@@ -16,7 +16,7 @@ import { getPerson, useNav } from "app/hooks";
 import { ProjectsActions } from "app/store/actions";
 import { getBrowserLocale } from "app/utils/browser";
 import { formatStringDuration, timeAgo } from "app/utils/date";
-import { AssigneesSync, CompanyTableCell, ProjectsList } from "app/widgets";
+import { Assignees, CompanyTableCell, ProjectsList } from "app/widgets";
 import { differenceInDays, isBefore } from "date-fns";
 import React, { CSSProperties, FunctionComponent } from "react";
 import { useLocation } from "react-router-dom";
@@ -158,7 +158,7 @@ const TableGroupCell: FunctionComponent<TablePersistentSectionCellProps<ReportRo
                 round
                 minimal
                 size="large"
-                intent={data.hourlyRate ?? 0 > 0 ? Intent.PRIMARY : Intent.NONE}
+                intent={(data.hourlyRate ?? 0 > 0) ? Intent.PRIMARY : Intent.NONE}
             >
                 {formatCurrency(data.hourlyRate)}
             </CompoundTag>
@@ -216,7 +216,7 @@ const TableCellPure: FunctionComponent<TablePersistentCellProps<ReportRow>> = ({
     } else if (column === "company") {
         return <CompanyTableCell companyId={row.company} />;
     } else if (column === "owner" && row.owner != null) {
-        return <AssigneesSync assignees={[row.owner]} />;
+        return <Assignees hideWhenEmpty assignees={[row.owner]} />;
     } else if (column === "projectsList") {
         return <ProjectsList projects={row.projectsList} />;
     }
@@ -242,12 +242,12 @@ const TableCellPure: FunctionComponent<TablePersistentCellProps<ReportRow>> = ({
 
     // People
     else if (column === "assignees") {
-        return <AssigneesSync assignees={row.assignees} />;
+        return <Assignees hideWhenEmpty assignees={row.assignees} />;
     } else if (column === "person") {
         const person = getPerson(row.person);
         return (
             <>
-                <AssigneesSync assignees={[row.person]} /> {person?.firstName} {person?.lastName}
+                <Assignees hideWhenEmpty assignees={[row.person]} /> {person?.firstName} {person?.lastName}
             </>
         );
     }
@@ -272,8 +272,8 @@ const TableCellPure: FunctionComponent<TablePersistentCellProps<ReportRow>> = ({
             column === "timeEstimated"
                 ? Intent.PRIMARY
                 : row.timeLogged > row.timeEstimated
-                    ? Intent.WARNING
-                    : Intent.SUCCESS;
+                  ? Intent.WARNING
+                  : Intent.SUCCESS;
         return (
             <Tag minimal intent={intent}>
                 {formatStringDuration(value, "d")}

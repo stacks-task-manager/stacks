@@ -127,6 +127,7 @@
         "braces@^3.0.3": "patch:braces@npm%3A3.0.3#./.yarn/patches/braces-npm-3.0.3-582c14023c.patch",
         "braces@~3.0.2": "patch:braces@npm%3A3.0.3#./.yarn/patches/braces-npm-3.0.3-582c14023c.patch",
         "@tiptap/core@^2.0.0": "npm:2.27.3",
+        "prosemirror-model": "1.25.12",
         "vite@npm:^6.0.0 || ^7.0.0 || ^8.0.0": "npm:8.0.16",
         "websocket-driver@npm:>=0.5.1": "npm:0.7.5",
         "websocket-driver@npm:^0.7.4": "npm:0.7.5",

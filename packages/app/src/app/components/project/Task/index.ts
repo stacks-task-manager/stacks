@@ -12,7 +12,6 @@ export * from "./TaskDetailsDependecies/TaskDetailsDependecies";
 export * from "./TaskDetailsEstimates/TaskDetailsEstimates";
 export * from "./TaskDetailsId/TaskDetailsId";
 export * from "./TaskDetailsLinks/TaskDetailsLinks";
-export * from "./TaskDetailsPriority/TaskDetailsPriority";
 export * from "./TaskDetailsProgress/TaskDetailsProgress";
 export * from "./TaskDetailsProjects/TaskDetailsProjects";
 export * from "./TaskDetailsSection/TaskDetailsSection";

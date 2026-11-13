@@ -36,7 +36,7 @@ import {
     HTMLRenderer,
     ReminderButton,
     Tags,
-    TagsPickerPopupSync,
+    TagsPickerPopup,
     TagsWrapper,
     TaskAssignees,
     TaskContextButton,
@@ -228,7 +228,7 @@ export const TaskCardComponent: FunctionComponent<TaskCardComponentProps> = prop
             ({
                 ["--task-tint" as string]: task.tint,
                 ["--task-tint-rgb" as string]: task.tint && colorToRGBA(task.tint, 5),
-            } as React.CSSProperties),
+            }) as React.CSSProperties,
         [task.tint]
     );
 
@@ -447,14 +447,15 @@ const ActiveTags: FunctionComponent<IActiveTagsProps> = ({ taskId, tags, disable
     return (
         <TagsWrapper>
             {!disabled ? (
-                <TagsPickerPopupSync
+                <TagsPickerPopup
+                    commitMode="onClose"
                     value={tags || []}
                     type={TAGTYPE.TAG}
                     section={TAGSECTION.PROJECTS}
                     onToggle={handleSetTags}
                 >
                     <RoundButton dashed small tooltip={translate("Add tags")} />
-                </TagsPickerPopupSync>
+                </TagsPickerPopup>
             ) : null}
             <Tags value={tags ?? []} section={TAGSECTION.PROJECTS} max={5} ellipsize />
         </TagsWrapper>

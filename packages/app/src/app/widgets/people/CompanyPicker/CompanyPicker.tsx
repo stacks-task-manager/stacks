@@ -1,8 +1,8 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
-import { Classes, HTMLSelect } from "@blueprintjs/core";
 import React, { FunctionComponent, useMemo } from "react";
 
 import { ICompany } from "@stacks/types";
+import { SelectPicker } from "app/components/common/SelectPicker/SelectPicker";
 import { PeopleStore } from "app/store/people";
 
 interface CompanyPickerProps {
@@ -19,28 +19,25 @@ export const CompanyPicker: FunctionComponent<CompanyPickerProps> = ({
 }) => {
     const { companies } = PeopleStore.use();
 
-    const sortedCompanies = useMemo(() => {
-        return [...companies].sort((a: ICompany, b: ICompany) => a.title.localeCompare(b.title));
-    }, [companies]);
+    const options = useMemo(
+        () => [
+            { value: "", label: "None" },
+            { value: "", label: "__________", disabled: true },
+            ...[...companies]
+                .sort((a: ICompany, b: ICompany) => a.title.localeCompare(b.title))
+                .map(company => ({ value: company.id, label: company.title })),
+        ],
+        [companies]
+    );
 
     return (
-        <HTMLSelect
-            disabled={disabled}
-            className={Classes.FILL}
+        <SelectPicker
+            options={options}
             defaultValue={defaultValue}
+            maxWidth={maxWidth}
+            disabled={disabled}
             fill
-            style={{ maxWidth }}
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onChange(e.currentTarget.value)}
-        >
-            <option value="">None</option>
-            <option disabled value="">
-                __________
-            </option>
-            {sortedCompanies.map((company: ICompany) => (
-                <option value={company.id} key={company.id}>
-                    {company.title}
-                </option>
-            ))}
-        </HTMLSelect>
+            onChange={onChange}
+        />
     );
 };

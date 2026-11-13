@@ -3,7 +3,7 @@ import { translate } from "@stacks/translations";
 import xor from "lodash/xor";
 import React, { FunctionComponent, useMemo } from "react";
 import { RoundButton } from "app/components/common";
-import { Tags, TagsPickerPopupSync, TagsWrapper } from "app/widgets";
+import { Tags, TagsPickerPopup, TagsWrapper } from "app/widgets";
 import { TAGSECTION, TAGTYPE } from "@stacks/types";
 
 interface ITaskTagsProps {
@@ -45,7 +45,8 @@ const TaskTagsRaw: FunctionComponent<ITaskTagsProps> = ({
     return (
         <TagsWrapper nowrap={nowrap}>
             {!disabled && (
-                <TagsPickerPopupSync
+                <TagsPickerPopup
+                    commitMode="onClose"
                     value={value}
                     type={TAGTYPE.TAG}
                     section={TAGSECTION.PROJECTS}
@@ -66,7 +67,7 @@ const TaskTagsRaw: FunctionComponent<ITaskTagsProps> = ({
                             icon={icon}
                         />
                     )}
-                </TagsPickerPopupSync>
+                </TagsPickerPopup>
             )}
             <Tags
                 value={value}
