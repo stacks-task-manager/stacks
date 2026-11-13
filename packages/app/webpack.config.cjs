@@ -349,7 +349,7 @@ module.exports = (env, argv) => {
                         vendor: {
                             test: /[\\/]node_modules[\\/]/,
                             name: "vendors",
-                            chunks: "all",
+                            chunks: "initial",
                         },
                         blueprintjs: {
                             test: /[\\/]node_modules[\\/]@blueprintjs[\\/]/,

@@ -5,10 +5,7 @@ import { Location, Route, Routes, useLocation, useNavigate } from "react-router-
 
 import { Announcement, ErrorBoundary, Feedback, Grid } from "app/components/common";
 import { DragDropProvider } from "app/components/draggable/context/DragDropContext";
-import { TaskDetails, TaskDetailsPanel } from "app/components/project";
-import { Home } from "app/views/Home/Home";
 import { Preferences } from "app/views/Preferences/Preferences";
-import { Project } from "app/views/Project/Project";
 import { Sidebar } from "app/views/Sidebar/Sidebar";
 import { SplitView } from "app/views/SplitView/SplitView";
 import { Watermark } from "app/views/Watermark/Watermark";
@@ -21,6 +18,19 @@ import { PeopleStore } from "./store/people";
 import currencies from "../assets/currencies.json";
 
 window["currencies"] = currencies;
+
+const Home = lazy(() => import("app/views/Home/Home").then(module => ({ default: module.Home })));
+const Project = lazy(() => import("app/views/Project/Project").then(module => ({ default: module.Project })));
+const TaskDetails = lazy(() =>
+    import("app/components/project/Task/TaskDetails/TaskDetails").then(module => ({
+        default: module.TaskDetails,
+    }))
+);
+const TaskDetailsPanel = lazy(() =>
+    import("app/components/project/Task/TaskDetails/TaskDetails").then(module => ({
+        default: module.TaskDetailsPanel,
+    }))
+);
 
 const Bookmarks = lazy(() =>
     import("app/views/Bookmarks/Bookmarks").then(module => ({ default: module.Bookmarks }))

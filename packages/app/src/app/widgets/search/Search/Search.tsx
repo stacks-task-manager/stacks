@@ -17,7 +17,7 @@ import {
 import classNames from "classnames";
 import xor from "lodash/xor";
 import { format } from "date-fns";
-import React, { FunctionComponent, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { FunctionComponent, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { SearchAPI } from "app/api";
@@ -68,20 +68,12 @@ export const Search: FunctionComponent<ISearchProps> = ({ onClose }) => {
     const [results, setResults] = useState<ISearchResult[]>([]);
     const [selectedIndex, setSelectedIndex] = useState<null | number>(null);
     const selectedRef = useRef<number | undefined>(undefined);
-    const debounce = useRef<NodeJS.Timeout | null>(null);
     const [subsections, setSubsections] = useStorage<string[]>("search-subsections", true, [
         "incomplete-tasks",
     ]);
     const location = useLocation();
     const navigate = useNavigate();
     const nav = useNav();
-
-    const search = useCallback(async () => {
-        const searchResults = await SearchAPI.search(query);
-
-        setResults(searchResults);
-        setIsLoading(false);
-    }, [query]);
 
     useMousetrap(["up", "down"], () => {
         if (inputRef.current) inputRef.current.focus();
@@ -92,18 +84,30 @@ export const Search: FunctionComponent<ISearchProps> = ({ onClose }) => {
     }, []);
 
     useEffect(() => {
+        let cancelled = false;
+        const hasQuery = query.trim().length >= 2;
         setResults([]);
-        setIsLoading(query.trim().length >= 2);
+        setIsLoading(hasQuery);
 
-        if (query.trim().length >= 2) {
-            if (debounce.current) {
-                clearTimeout(debounce.current);
-                debounce.current = null;
+        if (!hasQuery) return;
+
+        const timeout = setTimeout(async () => {
+            try {
+                const searchResults = await SearchAPI.search(query);
+                if (!cancelled) setResults(searchResults);
+            } catch {
+                // The shared request layer reports the error; a stale or failed search has no results.
+                if (!cancelled) setResults([]);
+            } finally {
+                if (!cancelled) setIsLoading(false);
             }
+        }, 500);
 
-            debounce.current = setTimeout(search, 500);
-        }
-    }, [query, search]);
+        return () => {
+            cancelled = true;
+            clearTimeout(timeout);
+        };
+    }, [query]);
 
     const filteredResults = useMemo(() => {
         return results.filter(result => {

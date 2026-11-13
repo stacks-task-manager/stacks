@@ -4,7 +4,10 @@
     "homepage": "./",
     "description": "The kanban task manager for everyone",
     "license": "AGPL-3.0-only",
-    "sideEffects": true,
+    "sideEffects": [
+        "**/*.css",
+        "**/*.scss"
+    ],
     "scripts": {
         "start": "webpack serve --config webpack.config.cjs --mode development",
         "build": "yarn pre-bundle && webpack --config webpack.config.cjs --mode production",
