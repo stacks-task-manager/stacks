@@ -24,13 +24,25 @@ const row = (id: string, children: GanttRow[] = []): GanttRow => ({
     children,
 });
 
-it("uses Blueprint controls for the toolbar actions and scale", () => {
+it("shows the today button only while today's column is outside the viewport", async () => {
     render(
         <GanttChart title="Tasks" rows={[row("task")]} onActivate={jest.fn()} onDatesChange={jest.fn()} />
     );
 
-    expect(screen.getByRole("button", { name: "Today" })).toHaveClass("bp6-button", "bp6-intent-primary");
-    expect(screen.getByTestId("gantt-scale").closest(".bp6-html-select")).not.toBeNull();
+    const viewport = screen.getByTestId("gantt-viewport");
+    expect(screen.queryByTestId("gantt-today")).not.toBeInTheDocument();
+
+    fireEvent.scroll(viewport, { target: { scrollLeft: 0 } });
+
+    const today = await screen.findByTestId("gantt-today");
+    expect(today.closest(".stacks-gantt-header")).not.toBeNull();
+    expect(today.closest(".stacks-gantt-header-controls")).not.toBeNull();
+    expect(today).toHaveClass("bp6-intent-primary");
+
+    fireEvent.click(today);
+
+    expect(viewport.scrollLeft).toBeGreaterThan(0);
+    await waitFor(() => expect(screen.queryByTestId("gantt-today")).not.toBeInTheDocument());
 });
 
 it("shows the translated selected scale in the header picker", async () => {
@@ -45,6 +57,36 @@ it("shows the translated selected scale in the header picker", async () => {
     fireEvent.click(await screen.findByRole("menuitem", { name: "Week" }));
 
     await waitFor(() => expect(picker).toHaveTextContent("Week"));
+});
+
+it("toggles the task pane from the floating divider button", async () => {
+    render(
+        <GanttChart title="Tasks" rows={[row("task")]} onActivate={jest.fn()} onDatesChange={jest.fn()} />
+    );
+
+    const divider = screen.getByTestId("gantt-divider");
+    const toggle = screen.getByTestId("gantt-pane-toggle");
+    expect(divider).toContainElement(toggle);
+    expect(toggle).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("separator", { name: "Task pane" })).toBeInTheDocument();
+    expect(toggle.querySelector(".icon-chevron-left")).toBeInTheDocument();
+
+    fireEvent.click(toggle);
+
+    await waitFor(() => {
+        expect(toggle).toHaveAttribute("aria-pressed", "false");
+        expect(toggle.querySelector(".icon-chevron-right")).toBeInTheDocument();
+        expect(screen.queryByRole("separator", { name: "Task pane" })).not.toBeInTheDocument();
+        expect(screen.getByTestId("gantt-divider")).toContainElement(toggle);
+    });
+
+    fireEvent.click(toggle);
+
+    await waitFor(() => {
+        expect(toggle).toHaveAttribute("aria-pressed", "true");
+        expect(screen.getByRole("separator", { name: "Task pane" })).toBeInTheDocument();
+        expect(toggle.querySelector(".icon-chevron-left")).toBeInTheDocument();
+    });
 });
 
 it("renders the task heading title supplied by its consumer", () => {
@@ -186,6 +228,35 @@ it("places a single expand and collapse toggle in the task heading", async () =>
         expect(toggle).toHaveAttribute("aria-label", "Collapse all");
         expect(toggle).toHaveTextContent("−");
     });
+});
+
+it("keeps the scroll-to-top button available while vertically scrolled", async () => {
+    render(
+        <GanttChart
+            title="Tasks"
+            rows={[row("parent", [row("child")])]}
+            onActivate={jest.fn()}
+            onDatesChange={jest.fn()}
+        />
+    );
+
+    const viewport = screen.getByTestId("gantt-viewport");
+    expect(screen.queryByTestId("gantt-scroll-top")).not.toBeInTheDocument();
+
+    fireEvent.scroll(viewport, { target: { scrollTop: 100 } });
+
+    expect(screen.getByTestId("gantt-scroll-top").closest(".stacks-gantt-header-controls")).not.toBeNull();
+
+    fireEvent.click(screen.getByTestId("gantt-pane-toggle"));
+    await waitFor(() =>
+        expect(screen.getByTestId("gantt-pane-toggle")).toHaveAttribute("aria-pressed", "false")
+    );
+    expect(screen.getByTestId("gantt-scroll-top")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByTestId("gantt-scroll-top"));
+
+    expect(viewport.scrollTop).toBe(0);
+    await waitFor(() => expect(screen.queryByTestId("gantt-scroll-top")).not.toBeInTheDocument());
 });
 
 it("renders only a viewport of a thousand tasks and reaches later rows", () => {

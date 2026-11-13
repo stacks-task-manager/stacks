@@ -4,12 +4,12 @@ import { translate } from "@stacks/translations";
 import { addDays, differenceInCalendarDays, startOfDay } from "date-fns";
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { HierarchyLinks } from "app/components/common/GanttChart/HierarchyLinks";
-import { ChartToolbar } from "app/components/common/GanttChart/ChartToolbar";
 import { PaneDivider } from "app/components/common/GanttChart/PaneDivider";
 import { TimelineHeader } from "app/components/common/GanttChart/TimelineHeader";
 import { DateEditor } from "app/components/common/GanttChart/DateEditor";
 import {
     barGeometry,
+    clampPaneWidth,
     dateAt,
     flattenRows,
     HEADER_HEIGHT,
@@ -39,7 +39,7 @@ export function GanttChart({ title, rows, onActivate, onDatesChange }: GanttChar
     const anchor = useRef<Date | null>(today);
     const initialScroll = useRef(true);
     const unit = pixelsPerDay[scale];
-    const taskWidth = hidePane ? 0 : Math.min(paneWidth, Math.max(120, viewport.width - 120));
+    const taskWidth = hidePane ? 0 : clampPaneWidth(paneWidth, viewport.width);
     const chartWidth = Math.max(80, viewport.width - taskWidth);
     const allRows = useMemo(() => flattenRows(rows, new Set()), [rows]);
     const visibleRows = useMemo(() => flattenRows(rows, collapsed), [rows, collapsed]);
@@ -133,24 +133,21 @@ export function GanttChart({ title, rows, onActivate, onDatesChange }: GanttChar
         [origin, viewport.left, chartWidth, scale]
     );
     const todayX = differenceInCalendarDays(today, origin) * unit;
+    const todayColumnVisible = todayX + unit > viewport.left && todayX < viewport.left + chartWidth;
     const reveal = (x: number) => {
-        if (scroller.current) scroller.current.scrollLeft = Math.max(0, x - 24);
+        const element = scroller.current;
+        if (!element) return;
+        element.scrollLeft = Math.max(0, x - 24);
+        readViewport();
+    };
+    const scrollToTop = () => {
+        const element = scroller.current;
+        if (!element) return;
+        element.scrollTop = 0;
+        readViewport();
     };
     return (
         <section className="stacks-gantt" data-testid="gantt-chart" aria-label={translate("Gantt")}>
-            <ChartToolbar
-                scale={scale}
-                paneVisible={!hidePane}
-                onToday={() => reveal(todayX)}
-                onScale={next => {
-                    anchor.current = dateAt(origin, viewport.left, unit);
-                    setScale(next);
-                }}
-                onPane={() => setHidePane(value => !value)}
-                onTop={() => {
-                    if (scroller.current) scroller.current.scrollTop = 0;
-                }}
-            />
             <div className="stacks-gantt-body">
                 <div
                     className="stacks-gantt-viewport"
@@ -180,6 +177,31 @@ export function GanttChart({ title, rows, onActivate, onDatesChange }: GanttChar
                                             setCollapsed(allCollapsed ? new Set() : new Set(expandableIds))
                                         }
                                     />
+                                </div>
+                            )}
+                            {(!todayColumnVisible || viewport.top > 0) && (
+                                <div className="stacks-gantt-header-controls" style={{ left: taskWidth + 8 }}>
+                                    {viewport.top > 0 && (
+                                        <Button
+                                            size="small"
+                                            variant="minimal"
+                                            data-testid="gantt-scroll-top"
+                                            aria-label={translate("Back to top")}
+                                            onClick={scrollToTop}
+                                        >
+                                            ↑
+                                        </Button>
+                                    )}
+                                    {!todayColumnVisible && (
+                                        <Button
+                                            size="small"
+                                            intent="primary"
+                                            data-testid="gantt-today"
+                                            onClick={() => reveal(todayX)}
+                                        >
+                                            {translate("Today")}
+                                        </Button>
+                                    )}
                                 </div>
                             )}
                             <TimelineHeader ticks={ticks} width={timelineWidth} left={viewport.left} />
@@ -269,9 +291,12 @@ export function GanttChart({ title, rows, onActivate, onDatesChange }: GanttChar
                         </div>
                     </div>
                 </div>
-                {taskWidth > 0 && (
-                    <PaneDivider width={taskWidth} availableWidth={viewport.width} onResize={setPaneWidth} />
-                )}
+                <PaneDivider
+                    width={taskWidth}
+                    availableWidth={viewport.width}
+                    onResize={setPaneWidth}
+                    onTogglePane={() => setHidePane(value => !value)}
+                />
             </div>
             {editing && (
                 <DateEditor

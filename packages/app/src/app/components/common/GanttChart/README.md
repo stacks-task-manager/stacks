@@ -14,7 +14,8 @@ App-local React/TypeScript task timeline. The project view converts shared task/
   focused bars also support F2. Expanders expose `aria-expanded`; the divider supports arrow keys.
 - Pointer gestures move, resize, or schedule an existing undated task. Escape cancels; edge scrolling
   begins after movement. The task pane can be resized or hidden independently of the timeline.
-- The scroll viewport is keyboard-focusable. The toolbar exposes Today and return-to-top controls.
+- The scroll viewport is keyboard-focusable. Sticky header controls expose Today while the current
+  date is offscreen and return-to-top while vertically scrolled, including when the task pane is hidden.
 
 Pure calendar/hierarchy helpers and component behavior have colocated Jest tests. The project adapter
 and persistence action have separate tests. Browser flows live in `playwright/tests/project/gantt.spec.ts`;

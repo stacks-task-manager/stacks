@@ -14,6 +14,7 @@ import { DateEdit, DateRange, GanttRow, GanttScale } from "app/components/common
 
 export const ROW_HEIGHT = 48;
 export const HEADER_HEIGHT = 56;
+export const MIN_PANE_WIDTH = 120;
 export const pixelsPerDay: Record<GanttScale, number> = {
     day: 36,
     week: 14,
@@ -21,6 +22,11 @@ export const pixelsPerDay: Record<GanttScale, number> = {
     quarter: 1.5,
     halfYear: 0.75,
 };
+
+export function clampPaneWidth(width: number, availableWidth: number): number {
+    const max = Math.max(MIN_PANE_WIDTH, availableWidth - MIN_PANE_WIDTH);
+    return Math.max(MIN_PANE_WIDTH, Math.min(max, width));
+}
 
 export function dateAt(origin: Date, x: number, unit: number): Date {
     return addDays(startOfDay(origin), Math.floor(x / unit));

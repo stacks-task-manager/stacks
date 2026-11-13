@@ -1,8 +1,10 @@
 import { addDays, differenceInCalendarDays, endOfDay } from "date-fns";
 import {
     barGeometry,
+    clampPaneWidth,
     dateAt,
     flattenRows,
+    MIN_PANE_WIDTH,
     editDates,
     visibleWindow,
     timelineTicks,
@@ -45,6 +47,12 @@ describe("Gantt calendar geometry", () => {
         const start = new Date(2024, 1, 28);
         expect(editDates(start, endOfDay(start), "move", 2).startDate).toEqual(new Date(2024, 2, 1));
         expect(dateAt(new Date(2025, 11, 31), 36, 36)).toEqual(new Date(2026, 0, 1));
+    });
+    it("clamps the task pane within shared width boundaries", () => {
+        expect(clampPaneWidth(300, 1000)).toBe(300);
+        expect(clampPaneWidth(20, 1000)).toBe(MIN_PANE_WIDTH);
+        expect(clampPaneWidth(2000, 1000)).toBe(880);
+        expect(clampPaneWidth(300, 200)).toBe(MIN_PANE_WIDTH);
     });
     it("creates bounded ticks for every scale in the visible viewport", () => {
         for (const scale of Object.keys(pixelsPerDay) as GanttScale[]) {

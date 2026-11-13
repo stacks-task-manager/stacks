@@ -32,19 +32,6 @@
         outline-offset: -2px;
     }
 }
-.stacks-gantt-toolbar {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 8px;
-    padding: 8px;
-    border-radius: 3px 3px 0 0;
-    border-bottom: 1px solid var(--gantt-border);
-    background-color: $light-gray5;
-    .bp6-dark & {
-        background-color: $dark-gray4;
-    }
-}
 .stacks-gantt-body {
     position: relative;
     display: flex;
@@ -68,6 +55,24 @@
     z-index: 5;
     background: var(--gantt-surface);
     border-bottom: 1px solid var(--gantt-border);
+}
+.stacks-gantt-header-controls {
+    position: sticky;
+    z-index: 4;
+    display: flex;
+    flex: 0 0 0;
+    align-items: center;
+    gap: 8px;
+    width: 0;
+    height: 100%;
+    pointer-events: none;
+
+    .bp6-button {
+        flex: 0 0 auto;
+        white-space: nowrap;
+        pointer-events: auto;
+        box-shadow: 0 1px 3px rgba($black, 0.15);
+    }
 }
 .stacks-gantt-task-heading,
 .stacks-gantt-task {
@@ -298,19 +303,58 @@
 .stacks-gantt-divider {
     position: absolute;
     top: 0;
-    bottom: 16px;
+    bottom: 0;
     z-index: 7;
     width: 6px;
+}
+.stacks-gantt-divider-handle {
+    width: 100%;
+    height: 100%;
     cursor: col-resize;
     touch-action: none;
     &:hover {
         background: rgba($blue3, 0.3);
     }
 }
-@media (max-width: 600px) {
-    .stacks-gantt-toolbar {
-        gap: 4px;
+.stacks-gantt-pane-toggle {
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 28px;
+    padding: 0;
+    transform: translateY(-50%);
+    border: 1px solid var(--gantt-border);
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    background: var(--gantt-surface);
+    color: var(--gantt-muted);
+    border-left: none;
+    margin-left: -4px;
+    cursor: pointer;
+
+    &:hover {
+        background: $light-gray5;
+        color: $dark-gray1;
     }
+    .bp6-dark & {
+        &:hover {
+            background: $dark-gray4;
+            color: $white;
+        }
+    }
+}
+
+.stacks-gantt-divider-collapsed {
+    .stacks-gantt-pane-toggle {
+        margin-left: -6px;
+    }
+}
+
+@media (max-width: 600px) {
     .stacks-gantt-date-text {
         font-size: 9px;
     }
