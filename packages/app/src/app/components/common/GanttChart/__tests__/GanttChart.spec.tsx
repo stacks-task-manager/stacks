@@ -51,6 +51,24 @@ it("shows the today button only while today's column is outside the viewport", a
     await waitFor(() => expect(screen.queryByTestId("gantt-today")).not.toBeInTheDocument());
 });
 
+it("centers today's line and circles the current date", () => {
+    jest.useFakeTimers();
+    jest.setSystemTime(new Date(2026, 10, 13, 12));
+    try {
+        const { container } = render(
+            <GanttChart title="Tasks" rows={[row("task")]} onActivate={jest.fn()} onDatesChange={jest.fn()} />
+        );
+        const tick = container.querySelector(".stacks-gantt-tick-today") as HTMLElement;
+        const line = screen.getByTestId("gantt-today-line") as HTMLElement;
+
+        expect(tick).toHaveTextContent("13");
+        expect(tick.querySelector(".stacks-gantt-tick-label-today")).toBeInTheDocument();
+        expect(Number.parseFloat(line.style.left) - Number.parseFloat(tick.style.left)).toBe(18);
+    } finally {
+        jest.useRealTimers();
+    }
+});
+
 it("shows the translated selected scale in the header picker", async () => {
     render(
         <GanttChart title="Tasks" rows={[row("task")]} onActivate={jest.fn()} onDatesChange={jest.fn()} />

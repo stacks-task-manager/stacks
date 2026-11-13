@@ -248,7 +248,12 @@ export function GanttChart({ title, rows, onActivate, onDatesChange }: GanttChar
                                     )}
                                 </div>
                             )}
-                            <TimelineHeader ticks={ticks} width={timelineWidth} left={viewport.left} />
+                            <TimelineHeader
+                                ticks={ticks}
+                                width={timelineWidth}
+                                left={viewport.left}
+                                today={today}
+                            />
                             <ScalePicker
                                 scale={scale}
                                 onScale={next => {
@@ -274,7 +279,11 @@ export function GanttChart({ title, rows, onActivate, onDatesChange }: GanttChar
                                         style={{ left: tick.left, width: tick.width }}
                                     />
                                 ))}
-                                <div className="stacks-gantt-today-line" style={{ left: todayX }} />
+                                <div
+                                    className="stacks-gantt-today-line"
+                                    data-testid="gantt-today-line"
+                                    style={{ left: todayX + unit / 2 }}
+                                />
                             </div>
                             <HierarchyLinks
                                 rows={visibleRows}

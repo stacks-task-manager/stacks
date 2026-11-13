@@ -1,4 +1,5 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+import { isSameDay } from "date-fns";
 import React from "react";
 import { TimelineTick } from "app/components/common/GanttChart/geometry";
 
@@ -6,10 +7,12 @@ export function TimelineHeader({
     ticks,
     width,
     left,
+    today,
 }: {
     ticks: TimelineTick[];
     width: number;
     left: number;
+    today: Date;
 }) {
     const groups: { left: number; end: number; label: string }[] = [];
     for (const tick of ticks) {
@@ -31,15 +34,24 @@ export function TimelineHeader({
                     {group.label}
                 </small>
             ))}
-            {ticks.map(tick => (
-                <span
-                    key={tick.left}
-                    className="stacks-gantt-tick"
-                    style={{ left: tick.left, width: tick.width }}
-                >
-                    {tick.label}
-                </span>
-            ))}
+            {ticks.map(tick => {
+                const current = isSameDay(tick.date, today);
+                return (
+                    <span
+                        key={tick.left}
+                        className={`stacks-gantt-tick${current ? " stacks-gantt-tick-today" : ""}`}
+                        style={{ left: tick.left, width: tick.width }}
+                    >
+                        <span
+                            className={`stacks-gantt-tick-label${
+                                current ? " stacks-gantt-tick-label-today" : ""
+                            }`}
+                        >
+                            {tick.label}
+                        </span>
+                    </span>
+                );
+            })}
         </div>
     );
 }

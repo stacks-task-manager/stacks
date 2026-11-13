@@ -81,6 +81,7 @@ export function visibleWindow(scrollTop: number, height: number, count: number) 
 }
 
 export interface TimelineTick {
+    date: Date;
     left: number;
     width: number;
     label: string;
@@ -110,6 +111,7 @@ export function timelineTicks(origin: Date, left: number, width: number, scale: 
                   ? addDays(cursor, 7)
                   : addMonths(cursor, scale === "month" ? 1 : scale === "quarter" ? 3 : 6);
         ticks.push({
+            date: cursor,
             left: differenceInCalendarDays(cursor, origin) * unit,
             width: differenceInCalendarDays(next, cursor) * unit,
             label:
