@@ -26,6 +26,7 @@ import "./_GanttChart.scss";
 
 export function GanttChart({ title, rows, onActivate, onDatesChange }: GanttChartProps) {
     const scroller = useRef<HTMLDivElement>(null);
+    const timelineScroller = useRef<HTMLDivElement>(null);
     const [today] = useState(() => startOfDay(new Date()));
     const [scale, setScale] = useState<GanttScale>("day");
     const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
@@ -70,6 +71,10 @@ export function GanttChart({ title, rows, onActivate, onDatesChange }: GanttChar
             left: element.scrollLeft,
             top: element.scrollTop,
         };
+        const horizontalScroller = timelineScroller.current;
+        if (horizontalScroller && horizontalScroller.scrollLeft !== next.left) {
+            horizontalScroller.scrollLeft = next.left;
+        }
         setViewport(current =>
             current.width === next.width &&
             current.height === next.height &&
@@ -168,6 +173,22 @@ export function GanttChart({ title, rows, onActivate, onDatesChange }: GanttChar
         element.scrollTop = 0;
         readViewport();
     };
+    const readHorizontalScroll = (event: React.UIEvent<HTMLDivElement>) => {
+        const element = scroller.current;
+        if (!element || element.scrollLeft === event.currentTarget.scrollLeft) return;
+        element.scrollLeft = event.currentTarget.scrollLeft;
+        readViewport();
+    };
+    const handleViewportWheel = (event: React.WheelEvent<HTMLDivElement>) => {
+        const element = scroller.current;
+        if (!element) return;
+        const delta = event.shiftKey ? event.deltaY : event.deltaX;
+        if (!delta) return;
+        event.preventDefault();
+        const scale = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? element.clientWidth : 1;
+        element.scrollLeft += delta * scale;
+        readViewport();
+    };
     return (
         <section className="stacks-gantt" data-testid="gantt-chart" aria-label={translate("Gantt")}>
             <div className="stacks-gantt-body">
@@ -178,6 +199,7 @@ export function GanttChart({ title, rows, onActivate, onDatesChange }: GanttChar
                     tabIndex={0}
                     aria-label={translate("Gantt")}
                     onScroll={readViewport}
+                    onWheel={handleViewportWheel}
                 >
                     <div className="stacks-gantt-content" style={{ width: taskWidth + timelineWidth }}>
                         <div className="stacks-gantt-header">
@@ -312,6 +334,16 @@ export function GanttChart({ title, rows, onActivate, onDatesChange }: GanttChar
                                 ))}
                         </div>
                     </div>
+                </div>
+                <div
+                    className="stacks-gantt-horizontal-scroller"
+                    data-testid="gantt-horizontal-scroller"
+                    ref={timelineScroller}
+                    style={{ marginLeft: taskWidth }}
+                    aria-hidden="true"
+                    onScroll={readHorizontalScroll}
+                >
+                    <div style={{ width: timelineWidth }} />
                 </div>
                 <PaneDivider
                     width={taskWidth}

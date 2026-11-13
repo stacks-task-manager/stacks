@@ -38,13 +38,25 @@ $blue-select: #137cbd;
     position: relative;
     display: flex;
     flex: 1;
+    flex-direction: column;
     min-height: 0;
 }
 .stacks-gantt-viewport {
     flex: 1;
     min-height: 0;
-    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
     overflow-anchor: none;
+
+    outline: none;
+}
+
+.stacks-gantt-horizontal-scroller {
+    flex: 0 0 16px;
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    background: var(--gantt-surface);
 }
 .stacks-gantt-content {
     min-height: 100%;

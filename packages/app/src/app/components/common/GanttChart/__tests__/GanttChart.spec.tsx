@@ -111,6 +111,36 @@ it("coalesces resize observer notifications into one frame read", () => {
     requestFrame.mockRestore();
 });
 
+it("starts the horizontal scrollbar at the timeline and keeps it synchronized", () => {
+    render(
+        <GanttChart title="Tasks" rows={[row("task")]} onActivate={jest.fn()} onDatesChange={jest.fn()} />
+    );
+
+    const viewport = screen.getByTestId("gantt-viewport");
+    const horizontalScroller = screen.getByTestId("gantt-horizontal-scroller");
+    expect(horizontalScroller).toHaveStyle({ marginLeft: "300px" });
+
+    fireEvent.scroll(horizontalScroller, { target: { scrollLeft: 120 } });
+    expect(viewport.scrollLeft).toBe(120);
+
+    fireEvent.scroll(viewport, { target: { scrollLeft: 240 } });
+    expect(horizontalScroller.scrollLeft).toBe(240);
+});
+
+it("scrolls the timeline horizontally with trackpad and shift-wheel input", () => {
+    render(
+        <GanttChart title="Tasks" rows={[row("task")]} onActivate={jest.fn()} onDatesChange={jest.fn()} />
+    );
+
+    const viewport = screen.getByTestId("gantt-viewport");
+    const initial = viewport.scrollLeft;
+    fireEvent.wheel(viewport, { deltaX: 120 });
+    expect(viewport.scrollLeft).toBe(initial + 120);
+
+    fireEvent.wheel(viewport, { deltaY: 80, shiftKey: true });
+    expect(viewport.scrollLeft).toBe(initial + 200);
+});
+
 it("shows assignees in place of the row edit button when available", () => {
     const assignee = {
         id: "person-1",
