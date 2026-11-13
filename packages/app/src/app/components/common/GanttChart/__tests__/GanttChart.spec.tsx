@@ -63,7 +63,7 @@ it("centers today's line and circles the current date", () => {
 
         expect(tick).toHaveTextContent("13");
         expect(tick.querySelector(".stacks-gantt-tick-label-today")).toBeInTheDocument();
-        expect(Number.parseFloat(line.style.left) - Number.parseFloat(tick.style.left)).toBe(18);
+        expect(Number.parseFloat(line.style.left) - Number.parseFloat(tick.style.left)).toBe(15);
     } finally {
         jest.useRealTimers();
     }

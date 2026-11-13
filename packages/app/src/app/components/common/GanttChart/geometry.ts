@@ -13,10 +13,10 @@ import {
 import { DateEdit, DateRange, GanttRow, GanttScale } from "app/components/common/GanttChart/types";
 
 export const ROW_HEIGHT = 48;
-export const HEADER_HEIGHT = 56;
+export const HEADER_HEIGHT = 60;
 export const MIN_PANE_WIDTH = 120;
 export const pixelsPerDay: Record<GanttScale, number> = {
-    day: 36,
+    day: 30,
     week: 14,
     month: 4,
     quarter: 1.5,

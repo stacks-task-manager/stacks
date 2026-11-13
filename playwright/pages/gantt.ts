@@ -62,7 +62,7 @@ export default class Gantt extends Base {
         const y = box.y + box.height / 2;
         await this.page.mouse.move(x, y);
         await this.page.mouse.down();
-        await this.page.mouse.move(x + days * 36, y, { steps: 8 });
+        await this.page.mouse.move(x + days * 30, y, { steps: 8 });
         if (cancel) {
             await this.page.keyboard.press("Escape");
             await this.page.mouse.up();

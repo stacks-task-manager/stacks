@@ -62,7 +62,7 @@ $blue-select: #137cbd;
     min-height: 100%;
 }
 .stacks-gantt-header {
-    height: 56px;
+    height: 60px;
     display: flex;
     position: sticky;
     top: 0;
@@ -126,8 +126,10 @@ $blue-select: #137cbd;
 .stacks-gantt-major {
     position: absolute;
     top: 0;
-    height: 28px;
-    padding: 6px 8px;
+    box-sizing: border-box;
+    height: 30px;
+    padding: 7px 8px;
+    font-size: 11px;
     white-space: nowrap;
     overflow: hidden;
     color: var(--gantt-muted);
@@ -138,19 +140,22 @@ $blue-select: #137cbd;
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 28px;
+    box-sizing: border-box;
+    height: 30px;
     border-top: 1px solid var(--gantt-border);
     border-left: 1px solid var(--gantt-border);
     padding: 0;
     overflow: hidden;
+    font-size: 12px;
     white-space: nowrap;
 }
 .stacks-gantt-tick-label-today {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 24px;
-    height: 24px;
+    width: 22px;
+    height: 22px;
+    font-size: 11px;
     border-radius: 50%;
     background: $blue3;
     color: $white;
