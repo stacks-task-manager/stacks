@@ -4,18 +4,25 @@ import { useParams } from "react-router-dom";
 
 import { Icon } from "app/components/common";
 import { DocumentTintMenuItem, ToolbarTitle } from "app/widgets";
+import {
+    MainToolbar,
+    SectionToolbar,
+    SectionToolbarOptions,
+    SectionToolbarSide,
+    SectionToolbarTitle,
+} from "app/widgets/toolbars/ToolbarLayout";
 
 export const ToolbarFile = () => {
     const params = useParams<{ id: string }>();
 
     return (
-        <div className="main-toolbar single">
-            <div className="section-toolbar">
-                <div className="section-toolbar-side side">
-                    <div className="section-toolbar-title">
+        <MainToolbar single>
+            <SectionToolbar>
+                <SectionToolbarSide side>
+                    <SectionToolbarTitle>
                         <ToolbarTitle documentId={params.id} />
-                    </div>
-                    <div className="section-toolbar-options">
+                    </SectionToolbarTitle>
+                    <SectionToolbarOptions>
                         <Popover
                             content={
                                 <Menu>
@@ -27,10 +34,10 @@ export const ToolbarFile = () => {
                         >
                             <Button size="small" variant="minimal" icon={<Icon icon="chevron-down" />} />
                         </Popover>
-                    </div>
-                </div>
-                <div className="section-toolbar-side fixed">&nbsp;</div>
-            </div>
-        </div>
+                    </SectionToolbarOptions>
+                </SectionToolbarSide>
+                <SectionToolbarSide fixed>&nbsp;</SectionToolbarSide>
+            </SectionToolbar>
+        </MainToolbar>
     );
 };

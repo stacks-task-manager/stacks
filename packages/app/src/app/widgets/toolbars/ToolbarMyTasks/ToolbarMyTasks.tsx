@@ -22,6 +22,13 @@ import { toggleNewTask } from "app/store/global";
 import { MyTasksStore } from "app/store/myTasks";
 import classNames from "classnames";
 import { ProjectSearch } from "../ToolbarProject/ToolbarProject";
+import {
+    MainToolbar,
+    SectionToolbar,
+    SectionToolbarDivider,
+    SectionToolbarSide,
+    SectionToolbarTitle,
+} from "app/widgets/toolbars/ToolbarLayout";
 
 export const ToolbarMyTasks = () => {
     const view = MyTasksStore.use(state => state.view, shallowEqual);
@@ -35,19 +42,19 @@ export const ToolbarMyTasks = () => {
     useMousetrap("ctrl+2", () => MyTasksActions.setView("schedule"));
 
     return (
-        <div className="main-toolbar">
-            <div className="section-toolbar">
-                <div className="section-toolbar-side side">
-                    <div className="section-toolbar-title">
+        <MainToolbar>
+            <SectionToolbar>
+                <SectionToolbarSide side>
+                    <SectionToolbarTitle>
                         <h1>{translate("My tasks")}</h1>
-                    </div>
-                </div>
-                <div className="section-toolbar-side fixed">
+                    </SectionToolbarTitle>
+                </SectionToolbarSide>
+                <SectionToolbarSide fixed>
                     <TimeboxDate />
 
                     <ProjectSearch />
 
-                    <span className="section-toolbar-divider" />
+                    <SectionToolbarDivider />
 
                     <ReloadButton
                         tooltip={translate("Reload my tasks")}
@@ -63,10 +70,10 @@ export const ToolbarMyTasks = () => {
                         minimal={false}
                         onClick={toggleNewTask}
                     />
-                </div>
-            </div>
-            <div className="section-toolbar">
-                <div className="section-toolbar-side">
+                </SectionToolbarSide>
+            </SectionToolbar>
+            <SectionToolbar>
+                <SectionToolbarSide>
                     <button
                         className={classNames("view-type-button", { active: view === "list" })}
                         onClick={() => MyTasksActions.setView("list")}
@@ -81,13 +88,13 @@ export const ToolbarMyTasks = () => {
                         <Icon icon="calendar-check-01" />
                         Schedule
                     </button>
-                </div>
-                <div className="section-toolbar-side">
+                </SectionToolbarSide>
+                <SectionToolbarSide>
                     <TimeboxViewButton />
                     <FilterButton />
-                </div>
-            </div>
-        </div>
+                </SectionToolbarSide>
+            </SectionToolbar>
+        </MainToolbar>
     );
 };
 
@@ -223,7 +230,7 @@ const TimeboxViewButton = () => {
                     </Button>
                 )}
             />
-            <span className="section-toolbar-divider" />
+            <SectionToolbarDivider />
         </>
     );
 };
@@ -322,7 +329,7 @@ const TimeboxDate = () => {
                 />
             </ButtonGroup>
 
-            <span className="section-toolbar-divider" />
+            <SectionToolbarDivider />
         </>
     );
 };

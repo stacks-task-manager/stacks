@@ -3,6 +3,13 @@ import { Button, InputGroup } from "@blueprintjs/core";
 import { translate } from "@stacks/translations";
 
 import { Icon } from "app/components/common";
+import {
+    MainToolbar,
+    SectionToolbar,
+    SectionToolbarDivider,
+    SectionToolbarSide,
+    SectionToolbarTitle,
+} from "app/widgets/toolbars/ToolbarLayout";
 
 interface ToolbarWorkbooksProps {
     query: string;
@@ -12,14 +19,14 @@ interface ToolbarWorkbooksProps {
 
 export const ToolbarWorkbooks = ({ query, onQueryChange, onCreate }: ToolbarWorkbooksProps) => {
     return (
-        <div className="main-toolbar" data-testid="workbooks-toolbar">
-            <div className="section-toolbar">
-                <div className="section-toolbar-side side">
-                    <div className="section-toolbar-title">
+        <MainToolbar data-testid="workbooks-toolbar">
+            <SectionToolbar>
+                <SectionToolbarSide side>
+                    <SectionToolbarTitle>
                         <h1>{translate("Workbooks")}</h1>
-                    </div>
-                </div>
-                <div className="section-toolbar-side fixed">
+                    </SectionToolbarTitle>
+                </SectionToolbarSide>
+                <SectionToolbarSide fixed>
                     <InputGroup
                         round
                         leftIcon={<Icon icon="search" />}
@@ -28,7 +35,7 @@ export const ToolbarWorkbooks = ({ query, onQueryChange, onCreate }: ToolbarWork
                         onChange={event => onQueryChange(event.currentTarget.value)}
                         data-testid="workbooks-search-input"
                     />
-                    <span className="section-toolbar-divider" />
+                    <SectionToolbarDivider />
                     <Button
                         icon={<Icon icon="plus" />}
                         intent="primary"
@@ -37,17 +44,17 @@ export const ToolbarWorkbooks = ({ query, onQueryChange, onCreate }: ToolbarWork
                     >
                         {translate("Add workbook")}
                     </Button>
-                </div>
-            </div>
-            <div className="section-toolbar">
-                <div className="section-toolbar-side" role="tablist" aria-label={translate("Workbooks")}>
+                </SectionToolbarSide>
+            </SectionToolbar>
+            <SectionToolbar>
+                <SectionToolbarSide role="tablist" aria-label={translate("Workbooks")}>
                     <button type="button" role="tab" aria-selected className="view-type-button active">
                         <Icon icon="list-view" />
                         {translate("List")}
                     </button>
-                </div>
-                <div className="section-toolbar-side" />
-            </div>
-        </div>
+                </SectionToolbarSide>
+                <SectionToolbarSide />
+            </SectionToolbar>
+        </MainToolbar>
     );
 };

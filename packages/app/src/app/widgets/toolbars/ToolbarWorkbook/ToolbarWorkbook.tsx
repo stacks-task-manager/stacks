@@ -20,6 +20,13 @@ import { WorkbooksActions } from "app/store/actions";
 import { showPermissions, toggleNewTask } from "app/store/global";
 import dialog from "app/utils/dialog";
 import toast from "app/utils/toast";
+import {
+    MainToolbar,
+    SectionToolbar,
+    SectionToolbarDivider,
+    SectionToolbarSide,
+    SectionToolbarTitle,
+} from "app/widgets/toolbars/ToolbarLayout";
 
 export type WorkbookView = "table" | "gantt" | "overview";
 
@@ -72,10 +79,10 @@ export const ToolbarWorkbook = ({
         workbook && WorkbooksActions.exportWorkbook(workbook, tasks, format);
 
     return (
-        <div className="main-toolbar" data-testid="workbook-toolbar">
-            <div className="section-toolbar">
-                <div className="section-toolbar-side side">
-                    <div className="section-toolbar-title">
+        <MainToolbar data-testid="workbook-toolbar">
+            <SectionToolbar>
+                <SectionToolbarSide side>
+                    <SectionToolbarTitle>
                         <Button
                             icon={<Icon icon="arrow-left" />}
                             minimal
@@ -139,9 +146,9 @@ export const ToolbarWorkbook = ({
                                 data-testid="workbook-menu-button"
                             />
                         </Popover>
-                    </div>
-                </div>
-                <div className="section-toolbar-side fixed">
+                    </SectionToolbarTitle>
+                </SectionToolbarSide>
+                <SectionToolbarSide fixed>
                     <InputGroup
                         round
                         leftIcon={<Icon icon="search" />}
@@ -149,14 +156,14 @@ export const ToolbarWorkbook = ({
                         placeholder={translate("Search tasks")}
                         onChange={event => onQueryChange(event.currentTarget.value)}
                     />
-                    <span className="section-toolbar-divider" />
+                    <SectionToolbarDivider />
                     <Button icon={<Icon icon="plus" />} intent="primary" onClick={toggleNewTask}>
                         {translate("Add task")}
                     </Button>
-                </div>
-            </div>
-            <div className="section-toolbar">
-                <div className="section-toolbar-side" role="tablist" aria-label={translate("Workbook views")}>
+                </SectionToolbarSide>
+            </SectionToolbar>
+            <SectionToolbar>
+                <SectionToolbarSide role="tablist" aria-label={translate("Workbook views")}>
                     {(["table", "gantt", "overview"] as const).map(item => (
                         <button
                             key={item}
@@ -179,9 +186,9 @@ export const ToolbarWorkbook = ({
                             {translate(item === "table" ? "Table" : item === "gantt" ? "Gantt" : "Overview")}
                         </button>
                     ))}
-                </div>
-                <div className="section-toolbar-side" />
-            </div>
-        </div>
+                </SectionToolbarSide>
+                <SectionToolbarSide />
+            </SectionToolbar>
+        </MainToolbar>
     );
 };

@@ -38,6 +38,14 @@ import { BetaButton, ImportDialog, ImportSelectedFields, TagsStatusesManager } f
 import { NewPersonPopover, TIMELOG_STATUS_MAP } from "app/widgets/people";
 import { eachDayOfInterval, endOfWeek, format, isThisMonth, isThisWeek, startOfWeek } from "date-fns";
 import { PEOPLE_VIEW_TYPE_LABELS } from "app/locale/dynamic-messages";
+import {
+    MainToolbar,
+    SectionToolbar,
+    SectionToolbarDivider,
+    SectionToolbarOptions,
+    SectionToolbarSide,
+    SectionToolbarTitle,
+} from "app/widgets/toolbars/ToolbarLayout";
 
 interface IPeopleView {
     id: PeopleViewType;
@@ -207,13 +215,13 @@ export const ToolbarPeople = () => {
 
     return (
         <ResizeSensor targetRef={toolbarRef as React.RefObject<HTMLElement>} onResize={handleResize}>
-            <div className="main-toolbar" ref={toolbarRef}>
-                <div className="section-toolbar">
-                    <div className="section-toolbar-side side">
-                        <div className="section-toolbar-title">
+            <MainToolbar ref={toolbarRef}>
+                <SectionToolbar>
+                    <SectionToolbarSide side>
+                        <SectionToolbarTitle>
                             <h1>{translate("People")}</h1>
-                        </div>
-                        <div className="section-toolbar-options">
+                        </SectionToolbarTitle>
+                        <SectionToolbarOptions>
                             <Popover
                                 content={
                                     <Menu data-testid="people-toolbar-menu">
@@ -260,15 +268,15 @@ export const ToolbarPeople = () => {
                                     data-testid="people-toolbar-menu-button"
                                 />
                             </Popover>
-                        </div>
-                    </div>
-                    <div className="section-toolbar-side fixed">
+                        </SectionToolbarOptions>
+                    </SectionToolbarSide>
+                    <SectionToolbarSide fixed>
                         {viewType === "contacts" || viewType === "workload" || viewType === "companies" ? (
                             <PeopleSearch />
                         ) : null}
 
                         {viewType === "contacts" || viewType === "workload" || viewType === "companies" ? (
-                            <span className="section-toolbar-divider" />
+                            <SectionToolbarDivider />
                         ) : null}
 
                         {viewType === "timesheet" ? <TimesheetNavigation /> : null}
@@ -276,17 +284,17 @@ export const ToolbarPeople = () => {
 
                         {viewType === "contacts" ? <PeopleButtons /> : null}
                         {viewType === "companies" ? <AddCompanyButton /> : null}
-                    </div>
-                </div>
-                <div className="section-toolbar">
-                    <div className="section-toolbar-side">
+                    </SectionToolbarSide>
+                </SectionToolbar>
+                <SectionToolbar>
+                    <SectionToolbarSide>
                         <Tabs narrow={narrow} />
-                    </div>
-                    <div className="section-toolbar-side">
+                    </SectionToolbarSide>
+                    <SectionToolbarSide>
                         {viewType === "contacts" ? (
                             <>
                                 <PeopleGroupingToggle />
-                                <span className="section-toolbar-divider" />
+                                <SectionToolbarDivider />
                                 <FilterButton />
                                 <DeletePeopleButton />
                             </>
@@ -294,8 +302,8 @@ export const ToolbarPeople = () => {
 
                         {viewType === "timesheet" ? <ShowWeekendsButton /> : null}
                         {viewType === "approvals" ? <ApprovalFilters /> : null}
-                    </div>
-                </div>
+                    </SectionToolbarSide>
+                </SectionToolbar>
 
                 {showTagsMgr ? (
                     <TagsStatusesManager
@@ -309,7 +317,7 @@ export const ToolbarPeople = () => {
                 ) : null}
 
                 {visibleImport ? <PeopleImport onClose={() => setVisibleImport(false)} /> : null}
-            </div>
+            </MainToolbar>
         </ResizeSensor>
     );
 };
@@ -392,7 +400,7 @@ const TimesheetNavigation = () => {
                 {format(interval.at(0) ?? new Date(), "MMM y")}
             </H4>
 
-            <span className="section-toolbar-divider" />
+            <SectionToolbarDivider />
 
             <Button
                 data-testid="people-timesheet-current-week-button"
@@ -426,7 +434,7 @@ const ApprovalNavigation = () => {
         <>
             <H4 style={{ margin: 0 }}>{format(interval.at(0) ?? new Date(), "MMM y")}</H4>
 
-            <span className="section-toolbar-divider" />
+            <SectionToolbarDivider />
 
             <Button
                 data-testid="people-approvals-current-month-button"
@@ -497,7 +505,7 @@ const ShowWeekendsButton = () => {
             >
                 {showWeekends ? translate("Hide weekends") : translate("Show weekends")}
             </Button>
-            <span className="section-toolbar-divider" />
+            <SectionToolbarDivider />
             <Button
                 data-testid="people-timesheet-submit-review-button"
                 intent={Intent.SUCCESS}
@@ -541,7 +549,7 @@ const ApprovalFilters = () => {
                 </Button>
             </ButtonGroup>
 
-            <span className="section-toolbar-divider" />
+            <SectionToolbarDivider />
 
             <Popover
                 content={
@@ -841,7 +849,7 @@ const DeletePeopleButton = () => {
 
     return (
         <>
-            <span className="section-toolbar-divider" />
+            <SectionToolbarDivider />
             <ToolbarButton
                 icon="trash"
                 intent={Intent.DANGER}

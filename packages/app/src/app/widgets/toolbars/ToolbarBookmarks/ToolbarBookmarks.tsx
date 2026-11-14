@@ -5,6 +5,14 @@ import { Icon, ReloadButton, ToolbarButton } from "app/components/common";
 import { useMousetrap } from "app/hooks";
 import { toggleNewBookmark } from "app/store/global";
 import { BookmarksActions } from "app/store/actions";
+import {
+    MainToolbar,
+    SectionToolbar,
+    SectionToolbarDivider,
+    SectionToolbarOptions,
+    SectionToolbarSide,
+    SectionToolbarTitle,
+} from "app/widgets/toolbars/ToolbarLayout";
 
 export const ToolbarBookmarks = () => {
     useMousetrap(["ctrl+n", "command+n"], toggleNewBookmark);
@@ -14,13 +22,13 @@ export const ToolbarBookmarks = () => {
     };
 
     return (
-        <div className="main-toolbar single">
-            <div className="section-toolbar">
-                <div className="section-toolbar-side side">
-                    <div className="section-toolbar-title">
+        <MainToolbar single>
+            <SectionToolbar>
+                <SectionToolbarSide side>
+                    <SectionToolbarTitle>
                         <h1>{translate("Bookmarks")}</h1>
-                    </div>
-                    <div className="section-toolbar-options">
+                    </SectionToolbarTitle>
+                    <SectionToolbarOptions>
                         <Popover
                             content={
                                 <Menu>
@@ -59,9 +67,9 @@ export const ToolbarBookmarks = () => {
                                 data-testid="bookmarks-menu-button"
                             />
                         </Popover>
-                    </div>
-                </div>
-                <div className="section-toolbar-side fixed">
+                    </SectionToolbarOptions>
+                </SectionToolbarSide>
+                <SectionToolbarSide fixed>
                     <InputGroup
                         leftIcon={<Icon icon="search" />}
                         placeholder={translate("Search bookmark")}
@@ -71,7 +79,7 @@ export const ToolbarBookmarks = () => {
                         onChange={BookmarksActions.setQuery}
                     />
 
-                    <span className="section-toolbar-divider" />
+                    <SectionToolbarDivider />
 
                     <ReloadButton
                         tooltip={translate("Reload bookmarks")}
@@ -90,8 +98,8 @@ export const ToolbarBookmarks = () => {
                         active
                         onClick={toggleNewBookmark}
                     />
-                </div>
-            </div>
-        </div>
+                </SectionToolbarSide>
+            </SectionToolbar>
+        </MainToolbar>
     );
 };

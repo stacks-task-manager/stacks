@@ -70,6 +70,14 @@ import { share } from "app/utils/url";
 import { TableStore, setGrouping } from "app/views/Project/Table/store";
 import { ArchivedTasksDialog, ProjectTemplateDialog, ToolbarTitle } from "app/widgets";
 import { DocumentPrivacyButton, DocumentTintMenuItem, TagsStatusesManager } from "app/widgets/common";
+import {
+    MainToolbar,
+    SectionToolbar,
+    SectionToolbarDivider,
+    SectionToolbarOptions,
+    SectionToolbarSide,
+    SectionToolbarTitle,
+} from "app/widgets/toolbars/ToolbarLayout";
 
 const NARROW_WIDTH = 1050;
 const SUPER_NARROW_WIDTH = 680;
@@ -135,13 +143,13 @@ export const ProjectToolbar = () => {
 
     return (
         <ResizeSensor targetRef={toolbarRef as React.RefObject<HTMLElement>} onResize={handleResize}>
-            <div className="main-toolbar" ref={toolbarRef} data-testid="project-toolbar">
-                <div className="section-toolbar">
-                    <div className="section-toolbar-side side">
-                        <div className="section-toolbar-title">
+            <MainToolbar ref={toolbarRef} data-testid="project-toolbar">
+                <SectionToolbar>
+                    <SectionToolbarSide side>
+                        <SectionToolbarTitle>
                             <ProjectToolbarTitle projectId={projectId} />
-                        </div>
-                        <div className="section-toolbar-options">
+                        </SectionToolbarTitle>
+                        <SectionToolbarOptions>
                             <ProjectMenuButton
                                 projectId={projectId}
                                 viewType={lastViewType}
@@ -158,33 +166,31 @@ export const ProjectToolbar = () => {
                             <ProjectExpirationIcon />
 
                             <DocumentPrivacyButton documentId={projectId} onClick={handleToggleVisibility} />
-                        </div>
-                    </div>
-                    <div className="section-toolbar-side fixed">
+                        </SectionToolbarOptions>
+                    </SectionToolbarSide>
+                    <SectionToolbarSide fixed>
                         <ProjectSecondaryToolbar small={superNarrow} />
-                    </div>
-                </div>
-                <div className="section-toolbar">
-                    <div className="section-toolbar-side">
+                    </SectionToolbarSide>
+                </SectionToolbar>
+                <SectionToolbar>
+                    <SectionToolbarSide>
                         <ProjectViewTabs narrow={narrow} />
-                    </div>
+                    </SectionToolbarSide>
 
-                    <div className="section-toolbar-side">
+                    <SectionToolbarSide>
                         {!superNarrow && (
                             <>
                                 {["list"].includes(lastViewType) ? <TableGroupingToggle /> : null}
 
-                                {["list"].includes(lastViewType) ? (
-                                    <span className="section-toolbar-divider" />
-                                ) : null}
+                                {["list"].includes(lastViewType) ? <SectionToolbarDivider /> : null}
 
                                 {["board", "list", "time", "gantt"].includes(lastViewType) ? (
                                     <FilterButton />
                                 ) : null}
                             </>
                         )}
-                    </div>
-                </div>
+                    </SectionToolbarSide>
+                </SectionToolbar>
                 {/* {memoizedSecondaryToolbar} */}
 
                 {manageAutomations && <AutomationsDialog onClose={handleToggleAutomations} />}
@@ -203,7 +209,7 @@ export const ProjectToolbar = () => {
 
                 {showTemplate && <ProjectTemplateDialog onClose={() => setShowTemplate(false)} />}
                 {showArchives && <ArchivedTasksDialog onClose={() => setShowArchives(false)} />}
-            </div>
+            </MainToolbar>
         </ResizeSensor>
     );
 };
@@ -548,7 +554,7 @@ const ProjectSecondaryToolbar = ({ small }: { small: boolean }) => {
                         onClick={handleReloadTime}
                     />
 
-                    <span className="section-toolbar-divider" />
+                    <SectionToolbarDivider />
 
                     <QuickTimeLogPopover projectId={projectId} placement="bottom-end" changeTask>
                         <ToolbarButton
@@ -569,7 +575,7 @@ const ProjectSecondaryToolbar = ({ small }: { small: boolean }) => {
                 {!small && (
                     <>
                         <ProjectSearch />
-                        <span className="section-toolbar-divider" />
+                        <SectionToolbarDivider />
 
                         <ReloadButton
                             tooltip={translate("Reload project")}
@@ -1015,36 +1021,36 @@ const ProjectInfoContent = () => {
 
 export const ProjectToolbarLoading = () => {
     return (
-        <div className="main-toolbar">
-            <div className="section-toolbar">
-                <div className="section-toolbar-side side">
-                    <div className="section-toolbar-title">
+        <MainToolbar>
+            <SectionToolbar>
+                <SectionToolbarSide side>
+                    <SectionToolbarTitle>
                         <InputGroup className={Classes.SKELETON} />
-                    </div>
-                    <div className="section-toolbar-options">
+                    </SectionToolbarTitle>
+                    <SectionToolbarOptions>
                         <Button className={Classes.SKELETON} />
-                    </div>
-                </div>
-                <div className="section-toolbar-side fixed">
+                    </SectionToolbarOptions>
+                </SectionToolbarSide>
+                <SectionToolbarSide fixed>
                     <InputGroup className={Classes.SKELETON} />
                     <Button className={Classes.SKELETON} />
                     <Button className={Classes.SKELETON} />
                     <Button className={Classes.SKELETON} />
-                </div>
-            </div>
-            <div className="section-toolbar">
-                <div className="section-toolbar-side">
+                </SectionToolbarSide>
+            </SectionToolbar>
+            <SectionToolbar>
+                <SectionToolbarSide>
                     {Array.from(Array(5).keys()).map(key => (
                         <button key={key} className={classNames("view-type-button", Classes.SKELETON)}>
                             Lorem
                         </button>
                     ))}
-                </div>
-                <div className="section-toolbar-side">
+                </SectionToolbarSide>
+                <SectionToolbarSide>
                     <Button className={Classes.SKELETON} />
                     <Button className={Classes.SKELETON}>Lorem ipsum</Button>
-                </div>
-            </div>
-        </div>
+                </SectionToolbarSide>
+            </SectionToolbar>
+        </MainToolbar>
     );
 };

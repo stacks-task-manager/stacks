@@ -9,5 +9,6 @@ export * from "./ToolbarPeople/ToolbarPeople";
 export * from "./ToolbarProject/ToolbarProject";
 export * from "./ToolbarReports/ToolbarReports";
 export * from "./ToolbarTitle/ToolbarTitle";
+export * from "./ToolbarLayout";
 export * from "./ToolbarWorkbook/ToolbarWorkbook";
 export * from "./ToolbarWorkbooks/ToolbarWorkbooks";

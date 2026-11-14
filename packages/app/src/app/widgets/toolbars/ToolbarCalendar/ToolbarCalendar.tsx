@@ -26,6 +26,14 @@ import { CalendarActions } from "app/store/actions";
 import { CalendarStore } from "app/store/calendar";
 import { formatDate } from "app/utils/date";
 import { LocaleDatePicker } from "app/widgets/common";
+import {
+    MainToolbar,
+    SectionToolbar,
+    SectionToolbarDivider,
+    SectionToolbarOptions,
+    SectionToolbarSide,
+    SectionToolbarTitle,
+} from "app/widgets/toolbars/ToolbarLayout";
 export const ToolbarCalendar = () => {
     const { date, view } = CalendarStore.use();
     const filterButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -68,13 +76,13 @@ export const ToolbarCalendar = () => {
     // };
 
     return (
-        <div className="main-toolbar">
-            <div className="section-toolbar">
-                <div className="section-toolbar-side side">
-                    <div className="section-toolbar-title">
+        <MainToolbar>
+            <SectionToolbar>
+                <SectionToolbarSide side>
+                    <SectionToolbarTitle>
                         <h1>{translate("Calendar")}</h1>
-                    </div>
-                    <div className="section-toolbar-options">
+                    </SectionToolbarTitle>
+                    <SectionToolbarOptions>
                         <Popover
                             content={
                                 <Menu>
@@ -90,14 +98,14 @@ export const ToolbarCalendar = () => {
                                 data-testid="calendar-integrations-button"
                             />
                         </Popover>
-                    </div>
-                </div>
-                <div className="section-toolbar-side fixed">
+                    </SectionToolbarOptions>
+                </SectionToolbarSide>
+                <SectionToolbarSide fixed>
                     <H4 style={{ margin: 0 }} data-testid="calendar-current-date">
                         {currentDate}
                     </H4>
 
-                    <span className="section-toolbar-divider" />
+                    <SectionToolbarDivider />
 
                     <Button
                         size="small"
@@ -125,7 +133,7 @@ export const ToolbarCalendar = () => {
                         />
                     </ButtonGroup>
 
-                    <span className="section-toolbar-divider" />
+                    <SectionToolbarDivider />
 
                     <ReloadButton
                         tooltip={translate("Reload events")}
@@ -170,10 +178,10 @@ export const ToolbarCalendar = () => {
                         placement="bottom-end"
                         onClick={handleAddNewEvent}
                     /> */}
-                </div>
-            </div>
-            <div className="section-toolbar">
-                <div className="section-toolbar-side">
+                </SectionToolbarSide>
+            </SectionToolbar>
+            <SectionToolbar>
+                <SectionToolbarSide>
                     <button
                         className={classNames("view-type-button", { active: "day" === view })}
                         onClick={() => CalendarActions.setView("day")}
@@ -198,13 +206,13 @@ export const ToolbarCalendar = () => {
                         <Icon icon="layout-grid-01" />
                         {translate("Month")}
                     </button>
-                </div>
-                <div className="section-toolbar-side">
+                </SectionToolbarSide>
+                <SectionToolbarSide>
                     <NewLocalCalendarButton />
                     <FilterButton />
-                </div>
-            </div>
-        </div>
+                </SectionToolbarSide>
+            </SectionToolbar>
+        </MainToolbar>
     );
 };
 

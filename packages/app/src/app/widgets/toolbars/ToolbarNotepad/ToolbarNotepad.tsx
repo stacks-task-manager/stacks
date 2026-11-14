@@ -26,6 +26,13 @@ import { formatDate } from "app/utils/date";
 import toast from "app/utils/toast";
 import { share } from "app/utils/url";
 import { DocumentTintMenuItem, ToolbarTitle } from "app/widgets";
+import {
+    MainToolbar,
+    SectionToolbar,
+    SectionToolbarOptions,
+    SectionToolbarSide,
+    SectionToolbarTitle,
+} from "app/widgets/toolbars/ToolbarLayout";
 
 export const ToolbarNotepad = () => {
     const { isLoading, editingBy } = NotepadStore.use(
@@ -90,13 +97,13 @@ export const ToolbarNotepad = () => {
     if (isLoading) return <ToolbarNotepadLoading />;
 
     return (
-        <div className="main-toolbar single" data-testid="notepad-toolbar">
-            <div className="section-toolbar">
-                <div className="section-toolbar-side side">
-                    <div className="section-toolbar-title">
+        <MainToolbar single data-testid="notepad-toolbar">
+            <SectionToolbar>
+                <SectionToolbarSide side>
+                    <SectionToolbarTitle>
                         <ToolbarTitle documentId={notepadId} />
-                    </div>
-                    <div className="section-toolbar-options">
+                    </SectionToolbarTitle>
+                    <SectionToolbarOptions>
                         <Popover
                             content={
                                 <Menu data-testid="notepad-menu">
@@ -174,9 +181,9 @@ export const ToolbarNotepad = () => {
                         <NotepadInfoButton />
 
                         <NotepadPrivacyIcon onClick={handleToggleVisibility} />
-                    </div>
-                </div>
-                <div className="section-toolbar-side fixed">
+                    </SectionToolbarOptions>
+                </SectionToolbarSide>
+                <SectionToolbarSide fixed>
                     {editingPerson}
 
                     {/* <ToolbarButton
@@ -187,9 +194,9 @@ export const ToolbarNotepad = () => {
                         tooltip="You will overwrite everything the other person is writing if you take control."
                         onClick={NotepadActions.toggleEditing}
                     /> */}
-                </div>
-            </div>
-        </div>
+                </SectionToolbarSide>
+            </SectionToolbar>
+        </MainToolbar>
     );
 };
 
@@ -215,21 +222,21 @@ const NotepadPrivacyIcon: FunctionComponent<INotepadPrivacyIconProps> = ({ onCli
 
 const ToolbarNotepadLoading = () => {
     return (
-        <div className="main-toolbar single">
-            <div className="section-toolbar">
-                <div className="section-toolbar-side side">
-                    <div className="section-toolbar-title">
+        <MainToolbar single>
+            <SectionToolbar>
+                <SectionToolbarSide side>
+                    <SectionToolbarTitle>
                         <InputGroup className={Classes.SKELETON} />
-                    </div>
-                    <div className="section-toolbar-options">
+                    </SectionToolbarTitle>
+                    <SectionToolbarOptions>
                         <Button className={Classes.SKELETON} />
-                    </div>
-                </div>
-                <div className="section-toolbar-side fixed">
+                    </SectionToolbarOptions>
+                </SectionToolbarSide>
+                <SectionToolbarSide fixed>
                     <Button className={Classes.SKELETON}>Lorem ipsum</Button>
-                </div>
-            </div>
-        </div>
+                </SectionToolbarSide>
+            </SectionToolbar>
+        </MainToolbar>
     );
 };
 
