@@ -52,7 +52,8 @@ export const ToolbarWorkbook = ({
         if (!workbook) return;
         const confirmed = await dialog.confirm(
             translate("Delete workbook"),
-            translate("Are you sure you want to delete this workbook?")
+            translate("Are you sure you want to delete this workbook"),
+            Intent.WARNING
         );
         if (!confirmed) return;
         await WorkbooksActions.remove(workbook.id);
