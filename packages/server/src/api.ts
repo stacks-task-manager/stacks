@@ -42,14 +42,7 @@ import calendars from "./routes/calendars";
 import workbooks from "./routes/workbooks";
 
 const APP_STATIC_ROOT = "./app";
-const APP_PUBLIC_ASSETS = [
-    "/favicon.ico",
-    "/manifest.json",
-    "/logo192.png",
-    "/logo512.png",
-    "/robots.txt",
-    "/notepad.css",
-];
+const APP_PUBLIC_ASSETS = ["/favicon.ico", "/manifest.json", "/logo192.png", "/logo512.png", "/robots.txt"];
 
 function getAppProxyHeaders(c: Context) {
     return {
