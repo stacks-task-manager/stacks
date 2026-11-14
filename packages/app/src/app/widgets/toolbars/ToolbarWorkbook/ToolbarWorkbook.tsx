@@ -80,7 +80,7 @@ export const ToolbarWorkbook = ({
                             minimal
                             onClick={() => navigate("/workbooks")}
                         />
-                        <h1>
+                        <h1 data-testid="workbook-toolbar-title">
                             <EditableText
                                 value={title || translate("Loading")}
                                 disabled={!workbook}
@@ -95,11 +95,12 @@ export const ToolbarWorkbook = ({
 
                         <Popover
                             content={
-                                <Menu>
+                                <Menu data-testid="workbook-menu">
                                     <MenuItem
                                         icon={<Icon icon="edit-04" />}
                                         text={translate("Edit filters")}
                                         onClick={onEditFilters}
+                                        data-testid="workbook-menu-edit-filters"
                                     />
                                     <MenuItem
                                         icon={<Icon icon="lock-01" />}
@@ -125,6 +126,7 @@ export const ToolbarWorkbook = ({
                                         intent={Intent.DANGER}
                                         text={`${translate("Delete workbook")}...`}
                                         onClick={handleDelete}
+                                        data-testid="workbook-menu-delete"
                                     />
                                 </Menu>
                             }
@@ -133,6 +135,7 @@ export const ToolbarWorkbook = ({
                                 icon={<Icon icon="chevron-down" />}
                                 variant="minimal"
                                 aria-label={translate("More")}
+                                data-testid="workbook-menu-button"
                             />
                         </Popover>
                     </div>
@@ -160,6 +163,7 @@ export const ToolbarWorkbook = ({
                             aria-selected={view === item}
                             className={classNames("view-type-button", { active: view === item })}
                             onClick={() => onViewChange(item)}
+                            data-testid={`workbook-view-tab-${item}`}
                         >
                             <Icon
                                 icon={

@@ -26,8 +26,14 @@ export const ToolbarWorkbooks = ({ query, onQueryChange, onCreate }: ToolbarWork
                         value={query}
                         placeholder={translate("Search workbooks")}
                         onChange={event => onQueryChange(event.currentTarget.value)}
+                        data-testid="workbooks-search-input"
                     />
-                    <Button icon={<Icon icon="plus" />} intent="primary" onClick={onCreate}>
+                    <Button
+                        icon={<Icon icon="plus" />}
+                        intent="primary"
+                        onClick={onCreate}
+                        data-testid="workbook-create-button"
+                    >
                         {translate("Add workbook")}
                     </Button>
                 </div>

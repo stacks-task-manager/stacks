@@ -22,8 +22,8 @@ const filterSummary = (workbook: IWorkbook) => {
             filters.state === "todo"
                 ? "Incomplete tasks"
                 : filters.state === "done"
-                    ? "Completed tasks"
-                    : "All tasks"
+                  ? "Completed tasks"
+                  : "All tasks"
         ),
     ];
     if (filters.tags.length) parts.push(translate("Tags selected", { count: filters.tags.length }));
@@ -53,6 +53,7 @@ export const Workbooks = () => {
 
     return (
         <AppView
+            data-testid="workbooks-view"
             toolbar={
                 <ToolbarWorkbooks
                     query={query}
@@ -65,6 +66,7 @@ export const Workbooks = () => {
                 {!isLoading && filtered.length === 0 ? (
                     <Grid vertical>
                         <BlankSlate
+                            testId="workbooks-blank-slate"
                             icon="book-open-01"
                             title={translate(query ? "No matching workbooks" : "No workbooks")}
                             description={translate(

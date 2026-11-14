@@ -38,6 +38,7 @@ export const ProjectsFilter: FunctionComponent<IProjectsFilterProps> = memo(func
                     icon={<Icon icon="grid-view" />}
                     endIcon={<Icon icon="chevron-down" />}
                     alignText={Alignment.START}
+                    data-testid="task-filter-project-button"
                 >
                     {projects.length === 0
                         ? translate("Any project")

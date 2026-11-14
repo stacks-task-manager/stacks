@@ -80,7 +80,7 @@ export const WorkbookDialog: FunctionComponent<IWorkbookDialogProps> = ({
                 </div>
             </Scroller>
             <div className="workbook-dialog__footer">
-                <Button variant="minimal" onClick={onClose}>
+                <Button variant="minimal" onClick={onClose} data-testid="workbook-cancel-button">
                     {translate("Cancel")}
                 </Button>
                 <Button

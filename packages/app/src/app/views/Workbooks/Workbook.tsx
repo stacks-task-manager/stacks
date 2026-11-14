@@ -124,6 +124,7 @@ export const Workbook = () => {
 
     return (
         <AppView
+            data-testid="workbook-view"
             toolbar={toolbar}
             append={
                 <>
@@ -142,6 +143,7 @@ export const Workbook = () => {
                 </AppViewContent>
             ) : result.tasks.length === 0 ? (
                 <BlankSlate
+                    testId="workbook-empty-slate"
                     icon="book-open-01"
                     title={translate("No tasks")}
                     description={translate("No tasks match these filters")}

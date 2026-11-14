@@ -24,17 +24,24 @@ export const QuickFilters: FunctionComponent<IQuickFiltersProps> = memo(function
 }) {
     return (
         <FormGroup label={translate("Quick filters")}>
-            <Switch label={translate("Only overdue tasks")} checked={overdue} onChange={onOverdueChange} />
+            <Switch
+                label={translate("Only overdue tasks")}
+                checked={overdue}
+                onChange={onOverdueChange}
+                data-testid="task-filter-overdue"
+            />
             <Switch
                 label={translate("Only tasks in progress")}
                 checked={inProgress}
                 onChange={onInProgressChange}
+                data-testid="task-filter-in-progress"
             />
             {showLoggedTime && onLoggedTimeChange && (
                 <Switch
                     label={translate("Only tasks with logged time")}
                     checked={Boolean(loggedTime)}
                     onChange={onLoggedTimeChange}
+                    data-testid="task-filter-logged-time"
                 />
             )}
         </FormGroup>

@@ -37,7 +37,7 @@ export const WorkbookOverview = ({ tasks, projects, timezone, onOpenTask }: IWor
     );
 
     return (
-        <div className="workbook-overview">
+        <div className="workbook-overview" data-testid="workbook-overview">
             <div className="workbook-overview__summary">
                 <TasksSummary
                     total={overview.tasksTotal}

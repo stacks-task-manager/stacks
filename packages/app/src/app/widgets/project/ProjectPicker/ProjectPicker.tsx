@@ -158,6 +158,7 @@ export const ProjectPicker: FunctionComponent<ProjectPickerProps> = props => {
                     inputRef={searchRef}
                     onKeyDown={handleOnKeyDown}
                     onChange={handleQueryChange}
+                    data-testid="project-picker-search"
                 />
             </div>
 
@@ -180,6 +181,7 @@ export const ProjectPicker: FunctionComponent<ProjectPickerProps> = props => {
                                     labelElement={!props.value?.length ? <Icon icon="check" /> : undefined}
                                     shouldDismissPopover={shouldDismissPopover || false}
                                     onClick={handleClearProjects}
+                                    data-testid="project-picker-any-project"
                                 />
                                 <MenuDivider />
                             </>
@@ -198,6 +200,7 @@ export const ProjectPicker: FunctionComponent<ProjectPickerProps> = props => {
                                     labelElement={isActive ? <Icon icon="check" /> : undefined}
                                     active={selected === index}
                                     onClick={() => handleSelectProject(project)}
+                                    data-testid={`project-picker-item-${project.id}`}
                                 />
                             );
                         })}
