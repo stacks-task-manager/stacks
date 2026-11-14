@@ -46,14 +46,26 @@
 }
 
 .workbook-overview {
-    display: grid;
+    display: flex;
+    flex-direction: column;
     gap: 15px;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+
+    &__grid {
+        align-items: stretch;
+        display: grid;
+        gap: 15px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+
+        > .#{$ns}-card {
+            width: 100%;
+            height: 100%;
+        }
+    }
 
     &__metrics {
         display: grid;
-        gap: 12px;
-        grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+        gap: 15px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
     &__metric {
@@ -62,12 +74,92 @@
         gap: 2px;
 
         strong {
-            font-size: 22px;
+            font-size: 30px;
+            line-height: 1;
         }
 
         span {
-            color: $gray1;
+            color: $gray3;
             font-size: 12px;
         }
+    }
+
+    &__count {
+        display: inline-grid;
+        place-items: center;
+        min-width: 24px;
+        height: 20px;
+        padding: 0 6px;
+        border-radius: 10px;
+        background: rgba($gray3, 0.15);
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    &__bar {
+        display: flex;
+        height: 6px;
+        margin-top: 4px;
+        border-radius: 3px;
+        overflow: hidden;
+
+        > div {
+            min-width: 2px;
+        }
+    }
+}
+
+.workbook-recent-list {
+    display: flex;
+    flex-direction: column;
+
+    &__item {
+        align-items: flex-start;
+        border: 0;
+        border-bottom: 1px solid $light-gray5;
+        background: transparent;
+        color: inherit;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        padding: 8px 0;
+        text-align: left;
+
+        &:last-child {
+            border-bottom: 0;
+        }
+
+        &:hover .workbook-recent-list__title,
+        &:focus-visible .workbook-recent-list__title {
+            color: $blue3;
+            text-decoration: underline;
+        }
+    }
+
+    &__title {
+        font-weight: 600;
+    }
+}
+
+@media (max-width: 1000px) {
+    .workbook-overview__grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .workbook-overview__metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+.#{$ns}-dark {
+    .workbook-recent-list__item {
+        border-bottom-color: $dark-gray4;
+    }
+
+    .workbook-overview__metric span {
+        color: $gray5;
     }
 }

@@ -84,6 +84,17 @@ export const Workbook = () => {
         [currentUserId, query, tasks, timezone, workbook]
     );
     const tree = useMemo(() => groupWorkbookTasks(result.treeTasks), [result.treeTasks]);
+    const projects = useMemo(
+        () => [
+            ...new Map(
+                result.tasks.map(task => [
+                    task.project,
+                    task.projectInfo ?? { id: task.project, title: translate("Unknown project") },
+                ])
+            ).values(),
+        ],
+        [result.tasks]
+    );
     const assigneeIds = useMemo(
         () => [...new Set(result.treeTasks.flatMap(task => task.assignees ?? []))],
         [result.treeTasks]
@@ -162,7 +173,12 @@ export const Workbook = () => {
                 </AppViewContent>
             ) : (
                 <AppViewContent padded>
-                    <WorkbookOverview tasks={result.tasks} />
+                    <WorkbookOverview
+                        tasks={result.tasks}
+                        projects={projects}
+                        timezone={timezone}
+                        onOpenTask={taskId => navigate(`/workbooks/${id}/${taskId}`)}
+                    />
                 </AppViewContent>
             )}
         </AppView>

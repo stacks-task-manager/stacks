@@ -1,5 +1,25 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+import { Colors } from "@blueprintjs/core";
+import { PRIORITY } from "@stacks/types";
 import tinycolor from "tinycolor2";
+
+/**
+ * Returns the display color for a task priority.
+ */
+export function getPriorityColor(priority?: PRIORITY | null): string {
+    switch (priority) {
+        case PRIORITY.LOW:
+            return Colors.GREEN3;
+        case PRIORITY.MEDIUM:
+            return Colors.ORANGE3;
+        case PRIORITY.HIGH:
+            return Colors.RED3;
+        case PRIORITY.CRITICAL:
+            return Colors.VERMILION3;
+        default:
+            return Colors.GRAY3;
+    }
+}
 
 export const adjustColor = (color: string, amount: number) => {
     return (
