@@ -262,7 +262,7 @@ const TimeboxDate = () => {
         }
 
         return `Week ${format(start, "w, MMM yyyy")}`;
-    }, [start, calendarView, scheduledView]);
+    }, [scheduledView, calendarView, start, end]);
 
     const shouldShowTodayButton = useMemo(() => {
         if (scheduledView === TIMEBOXVIEWS.CALENDAR && calendarView === "one") {

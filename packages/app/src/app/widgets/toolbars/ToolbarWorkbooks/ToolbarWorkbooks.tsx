@@ -2,7 +2,8 @@
 import { Button, InputGroup } from "@blueprintjs/core";
 import { translate } from "@stacks/translations";
 
-import { Icon } from "app/components/common";
+import { Icon, ReloadButton } from "app/components/common";
+import { WorkbooksActions } from "app/store/actions";
 import {
     MainToolbar,
     SectionToolbar,
@@ -36,6 +37,11 @@ export const ToolbarWorkbooks = ({ query, onQueryChange, onCreate }: ToolbarWork
                         data-testid="workbooks-search-input"
                     />
                     <SectionToolbarDivider />
+                    <ReloadButton
+                        tooltip={translate("Reload workbooks")}
+                        placement="bottom-end"
+                        onClick={() => WorkbooksActions.reload()}
+                    />
                     <Button
                         icon={<Icon icon="plus" />}
                         intent="primary"

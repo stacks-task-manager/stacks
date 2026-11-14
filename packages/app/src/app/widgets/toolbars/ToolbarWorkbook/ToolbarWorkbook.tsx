@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { translate } from "@stacks/translations";
 import type { ITask, IWorkbook } from "@stacks/types";
 
-import { Icon } from "app/components/common";
+import { Icon, ReloadButton } from "app/components/common";
 import { WorkbooksActions } from "app/store/actions";
 import { showPermissions, toggleNewTask } from "app/store/global";
 import dialog from "app/utils/dialog";
@@ -40,6 +40,7 @@ interface ToolbarWorkbookProps {
     onQueryChange: (query: string) => void;
     onViewChange: (view: WorkbookView) => void;
     onEditFilters: () => void;
+    onReloadTasks: () => void;
 }
 
 export const ToolbarWorkbook = ({
@@ -52,6 +53,7 @@ export const ToolbarWorkbook = ({
     onQueryChange,
     onViewChange,
     onEditFilters,
+    onReloadTasks,
 }: ToolbarWorkbookProps) => {
     const navigate = useNavigate();
 
@@ -157,6 +159,11 @@ export const ToolbarWorkbook = ({
                         onChange={event => onQueryChange(event.currentTarget.value)}
                     />
                     <SectionToolbarDivider />
+                    <ReloadButton
+                        tooltip={translate("Reload tasks")}
+                        placement="bottom-end"
+                        onClick={onReloadTasks}
+                    />
                     <Button icon={<Icon icon="plus" />} intent="primary" onClick={toggleNewTask}>
                         {translate("Add task")}
                     </Button>

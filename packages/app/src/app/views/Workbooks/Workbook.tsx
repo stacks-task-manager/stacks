@@ -28,6 +28,7 @@ export const Workbook = () => {
     const [view, setView] = useState<WorkbookView>("table");
     const [editOpen, setEditOpen] = useState(false);
     const [taskIds, setTaskIds] = useState<string[]>([]);
+    const [reloadKey, setReloadKey] = useState(0);
     const [loading, setLoading] = useState(true);
     const { timezone = "UTC" } = usePreferences(["timezone"]);
     const currentUserId = PeopleStore.use(state => state.me);
@@ -69,7 +70,7 @@ export const Workbook = () => {
         return () => {
             cancelled = true;
         };
-    }, [id, workbook?.updated]);
+    }, [id, reloadKey, workbook?.updated]);
 
     const tasks = TasksStore.use(state => {
         return taskIds
@@ -119,6 +120,7 @@ export const Workbook = () => {
             onQueryChange={setQuery}
             onViewChange={setView}
             onEditFilters={() => setEditOpen(true)}
+            onReloadTasks={() => setReloadKey(key => key + 1)}
         />
     );
 
