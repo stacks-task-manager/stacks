@@ -97,7 +97,7 @@ export const ToolbarWorkbook = ({
                             content={
                                 <Menu>
                                     <MenuItem
-                                        icon={<Icon icon="edit" />}
+                                        icon={<Icon icon="edit-04" />}
                                         text={translate("Edit filters")}
                                         onClick={onEditFilters}
                                     />
