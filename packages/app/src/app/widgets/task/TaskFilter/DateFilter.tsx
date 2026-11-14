@@ -48,18 +48,22 @@ export const DateFilter: FunctionComponent<IDateFilterProps> = memo(function Dat
                 minimal={minimal}
                 matchTargetWidth={matchTargetWidth}
                 placement={placement}
-            >
-                <Button
-                    fill
-                    icon={<Icon icon="calendar-date" />}
-                    alignText={Alignment.START}
-                    endIcon={<Icon icon="chevron-down" />}
-                    intent={date != null && highlightWhenSet ? Intent.PRIMARY : Intent.NONE}
-                    data-testid={testId ? `${testId}-button` : undefined}
-                >
-                    {buttonLabel}
-                </Button>
-            </Popover>
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                renderTarget={({ isOpen, ref, ...props }) => (
+                    <Button
+                        fill
+                        icon={<Icon icon="calendar-date" />}
+                        alignText={Alignment.START}
+                        endIcon={<Icon icon="chevron-down" />}
+                        intent={date != null && highlightWhenSet ? Intent.PRIMARY : Intent.NONE}
+                        data-testid={testId ? `${testId}-button` : undefined}
+                        ref={ref}
+                        {...props}
+                    >
+                        {buttonLabel}
+                    </Button>
+                )}
+            />
         </FormGroup>
     );
 });

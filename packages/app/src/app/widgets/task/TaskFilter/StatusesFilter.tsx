@@ -99,17 +99,21 @@ export const StatusesFilter: FunctionComponent<IStatusesFilterProps> = memo(func
                 minimal
                 matchTargetWidth
                 placement="bottom"
-            >
-                <Button
-                    fill
-                    icon={<Icon icon="circle-filled" color={color} />}
-                    endIcon={<Icon icon="chevron-down" />}
-                    alignText={Alignment.START}
-                    intent={statuses.length > 0 ? Intent.PRIMARY : Intent.NONE}
-                >
-                    {label}
-                </Button>
-            </Popover>
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                renderTarget={({ isOpen, ref, ...props }) => (
+                    <Button
+                        fill
+                        icon={<Icon icon="circle-filled" color={color} />}
+                        endIcon={<Icon icon="chevron-down" />}
+                        alignText={Alignment.START}
+                        intent={statuses.length > 0 ? Intent.PRIMARY : Intent.NONE}
+                        ref={ref}
+                        {...props}
+                    >
+                        {label}
+                    </Button>
+                )}
+            />
 
             {selectedStatuses.length > 0 && (
                 <div style={{ marginTop: 10 }}>

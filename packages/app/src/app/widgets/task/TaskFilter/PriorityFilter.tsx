@@ -62,17 +62,21 @@ export const PriorityFilter: FunctionComponent<IPriorityFilterProps> = memo(func
                 placement="bottom"
                 minimal
                 matchTargetWidth
-            >
-                <Button
-                    fill
-                    icon={<Icon icon={icon} color={color} />}
-                    endIcon={<Icon icon="chevron-down" />}
-                    alignText={Alignment.START}
-                    intent={priority != null ? Intent.PRIMARY : Intent.NONE}
-                >
-                    {label}
-                </Button>
-            </Popover>
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                renderTarget={({ isOpen, ref, ...props }) => (
+                    <Button
+                        fill
+                        icon={<Icon icon={icon} color={color} />}
+                        endIcon={<Icon icon="chevron-down" />}
+                        alignText={Alignment.START}
+                        intent={priority != null ? Intent.PRIMARY : Intent.NONE}
+                        ref={ref}
+                        {...props}
+                    >
+                        {label}
+                    </Button>
+                )}
+            />
         </FormGroup>
     );
 });

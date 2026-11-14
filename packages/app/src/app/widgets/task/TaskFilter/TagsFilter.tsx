@@ -78,17 +78,21 @@ export const TagsFilter: FunctionComponent<ITagsFilterProps> = memo(function Tag
                 minimal
                 matchTargetWidth
                 placement="bottom"
-            >
-                <Button
-                    fill
-                    icon={<Icon icon={icon} color={color} />}
-                    endIcon={<Icon icon="chevron-down" />}
-                    alignText={Alignment.START}
-                    intent={tags.length > 0 ? Intent.PRIMARY : Intent.NONE}
-                >
-                    {label}
-                </Button>
-            </Popover>
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                renderTarget={({ isOpen, ref, ...props }) => (
+                    <Button
+                        fill
+                        icon={<Icon icon={icon} color={color} />}
+                        endIcon={<Icon icon="chevron-down" />}
+                        alignText={Alignment.START}
+                        intent={tags.length > 0 ? Intent.PRIMARY : Intent.NONE}
+                        ref={ref}
+                        {...props}
+                    >
+                        {label}
+                    </Button>
+                )}
+            />
 
             {tags.length > 0 && (
                 <div style={{ marginTop: 10 }}>
