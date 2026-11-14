@@ -291,6 +291,23 @@ it("adds the lower tree connector segment for level 0 task parents", () => {
     expect(childLine.querySelector("path")).toHaveAttribute("d", "M 0.5 38 V 48");
 });
 
+it("hides the lower tree connector segment of a collapsed parent", () => {
+    render(
+        <GanttChart
+            title="Tasks"
+            rows={[row("parent", [row("child")])]}
+            onActivate={jest.fn()}
+            onDatesChange={jest.fn()}
+        />
+    );
+
+    fireEvent.click(screen.getByTestId("gantt-toggle-all"));
+    expect(screen.queryByTestId("gantt-tree-child-line-parent")).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByTestId("gantt-toggle-all"));
+    expect(screen.getByTestId("gantt-tree-child-line-parent")).toBeInTheDocument();
+});
+
 it("adds the lower tree connector segment below subtasks with children", () => {
     render(
         <GanttChart
