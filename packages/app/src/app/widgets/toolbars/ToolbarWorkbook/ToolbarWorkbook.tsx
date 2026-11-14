@@ -149,6 +149,7 @@ export const ToolbarWorkbook = ({
                         placeholder={translate("Search tasks")}
                         onChange={event => onQueryChange(event.currentTarget.value)}
                     />
+                    <span className="section-toolbar-divider" />
                     <Button icon={<Icon icon="plus" />} intent="primary" onClick={toggleNewTask}>
                         {translate("Add task")}
                     </Button>

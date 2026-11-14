@@ -28,6 +28,7 @@ export const ToolbarWorkbooks = ({ query, onQueryChange, onCreate }: ToolbarWork
                         onChange={event => onQueryChange(event.currentTarget.value)}
                         data-testid="workbooks-search-input"
                     />
+                    <span className="section-toolbar-divider" />
                     <Button
                         icon={<Icon icon="plus" />}
                         intent="primary"
