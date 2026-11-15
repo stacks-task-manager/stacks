@@ -32,7 +32,15 @@ import {
     ROLE_SECTIONS,
     TAGSECTION,
 } from "@stacks/types";
-import { Avatar, Col, Icon, ReloadButton, Row, ToolbarButton } from "app/components/common";
+import {
+    Avatar,
+    Col,
+    Icon,
+    ReloadButton,
+    Row,
+    ToolbarButton,
+    ToolbarViewButton,
+} from "app/components/common";
 import { AutomationsDialog, ProjectHealth, QuickTimeLogPopover } from "app/components/project";
 import {
     getCurrentProjectId,
@@ -471,16 +479,15 @@ const ProjectViewTabs = ({ narrow }: { narrow: boolean }) => {
                 placement="bottom"
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 renderTarget={({ isOpen, ...props }) => (
-                    <button
+                    <ToolbarViewButton
                         {...props}
-                        className={classNames("view-type-button", { active: lastViewType === view.id })}
+                        icon={view.icon}
+                        label={!narrow ? PROJECT_VIEWS_LABELS[view.id] : null}
+                        active={lastViewType === view.id}
                         onClick={() => ProjectsStatusActions.setCurrentView(view.id)}
                         data-testid={`project-view-tab-${view.id}`}
                         data-active={lastViewType === view.id}
-                    >
-                        <Icon icon={view.icon} />
-                        {!narrow ? PROJECT_VIEWS_LABELS[view.id] : null}
-                    </button>
+                    />
                 )}
             />
         ));
@@ -510,10 +517,13 @@ const ProjectViewTabs = ({ narrow }: { narrow: boolean }) => {
                 }
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 renderTarget={({ isOpen, ...props }) => (
-                    <button {...props} className="view-type-button views" data-testid="project-views-button">
-                        <Icon icon="plus" />
-                        {translate("Views")}
-                    </button>
+                    <ToolbarViewButton
+                        {...props}
+                        views
+                        icon="plus"
+                        label={translate("Views")}
+                        data-testid="project-views-button"
+                    />
                 )}
             />
         );
@@ -1041,9 +1051,7 @@ export const ProjectToolbarLoading = () => {
             <SectionToolbar>
                 <SectionToolbarSide>
                     {Array.from(Array(5).keys()).map(key => (
-                        <button key={key} className={classNames("view-type-button", Classes.SKELETON)}>
-                            Lorem
-                        </button>
+                        <ToolbarViewButton key={key} className={Classes.SKELETON} label="Lorem" />
                     ))}
                 </SectionToolbarSide>
                 <SectionToolbarSide>

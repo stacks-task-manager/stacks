@@ -14,7 +14,6 @@ import {
 } from "@blueprintjs/core";
 import { translate } from "@stacks/translations";
 import { shallowEqual } from "app/hooks/store";
-import classNames from "classnames";
 import React, { FunctionComponent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import {
@@ -26,7 +25,7 @@ import {
     TAGSECTION,
     TIMELOG_STATUS,
 } from "@stacks/types";
-import { Icon, NewGeneric, ReloadButton, ToolbarButton } from "app/components/common";
+import { Icon, NewGeneric, ReloadButton, ToolbarButton, ToolbarViewButton } from "app/components/common";
 import { useCanAccess, useMousetrap, usePeopleHasFilters, useTimelogsInterval, useViewType } from "app/hooks";
 import { PeopleActions, PersonTimesheetActions, TimesheetApprovalActions } from "app/store/actions";
 import { PeopleStore, PeopleViewType } from "app/store/people";
@@ -372,17 +371,17 @@ const Tabs = ({ narrow }: { narrow: boolean }) => {
         () => (
             <>
                 {tabsToRender.map((view: IPeopleView) => (
-                    <button
+                    <ToolbarViewButton
                         key={view.id}
-                        className={classNames("view-type-button", { active: viewType === view.id })}
+                        icon={view.icon}
+                        iconSize={14}
+                        label={!narrow && PEOPLE_VIEW_TYPE_LABELS[view.id]}
+                        active={viewType === view.id}
                         onClick={() => PeopleActions.changeViewType(view.id)}
                         data-testid={`people-tab-${view.id}`}
                     >
-                        <Icon icon={view.icon} size={14} />
-                        {!narrow && PEOPLE_VIEW_TYPE_LABELS[view.id]}
-
                         {["timesheet", "approvals"].includes(view.id) && !narrow ? <BetaButton ml /> : null}
-                    </button>
+                    </ToolbarViewButton>
                 ))}
             </>
         ),

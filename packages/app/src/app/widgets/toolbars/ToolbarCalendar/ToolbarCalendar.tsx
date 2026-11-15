@@ -14,11 +14,10 @@ import {
     Popover,
     Tooltip,
 } from "@blueprintjs/core";
-import classNames from "classnames";
 import { format, getWeek } from "date-fns";
 import React, { useMemo, useRef, useState } from "react";
 
-import { Icon, ReloadButton, ToolbarButton } from "app/components/common";
+import { Icon, ReloadButton, ToolbarButton, ToolbarViewButton } from "app/components/common";
 import { TintPicker } from "app/components/project";
 import { useMousetrap } from "app/hooks";
 import { shallowEqual } from "app/hooks/store";
@@ -182,30 +181,27 @@ export const ToolbarCalendar = () => {
             </SectionToolbar>
             <SectionToolbar>
                 <SectionToolbarSide>
-                    <button
-                        className={classNames("view-type-button", { active: "day" === view })}
+                    <ToolbarViewButton
+                        icon="rows-03"
+                        label={translate("Day")}
+                        active={view === "day"}
                         onClick={() => CalendarActions.setView("day")}
                         data-testid="calendar-view-day-button"
-                    >
-                        <Icon icon="rows-03" />
-                        {translate("Day")}
-                    </button>
-                    <button
-                        className={classNames("view-type-button", { active: "week" === view })}
+                    />
+                    <ToolbarViewButton
+                        icon="columns-03"
+                        label={translate("Week")}
+                        active={view === "week"}
                         onClick={() => CalendarActions.setView("week")}
                         data-testid="calendar-view-week-button"
-                    >
-                        <Icon icon="columns-03" />
-                        {translate("Week")}
-                    </button>
-                    <button
-                        className={classNames("view-type-button", { active: "month" === view })}
+                    />
+                    <ToolbarViewButton
+                        icon="layout-grid-01"
+                        label={translate("Month")}
+                        active={view === "month"}
                         onClick={() => CalendarActions.setView("month")}
                         data-testid="calendar-view-month-button"
-                    >
-                        <Icon icon="layout-grid-01" />
-                        {translate("Month")}
-                    </button>
+                    />
                 </SectionToolbarSide>
                 <SectionToolbarSide>
                     <NewLocalCalendarButton />

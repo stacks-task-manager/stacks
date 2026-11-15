@@ -14,13 +14,12 @@ import {
     Tooltip,
 } from "@blueprintjs/core";
 import { TIMEBOXVIEWS } from "@stacks/types";
-import { Icon, ReloadButton, ToolbarButton } from "app/components/common";
+import { Icon, ReloadButton, ToolbarButton, ToolbarViewButton } from "app/components/common";
 import { useHasFilters, useMousetrap } from "app/hooks";
 import { shallowEqual } from "app/hooks/store";
 import { MyTasksActions, ProjectFiltersActions, TasksActions } from "app/store/actions";
 import { toggleNewTask } from "app/store/global";
 import { MyTasksStore } from "app/store/myTasks";
-import classNames from "classnames";
 import { ProjectSearch } from "../ToolbarProject/ToolbarProject";
 import {
     MainToolbar,
@@ -74,22 +73,20 @@ export const ToolbarMyTasks = () => {
             </SectionToolbar>
             <SectionToolbar>
                 <SectionToolbarSide>
-                    <button
-                        className={classNames("view-type-button", { active: view === "list" })}
+                    <ToolbarViewButton
+                        icon="list"
+                        label="List"
+                        active={view === "list"}
                         data-testid="my-tasks-view-list-button"
                         onClick={() => MyTasksActions.setView("list")}
-                    >
-                        <Icon icon="list" />
-                        List
-                    </button>
-                    <button
-                        className={classNames("view-type-button", { active: view === "schedule" })}
+                    />
+                    <ToolbarViewButton
+                        icon="calendar-check-01"
+                        label="Schedule"
+                        active={view === "schedule"}
                         data-testid="my-tasks-view-schedule-button"
                         onClick={() => MyTasksActions.setView("schedule")}
-                    >
-                        <Icon icon="calendar-check-01" />
-                        Schedule
-                    </button>
+                    />
                 </SectionToolbarSide>
                 <SectionToolbarSide>
                     <TimeboxViewButton />

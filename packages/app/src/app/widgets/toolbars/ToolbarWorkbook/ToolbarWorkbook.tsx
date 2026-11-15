@@ -9,13 +9,12 @@ import {
     MenuItem,
     Popover,
 } from "@blueprintjs/core";
-import classNames from "classnames";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { translate } from "@stacks/translations";
 import type { ITask, IWorkbook } from "@stacks/types";
 
-import { Icon, ReloadButton } from "app/components/common";
+import { Icon, ReloadButton, ToolbarViewButton } from "app/components/common";
 import { WorkbooksActions } from "app/store/actions";
 import { showPermissions, toggleNewTask } from "app/store/global";
 import dialog from "app/utils/dialog";
@@ -172,26 +171,24 @@ export const ToolbarWorkbook = ({
             <SectionToolbar>
                 <SectionToolbarSide role="tablist" aria-label={translate("Workbook views")}>
                     {(["table", "gantt", "overview"] as const).map(item => (
-                        <button
+                        <ToolbarViewButton
                             key={item}
-                            type="button"
                             role="tab"
                             aria-selected={view === item}
-                            className={classNames("view-type-button", { active: view === item })}
+                            icon={
+                                item === "table"
+                                    ? "list-view"
+                                    : item === "gantt"
+                                      ? "dataflow-03"
+                                      : "overview-view"
+                            }
+                            label={translate(
+                                item === "table" ? "Table" : item === "gantt" ? "Gantt" : "Overview"
+                            )}
+                            active={view === item}
                             onClick={() => onViewChange(item)}
                             data-testid={`workbook-view-tab-${item}`}
-                        >
-                            <Icon
-                                icon={
-                                    item === "table"
-                                        ? "list-view"
-                                        : item === "gantt"
-                                          ? "dataflow-03"
-                                          : "overview-view"
-                                }
-                            />
-                            {translate(item === "table" ? "Table" : item === "gantt" ? "Gantt" : "Overview")}
-                        </button>
+                        />
                     ))}
                 </SectionToolbarSide>
                 <SectionToolbarSide />

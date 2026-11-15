@@ -154,3 +154,45 @@ export const ToolbarButton: FunctionComponent<IToolbarButtonProps> = ({
 };
 
 export const ToolbarDropdownButton = React.forwardRef(ToolbarDropdownButtonPure);
+
+interface IToolbarViewButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "children"> {
+    icon?: string;
+    iconSize?: number;
+    label?: React.ReactNode;
+    children?: React.ReactNode;
+    active?: boolean;
+    views?: boolean;
+    "data-testid"?: string;
+    "data-active"?: boolean;
+}
+const ToolbarViewButtonPure: ForwardRefRenderFunction<HTMLButtonElement | null, IToolbarViewButtonProps> = (
+    {
+        icon,
+        iconSize,
+        label,
+        children,
+        active,
+        views,
+        className,
+        type = "button",
+        "data-testid": dataTestId,
+        "data-active": dataActive,
+        ...props
+    },
+    ref
+) => (
+    <button
+        {...props}
+        ref={ref}
+        type={type}
+        className={classNames("view-type-button", { active, views }, className)}
+        data-testid={dataTestId}
+        data-active={dataActive}
+    >
+        {icon ? <Icon icon={icon} size={iconSize} /> : null}
+        {label}
+        {children}
+    </button>
+);
+
+export const ToolbarViewButton = React.forwardRef(ToolbarViewButtonPure);

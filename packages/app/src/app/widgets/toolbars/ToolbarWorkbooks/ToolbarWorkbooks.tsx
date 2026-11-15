@@ -2,7 +2,7 @@
 import { Button, InputGroup } from "@blueprintjs/core";
 import { translate } from "@stacks/translations";
 
-import { Icon, ReloadButton } from "app/components/common";
+import { Icon, ReloadButton, ToolbarViewButton } from "app/components/common";
 import { WorkbooksActions } from "app/store/actions";
 import {
     MainToolbar,
@@ -54,10 +54,13 @@ export const ToolbarWorkbooks = ({ query, onQueryChange, onCreate }: ToolbarWork
             </SectionToolbar>
             <SectionToolbar>
                 <SectionToolbarSide role="tablist" aria-label={translate("Workbooks")}>
-                    <button type="button" role="tab" aria-selected className="view-type-button active">
-                        <Icon icon="list-view" />
-                        {translate("List")}
-                    </button>
+                    <ToolbarViewButton
+                        role="tab"
+                        aria-selected
+                        icon="list-view"
+                        label={translate("List")}
+                        active
+                    />
                 </SectionToolbarSide>
                 <SectionToolbarSide />
             </SectionToolbar>
