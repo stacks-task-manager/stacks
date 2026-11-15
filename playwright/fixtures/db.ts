@@ -84,6 +84,8 @@ export class DbHelper {
             await this.pool.query(`DELETE FROM "auth_sessions" WHERE "userId" = $1`, [userId]);
             await this.pool.query(`DELETE FROM "users" WHERE "id" = $1`, [userId]);
         }
+        const remaining = await this.pool.query(`SELECT "id" FROM "users" WHERE "email" = $1`, [email]);
+        if (remaining.rowCount) throw new Error(`Scenario user ${email} remains after cleanup`);
     }
 
     /** Removes only a contact ID captured from this scenario's create response. */
