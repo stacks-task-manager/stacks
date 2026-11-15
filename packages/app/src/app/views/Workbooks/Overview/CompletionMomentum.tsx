@@ -2,7 +2,7 @@
 import { Card, Classes, Intent, ProgressBar } from "@blueprintjs/core";
 import React from "react";
 import { translate } from "@stacks/translations";
-import type { IWorkbookMomentum } from "app/utils/workbookOverview";
+import type { IWorkbookMomentum } from "@stacks/types";
 
 interface ICompletionMomentumProps {
     data: IWorkbookMomentum;

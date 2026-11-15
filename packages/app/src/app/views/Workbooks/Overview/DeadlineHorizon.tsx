@@ -2,11 +2,10 @@
 import { Card, Classes } from "@blueprintjs/core";
 import React from "react";
 import { translate } from "@stacks/translations";
-import { PRIORITY } from "@stacks/types";
+import { PRIORITY, type IWorkbookDeadline } from "@stacks/types";
 
 import { Icon } from "app/components/common";
 import { getPriorityColor } from "app/utils/colors";
-import type { IWorkbookDeadline } from "app/utils/workbookOverview";
 
 interface IDeadlineHorizonProps {
     data: IWorkbookDeadline;

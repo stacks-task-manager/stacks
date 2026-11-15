@@ -2,8 +2,9 @@
 import { Card, Classes } from "@blueprintjs/core";
 import React from "react";
 import { translate } from "@stacks/translations";
+import type { IWorkbookPlanningGaps as IPlanningGapsData } from "@stacks/types";
+
 import { Icon } from "app/components/common";
-import type { IWorkbookPlanningGaps as IPlanningGapsData } from "app/utils/workbookOverview";
 
 interface IPlanningGapsProps {
     data: IPlanningGapsData;

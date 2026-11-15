@@ -2,9 +2,10 @@
 import { Card, Classes } from "@blueprintjs/core";
 import React from "react";
 import { translate } from "@stacks/translations";
+import type { IWorkbookRecentCompletion } from "@stacks/types";
+
 import { timeSince } from "app/utils/date";
 import { stripMd } from "app/utils/string";
-import type { IWorkbookRecentCompletion } from "app/utils/workbookOverview";
 
 interface IRecentlyCompletedProps {
     tasks: IWorkbookRecentCompletion[];

@@ -2,7 +2,7 @@
 import { Card, Classes, Colors } from "@blueprintjs/core";
 import React from "react";
 import { translate } from "@stacks/translations";
-import type { IWorkbookProjectWorkload } from "app/utils/workbookOverview";
+import type { IWorkbookProjectWorkload } from "@stacks/types";
 
 interface IProjectWorkloadProps {
     data: IWorkbookProjectWorkload[];

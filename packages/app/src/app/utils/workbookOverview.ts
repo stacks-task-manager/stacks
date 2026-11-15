@@ -1,81 +1,20 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { addDays, format, parseISO } from "date-fns";
-import { PRIORITY, type ITask } from "@stacks/types";
+import {
+    PRIORITY,
+    type IProjectReference,
+    type ITask,
+    type IWorkbookDeadline,
+    type IWorkbookMomentum,
+    type IWorkbookOverBudget,
+    type IWorkbookOverview,
+    type IWorkbookProjectWorkload,
+    type IWorkbookRecentCompletion,
+} from "@stacks/types";
 
 import { toCalendarDateKey } from "app/utils/date";
 
-/** A single day entry in the workbook deadline horizon. */
-export interface IWorkbookDeadlineDay {
-    label: string;
-    count: number;
-}
-
-/** Overdue count plus per-day breakdown for the next 7 days. */
-export interface IWorkbookDeadline {
-    overdue: number;
-    days: IWorkbookDeadlineDay[];
-}
-
-/** Task counts per project inside a workbook. */
-export interface IWorkbookProjectWorkload {
-    id: string;
-    title: string;
-    total: number;
-    inProgress: number;
-    done: number;
-}
-
-/** Open tasks missing planning data, grouped by gap type. */
-export interface IWorkbookPlanningGaps {
-    noDueDate: number;
-    noStartDate: number;
-    noAssignees: number;
-}
-
-/** Completion totals and progress percentage for a workbook. */
-export interface IWorkbookMomentum {
-    total: number;
-    completed: number;
-    progress: number;
-    percent: number;
-}
-
-/** A recently completed task shown in the workbook overview. */
-export interface IWorkbookRecentCompletion {
-    id: string;
-    title: string;
-    project: string;
-    doneAt?: Date | null;
-}
-
-export interface IWorkbookOverview {
-    tasksTotal: number;
-    tasksIdle: number;
-    tasksInProgress: number;
-    tasksCompleted: number;
-    tasksArchived: number;
-    tasksStartingToday: number;
-    tasksOverdue: number;
-    projects: IWorkbookProjectWorkload[];
-    deadline: IWorkbookDeadline;
-    critical: number;
-    high: number;
-    medium: number;
-    low: number;
-    assigneeIds: string[];
-    workload: Map<string, number>;
-    timeEstimatedTotal: number;
-    timeLoggedTotal: number;
-    timeRemaining: number;
-    planningGaps: IWorkbookPlanningGaps;
-    momentum: IWorkbookMomentum;
-    recentCompleted: IWorkbookRecentCompletion[];
-}
-
-interface IProjectReference {
-    id: string;
-    title: string;
-}
+const DAY_MS = 24 * 60 * 60 * 1000;
 
 /**
  * Builds the workbook overview data from tasks, their projects and assignees.
@@ -185,6 +124,46 @@ export function buildWorkbookOverview(
             doneAt: task.completed,
         }));
 
+    const overruns = tasks
+        .filter(
+            task => !task.done && (task.estimate ?? 0) > 0 && (task.timeSpent ?? 0) > (task.estimate ?? 0)
+        )
+        .map(task => ({
+            id: task.id,
+            title: task.title,
+            project: task.project,
+            estimateMinutes: task.estimate ?? 0,
+            loggedMinutes: task.timeSpent ?? 0,
+            overrunPct: Math.round(
+                (((task.timeSpent ?? 0) - (task.estimate ?? 0)) / (task.estimate ?? 0)) * 100
+            ),
+        }))
+        .sort((a, b) => b.overrunPct - a.overrunPct);
+
+    const overBudget: IWorkbookOverBudget = { count: overruns.length, tasks: overruns.slice(0, 5) };
+
+    const completionDays = tasks
+        .filter(task => task.done)
+        .map(task => {
+            const doneAt = task.dodate ?? task.completed;
+            if (!doneAt || !task.created) return null;
+            const days = (new Date(doneAt).getTime() - new Date(task.created).getTime()) / DAY_MS;
+            return days > 0 ? days : null;
+        })
+        .filter((days): days is number => days !== null);
+
+    const avgCompletionDays =
+        completionDays.length > 0
+            ? Math.round((completionDays.reduce((sum, days) => sum + days, 0) / completionDays.length) * 10) /
+              10
+            : null;
+
+    const openAges = tasks
+        .filter(task => !task.done && task.created)
+        .map(task => Math.max(0, (now.getTime() - new Date(task.created).getTime()) / DAY_MS));
+
+    const medianOpenAgeDays = openAges.length > 0 ? Math.round(median(openAges)) : null;
+
     return {
         tasksTotal: tasks.length,
         tasksIdle,
@@ -205,9 +184,17 @@ export function buildWorkbookOverview(
         timeLoggedTotal,
         timeRemaining,
         planningGaps: { noDueDate, noStartDate, noAssignees },
+        overBudget,
+        leadTime: { avgCompletionDays, medianOpenAgeDays },
         momentum,
         recentCompleted,
     };
+}
+
+function median(values: number[]): number {
+    const sorted = [...values].sort((a, b) => a - b);
+    const mid = Math.floor(sorted.length / 2);
+    return sorted.length % 2 === 1 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
 }
 
 function formatCalendarLabel(key: string, todayKey: string): string {

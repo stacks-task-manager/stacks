@@ -10,9 +10,11 @@ import { TasksPriority } from "app/views/Project/Overview/TasksPriority/TasksPri
 import { TasksSummary } from "app/views/Project/Overview/TasksSummary/TasksSummary";
 import { CompletionMomentum } from "./Overview/CompletionMomentum";
 import { DeadlineHorizon } from "./Overview/DeadlineHorizon";
+import { OverBudget } from "./Overview/OverBudget";
 import { PlanningGaps } from "./Overview/PlanningGaps";
 import { ProjectWorkload } from "./Overview/ProjectWorkload";
 import { RecentlyCompleted } from "./Overview/RecentlyCompleted";
+import { TaskAging } from "./Overview/TaskAging";
 
 interface IWorkbookOverviewProps {
     tasks: ITask[];
@@ -68,8 +70,14 @@ export const WorkbookOverview = ({ tasks, projects, timezone, onOpenTask }: IWor
                     loggedTotal={overview.timeLoggedTotal}
                     remaining={overview.timeRemaining}
                 />
+                <OverBudget
+                    data={overview.overBudget}
+                    getProjectName={getProjectName}
+                    onOpenTask={onOpenTask}
+                />
                 <PlanningGaps data={overview.planningGaps} />
                 <CompletionMomentum data={overview.momentum} />
+                <TaskAging data={overview.leadTime} />
                 <RecentlyCompleted
                     tasks={overview.recentCompleted}
                     getProjectName={getProjectName}

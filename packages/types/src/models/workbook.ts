@@ -79,3 +79,102 @@ export const sanitizeWorkbookFilters = (filters: IWorkbookFilters): IWorkbookFil
         onlyAssigned,
     };
 };
+
+/** A project reference used when building workbook overview data. */
+export interface IProjectReference {
+    id: string;
+    title: string;
+}
+
+/** A single day entry in the workbook deadline horizon. */
+export interface IWorkbookDeadlineDay {
+    label: string;
+    count: number;
+}
+
+/** Overdue count plus per-day breakdown for the next 7 days. */
+export interface IWorkbookDeadline {
+    overdue: number;
+    days: IWorkbookDeadlineDay[];
+}
+
+/** Task counts per project inside a workbook. */
+export interface IWorkbookProjectWorkload {
+    id: string;
+    title: string;
+    total: number;
+    inProgress: number;
+    done: number;
+}
+
+/** Open tasks missing planning data, grouped by gap type. */
+export interface IWorkbookPlanningGaps {
+    noDueDate: number;
+    noStartDate: number;
+    noAssignees: number;
+}
+
+/** Completion totals and progress percentage for a workbook. */
+export interface IWorkbookMomentum {
+    total: number;
+    completed: number;
+    progress: number;
+    percent: number;
+}
+
+/** An open task spending more time than its estimate. */
+export interface IWorkbookOverrunTask {
+    id: string;
+    title: string;
+    project: string;
+    estimateMinutes: number;
+    loggedMinutes: number;
+    overrunPct: number;
+}
+
+/** Open tasks over their time estimate, ranked by overrun percentage. */
+export interface IWorkbookOverBudget {
+    count: number;
+    tasks: IWorkbookOverrunTask[];
+}
+
+/** How long completed tasks took and how old open tasks are. */
+export interface IWorkbookLeadTime {
+    avgCompletionDays: number | null;
+    medianOpenAgeDays: number | null;
+}
+
+/** A recently completed task shown in the workbook overview. */
+export interface IWorkbookRecentCompletion {
+    id: string;
+    title: string;
+    project: string;
+    doneAt?: Date | null;
+}
+
+/** Aggregated data for the workbook overview view. */
+export interface IWorkbookOverview {
+    tasksTotal: number;
+    tasksIdle: number;
+    tasksInProgress: number;
+    tasksCompleted: number;
+    tasksArchived: number;
+    tasksStartingToday: number;
+    tasksOverdue: number;
+    projects: IWorkbookProjectWorkload[];
+    deadline: IWorkbookDeadline;
+    critical: number;
+    high: number;
+    medium: number;
+    low: number;
+    assigneeIds: string[];
+    workload: Map<string, number>;
+    timeEstimatedTotal: number;
+    timeLoggedTotal: number;
+    timeRemaining: number;
+    planningGaps: IWorkbookPlanningGaps;
+    overBudget: IWorkbookOverBudget;
+    leadTime: IWorkbookLeadTime;
+    momentum: IWorkbookMomentum;
+    recentCompleted: IWorkbookRecentCompletion[];
+}

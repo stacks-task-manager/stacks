@@ -95,6 +95,67 @@ describe("buildWorkbookOverview", () => {
     });
 });
 
+describe("buildWorkbookOverview overBudget", () => {
+    it("ranks open tasks spending more than their estimate by overrun percentage", () => {
+        const tasks = [
+            task({ id: "1", title: "A", estimate: 60, timeSpent: 90 }), // +50%
+            task({ id: "2", title: "B", estimate: 120, timeSpent: 300 }), // +150%
+            task({ id: "3", title: "C", estimate: 60, timeSpent: 30 }), // under budget
+            task({
+                id: "4",
+                title: "D",
+                done: true,
+                completed: dateBeforeNow(1),
+                estimate: 60,
+                timeSpent: 90,
+            }), // completed → excluded
+        ];
+
+        const overview = buildWorkbookOverview(tasks, [], NOW, TIME_ZONE);
+
+        expect(overview.overBudget.count).toBe(2);
+        expect(overview.overBudget.tasks.map(task => task.id)).toEqual(["2", "1"]);
+        expect(overview.overBudget.tasks[0].overrunPct).toBe(150);
+    });
+
+    it("ignores tasks without an estimate or with no logged time", () => {
+        const overview = buildWorkbookOverview(
+            [task({ id: "1", title: "A", estimate: 0, timeSpent: 60 })],
+            [],
+            NOW,
+            TIME_ZONE
+        );
+
+        expect(overview.overBudget.count).toBe(0);
+    });
+});
+
+describe("buildWorkbookOverview leadTime", () => {
+    it("computes average completion days and median open task age", () => {
+        const tasks = [
+            // completed 3 days after creation
+            task({ id: "1", done: true, completed: dateBeforeNow(1), created: dateBeforeNow(4) }),
+            // completed 5 days after creation
+            task({ id: "2", done: true, completed: dateBeforeNow(1), created: dateBeforeNow(6) }),
+            // open tasks aged 2 and 8 days → median 5
+            task({ id: "3", created: dateBeforeNow(2) }),
+            task({ id: "4", created: dateBeforeNow(8) }),
+        ];
+
+        const overview = buildWorkbookOverview(tasks, [], NOW, TIME_ZONE);
+
+        expect(overview.leadTime.avgCompletionDays).toBe(4); // (3 + 5) / 2
+        expect(overview.leadTime.medianOpenAgeDays).toBe(5); // median of [2, 8]
+    });
+
+    it("returns null when there is no data", () => {
+        const overview = buildWorkbookOverview([], [], NOW, TIME_ZONE);
+
+        expect(overview.leadTime.avgCompletionDays).toBeNull();
+        expect(overview.leadTime.medianOpenAgeDays).toBeNull();
+    });
+});
+
 describe("formatDueDate", () => {
     it("labels today and tomorrow in the requested time zone", () => {
         expect(formatDueDate(new Date("2026-01-01T01:00:00Z"), NOW, TIME_ZONE)).toBe("Today");
