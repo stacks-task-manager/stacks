@@ -8,7 +8,7 @@ import {
 } from "app/widgets/toolbars/ToolbarLayout";
 export const InboxToolbar = () => {
     return (
-        <MainToolbar>
+        <MainToolbar data-testid="inbox-toolbar">
             <SectionToolbar>
                 <SectionToolbarSide side>
                     <SectionToolbarTitle>

@@ -56,29 +56,32 @@ export const Inbox = () => {
                 <div id="notifications">
                     <div className="notifications__sidebar">
                         {notifications.length > 0 ? (
-                            <CardList bordered={false}>
-                                <Scroller thin vertical>
-                                    {notifications.map(notification => (
-                                        <Notification
-                                            key={notification.id}
-                                            notification={notification}
-                                            isSelected={selected === notification.id}
-                                            onSelect={handleSelectNotification}
-                                        />
-                                    ))}
-                                </Scroller>
-                            </CardList>
+                            <div data-testid="inbox-list">
+                                <CardList bordered={false}>
+                                    <Scroller thin vertical>
+                                        {notifications.map(notification => (
+                                            <Notification
+                                                key={notification.id}
+                                                notification={notification}
+                                                isSelected={selected === notification.id}
+                                                onSelect={handleSelectNotification}
+                                            />
+                                        ))}
+                                    </Scroller>
+                                </CardList>
+                            </div>
                         ) : (
                             <BlankSlate
                                 title="No notifications"
                                 description="All new updates in your inbox will appear here"
                                 icon="message-chat-square"
+                                testId="inbox-blank-slate"
                             />
                         )}
                     </div>
                     <div className="notifications__content">
                         {notification ? (
-                            <Grid>
+                            <Grid data-testid="inbox-detail">
                                 <Row className="notifications__block" gutter={5}>
                                     <Col width={30}>
                                         <IconPill
@@ -88,7 +91,9 @@ export const Inbox = () => {
                                         />
                                     </Col>
                                     <Col fill vertical>
-                                        <h2 style={{ margin: 0 }}>{notification.subject}</h2>
+                                        <h2 style={{ margin: 0 }} data-testid="inbox-detail-subject">
+                                            {notification.subject}
+                                        </h2>
                                         <div className={Classes.TEXT_MUTED}>
                                             {format(notification.created, "PP pp")}
                                         </div>
@@ -101,7 +106,9 @@ export const Inbox = () => {
                                     </Col>
                                 </Row>
                                 <Divider />
-                                <div className="notifications__block">{notification.message}</div>
+                                <div className="notifications__block" data-testid="inbox-detail-message">
+                                    {notification.message}
+                                </div>
                                 <pre>{JSON.stringify(notification.data)}</pre>
                             </Grid>
                         ) : (
@@ -110,6 +117,7 @@ export const Inbox = () => {
                                     title="Nothing to preview"
                                     description="Select a notification to preview its details"
                                     icon="lightbulb-04"
+                                    testId="inbox-detail-empty"
                                 />
                             </Grid>
                         )}
@@ -132,6 +140,8 @@ const Notification: FunctionComponent<NotificationProps> = ({ notification, isSe
             selected={isSelected}
             className={classNames({ selected: isSelected })}
             key={notification.id}
+            data-testid={`inbox-notification-${notification.id}`}
+            data-unread={!notification.read}
             onClick={() => onSelect(notification.id)}
         >
             <Grid
@@ -186,7 +196,12 @@ const NotificationButton: FC<NotificationButtonProps> = ({ recordId, recordType 
     };
 
     return (
-        <Button endIcon={<Icon icon="link-external-01" />} intent={Intent.PRIMARY} onClick={handleOpenRecord}>
+        <Button
+            data-testid="inbox-detail-action"
+            endIcon={<Icon icon="link-external-01" />}
+            intent={Intent.PRIMARY}
+            onClick={handleOpenRecord}
+        >
             {buttonLabel}
         </Button>
     );
