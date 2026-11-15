@@ -426,6 +426,14 @@ class TasksTable {
         }
     }
 
+    /** Sets the start date of a task through the API (the timebox board groups by start date). */
+    public async setTaskStartDateViaApi(taskId: string, startDate: string) {
+        const response = await this.mutateApi("PATCH", `/api/tasks/${taskId}`, { startdate: startDate });
+        if (!response.ok) {
+            throw new Error(`Setting task start date failed with HTTP ${response.status}`);
+        }
+    }
+
     /** Creates a task inside a project stack through the API. Returns the new task id. */
     public async createTaskViaApi({
         projectId,
