@@ -81,14 +81,18 @@ export const File = () => {
     return (
         <AppView toolbar={<ToolbarFile />}>
             <AppViewContent padded>
-                <div id="file">
+                <div id="file" data-testid="file-view">
                     <div className="file-info">
                         <div className="file-options">
                             <Popover
                                 placement="bottom-end"
                                 content={<FileMenu attachmentId={file.id} onDelete={handleDelete} />}
                             >
-                                <Button variant="minimal" icon={<Icon icon="dots-vertical" />} />
+                                <Button
+                                    variant="minimal"
+                                    icon={<Icon icon="dots-vertical" />}
+                                    data-testid="file-menu-button"
+                                />
                             </Popover>
                         </div>
                         <div className="file-icon">
@@ -96,17 +100,20 @@ export const File = () => {
                             <span>{file.extension}</span>
                         </div>
 
-                        <div className="file-name">{file.originalName}</div>
+                        <div className="file-name" data-testid="file-name">
+                            {file.originalName}
+                        </div>
 
                         <div className="file-footer">
                             <div className="file-size">
                                 <span>{translate("Filesize")}</span>
-                                <span>{humanFileSize(file.size)}</span>
+                                <span data-testid="file-size">{humanFileSize(file.size)}</span>
                             </div>
 
                             <Button
                                 onClick={() => alert(translate("Open online file"))}
                                 icon="cloud-download"
+                                data-testid="file-download-button"
                             >
                                 {translate("Download file")}
                             </Button>

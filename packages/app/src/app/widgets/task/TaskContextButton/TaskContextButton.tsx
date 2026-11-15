@@ -82,6 +82,7 @@ export const TaskContextButton: FunctionComponent<TaskContextButtonProps> = ({ t
                         ref={ref}
                         {...popoverProps}
                         className={classNames("task-context-button", { [Classes.ACTIVE]: isOpen })}
+                        data-testid="task-context-menu-button"
                     >
                         <Icon icon="dots-vertical" />
                     </button>

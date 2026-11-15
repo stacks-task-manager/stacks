@@ -101,7 +101,7 @@ const DraggableTaskCard: FunctionComponent<DraggableTaskCardProps> = props => {
     );
 };
 
-interface ITaskCardProps {
+interface ITaskCardProps extends React.HTMLProps<HTMLDivElement> {
     taskId: string;
     stackId?: string;
     /** When set, used as the drag-drop container id (e.g. timebox day column). Falls back to stack-column-{stackId}. */
