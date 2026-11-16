@@ -96,7 +96,11 @@ const Link: FunctionComponent<LinkProps> = ({ link }) => {
 
     return (
         <li key={link.id}>
-            <div className={classNames("link-menu-item", Classes.MENU_ITEM)} onClick={handleOpenLink}>
+            <div
+                className={classNames("link-menu-item", Classes.MENU_ITEM)}
+                data-testid={`link-row-${link.id}`}
+                onClick={handleOpenLink}
+            >
                 <LinkPreview link={link} />
 
                 <div className={Classes.FILL} style={{ minWidth: 0 }}>
@@ -164,11 +168,13 @@ const Link: FunctionComponent<LinkProps> = ({ link }) => {
                                     text={translate("Open link ellipsis")}
                                     icon={<Icon icon="link-external-01" />}
                                     onClick={handleOpenLink}
+                                    data-testid={`link-open-${link.id}`}
                                 />
                                 <MenuItem
                                     text={translate("Copy url")}
                                     icon={<Icon icon="copy" />}
                                     onClick={handleCopyLink}
+                                    data-testid={`link-copy-${link.id}`}
                                 />
                             </Menu>
                         }
@@ -181,6 +187,7 @@ const Link: FunctionComponent<LinkProps> = ({ link }) => {
                                 size="small"
                                 variant="minimal"
                                 icon={<Icon icon="dots-vertical" />}
+                                data-testid={`link-menu-button-${link.id}`}
                             />
                         )}
                     />

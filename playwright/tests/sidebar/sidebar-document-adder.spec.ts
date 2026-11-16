@@ -111,8 +111,6 @@ test.describe("Sidebar - Document adder", () => {
         await notepad.newNotepadDialog.cancelButton.click();
         await expect(notepad.newNotepadDialog.dialog).toBeHidden();
 
-        // add assert for adding a new file
-
         // should show the new bookmark dialog
         await showQuickAddMenu();
         await page.keyboard.press("b");

@@ -26,6 +26,10 @@ class Calendar extends Base {
     public integrationsButton: Locator;
     public connectMenuItem: Locator;
     public googleConnectButton: Locator;
+    public filterButton: Locator;
+    public newLocalButton: Locator;
+    public newLocalPopover: Locator;
+    public localCalendarFilter: Locator;
 
     constructor(page: Page) {
         super(page);
@@ -50,6 +54,19 @@ class Calendar extends Base {
         this.integrationsButton = page.getByTestId("calendar-integrations-button");
         this.connectMenuItem = page.getByTestId("calendar-integrations-menu");
         this.googleConnectButton = page.getByTestId("calendar-google-connect");
+        this.filterButton = page.getByTestId("calendar-filter-button");
+        this.newLocalButton = page.getByTestId("calendar-new-local-button");
+        this.newLocalPopover = page.getByTestId("calendar-new-local-popover");
+        this.localCalendarFilter = page.getByTestId("local-calendar-filter");
+    }
+
+    async openFilters() {
+        await this.filterButton.click();
+    }
+
+    async openNewLocalCalendar() {
+        await this.newLocalButton.click();
+        await this.newLocalPopover.waitFor({ state: "visible" });
     }
 
     async open() {

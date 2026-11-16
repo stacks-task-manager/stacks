@@ -141,6 +141,8 @@ export function tablePersistentAutoSort<T>(
 
 interface TablePersistentProps<T> {
     id: string;
+    /** Optional test id for the table root; defaults to `table-${id}`. */
+    testId?: string;
     columns: ITableColumns<T>;
     defaultVisibleColumns?: string[];
     sticky?: boolean;
@@ -172,6 +174,7 @@ interface TablePersistentProps<T> {
 }
 export function TablePersistent<T>({
     id,
+    testId,
     sticky,
     lazy,
     columns,
@@ -272,7 +275,7 @@ export function TablePersistent<T>({
 
     return (
         <DragDropContext onDragEnd={onDragEnd ? onDragEnd : noop}>
-            <Table sticky={sticky} testId={`table-${id}`}>
+            <Table sticky={sticky} testId={testId ?? `table-${id}`}>
                 <TableHead>
                     {Object.keys(orderedColumns)
                         .filter(col => visibleColumnsToRender.includes(col))

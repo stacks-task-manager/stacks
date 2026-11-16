@@ -293,13 +293,20 @@ class Preferences extends Base {
     }
 
     public async restorePreferences(preferences: Record<string, unknown>) {
-        await this.page.evaluate(async restoredPreferences => {
-            await fetch("/api/preferences", {
+        const result = await this.page.evaluate(async restoredPreferences => {
+            const csrfResponse = await fetch("/auth/csrf");
+            const csrfBody = await csrfResponse.json();
+            const response = await fetch("/api/preferences", {
                 method: "PATCH",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-csrf-token": csrfBody.data?.token,
+                },
                 body: JSON.stringify(restoredPreferences),
             });
+            return { ok: response.ok, status: response.status };
         }, preferences);
+        expect(result.ok, `Failed to restore preferences (status ${result.status})`).toBeTruthy();
         await this.page.reload();
     }
 

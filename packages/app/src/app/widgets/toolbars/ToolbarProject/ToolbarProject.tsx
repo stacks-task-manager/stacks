@@ -667,6 +667,7 @@ const AttachmentsSearch = () => {
             round
             type="search"
             onChange={handleChangeQuery}
+            data-testid="project-attachments-search"
         />
     );
 };
@@ -693,6 +694,7 @@ const LinksSearch = () => {
             round
             type="search"
             onChange={handleChangeQuery}
+            data-testid="project-links-search"
         />
     );
 };
@@ -771,6 +773,7 @@ export const FilterButton = () => {
                 badge={Boolean(hasFilters)}
                 keys={["meta", "F"]}
                 placement="bottom-end"
+                data-testid="project-filter-button"
                 onClick={handleToggleFilter}
                 active={isActive}
             />

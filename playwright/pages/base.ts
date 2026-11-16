@@ -1,5 +1,14 @@
-import { expect, type Locator, type Page } from "@playwright/test";
+import { expect, type Locator, type Page, type Response } from "@playwright/test";
 import { e2eBaseUrl } from "../config/runtime";
+
+/** Metadata and body of a `/api/export` response, captured by captureExport. */
+export interface ExportResult {
+    status: number;
+    contentType: string;
+    contentDisposition: string | undefined;
+    requestBody: unknown;
+    body: Buffer;
+}
 
 class Base {
     public page: Page;
@@ -160,6 +169,55 @@ class Base {
 
     async getSelectorHTML(selector: Locator) {
         return await selector.evaluateAll(elements => elements.map(element => element.outerHTML));
+    }
+
+    /** Export format -> request `format` value and response content-type. */
+    private static readonly EXPORT_META = {
+        xlsx: {
+            requestFormat: "excel",
+            contentType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        },
+        json: { requestFormat: "json", contentType: "application/json" },
+        pdf: { requestFormat: "pdf", contentType: "application/pdf" },
+        html: { requestFormat: "html", contentType: "text/html" },
+    } as const;
+
+    /**
+     * Intercepts the POST /api/export response triggered by running `click` (the caller
+     * opens the menu first) and returns its metadata and body. PDF generation is slow, so
+     * the wait is capped at 60s — a timeout here is a real failure, not a flake.
+     */
+    public async captureExport<T>(click: () => T | Promise<T>): Promise<ExportResult> {
+        const responsePromise = this.page.waitForResponse(
+            response => response.url().includes("/api/export") && response.request().method() === "POST",
+            { timeout: 60000 }
+        );
+        await click();
+        const response: Response = await responsePromise;
+        return {
+            status: response.status(),
+            contentType: response.headers()["content-type"],
+            contentDisposition: response.headers()["content-disposition"],
+            requestBody: response.request().postDataJSON(),
+            body: await response.body(),
+        };
+    }
+
+    /**
+     * Asserts a captured export is a successful attachment of the given format. `type`,
+     * when given, is matched against the request payload's `type` field.
+     */
+    public expectExportResult(result: ExportResult, format: keyof typeof Base.EXPORT_META, type?: string) {
+        const meta = Base.EXPORT_META[format];
+        expect(result.status).toBe(200);
+        expect(result.contentType).toContain(meta.contentType);
+        expect(result.contentDisposition).toMatch(new RegExp(`\\.${format}$`, "i"));
+        if (type) {
+            expect(result.requestBody as Record<string, unknown>).toMatchObject({
+                type,
+                format: meta.requestFormat,
+            });
+        }
     }
 }
 export default Base;

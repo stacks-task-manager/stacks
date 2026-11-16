@@ -63,4 +63,21 @@ test.describe("Project - Settings", () => {
         await expect(project.settings.backgroundUrlInput).toHaveValue(backgroundUrl);
         await project.settings.close();
     });
+
+    test("Should add and remove a project custom field", async () => {
+        const fieldTitle = `E2E field ${Math.floor(Math.random() * 10000)}`;
+        await project.openSettings();
+        try {
+            await project.settings.addField(fieldTitle);
+            await expect(project.settings.fieldRow(fieldTitle)).toBeVisible();
+
+            await project.settings.deleteField(fieldTitle);
+            await expect(project.settings.fieldRow(fieldTitle)).toBeHidden();
+        } finally {
+            // Close the settings dialog via Escape (robust against the post-delete re-render).
+            await page.keyboard.press("Escape");
+            await page.keyboard.press("Escape");
+            await project.settings.dialog.waitFor({ state: "hidden" }).catch(() => undefined);
+        }
+    });
 });

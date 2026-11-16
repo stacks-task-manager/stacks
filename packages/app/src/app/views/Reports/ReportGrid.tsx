@@ -92,6 +92,7 @@ export const ReportGrid: FunctionComponent<ReportGridProps> = ({ type, columns, 
     return (
         <TablePersistent<ReportRow>
             id={type}
+            testId="report-grid"
             sticky
             enableReorder={false}
             columns={columns}

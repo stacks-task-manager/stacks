@@ -20,11 +20,19 @@ export type SeedChatMessage = {
 class AiChat extends Base {
     public assistantButton: Locator;
     public panel: Locator;
+    public input: Locator;
+    public sendButton: Locator;
+    public closeButton: Locator;
+    public clearButton: Locator;
 
     constructor(page: Page) {
         super(page);
         this.assistantButton = page.getByTestId("ai-chat-open");
         this.panel = page.getByTestId("ai-chat-panel");
+        this.input = page.getByTestId("ai-chat-input");
+        this.sendButton = page.getByTestId("ai-chat-send");
+        this.closeButton = page.getByTestId("ai-chat-close");
+        this.clearButton = page.getByTestId("ai-chat-clear");
     }
 
     async expectResult(label: string) {

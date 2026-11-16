@@ -155,6 +155,10 @@ export const TipTapEditor: React.FC<TipTapEditorPropsExtended> = ({
         },
         editable: disabled != null ? !disabled : true,
         onUpdate: ({ editor }: UpdatePayload) => {
+            if (editor.isDestroyed) {
+                return;
+            }
+
             if (preventUpdateRef.current) {
                 preventUpdateRef.current = false;
                 return;
@@ -171,10 +175,10 @@ export const TipTapEditor: React.FC<TipTapEditorPropsExtended> = ({
     });
 
     useEffect(() => {
-        if (editor && value != null) {
-            const html = editor.getHTML();
-
+        if (editor && !editor.isDestroyed && value != null) {
             try {
+                const html = editor.getHTML();
+
                 if (html !== value) {
                     preventUpdateRef.current = true;
                     editor.commands.setContent(value ?? "", { emitUpdate: true });
@@ -222,10 +226,15 @@ export const TipTapEditor: React.FC<TipTapEditorPropsExtended> = ({
     }, [editor, onBlur, onBoot, onFocus]);
 
     useEffect(() => {
-        if (editor) {
-            preventUpdateRef.current = true;
-            editor.setEditable(!Boolean(disabled));
-            if (contentTestId) editor.view.dom.setAttribute("data-testid", contentTestId);
+        if (editor && !editor.isDestroyed) {
+            try {
+                preventUpdateRef.current = true;
+                editor.setEditable(!Boolean(disabled));
+                if (contentTestId) editor.view.dom.setAttribute("data-testid", contentTestId);
+            } catch (error) {
+                // eslint-disable-next-line no-console
+                console.error("Error configuring editor state", error);
+            }
         }
     }, [contentTestId, disabled, editor]);
 

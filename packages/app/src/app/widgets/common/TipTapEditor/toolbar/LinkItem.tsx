@@ -35,6 +35,7 @@ export const LinkItem = ({ editor, small, isLink }: TipTapToolbarItem) => {
                             variant={ButtonVariant.MINIMAL}
                             icon={<Icon icon="link-01" />}
                             intent={isLink ? Intent.PRIMARY : Intent.NONE}
+                            data-testid="tip-tap-link"
                         />
                     )}
                 />
