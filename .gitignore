@@ -105,6 +105,10 @@ graft/
 opencode.json
 opencode-swarm.json
 
+# local agent tooling (regenerable, machine-specific)
+.claude/
+.trail/
+
 # Manual live-model evaluation reports
 ai-eval-reports/
 
