@@ -26,3 +26,4 @@ export * from "./tags";
 export * from "./tasks";
 export * from "./tenants";
 export * from "./timelogs";
+export * from "./workbooks";

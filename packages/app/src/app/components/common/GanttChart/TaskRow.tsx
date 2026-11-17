@@ -88,7 +88,7 @@ export function TaskRow({
                             <path d={`M 0.5 0 V ${ROW_HEIGHT}`} />
                         </svg>
                     ))}
-                    {row.children.length > 0 && (
+                    {row.children.length > 0 && !collapsed && (
                         <svg
                             className="stacks-gantt-tree-child-line"
                             data-testid={`gantt-tree-child-line-${row.id}`}

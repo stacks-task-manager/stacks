@@ -3,7 +3,7 @@
  * Attachments: listing, streaming upload, dedupe check, delete, download.
  */
 import { FILES_TYPE, IAttachment } from "@stacks/types";
-import request from "./request";
+import request, { clearCsrfToken, getCsrfToken } from "./request";
 
 export const FilesAPI = {
     /** Lists attachments for a record and category. */
@@ -18,6 +18,8 @@ export const FilesAPI = {
         type: FILES_TYPE,
         onProgress?: (progress: number) => void
     ): Promise<IAttachment> {
+        const csrfToken = await getCsrfToken();
+
         return new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
 
@@ -38,6 +40,10 @@ export const FilesAPI = {
                         reject(new Error("Invalid response format"));
                     }
                 } else {
+                    if (xhr.status === 401 || xhr.status === 403) {
+                        // The cached token is no longer usable; ask for a new one next time.
+                        clearCsrfToken();
+                    }
                     reject(new Error(`Upload failed with status ${xhr.status}`));
                 }
             });
@@ -54,6 +60,9 @@ export const FilesAPI = {
             xhr.setRequestHeader("x-file-type", file.type);
             xhr.setRequestHeader("x-record-id", recordId);
             xhr.setRequestHeader("x-file-category", type);
+            if (csrfToken) {
+                xhr.setRequestHeader("x-csrf-token", csrfToken);
+            }
 
             // Send the file as a stream
             xhr.send(file);

@@ -4,7 +4,7 @@ import { Classes, Menu, MenuDivider, MenuItem } from "@blueprintjs/core";
 import React, { FunctionComponent, useCallback } from "react";
 import { PRIORITY } from "@stacks/types";
 import { useMenuKeyboardNavigation } from "app/hooks";
-import { PriorityMenuItems } from "app/widgets";
+import { PriorityMenuItems } from "app/widgets/common/PriorityMenuItems/PriorityMenuItems";
 
 const Priorities = [PRIORITY.NONE, PRIORITY.CRITICAL, PRIORITY.HIGH, PRIORITY.MEDIUM, PRIORITY.LOW];
 

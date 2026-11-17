@@ -48,12 +48,12 @@ import { EVENTTYPE, ICalendarEvent, ICalendarSource, ITimeLogExtended, TAGSECTIO
 import { CalendarActions } from "app/store/actions";
 import { CalendarStore } from "app/store/calendar";
 import { openInNewTab } from "app/utils/browser";
-import { DateTimePicker } from "app/widgets/date";
+import { TimeInput } from "app/widgets/date";
 import { CalendarPicker } from "../CalendarPicker/CalendarPicker";
 import { formatDuration } from "app/utils/date";
 import { HTMLRenderer, Tags, TagsWrapper } from "app/widgets/common";
 import { PriorityChip, TaskDetailsAssignees } from "app/components/project";
-import { TaskDetailsStatus } from "app/widgets/status";
+import { TaskStatus } from "app/widgets/status";
 import { DateInput } from "@blueprintjs/datetime";
 
 type RecurrenceFrequency = "none" | "daily" | "weekly" | "monthly" | "yearly";
@@ -456,7 +456,7 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew, isAl
                                     <FormGroup label={translate("Starts")}>
                                         <Grid gap={10}>
                                             {!isAllDay && (
-                                                <DateTimePicker
+                                                <TimeInput
                                                     value={startTime}
                                                     is24Hour={is24Hours}
                                                     disabled={isDisabled}
@@ -484,7 +484,7 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({ event, isNew, isAl
                                     <FormGroup label={translate("Ends")}>
                                         <Grid gap={10}>
                                             {!isAllDay && (
-                                                <DateTimePicker
+                                                <TimeInput
                                                     value={endTime}
                                                     is24Hour={is24Hours}
                                                     min={isSameDayValue ? startTime : undefined}
@@ -734,7 +734,7 @@ const TaskDetails: FunctionComponent<TaskDetailsProps> = ({ taskId }) => {
 
                         <FormGroup label={translate("Status")}>
                             {task.status ? (
-                                <TaskDetailsStatus value={task.status} disabled taskId="none" />
+                                <TaskStatus variant="detail" value={task.status} disabled taskId="none" />
                             ) : (
                                 <span className={Classes.TEXT_MUTED}>{translate("No status")}</span>
                             )}

@@ -4,7 +4,8 @@ import React, { FunctionComponent } from "react";
 import { IPerson } from "@stacks/types";
 import classNames from "classnames";
 import { Button } from "@blueprintjs/core";
-import { Avatar, Icon } from "app/components/common";
+import { Avatar } from "app/components/common/Avatar/Avatar";
+import { Icon } from "app/components/common/Icon/Icon";
 
 interface IAvatarChipProps {
     person: IPerson;

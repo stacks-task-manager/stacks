@@ -7,27 +7,34 @@ import { ReportsActions } from "app/store/actions";
 import { ReportSpan, ReportsStore } from "app/store/reports";
 import { useNavigate, useParams } from "react-router-dom";
 import { Icon } from "app/components/common";
+import {
+    MainToolbar,
+    SectionToolbar,
+    SectionToolbarOptions,
+    SectionToolbarSide,
+    SectionToolbarTitle,
+} from "app/widgets/toolbars/ToolbarLayout";
 
 export const ToolbarReports = () => {
     return (
-        <div className="main-toolbar">
-            <div className="section-toolbar">
-                <div className="section-toolbar-side side">
-                    <div className="section-toolbar-title">
+        <MainToolbar>
+            <SectionToolbar>
+                <SectionToolbarSide side>
+                    <SectionToolbarTitle>
                         <h1>{translate("Reports")}</h1>
-                    </div>
-                    <div className="section-toolbar-options">&nbsp;</div>
-                </div>
-                <div className="section-toolbar-side fixed">
+                    </SectionToolbarTitle>
+                    <SectionToolbarOptions>&nbsp;</SectionToolbarOptions>
+                </SectionToolbarSide>
+                <SectionToolbarSide fixed>
                     {/* <ReloadButton
                         tooltip="Reload reports"
                         placement="bottom-end"
                         onClick={ReportsActions.load}
                     /> */}
-                </div>
-            </div>
-            <div className="section-toolbar">
-                <div className="section-toolbar-side">
+                </SectionToolbarSide>
+            </SectionToolbar>
+            <SectionToolbar>
+                <SectionToolbarSide>
                     {/* <button
                         className={classNames("view-type-button", { active: viewType === "table" })}
                         onClick={() => ReportsActions.setView("table")}
@@ -49,10 +56,10 @@ export const ToolbarReports = () => {
                         <Icon icon="overview-view" size={14} />
                         {translate("Overview")}
                     </button> */}
-                </div>
-                <div className="section-toolbar-side"></div>
-            </div>
-        </div>
+                </SectionToolbarSide>
+                <SectionToolbarSide></SectionToolbarSide>
+            </SectionToolbar>
+        </MainToolbar>
     );
 };
 
@@ -93,10 +100,10 @@ export const ToolbarReport = () => {
     }, [params.type, reports]);
 
     return (
-        <div className="main-toolbar">
-            <div className="section-toolbar">
-                <div className="section-toolbar-side side">
-                    <div className="section-toolbar-title">
+        <MainToolbar>
+            <SectionToolbar>
+                <SectionToolbarSide side>
+                    <SectionToolbarTitle>
                         <Button
                             icon="chevron-left"
                             onClick={() => navigate("/reports")}
@@ -110,16 +117,16 @@ export const ToolbarReport = () => {
                                 <Icon icon="info-circle" cursor="help" />
                             </Tooltip>
                         )}
-                    </div>
-                </div>
-                <div className="section-toolbar-side fixed">
+                    </SectionToolbarTitle>
+                </SectionToolbarSide>
+                <SectionToolbarSide fixed>
                     <SegmentedControl
                         options={ReportFilterSpan}
                         value={span}
                         onValueChange={newSpan => ReportsActions.setSpan(newSpan as ReportSpan)}
                     />
-                </div>
-            </div>
-        </div>
+                </SectionToolbarSide>
+            </SectionToolbar>
+        </MainToolbar>
     );
 };

@@ -1,6 +1,7 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
-import { HTMLSelect } from "@blueprintjs/core";
 import React, { FunctionComponent } from "react";
+
+import { SelectPicker } from "app/components/common/SelectPicker/SelectPicker";
 
 const industries = [
     "Accounting ",
@@ -154,20 +155,17 @@ const industries = [
 
 interface IIndustryPickerProps {
     defaultValue: string | null;
-    onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+    onChange: (industry: string) => void;
 }
 
 export const IndustryPicker: FunctionComponent<IIndustryPickerProps> = ({ defaultValue, onChange }) => {
     return (
-        <HTMLSelect defaultValue={defaultValue ?? undefined} fill onChange={onChange}>
-            <option selected disabled>
-                Choose industry
-            </option>
-            {industries.map((industry: string) => (
-                <option value={industry} key={industry}>
-                    {industry}
-                </option>
-            ))}
-        </HTMLSelect>
+        <SelectPicker
+            defaultValue={defaultValue ?? undefined}
+            placeholder="Choose industry"
+            options={industries.map(industry => ({ value: industry, label: industry }))}
+            fill
+            onChange={onChange}
+        />
     );
 };

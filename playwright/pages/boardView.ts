@@ -1,5 +1,6 @@
 import { expect, Locator, Page } from "@playwright/test";
 import Base from "./base";
+import TaskContextMenu from "./components/TaskContextMenu";
 
 class BoardView extends Base {
     public board: Locator;
@@ -134,6 +135,42 @@ class BoardView extends Base {
         // confirm delete
         await this.page.getByRole("alertdialog").getByRole("button", { name: "Yes" }).click();
         await expect(this.page.getByRole("alertdialog")).toBeHidden();
+    }
+
+    /**
+     * Opens the card's dots context menu for the given task. Returns the menu
+     * surface; callers must act on it (or close it) before the next step.
+     */
+    public async openTaskContextMenu(taskTitle: string): Promise<TaskContextMenu> {
+        const card = this.getCardByName(taskTitle);
+        await expect(card).toBeVisible();
+        const menu = new TaskContextMenu(this.page, card);
+        await menu.open();
+        return menu;
+    }
+
+    /**
+     * Keyboard-selects the first `count` tasks of the first column, mirroring the
+     * navigation sequence in {@link BoardView.expectKeyboardShortcuts} (ArrowRight
+     * enters the column and anchors the first task; ArrowDown walks down;
+     * Shift+ArrowUp range-selects back to the anchor). This is the app's own
+     * multi-selection path — not a click-based selection.
+     */
+    public async selectFirstTasks(count: number): Promise<void> {
+        if (count < 1) throw new Error("selectFirstTasks requires at least one task");
+        await this.page.getByTestId("toggle-sidebar-button").focus();
+        await this.page.keyboard.press("ArrowRight");
+        await expect(this.getColumnByIndex(0).getByTestId("selected-board-column")).toBeVisible();
+        for (let i = 1; i < count; i++) {
+            await this.page.keyboard.press("ArrowDown");
+        }
+        if (count > 1) {
+            await this.page.keyboard.press("Shift+ArrowUp");
+        }
+        const cards = this.getColumnByIndex(0).getByTestId("task-card-click-target");
+        for (let i = 0; i < count; i++) {
+            await expect(cards.nth(i)).toHaveAttribute("data-selected", "true");
+        }
     }
 
     public async addTaskToColumn(columnName: string, taskTitle: string): Promise<void> {

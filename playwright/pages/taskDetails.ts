@@ -460,6 +460,101 @@ class TaskDetails extends Base {
         await expect(this.page.getByTestId("progress-menu")).toBeHidden();
     }
 
+    // ── Task repeats (RepeatPicker) ──────────────────────────────────────────
+
+    private async waitForTaskPatch(taskId: string, action: () => Promise<unknown>): Promise<void> {
+        const update = this.page.waitForResponse(
+            response =>
+                response.request().method() === "PATCH" && response.url().includes(`/api/tasks/${taskId}`)
+        );
+        await action();
+        expect((await update).ok(), "repeat update PATCH failed").toBeTruthy();
+    }
+
+    public async openRepeatPicker(): Promise<void> {
+        // When the task has no repeat yet, opening the picker auto-sets a default
+        // (WEEKLY) via the popover's onOpening. Settle that PATCH so it cannot race
+        // the first explicit change made after the picker is open.
+        const onOpeningPatch = this.page.waitForResponse(
+            response => response.request().method() === "PATCH" && response.url().includes("/api/tasks/"),
+            { timeout: 2000 }
+        );
+        await this.task.getByTestId("task-details-repeat-trigger").click();
+        await this.page.getByTestId("repeat-type-select").waitFor({ state: "visible" });
+        try {
+            await onOpeningPatch;
+        } catch {
+            /* no onOpening PATCH — a repeat was already set */
+        }
+    }
+
+    public async selectRepeatType(type: string): Promise<void> {
+        const taskId = await this.getTaskId();
+        await this.waitForTaskPatch(taskId, () =>
+            this.page.getByTestId("repeat-type-select").selectOption(type)
+        );
+    }
+
+    public async selectRepeatMonthDay(day: string): Promise<void> {
+        const taskId = await this.getTaskId();
+        await this.waitForTaskPatch(taskId, () =>
+            this.page.getByTestId("repeat-month-day-select").selectOption(day)
+        );
+    }
+
+    public async setRepeatPeriod(days: number): Promise<void> {
+        const taskId = await this.getTaskId();
+        await this.waitForTaskPatch(taskId, async () => {
+            const input = this.page.getByTestId("repeat-period-input");
+            await input.fill(String(days));
+            await input.press("Enter");
+        });
+    }
+
+    public async setRepeatReopen(reopen: boolean): Promise<void> {
+        const checkbox = this.page.getByTestId("repeat-reopen-checkbox");
+        if ((await checkbox.isChecked()) === reopen) return;
+        const taskId = await this.getTaskId();
+        // Blueprint renders the testid on a hidden <input>; the visible <span> indicator
+        // intercepts pointer events. Click the wrapping <label> to toggle it reliably.
+        await this.waitForTaskPatch(taskId, () => checkbox.locator("xpath=ancestor::label[1]").click());
+    }
+
+    public async clearRepeat(): Promise<void> {
+        const taskId = await this.getTaskId();
+        await this.waitForTaskPatch(taskId, () => this.page.getByTestId("repeat-clear-button").click());
+    }
+
+    public async closeRepeatPicker(): Promise<void> {
+        await this.page.keyboard.press("Escape");
+        await this.page.getByTestId("repeat-type-select").waitFor({ state: "hidden" });
+    }
+
+    public async getPersistedRepeat(taskId: string): Promise<any> {
+        const task = await this.getPersistedTask(taskId);
+        return task.repeats ?? null;
+    }
+
+    public async expectRepeatPersisted(
+        taskId: string,
+        expected: { type: string; value?: string; reopen?: boolean }
+    ): Promise<void> {
+        const repeats = await this.getPersistedRepeat(taskId);
+        expect(repeats, "expected a persisted repeat, got none").not.toBeNull();
+        expect(repeats.type).toBe(expected.type);
+        if (expected.value !== undefined) expect(repeats.value).toBe(expected.value);
+        if (expected.reopen !== undefined) expect(repeats.reopen).toBe(expected.reopen);
+    }
+
+    public async expectRepeatLabel(label: string): Promise<void> {
+        await expect(this.page.getByTestId("task-details-repeat-trigger")).toContainText(label);
+    }
+
+    public async expectRepeatCleared(taskId: string): Promise<void> {
+        expect(await this.getPersistedRepeat(taskId)).toBeNull();
+        await expect(this.page.getByTestId("task-details-repeat-trigger")).toBeVisible();
+    }
+
     private async getPersistedTask(taskId: string): Promise<any> {
         const response = await this.page.request.get(`/api/tasks?ids=${taskId}`);
         expect(response.ok()).toBeTruthy();

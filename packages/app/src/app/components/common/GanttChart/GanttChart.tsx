@@ -182,16 +182,25 @@ export function GanttChart({ title, rows, onActivate, onDatesChange }: GanttChar
         element.scrollLeft = event.currentTarget.scrollLeft;
         readViewport();
     };
-    const handleViewportWheel = (event: React.WheelEvent<HTMLDivElement>) => {
+    useEffect(() => {
         const element = scroller.current;
         if (!element) return;
-        const delta = event.shiftKey ? event.deltaY : event.deltaX;
-        if (!delta) return;
-        event.preventDefault();
-        const scale = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? element.clientWidth : 1;
-        element.scrollLeft += delta * scale;
-        readViewport();
-    };
+        const handleWheel = (event: WheelEvent) => {
+            const delta = event.shiftKey ? event.deltaY : event.deltaX;
+            if (!delta) return;
+            event.preventDefault();
+            const scale =
+                event.deltaMode === WheelEvent.DOM_DELTA_LINE
+                    ? 16
+                    : event.deltaMode === WheelEvent.DOM_DELTA_PAGE
+                      ? element.clientWidth
+                      : 1;
+            element.scrollLeft += delta * scale;
+            readViewport();
+        };
+        element.addEventListener("wheel", handleWheel, { passive: false });
+        return () => element.removeEventListener("wheel", handleWheel);
+    }, [readViewport]);
     return (
         <section className="stacks-gantt" data-testid="gantt-chart" aria-label={translate("Gantt")}>
             <div className="stacks-gantt-body">
@@ -202,7 +211,6 @@ export function GanttChart({ title, rows, onActivate, onDatesChange }: GanttChar
                     tabIndex={0}
                     aria-label={translate("Gantt")}
                     onScroll={readViewport}
-                    onWheel={handleViewportWheel}
                 >
                     <div className="stacks-gantt-content" style={{ width: taskWidth + timelineWidth }}>
                         <div className="stacks-gantt-header">

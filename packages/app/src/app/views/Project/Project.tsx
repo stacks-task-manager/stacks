@@ -4,7 +4,7 @@ import { Outlet, useParams, useSearchParams } from "react-router-dom";
 
 import { PROJECTVIEW } from "@stacks/types";
 import { CopyMoveWrapper } from "app/components";
-import { ProjectFilterDrawer, TimeFilterDrawer } from "app/components/project";
+import { TimeFilterDrawer } from "app/components/project";
 import {
     useFilterQuerySync,
     useProjectBackground,
@@ -16,7 +16,13 @@ import {
 } from "app/hooks";
 import { defaultFilters } from "app/store/projectFilters";
 import { ProjectsActions } from "app/store/actions/projects";
-import { AppView, AppViewContent, ProjectToolbar, ProjectToolbarLoading } from "app/widgets";
+import {
+    AppView,
+    AppViewContent,
+    ProjectToolbar,
+    ProjectToolbarLoading,
+    TaskFilterDrawer,
+} from "app/widgets";
 import { Attachments } from "./Attachments/Attachments";
 import { Board } from "./Board/Board";
 import { Gantt } from "./Gantt/Gantt";
@@ -127,7 +133,7 @@ const ProjectView = () => {
             toolbar={<ProjectToolbar />}
             append={
                 <>
-                    <ProjectFilterDrawer />
+                    <TaskFilterDrawer />
                     <TimeFilterDrawer />
                     <Outlet />
                 </>

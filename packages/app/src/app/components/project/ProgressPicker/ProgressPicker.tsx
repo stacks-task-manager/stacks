@@ -1,7 +1,7 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import React, { FunctionComponent } from "react";
 
-import { ProgressMenu } from "app/components/project";
+import { ProgressMenu } from "app/components/project/ProgressMenu/ProgressMenu";
 import { Placement, Popover } from "@blueprintjs/core";
 
 interface IProgressPickerProps {

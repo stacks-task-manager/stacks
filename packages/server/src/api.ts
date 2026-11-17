@@ -39,16 +39,10 @@ import exportRoute from "./routes/export";
 import info from "./routes/info";
 import mcp from "./routes/mcp";
 import calendars from "./routes/calendars";
+import workbooks from "./routes/workbooks";
 
 const APP_STATIC_ROOT = "./app";
-const APP_PUBLIC_ASSETS = [
-    "/favicon.ico",
-    "/manifest.json",
-    "/logo192.png",
-    "/logo512.png",
-    "/robots.txt",
-    "/notepad.css",
-];
+const APP_PUBLIC_ASSETS = ["/favicon.ico", "/manifest.json", "/logo192.png", "/logo512.png", "/robots.txt"];
 
 function getAppProxyHeaders(c: Context) {
     return {
@@ -193,4 +187,5 @@ export const registerApiRoutes = (app: Hono) => {
     mountAuthenticated("export", exportRoute);
     mountAuthenticated("mcp", mcp);
     mountAuthenticated("calendars", calendars);
+    mountAuthenticated("workbooks", workbooks);
 };

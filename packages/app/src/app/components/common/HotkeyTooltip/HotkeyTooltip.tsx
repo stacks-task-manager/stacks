@@ -2,7 +2,7 @@
 import classnames from "classnames";
 import React, { FunctionComponent } from "react";
 
-import { HotkeyChip } from "app/components/common";
+import { HotkeyChip } from "app/components/common/HotkeyChip/HotkeyChip";
 import { Placement, PopoverTargetProps, Tooltip } from "@blueprintjs/core";
 
 interface IHotkeyTooltipProps {

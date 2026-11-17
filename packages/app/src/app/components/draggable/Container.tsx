@@ -62,7 +62,8 @@ export function Container({
             direction !== "horizontal" && placeholderSlot?.containerId === id ? placeholderSlot : null;
         if (!slot) return children;
 
-        const childArray = Children.toArray(children);
+        // Keep the original keyed elements: Children.toArray() rewrites keys and remounts the list.
+        const childArray = Array.isArray(children) ? children : Children.toArray(children);
         const phStyle = {
             width: slot.width,
             height: slot.height,

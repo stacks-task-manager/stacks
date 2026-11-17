@@ -5,6 +5,7 @@
 import { translate } from "@stacks/translations";
 import { Intent } from "@blueprintjs/core";
 import { produce } from "immer";
+import isEqual from "lodash/isEqual";
 import kebabCase from "lodash/kebabCase";
 import union from "lodash/union";
 import without from "lodash/without";
@@ -67,6 +68,38 @@ import { cleanupResourceNavigationRefs } from "./resourceNavigationCleanup";
 import { ProjectsActions } from "./projects";
 import { RecordActions } from "./record";
 
+let primaryLoadCount = 0;
+let archivedLoadCount = 0;
+
+const startPrimaryLoad = () => {
+    primaryLoadCount++;
+    TasksStore.set(
+        produce((state: ITasksStore) => {
+            state.isLoading = true;
+        })
+    );
+};
+
+const finishPrimaryLoad = () => {
+    primaryLoadCount--;
+    if (primaryLoadCount > 0) return;
+    TasksStore.set(
+        produce((state: ITasksStore) => {
+            state.isLoading = false;
+        })
+    );
+};
+
+const finishArchivedLoad = () => {
+    archivedLoadCount--;
+    if (archivedLoadCount > 0) return;
+    TasksStore.set(
+        produce((state: ITasksStore) => {
+            state.isLoadingArchived = false;
+        })
+    );
+};
+
 /**
  * Load all tasks based on a given project id
  * @param projectId
@@ -78,19 +111,20 @@ const loadByProject = async (projectId: string, silent?: boolean): Promise<ITask
 
     // const tasksIs = await ProjectsActions.getTasks(projectId);
 
-    TasksStore.set(
-        produce((state: ITasksStore) => {
-            if (!silent) {
-                state.isLoading = true;
-            }
-            // state.loadingChunk = uniq([...state.loadingChunk, ...tasksIs]);
-            state.loadedProjects = union(state.loadedProjects, [projectId]);
-        })
-    );
+    if (!silent) startPrimaryLoad();
 
-    const tasks = await TasksAPI.load({ project: [projectId] });
-    await upsertTasks(tasks);
-    return tasks;
+    try {
+        const tasks = await TasksAPI.load({ project: [projectId] });
+        await upsertTasks(tasks);
+        TasksStore.set(
+            produce((state: ITasksStore) => {
+                state.loadedProjects = union(state.loadedProjects, [projectId]);
+            })
+        );
+        return tasks;
+    } finally {
+        if (!silent) finishPrimaryLoad();
+    }
 };
 
 /**
@@ -115,9 +149,17 @@ const loadSegment = async (taskIds: string[], forceReload?: boolean): Promise<IT
                 state.loadingChunk = union(state.loadingChunk, tasksToLoad);
             })
         );
-        const tasks = await TasksAPI.load({ ids: tasksToLoad });
-        await upsertTasks(tasks);
-        return tasks;
+        try {
+            const tasks = await TasksAPI.load({ ids: tasksToLoad });
+            await upsertTasks(tasks);
+            return tasks;
+        } finally {
+            TasksStore.set(
+                produce((state: ITasksStore) => {
+                    state.loadingChunk = without(state.loadingChunk, ...tasksToLoad);
+                })
+            );
+        }
     }
 
     return [];
@@ -171,17 +213,15 @@ const loadMy = async (): Promise<ITask[]> => {
         return [];
     }
 
-    TasksStore.set(
-        produce((state: ITasksStore) => {
-            state.isLoading = true;
-        })
-    );
+    startPrimaryLoad();
 
-    const myTasks = await TasksAPI.load({ assignees: [me.id] });
-
-    await upsertTasks(myTasks);
-
-    return myTasks;
+    try {
+        const myTasks = await TasksAPI.load({ assignees: [me.id] });
+        await upsertTasks(myTasks);
+        return myTasks;
+    } finally {
+        finishPrimaryLoad();
+    }
 };
 
 /**
@@ -190,15 +230,20 @@ const loadMy = async (): Promise<ITask[]> => {
  * @returns
  */
 const loadArchived = async (project: string[]): Promise<ITask[]> => {
+    archivedLoadCount++;
     TasksStore.set(
         produce((state: ITasksStore) => {
             state.isLoadingArchived = true;
         })
     );
 
-    const tasks = await TasksAPI.load({ project, archived: true });
-    await upsertTasks(tasks);
-    return tasks;
+    try {
+        const tasks = await TasksAPI.load({ project, archived: true });
+        await upsertTasks(tasks);
+        return tasks;
+    } finally {
+        finishArchivedLoad();
+    }
 };
 
 // const moveToStack = async (taskId: string, targetStack: string, targetPosition: number, sourcePositionOpt?: number) => {
@@ -371,14 +416,17 @@ const replaceTask = (replacedTask: ITask, skipSave?: boolean) => {
  * @param tasks
  */
 const upsertTasks = async (tasks: ITask[]) => {
-    const newTaskIds = tasks.map((task: ITask) => task.id);
+    const existingTasksById = new Map(TasksStore.get().tasks.map(task => [task.id, task]));
+    // Preserve existing task references when the fetched task is identical so
+    // task-details subscribers do not re-render merely because a project reloads.
+    const storedTasks = tasks.map(task => {
+        const existingTask = existingTasksById.get(task.id);
+        return existingTask && isEqual(existingTask, task) ? existingTask : task;
+    });
 
     TasksStore.set(
         produce((state: ITasksStore) => {
-            state.tasks = upsertById(state.tasks, tasks);
-            state.loadingChunk = without(state.loadingChunk, ...newTaskIds);
-            state.isLoading = false;
-            state.isLoadingArchived = false;
+            state.tasks = upsertById(state.tasks, storedTasks);
         })
     );
 

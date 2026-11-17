@@ -159,6 +159,25 @@ it("scrolls the timeline horizontally with trackpad and shift-wheel input", () =
     expect(viewport.scrollLeft).toBe(initial + 200);
 });
 
+it("cancels horizontal wheel input so the page does not scroll too", () => {
+    render(
+        <GanttChart title="Tasks" rows={[row("task")]} onActivate={jest.fn()} onDatesChange={jest.fn()} />
+    );
+
+    const viewport = screen.getByTestId("gantt-viewport");
+    const initial = viewport.scrollLeft;
+    const wheel = new WheelEvent("wheel", { bubbles: true, cancelable: true, deltaX: 120 });
+    let notCanceled = false;
+
+    act(() => {
+        notCanceled = viewport.dispatchEvent(wheel);
+    });
+
+    expect(notCanceled).toBe(false);
+    expect(wheel.defaultPrevented).toBe(true);
+    expect(viewport.scrollLeft).toBe(initial + 120);
+});
+
 it("shows assignees in place of the row edit button when available", () => {
     const assignee = {
         id: "person-1",
@@ -270,6 +289,23 @@ it("adds the lower tree connector segment for level 0 task parents", () => {
     const childLine = screen.getByTestId("gantt-tree-child-line-parent");
     expect(childLine).toHaveStyle({ left: "15px" });
     expect(childLine.querySelector("path")).toHaveAttribute("d", "M 0.5 38 V 48");
+});
+
+it("hides the lower tree connector segment of a collapsed parent", () => {
+    render(
+        <GanttChart
+            title="Tasks"
+            rows={[row("parent", [row("child")])]}
+            onActivate={jest.fn()}
+            onDatesChange={jest.fn()}
+        />
+    );
+
+    fireEvent.click(screen.getByTestId("gantt-toggle-all"));
+    expect(screen.queryByTestId("gantt-tree-child-line-parent")).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByTestId("gantt-toggle-all"));
+    expect(screen.getByTestId("gantt-tree-child-line-parent")).toBeInTheDocument();
 });
 
 it("adds the lower tree connector segment below subtasks with children", () => {

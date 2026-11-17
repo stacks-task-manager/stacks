@@ -38,3 +38,4 @@ export * from "./models/timebox.js";
 export * from "./models/timelogs.js";
 export * from "./models/updates.js";
 export * from "./models/url.js";
+export * from "./models/workbook.js";

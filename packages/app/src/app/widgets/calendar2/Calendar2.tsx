@@ -131,7 +131,9 @@ const DEFAULT_BG_BOTTOM = "#eef2fcff";
 const EventContent = ({ event, view }: { event: EventImpl; view: calendarViewType }) => {
     const [selected, setSelected] = useState(false);
 
-    const source = event.extendedProps?.iEvent.resource.data.source;
+    // Task events (e.g. from the My Tasks timebox) carry no `iEvent`; guard the source lookup so
+    // shared event content does not crash for non-calendar event shapes.
+    const source = event.extendedProps?.iEvent?.resource?.data?.source;
     const eventId = String(event.id);
     const tinted = Boolean(event.extendedProps?.tint);
     const styles: CSSProperties = {

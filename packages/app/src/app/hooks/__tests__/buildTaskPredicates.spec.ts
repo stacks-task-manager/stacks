@@ -19,7 +19,11 @@ jest.mock("app/hooks/projectFilters", () => ({ useProjectFilters: () => ({ filte
 jest.mock("app/hooks/router", () => ({ getHashPathname: () => null }));
 jest.mock("app/hooks/stacks", () => ({ useStack: () => null, useStacks: () => null }));
 jest.mock("app/hooks/store", () => ({ shallowEqual: (a: any, b: any) => a === b }));
-jest.mock("app/utils/date", () => ({ isAfterToday: () => false, isOverdue: () => false }));
+jest.mock("app/utils/date", () => ({
+    ...jest.requireActual("app/utils/date"),
+    isAfterToday: () => false,
+    isOverdue: () => false,
+}));
 jest.mock("app/utils/taskOrder", () => ({ sortByIdOrder: (items: any[]) => items }));
 
 import { renderHook } from "@testing-library/react";
@@ -96,6 +100,19 @@ describe("task filter predicates", () => {
     it("does not match an unrelated title when the description is null", () => {
         const preds = buildTaskPredicates({ ...filters, query: "no-such-word" }, null);
         expect(preds.every(predicate => predicate(taskWithoutDescription))).toBe(false);
+    });
+
+    it("matches named date filters in the browser time zone", () => {
+        jest.useFakeTimers();
+        jest.setSystemTime(new Date(2026, 10, 13, 12));
+
+        try {
+            const dueToday = { ...taskWithoutDescription, duedate: new Date(2026, 10, 13, 15) };
+            const preds = buildTaskPredicates({ ...filters, dueDate: "today" }, null);
+            expect(preds.every(predicate => predicate(dueToday))).toBe(true);
+        } finally {
+            jest.useRealTimers();
+        }
     });
 });
 

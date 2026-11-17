@@ -1,7 +1,7 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import React, { FunctionComponent, useEffect, useState } from "react";
 
-import { ToolbarButton } from "app/components/common";
+import { ToolbarButton } from "app/components/common/ToolbarButtons/ToolbarButtons";
 import { Placement } from "@blueprintjs/core";
 
 interface IReloadButtonProps {

@@ -6,7 +6,6 @@ import { Outlet } from "react-router-dom";
 
 import { ITask } from "@stacks/types";
 import { BlankSlate, Grid, TablePersistentGroupData } from "app/components/common";
-import { MyTasksFilterDrawer } from "app/components/project";
 import {
     useFilteredMyTasks,
     useFilterQuerySync,
@@ -19,7 +18,7 @@ import { shallowEqual } from "app/hooks/store";
 import { ProjectFiltersActions, TasksActions } from "app/store/actions";
 import { toggleNewTask } from "app/store/global";
 import { MyTasksStore } from "app/store/myTasks";
-import { AppView, AppViewContent, TasksTable, ToolbarMyTasks } from "app/widgets";
+import { AppView, AppViewContent, TaskFilterDrawer, TasksTable, ToolbarMyTasks } from "app/widgets";
 import { Timebox } from "../Timebox/Timebox";
 
 export const MyTasks = () => {
@@ -39,7 +38,7 @@ export const MyTasks = () => {
             toolbar={<ToolbarMyTasks />}
             append={
                 <>
-                    <MyTasksFilterDrawer />
+                    <TaskFilterDrawer myTasks />
                     <Outlet />
                 </>
             }

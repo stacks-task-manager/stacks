@@ -11,7 +11,7 @@ import { getPeople, getStack, getTag } from "app/hooks";
 import { ActivitiesActions, FilesActions } from "app/store/actions";
 import { formatDuration, timeSince } from "app/utils/date";
 import { diffActivitySegments } from "app/utils/activityDiff";
-import { Assignees, Editor, HTMLRenderer, StatusChip, Tags, TipTapEditorContent } from "app/widgets";
+import { Assignees, Editor, HTMLRenderer, TagChip, Tags, TipTapEditorContent } from "app/widgets";
 interface ICommentProps {
     resourceId: string;
     comment: IComment;
@@ -166,7 +166,7 @@ const ActivityParser = ({ field, value }: { field: string; value: any }) => {
         return <PriorityChip priority={value as PRIORITY} />;
     } else if (field === "status") {
         const status = getTag(value);
-        return status ? <StatusChip tag={status} /> : <>-</>;
+        return status ? <TagChip variant="status" tag={status} /> : <>-</>;
     } else if (field === "assignees") {
         const people = getPeople(value);
         return <Assignees assignees={people} small />;

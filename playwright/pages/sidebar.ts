@@ -156,6 +156,34 @@ class Sidebar extends Base {
         await this.quickAddMenu.waitFor({ state: "hidden" });
     }
 
+    /**
+     * Drives the quick-add "File" flow: opens the OS file picker, uploads the given file, and
+     * waits for the app to navigate to the new file view. Returns the created document id.
+     * The upload hook appends a hidden <input type="file"> to the body, so we answer the
+     * `filechooser` event rather than targeting a guessed selector.
+     */
+    public async addFileDocument(filePath: string): Promise<string> {
+        const fileChooserPromise = this.page.waitForEvent("filechooser");
+        const docPromise = this.page.waitForResponse(
+            response =>
+                response.request().method() === "POST" &&
+                new URL(response.url()).pathname === "/api/documents"
+        );
+        await this.addNew("file");
+        const [fileChooser, docResponse] = await Promise.all([fileChooserPromise, docPromise]);
+        await fileChooser.setFiles(filePath);
+        const { data } = await docResponse.json();
+        const documentId: string | undefined = data?.id;
+        if (!documentId) {
+            throw new Error("Could not capture the created file document id from the response");
+        }
+        // Return the id as soon as it is known (the document row already exists). The upload
+        // and the navigation to the file view continue in the background; the caller waits
+        // for the view to load. Capturing the id early lets the spec register cleanup before
+        // the upload finishes, so a failed upload cannot orphan the document (§5.1).
+        return documentId;
+    }
+
     public async deleteDocument(title: string) {
         const document = this.documentsTree.getByRole("treeitem", { name: title, exact: true });
         await document.hover();

@@ -14,6 +14,7 @@ import {
     StacksActions,
     TasksActions,
     TimelogsActions,
+    WorkbooksActions,
 } from "app/store/actions";
 import { useEffect } from "react";
 
@@ -53,4 +54,5 @@ export const useUpdates = () => {
     useRealtimeUpdates(POLLINGTYPE.TIMELOG, TimelogsActions.reload);
     useRealtimeUpdates(POLLINGTYPE.NOTEPAD, NotepadActions.reload);
     useRealtimeUpdates(POLLINGTYPE.BOOKMARKS, BookmarksActions.reload);
+    useRealtimeUpdates(POLLINGTYPE.WORKBOOK, WorkbooksActions.reload);
 };

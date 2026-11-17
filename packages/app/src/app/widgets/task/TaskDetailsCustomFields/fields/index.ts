@@ -8,4 +8,3 @@ export * from "./FieldTypeSlider";
 export * from "./FieldTypeSwitch";
 export * from "./FieldTypeText";
 export * from "./FieldTypeTextArea";
-export * from "./FieldTypeUrl";

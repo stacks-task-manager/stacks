@@ -12,7 +12,7 @@ describe("development app public assets", () => {
         vi.unstubAllEnvs();
     });
 
-    test.each(["favicon.ico", "manifest.json", "logo192.png", "logo512.png", "robots.txt", "notepad.css"])(
+    test.each(["favicon.ico", "manifest.json", "logo192.png", "logo512.png", "robots.txt"])(
         "serves public asset %s instead of a 404 or SPA fallback",
         async asset => {
             const app = new Hono();

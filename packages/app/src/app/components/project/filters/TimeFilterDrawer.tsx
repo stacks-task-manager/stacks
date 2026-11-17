@@ -20,9 +20,9 @@ import { PeopleStore } from "app/store/people";
 import { ITimelogsFilters, TimelogsStore } from "app/store/timelogs";
 import { uuidv4 } from "app/utils/uuid";
 import { FiltersSidebar } from "app/widgets";
-import { AssigneesFilter } from "./AssigneesFilter";
-import { DateFilter } from "./DateFilter";
-import { QueryFilter } from "./QueryFilter";
+import { AssigneesFilter } from "app/widgets/task/TaskFilter/AssigneesFilter";
+import { DateFilter } from "app/widgets/task/TaskFilter/DateFilter";
+import { QueryFilter } from "app/widgets/task/TaskFilter/QueryFilter";
 import { shallowEqual } from "app/hooks/store";
 import { useProjectLastView } from "app/hooks";
 

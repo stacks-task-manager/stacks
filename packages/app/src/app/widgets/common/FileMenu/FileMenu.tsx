@@ -42,11 +42,21 @@ export const FileMenu: FunctionComponent<IFileMenuProps> = ({
     };
 
     return (
-        <Menu>
+        <Menu data-testid="file-menu">
             {prepend}
 
-            <MenuItem icon={<Icon icon="download-04" />} text="Download..." onClick={handleDownload} />
-            <MenuItem icon={<Icon icon="eye" />} text="Preview..." onClick={handlePreview} />
+            <MenuItem
+                icon={<Icon icon="download-04" />}
+                text="Download..."
+                onClick={handleDownload}
+                data-testid="file-menu-download"
+            />
+            <MenuItem
+                icon={<Icon icon="eye" />}
+                text="Preview..."
+                onClick={handlePreview}
+                data-testid="file-menu-preview"
+            />
 
             {!canDelete ? (
                 <>
@@ -56,6 +66,7 @@ export const FileMenu: FunctionComponent<IFileMenuProps> = ({
                         text={translate("Delete")}
                         intent={Intent.DANGER}
                         onClick={handleDelete}
+                        data-testid="file-menu-delete"
                     />
                 </>
             ) : null}

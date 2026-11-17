@@ -49,6 +49,23 @@ export const clearCsrfToken = (): void => {
     csrfToken = null;
 };
 
+/**
+ * Returns the browser CSRF token, requesting one on first use. Non-axios
+ * transports (the streaming XHR upload) must attach it themselves.
+ */
+export async function getCsrfToken(): Promise<string | null> {
+    if (!csrfToken) {
+        try {
+            const issued = await axios.get("/auth/csrf", { withCredentials: true });
+            csrfToken = issued.data?.data?.token ?? null;
+        } catch {
+            csrfToken = null;
+        }
+    }
+
+    return csrfToken;
+}
+
 instance.interceptors.request.use(
     config => {
         // Add instance ID header to all requests
@@ -108,18 +125,11 @@ instance.interceptors.request.use(async config => {
         return config;
     }
 
-    if (!csrfToken) {
-        try {
-            const issued = await axios.get("/auth/csrf", { withCredentials: true });
-            csrfToken = issued.data?.data?.token ?? null;
-        } catch {
-            csrfToken = null;
-        }
-    }
+    const token = await getCsrfToken();
 
-    if (csrfToken) {
+    if (token) {
         config.headers = config.headers || {};
-        config.headers["x-csrf-token"] = csrfToken;
+        config.headers["x-csrf-token"] = token;
     }
 
     return config;

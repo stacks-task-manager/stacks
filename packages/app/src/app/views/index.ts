@@ -31,3 +31,5 @@ export * from "./Watermark/Watermark";
 export * from "./Workspaces/Workspaces";
 export * from "./CompanyDetails/CompanyDetails";
 export * from "./Timebox/Timebox";
+export * from "./Workbooks/Workbook";
+export * from "./Workbooks/Workbooks";
