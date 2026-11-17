@@ -3,42 +3,39 @@
  * Tasks hooks and selectors.
  */
 import {
-    addDays,
-    addMonths,
     addWeeks,
     endOfDay,
-    endOfMonth,
     isBefore,
-    isSameDay,
     isSameWeek,
     isToday,
     isTomorrow,
     isValid,
     isWithinInterval,
     startOfDay,
-    startOfMonth,
-    subDays,
-    subMonths,
 } from "date-fns";
 import intersection from "lodash/intersection";
 import { useEffect, useMemo } from "react";
 import { matchPath, useParams } from "react-router-dom";
 
-import { APPICONS, GROUPING_TYPE, ICONS, ITask, PRIORITY, PRIORITYICON } from "@stacks/types";
+import { APPICONS, GROUPING_TYPE, ICONS, IStack, ITask, PRIORITY, PRIORITYICON } from "@stacks/types";
 import { TablePersistentData, TablePersistentGroupData } from "app/components/common";
 import { TasksActions } from "app/store/actions";
 import { PeopleStore } from "app/store/people";
 import { IFilters } from "app/store/projectFilters";
-import { TasksStore } from "app/store/tasks";
-import { isAfterToday, isOverdue } from "app/utils/date";
+import { TasksStore, orderTasksWithFallback } from "app/store/tasks";
+import { getNamedDateFilterRange, isAfterToday, isOverdue, toCalendarDateKey } from "app/utils/date";
 import { sortByIdOrder } from "app/utils/taskOrder";
 import { TableStore } from "app/views/Project/Table/store";
-import { useCurrentProject } from "./project";
+import { useCurrentProjectValue } from "./project";
 import { useProjectFilters } from "./projectFilters";
 import { getHashPathname } from "./router";
 import { useStack, useStacks } from "./stacks";
-import { shallowEqual } from "./store";
+import { shallowEqual, strictEqual } from "./store";
 import { useLoadWhen } from "./useLoadWhen";
+
+const EMPTY_TASKS: ITask[] = [];
+const EMPTY_IDS: string[] = [];
+const EMPTY_SUBTASKS = { subtasks: EMPTY_TASKS, isLoading: false };
 
 /**
  * Non-archived task whose start/duedate falls in `[dateFrom, dateTo]` (inclusive days).
@@ -67,30 +64,11 @@ export function taskInDateRange(task: ITask, dateFrom: Date, dateTo: Date, loose
 function filterByDate(filterDate: string, date?: Date | null, loose = false) {
     if (!date) return true;
 
-    if (filterDate === "today") {
-        return !isSameDay(new Date(), new Date(date));
-    } else if (filterDate === "yesterday") {
-        return !isSameDay(subDays(new Date(), 1), new Date(date));
-    } else if (filterDate === "tomorrow") {
-        return !isSameDay(addDays(new Date(), 1), new Date(date));
-    } else if (filterDate === "thisWeek") {
-        return !isSameWeek(new Date(), new Date(date));
-    } else if (filterDate === "lastWeek") {
-        return !isSameWeek(subDays(new Date(), 7), new Date(date));
-    } else if (filterDate === "nextWeek") {
-        return !isSameWeek(addDays(new Date(), 7), new Date(date));
-    } else if (filterDate === "thisMonth") {
-        const start = startOfMonth(new Date());
-        const finish = endOfMonth(new Date());
-        return !isWithinInterval(new Date(date), { start, end: finish });
-    } else if (filterDate === "lastMonth") {
-        const start = startOfMonth(subMonths(new Date(), 1));
-        const finish = endOfMonth(subMonths(new Date(), 1));
-        return !isWithinInterval(new Date(date), { start, end: finish });
-    } else if (filterDate === "nextMonth") {
-        const start = startOfMonth(addMonths(new Date(), 1));
-        const finish = endOfMonth(addMonths(new Date(), 1));
-        return !isWithinInterval(new Date(date), { start, end: finish });
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
+    const namedRange = getNamedDateFilterRange(filterDate, new Date(), timeZone);
+    if (namedRange) {
+        const key = toCalendarDateKey(new Date(date), timeZone);
+        return key < namedRange[0] || key > namedRange[1];
     }
 
     const dates = filterDate.split("|");
@@ -223,15 +201,18 @@ export function filterTask(
  * Returns an array of tasks for the current project
  * @returns
  */
-export const useFilteredProjectTasks = () => {
+export const useFilteredProjectTasks = ({ includeSubtasks = false }: { includeSubtasks?: boolean } = {}) => {
     const { filters } = useProjectFilters();
     const tasks = TasksStore.use(state => state.tasks, shallowEqual);
     const currentUserId = PeopleStore.use(state => state.me, shallowEqual);
 
     return useMemo(() => {
-        const preds = buildTaskPredicates(filters, currentUserId);
+        const preds = buildTaskPredicates(
+            includeSubtasks ? { ...filters, showSubtasks: true } : filters,
+            currentUserId
+        );
         return tasks.filter(task => preds.every(p => p(task)) && !task.archived);
-    }, [tasks, filters, currentUserId]);
+    }, [tasks, filters, currentUserId, includeSubtasks]);
 };
 
 /**
@@ -241,11 +222,13 @@ export const useFilteredProjectTasks = () => {
  */
 export const useProjectTasksByIds = (taskIds: string[]) => {
     const { id } = useParams();
-    return TasksStore.use(
-        state =>
-            state.tasks.filter(task => task.project === id && taskIds.includes(task.id) && !task.archived),
-        shallowEqual
-    );
+    return TasksStore.use(state => {
+        const tasks = taskIds.flatMap(taskId => {
+            const task = state.tasksById.get(taskId);
+            return task && task.project === id && !task.archived ? [task] : [];
+        });
+        return tasks.length ? tasks : EMPTY_TASKS;
+    }, shallowEqual);
 };
 
 /**
@@ -255,10 +238,13 @@ export const useProjectTasksByIds = (taskIds: string[]) => {
  */
 export const useFilteredProjectTasksIds = (taskIds: string[]) => {
     const { filters } = useProjectFilters();
-    const tasks = TasksStore.use(
-        state => state.tasks.filter(task => taskIds.includes(task.id) && !task.archived),
-        shallowEqual
-    );
+    const tasks = TasksStore.use(state => {
+        const tasks = taskIds.flatMap(taskId => {
+            const task = state.tasksById.get(taskId);
+            return task && !task.archived ? [task] : [];
+        });
+        return tasks.length ? tasks : EMPTY_TASKS;
+    }, shallowEqual);
     const currentUserId = PeopleStore.use(state => state.me, shallowEqual);
 
     return useMemo(() => {
@@ -305,12 +291,12 @@ export const useTask = (
 ): { task: ITask | undefined; isLoading: boolean } => {
     const resolvedId = taskId ?? "";
 
-    const isLoading = TasksStore.use(
-        state => state.isLoading || (Boolean(resolvedId) && state.loadingChunk.includes(resolvedId))
-    );
-
-    const task = TasksStore.use(state =>
-        resolvedId ? state.tasks.find(t => t.id === resolvedId) : undefined
+    const { isLoading, task } = TasksStore.use(
+        state => ({
+            isLoading: state.isLoading || (Boolean(resolvedId) && state.loadingChunk.includes(resolvedId)),
+            task: resolvedId ? state.tasksById.get(resolvedId) : undefined,
+        }),
+        shallowEqual
     );
 
     useLoadWhen(
@@ -332,9 +318,13 @@ export const useTask = (
 export const useTasks = (taskIds: string[]): { tasks: ITask[]; isLoading: boolean } => {
     const { isLoading, tasks } = TasksStore.use(
         state => ({
-            tasks: state.tasks.filter(task => {
-                return taskIds.includes(task.id);
-            }),
+            tasks: (() => {
+                const tasks = taskIds.flatMap(taskId => {
+                    const task = state.tasksById.get(taskId);
+                    return task ? [task] : [];
+                });
+                return tasks.length ? tasks : EMPTY_TASKS;
+            })(),
             isLoading: state.isLoading || state.loadingChunk.some(id => taskIds.includes(id)),
         }),
         shallowEqual
@@ -360,7 +350,7 @@ export const useTasks = (taskIds: string[]): { tasks: ITask[]; isLoading: boolea
  * @returns The matching task, or undefined
  */
 export const getTask = (taskId: string) => {
-    return TasksStore.get().tasks.find(task => task.id === taskId);
+    return TasksStore.get().tasksById.get(taskId);
 };
 
 /**
@@ -383,8 +373,9 @@ export const getCurrentTaskId = () => {
     const match1 = matchPath("/task/:id", path);
     const match2 = matchPath("/project/:id/:tid", path);
     const match3 = matchPath("/mytasks/:id", path);
+    const match4 = matchPath("/workbooks/:id/:tid", path);
 
-    return match1?.params.id ?? match2?.params.tid ?? match3?.params.id ?? "";
+    return match1?.params.id ?? match2?.params.tid ?? match3?.params.id ?? match4?.params.tid ?? "";
 };
 
 /**
@@ -393,10 +384,13 @@ export const getCurrentTaskId = () => {
  * @returns
  */
 export const useProjectTasks = (projectId: string): ITask[] => {
-    return TasksStore.use(
-        state => state.tasks.filter(task => task.project === projectId && !task.archived),
-        shallowEqual
-    );
+    return TasksStore.use(state => {
+        const tasks = (state.taskIdsByProject.get(projectId) ?? EMPTY_IDS).flatMap(taskId => {
+            const task = state.tasksById.get(taskId);
+            return task && !task.archived ? [task] : [];
+        });
+        return tasks.length ? tasks : EMPTY_TASKS;
+    }, shallowEqual);
 };
 
 /**
@@ -405,7 +399,11 @@ export const useProjectTasks = (projectId: string): ITask[] => {
  * @returns The project's non-archived tasks
  */
 export const getProjectTasks = (projectId: string): ITask[] => {
-    return TasksStore.get().tasks.filter(task => task.project === projectId && !task.archived);
+    const { taskIdsByProject, tasksById } = TasksStore.get();
+    return (taskIdsByProject.get(projectId) ?? []).flatMap(taskId => {
+        const task = tasksById.get(taskId);
+        return task && !task.archived ? [task] : [];
+    });
 };
 
 /**
@@ -414,7 +412,11 @@ export const getProjectTasks = (projectId: string): ITask[] => {
  * @returns The stack's non-archived tasks
  */
 export const getStackTasks = (stackId: string): ITask[] => {
-    return TasksStore.get().tasks.filter(task => task.stack === stackId && !task.archived);
+    const { taskIdsByStack, tasksById } = TasksStore.get();
+    return (taskIdsByStack.get(stackId) ?? []).flatMap(taskId => {
+        const task = tasksById.get(taskId);
+        return task && !task.archived ? [task] : [];
+    });
 };
 
 /**
@@ -423,9 +425,7 @@ export const getStackTasks = (stackId: string): ITask[] => {
  * @returns The stack's task ids
  */
 export const getStackTasksIds = (stackId: string): string[] => {
-    return TasksStore.get()
-        .tasks.filter(task => task.stack === stackId)
-        .map(task => task.id);
+    return [...(TasksStore.get().taskIdsByStack.get(stackId) ?? [])];
 };
 /**
  * Returns a project's tasks ids
@@ -433,10 +433,7 @@ export const getStackTasksIds = (stackId: string): string[] => {
  * @returns
  */
 export const useProjectTasksIds = (projectId: string) => {
-    return TasksStore.use(
-        state => state.tasks.filter(task => task.project === projectId).map(task => task.id),
-        shallowEqual
-    );
+    return TasksStore.use(state => state.taskIdsByProject.get(projectId) ?? EMPTY_IDS, shallowEqual);
 };
 
 /**
@@ -485,18 +482,36 @@ type TaskDateField = "duedate" | "startdate";
  * @returns An object mapping each bucket name to its matching undone tasks
  */
 function partitionTasksByCalendarBuckets(tasks: ITask[], field: TaskDateField) {
-    const get = (t: ITask) => (field === "duedate" ? t.duedate : t.startdate);
-    return {
-        overdue: tasks.filter(t => !t.done && get(t) && isOverdue(get(t)!)),
-        today: tasks.filter(t => !t.done && get(t) && isToday(get(t)!)),
-        tomorrow: tasks.filter(t => !t.done && get(t) && isTomorrow(get(t)!)),
-        thisWeek: tasks.filter(t => !t.done && get(t) && isSameWeek(new Date(get(t)!), new Date())),
-        nextWeek: tasks.filter(
-            t => !t.done && get(t) && isSameWeek(new Date(get(t)!), addWeeks(new Date(), 1))
-        ),
-        upcoming: tasks.filter(t => !t.done && get(t) && isAfterToday(get(t)!)),
-        missing: tasks.filter(t => !t.done && !get(t)),
+    const buckets = {
+        overdue: [] as ITask[],
+        today: [] as ITask[],
+        tomorrow: [] as ITask[],
+        thisWeek: [] as ITask[],
+        nextWeek: [] as ITask[],
+        upcoming: [] as ITask[],
+        missing: [] as ITask[],
     };
+    const now = new Date();
+    const nextWeek = addWeeks(now, 1);
+
+    for (const task of tasks) {
+        if (task.done) continue;
+
+        const date = field === "duedate" ? task.duedate : task.startdate;
+        if (!date) {
+            buckets.missing.push(task);
+            continue;
+        }
+
+        if (isOverdue(date)) buckets.overdue.push(task);
+        if (isToday(date)) buckets.today.push(task);
+        if (isTomorrow(date)) buckets.tomorrow.push(task);
+        if (isSameWeek(date, now)) buckets.thisWeek.push(task);
+        if (isSameWeek(date, nextWeek)) buckets.nextWeek.push(task);
+        if (isAfterToday(date)) buckets.upcoming.push(task);
+    }
+
+    return buckets;
 }
 
 /**
@@ -676,30 +691,27 @@ const PRIORITY_GROUP_SPEC: Array<{
  * @returns
  */
 export const useGrouppedProjectTasks = () => {
-    const { project } = useCurrentProject();
+    const projectId = useCurrentProjectValue(project => project.id, strictEqual);
     const grouping = TableStore.use(state => state.grouping, shallowEqual);
     const tasksPlain = useFilteredProjectTasks();
     const stacks = useStacks();
     const people = PeopleStore.use(state => state.people, shallowEqual);
 
     return useMemo(() => {
-        if (!project) return [];
+        if (!projectId) return [];
 
         const tasks = grouping === GROUPING_TYPE.UNGROUPED ? buildNestedTaskTree(tasksPlain) : tasksPlain;
 
         if (grouping === GROUPING_TYPE.STACK) {
-            const group: TablePersistentGroupData<ITask>[] = [];
+            const tasksById = new Map(tasks.map(task => [task.id, task]));
 
-            let index = 0;
-            for (const stack of stacks) {
-                const tasksOrder = stack?.tasksOrder || [];
-                const stackTasks = sortByIdOrder(
-                    tasks.filter(task => task.stack === stack.id),
-                    tasksOrder,
-                    task => task.id
-                );
+            return stacks.map((stack, index) => {
+                const stackTasks = stack.tasksOrder.flatMap(taskId => {
+                    const task = tasksById.get(taskId);
+                    return task ? [task] : [];
+                });
 
-                group.push({
+                return {
                     groupId: stack.id,
                     title: stack.title,
                     data: stackTasks,
@@ -711,11 +723,8 @@ export const useGrouppedProjectTasks = () => {
                               icon: APPICONS.TASK,
                           }
                         : undefined,
-                });
-                index++;
-            }
-
-            return group;
+                };
+            });
         }
 
         if (grouping === GROUPING_TYPE.DUEDATE) {
@@ -733,12 +742,15 @@ export const useGrouppedProjectTasks = () => {
         }
 
         if (grouping === GROUPING_TYPE.PRIORITY) {
+            const tasksByPriority = new Map(PRIORITY_GROUP_SPEC.map(spec => [spec.priority, [] as ITask[]]));
+
+            for (const task of tasks) {
+                const priority = task.priority ?? PRIORITY.NONE;
+                (tasksByPriority.get(priority) ?? tasksByPriority.get(PRIORITY.NONE)!).push(task);
+            }
+
             return PRIORITY_GROUP_SPEC.map(spec => {
-                const data = tasks.filter(task =>
-                    spec.priority === PRIORITY.NONE
-                        ? task.priority === PRIORITY.NONE || task.priority == null
-                        : task.priority === spec.priority
-                );
+                const data = tasksByPriority.get(spec.priority) ?? [];
                 return {
                     groupId: spec.groupId,
                     title: spec.title,
@@ -752,28 +764,44 @@ export const useGrouppedProjectTasks = () => {
         }
 
         if (grouping === GROUPING_TYPE.PEOPLE) {
-            const group: TablePersistentGroupData<ITask>[] = [];
-            for (const person of people) {
-                group.push({
-                    groupId: person.id,
-                    title: `${person.firstName} ${person.lastName}`,
-                    data: tasks.filter(task => task.assignees?.includes(person.id)),
-                });
+            const tasksByPerson = new Map(people.map(person => [person.id, [] as ITask[]]));
+            const unassigned: ITask[] = [];
+
+            for (const task of tasks) {
+                if (!task.assignees?.length) {
+                    unassigned.push(task);
+                    continue;
+                }
+
+                for (const personId of task.assignees) {
+                    const personTasks = tasksByPerson.get(personId);
+                    if (personTasks) personTasks.push(task);
+                }
             }
 
-            const groupFilled = group.filter(group => group.data.length > 0);
-
-            groupFilled.push({
-                groupId: "unassigned",
-                title: "Unassigned",
-                data: tasks.filter(task => !Boolean(task.assignees?.length)),
-            });
-
-            return groupFilled;
+            return [
+                ...people.flatMap(person => {
+                    const personTasks = tasksByPerson.get(person.id) ?? [];
+                    return personTasks.length
+                        ? [
+                              {
+                                  groupId: person.id,
+                                  title: `${person.firstName} ${person.lastName}`,
+                                  data: personTasks,
+                              },
+                          ]
+                        : [];
+                }),
+                {
+                    groupId: "unassigned",
+                    title: "Unassigned",
+                    data: unassigned,
+                },
+            ];
         }
 
-        return buildNestedTaskTree(tasks);
-    }, [project, tasksPlain, grouping, stacks, people]);
+        return tasks;
+    }, [projectId, tasksPlain, grouping, stacks, people]);
 };
 
 /**
@@ -782,17 +810,40 @@ export const useGrouppedProjectTasks = () => {
  * @param done Whether to filter by done or not
  * @returns The subtasks of the task
  */
-export const useSubtasks = (parentId?: string, done?: boolean): { subtasks: ITask[]; isLoading: boolean } => {
-    return TasksStore.use(state => {
-        const parentLoading = Boolean(parentId && state.loadingChunk.includes(parentId));
-        return {
-            subtasks: state.tasks
-                .filter(task => task.parent === parentId)
-                .filter(task => (done !== undefined ? task.done === done : true)),
-            // .sort((a, b) => (a.siblingPosition || 0) - (b.siblingPosition || 0)),
-            isLoading: parentLoading,
-        };
-    }, shallowEqual);
+export const useSubtasks = (
+    parentId?: string,
+    done?: boolean,
+    enabled = true
+): { subtasks: ITask[]; isLoading: boolean } => {
+    const selector = useMemo(
+        () => (state: ReturnType<typeof TasksStore.get>) => {
+            if (!enabled || parentId == null) return EMPTY_SUBTASKS;
+
+            const parent = state.tasksById.get(parentId);
+            const indexedSubtaskIds = state.subtaskIdsByParent.get(parentId) ?? [];
+            const subtaskIds = orderTasksWithFallback(
+                state.tasksById,
+                parent?.subtasksOrder ?? [],
+                indexedSubtaskIds
+            )
+                .filter(subtask => done === undefined || subtask.done === done)
+                .map(subtask => subtask.id);
+            const subtasks = subtaskIds.flatMap(subtaskId => {
+                const subtask = state.tasksById.get(subtaskId);
+                return subtask ? [subtask] : [];
+            });
+            const loadingIds = new Set(state.loadingChunk);
+
+            return {
+                subtasks: subtasks.length ? subtasks : EMPTY_TASKS,
+                isLoading:
+                    loadingIds.has(parentId) || subtaskIds.some(subtaskId => loadingIds.has(subtaskId)),
+            };
+        },
+        [done, enabled, parentId]
+    );
+
+    return TasksStore.use(selector, shallowEqual);
 };
 
 /**
@@ -802,10 +853,13 @@ export const useSubtasks = (parentId?: string, done?: boolean): { subtasks: ITas
  * @returns The subtasks of the task
  */
 export const getSubtasks = (parentId?: string, done?: boolean): ITask[] => {
-    return TasksStore.get()
-        .tasks.filter(task => task.parent === parentId)
-        .filter(task => (done !== undefined ? task.done === done : true));
-    // .sort((a, b) => (a.siblingPosition || 0) - (b.siblingPosition || 0));
+    if (parentId == null) return [];
+    const { subtaskIdsByParent, tasksById } = TasksStore.get();
+    return orderTasksWithFallback(
+        tasksById,
+        tasksById.get(parentId)?.subtasksOrder ?? [],
+        subtaskIdsByParent.get(parentId) ?? []
+    ).filter(subtask => done === undefined || subtask.done === done);
 };
 
 /**
@@ -825,17 +879,17 @@ export const useDependants = (taskId: string, done?: boolean): { tasks: ITask[];
         if (state.isLoading) {
             return defaultReturn;
         }
-        const mainTask = state.tasks.find(task => task.id === taskId);
+        const mainTask = state.tasksById.get(taskId);
         const dependencies = mainTask?.dependencies || [];
+        const loadingIds = new Set(state.loadingChunk);
         const isLoading =
-            state.isLoading ||
-            state.loadingChunk.includes(taskId) ||
-            state.loadingChunk.some(id => dependencies.includes(id));
+            state.isLoading || loadingIds.has(taskId) || dependencies.some(id => loadingIds.has(id));
 
         return {
-            tasks: state.tasks
-                .filter(task => dependencies.includes(task.id))
-                .filter(task => (done !== undefined ? task.done === done : true)),
+            tasks: dependencies.flatMap(dependencyId => {
+                const task = state.tasksById.get(dependencyId);
+                return task && (done === undefined || task.done === done) ? [task] : [];
+            }),
             isLoading,
             task: mainTask,
         };
@@ -883,12 +937,26 @@ export const useDependantsCount = (taskId: string, done?: boolean): number => {
  * @param stackId The stack id
  * @returns The stack's non-archived tasks
  */
-export const useStackTasks = (stackId?: string): ITask[] => {
-    return TasksStore.use(
-        state => state.tasks.filter(task => task.stack === stackId && !task.archived),
-        // .sort((a, b) => (a.position || 0) - (b.position || 0)),
+export const useStackTasksFromStack = (stack?: IStack): ITask[] => {
+    const { tasksById, taskIdsByStack } = TasksStore.use(
+        state => ({ tasksById: state.tasksById, taskIdsByStack: state.taskIdsByStack }),
         shallowEqual
     );
+
+    return useMemo(
+        () =>
+            orderTasksWithFallback(
+                tasksById,
+                stack?.tasksOrder ?? [],
+                stack ? (taskIdsByStack.get(stack.id) ?? []) : []
+            ).filter(task => task.stack === stack?.id && !task.archived),
+        [stack, taskIdsByStack, tasksById]
+    );
+};
+
+export const useStackTasks = (stackId?: string): ITask[] => {
+    const stack = useStack(stackId);
+    return useStackTasksFromStack(stack);
 };
 
 /**
@@ -914,8 +982,13 @@ export const useTasksByPeriod = (from: Date, to: Date, loose = false) => {
  */
 export const useArchivedTasks = (projectId?: string): { tasks: ITask[]; isLoading: boolean } => {
     return TasksStore.use(state => {
+        const taskIds = projectId ? (state.taskIdsByProject.get(projectId) ?? []) : [];
+        const tasks = taskIds.flatMap(taskId => {
+            const task = state.tasksById.get(taskId);
+            return task?.archived ? [task] : [];
+        });
         return {
-            tasks: state.tasks.filter(task => task.archived && task.project === projectId),
+            tasks: tasks.length ? tasks : EMPTY_TASKS,
             isLoading: state.isLoadingArchived,
         };
     }, shallowEqual);

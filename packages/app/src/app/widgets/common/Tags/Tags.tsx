@@ -4,10 +4,10 @@ import classNames from "classnames";
 import React, { FunctionComponent } from "react";
 import tinycolor, { ColorInput } from "tinycolor2";
 
-import { Grid } from "app/components/common";
+import { Grid } from "app/components/common/Layout/Grid/Grid";
 import { ITag, TAGSECTION, TAGTYPE } from "@stacks/types";
 import { adjustColor } from "app/utils/colors";
-import { TagChip } from "app/widgets";
+import { TagChip } from "app/widgets/common/TagChip/TagChip";
 import { useTags } from "app/hooks";
 
 const allColors: ColorInput[] = [];

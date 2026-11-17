@@ -8,7 +8,7 @@ import React, { FunctionComponent, useEffect, useMemo, useRef, useState } from "
 import { ITask } from "@stacks/types";
 import { Container, Draggable } from "app/components/draggable";
 import { LazyLoad } from "app/components/common";
-import { TaskCard } from "app/components/project";
+import { TaskCard } from "app/components/project/Task/TaskCard/TaskCard";
 import {
     getStack,
     useFilteredProjectTasksIds,

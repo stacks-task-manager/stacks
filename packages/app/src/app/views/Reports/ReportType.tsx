@@ -46,7 +46,11 @@ export const ReportType = () => {
             <AppViewContent padded>
                 {report == null && (
                     <Grid vertical>
-                        <BlankSlate title={translate("No report found")} icon={"chart-line"} />
+                        <BlankSlate
+                            title={translate("No report found")}
+                            icon={"chart-line"}
+                            testId="report-blank-slate"
+                        />
                     </Grid>
                 )}
                 {report != null && <ReportRenderer report={report} />}
@@ -61,7 +65,10 @@ interface ReportRendererProps {
 const ReportRenderer: FunctionComponent<ReportRendererProps> = ({ report }) => {
     if ("type" in report) {
         return (
-            <div className={`report-column size-${report.size ?? "100"}`}>
+            <div
+                className={`report-column size-${report.size ?? "100"}`}
+                data-testid={report.type === "grid" ? "report-grid-report" : "report-chart-report"}
+            >
                 {report.type === "grid" && (
                     <ReportGrid type={report.type} columns={report.columns} data={report.data} />
                 )}

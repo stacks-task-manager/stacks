@@ -7,5 +7,4 @@ export * from "./CopyMove/CopyMove";
 export { Container, Draggable } from "./draggable";
 export * from "./Footer/Footer";
 export * from "./Toolbar";
-export * from "../widgets/common/StatusChip/StatusChip";
 export * from "./draggable";

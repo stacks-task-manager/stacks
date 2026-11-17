@@ -830,6 +830,7 @@ var init_sidebar = __esm({
       SIDEBARITEMS2["CALENDAR"] = "calendar";
       SIDEBARITEMS2["MYTASKS"] = "mytasks";
       SIDEBARITEMS2["REPORTS"] = "reports";
+      SIDEBARITEMS2["WORKBOOKS"] = "workbooks";
     })(SIDEBARITEMS || (SIDEBARITEMS = {}));
     SIDEBARICON = {
       home: "home",
@@ -840,7 +841,8 @@ var init_sidebar = __esm({
       calendar: "calendar-date",
       mytasks: "check-circle",
       // planner: "calendar-minus-01",
-      reports: APPICONS.REPORTS
+      reports: APPICONS.REPORTS,
+      workbooks: "book-open-01"
     };
   }
 });
@@ -1493,6 +1495,7 @@ var init_updates = __esm({
       POLLINGTYPE2["TIMELOG"] = "timelog";
       POLLINGTYPE2["NOTIFICATION"] = "notification";
       POLLINGTYPE2["PERMISSION"] = "permission";
+      POLLINGTYPE2["WORKBOOK"] = "workbook";
     })(POLLINGTYPE || (POLLINGTYPE = {}));
   }
 });
@@ -1500,6 +1503,13 @@ var init_updates = __esm({
 // ../types/dist/models/url.js
 var init_url = __esm({
   "../types/dist/models/url.js"() {
+    "use strict";
+  }
+});
+
+// ../types/dist/models/workbook.js
+var init_workbook = __esm({
+  "../types/dist/models/workbook.js"() {
     "use strict";
   }
 });
@@ -1547,6 +1557,7 @@ var init_dist = __esm({
     init_timelogs();
     init_updates();
     init_url();
+    init_workbook();
   }
 });
 
@@ -2533,23 +2544,47 @@ var init_User = __esm({
   }
 });
 
-// src/entities/Session.ts
-var import_sequelize27, SessionEntity, Session_default;
-var init_Session = __esm({
-  "src/entities/Session.ts"() {
+// src/entities/Workbook.ts
+var import_sequelize27, WorkbookEntity, Workbook_default;
+var init_Workbook = __esm({
+  "src/entities/Workbook.ts"() {
     "use strict";
     import_sequelize27 = require("sequelize");
     init_db();
-    SessionEntity = class extends import_sequelize27.Model {
+    init_Base();
+    WorkbookEntity = class extends Base_default {
+    };
+    WorkbookEntity.initialize(
+      {
+        title: { type: import_sequelize27.DataTypes.STRING, allowNull: false },
+        filters: { type: import_sequelize27.DataTypes.JSONB, allowNull: false, defaultValue: {} }
+      },
+      {
+        tableName: "workbooks",
+        sequelize
+      }
+    );
+    Workbook_default = WorkbookEntity;
+  }
+});
+
+// src/entities/Session.ts
+var import_sequelize28, SessionEntity, Session_default;
+var init_Session = __esm({
+  "src/entities/Session.ts"() {
+    "use strict";
+    import_sequelize28 = require("sequelize");
+    init_db();
+    SessionEntity = class extends import_sequelize28.Model {
     };
     SessionEntity.init(
       {
-        id: { type: import_sequelize27.DataTypes.UUID, defaultValue: import_sequelize27.DataTypes.UUIDV4, primaryKey: true },
-        userId: { type: import_sequelize27.DataTypes.UUID, allowNull: false },
-        tenant: { type: import_sequelize27.DataTypes.UUID, allowNull: false },
-        createdAt: { type: import_sequelize27.DataTypes.DATE, allowNull: false, defaultValue: import_sequelize27.DataTypes.NOW },
-        expiresAt: { type: import_sequelize27.DataTypes.DATE, allowNull: false },
-        revokedAt: { type: import_sequelize27.DataTypes.DATE, allowNull: true }
+        id: { type: import_sequelize28.DataTypes.UUID, defaultValue: import_sequelize28.DataTypes.UUIDV4, primaryKey: true },
+        userId: { type: import_sequelize28.DataTypes.UUID, allowNull: false },
+        tenant: { type: import_sequelize28.DataTypes.UUID, allowNull: false },
+        createdAt: { type: import_sequelize28.DataTypes.DATE, allowNull: false, defaultValue: import_sequelize28.DataTypes.NOW },
+        expiresAt: { type: import_sequelize28.DataTypes.DATE, allowNull: false },
+        revokedAt: { type: import_sequelize28.DataTypes.DATE, allowNull: true }
       },
       {
         sequelize,
@@ -2569,26 +2604,26 @@ var init_Session = __esm({
 });
 
 // src/entities/OAuthAttempt.ts
-var import_sequelize28, OAuthAttemptEntity, OAuthAttempt_default;
+var import_sequelize29, OAuthAttemptEntity, OAuthAttempt_default;
 var init_OAuthAttempt = __esm({
   "src/entities/OAuthAttempt.ts"() {
     "use strict";
-    import_sequelize28 = require("sequelize");
+    import_sequelize29 = require("sequelize");
     init_db();
-    OAuthAttemptEntity = class extends import_sequelize28.Model {
+    OAuthAttemptEntity = class extends import_sequelize29.Model {
     };
     OAuthAttemptEntity.init(
       {
-        id: { type: import_sequelize28.DataTypes.UUID, defaultValue: import_sequelize28.DataTypes.UUIDV4, primaryKey: true },
-        userId: { type: import_sequelize28.DataTypes.UUID, allowNull: false },
-        tenant: { type: import_sequelize28.DataTypes.UUID, allowNull: false },
-        sid: { type: import_sequelize28.DataTypes.UUID, allowNull: false },
-        stateHash: { type: import_sequelize28.DataTypes.STRING(64), allowNull: false, unique: true },
-        nonceHash: { type: import_sequelize28.DataTypes.STRING(64), allowNull: false },
-        codeVerifier: { type: import_sequelize28.DataTypes.TEXT, allowNull: false },
-        createdAt: { type: import_sequelize28.DataTypes.DATE, allowNull: false, defaultValue: import_sequelize28.DataTypes.NOW },
-        expiresAt: { type: import_sequelize28.DataTypes.DATE, allowNull: false },
-        consumedAt: { type: import_sequelize28.DataTypes.DATE, allowNull: true }
+        id: { type: import_sequelize29.DataTypes.UUID, defaultValue: import_sequelize29.DataTypes.UUIDV4, primaryKey: true },
+        userId: { type: import_sequelize29.DataTypes.UUID, allowNull: false },
+        tenant: { type: import_sequelize29.DataTypes.UUID, allowNull: false },
+        sid: { type: import_sequelize29.DataTypes.UUID, allowNull: false },
+        stateHash: { type: import_sequelize29.DataTypes.STRING(64), allowNull: false, unique: true },
+        nonceHash: { type: import_sequelize29.DataTypes.STRING(64), allowNull: false },
+        codeVerifier: { type: import_sequelize29.DataTypes.TEXT, allowNull: false },
+        createdAt: { type: import_sequelize29.DataTypes.DATE, allowNull: false, defaultValue: import_sequelize29.DataTypes.NOW },
+        expiresAt: { type: import_sequelize29.DataTypes.DATE, allowNull: false },
+        consumedAt: { type: import_sequelize29.DataTypes.DATE, allowNull: true }
       },
       {
         sequelize,
@@ -2602,20 +2637,20 @@ var init_OAuthAttempt = __esm({
 });
 
 // src/entities/RateLimitCounter.ts
-var import_sequelize29, RateLimitCounterEntity, RateLimitCounter_default;
+var import_sequelize30, RateLimitCounterEntity, RateLimitCounter_default;
 var init_RateLimitCounter = __esm({
   "src/entities/RateLimitCounter.ts"() {
     "use strict";
-    import_sequelize29 = require("sequelize");
+    import_sequelize30 = require("sequelize");
     init_db();
-    RateLimitCounterEntity = class extends import_sequelize29.Model {
+    RateLimitCounterEntity = class extends import_sequelize30.Model {
     };
     RateLimitCounterEntity.init(
       {
-        keyHash: { type: import_sequelize29.DataTypes.STRING(64), primaryKey: true, allowNull: false },
-        windowStart: { type: import_sequelize29.DataTypes.BIGINT, primaryKey: true, allowNull: false },
-        hits: { type: import_sequelize29.DataTypes.INTEGER, allowNull: false, defaultValue: 0 },
-        expiresAt: { type: import_sequelize29.DataTypes.DATE, allowNull: false }
+        keyHash: { type: import_sequelize30.DataTypes.STRING(64), primaryKey: true, allowNull: false },
+        windowStart: { type: import_sequelize30.DataTypes.BIGINT, primaryKey: true, allowNull: false },
+        hits: { type: import_sequelize30.DataTypes.INTEGER, allowNull: false, defaultValue: 0 },
+        expiresAt: { type: import_sequelize30.DataTypes.DATE, allowNull: false }
       },
       {
         sequelize,
@@ -2630,19 +2665,19 @@ var init_RateLimitCounter = __esm({
 });
 
 // src/entities/RateLimitLease.ts
-var import_sequelize30, RateLimitLeaseEntity, RateLimitLease_default;
+var import_sequelize31, RateLimitLeaseEntity, RateLimitLease_default;
 var init_RateLimitLease = __esm({
   "src/entities/RateLimitLease.ts"() {
     "use strict";
-    import_sequelize30 = require("sequelize");
+    import_sequelize31 = require("sequelize");
     init_db();
-    RateLimitLeaseEntity = class extends import_sequelize30.Model {
+    RateLimitLeaseEntity = class extends import_sequelize31.Model {
     };
     RateLimitLeaseEntity.init(
       {
-        id: { type: import_sequelize30.DataTypes.UUID, defaultValue: import_sequelize30.DataTypes.UUIDV4, primaryKey: true },
-        keyHash: { type: import_sequelize30.DataTypes.STRING(64), allowNull: false },
-        expiresAt: { type: import_sequelize30.DataTypes.DATE, allowNull: false }
+        id: { type: import_sequelize31.DataTypes.UUID, defaultValue: import_sequelize31.DataTypes.UUIDV4, primaryKey: true },
+        keyHash: { type: import_sequelize31.DataTypes.STRING(64), allowNull: false },
+        expiresAt: { type: import_sequelize31.DataTypes.DATE, allowNull: false }
       },
       {
         sequelize,
@@ -2691,6 +2726,7 @@ __export(index_exports, {
   TenantEntity: () => Tenant_default,
   TimelogEntity: () => Timelog_default,
   UserEntity: () => User_default,
+  WorkbookEntity: () => Workbook_default,
   connectDb: () => connectDb,
   sequelize: () => sequelize
 });
@@ -2723,6 +2759,7 @@ var init_index = __esm({
     init_Tenant();
     init_Timelog();
     init_User();
+    init_Workbook();
     init_Session();
     init_OAuthAttempt();
     init_RateLimitCounter();

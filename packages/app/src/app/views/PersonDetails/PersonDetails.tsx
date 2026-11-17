@@ -41,17 +41,7 @@ import {
     TAGSECTION,
     UUID,
 } from "@stacks/types";
-import {
-    Avatar,
-    BlankSlate,
-    Col,
-    Grid,
-    Icon,
-    Link,
-    PopupNewGeneric,
-    Row,
-    Scroller,
-} from "app/components/common";
+import { Avatar, BlankSlate, Col, Grid, Icon, Link, NewGeneric, Row, Scroller } from "app/components/common";
 import { FeeInputPopup, TaskDetailsSection } from "app/components/project";
 import { useElementHotkey, useMe, useOnClickOutside, usePerson, useRoles } from "app/hooks";
 import { useUpload } from "app/hooks/fileUpload";
@@ -501,13 +491,14 @@ const PersonEditing: FunctionComponent<IPersonEditingProps> = ({ person, onClose
                                         </Col>
                                         <Col width="auto">
                                             <Tooltip content="Add company" placement="top-end">
-                                                <PopupNewGeneric
+                                                <NewGeneric
+                                                    presentation="popover"
                                                     placeholder="Untitled company"
                                                     buttonText="Add"
                                                     onAdd={PeopleActions.addCompany}
                                                 >
                                                     <Button icon={<Icon icon="plus" />}></Button>
-                                                </PopupNewGeneric>
+                                                </NewGeneric>
                                             </Tooltip>
                                         </Col>
                                     </Row>
@@ -671,9 +662,7 @@ const PersonEditing: FunctionComponent<IPersonEditingProps> = ({ person, onClose
                                 <FormGroup label={translate("Country")} labelFor="country">
                                     <CountryPicker
                                         defaultValue={updatedPerson?.country ?? undefined}
-                                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                                            update("country", e.currentTarget.value)
-                                        }
+                                        onChange={value => update("country", value)}
                                     />
                                 </FormGroup>
                             </Col>
@@ -982,7 +971,11 @@ const PersonRead: FunctionComponent<IPersonProps> = ({ person, onClose, onEdit }
                                         <MenuDivider />
                                     </>
                                 )}
-                                <MenuItem text={translate("Export")} icon={<Icon icon="download-04" />}>
+                                <MenuItem
+                                    text={translate("Export")}
+                                    icon={<Icon icon="download-04" />}
+                                    data-testid="person-details-export-menu"
+                                >
                                     <MenuItem
                                         text={translate("Export as", { type: ".xlsx" })}
                                         icon={<Icon icon="download-04" />}
@@ -1024,7 +1017,12 @@ const PersonRead: FunctionComponent<IPersonProps> = ({ person, onClose, onEdit }
                         }
                         placement="bottom-end"
                     >
-                        <Button size="small" variant="minimal" icon={<Icon icon="dots-vertical" />} />
+                        <Button
+                            size="small"
+                            variant="minimal"
+                            icon={<Icon icon="dots-vertical" />}
+                            data-testid="person-details-menu-button"
+                        />
                     </Popover>
 
                     <FavoritePersonButton personId={person.id} />
@@ -1079,7 +1077,7 @@ const PersonRead: FunctionComponent<IPersonProps> = ({ person, onClose, onEdit }
                     </div>
                     <div className="person-details__section">
                         <TaskDetailsSection title={translate("Gender")} centered>
-                            {person.gender ? PEOPLE_GENDER_LABELS[person.gender] ?? person.gender : "-"}
+                            {person.gender ? (PEOPLE_GENDER_LABELS[person.gender] ?? person.gender) : "-"}
                         </TaskDetailsSection>
                     </div>
                     <div className="person-details__section">

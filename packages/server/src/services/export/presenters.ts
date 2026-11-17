@@ -68,8 +68,8 @@ const list = (value: unknown): string[] =>
     Array.isArray(value)
         ? value.map(item => text(item)).filter(item => item !== "—")
         : value
-        ? [text(value)]
-        : [];
+          ? [text(value)]
+          : [];
 const date = (value: unknown, locale: string, empty: string): string => {
     if (value == null || value === "") return empty;
     const source = String(value);
@@ -338,6 +338,33 @@ function bookmarkRecords(data: unknown, _locale: string, empty: string): ReportR
     }));
 }
 
+function workbookRecords(data: unknown, locale: string, empty: string): ReportRecord[] {
+    const wrapper = record(data);
+    const workbook = record(raw(wrapper, "workbook"));
+    const tasks = records(raw(wrapper, "tasks"));
+    const source = tasks.length > 0 ? [workbook] : records(data);
+
+    return source.map(item => ({
+        title: text(raw(item, "title", "name"), translate("Workbook")),
+        subtitle: translate("Workbook"),
+        badges: [],
+        facts: [
+            fact("Tasks", tasks.length > 0 ? tasks.length : raw(item, "taskCount"), empty),
+            fact("Created", date(raw(item, "created"), locale, empty), empty),
+            fact("Updated", date(raw(item, "updated"), locale, empty), empty),
+        ],
+        sections:
+            tasks.length > 0
+                ? [
+                      {
+                          title: translate("Tasks"),
+                          items: tasks.map(task => text(raw(task, "title", "name"), "")).filter(Boolean),
+                      },
+                  ]
+                : [],
+    }));
+}
+
 const ENTITY_LABELS: Record<ExportEntityType, string> = {
     task: "Task",
     project: "Project",
@@ -345,6 +372,7 @@ const ENTITY_LABELS: Record<ExportEntityType, string> = {
     company: "Company",
     bookmark: "Bookmarks",
     notepad: "Notepad",
+    workbook: "Workbook",
 };
 
 const PDF_PRESENTERS: Record<
@@ -356,6 +384,7 @@ const PDF_PRESENTERS: Record<
     person: personRecords,
     company: companyRecords,
     bookmark: bookmarkRecords,
+    workbook: workbookRecords,
 };
 
 /** Normalizes client-owned entity data into the stable, localized PDF report model. */

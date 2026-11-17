@@ -51,7 +51,7 @@ $indicator-bullet-size: $level-bullet-size;
         position: relative;
         background-color: $indicator-color;
 
-        &:last-child {
+        &.is-current {
             &::before {
                 @include indicator-line();
             }
@@ -60,11 +60,9 @@ $indicator-bullet-size: $level-bullet-size;
                 @include indicator-bullet();
             }
         }
-    }
 
-    &.is-last {
-        .table-level-indicator-item {
-            &:last-child {
+        &.is-last {
+            &.is-current {
                 height: 50%;
 
                 &::before {
@@ -74,6 +72,10 @@ $indicator-bullet-size: $level-bullet-size;
                 &::after {
                     @include indicator-bullet(100%);
                 }
+            }
+
+            &:not(.is-current) {
+                background-color: transparent;
             }
         }
     }

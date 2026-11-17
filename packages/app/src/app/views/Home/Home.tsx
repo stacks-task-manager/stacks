@@ -263,20 +263,30 @@ const PinnedBookmarks = () => {
 };
 
 const FavoritePeople = () => {
-    const { favoritePeople, favoriteCompanies } = PeopleStore.use(
-        state => ({ favoritePeople: state.favoritePeople, favoriteCompanies: state.favoriteCompanies }),
+    const {
+        people: allPeople,
+        companies: allCompanies,
+        favoritePeople,
+        favoriteCompanies,
+    } = PeopleStore.use(
+        state => ({
+            people: state.people,
+            companies: state.companies,
+            favoritePeople: state.favoritePeople,
+            favoriteCompanies: state.favoriteCompanies,
+        }),
         shallowEqual
     );
     const navigate = useNavigate();
     const location = useLocation();
 
     const people = useMemo(() => {
-        return PeopleStore.get().people.filter(person => favoritePeople.includes(person.id));
-    }, [favoritePeople]);
+        return allPeople.filter(person => favoritePeople.includes(person.id));
+    }, [allPeople, favoritePeople]);
 
     const companies = useMemo(() => {
-        return PeopleStore.get().companies.filter(company => favoriteCompanies.includes(company.id));
-    }, [favoritePeople]);
+        return allCompanies.filter(company => favoriteCompanies.includes(company.id));
+    }, [allCompanies, favoriteCompanies]);
 
     const handleOpenProfile = (personId: string) => {
         navigate(`/person/${personId}`, {

@@ -107,12 +107,14 @@ export const BlockItem = ({ editor, small }: { editor: Editor; small?: boolean }
 
                         <MenuItem
                             text="Ordered list"
+                            data-testid="tip-tap-list-ordered"
                             labelElement={block === "orderedList" ? <Icon icon="check" /> : null}
                             onClick={() => getSelectionChain(editor).toggleOrderedList().run()}
                             icon={<NumberedList size={13} />}
                         />
                         <MenuItem
                             text="Bullet list"
+                            data-testid="tip-tap-list"
                             labelElement={block === "bulletList" ? <Icon icon="check" /> : null}
                             onClick={() => getSelectionChain(editor).toggleBulletList().run()}
                             icon={<Icon icon="dotpoints-02" />}
@@ -139,7 +141,12 @@ export const BlockItem = ({ editor, small }: { editor: Editor; small?: boolean }
                 placement="bottom-start"
                 minimal
             >
-                <Button size={small ? "small" : undefined} variant="minimal" icon={currentIcon} />
+                <Button
+                    size={small ? "small" : undefined}
+                    variant="minimal"
+                    icon={currentIcon}
+                    data-testid="tip-tap-block-button"
+                />
             </Popover>
 
             {block === "taskList" ? (

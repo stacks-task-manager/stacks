@@ -58,7 +58,14 @@ export const TIRepeats: FunctionComponent<ITIRepeatsProps> = ({ taskId, value, d
             onOpening={handleSetDefault}
         >
             <>
-                {!value && <RoundButton dashed title={translate("Add repeats")} disabled={disabled} />}
+                {!value && (
+                    <RoundButton
+                        dashed
+                        title={translate("Add repeats")}
+                        disabled={disabled}
+                        testId="task-details-repeat-trigger"
+                    />
+                )}
                 {value && (
                     <Tooltip content={repeatsTooltip} disabled={!value} placement="top">
                         <Tag
@@ -67,6 +74,7 @@ export const TIRepeats: FunctionComponent<ITIRepeatsProps> = ({ taskId, value, d
                             icon={<Icon icon="refresh" size={14} />}
                             intent={Intent.SUCCESS}
                             onRemove={!disabled && value ? handleRemove : undefined}
+                            data-testid="task-details-repeat-trigger"
                         >
                             {repeatsLabel}
                         </Tag>

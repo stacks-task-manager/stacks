@@ -5,24 +5,36 @@ import { FunctionComponent } from "react";
 interface TableLevelIndicatorProps {
     level: number;
     isParent: boolean;
-    isLast: boolean;
+    lastAtDepth: boolean[];
+    testId?: string;
 }
 export const TableLevelIndicator: FunctionComponent<TableLevelIndicatorProps> = ({
     level,
     isParent,
-    isLast,
+    lastAtDepth,
+    testId,
 }) => {
     const isChildren = level > 0;
+    const itemCount = level + (isParent && isChildren ? 1 : 0);
+
     return (
         <span
             className={classNames("table-level-indicator", {
-                "is-last": isLast,
                 "is-parent": isParent,
                 "is-children": isChildren,
             })}
+            data-testid={testId}
+            data-item-count={itemCount}
         >
-            {Array.from({ length: level + (isParent && isChildren ? 1 : 0) }).map((_, i) => (
-                <span key={i} className="table-level-indicator-item" />
+            {Array.from({ length: itemCount }).map((_, i) => (
+                <span
+                    key={i}
+                    data-testid={testId ? `${testId}-item-${i}` : undefined}
+                    className={classNames("table-level-indicator-item", {
+                        "is-current": i === level - 1,
+                        "is-last": lastAtDepth[i + 1] ?? false,
+                    })}
+                />
             ))}
         </span>
     );

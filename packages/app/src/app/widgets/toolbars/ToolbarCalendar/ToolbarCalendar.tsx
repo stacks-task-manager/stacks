@@ -14,11 +14,10 @@ import {
     Popover,
     Tooltip,
 } from "@blueprintjs/core";
-import classNames from "classnames";
 import { format, getWeek } from "date-fns";
 import React, { useMemo, useRef, useState } from "react";
 
-import { Icon, ReloadButton, ToolbarButton } from "app/components/common";
+import { Icon, ReloadButton, ToolbarButton, ToolbarViewButton } from "app/components/common";
 import { TintPicker } from "app/components/project";
 import { useMousetrap } from "app/hooks";
 import { shallowEqual } from "app/hooks/store";
@@ -26,6 +25,14 @@ import { CalendarActions } from "app/store/actions";
 import { CalendarStore } from "app/store/calendar";
 import { formatDate } from "app/utils/date";
 import { LocaleDatePicker } from "app/widgets/common";
+import {
+    MainToolbar,
+    SectionToolbar,
+    SectionToolbarDivider,
+    SectionToolbarOptions,
+    SectionToolbarSide,
+    SectionToolbarTitle,
+} from "app/widgets/toolbars/ToolbarLayout";
 export const ToolbarCalendar = () => {
     const { date, view } = CalendarStore.use();
     const filterButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -68,13 +75,13 @@ export const ToolbarCalendar = () => {
     // };
 
     return (
-        <div className="main-toolbar">
-            <div className="section-toolbar">
-                <div className="section-toolbar-side side">
-                    <div className="section-toolbar-title">
+        <MainToolbar>
+            <SectionToolbar>
+                <SectionToolbarSide side>
+                    <SectionToolbarTitle>
                         <h1>{translate("Calendar")}</h1>
-                    </div>
-                    <div className="section-toolbar-options">
+                    </SectionToolbarTitle>
+                    <SectionToolbarOptions>
                         <Popover
                             content={
                                 <Menu>
@@ -90,14 +97,14 @@ export const ToolbarCalendar = () => {
                                 data-testid="calendar-integrations-button"
                             />
                         </Popover>
-                    </div>
-                </div>
-                <div className="section-toolbar-side fixed">
+                    </SectionToolbarOptions>
+                </SectionToolbarSide>
+                <SectionToolbarSide fixed>
                     <H4 style={{ margin: 0 }} data-testid="calendar-current-date">
                         {currentDate}
                     </H4>
 
-                    <span className="section-toolbar-divider" />
+                    <SectionToolbarDivider />
 
                     <Button
                         size="small"
@@ -125,7 +132,7 @@ export const ToolbarCalendar = () => {
                         />
                     </ButtonGroup>
 
-                    <span className="section-toolbar-divider" />
+                    <SectionToolbarDivider />
 
                     <ReloadButton
                         tooltip={translate("Reload events")}
@@ -170,41 +177,38 @@ export const ToolbarCalendar = () => {
                         placement="bottom-end"
                         onClick={handleAddNewEvent}
                     /> */}
-                </div>
-            </div>
-            <div className="section-toolbar">
-                <div className="section-toolbar-side">
-                    <button
-                        className={classNames("view-type-button", { active: "day" === view })}
+                </SectionToolbarSide>
+            </SectionToolbar>
+            <SectionToolbar>
+                <SectionToolbarSide>
+                    <ToolbarViewButton
+                        icon="rows-03"
+                        label={translate("Day")}
+                        active={view === "day"}
                         onClick={() => CalendarActions.setView("day")}
                         data-testid="calendar-view-day-button"
-                    >
-                        <Icon icon="rows-03" />
-                        {translate("Day")}
-                    </button>
-                    <button
-                        className={classNames("view-type-button", { active: "week" === view })}
+                    />
+                    <ToolbarViewButton
+                        icon="columns-03"
+                        label={translate("Week")}
+                        active={view === "week"}
                         onClick={() => CalendarActions.setView("week")}
                         data-testid="calendar-view-week-button"
-                    >
-                        <Icon icon="columns-03" />
-                        {translate("Week")}
-                    </button>
-                    <button
-                        className={classNames("view-type-button", { active: "month" === view })}
+                    />
+                    <ToolbarViewButton
+                        icon="layout-grid-01"
+                        label={translate("Month")}
+                        active={view === "month"}
                         onClick={() => CalendarActions.setView("month")}
                         data-testid="calendar-view-month-button"
-                    >
-                        <Icon icon="layout-grid-01" />
-                        {translate("Month")}
-                    </button>
-                </div>
-                <div className="section-toolbar-side">
+                    />
+                </SectionToolbarSide>
+                <SectionToolbarSide>
                     <NewLocalCalendarButton />
                     <FilterButton />
-                </div>
-            </div>
-        </div>
+                </SectionToolbarSide>
+            </SectionToolbar>
+        </MainToolbar>
     );
 };
 

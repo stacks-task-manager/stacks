@@ -77,6 +77,7 @@ export const SIDEBAR_MENU_LABELS: Record<string, string> = translatedRecord({
     calendar: "Calendar",
     mytasks: "My tasks",
     reports: "Reports",
+    workbooks: "Workbooks",
 });
 
 /** Project table grouping (GROUPING_TYPE string values) */

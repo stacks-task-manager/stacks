@@ -5,6 +5,7 @@
 import { translate } from "@stacks/translations";
 import { Intent } from "@blueprintjs/core";
 import { produce } from "immer";
+import isEqual from "lodash/isEqual";
 import kebabCase from "lodash/kebabCase";
 import union from "lodash/union";
 import without from "lodash/without";
@@ -67,6 +68,38 @@ import { cleanupResourceNavigationRefs } from "./resourceNavigationCleanup";
 import { ProjectsActions } from "./projects";
 import { RecordActions } from "./record";
 
+let primaryLoadCount = 0;
+let archivedLoadCount = 0;
+
+const startPrimaryLoad = () => {
+    primaryLoadCount++;
+    TasksStore.set(
+        produce((state: ITasksStore) => {
+            state.isLoading = true;
+        })
+    );
+};
+
+const finishPrimaryLoad = () => {
+    primaryLoadCount--;
+    if (primaryLoadCount > 0) return;
+    TasksStore.set(
+        produce((state: ITasksStore) => {
+            state.isLoading = false;
+        })
+    );
+};
+
+const finishArchivedLoad = () => {
+    archivedLoadCount--;
+    if (archivedLoadCount > 0) return;
+    TasksStore.set(
+        produce((state: ITasksStore) => {
+            state.isLoadingArchived = false;
+        })
+    );
+};
+
 /**
  * Load all tasks based on a given project id
  * @param projectId
@@ -78,19 +111,20 @@ const loadByProject = async (projectId: string, silent?: boolean): Promise<ITask
 
     // const tasksIs = await ProjectsActions.getTasks(projectId);
 
-    TasksStore.set(
-        produce((state: ITasksStore) => {
-            if (!silent) {
-                state.isLoading = true;
-            }
-            // state.loadingChunk = uniq([...state.loadingChunk, ...tasksIs]);
-            state.loadedProjects = union(state.loadedProjects, [projectId]);
-        })
-    );
+    if (!silent) startPrimaryLoad();
 
-    const tasks = await TasksAPI.load({ project: [projectId] });
-    await upsertTasks(tasks);
-    return tasks;
+    try {
+        const tasks = await TasksAPI.load({ project: [projectId] });
+        await upsertTasks(tasks);
+        TasksStore.set(
+            produce((state: ITasksStore) => {
+                state.loadedProjects = union(state.loadedProjects, [projectId]);
+            })
+        );
+        return tasks;
+    } finally {
+        if (!silent) finishPrimaryLoad();
+    }
 };
 
 /**
@@ -103,11 +137,8 @@ const loadSegment = async (taskIds: string[], forceReload?: boolean): Promise<IT
     // if we do not force reload the requested tasks
     // then build an array of tasks to reload
     if (!forceReload) {
-        const loadedTasksIds = TasksStore.get().tasks.map(task => task.id);
-        const loadingTaskIds = TasksStore.get().loadingChunk;
-        tasksToLoad = taskIds.filter(
-            taskId => !loadedTasksIds.includes(taskId) && !loadingTaskIds.includes(taskId)
-        );
+        const { loadingChunk, tasksById } = TasksStore.get();
+        tasksToLoad = taskIds.filter(taskId => !tasksById.has(taskId) && !loadingChunk.includes(taskId));
     }
 
     // if there are tasks to be loaded
@@ -118,9 +149,17 @@ const loadSegment = async (taskIds: string[], forceReload?: boolean): Promise<IT
                 state.loadingChunk = union(state.loadingChunk, tasksToLoad);
             })
         );
-        const tasks = await TasksAPI.load({ ids: tasksToLoad });
-        await upsertTasks(tasks);
-        return tasks;
+        try {
+            const tasks = await TasksAPI.load({ ids: tasksToLoad });
+            await upsertTasks(tasks);
+            return tasks;
+        } finally {
+            TasksStore.set(
+                produce((state: ITasksStore) => {
+                    state.loadingChunk = without(state.loadingChunk, ...tasksToLoad);
+                })
+            );
+        }
     }
 
     return [];
@@ -174,17 +213,15 @@ const loadMy = async (): Promise<ITask[]> => {
         return [];
     }
 
-    TasksStore.set(
-        produce((state: ITasksStore) => {
-            state.isLoading = true;
-        })
-    );
+    startPrimaryLoad();
 
-    const myTasks = await TasksAPI.load({ assignees: [me.id] });
-
-    await upsertTasks(myTasks);
-
-    return myTasks;
+    try {
+        const myTasks = await TasksAPI.load({ assignees: [me.id] });
+        await upsertTasks(myTasks);
+        return myTasks;
+    } finally {
+        finishPrimaryLoad();
+    }
 };
 
 /**
@@ -193,15 +230,20 @@ const loadMy = async (): Promise<ITask[]> => {
  * @returns
  */
 const loadArchived = async (project: string[]): Promise<ITask[]> => {
+    archivedLoadCount++;
     TasksStore.set(
         produce((state: ITasksStore) => {
             state.isLoadingArchived = true;
         })
     );
 
-    const tasks = await TasksAPI.load({ project, archived: true });
-    await upsertTasks(tasks);
-    return tasks;
+    try {
+        const tasks = await TasksAPI.load({ project, archived: true });
+        await upsertTasks(tasks);
+        return tasks;
+    } finally {
+        finishArchivedLoad();
+    }
 };
 
 // const moveToStack = async (taskId: string, targetStack: string, targetPosition: number, sourcePositionOpt?: number) => {
@@ -345,7 +387,7 @@ const update = async (taskId: string, updatedTask: Partial<ITask>, skipSave?: bo
         TaskLog(previousTask, updatedTaskData);
     }
 
-    const newUpdatedTask = TasksStore.get().tasks.find(task => task.id === taskId);
+    const newUpdatedTask = TasksStore.get().tasksById.get(taskId);
     publish("task:updated", newUpdatedTask);
 
     return newUpdatedTask!;
@@ -374,14 +416,17 @@ const replaceTask = (replacedTask: ITask, skipSave?: boolean) => {
  * @param tasks
  */
 const upsertTasks = async (tasks: ITask[]) => {
-    const newTaskIds = tasks.map((task: ITask) => task.id);
+    const existingTasksById = new Map(TasksStore.get().tasks.map(task => [task.id, task]));
+    // Preserve existing task references when the fetched task is identical so
+    // task-details subscribers do not re-render merely because a project reloads.
+    const storedTasks = tasks.map(task => {
+        const existingTask = existingTasksById.get(task.id);
+        return existingTask && isEqual(existingTask, task) ? existingTask : task;
+    });
 
     TasksStore.set(
         produce((state: ITasksStore) => {
-            state.tasks = upsertById(state.tasks, tasks);
-            state.loadingChunk = without(state.loadingChunk, ...newTaskIds);
-            state.isLoading = false;
-            state.isLoadingArchived = false;
+            state.tasks = upsertById(state.tasks, storedTasks);
         })
     );
 
@@ -614,7 +659,7 @@ const alertDetach = async (taskId: string) => {
  * @returns ITask | undefined
  */
 export const getTask = async (taskId: string): Promise<ITask> => {
-    const localTask = TasksStore.get().tasks.find((task: ITask) => task.id === taskId);
+    const localTask = TasksStore.get().tasksById.get(taskId);
     if (localTask) return localTask;
 
     // if the requested task is in the loading queue
@@ -642,7 +687,11 @@ export const getTask = async (taskId: string): Promise<ITask> => {
  * @returns ITask[]
  */
 export const getTasks = (taskIds: string[]): ITask[] => {
-    return TasksStore.get().tasks.filter((task: ITask) => taskIds.includes(task.id));
+    const { tasksById } = TasksStore.get();
+    return taskIds.flatMap(taskId => {
+        const task = tasksById.get(taskId);
+        return task ? [task] : [];
+    });
 };
 
 /**
@@ -960,10 +1009,10 @@ const setSubtaskPosition = async (
 ) => {
     TasksStore.set(
         produce((state: ITasksStore) => {
-            const parent = state.tasks.find(t => t.id === parentId);
+            const parent = state.tasksById.get(parentId);
             if (!parent) return;
 
-            const childIds = state.tasks.filter(t => t.parent === parentId).map(t => t.id);
+            const childIds = [...(state.subtaskIdsByParent.get(parentId) ?? [])];
             const childSet = new Set(childIds);
 
             let order = [...(parent.subtasksOrder?.length ? parent.subtasksOrder : childIds)];
@@ -1256,7 +1305,7 @@ const exportTask = async (taskId: string, format: "json" | "pdf" | "excel") => {
 
     const fileTitle = kebabCase(stripMd(task.title).substring(0, 30));
 
-    const subtasks = TasksStore.get().tasks.filter(subtask => subtask.parent === task.id);
+    const subtasks = getSubtasks(task.id);
     const project = await ProjectsActions.getProject(task.project);
 
     await ExportAPI.export({

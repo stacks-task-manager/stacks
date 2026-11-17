@@ -20,19 +20,16 @@ export const Timebox = () => {
     const [showAddTaskDialog, setShowAddTaskDialog] = useState(false);
     const datesRef = useRef<Date[]>([]);
 
-    const handleAddTask = useCallback(
-        (taskId?: string) => {
-            setShowAddTaskDialog(false);
-            if (taskId && datesRef.current.length) {
-                TasksActions.setDates(
-                    taskId,
-                    datesRef.current[0],
-                    datesRef.current[1] ?? addMinutes(datesRef.current[0], 30)
-                );
-            }
-        },
-        [datesRef.current]
-    );
+    const handleAddTask = useCallback((taskId?: string) => {
+        setShowAddTaskDialog(false);
+        if (taskId && datesRef.current.length) {
+            TasksActions.setDates(
+                taskId,
+                datesRef.current[0],
+                datesRef.current[1] ?? addMinutes(datesRef.current[0], 30)
+            );
+        }
+    }, []);
 
     const handleShowPicker = useCallback((dates: Date[]) => {
         datesRef.current = dates;
@@ -42,8 +39,16 @@ export const Timebox = () => {
     return (
         <>
             <AppViewContent padded={view === TIMEBOXVIEWS.CALENDAR} id="timebox2">
-                {TIMEBOXVIEWS.BOARD === view && <TimeboxBoard onShowPicker={handleShowPicker} />}
-                {TIMEBOXVIEWS.CALENDAR === view && <TimeboxCalendar onShowPicker={handleShowPicker} />}
+                {TIMEBOXVIEWS.BOARD === view && (
+                    <div data-testid="timebox-board">
+                        <TimeboxBoard onShowPicker={handleShowPicker} />
+                    </div>
+                )}
+                {TIMEBOXVIEWS.CALENDAR === view && (
+                    <div data-testid="timebox-calendar">
+                        <TimeboxCalendar onShowPicker={handleShowPicker} />
+                    </div>
+                )}
             </AppViewContent>
             {showAddTaskDialog && <TaskPicker2Dialog onClose={handleAddTask} onFilter={filterTasks} />}
             <TimeboxTasksLoader />

@@ -2,7 +2,7 @@
 /**
  * Preferences hooks and selectors.
  */
-import { useCallback } from "react";
+import { useMemo } from "react";
 
 import { IPreferences } from "@stacks/types";
 import { PreferencesStore } from "app/store/preferences";
@@ -14,18 +14,17 @@ import { shallowEqual, useEntity } from "./store";
  * @returns A partial preferences object containing only the requested keys.
  */
 export const usePreferences = (props: Array<keyof IPreferences>): Partial<IPreferences> => {
-    const preferences = useEntity(
-        PreferencesStore,
-        useCallback(
-            (state: IPreferences) => {
-                return props.reduce((res, key) => ({ ...res, [key]: state[key] }), {});
-            },
-            [props]
-        ),
-        shallowEqual
-    );
+    const preferenceKey = [...props].sort().join("\0");
+    const selector = useMemo(() => {
+        const keys = preferenceKey ? (preferenceKey.split("\0") as Array<keyof IPreferences>) : [];
+        return (state: IPreferences) => {
+            const selected: Partial<IPreferences> = {};
+            for (const key of keys) selected[key] = state[key] as never;
+            return selected;
+        };
+    }, [preferenceKey]);
 
-    return preferences;
+    return useEntity(PreferencesStore, selector, shallowEqual);
 };
 
 /**

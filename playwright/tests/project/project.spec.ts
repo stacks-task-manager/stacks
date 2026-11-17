@@ -2,22 +2,31 @@ import type { Browser, BrowserContext, Page } from "@playwright/test";
 import { test, expect } from "../../fixtures";
 import { bootstrapContext } from "../../fixtures/bootstrapContext";
 import Project from "../../pages/project";
+import TasksTable from "../../pages/tasksTable";
 
 test.describe("Project", () => {
     let browser: Browser;
     let context: BrowserContext;
     let page: Page;
     let project: Project;
+    let tasksTable: TasksTable;
     let projectName: string;
     let projectId: string;
+    let completedTaskId: string;
 
     test.beforeAll(async ({ login: loginPage }: any) => {
         ({ browser, context, page } = await bootstrapContext());
         await loginPage({ page });
 
         project = new Project(page);
+        tasksTable = new TasksTable(page);
         projectName = `Project toolbar ${Math.floor(Math.random() * 10000)}`;
         projectId = await project.addNew({ name: projectName });
+
+        // A completed task so the "Archive completed tasks" menu action has something to do.
+        const stackId = await tasksTable.createStackViaApi({ projectId, title: "P" });
+        completedTaskId = await tasksTable.createTaskViaApi({ projectId, stackId, title: "P done" });
+        await tasksTable.setTaskDoneViaApi(completedTaskId, true);
     });
 
     test.beforeEach(({ attachVideoContext }: any) => {
@@ -57,6 +66,16 @@ test.describe("Project", () => {
         await expect(project.favoriteButton).toHaveAttribute("data-active", "false");
     });
 
+    test("Should open the task filter drawer and expose the filter fields", async () => {
+        await project.openFilterDrawer();
+        await expect(project.filterQueryInput).toBeVisible();
+
+        // The do-date filter field is present as its trigger button (the menu items are `do-date-filter-*`).
+        await expect(project.doDateFilterButton).toBeVisible();
+
+        await project.closeFilterDrawer();
+    });
+
     test("Should switch between enabled project views", async () => {
         await project.enableAllViews();
         await project.expectAllViewsVisible();
@@ -76,6 +95,23 @@ test.describe("Project", () => {
         expect(result.requestBody).toMatchObject({ type: "project", format: "pdf" });
         expect(result.body.subarray(0, 4).toString()).toBe("%PDF");
         expect(result.body.length).toBeGreaterThan(4);
+    });
+
+    test("Should export the project as XLSX and JSON", async () => {
+        const xlsx = await project.exportProject("xlsx");
+        project.expectExportResult(xlsx, "xlsx", "project");
+        expect(xlsx.body.length).toBeGreaterThan(0);
+
+        const json = await project.exportProject("json");
+        project.expectExportResult(json, "json", "project");
+        const payload = JSON.parse(json.body.toString("utf-8"));
+        expect(payload.project.id).toBe(projectId);
+    });
+
+    test("Should archive completed tasks from the project menu", async () => {
+        await project.archiveCompleted();
+        const archived = await tasksTable.filteredTaskIds({ archived: "true", project: projectId });
+        expect(archived).toContain(completedTaskId);
     });
 
     test("Should update the project title", async () => {

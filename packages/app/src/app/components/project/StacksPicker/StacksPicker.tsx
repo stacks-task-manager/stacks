@@ -2,7 +2,8 @@
 import { Popover } from "@blueprintjs/core";
 import React from "react";
 
-import { IStacksMenuProps, StacksMenu } from "app/components/project";
+import { StacksMenu } from "app/components/project/StacksMenu/StacksMenu";
+import type { IStacksMenuProps } from "app/components/project/StacksMenu/StacksMenu";
 
 interface IStacksPickerProps extends IStacksMenuProps {
     children: React.ReactNode;

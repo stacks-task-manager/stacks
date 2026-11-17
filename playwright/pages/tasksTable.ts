@@ -5,15 +5,16 @@ const TABLE_ID = "tasks-filtered";
 const COLUMN_KEY = "table-tasks-filtered-visible-columns";
 
 /**
- * Page object for the filtered tasks table at `/app/tasks?…`.
+ * Page object for a TasksTable, defaulting to the filtered tasks table at `/app/tasks?…`.
  *
  * All DOM selectors rely on the TablePersistent data-testid attributes:
- * - table: `table-${TABLE_ID}`
- * - row:   `table-${TABLE_ID}-row-<taskId>`
- * - cell:  `table-${TABLE_ID}-cell-<taskId>-<column>`
+ * - table: `table-${tableId}`
+ * - row:   `table-${tableId}-row-<taskId>`
+ * - cell:  `table-${tableId}-cell-<taskId>-<column>`
  */
 class TasksTable {
     private page: Page;
+    private tableId: string;
 
     /**
      * The value that existed in localStorage before this POM overrode the column
@@ -23,8 +24,9 @@ class TasksTable {
     private previousColumnVisibility: string | null = null;
     private hasOverriddenColumns = false;
 
-    constructor(page: Page) {
+    constructor(page: Page, tableId = TABLE_ID) {
         this.page = page;
+        this.tableId = tableId;
     }
 
     private async scopedStorageKey(key: string): Promise<string> {
@@ -64,16 +66,24 @@ class TasksTable {
 
     /** The row for a task id. */
     public row(taskId: string): Locator {
-        return this.page.getByTestId(`table-${TABLE_ID}-row-${taskId}`);
+        return this.page.getByTestId(`table-${this.tableId}-row-${taskId}`);
     }
 
     public get rows(): Locator {
-        return this.page.getByTestId(new RegExp(`^table-${TABLE_ID}-row-`));
+        return this.page.getByTestId(new RegExp(`^table-${this.tableId}-row-`));
     }
 
     /** A cell within the row of a known task id. */
     public cell(taskId: string, column: string): Locator {
-        return this.row(taskId).getByTestId(`table-${TABLE_ID}-cell-${taskId}-${column}`);
+        return this.row(taskId).getByTestId(`table-${this.tableId}-cell-${taskId}-${column}`);
+    }
+
+    private levelIndicatorItem(taskId: string, index: number): Locator {
+        return this.page.getByTestId(`table-${this.tableId}-level-indicator-${taskId}-item-${index}`);
+    }
+
+    private levelIndicator(taskId: string): Locator {
+        return this.page.getByTestId(`table-${this.tableId}-level-indicator-${taskId}`);
     }
 
     /**
@@ -205,6 +215,51 @@ class TasksTable {
         await expect(this.cell(taskId, column)).not.toHaveText(expectedText);
     }
 
+    /** Asserts the rendered depth and connectors for a single parent-to-child task chain. */
+    public async expectNestedTaskTree(taskIds: string[]) {
+        await this.expectRowCount(taskIds.length);
+
+        let previousRowY: number | undefined;
+        for (let level = 0; level < taskIds.length; level++) {
+            const taskId = taskIds[level]!;
+            const row = this.row(taskId);
+            await expect(row).toBeVisible();
+            await expect(row).toHaveAttribute("data-level", String(level));
+            const expectedItemCount = level + (level > 0 && level < taskIds.length - 1 ? 1 : 0);
+            await expect(this.levelIndicator(taskId)).toHaveAttribute(
+                "data-item-count",
+                String(expectedItemCount)
+            );
+
+            const box = await row.boundingBox();
+            if (box && previousRowY !== undefined) expect(box.y).toBeGreaterThan(previousRowY);
+            previousRowY = box?.y;
+
+            if (level === 0) continue;
+
+            for (let index = 0; index < level; index++) {
+                await expect(this.levelIndicatorItem(taskId, index)).toHaveClass(/is-last/);
+            }
+
+            const currentItem = this.levelIndicatorItem(taskId, level - 1);
+            await expect(currentItem).toHaveClass(/is-current/);
+            await expect(currentItem).toHaveClass(/is-last/);
+            const lineStyle = await currentItem.evaluate(element => {
+                const style = getComputedStyle(element, "::before");
+                return {
+                    content: style.content,
+                    width: style.width,
+                    height: style.height,
+                    backgroundColor: style.backgroundColor,
+                };
+            });
+            expect(lineStyle.content).not.toBe("none");
+            expect(parseFloat(lineStyle.width)).toBeGreaterThan(0);
+            expect(parseFloat(lineStyle.height)).toBeGreaterThan(0);
+            expect(lineStyle.backgroundColor).not.toBe("rgba(0, 0, 0, 0)");
+        }
+    }
+
     /** Changes a task's priority through the in-cell priority picker. */
     public async setPriority(taskId: string, priority: string) {
         await this.row(taskId).getByTestId("priority-button").click();
@@ -262,6 +317,12 @@ class TasksTable {
         const created = await this.mutateApi("POST", "/api/stacks", { project: projectId, title });
         if (!created.ok) throw new Error(`Stack creation failed with HTTP ${created.status}`);
         return created.body.data.id;
+    }
+
+    /** Hard-deletes a stack through the API. */
+    public async deleteStackViaApi(stackId: string) {
+        const response = await this.mutateApi("DELETE", `/api/stacks/${stackId}`);
+        if (!response.ok) throw new Error(`Stack cleanup failed with HTTP ${response.status}`);
     }
 
     /** Waits until a task (matched by title in a project) exists, then returns its id. */
@@ -365,18 +426,28 @@ class TasksTable {
         }
     }
 
+    /** Sets the start date of a task through the API (the timebox board groups by start date). */
+    public async setTaskStartDateViaApi(taskId: string, startDate: string) {
+        const response = await this.mutateApi("PATCH", `/api/tasks/${taskId}`, { startdate: startDate });
+        if (!response.ok) {
+            throw new Error(`Setting task start date failed with HTTP ${response.status}`);
+        }
+    }
+
     /** Creates a task inside a project stack through the API. Returns the new task id. */
     public async createTaskViaApi({
         projectId,
         stackId,
         title,
+        parentId,
     }: {
         projectId: string;
         stackId: string;
         title: string;
+        parentId?: string;
     }): Promise<string> {
         const created = await this.mutateApi("POST", "/api/tasks", {
-            task: { title, project: projectId, stack: stackId },
+            task: { title, project: projectId, stack: stackId, ...(parentId ? { parent: parentId } : {}) },
         });
         if (!created.ok) throw new Error(`Task creation failed with HTTP ${created.status}`);
         return created.body.data.id;
@@ -386,6 +457,18 @@ class TasksTable {
     public async setTaskAssigneesViaApi(taskId: string, personIds: string[]) {
         const response = await this.mutateApi("PATCH", `/api/tasks/${taskId}`, { assignees: personIds });
         if (!response.ok) throw new Error(`Setting task assignees failed with HTTP ${response.status}`);
+    }
+
+    /** Replaces the links of a task through the API (each link's id is caller-chosen). */
+    public async setTaskLinksViaApi(
+        taskId: string,
+        links: Array<{ id: string; url: string; title: string }>
+    ) {
+        const now = new Date().toISOString();
+        const response = await this.mutateApi("PATCH", `/api/tasks/${taskId}`, {
+            links: links.map(link => ({ ...link, created: now, updated: now })),
+        });
+        if (!response.ok) throw new Error(`Setting task links failed with HTTP ${response.status}`);
     }
 
     /** Marks a task complete or open through the API. */

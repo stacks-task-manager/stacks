@@ -3,7 +3,7 @@ import { translate } from "@stacks/translations";
 import { Button, Classes, Dialog, FormGroup, InputGroup, Intent, Switch } from "@blueprintjs/core";
 import React, { FunctionComponent, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { Icon } from "app/components/common";
+import { Icon } from "app/components/common/Icon/Icon";
 import { shallowEqual } from "app/hooks/store";
 import { IBookmark, RECORDTYPE } from "@stacks/types";
 import { BookmarksActions, TasksActions } from "app/store/actions";

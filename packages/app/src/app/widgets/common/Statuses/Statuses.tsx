@@ -3,7 +3,7 @@ import React, { FunctionComponent } from "react";
 import tinycolor, { ColorInput } from "tinycolor2";
 
 import { ITag } from "@stacks/types";
-import { StatusChip } from "app/widgets";
+import { TagChip } from "../TagChip/TagChip";
 
 const allColors: ColorInput[] = [];
 for (const i in tinycolor.names) {
@@ -28,7 +28,8 @@ export const Statuses: FunctionComponent<StatusesProps> = ({
     return (
         <>
             {statuses.map((status: ITag) => (
-                <StatusChip
+                <TagChip
+                    variant="status"
                     tag={status}
                     key={status.id}
                     showParent={showParent}

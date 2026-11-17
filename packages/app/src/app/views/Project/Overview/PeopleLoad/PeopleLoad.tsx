@@ -3,7 +3,7 @@ import { Card, Classes, Tag } from "@blueprintjs/core";
 import React, { FunctionComponent, useMemo } from "react";
 
 import { Avatar, Grid } from "app/components/common";
-import { IPerson, IProjectCounter } from "@stacks/types";
+import { IProjectCounter } from "@stacks/types";
 import { PeopleStore } from "app/store/people";
 import { OverviewWidgetBlankSlate } from "../OverviewWidgetBlankSlate/OverviewWidgetBlankSlate";
 
@@ -12,10 +12,15 @@ interface IPeopleLoadProps {
     counter: IProjectCounter;
 }
 export const PeopleLoad: FunctionComponent<IPeopleLoadProps> = ({ assignees, counter }) => {
-    const people = useMemo(() => {
-        const { people } = PeopleStore.get();
-        return people.filter((person: IPerson) => assignees.includes(person.id));
-    }, [counter]);
+    const allPeople = PeopleStore.use(
+        state => state.people,
+        (left, right) => left === right
+    );
+    const assigneeSet = useMemo(() => new Set(assignees), [assignees]);
+    const people = useMemo(
+        () => allPeople.filter(person => assigneeSet.has(person.id)),
+        [allPeople, assigneeSet]
+    );
 
     return (
         <Card>

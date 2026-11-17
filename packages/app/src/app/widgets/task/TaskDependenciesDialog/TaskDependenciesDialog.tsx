@@ -18,6 +18,7 @@ import { xor } from "lodash";
 
 import { BlankSlate, Grid, Icon, Row, Scroller } from "app/components/common";
 import {
+    getDocument,
     useDocument,
     useProjectDocuments,
     useProjectStacks,
@@ -27,7 +28,8 @@ import {
     useStorage,
     useTask,
 } from "app/hooks";
-import { ProjectsActions, TasksActions } from "app/store/actions";
+import { TasksActions } from "app/store/actions";
+import { TasksStore } from "app/store/tasks";
 import { PriorityChip } from "app/components/project";
 import { TaskAssignees } from "../TaskAssignees/TaskAssignees";
 
@@ -91,22 +93,21 @@ export const TaskDependenciesDialog = ({
     const [selectedTasks, setSelectedTasks] = useState<string[]>(values ?? []);
     const projects = useProjectDocuments();
     const stacks = useProjectStacks(selectedProject);
+    const projectTasksLoaded = TasksStore.use(state => state.loadedProjects.includes(selectedProject ?? ""));
+
+    useEffect(() => {
+        if (selectedProject && !getDocument(selectedProject)) {
+            setSelectedProject(undefined);
+        }
+    }, [selectedProject, setSelectedProject]);
 
     useEffect(() => {
         (async () => {
-            if (selectedProject) {
-                try {
-                    const project = await ProjectsActions.load([selectedProject], { silent: true });
-                    if (!project) {
-                        setSelectedProject(undefined);
-                    }
-                    await TasksActions.loadByProject(selectedProject);
-                } catch (error) {
-                    setSelectedProject(undefined);
-                }
+            if (selectedProject && !projectTasksLoaded) {
+                await TasksActions.loadByProject(selectedProject, true);
             }
         })();
-    }, [selectedProject]);
+    }, [projectTasksLoaded, selectedProject, setSelectedProject]);
 
     const handleSelectProject = (project: TreeNode) => {
         setSelectedProject(project.id);
@@ -252,7 +253,7 @@ const StackItem = ({ stackId, selected, onClick }: StackItemProps) => {
             icon={<Icon icon="stop-filled" color={tint || Colors.GRAY3} />}
             labelElement={
                 <Tag round minimal>
-                    {tasks?.length}
+                    {tasks.length}
                 </Tag>
             }
             active={selected}

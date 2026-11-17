@@ -187,6 +187,49 @@ test.describe("People and Companies", () => {
         await people.waitForCompanySearchResult(companyId, updatedCompanyName);
     });
 
+    test("Should export a person as XLSX, JSON, and PDF", async () => {
+        const suffix = Date.now();
+        const personId = await people.addPerson(
+            `Export${suffix}`,
+            "Person",
+            `export-person-${suffix}@example.com`
+        );
+        personIds.add(personId);
+
+        const xlsx = await people.exportPerson("xlsx");
+        people.expectExportResult(xlsx, "xlsx", "person");
+        expect(xlsx.body.length).toBeGreaterThan(0);
+
+        const json = await people.exportPerson("json");
+        people.expectExportResult(json, "json", "person");
+
+        const pdf = await people.exportPerson("pdf");
+        people.expectExportResult(pdf, "pdf", "person");
+        expect(pdf.body.subarray(0, 4).toString()).toBe("%PDF");
+
+        await people.goto("/app/people");
+    });
+
+    test("Should export a company as XLSX, JSON, and PDF", async () => {
+        const suffix = Date.now();
+        const companyId = await people.addCompany(`E2E Export Company ${suffix}`);
+        companyIds.add(companyId);
+        await people.openCompany(companyId);
+
+        const xlsx = await people.exportCompany("xlsx");
+        people.expectExportResult(xlsx, "xlsx", "company");
+        expect(xlsx.body.length).toBeGreaterThan(0);
+
+        const json = await people.exportCompany("json");
+        people.expectExportResult(json, "json", "company");
+
+        const pdf = await people.exportCompany("pdf");
+        people.expectExportResult(pdf, "pdf", "company");
+        expect(pdf.body.subarray(0, 4).toString()).toBe("%PDF");
+
+        await people.goto("/app/people");
+    });
+
     test("Should apply embedded person and company preferences", async () => {
         const suffix = Date.now();
         const originalPreferences = await preferences.snapshotPreferences();

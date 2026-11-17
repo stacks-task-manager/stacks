@@ -18,3 +18,4 @@ export * from "./SidebarDivider/SidebarDivider";
 export * from "./SidebarSkeleton/SidebarSkeleton";
 export * from "./SidebarToolbar/SidebarToolbar";
 export * from "./WhatsNewButton/WhatsNewButton";
+export * from "./WorkbooksButton/WorkbooksButton";

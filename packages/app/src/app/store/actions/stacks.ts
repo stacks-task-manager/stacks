@@ -323,8 +323,11 @@ const sortTasks = (tasks: ITask[], sortBy: TASKSORTING) => {
 };
 
 const getSortedTasks = (taskIds: string[], sortBy: TASKSORTING): string[] | null => {
-    const { tasks } = TasksStore.get();
-    const stackTasks = tasks.filter(task => taskIds.includes(task.id));
+    const { tasksById } = TasksStore.get();
+    const stackTasks = taskIds.flatMap(taskId => {
+        const task = tasksById.get(taskId);
+        return task ? [task] : [];
+    });
 
     const sortedTasks = sortTasks(stackTasks, sortBy).map(task => task.id);
 
@@ -332,7 +335,9 @@ const getSortedTasks = (taskIds: string[], sortBy: TASKSORTING): string[] | null
 };
 
 const orderTasks = async (stackId: string, sortBy?: TASKSORTING) => {
-    console.log("THIS SHOULD BE DONE SERVER SIDE");
+    void stackId;
+    void sortBy;
+    Log.info("[Store][Stacks]", "Task ordering is handled server-side");
     return;
 
     // const stack = getStack(stackId);
@@ -398,7 +403,7 @@ const copy = async () => {
 };
 
 const move = async () => {
-    console.log("Moved stack");
+    Log.info("[Store][Stacks]", "Moved stack");
     const projectId = getCurrentProjectId();
     if (!projectId) return false;
 

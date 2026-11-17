@@ -122,6 +122,59 @@ export const useCurrentProject = () => {
 };
 
 /**
+ * Selects a derived value from a specific project without subscribing to unrelated project fields.
+ */
+export const useProjectValue = <T>(
+    projectId: string | undefined,
+    selector: (project: IProject) => T,
+    equality: (a: T | undefined, b: T | undefined) => boolean = shallowEqual
+): T | undefined => {
+    const value = ProjectsStore.use(state => {
+        if (projectId == null) return undefined;
+        const project = state.projects.find(project => project.id === projectId);
+        return project ? selector(project) : undefined;
+    }, equality);
+
+    const { isLoading, isLoaded } = ProjectsStatusStore.use(
+        state => ({
+            isLoading: state.isLoading[projectId ?? ""] ?? false,
+            isLoaded: state.loadedProjects.includes(projectId ?? "--"),
+        }),
+        shallowEqual
+    );
+
+    useLoadWhen(
+        value === undefined && !isLoading && !isLoaded && projectId != null,
+        () => {
+            void ProjectsActions.load([projectId!]);
+        },
+        [projectId, value, isLoading, isLoaded]
+    );
+
+    return value;
+};
+
+/**
+ * Selects a derived value from the current route's project.
+ */
+export const useCurrentProjectValue = <T>(
+    selector: (project: IProject) => T,
+    equality: (a: T | undefined, b: T | undefined) => boolean = shallowEqual
+): T | undefined => {
+    const { id } = useParams();
+    const { state } = useLocation();
+    const projectId = useMemo(() => {
+        if (state && state.backgroundLocation) {
+            const match = matchPath("/project/:id", state.backgroundLocation.pathname);
+            return match?.params.id;
+        }
+        return id;
+    }, [id, state]);
+
+    return useProjectValue(projectId, selector, equality);
+};
+
+/**
  * Returns the current project's background image.
  * @returns {string | undefined} The URL of the background image, or undefined.
  */

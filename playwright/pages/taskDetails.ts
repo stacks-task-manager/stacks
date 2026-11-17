@@ -1,5 +1,5 @@
 import { expect, Locator, Page } from "@playwright/test";
-import Base from "./base";
+import Base, { ExportResult } from "./base";
 import { PeopleDialog } from "./components/PeopleDialog";
 import { Subtasks } from "./components/Subtasks";
 import { DatePicker } from "./components/DatePicker";
@@ -31,6 +31,9 @@ class TaskDetails extends Base {
     public timeEntriesTab: Locator;
     public previousTaskButton: Locator;
     public nextTaskButton: Locator;
+    public reminderButton: Locator;
+    public reminderAddTomorrow: Locator;
+    public reminderItem: Locator;
 
     constructor(page: Page) {
         super(page);
@@ -61,11 +64,26 @@ class TaskDetails extends Base {
         this.timeEntriesTab = this.tabs.getByTestId("task-details-tab-timelogs");
         this.previousTaskButton = this.header.getByTestId("task-details-previous-task");
         this.nextTaskButton = this.header.getByTestId("task-details-next-task");
+        this.reminderButton = this.task.getByTestId("reminder-button");
+        this.reminderAddTomorrow = page.getByTestId("reminder-add-tomorrow");
+        this.reminderItem = page.getByTestId("reminder-item");
     }
 
     public async waitUntilOpen(): Promise<void> {
         await this.drawer.waitFor({ state: "visible" });
         await this.task.waitFor({ state: "visible" });
+    }
+
+    /** Opens the task's reminder popup. */
+    public async openReminderPopup(): Promise<void> {
+        await this.reminderButton.click();
+        await this.reminderAddTomorrow.waitFor({ state: "visible" });
+    }
+
+    /** Schedules a "Tomorrow" reminder for the task. */
+    public async addReminderTomorrow(): Promise<void> {
+        await this.openReminderPopup();
+        await this.reminderAddTomorrow.click();
     }
 
     public async setTitle(title: string): Promise<void> {
@@ -460,6 +478,101 @@ class TaskDetails extends Base {
         await expect(this.page.getByTestId("progress-menu")).toBeHidden();
     }
 
+    // ── Task repeats (RepeatPicker) ──────────────────────────────────────────
+
+    private async waitForTaskPatch(taskId: string, action: () => Promise<unknown>): Promise<void> {
+        const update = this.page.waitForResponse(
+            response =>
+                response.request().method() === "PATCH" && response.url().includes(`/api/tasks/${taskId}`)
+        );
+        await action();
+        expect((await update).ok(), "repeat update PATCH failed").toBeTruthy();
+    }
+
+    public async openRepeatPicker(): Promise<void> {
+        // When the task has no repeat yet, opening the picker auto-sets a default
+        // (WEEKLY) via the popover's onOpening. Settle that PATCH so it cannot race
+        // the first explicit change made after the picker is open.
+        const onOpeningPatch = this.page.waitForResponse(
+            response => response.request().method() === "PATCH" && response.url().includes("/api/tasks/"),
+            { timeout: 2000 }
+        );
+        await this.task.getByTestId("task-details-repeat-trigger").click();
+        await this.page.getByTestId("repeat-type-select").waitFor({ state: "visible" });
+        try {
+            await onOpeningPatch;
+        } catch {
+            /* no onOpening PATCH — a repeat was already set */
+        }
+    }
+
+    public async selectRepeatType(type: string): Promise<void> {
+        const taskId = await this.getTaskId();
+        await this.waitForTaskPatch(taskId, () =>
+            this.page.getByTestId("repeat-type-select").selectOption(type)
+        );
+    }
+
+    public async selectRepeatMonthDay(day: string): Promise<void> {
+        const taskId = await this.getTaskId();
+        await this.waitForTaskPatch(taskId, () =>
+            this.page.getByTestId("repeat-month-day-select").selectOption(day)
+        );
+    }
+
+    public async setRepeatPeriod(days: number): Promise<void> {
+        const taskId = await this.getTaskId();
+        await this.waitForTaskPatch(taskId, async () => {
+            const input = this.page.getByTestId("repeat-period-input");
+            await input.fill(String(days));
+            await input.press("Enter");
+        });
+    }
+
+    public async setRepeatReopen(reopen: boolean): Promise<void> {
+        const checkbox = this.page.getByTestId("repeat-reopen-checkbox");
+        if ((await checkbox.isChecked()) === reopen) return;
+        const taskId = await this.getTaskId();
+        // Blueprint renders the testid on a hidden <input>; the visible <span> indicator
+        // intercepts pointer events. Click the wrapping <label> to toggle it reliably.
+        await this.waitForTaskPatch(taskId, () => checkbox.locator("xpath=ancestor::label[1]").click());
+    }
+
+    public async clearRepeat(): Promise<void> {
+        const taskId = await this.getTaskId();
+        await this.waitForTaskPatch(taskId, () => this.page.getByTestId("repeat-clear-button").click());
+    }
+
+    public async closeRepeatPicker(): Promise<void> {
+        await this.page.keyboard.press("Escape");
+        await this.page.getByTestId("repeat-type-select").waitFor({ state: "hidden" });
+    }
+
+    public async getPersistedRepeat(taskId: string): Promise<any> {
+        const task = await this.getPersistedTask(taskId);
+        return task.repeats ?? null;
+    }
+
+    public async expectRepeatPersisted(
+        taskId: string,
+        expected: { type: string; value?: string; reopen?: boolean }
+    ): Promise<void> {
+        const repeats = await this.getPersistedRepeat(taskId);
+        expect(repeats, "expected a persisted repeat, got none").not.toBeNull();
+        expect(repeats.type).toBe(expected.type);
+        if (expected.value !== undefined) expect(repeats.value).toBe(expected.value);
+        if (expected.reopen !== undefined) expect(repeats.reopen).toBe(expected.reopen);
+    }
+
+    public async expectRepeatLabel(label: string): Promise<void> {
+        await expect(this.page.getByTestId("task-details-repeat-trigger")).toContainText(label);
+    }
+
+    public async expectRepeatCleared(taskId: string): Promise<void> {
+        expect(await this.getPersistedRepeat(taskId)).toBeNull();
+        await expect(this.page.getByTestId("task-details-repeat-trigger")).toBeVisible();
+    }
+
     private async getPersistedTask(taskId: string): Promise<any> {
         const response = await this.page.request.get(`/api/tasks?ids=${taskId}`);
         expect(response.ok()).toBeTruthy();
@@ -541,6 +654,31 @@ class TaskDetails extends Base {
         return this.page.getByTestId(testId);
     }
 
+    /** Opens the task overflow menu's export submenu and triggers the given format. */
+    public async exportTask(format: "xlsx" | "json" | "pdf"): Promise<ExportResult> {
+        await this.openMenu();
+        await this.menuItem("task-details-menu-export").hover();
+        const item = this.page.getByTestId(`task-details-menu-export-${format}`);
+        await item.waitFor({ state: "visible" });
+        return this.captureExport(() => item.click());
+    }
+
+    /** Clicks "Detach from parent" and confirms the warning dialog. */
+    public async detachParent(): Promise<void> {
+        await this.openMenu();
+        await this.menuItem("task-details-menu-detach-parent").click();
+        const dialog = this.page.getByRole("alertdialog");
+        await dialog.waitFor({ state: "visible" });
+        await dialog.getByTestId("confirm-dialog-confirm-button").click();
+        await dialog.waitFor({ state: "hidden" });
+    }
+
+    /** Clicks "Unarchive" on an archived task's menu. */
+    public async unarchiveFromMenu(): Promise<void> {
+        await this.openMenu();
+        await this.menuItem("task-details-menu-unarchive").click();
+    }
+
     public tab(tabName: string): Locator {
         return this.tabs.getByRole("tab", { name: tabName });
     }
@@ -548,6 +686,41 @@ class TaskDetails extends Base {
     public async openTimeEntries(): Promise<void> {
         await this.timeEntriesTab.click();
         await expect(this.timeEntriesTab).toHaveAttribute("aria-selected", "true");
+    }
+
+    /**
+     * W7 — Uploads a file to the "Files" tab (active by default) of the open task and
+     * returns the created file document id. The flow is fully UI-driven: it clicks the
+     * upload button, answers the `filechooser` the app's hidden <input type="file">
+     * produces, then waits for a NEW attachment card to render (the card only appears
+     * once the app's upload has completed) and reads the id back from its
+     * `data-testid`. No upload request is issued or intercepted by this POM.
+     */
+    public async addTaskAttachment(filePath: string): Promise<string> {
+        const cards = this.page.getByTestId(/^attachment-card-/);
+        const existing: string[] = (
+            await cards.evaluateAll(els => els.map(el => el.getAttribute("data-testid")))
+        ).filter((testId): testId is string => Boolean(testId));
+
+        const fileChooserPromise = this.page.waitForEvent("filechooser");
+        await this.page.getByTestId("task-attachments-upload-button").first().click();
+        const fileChooser = await fileChooserPromise;
+        await fileChooser.setFiles(filePath);
+
+        const deadline = Date.now() + 30000;
+        for (;;) {
+            const current: string[] = (
+                await cards.evaluateAll(els => els.map(el => el.getAttribute("data-testid")))
+            ).filter((testId): testId is string => Boolean(testId));
+            const fresh = current.find(testId => !existing.includes(testId));
+            if (fresh) {
+                return fresh.replace(/^attachment-card-/, "");
+            }
+            if (Date.now() > deadline) {
+                throw new Error("Upload completed but no new attachment card appeared in the Files tab");
+            }
+            await new Promise(resolve => setTimeout(resolve, 250));
+        }
     }
 }
 

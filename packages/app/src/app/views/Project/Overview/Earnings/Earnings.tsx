@@ -3,12 +3,13 @@ import { translate } from "@stacks/translations";
 import { Card, Classes, Intent, Tag } from "@blueprintjs/core";
 import React, { useMemo } from "react";
 import { TasksStore } from "app/store/tasks";
+import { shallowEqual } from "app/hooks/store";
 import { OverviewWidgetBlankSlate } from "../OverviewWidgetBlankSlate/OverviewWidgetBlankSlate";
 import { useCurrentProject, useProjectTimelogs } from "app/hooks";
 
 export const Earnings = () => {
     const { project } = useCurrentProject();
-    const { tasks } = TasksStore.use();
+    const tasks = TasksStore.use(state => state.tasks, shallowEqual);
     const timelogs = useProjectTimelogs(project!.id);
 
     const data = useMemo(() => {

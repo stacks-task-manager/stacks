@@ -68,6 +68,7 @@ export const TextStyleItem: FunctionComponent<TipTapToolbarItem> = ({
                 variant="minimal"
                 icon={<Icon icon="bold-01" />}
                 intent={isBold ? Intent.PRIMARY : Intent.NONE}
+                data-testid="tip-tap-bold"
                 onClick={() => getSelectionChain(editor).toggleBold().run()}
             />
             <Button
@@ -81,6 +82,7 @@ export const TextStyleItem: FunctionComponent<TipTapToolbarItem> = ({
                 onClick={() => getSelectionChain(editor).toggleItalic().run()}
                 intent={isUnderline ? Intent.PRIMARY : Intent.NONE}
                 icon={<Icon icon="italic-01" />}
+                data-testid="tip-tap-italic"
             />
             <Button
                 variant="minimal"

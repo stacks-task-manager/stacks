@@ -16,6 +16,7 @@ class Notepad extends Base {
     public menuButton: Locator;
     public menu: Locator;
     public infoButton: Locator;
+    public privacyButton: Locator;
 
     constructor(page: Page) {
         super(page);
@@ -31,6 +32,7 @@ class Notepad extends Base {
         this.menuButton = page.getByTestId("notepad-menu-button");
         this.menu = page.getByTestId("notepad-menu");
         this.infoButton = page.getByTestId("notepad-info-button");
+        this.privacyButton = page.getByTestId("notepad-privacy-button");
     }
 
     public async addNew(notepadName: string) {
@@ -77,6 +79,34 @@ class Notepad extends Base {
         return this.editor.textContent();
     }
 
+    public async getEditorHtml(): Promise<string> {
+        return this.editor.innerHTML();
+    }
+
+    public async selectAllEditorContent(): Promise<void> {
+        await this.editor.click();
+        await this.page.keyboard.press(`${metaOrControl}+A`);
+    }
+
+    /** Selects all editor content and applies a text mark (bold/italic) from the toolbar. */
+    public async applyTextMark(testId: string): Promise<void> {
+        await this.selectAllEditorContent();
+        await this.page.getByTestId(testId).click();
+    }
+
+    /** Selects all editor content and turns it into a bullet list via the block popover. */
+    public async applyBulletList(): Promise<void> {
+        await this.selectAllEditorContent();
+        await this.page.getByTestId("tip-tap-block-button").click();
+        await this.page.getByTestId("tip-tap-list").click();
+    }
+
+    public waitForNotepadSave() {
+        return this.page.waitForResponse(
+            response => response.url().includes("/api/notepads/") && response.request().method() === "PATCH"
+        );
+    }
+
     public async toggleWide() {
         await this.wideToggleButton.click();
     }
@@ -99,7 +129,8 @@ class Notepad extends Base {
         await this.openMenu();
         await this.menuItem("notepad-menu-export").hover();
         const responsePromise = this.page.waitForResponse(
-            response => response.url().includes("/api/export") && response.request().method() === "POST"
+            response => response.url().includes("/api/export") && response.request().method() === "POST",
+            { timeout: 60000 }
         );
         await this.page.getByTestId(`notepad-menu-export-${format}`).click();
         const response = await responsePromise;

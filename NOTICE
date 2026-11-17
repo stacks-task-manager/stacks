@@ -41,8 +41,3 @@ manifests (yarn.lock and each packages/*/package.json). Each is licensed
 under its own terms — generate an SBOM with:
 
     yarn licenses list
-
-Vendored sources live under third-party/ and retain their upstream
-licenses unchanged. Notable vendored components:
-
-  - third-party/rc-gantt/  —  MIT License (see third-party/rc-gantt/LICENSE)

@@ -451,6 +451,10 @@ export const copyTasks = async (tasks: ITask[]) => {
 export const copySelection = () => {
     const { tasks } = NavigationStore.get();
     if (!tasks.length) return;
-    const selectedTasks: ITask[] = TasksStore.get().tasks.filter(task => tasks.includes(task.id));
+    const { tasksById } = TasksStore.get();
+    const selectedTasks = tasks.flatMap(taskId => {
+        const task = tasksById.get(taskId);
+        return task ? [task] : [];
+    });
     copyTasks(selectedTasks);
 };

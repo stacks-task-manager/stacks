@@ -58,7 +58,7 @@ export const FieldsProjectSettings = ({ disabled }: { disabled?: boolean }) => {
                                     handleClassName="draggable-fields"
                                     className="project-settings-field"
                                 >
-                                    <a className={Classes.MENU_ITEM}>
+                                    <a className={Classes.MENU_ITEM} data-testid="project-field-row">
                                         <span className="drag-handle draggable-fields">
                                             <Icon icon="drag" />
                                         </span>
@@ -79,12 +79,14 @@ export const FieldsProjectSettings = ({ disabled }: { disabled?: boolean }) => {
                                                         <MenuItem
                                                             text={translate("Edit")}
                                                             icon={<Icon icon="edit-05" />}
+                                                            data-testid="project-field-edit"
                                                             onClick={() => handleEdit(field)}
                                                         />
                                                         <MenuItem
                                                             text={translate("Delete")}
                                                             intent={Intent.DANGER}
                                                             icon={<Icon icon="trash" />}
+                                                            data-testid="project-field-delete"
                                                             onClick={() =>
                                                                 ProjectsActions.removeField(field.id)
                                                             }
@@ -97,6 +99,7 @@ export const FieldsProjectSettings = ({ disabled }: { disabled?: boolean }) => {
                                                     size="small"
                                                     variant="minimal"
                                                     className="tiny"
+                                                    data-testid="project-field-menu"
                                                     icon={<Icon icon="dots-vertical" size={14} />}
                                                 />
                                             </Popover>
@@ -115,6 +118,7 @@ export const FieldsProjectSettings = ({ disabled }: { disabled?: boolean }) => {
                                     intent={Intent.PRIMARY}
                                     icon={<Icon icon="plus" />}
                                     onClick={() => setShow(true)}
+                                    data-testid="project-fields-add"
                                 >
                                     {translate("Add new field")}
                                 </Button>
@@ -135,6 +139,7 @@ export const FieldsProjectSettings = ({ disabled }: { disabled?: boolean }) => {
                         icon={<Icon icon="plus" />}
                         onClick={() => setShow(true)}
                         disabled={disabled}
+                        data-testid="project-fields-add"
                     >
                         {translate("Add new field")}
                     </Button>

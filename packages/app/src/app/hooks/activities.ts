@@ -27,9 +27,10 @@ export const useActivities = (resourceId: string) => {
 export const useLatestActivitiesByProject = (projectId: string, count: number) => {
     const taskIds = useProjectTasksIds(projectId);
     const activities = ActivitiesStore.use(state => state.activities);
+    const taskIdSet = new Set(taskIds);
 
     return activities
-        .filter(activity => activity.type === "message" && taskIds.includes(activity.resourceId))
+        .filter(activity => activity.type === "message" && taskIdSet.has(activity.resourceId))
         .sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime())
         .slice(0, count);
 };
@@ -41,11 +42,11 @@ export const useLatestActivitiesByProject = (projectId: string, count: number) =
  * @returns {IActivity[]} The latest message activities for the project's tasks, newest first.
  */
 export const getLatestActivitiesByProject = (projectId: string, count: number) => {
-    const taskIds = getProjectTasksIds(projectId);
+    const taskIdSet = new Set(getProjectTasksIds(projectId));
     const activities = ActivitiesStore.get().activities;
 
     return activities
-        .filter(activity => activity.type === "message" && taskIds.includes(activity.resourceId))
+        .filter(activity => activity.type === "message" && taskIdSet.has(activity.resourceId))
         .sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime())
         .slice(0, count);
 };

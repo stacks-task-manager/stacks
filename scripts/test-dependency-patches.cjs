@@ -1,26 +1,10 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 const assert = require("node:assert/strict");
 const { spawnSync } = require("node:child_process");
-const fs = require("node:fs");
 const { createRequire } = require("node:module");
 const path = require("node:path");
 const braces = require("braces");
 const forge = require("node-forge");
-
-const ganttPackage = require("../third-party/rc-gantt/package.json");
-const ganttBundle = fs.readFileSync(
-    path.join(__dirname, "../third-party/rc-gantt/dist/index.esm.js"),
-    "utf8"
-);
-assert.equal(ganttPackage.version, "0.3.3");
-assert.doesNotMatch(ganttBundle, /\r/);
-for (const dependency of ["lodash/debounce", "lodash/find", "lodash/throttle"]) {
-    assert.ok(
-        ganttBundle.includes(`from '${dependency}'`),
-        `${dependency} must resolve from the patched runtime dependency`
-    );
-}
-assert.doesNotMatch(ganttBundle, /HASH_UNDEFINED|Built-in method references/);
 
 assert.deepEqual(braces("{a,b}", { expand: true }), ["a", "b"]);
 assert.equal(braces.compile("{a,b}"), "(a|b)");

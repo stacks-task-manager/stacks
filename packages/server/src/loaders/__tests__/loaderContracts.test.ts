@@ -92,6 +92,7 @@ const expectedMethodsByFile = {
         "updateStatus",
         "updateTotals",
     ],
+    "workbooks.ts": ["create", "getAll", "getOne", "update", "remove", "getTasks"],
 } as const;
 
 const expectedBarrelExports = [
@@ -119,6 +120,7 @@ const expectedBarrelExports = [
     "tasks",
     "tenants",
     "timelogs",
+    "workbooks",
 ].sort();
 
 function parseLoaderMethods(source: string) {

@@ -9,9 +9,6 @@ import {
 
 jest.mock("app/hooks", () => ({ useStorage: () => [[], jest.fn()] }));
 jest.mock("app/components/common", () => ({ Icon: () => null, BlankSlate: () => null }));
-jest.mock("react-intersection-observer", () => ({
-    useInView: () => ({ ref: jest.fn(), inView: true }),
-}));
 jest.mock("app/components/common/Table/TableColumnPicker/TableColumnPicker", () => ({
     TableColumnPicker: () => null,
 }));
@@ -100,5 +97,77 @@ describe("TablePersistent invalid rows", () => {
         );
 
         expect(container.querySelectorAll("tbody tr")).toHaveLength(0);
+    });
+});
+
+describe("TablePersistent sorting ownership", () => {
+    it("does not mutate supplied grouped row arrays while sorting", () => {
+        const first = { id: "z", title: "Zebra" };
+        const second = { id: "a", title: "Alpha" };
+        const groupedData = [first, second];
+        const group: TablePersistentGroupData<Row> = {
+            groupId: "group",
+            title: "Group",
+            defaultExpanded: true,
+            data: groupedData,
+        };
+
+        render(<TablePersistent<Row> id="test" columns={columns} data={[group]} enableReorder={false} />);
+
+        expect(group.data).toEqual([first, second]);
+        expect(group.data[0]).toBe(first);
+        expect(group.data[1]).toBe(second);
+    });
+});
+
+describe("TablePersistent nested rows", () => {
+    it("renders five levels and counts descendants in the group total", () => {
+        const data = [
+            {
+                groupId: "group",
+                title: "Nested",
+                defaultExpanded: true,
+                data: [
+                    {
+                        id: "level-1",
+                        title: "Level 1",
+                        children: [
+                            {
+                                id: "level-2",
+                                title: "Level 2",
+                                children: [
+                                    {
+                                        id: "level-3",
+                                        title: "Level 3",
+                                        children: [
+                                            {
+                                                id: "level-4",
+                                                title: "Level 4",
+                                                children: [{ id: "level-5", title: "Level 5" }],
+                                            },
+                                        ],
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+        ];
+
+        const { container } = render(
+            <TablePersistent<Row>
+                id="test-nested"
+                columns={columns}
+                data={data}
+                components={{ groupAppend: ({ count }) => <span>{`Rows: ${count}`}</span> }}
+                enableReorder={false}
+            />
+        );
+
+        expect(screen.getByText("Rows: 5")).toBeInTheDocument();
+        for (let level = 0; level < 5; level++) {
+            expect(container.querySelectorAll(`.row-level-${level}`)).toHaveLength(1);
+        }
     });
 });

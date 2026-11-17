@@ -19,7 +19,7 @@ export const DocumentTintMenuItem: FunctionComponent<DocumentTintMenuItemProps> 
     };
 
     return (
-        <MenuItem text="Tint" icon={<Icon icon="palette" />}>
+        <MenuItem text="Tint" icon={<Icon icon="palette" />} data-testid="project-toolbar-tint">
             <TintPicker canClear value={document.tint} onChange={handleChangeTint} />
         </MenuItem>
     );

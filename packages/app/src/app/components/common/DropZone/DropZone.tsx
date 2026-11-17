@@ -1,7 +1,7 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { translate } from "@stacks/translations";
 import React, { FunctionComponent } from "react";
-import { Icon } from "app/components/common";
+import { Icon } from "app/components/common/Icon/Icon";
 import classNames from "classnames";
 
 interface IDropZoneProps {

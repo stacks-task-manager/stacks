@@ -4,11 +4,11 @@
  */
 import { useMemo } from "react";
 
-import { IStack, ITask } from "@stacks/types";
+import { IStack } from "@stacks/types";
 import { StacksStore } from "app/store/stacks";
-import { getCurrentProject, getProject, useCurrentProject, useProject } from "./project";
+import { getCurrentProject, getProject, useCurrentProjectValue, useProjectValue } from "./project";
 import { shallowEqual } from "./store";
-import { useStackTasks } from "./tasks";
+import { useStackTasksFromStack } from "./tasks";
 
 /**
  * Returns the stacks of a project sorted in the given order.
@@ -32,12 +32,14 @@ export function orderedStacksForProject(
  * @returns {IStack[]} Array of stacks.
  */
 export const useStacks = (): IStack[] => {
-    const { project, isLoading } = useCurrentProject();
-    const stacksOrder = project?.stacksOrder ?? [];
+    const project = useCurrentProjectValue(
+        project => ({ id: project.id, stacksOrder: project.stacksOrder ?? [] }),
+        shallowEqual
+    );
 
     return StacksStore.use(state => {
-        if (isLoading || !project) return [];
-        return orderedStacksForProject(state.stacks, project.id, stacksOrder);
+        if (!project) return [];
+        return orderedStacksForProject(state.stacks, project.id, project.stacksOrder);
     }, shallowEqual);
 };
 
@@ -56,7 +58,7 @@ export const getStacks = (): IStack[] => {
  */
 export const useStacksIds = () => {
     const stacks = useStacks();
-    return stacks.map((stack: IStack) => stack.id);
+    return useMemo(() => stacks.map((stack: IStack) => stack.id), [stacks]);
 };
 
 /**
@@ -86,12 +88,15 @@ export const getStack = (stackId: string): IStack | undefined => {
  * @returns {IStack[]} The project's stacks, or an empty array when not loaded.
  */
 export const useProjectStacks = (projectId?: string): IStack[] => {
-    const { project, isLoading } = useProject(projectId);
-    const stacksOrder = project?.stacksOrder ?? [];
+    const project = useProjectValue(
+        projectId,
+        project => ({ id: project.id, stacksOrder: project.stacksOrder ?? [] }),
+        shallowEqual
+    );
 
     return StacksStore.use(state => {
-        if (isLoading || !project || projectId == null || project.id !== projectId) return [];
-        return orderedStacksForProject(state.stacks, projectId, stacksOrder);
+        if (!project || projectId == null || project.id !== projectId) return [];
+        return orderedStacksForProject(state.stacks, projectId, project.stacksOrder);
     }, shallowEqual);
 };
 
@@ -130,7 +135,7 @@ export const getProjectStacks = (projectId: string): IStack[] => {
  */
 export const useStackInfo = (stackId: string) => {
     const stack = useStack(stackId);
-    const tasks = useStackTasks(stackId);
+    const tasks = useStackTasksFromStack(stack);
 
     return useMemo(() => {
         if (!stack) return null;
@@ -159,33 +164,31 @@ export const useStackInfo = (stackId: string) => {
  */
 export const useStackMenu = (stackId: string) => {
     const stack = useStack(stackId);
-    const tasks = useStackTasks(stackId);
+    const tasks = useStackTasksFromStack(stack);
 
     return useMemo(() => {
         if (!stack) return null;
 
-        const stackInfo = {
+        let completedCount = 0;
+        let total = 0;
+        for (const task of tasks) {
+            if (task.done) completedCount++;
+            total += task.progress || 0;
+        }
+
+        const uncompleteCount = tasks.length - completedCount;
+        const maxTasks = stack.maxTasks || 0;
+
+        return {
             title: stack.title,
-            progress: 0,
-            limit: false,
-            completedCount: tasks.filter((task: ITask) => task.done).length,
-            uncompleteCount: tasks.filter((task: ITask) => !task.done).length,
+            progress: tasks.length ? Math.ceil(total / tasks.length) : 0,
+            limit: Boolean(maxTasks && uncompleteCount > maxTasks),
+            completedCount,
+            uncompleteCount,
             tasksCount: tasks.length,
-            maxTasks: stack.maxTasks || 0,
+            maxTasks,
             tint: stack.tint,
             sorting: stack.sorting,
         };
-
-        const total = tasks.reduce((current: number, task: ITask) => {
-            return current + (task.progress || 0);
-        }, 0);
-
-        if (stack.maxTasks) {
-            stackInfo.limit = stackInfo.uncompleteCount > stack.maxTasks;
-        }
-
-        stackInfo.progress = Math.ceil(total / tasks.length);
-
-        return stackInfo;
     }, [stack, tasks]);
 };
