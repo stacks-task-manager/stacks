@@ -156,6 +156,31 @@ test.describe("Project - Board column", () => {
         }
     });
 
+    test("Should expose the remove tint control when a tint is set", async () => {
+        const column = await board.getColumnByName(MAIN_COLUMN);
+        await expect(column).toBeVisible();
+
+        // Close any lingering context menu / tint popover left mounted by a prior test.
+        await page.keyboard.press("Escape");
+
+        // Open the tint picker from the column header. It renders in a portal, but a prior test may leave a second picker open inside the column context menu, so scope to the one outside it.
+        await column.getByTestId("column-header-tint-button").click();
+        const picker = page.locator(
+            '[data-testid="tint-picker"]:not([data-testid="column-menu"] [data-testid="tint-picker"])'
+        );
+        await expect(picker).toBeVisible();
+
+        // Select a palette color so a tint value exists; the remove control then appears.
+        await picker.locator('[data-testid="color-button"][data-color="#ff006e"]').click();
+        await expect(picker.getByTestId("tint-remove-button")).toBeVisible();
+
+        // Close the picker without clicking remove: the popover-dismiss path leaves a full-screen overlay that blocks later tests.
+        await page.keyboard.press("Escape");
+        await expect(picker).toBeHidden();
+        // Let the popover's close animation finish so the picker does not linger and block the next test.
+        await page.waitForTimeout(400);
+    });
+
     test("Should collapse and uncollapse a column using the header button", async () => {
         const column = await board.getColumnByName(MAIN_COLUMN);
         await expect(column).toBeVisible();

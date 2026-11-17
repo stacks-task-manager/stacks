@@ -59,6 +59,7 @@ export const TaskDetailsAttachments: FunctionComponent<ITaskDetailsAttachmentsPr
                         {!disabled && (
                             <RoundButton
                                 id="td-attachments"
+                                testId="task-attachments-upload-button"
                                 minimal
                                 title={translate("Select files")}
                                 icon="file-plus-02"
@@ -88,6 +89,7 @@ export const TaskDetailsAttachments: FunctionComponent<ITaskDetailsAttachmentsPr
                     <Col>
                         <RoundButton
                             id="td-attachments"
+                            testId="task-attachments-upload-button"
                             minimal
                             title={translate("Select files")}
                             icon="file-plus-02"

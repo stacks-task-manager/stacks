@@ -153,6 +153,7 @@ test.describe("Search - Global search results", () => {
         await search.setQuery(SEARCH_TOKEN);
         await search.waitForOutcome();
 
+        await expect(search.typeChip("all")).toBeVisible();
         // the title hit, the description-only hit, and the notepad whose content matches
         await search.expectRowsFor([titleTaskId, descriptionTaskId, notepadDocId]);
         await search.expectResultCount(3);

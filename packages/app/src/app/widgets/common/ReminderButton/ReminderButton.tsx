@@ -53,12 +53,9 @@ export const ReminderButton: FunctionComponent<ReminderButtonProps> = ({
         return "Manage reminders";
     }, [reminders]);
 
-    const handleSetDate = useCallback(
-        (selectedDate: Date | null, isUserChange: boolean) => {
-            if (isUserChange) setSelectedDate(selectedDate ?? undefined);
-        },
-        []
-    );
+    const handleSetDate = useCallback((selectedDate: Date | null, isUserChange: boolean) => {
+        if (isUserChange) setSelectedDate(selectedDate ?? undefined);
+    }, []);
 
     const date = useMemo(() => {
         const now = new Date();
@@ -100,6 +97,7 @@ export const ReminderButton: FunctionComponent<ReminderButtonProps> = ({
                                     key={index}
                                     text={item.title}
                                     labelElement={item.label}
+                                    data-testid={index === 1 ? "reminder-add-tomorrow" : undefined}
                                     onClick={() => onAdd(item.date)}
                                 />
                             ))}
@@ -149,6 +147,7 @@ export const ReminderButton: FunctionComponent<ReminderButtonProps> = ({
                                             ref={ref}
                                             {...tooltipProps}
                                             text={format(notification, "PPPp")}
+                                            data-testid="reminder-item"
                                             intent={onRemove != null ? Intent.WARNING : Intent.NONE}
                                             icon={<Icon icon="bell-ringing-01" />}
                                             shouldDismissPopover={false}
@@ -188,6 +187,7 @@ export const ReminderButton: FunctionComponent<ReminderButtonProps> = ({
                             variant="minimal"
                             size="small"
                             disabled={disabled}
+                            data-testid="reminder-button"
                             intent={reminders.length ? Intent.WARNING : Intent.NONE}
                             icon={<Icon icon={reminders.length != null ? "bell-ringing-01" : "bell"} />}
                         />

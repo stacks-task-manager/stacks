@@ -3,9 +3,11 @@ import Base from "./base";
 
 export default class Gantt extends Base {
     readonly chart: Locator;
+    readonly horizontalScroller: Locator;
     constructor(page: Page) {
         super(page);
         this.chart = page.getByTestId("gantt-chart");
+        this.horizontalScroller = page.getByTestId("gantt-horizontal-scroller");
     }
     bar(id: string) {
         return this.page.getByTestId(`gantt-bar-${id}`);

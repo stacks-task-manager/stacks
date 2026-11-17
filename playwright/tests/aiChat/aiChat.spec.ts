@@ -1,4 +1,5 @@
 import type { Browser, BrowserContext, Page } from "@playwright/test";
+import { expect } from "@playwright/test";
 import { test } from "../../fixtures";
 import { bootstrapContext } from "../../fixtures/bootstrapContext";
 import AiChat, { type SeedChatMessage } from "../../pages/aiChat";
@@ -92,6 +93,17 @@ test.describe("AI Chat interactive widgets", () => {
         if (page && !page.isClosed()) await page.close();
         if (context) await context.close();
         if (browser) await browser.close();
+    });
+
+    test("exposes the free-text input, send, clear, and close controls", async () => {
+        test.skip(!aiEnabled, "AI chat is not enabled on the running server");
+        await expect(aiChat.input).toBeVisible();
+        await expect(aiChat.sendButton).toBeVisible();
+        await expect(aiChat.clearButton).toBeVisible();
+        await expect(aiChat.closeButton).toBeVisible();
+
+        await aiChat.closeButton.click();
+        await expect(aiChat.panel).toBeHidden();
     });
 
     test("renders button, radio, and checkbox choice widgets", async () => {

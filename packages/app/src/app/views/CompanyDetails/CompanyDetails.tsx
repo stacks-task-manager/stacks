@@ -798,7 +798,11 @@ const CompanyRead: FunctionComponent<ICompanyProps> = ({ company, onClose, onEdi
                     <Popover
                         content={
                             <Menu>
-                                <MenuItem text={translate("Export")} icon={<Icon icon="download-04" />}>
+                                <MenuItem
+                                    text={translate("Export")}
+                                    icon={<Icon icon="download-04" />}
+                                    data-testid="company-details-export-menu"
+                                >
                                     <MenuItem
                                         text={translate("Export as", { type: ".xlsx" })}
                                         icon={<Icon icon="download-04" />}
@@ -840,7 +844,12 @@ const CompanyRead: FunctionComponent<ICompanyProps> = ({ company, onClose, onEdi
                         }
                         placement="bottom-end"
                     >
-                        <Button size="small" variant="minimal" icon={<Icon icon="dots-vertical" />} />
+                        <Button
+                            size="small"
+                            variant="minimal"
+                            icon={<Icon icon="dots-vertical" />}
+                            data-testid="company-details-menu-button"
+                        />
                     </Popover>
 
                     <FavoriteCompanyButton companyId={company.id} />

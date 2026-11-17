@@ -1,5 +1,5 @@
 import { expect, Locator, Page } from "@playwright/test";
-import Base from "./base";
+import Base, { type ExportResult } from "./base";
 import { QuickTimelog } from "./components/QuickTimelog";
 import Sidebar from "./sidebar";
 import type { IRoleAccess, IRole } from "@stacks/types";
@@ -191,6 +191,10 @@ class People extends Base {
         await this.openRoles();
         await this.page.getByTestId(`role-edit-${id}`).click();
         await expect(this.page.getByTestId("role-title-input")).toBeVisible();
+    }
+
+    public roleDescriptionInput(): Locator {
+        return this.page.getByTestId("role-description-input");
     }
 
     public async setRolePeopleWrite(enabled: boolean) {
@@ -636,6 +640,34 @@ class People extends Base {
         await this.companyUpdateButton.click();
         await responsePromise;
         await this.companyEditButton.waitFor({ state: "visible" });
+    }
+
+    /** Exports a person from the details kebab menu (Export > Export as <format>). */
+    public async exportPerson(format: "xlsx" | "json" | "pdf"): Promise<ExportResult> {
+        const menuId = {
+            xlsx: "person-details-export-xlsx",
+            json: "person-details-export-json",
+            pdf: "person-details-export-pdf",
+        }[format];
+        return await this.captureExport(async () => {
+            await this.page.getByTestId("person-details-menu-button").click();
+            await this.page.getByTestId("person-details-export-menu").click();
+            await this.page.getByTestId(menuId).click();
+        });
+    }
+
+    /** Exports a company from the details kebab menu (Export > Export as <format>). */
+    public async exportCompany(format: "xlsx" | "json" | "pdf"): Promise<ExportResult> {
+        const menuId = {
+            xlsx: "company-details-export-xlsx",
+            json: "company-details-export-json",
+            pdf: "company-details-export-pdf",
+        }[format];
+        return await this.captureExport(async () => {
+            await this.page.getByTestId("company-details-menu-button").click();
+            await this.page.getByTestId("company-details-export-menu").click();
+            await this.page.getByTestId(menuId).click();
+        });
     }
 }
 

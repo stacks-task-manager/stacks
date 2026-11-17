@@ -971,7 +971,11 @@ const PersonRead: FunctionComponent<IPersonProps> = ({ person, onClose, onEdit }
                                         <MenuDivider />
                                     </>
                                 )}
-                                <MenuItem text={translate("Export")} icon={<Icon icon="download-04" />}>
+                                <MenuItem
+                                    text={translate("Export")}
+                                    icon={<Icon icon="download-04" />}
+                                    data-testid="person-details-export-menu"
+                                >
                                     <MenuItem
                                         text={translate("Export as", { type: ".xlsx" })}
                                         icon={<Icon icon="download-04" />}
@@ -1013,7 +1017,12 @@ const PersonRead: FunctionComponent<IPersonProps> = ({ person, onClose, onEdit }
                         }
                         placement="bottom-end"
                     >
-                        <Button size="small" variant="minimal" icon={<Icon icon="dots-vertical" />} />
+                        <Button
+                            size="small"
+                            variant="minimal"
+                            icon={<Icon icon="dots-vertical" />}
+                            data-testid="person-details-menu-button"
+                        />
                     </Popover>
 
                     <FavoritePersonButton personId={person.id} />

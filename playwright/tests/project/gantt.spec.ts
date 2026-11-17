@@ -75,6 +75,7 @@ test.describe("Project - Internal Gantt", () => {
         changedVisual = true;
         await gantt.setVisualSettings(cleanup, { darkMode: false, embeddedTask: false });
         await gantt.reload();
+        await expect(gantt.horizontalScroller).toBeVisible();
         const today = new Date();
         const day = (offset: number) => format(addDays(today, offset), "yyyy-MM-dd");
         await gantt.hierarchy(parent, child);

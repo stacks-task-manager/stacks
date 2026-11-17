@@ -1,12 +1,12 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { translate } from "@stacks/translations";
-import { Button, SegmentedControl, Tooltip } from "@blueprintjs/core";
+import { Button, Tooltip } from "@blueprintjs/core";
 import React, { useEffect, useMemo } from "react";
 import { shallowEqual } from "app/hooks/store";
 import { ReportsActions } from "app/store/actions";
 import { ReportSpan, ReportsStore } from "app/store/reports";
 import { useNavigate, useParams } from "react-router-dom";
-import { Icon } from "app/components/common";
+import { Icon, ToolbarViewButton } from "app/components/common";
 import {
     MainToolbar,
     SectionToolbar,
@@ -120,11 +120,16 @@ export const ToolbarReport = () => {
                     </SectionToolbarTitle>
                 </SectionToolbarSide>
                 <SectionToolbarSide fixed>
-                    <SegmentedControl
-                        options={ReportFilterSpan}
-                        value={span}
-                        onValueChange={newSpan => ReportsActions.setSpan(newSpan as ReportSpan)}
-                    />
+                    {ReportFilterSpan.map(option => (
+                        <ToolbarViewButton
+                            key={option.value}
+                            label={option.label}
+                            active={span === option.value}
+                            onClick={() => ReportsActions.setSpan(option.value as ReportSpan)}
+                            data-testid={`report-span-${option.value}`}
+                            data-active={span === option.value}
+                        />
+                    ))}
                 </SectionToolbarSide>
             </SectionToolbar>
         </MainToolbar>

@@ -111,6 +111,16 @@ export class DbHelper {
         if (remaining.rowCount) throw new Error(`Scenario tag ${id} remains after cleanup`);
     }
 
+    /** Removes the reminders owned by a record (e.g. a task). */
+    async cleanupReminders(recordId: string): Promise<void> {
+        await this.pool.query(`DELETE FROM "reminders" WHERE "recordId" = $1`, [recordId]);
+        const remaining = await this.pool.query(`SELECT "id" FROM "reminders" WHERE "recordId" = $1`, [
+            recordId,
+        ]);
+        if (remaining.rowCount)
+            throw new Error(`Scenario reminder for record ${recordId} remains after cleanup`);
+    }
+
     /**
      * Removes a scenario-owned document plus everything the server cascade removes
      * (removeRecursive at packages/server/src/loaders/documents.ts:216): folder children
