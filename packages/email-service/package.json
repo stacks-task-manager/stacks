@@ -25,7 +25,7 @@
         "sequelize": "^6.37.7"
     },
     "devDependencies": {
-        "@react-email/preview-server": "4.2.8",
+        "@react-email/preview-server": "5.2.10",
         "@stacks/db": "workspace:*",
         "@stacks/types": "workspace:*",
         "@types/node": "^26.6.5",
