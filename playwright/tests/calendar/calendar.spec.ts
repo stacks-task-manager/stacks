@@ -68,6 +68,18 @@ test.describe("Calendar", () => {
         }
     });
 
+    test("shows the local calendar filters and the new local calendar popover", async () => {
+        await calendar.openFilters();
+        await expect(calendar.localCalendarFilter).toBeVisible();
+
+        await calendar.openNewLocalCalendar();
+        await expect(calendar.newLocalPopover.getByTestId("calendar-new-local-title-input")).toBeVisible();
+        await expect(calendar.newLocalPopover.getByTestId("calendar-new-local-save")).toBeVisible();
+        // Cancel so no calendar is created (no cleanup needed).
+        await calendar.newLocalPopover.getByTestId("calendar-new-local-cancel").click();
+        await expect(calendar.newLocalPopover).toBeHidden();
+    });
+
     test("moves backward and forward in each selected view", async () => {
         for (const view of ["month", "week", "day"] as const) {
             await calendar.switchView(view);

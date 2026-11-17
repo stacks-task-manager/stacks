@@ -2,7 +2,7 @@
 import React, { FunctionComponent, useMemo } from "react";
 
 import { getTag } from "app/hooks";
-import { StatusChip } from "app/widgets/common";
+import { TagChip } from "app/widgets/common";
 
 interface ProjectStatusProps {
     status: string | null;
@@ -28,7 +28,8 @@ export const ProjectStatus: FunctionComponent<ProjectStatusProps> = ({
     if (!currentStatus) return null;
 
     return (
-        <StatusChip
+        <TagChip
+            variant="status"
             tag={currentStatus}
             tagId={id}
             testId={testId}

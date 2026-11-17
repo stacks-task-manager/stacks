@@ -27,7 +27,7 @@ export const Attachment: FunctionComponent<IAttachmentProps> = ({
     }, [file, onDeleted]);
 
     return (
-        <div className="attachment">
+        <div className="attachment" data-testid={`attachment-card-${file.id}`}>
             <div className="attachment__toolbar">
                 <Popover
                     popoverClassName="popover-padded-medium"
@@ -58,6 +58,7 @@ export const Attachment: FunctionComponent<IAttachmentProps> = ({
                                                 text="Open task..."
                                                 icon={<Icon icon="link-external-01" />}
                                                 onClick={onOpenTask}
+                                                data-testid={`attachment-open-task-${file.id}`}
                                             />
                                             <MenuDivider />
                                         </React.Fragment>
@@ -68,7 +69,12 @@ export const Attachment: FunctionComponent<IAttachmentProps> = ({
                     }
                     placement="bottom-end"
                 >
-                    <Button variant="minimal" size="small" icon={<Icon icon="dots-vertical" size={14} />} />
+                    <Button
+                        variant="minimal"
+                        size="small"
+                        icon={<Icon icon="dots-vertical" size={14} />}
+                        data-testid={`attachment-menu-button-${file.id}`}
+                    />
                 </Popover>
             </div>
             <div className="attachment__icon">

@@ -1,7 +1,7 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import React, { FunctionComponent, useMemo } from "react";
 
-import { StatusChip } from "app/components";
+import { TagChip } from "app/widgets/common/TagChip/TagChip";
 import { ITag, TAGSECTION, TAGTYPE } from "@stacks/types";
 import { useTags } from "app/hooks";
 
@@ -15,5 +15,5 @@ export const Status: FunctionComponent<StatusProps> = ({ status, section }) => {
 
     if (currentStatus == null) return null;
 
-    return <StatusChip tag={currentStatus} />;
+    return <TagChip variant="status" tag={currentStatus} />;
 };

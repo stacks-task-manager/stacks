@@ -14,14 +14,20 @@ import {
     Tooltip,
 } from "@blueprintjs/core";
 import { TIMEBOXVIEWS } from "@stacks/types";
-import { Icon, ReloadButton, ToolbarButton } from "app/components/common";
+import { Icon, ReloadButton, ToolbarButton, ToolbarViewButton } from "app/components/common";
 import { useHasFilters, useMousetrap } from "app/hooks";
 import { shallowEqual } from "app/hooks/store";
 import { MyTasksActions, ProjectFiltersActions, TasksActions } from "app/store/actions";
 import { toggleNewTask } from "app/store/global";
 import { MyTasksStore } from "app/store/myTasks";
-import classNames from "classnames";
 import { ProjectSearch } from "../ToolbarProject/ToolbarProject";
+import {
+    MainToolbar,
+    SectionToolbar,
+    SectionToolbarDivider,
+    SectionToolbarSide,
+    SectionToolbarTitle,
+} from "app/widgets/toolbars/ToolbarLayout";
 
 export const ToolbarMyTasks = () => {
     const view = MyTasksStore.use(state => state.view, shallowEqual);
@@ -35,19 +41,19 @@ export const ToolbarMyTasks = () => {
     useMousetrap("ctrl+2", () => MyTasksActions.setView("schedule"));
 
     return (
-        <div className="main-toolbar">
-            <div className="section-toolbar">
-                <div className="section-toolbar-side side">
-                    <div className="section-toolbar-title">
+        <MainToolbar>
+            <SectionToolbar>
+                <SectionToolbarSide side>
+                    <SectionToolbarTitle>
                         <h1>{translate("My tasks")}</h1>
-                    </div>
-                </div>
-                <div className="section-toolbar-side fixed">
+                    </SectionToolbarTitle>
+                </SectionToolbarSide>
+                <SectionToolbarSide fixed>
                     <TimeboxDate />
 
                     <ProjectSearch />
 
-                    <span className="section-toolbar-divider" />
+                    <SectionToolbarDivider />
 
                     <ReloadButton
                         tooltip={translate("Reload my tasks")}
@@ -63,31 +69,31 @@ export const ToolbarMyTasks = () => {
                         minimal={false}
                         onClick={toggleNewTask}
                     />
-                </div>
-            </div>
-            <div className="section-toolbar">
-                <div className="section-toolbar-side">
-                    <button
-                        className={classNames("view-type-button", { active: view === "list" })}
+                </SectionToolbarSide>
+            </SectionToolbar>
+            <SectionToolbar>
+                <SectionToolbarSide>
+                    <ToolbarViewButton
+                        icon="list"
+                        label="List"
+                        active={view === "list"}
+                        data-testid="my-tasks-view-list-button"
                         onClick={() => MyTasksActions.setView("list")}
-                    >
-                        <Icon icon="list" />
-                        List
-                    </button>
-                    <button
-                        className={classNames("view-type-button", { active: view === "schedule" })}
+                    />
+                    <ToolbarViewButton
+                        icon="calendar-check-01"
+                        label="Schedule"
+                        active={view === "schedule"}
+                        data-testid="my-tasks-view-schedule-button"
                         onClick={() => MyTasksActions.setView("schedule")}
-                    >
-                        <Icon icon="calendar-check-01" />
-                        Schedule
-                    </button>
-                </div>
-                <div className="section-toolbar-side">
+                    />
+                </SectionToolbarSide>
+                <SectionToolbarSide>
                     <TimeboxViewButton />
                     <FilterButton />
-                </div>
-            </div>
-        </div>
+                </SectionToolbarSide>
+            </SectionToolbar>
+        </MainToolbar>
     );
 };
 
@@ -162,6 +168,7 @@ const TimeboxViewButton = () => {
                         <MenuDivider title="Views" />
                         <MenuItem
                             text="Board"
+                            data-testid="timebox-schedule-board"
                             icon={<Icon icon="board-view" />}
                             labelElement={isBoardView ? <Icon icon="check" /> : null}
                             onClick={() => MyTasksActions.setScheduleView(TIMEBOXVIEWS.BOARD)}
@@ -169,6 +176,7 @@ const TimeboxViewButton = () => {
                         <MenuDivider title="Calendar" />
                         <MenuItem
                             text="One day"
+                            data-testid="timebox-calendar-one"
                             icon={<Icon icon="rows-03" />}
                             labelElement={
                                 isCalendarView && calendarView === "one" ? <Icon icon="check" /> : null
@@ -178,6 +186,7 @@ const TimeboxViewButton = () => {
 
                         <MenuItem
                             text="Three days"
+                            data-testid="timebox-calendar-three"
                             icon={<Icon icon="columns-03" />}
                             labelElement={
                                 isCalendarView && calendarView === "three" ? <Icon icon="check" /> : null
@@ -186,6 +195,7 @@ const TimeboxViewButton = () => {
                         />
                         <MenuItem
                             text="Weekdays"
+                            data-testid="timebox-calendar-weekdays"
                             icon={<Icon icon="columns-03" />}
                             labelElement={
                                 isCalendarView && calendarView === "weekdays" ? <Icon icon="check" /> : null
@@ -194,6 +204,7 @@ const TimeboxViewButton = () => {
                         />
                         <MenuItem
                             text="Full week"
+                            data-testid="timebox-calendar-week"
                             icon={<Icon icon="columns-03" />}
                             labelElement={
                                 isCalendarView && calendarView === "week" ? <Icon icon="check" /> : null
@@ -202,6 +213,7 @@ const TimeboxViewButton = () => {
                         />
                         <MenuItem
                             text="Month"
+                            data-testid="timebox-calendar-month"
                             icon={<Icon icon="layout-grid-01" />}
                             labelElement={
                                 isCalendarView && calendarView === "month" ? <Icon icon="check" /> : null
@@ -214,6 +226,7 @@ const TimeboxViewButton = () => {
                 renderTarget={({ isOpen, ...props }) => (
                     <Button
                         {...props}
+                        data-testid="timebox-view-button"
                         icon={<Icon icon={BTN_LABELS[scheduledView].icon} />}
                         size="small"
                         variant="minimal"
@@ -223,7 +236,7 @@ const TimeboxViewButton = () => {
                     </Button>
                 )}
             />
-            <span className="section-toolbar-divider" />
+            <SectionToolbarDivider />
         </>
     );
 };
@@ -255,7 +268,7 @@ const TimeboxDate = () => {
         }
 
         return `Week ${format(start, "w, MMM yyyy")}`;
-    }, [start, calendarView, scheduledView]);
+    }, [scheduledView, calendarView, start, end]);
 
     const shouldShowTodayButton = useMemo(() => {
         if (scheduledView === TIMEBOXVIEWS.CALENDAR && calendarView === "one") {
@@ -272,7 +285,9 @@ const TimeboxDate = () => {
 
     return (
         <>
-            <H4 style={{ margin: 0 }}>{dateLabel}</H4>
+            <H4 style={{ margin: 0 }} data-testid="timebox-date-label">
+                {dateLabel}
+            </H4>
 
             {shouldShowTodayButton && (
                 <Tooltip content={translate("Go to Today")} placement="bottom" hoverOpenDelay={500}>
@@ -280,6 +295,7 @@ const TimeboxDate = () => {
                         size="small"
                         variant="minimal"
                         intent={Intent.PRIMARY}
+                        data-testid="timebox-today-button"
                         icon={<Icon icon="calendar-date" />}
                         onClick={MyTasksActions.today}
                     >
@@ -297,6 +313,7 @@ const TimeboxDate = () => {
                     renderTarget={({ isOpen, ...props }) => (
                         <Button
                             {...props}
+                            data-testid="timebox-prev-button"
                             icon={<Icon icon="chevron-left" />}
                             size="small"
                             variant="minimal"
@@ -313,6 +330,7 @@ const TimeboxDate = () => {
                     renderTarget={({ isOpen, ...props }) => (
                         <Button
                             {...props}
+                            data-testid="timebox-next-button"
                             icon={<Icon icon="chevron-right" />}
                             size="small"
                             variant="minimal"
@@ -322,7 +340,7 @@ const TimeboxDate = () => {
                 />
             </ButtonGroup>
 
-            <span className="section-toolbar-divider" />
+            <SectionToolbarDivider />
         </>
     );
 };

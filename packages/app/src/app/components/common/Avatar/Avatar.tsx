@@ -14,7 +14,7 @@ import { HTMLDivProps, Placement, Tooltip } from "@blueprintjs/core";
 import { getInitials } from "app/utils/string";
 import { stringToColour } from "app/utils/colors";
 import { IPerson } from "@stacks/types";
-import { Icon } from "app/components/common";
+import { Icon } from "app/components/common/Icon/Icon";
 
 interface IAvatarProps extends HTMLDivProps {
     person: IPerson;

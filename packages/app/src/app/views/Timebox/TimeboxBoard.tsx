@@ -115,6 +115,7 @@ const DayTasksColumn = ({ day, containerId, onReorder, onItemMove }: DayTasksCol
     return (
         <Container
             id={containerId}
+            data-testid={`timebox-slot-${format(day, "yyyy-MM-dd")}`}
             type="timebox-task"
             direction="vertical"
             className="column-content scroller thin auto"
@@ -127,6 +128,7 @@ const DayTasksColumn = ({ day, containerId, onReorder, onItemMove }: DayTasksCol
                     taskId={t.id}
                     containerId={containerId}
                     dragType="timebox-task"
+                    data-testid={`timebox-task-${t.id}`}
                     initialVisible={index < 6}
                 />
             ))}

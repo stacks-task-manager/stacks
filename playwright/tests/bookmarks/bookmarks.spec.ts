@@ -135,6 +135,22 @@ test.describe("Bookmarks - Sidebar bookmarks", () => {
         expect(drafts.length, `the draft title ${DRAFT_TITLE} was saved instead`).toBe(0);
     });
 
+    test("Should export bookmarks as XLSX, JSON, and PDF", async () => {
+        await bookmarks.open();
+
+        const xlsx = await bookmarks.exportBookmarks("xlsx");
+        bookmarks.expectExportResult(xlsx, "xlsx", "bookmark");
+        expect(xlsx.body.length).toBeGreaterThan(0);
+
+        const json = await bookmarks.exportBookmarks("json");
+        bookmarks.expectExportResult(json, "json", "bookmark");
+        expect(JSON.parse(json.body.toString("utf-8"))).toBeTruthy();
+
+        const pdf = await bookmarks.exportBookmarks("pdf");
+        bookmarks.expectExportResult(pdf, "pdf", "bookmark");
+        expect(pdf.body.subarray(0, 4).toString()).toBe("%PDF");
+    });
+
     test("Should cancel the quick add dialog without creating a bookmark", async () => {
         await sidebar.addNew("bookmark");
         await sidebar.newBookmarkDialog.fill(CANCELLED_TITLE, CANCELLED_URL);

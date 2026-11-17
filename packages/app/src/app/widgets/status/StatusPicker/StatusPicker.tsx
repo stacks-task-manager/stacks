@@ -16,7 +16,6 @@ export const StatusPicker: FunctionComponent<IStatusPickerProps> = ({ disabled, 
             section={TAGSECTION.PROJECTS}
             placement="top"
             disabled={disabled}
-            shouldDismissPopover={true}
             type={TAGTYPE.STATUS}
             onToggle={onChange}
         >

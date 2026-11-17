@@ -24,14 +24,16 @@ export const ReportChart = () => {
     );
 
     return (
-        <ResponsiveContainer width="100%" height={320}>
-            <BarChart data={data} margin={{ top: 8, right: 16, left: 0, bottom: 8 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke={Colors.LIGHT_GRAY2} />
-                <XAxis dataKey="year" stroke={Colors.GRAY1} />
-                <YAxis stroke={Colors.GRAY1} />
-                <Tooltip />
-                <Bar dataKey="count" fill={Colors.BLUE3} radius={[4, 4, 0, 0]} />
-            </BarChart>
-        </ResponsiveContainer>
+        <div data-testid="report-chart" style={{ width: "100%" }}>
+            <ResponsiveContainer width="100%" height={320}>
+                <BarChart data={data} margin={{ top: 8, right: 16, left: 0, bottom: 8 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke={Colors.LIGHT_GRAY2} />
+                    <XAxis dataKey="year" stroke={Colors.GRAY1} />
+                    <YAxis stroke={Colors.GRAY1} />
+                    <Tooltip />
+                    <Bar dataKey="count" fill={Colors.BLUE3} radius={[4, 4, 0, 0]} />
+                </BarChart>
+            </ResponsiveContainer>
+        </div>
     );
 };

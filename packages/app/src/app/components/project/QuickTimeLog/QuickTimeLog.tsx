@@ -209,7 +209,7 @@ export const QuickTimeLog: FunctionComponent<IQuickTimeLogProps> = ({
 
             {/* <FormGroup label="Assignee">
                 <AssigneesPopover value={person ? [person] : []} onToggle={setPerson}>
-                    {person != null ? <AssigneesSync assignees={person ? [person] : []} /> : <RoundButton dashed icon="user-add" tooltip="Assign person" />}
+                    {person != null ? <Assignees hideWhenEmpty assignees={person ? [person] : []} /> : <RoundButton dashed icon="user-add" tooltip="Assign person" />}
                 </AssigneesPopover>
             </FormGroup> */}
 

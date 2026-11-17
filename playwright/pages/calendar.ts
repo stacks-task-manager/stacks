@@ -26,6 +26,10 @@ class Calendar extends Base {
     public integrationsButton: Locator;
     public connectMenuItem: Locator;
     public googleConnectButton: Locator;
+    public filterButton: Locator;
+    public newLocalButton: Locator;
+    public newLocalPopover: Locator;
+    public localCalendarFilter: Locator;
 
     constructor(page: Page) {
         super(page);
@@ -50,6 +54,19 @@ class Calendar extends Base {
         this.integrationsButton = page.getByTestId("calendar-integrations-button");
         this.connectMenuItem = page.getByTestId("calendar-integrations-menu");
         this.googleConnectButton = page.getByTestId("calendar-google-connect");
+        this.filterButton = page.getByTestId("calendar-filter-button");
+        this.newLocalButton = page.getByTestId("calendar-new-local-button");
+        this.newLocalPopover = page.getByTestId("calendar-new-local-popover");
+        this.localCalendarFilter = page.getByTestId("local-calendar-filter");
+    }
+
+    async openFilters() {
+        await this.filterButton.click();
+    }
+
+    async openNewLocalCalendar() {
+        await this.newLocalButton.click();
+        await this.newLocalPopover.waitFor({ state: "visible" });
     }
 
     async open() {
@@ -141,8 +158,8 @@ class Calendar extends Base {
             view === "month"
                 ? format(date, "LLLL yyyy")
                 : view === "week"
-                ? new RegExp(`Week \\d+, ${format(date, "MMM yyyy")}`)
-                : format(date, "eee, MMM do yyyy");
+                  ? new RegExp(`Week \\d+, ${format(date, "MMM yyyy")}`)
+                  : format(date, "eee, MMM do yyyy");
 
         await expect(this.currentDate).toHaveText(expected);
     }
@@ -282,6 +299,33 @@ class Calendar extends Base {
             "data-calendar-event-title",
             title
         );
+    }
+
+    async expectEventAbsent(eventId: string) {
+        await expect(this.page.getByTestId(`calendar-event-${eventId}`)).toHaveCount(0);
+    }
+
+    /**
+     * Opens a recurring (Google) event's details and requests deletion, which
+     * raises the RecurringDeleteDialog (single / series / cancel).
+     */
+    async openRecurringDeleteDialog(eventId: string) {
+        await this.openEvent(eventId);
+        await this.detailsMenuButton.click();
+        await this.detailsDeleteMenuItem.click();
+        await this.page.getByTestId("recurring-delete-cancel").waitFor({ state: "visible" });
+    }
+
+    /** Chooses an option in the RecurringDeleteDialog and waits for it to close. */
+    async chooseRecurringDelete(kind: "single" | "series" | "cancel") {
+        const testId = {
+            single: "recurring-delete-single",
+            series: "recurring-delete-series",
+            cancel: "recurring-delete-cancel",
+        }[kind];
+        await this.page.getByTestId(testId).click();
+        // The dialog unmounts from the DOM after its close animation completes.
+        await expect(this.page.getByTestId("recurring-delete-cancel")).toHaveCount(0);
     }
 
     private async selectVisibleSlot() {

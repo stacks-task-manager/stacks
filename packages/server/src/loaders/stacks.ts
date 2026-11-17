@@ -134,7 +134,25 @@ async function update(id: string, data: any, extTransaction?: Transaction): Prom
         assertCanWriteResource(stack, "owner");
 
         if (data.tasksOrder !== undefined) {
-            const requestedTaskIds = [...new Set<string>(data.tasksOrder)];
+            const existingTaskIds = new Set(stack.tasksOrder ?? []);
+            const addedTaskIds = new Set(
+                (data.tasksOrder as string[]).filter((taskId: string) => !existingTaskIds.has(taskId))
+            );
+
+            // Drop stored order entries whose tasks no longer exist. A present-but-invalid
+            // entry still fails validation below, and new entries always need ACL access.
+            const presentTasks = await TaskEntity.findAll({
+                where: { id: { [Op.in]: [...new Set<string>(data.tasksOrder)] } },
+                attributes: ["id"],
+                raw: true,
+                transaction,
+            });
+            const presentTaskIds = new Set(presentTasks.map(task => String(task.id)));
+            const requestedTaskIds = ([...new Set<string>(data.tasksOrder)] as string[]).filter(
+                taskId => presentTaskIds.has(taskId) || addedTaskIds.has(taskId)
+            );
+            data = { ...data, tasksOrder: requestedTaskIds };
+
             const taskCount = await TaskEntity.count({
                 where: {
                     id: { [Op.in]: requestedTaskIds },
@@ -149,15 +167,13 @@ async function update(id: string, data: any, extTransaction?: Transaction): Prom
             }
 
             // Retain stored private entries without exposing them; newly added references still need ACL access.
-            const existingTaskIds = new Set(stack.tasksOrder ?? []);
-            const addedTaskIds = requestedTaskIds.filter(taskId => !existingTaskIds.has(taskId));
-            if (addedTaskIds.length > 0) {
+            if (addedTaskIds.size > 0) {
                 const visibleTasks = await findAll<{ id: string }>({
                     entity: TaskEntity,
-                    filter: { id: { [Op.in]: addedTaskIds }, project: stack.project },
+                    filter: { id: { [Op.in]: [...addedTaskIds] }, project: stack.project },
                     transaction,
                 });
-                if (visibleTasks.length !== addedTaskIds.length) {
+                if (visibleTasks.length !== addedTaskIds.size) {
                     throw Errors.notFound(translate("Task not found"));
                 }
             }

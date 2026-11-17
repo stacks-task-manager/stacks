@@ -11,7 +11,7 @@ import { usePerson } from "app/hooks";
 import { PeopleStore } from "app/store/people";
 import { isSameDay } from "date-fns";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const Video = require("assets/hb.mp4");
 
 export const Me = () => {

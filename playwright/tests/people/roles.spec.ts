@@ -70,6 +70,7 @@ test.describe("People - Scenario role access", () => {
     test("Should persist role edits and enforce granted and revoked person creation in another session", async () => {
         await admin.open();
         await admin.editRole(roleId);
+        await expect(admin.roleDescriptionInput()).toBeVisible();
         await admin.cancelRoleTitleEdit("Canceled role title");
         expect((await admin.loadRole(roleId)).title).toBe(roleTitle);
 

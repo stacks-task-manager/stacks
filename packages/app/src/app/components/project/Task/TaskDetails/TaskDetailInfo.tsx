@@ -8,7 +8,6 @@ import {
     TIRepeats,
     TaskDetailsAssignees,
     TaskDetailsId,
-    TaskDetailsPriority,
     TaskDetailsProgress,
     TaskDetailsProjects,
     TaskDetailsSection,
@@ -17,10 +16,11 @@ import {
     TaskEstimates,
     TaskSpentProgress,
 } from "app/components/project";
+import { PriorityPicker } from "app/components/project/PriorityPicker/PriorityPicker";
 import { getProject } from "app/hooks";
 import { TasksActions } from "app/store/actions";
 import { formatStringDuration } from "app/utils/date";
-import { TaskDetailsDueDate, TaskDetailsStartDate, TaskDetailsStatus, TaskDetailsTags } from "app/widgets";
+import { TaskDateField, TaskStatus, TaskDetailsTags } from "app/widgets";
 import React, { FunctionComponent } from "react";
 import { TaskDetailsCover } from "../TaskDetailsCover/TaskDetailsCover";
 
@@ -59,19 +59,23 @@ export const TaskDetailInfo: FunctionComponent<ITaskDetailInfoProps> = React.mem
             case TASKDETAILMATRIX.PRIORITY:
                 return (
                     <TaskDetailsSection title={translate("Priority")} vertical={vertical} centered={centered}>
-                        <TaskDetailsPriority
+                        <PriorityPicker
                             taskId={task.id}
                             value={task.priority ?? PRIORITY.NONE}
                             showEmpty
                             canClear
                             disabled={disabled}
+                            id="td-priority"
+                            testId="task-details-priority"
+                            hotkey="shift+p"
                         />
                     </TaskDetailsSection>
                 );
             case TASKDETAILMATRIX.STATUS:
                 return (
                     <TaskDetailsSection title={translate("Status")} vertical={vertical} centered={centered}>
-                        <TaskDetailsStatus
+                        <TaskStatus
+                            variant="detail"
                             taskId={task.id}
                             value={task.status}
                             canClear
@@ -105,7 +109,8 @@ export const TaskDetailInfo: FunctionComponent<ITaskDetailInfoProps> = React.mem
             case TASKDETAILMATRIX.DUEDATE:
                 return (
                     <TaskDetailsSection title={translate("Due Date")} vertical={vertical} centered={centered}>
-                        <TaskDetailsDueDate
+                        <TaskDateField
+                            kind="due"
                             value={task.duedate ?? null}
                             disabled={disabled}
                             minDate={task.startdate ?? undefined}
@@ -120,7 +125,8 @@ export const TaskDetailInfo: FunctionComponent<ITaskDetailInfoProps> = React.mem
                         vertical={vertical}
                         centered={centered}
                     >
-                        <TaskDetailsStartDate
+                        <TaskDateField
+                            kind="start"
                             value={task.startdate ?? null}
                             disabled={disabled}
                             maxDate={task.duedate ?? undefined}

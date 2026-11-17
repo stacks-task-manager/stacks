@@ -6,12 +6,12 @@ The authenticated `POST /api/export` endpoint creates Stacks-branded attachments
 
 Every request includes `type`, `format`, `data`, and an optional `title`. Entity names come from `ExportEntityType` in `@stacks/types`.
 
-| Format  | Allowed types                                                 | Response                                            |
-| ------- | ------------------------------------------------------------- | --------------------------------------------------- |
-| `pdf`   | `task`, `project`, `person`, `company`, `bookmark`, `notepad` | `application/pdf` attachment                        |
-| `html`  | `notepad` only                                                | `text/html; charset=utf-8` attachment               |
-| `json`  | all six types                                                 | JSON attachment preserving the supplied data        |
-| `excel` | all six types                                                 | XLSX attachment built from normalized supplied data |
+| Format  | Allowed types   | Response                                            |
+| ------- | --------------- | --------------------------------------------------- |
+| `pdf`   | all seven types | `application/pdf` attachment                        |
+| `html`  | `notepad` only  | `text/html; charset=utf-8` attachment               |
+| `json`  | all seven types | JSON attachment preserving the supplied data        |
+| `excel` | all seven types | XLSX attachment built from normalized supplied data |
 
 Invalid format/type combinations return `400`. Filenames use a sanitized title plus a local timestamp.
 

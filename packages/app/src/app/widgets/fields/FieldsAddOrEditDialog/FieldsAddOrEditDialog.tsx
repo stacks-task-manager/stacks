@@ -154,6 +154,7 @@ export const FieldsAddOrEditDialog: FunctionComponent<FieldsAddOrEditDialogProps
                                     placeholder={translate("Field title")}
                                     value={title}
                                     fill
+                                    data-testid="field-dialog-title"
                                     onChange={handleSetTitle}
                                 />
                             </FormGroup>
@@ -357,6 +358,7 @@ export const FieldsAddOrEditDialog: FunctionComponent<FieldsAddOrEditDialogProps
                             intent={Intent.PRIMARY}
                             disabled={!canSave}
                             loading={saving}
+                            data-testid="field-dialog-save"
                             onClick={handleSaveField}
                         >
                             {translate("Save")}

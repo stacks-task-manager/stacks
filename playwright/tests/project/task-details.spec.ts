@@ -35,8 +35,10 @@ test.describe("Project - Task details", () => {
     let mainStackId: string;
     let baseTaskId: string;
     let originalTaskDetailsPreferences: Record<string, boolean> = {};
+    let originalDialogTask = false;
     let preferences: Preferences;
     let taskDetails: TaskDetails;
+    let tasksTable: TasksTable;
     const ownedTagIds: string[] = [];
     let statusTagIds: { tagId: string; otherTagId: string; statusId: string; otherStatusId: string };
 
@@ -49,6 +51,14 @@ test.describe("Project - Task details", () => {
         board = new BoardView(page);
         preferences = new Preferences(page);
         taskDetails = new TaskDetails(page);
+
+        // Task details tests assume the drawer (side panel) presentation. If the
+        // `dialogTask` preference was left in dialog-window mode, pin it to the drawer
+        // for the run and record the original value so afterAll reverts it.
+        originalDialogTask = Boolean((await preferences.snapshotPreferences()).dialogTask);
+        if (originalDialogTask) {
+            await preferences.setPref("dialogTask", false);
+        }
 
         const taskDetailsSettings = [
             "Show attachments",
@@ -84,7 +94,7 @@ test.describe("Project - Task details", () => {
             },
         });
         baseTaskId = await board.getCardIdByName(TASK_TITLE);
-        const tasksTable = new TasksTable(page);
+        tasksTable = new TasksTable(page);
         const createOwnedTag = async (type: "tag" | "status") => {
             const id = await tasksTable.findOrCreateTagViaApi({
                 title: `E02 ${type} ${randomUUID()}`,
@@ -129,6 +139,7 @@ test.describe("Project - Task details", () => {
             for (const [setting, checked] of Object.entries(originalTaskDetailsPreferences)) {
                 await attempt(() => preferences.setSwitch("Task details", setting, checked));
             }
+            await attempt(() => preferences.setPref("dialogTask", originalDialogTask));
             await attempt(() => preferences.closePreferences());
         }
         await attempt(closeDb);
@@ -299,6 +310,65 @@ test.describe("Project - Task details", () => {
         await expect(taskDetails.menuItem("task-details-menu-archive")).toBeVisible();
         await expect(taskDetails.menuItem("task-details-menu-delete")).toBeVisible();
         await taskDetails.closeMenu();
+    });
+
+    test("Should export the task as XLSX, JSON, and PDF", async () => {
+        await taskDetails.openProjectTask(projectId, baseTaskId);
+        await taskDetails.waitUntilOpen();
+
+        const xlsx = await taskDetails.exportTask("xlsx");
+        taskDetails.expectExportResult(xlsx, "xlsx", "task");
+        expect(xlsx.body.length).toBeGreaterThan(0);
+
+        const json = await taskDetails.exportTask("json");
+        taskDetails.expectExportResult(json, "json", "task");
+        const payload = JSON.parse(json.body.toString("utf-8"));
+        expect(payload.task.id).toBe(baseTaskId);
+
+        const pdf = await taskDetails.exportTask("pdf");
+        taskDetails.expectExportResult(pdf, "pdf", "task");
+        expect(pdf.body.subarray(0, 4).toString()).toBe("%PDF");
+    });
+
+    test("Should detach a subtask from its parent", async () => {
+        const subtaskId = await tasksTable.createTaskViaApi({
+            projectId,
+            stackId: mainStackId,
+            title: `Subtask detach ${randomUUID()}`,
+            parentId: baseTaskId,
+        });
+        try {
+            await taskDetails.openProjectTask(projectId, subtaskId);
+            await taskDetails.waitUntilOpen();
+
+            await taskDetails.openMenu();
+            await expect(taskDetails.menuItem("task-details-menu-detach-parent")).toBeVisible();
+            await taskDetails.closeMenu();
+
+            await taskDetails.detachParent();
+
+            // Detached: the menu now offers "Attach task" instead.
+            await taskDetails.openMenu();
+            await expect(taskDetails.menuItem("task-details-menu-attach-parent")).toBeVisible();
+            await taskDetails.closeMenu();
+        } finally {
+            await taskDetails.close().catch(() => undefined);
+        }
+    });
+
+    test("Should schedule a task reminder", async () => {
+        await taskDetails.openProjectTask(projectId, baseTaskId);
+        await taskDetails.waitUntilOpen();
+        try {
+            await taskDetails.addReminderTomorrow();
+
+            // The scheduled reminder is listed in the popup.
+            await taskDetails.openReminderPopup();
+            await expect(taskDetails.reminderItem).toBeVisible();
+        } finally {
+            await taskDetails.close().catch(() => undefined);
+            await getDb().cleanupReminders(baseTaskId);
+        }
     });
 
     test("Should add, reload, and remove task dependencies", async () => {

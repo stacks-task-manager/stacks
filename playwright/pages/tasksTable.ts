@@ -426,6 +426,14 @@ class TasksTable {
         }
     }
 
+    /** Sets the start date of a task through the API (the timebox board groups by start date). */
+    public async setTaskStartDateViaApi(taskId: string, startDate: string) {
+        const response = await this.mutateApi("PATCH", `/api/tasks/${taskId}`, { startdate: startDate });
+        if (!response.ok) {
+            throw new Error(`Setting task start date failed with HTTP ${response.status}`);
+        }
+    }
+
     /** Creates a task inside a project stack through the API. Returns the new task id. */
     public async createTaskViaApi({
         projectId,
@@ -449,6 +457,18 @@ class TasksTable {
     public async setTaskAssigneesViaApi(taskId: string, personIds: string[]) {
         const response = await this.mutateApi("PATCH", `/api/tasks/${taskId}`, { assignees: personIds });
         if (!response.ok) throw new Error(`Setting task assignees failed with HTTP ${response.status}`);
+    }
+
+    /** Replaces the links of a task through the API (each link's id is caller-chosen). */
+    public async setTaskLinksViaApi(
+        taskId: string,
+        links: Array<{ id: string; url: string; title: string }>
+    ) {
+        const now = new Date().toISOString();
+        const response = await this.mutateApi("PATCH", `/api/tasks/${taskId}`, {
+            links: links.map(link => ({ ...link, created: now, updated: now })),
+        });
+        if (!response.ok) throw new Error(`Setting task links failed with HTTP ${response.status}`);
     }
 
     /** Marks a task complete or open through the API. */

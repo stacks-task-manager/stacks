@@ -1,5 +1,5 @@
 import { expect, Locator, Page } from "@playwright/test";
-import Base from "./base";
+import Base, { ExportResult } from "./base";
 
 const VIEW_TEST_ID = "bookmarks-view";
 const ROW_PREFIX = "bookmark-row-";
@@ -86,6 +86,17 @@ class Bookmarks extends Base {
 
     public async reload(): Promise<void> {
         await this.page.reload({ waitUntil: "networkidle" });
+    }
+
+    /** Opens the toolbar export menu and triggers the given export format. */
+    public async exportBookmarks(format: "xlsx" | "json" | "pdf"): Promise<ExportResult> {
+        await this.page.getByTestId("bookmarks-menu-button").click();
+        const exportParent = this.page.getByTestId("bookmarks-menu-export");
+        await exportParent.waitFor({ state: "visible" });
+        await exportParent.hover();
+        const item = this.page.getByTestId(`bookmarks-menu-export-${format}`);
+        await item.waitFor({ state: "visible" });
+        return this.captureExport(() => item.click());
     }
 
     /** Types a toolbar search query, which the view filters through `BookmarksStore.query`. */
