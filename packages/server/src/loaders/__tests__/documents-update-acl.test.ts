@@ -11,11 +11,9 @@ vi.mock("@stacks/db", () => ({
     AttachmentEntity: {},
     DocumentEntity: {
         associations: {},
-        count: vi.fn().mockResolvedValue(1),
         findOne: vi.fn(),
         hasMany: vi.fn(),
         hasOne: vi.fn(),
-        update: vi.fn().mockResolvedValue([1]),
     },
     PermissionEntity: {
         belongsTo: vi.fn(),
@@ -71,6 +69,7 @@ describe("DocumentsLoader update ACL", () => {
         vi.clearAllMocks();
         findOneMock.mockImplementation(({ id }) => Promise.resolve(document(id)));
         updateOneMock.mockResolvedValue(document(documentId));
+        findAllMock.mockResolvedValue([]);
     });
 
     it("allows ACL-visible documents to be moved into an ACL-visible folder", async () => {
@@ -81,6 +80,28 @@ describe("DocumentsLoader update ACL", () => {
                 id: documentId,
                 writePolicy: "visible",
             })
+        );
+    });
+
+    it("renumbers the destination parent densely instead of trusting the stored order values", async () => {
+        // Root siblings whose stored orders have holes (archived and deleted children keep theirs).
+        findAllMock.mockResolvedValue([
+            { id: "a", parent: rootId, order: 0 },
+            { id: "b", parent: rootId, order: 4 },
+            { id: documentId, parent: rootId, order: 9 },
+        ]);
+
+        await DocumentsLoader.update(documentId, { parent: rootId, order: 1 });
+
+        // Position 1 means "between a and b", so the sequence becomes a=0, moved=1, b=2. Only b
+        // actually changes, so it is the only sibling written; a keeps order 0.
+        const orderWrites = updateOneMock.mock.calls
+            .map(([args]) => args)
+            .filter(args => args.data && Object.keys(args.data).every(key => key === "order"))
+            .map(args => `${args.id}:${args.data.order}`);
+        expect(orderWrites).toEqual(["b:2"]);
+        expect((updateOneMock.mock.calls[0][0] as any).data).toEqual(
+            expect.objectContaining({ parent: rootId, order: 1 })
         );
     });
 

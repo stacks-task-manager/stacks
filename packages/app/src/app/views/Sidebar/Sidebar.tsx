@@ -1,17 +1,15 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { HotkeysProvider, Menu, MenuDivider, MenuItem, Popover } from "@blueprintjs/core";
-import { DropOptions, NodeModel, Tree, TreeMethods } from "@minoru/react-dnd-treeview";
 import { translate } from "@stacks/translations";
 import { SIDEBAR_MENU_LABELS } from "app/locale/dynamic-messages";
 import classnames from "classnames";
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
+import React, { useEffect, useMemo, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { ROLE_SECTIONS, SIDEBARICON, SIDEBARITEMS, TreeNode } from "@stacks/types";
 import { Body, Content, Footer } from "app/components";
-import { BlankSlate, Icon, Scroller } from "app/components/common";
+import { BlankSlate, Icon, Scroller, Tree } from "app/components/common";
+import { TreeDropOptions } from "app/components/common/Tree/types";
 import { TimeTracker } from "app/components/project";
 import { canRead, publish, useDocuments, useMousetrap, usePreferences } from "app/hooks";
 import { shallowEqual, strictEqual } from "app/hooks/store";
@@ -53,7 +51,6 @@ const SidebarToggle = () => {
 };
 
 const SidebarBody = () => {
-    const treeMethods = useRef<TreeMethods | null>(null);
     const { hideGeneral } = usePreferences(["hideGeneral"]);
     const { isLoading, documents } = useDocuments();
     const dragRef = useRef<null | string>(null);
@@ -79,11 +76,11 @@ const SidebarBody = () => {
         );
     }
 
-    const handleDragStart = (node: NodeModel) => {
-        dragRef.current = `${node.id}`;
+    const handleDragStart = (id: string | number) => {
+        dragRef.current = `${id}`;
     };
 
-    const handleDrop = (_newDocuments: NodeModel[], options: DropOptions) => {
+    const handleDrop = (options: TreeDropOptions) => {
         if (!dragRef.current) return;
         if (options.destinationIndex == null) return;
         RecordActions.setDocuments(dragRef.current, `${options.dropTargetId}`, options.destinationIndex);
@@ -94,7 +91,7 @@ const SidebarBody = () => {
             <Scroller thin vertical>
                 <SidebarMenu />
                 <HotkeysProvider>
-                    <DocumentsAdder treeMethods={treeMethods.current} padded={!hideGeneral} />
+                    <DocumentsAdder padded={!hideGeneral} />
                 </HotkeysProvider>
 
                 {documents.length === 0 && (
@@ -105,31 +102,13 @@ const SidebarBody = () => {
 
                 <div data-testid="documents-tree">
                     <Tree
-                        tree={documents}
-                        ref={treeMethods}
+                        nodes={documents}
                         rootId="00000000-0000-0000-0000-000000000000"
+                        openIds={openedFolders}
+                        onOpenChange={ids => setOpenFolders(ids as string[])}
                         onDrop={handleDrop}
                         onDragStart={handleDragStart}
-                        onChangeOpen={setOpenFolders}
-                        initialOpen={openedFolders}
-                        classes={{
-                            root: "tree",
-                        }}
-                        insertDroppableFirst={false}
-                        sort={false}
-                        render={(node: NodeModel, { depth, isOpen, onToggle }) => {
-                            if (node.droppable)
-                                return (
-                                    <Folder
-                                        folder={node as TreeNode}
-                                        isOpen={isOpen}
-                                        onClick={onToggle}
-                                        depth={depth}
-                                    />
-                                );
-                            return <Document record={node as TreeNode} depth={depth} />;
-                        }}
-                        canDrop={(_tree, { dragSource, dropTargetId }) => {
+                        canDrop={(_nodes, { dragSource, dropTargetId }) => {
                             if (dragSource?.parent === dropTargetId) return true;
                         }}
                         dropTargetOffset={10}
@@ -141,6 +120,18 @@ const SidebarBody = () => {
                                 }}
                             />
                         )}
+                        render={(node, { depth, isOpen, onToggle }) => {
+                            if (node.droppable)
+                                return (
+                                    <Folder
+                                        folder={node as TreeNode}
+                                        isOpen={isOpen}
+                                        onClick={onToggle}
+                                        depth={depth}
+                                    />
+                                );
+                            return <Document record={node as TreeNode} depth={depth} />;
+                        }}
                     />
                 </div>
             </Scroller>
@@ -161,7 +152,6 @@ const SidebarFooter = () => {
 
 const SidebarPure = () => {
     const isSidebarVisible = GlobalStore.use(state => state.isSidebarVisible, strictEqual);
-    const [sidebar, setSidebar] = useState<HTMLDivElement | null>(null);
 
     useEffect(() => {
         BookmarksActions.load();
@@ -194,16 +184,11 @@ const SidebarPure = () => {
                 closed: !isSidebarVisible,
             })}
             data-testid="sidebar"
-            ref={setSidebar}
         >
             <SidebarToggle />
             <Content>
                 {/* <SidebarToolbar /> */}
-                {sidebar && (
-                    <DndProvider backend={HTML5Backend} options={{ rootElement: sidebar }}>
-                        <SidebarBody />
-                    </DndProvider>
-                )}
+                <SidebarBody />
                 <SidebarFooter />
             </Content>
         </div>

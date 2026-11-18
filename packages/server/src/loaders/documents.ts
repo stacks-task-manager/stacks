@@ -1,8 +1,8 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
-import { AttachmentEntity, DocumentEntity, PermissionEntity, sequelize } from "@stacks/db";
+import { AttachmentEntity, DocumentEntity, PermissionEntity } from "@stacks/db";
 import { Errors } from "../errors";
 import { FILES_TYPE, POLLINGACTIONS, POLLINGTYPE, RECORDTYPE, TreeNode } from "@stacks/types";
-import { Op, Transaction } from "sequelize";
+import { Transaction } from "sequelize";
 import { type IDocumentCreate } from "../types";
 import { getCurrentUser } from "./context";
 import { FilesLoader } from "./files";
@@ -15,7 +15,6 @@ import {
     deleteOne,
     findAll,
     findOne,
-    sanitizeWhere,
     updateOne,
     withTransaction,
 } from "./utils";
@@ -257,6 +256,33 @@ async function getChildren(parent: string, transaction?: Transaction): Promise<T
     });
 }
 
+/** Children of a parent as `{ id, order }`, in sequence order (id breaks order ties). */
+const orderedChildren = (children: TreeNode[]): Array<{ id: string; order: number }> =>
+    children
+        .map(child => ({ id: String(child.id), order: Number(child.order ?? 0) }))
+        .sort((a, b) => a.order - b.order || (String(a.id) < String(b.id) ? -1 : 1));
+
+/**
+ * Writes `order` as a dense 0..n-1 sequence. `order` is what the sidebar renders and what every move
+ * depends on, so the sequence is rebuilt instead of shifted: archived or deleted children otherwise
+ * leave holes that make a position point at a different document than the one it was dropped on.
+ */
+async function renumberSiblings(
+    sequence: Array<{ id: string; order: number }>,
+    transaction: Transaction
+): Promise<void> {
+    for (const [index, sibling] of sequence.entries()) {
+        if (Number(sibling.order) === index) continue;
+        await updateOne({
+            entity: DocumentEntity,
+            id: sibling.id,
+            data: { order: index },
+            writePolicy: "visible",
+            transaction,
+        });
+    }
+}
+
 /**
  * Update a document by its ID.
  * @param id The ID of the document to update.
@@ -291,18 +317,24 @@ async function update(id: string, data: any, extTransaction?: Transaction): Prom
             }
         }
 
-        // Clamp destination index to valid sibling range
+        // `order` is the position of the document among its parent's children. Resolve it against
+        // the current sibling sequence instead of the raw order values: children are renumbered
+        // densely after every move, but archived and deleted ones leave holes, so a position and an
+        // order value only coincide right after a renumbering.
+        let destinationSequence: Array<{ id: string; order: number }> = [];
+        let sourceSequence: Array<{ id: string; order: number }> = [];
         if (data.order != null) {
-            const destCount = await DocumentEntity.count({
-                where: sanitizeWhere({ parent: newParent }),
-                transaction,
-            });
-            if (oldParent === newParent) {
-                newPosition = Math.max(0, Math.min(newPosition, Math.max(destCount - 1, 0)));
-            } else {
-                newPosition = Math.max(0, Math.min(newPosition, destCount));
-            }
+            const destination = orderedChildren(await getChildren(newParent, transaction));
+            const others = destination.filter(sibling => sibling.id !== id);
+            newPosition = Math.max(0, Math.min(newPosition, others.length));
             data.order = newPosition;
+            destinationSequence = [...others];
+            destinationSequence.splice(newPosition, 0, { id, order: newPosition });
+
+            if (oldParent !== newParent) {
+                const previous = orderedChildren(await getChildren(oldParent, transaction));
+                sourceSequence = previous.filter(sibling => sibling.id !== id);
+            }
         }
 
         await getOne(id, transaction);
@@ -322,75 +354,8 @@ async function update(id: string, data: any, extTransaction?: Transaction): Prom
         });
 
         if (data.order != null) {
-            if (oldParent === newParent) {
-                // Same parent reorder: adjust only siblings in the same parent
-                if (oldPosition < newPosition) {
-                    // Move forward: shift siblings (oldPosition, newPosition] up by 1
-                    await DocumentEntity.update(
-                        {
-                            order: sequelize.literal(`"order" - 1`),
-                        },
-                        {
-                            where: sanitizeWhere({
-                                parent: oldParent,
-                                id: { [Op.ne]: id },
-                                order: { [Op.gt]: oldPosition, [Op.lte]: newPosition },
-                            }),
-                            transaction,
-                            returning: false,
-                        }
-                    );
-                } else if (oldPosition > newPosition) {
-                    // Move backward: shift siblings [newPosition, oldPosition) down by 1
-                    await DocumentEntity.update(
-                        {
-                            order: sequelize.literal(`"order" + 1`),
-                        },
-                        {
-                            where: sanitizeWhere({
-                                parent: oldParent,
-                                id: { [Op.ne]: id },
-                                order: { [Op.gte]: newPosition, [Op.lt]: oldPosition },
-                            }),
-                            transaction,
-                            returning: false,
-                        }
-                    );
-                }
-            } else {
-                // Cross-parent move
-                // 1) Open slot in destination parent: shift siblings at/after newPosition up by 1
-                await DocumentEntity.update(
-                    {
-                        order: sequelize.literal(`"order" + 1`),
-                    },
-                    {
-                        where: sanitizeWhere({
-                            parent: newParent,
-                            id: { [Op.ne]: id },
-                            order: { [Op.gte]: newPosition },
-                        }),
-                        transaction,
-                        returning: false,
-                    }
-                );
-
-                // 2) Close gap in source parent: shift siblings above oldPosition down by 1
-                await DocumentEntity.update(
-                    {
-                        order: sequelize.literal(`"order" - 1`),
-                    },
-                    {
-                        where: sanitizeWhere({
-                            parent: oldParent,
-                            id: { [Op.ne]: id },
-                            order: { [Op.gt]: oldPosition },
-                        }),
-                        transaction,
-                        returning: false,
-                    }
-                );
-            }
+            await renumberSiblings(destinationSequence, transaction);
+            await renumberSiblings(sourceSequence, transaction);
         }
 
         afterTransactionCommit(transaction, () => {

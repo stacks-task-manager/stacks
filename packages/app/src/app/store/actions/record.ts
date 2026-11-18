@@ -110,82 +110,67 @@ const hasDocument = (documentId: string | number) => {
 };
 
 // this is called by the tree component when a document was reallocated
+/**
+ * Children of one parent in the order the sidebar renders them: by `order`, then by sequence.
+ * Archived children are included - they are hidden in the tree but keep their `order`.
+ */
+const siblingsOf = (documents: TreeNode[], parent: string) =>
+    documents
+        .filter(document => String(document.parent) === String(parent))
+        .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+
 const setDocuments = async (documentId: string, parent: string, destinationIndex: number) => {
     const documents = cloneDeep(RecordsStore.get().documents);
     const movedDocument = documents.find(document => document.id === documentId);
-    const sourceIndex = movedDocument?.order ?? -1;
-    const sourceParent = movedDocument?.parent;
 
     // No-op: dropping onto itself
-    if (documentId === parent) return;
-    // Not found or missing order
-    if (!movedDocument || sourceIndex === -1) return;
+    if (!movedDocument || documentId === parent) return;
 
-    const sameParent = sourceParent === parent;
-    // No-op: same parent & same index
-    if (sameParent && sourceIndex === destinationIndex) return;
+    const sourceParent = movedDocument.parent;
+    const current = siblingsOf(documents, parent);
+    // The tree draws the visible children and keeps the dragged row in that list, so its slot counts
+    // that row. Translate it into the sibling sequence without it: a slot below the dragged row shifts
+    // up by one, which is exactly the downward move that would otherwise land one row too low.
+    const rendered = current.filter(document => document.archived === null);
+    const sourceSlot = rendered.findIndex(document => document.id === documentId);
+    const destination = current.filter(document => document.id !== documentId);
+    const visible = destination.filter(document => document.archived === null);
 
-    let targetIndex = destinationIndex;
+    const renderedSlot = Math.max(
+        0,
+        Math.min(destinationIndex, visible.length + (sourceSlot === -1 ? 0 : 1))
+    );
+    const slot = Math.max(
+        0,
+        Math.min(
+            sourceSlot !== -1 && sourceSlot < renderedSlot ? renderedSlot - 1 : renderedSlot,
+            visible.length
+        )
+    );
 
-    if (sameParent) {
-        // Reorder within the same parent: clamp destination to valid range
-        const siblingCount = documents.filter(d => d.parent === sourceParent).length;
-        targetIndex = Math.max(0, Math.min(destinationIndex, siblingCount - 1));
+    // No-op: the row already occupies that slot
+    if (sourceParent === parent && sourceSlot === slot) return;
 
-        if (sourceIndex < targetIndex) {
-            // Move down: shift siblings between (sourceIndex, targetIndex] up by 1
-            documents.forEach(d => {
-                if (
-                    d.parent === sourceParent &&
-                    d.id !== documentId &&
-                    (d.order ?? 0) > sourceIndex &&
-                    (d.order ?? 0) <= targetIndex
-                ) {
-                    d.order = (d.order ?? 0) - 1;
-                }
-            });
-        } else {
-            // Move up: shift siblings between [targetIndex, sourceIndex) down by 1
-            documents.forEach(d => {
-                if (
-                    d.parent === sourceParent &&
-                    d.id !== documentId &&
-                    (d.order ?? 0) >= targetIndex &&
-                    (d.order ?? 0) < sourceIndex
-                ) {
-                    d.order = (d.order ?? 0) + 1;
-                }
-            });
-        }
-        movedDocument.order = targetIndex;
-    } else {
-        // Move across parents
-        // Clamp destination to valid range in destination parent
-        const destSiblingCount = documents.filter(d => d.parent === parent).length;
-        targetIndex = Math.max(0, Math.min(destinationIndex, destSiblingCount));
+    // Resolve the slot in the full sibling sequence so a hidden child can never shift the row past
+    // where it was dropped.
+    const insertAt = slot < visible.length ? destination.indexOf(visible[slot]) : destination.length;
 
-        // Close gap in source parent: shift down siblings with order > sourceIndex
-        documents.forEach(d => {
-            if (d.parent === sourceParent && d.id !== documentId && (d.order ?? 0) > sourceIndex) {
-                d.order = (d.order ?? 0) - 1;
-            }
+    destination.splice(insertAt, 0, movedDocument);
+    movedDocument.parent = parent;
+
+    // `order` is a dense 0..n-1 sequence per parent: the tree renders it and the API persists it.
+    destination.forEach((document, index) => {
+        document.order = index;
+    });
+    if (sourceParent !== parent) {
+        siblingsOf(documents, sourceParent).forEach((document, index) => {
+            document.order = index;
         });
-
-        // Open slot in destination parent: shift up siblings with order >= targetIndex
-        documents.forEach(d => {
-            if (d.parent === parent && (d.order ?? 0) >= targetIndex) {
-                d.order = (d.order ?? 0) + 1;
-            }
-        });
-
-        // Reassign moved document
-        movedDocument.parent = parent;
-        movedDocument.order = targetIndex;
     }
 
     RecordsStore.set(
         produce((state: IRecordsStore) => {
-            state.documents = documents.sort((a, b) => a.order - b.order);
+            state.documents = documents.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
         })
     );
 

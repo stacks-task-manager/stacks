@@ -3,7 +3,6 @@ import { translate } from "@stacks/translations";
 import React, { FunctionComponent, useState } from "react";
 import { Intent, Menu, MenuDivider, MenuItem } from "@blueprintjs/core";
 import { useMatch, useNavigate } from "react-router-dom";
-import { useDragOver } from "@minoru/react-dnd-treeview";
 import { shallowEqual } from "app/hooks/store";
 
 import { TreeNode } from "@stacks/types";
@@ -22,7 +21,6 @@ interface IFolder2Props {
 }
 export const Folder: FunctionComponent<IFolder2Props> = ({ folder, depth, isOpen, onClick }) => {
     const selectedRecord = SidebarStore.use(state => state.selectedRecord, shallowEqual);
-    const dragOverProps = useDragOver(folder.id, isOpen, onClick);
     const navigate = useNavigate();
     const match = useMatch("/:type/:id");
     const [isEditing, setIsEditing] = useState(false);
@@ -119,7 +117,6 @@ export const Folder: FunctionComponent<IFolder2Props> = ({ folder, depth, isOpen
             isLoading={isLoading}
             disabled={isLoading}
             onChange={handleSave}
-            {...dragOverProps}
         ></SidebarButton>
     );
 };

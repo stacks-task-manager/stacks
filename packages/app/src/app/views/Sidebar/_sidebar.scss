@@ -91,34 +91,6 @@
     align-items: stretch;
 }
 
-.tree,
-.tree ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-
-.tree {
-    margin-bottom: 10px;
-}
-
-.tree-placeholder {
-    margin-right: 10px;
-    position: relative;
-    height: 10px;
-
-    &::after {
-        content: "";
-        height: 2px;
-        position: absolute;
-        right: 0;
-        left: 0;
-        top: 50%;
-        margin-top: -1px;
-        background-color: #1967d2;
-    }
-}
-
 .#{$ns}-dark {
     .sidebar {
         background-color: $sidebar-background-dark;
