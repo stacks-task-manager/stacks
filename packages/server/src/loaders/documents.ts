@@ -2,9 +2,10 @@
 import { AttachmentEntity, DocumentEntity, PermissionEntity } from "@stacks/db";
 import { Errors } from "../errors";
 import { FILES_TYPE, POLLINGACTIONS, POLLINGTYPE, RECORDTYPE, TreeNode } from "@stacks/types";
-import { Transaction } from "sequelize";
+import { literal, Op, Transaction } from "sequelize";
 import { type IDocumentCreate } from "../types";
 import { getCurrentUser } from "./context";
+import { pgStringLiteral } from "./sqlLiteral";
 import { FilesLoader } from "./files";
 import { NotepadsLoader } from "./notepads";
 import { PermissionsLoader } from "./permissions";
@@ -15,6 +16,7 @@ import {
     deleteOne,
     findAll,
     findOne,
+    sanitizeWhere,
     updateOne,
     withTransaction,
 } from "./utils";
@@ -263,24 +265,34 @@ const orderedChildren = (children: TreeNode[]): Array<{ id: string; order: numbe
         .sort((a, b) => a.order - b.order || (String(a.id) < String(b.id) ? -1 : 1));
 
 /**
- * Writes `order` as a dense 0..n-1 sequence. `order` is what the sidebar renders and what every move
- * depends on, so the sequence is rebuilt instead of shifted: archived or deleted children otherwise
- * leave holes that make a position point at a different document than the one it was dropped on.
+ * Writes `order` as a dense 0..n-1 sequence in a single rewrite. `order` is what the sidebar renders
+ * and what every move depends on, so the sequence is rebuilt instead of shifted: archived or deleted
+ * children otherwise leave holes that make a position point at a different document than the one it
+ * was dropped on. `sequence` comes from the ACL-scoped `getChildren` read, so restricting the update
+ * to those ids keeps the write within what the user can see.
  */
 async function renumberSiblings(
     sequence: Array<{ id: string; order: number }>,
     transaction: Transaction
 ): Promise<void> {
-    for (const [index, sibling] of sequence.entries()) {
-        if (Number(sibling.order) === index) continue;
-        await updateOne({
-            entity: DocumentEntity,
-            id: sibling.id,
-            data: { order: index },
-            writePolicy: "visible",
+    const changes = sequence
+        .map((sibling, index) => ({ id: sibling.id, order: Number(sibling.order), index }))
+        .filter(sibling => sibling.order !== sibling.index);
+    if (changes.length === 0) return;
+
+    const cases = changes
+        .map(sibling => `WHEN ${pgStringLiteral(sibling.id)} THEN ${sibling.index}`)
+        .join(" ");
+    await DocumentEntity.update(
+        {
+            order: literal(`CASE "id"::text ${cases} ELSE "order" END`),
+        },
+        {
+            where: sanitizeWhere({ id: { [Op.in]: changes.map(sibling => sibling.id) } }),
             transaction,
-        });
-    }
+            returning: false,
+        }
+    );
 }
 
 /**

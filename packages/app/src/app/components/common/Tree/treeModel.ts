@@ -172,9 +172,6 @@ export const isAncestorOf = (
     sourceId: string | number,
     targetId: string | number
 ): boolean => {
-    if (targetId === 0) {
-        return false;
-    }
     const targetNode = nodes.find(node => node.id === targetId);
     if (targetNode === undefined) {
         return false;
@@ -192,7 +189,7 @@ export const isAncestorOf = (
 export const canDropRow = (
     nodes: readonly TreeRowModel[],
     rootId: string | number,
-    dragSource: null | string | TreeRowModel,
+    dragSource: null | TreeRowModel,
     dropTargetId: string | number,
     canDrop?: (nodes: readonly TreeRowModel[], context: TreeDropContext) => boolean | undefined
 ): boolean => {
@@ -204,12 +201,12 @@ export const canDropRow = (
         return Boolean(dropTargetNode?.droppable);
     }
 
-    const dragSourceId = typeof dragSource === "object" ? dragSource.id : null;
+    const dragSourceId = dragSource.id;
     if (canDrop) {
         const result = canDrop(nodes, {
-            dragSourceId: dragSourceId ?? undefined,
+            dragSourceId,
             dropTargetId,
-            dragSource: typeof dragSource === "object" ? dragSource : null,
+            dragSource,
             dropTarget: nodes.find(node => node.id === dropTargetId) ?? null,
         });
         if (result !== undefined) {
@@ -217,18 +214,19 @@ export const canDropRow = (
         }
     }
 
+    // The root is always a valid target for a row dragged from inside the tree.
+    if (dropTargetId === rootId) {
+        return true;
+    }
     if (dragSourceId === dropTargetId) {
         return false;
     }
-    const dragSourceNode = dragSourceId === null ? undefined : nodes.find(node => node.id === dragSourceId);
     const dropTargetNode = nodes.find(node => node.id === dropTargetId);
-    if (dragSourceNode === undefined || dragSourceId === null) {
-        return dropTargetId === rootId || Boolean(dropTargetNode?.droppable);
+    if (!dropTargetNode?.droppable) {
+        return false;
     }
-    if (dropTargetNode === undefined) {
-        return dragSourceNode.parent !== 0;
-    }
-    if (dragSourceNode.parent === dropTargetId || !dropTargetNode.droppable) {
+    const dragSourceNode = nodes.find(node => node.id === dragSourceId);
+    if (dragSourceNode?.parent === dropTargetId) {
         return false;
     }
     return !isAncestorOf(nodes, dragSourceId, dropTargetId);

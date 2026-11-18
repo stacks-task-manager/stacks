@@ -50,6 +50,10 @@ export const Tree: FunctionComponent<TreeProps> = ({
     const [dropTarget, setDropTarget] = useState<DropTarget | null>(null);
     const containerRef = useRef<HTMLUListElement | null>(null);
     const rowEls = useRef(new Map<string | number, HTMLLIElement>());
+    // Synchronous mirror of the `openIds` prop: the auto-open timeout must read the list that is
+    // current when it fires, not the one captured when the timer was scheduled.
+    const openIdsRef = useRef(openIds);
+    openIdsRef.current = openIds;
     // Synchronous mirror of `dropTarget`: `drop` must not depend on a state flush.
     const resolvedTarget = useRef<DropTarget | null>(null);
     const pointerDownEl = useRef<HTMLElement | null>(null);
@@ -136,8 +140,9 @@ export const Tree: FunctionComponent<TreeProps> = ({
         openTimer.current = window.setTimeout(() => {
             openTimer.current = null;
             openTimerRow.current = null;
-            if (!openIds.includes(id)) {
-                onOpenChange([...openIds, id]);
+            const currentOpenIds = openIdsRef.current;
+            if (!currentOpenIds.includes(id)) {
+                onOpenChange([...currentOpenIds, id]);
             }
         }, AUTO_OPEN_DELAY);
     };

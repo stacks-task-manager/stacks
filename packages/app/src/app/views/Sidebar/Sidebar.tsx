@@ -105,7 +105,7 @@ const SidebarBody = () => {
                         nodes={documents}
                         rootId="00000000-0000-0000-0000-000000000000"
                         openIds={openedFolders}
-                        onOpenChange={ids => setOpenFolders(ids as string[])}
+                        onOpenChange={ids => setOpenFolders(ids.map(id => String(id)))}
                         onDrop={handleDrop}
                         onDragStart={handleDragStart}
                         canDrop={(_nodes, { dragSource, dropTargetId }) => {
