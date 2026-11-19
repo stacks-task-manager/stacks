@@ -6639,7 +6639,7 @@ __metadata:
     react-native-keyboard-controller: 1.21.9
     react-native-reanimated: 4.5.1
     react-native-safe-area-context: ~5.7.0
-    react-native-screens: ~4.26.0
+    react-native-screens: ~4.30.1
     react-native-svg: 15.15.4
     react-native-webview: 13.16.1
     react-native-worklets: 0.10.1
@@ -21576,16 +21576,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-screens@npm:~4.26.0":
-  version: 4.26.2
-  resolution: "react-native-screens@npm:4.26.2"
+"react-native-screens@npm:~4.30.1":
+  version: 4.30.1
+  resolution: "react-native-screens@npm:4.30.1"
   dependencies:
     react-freeze: ^1.0.0
     warn-once: ^0.1.0
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: e4aad99f283e1c2a57839959fad93e0222e8bfdf3b59381f378f9949b2e8e76a8c53d1790fce40ec58a5bdcccea1de4a66a0242bb8651587da3822744a51bb4f
+  checksum: 04e1ee936cb3f50074ada1498bebd5ccbaa6654e3a28fa1d5dde9f8458381343d8c1014d17e85fda8a3d36a96ecfae72872a583f84f7c23ad0eb2c5d2654cdc2
   languageName: node
   linkType: hard
 
