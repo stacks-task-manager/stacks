@@ -11,27 +11,25 @@ vi.mock("@stacks/db", () => ({
     AttachmentEntity: {},
     DocumentEntity: {
         associations: {},
-        count: vi.fn().mockResolvedValue(1),
         findOne: vi.fn(),
         hasMany: vi.fn(),
         hasOne: vi.fn(),
-        update: vi.fn().mockResolvedValue([1]),
+        update: vi.fn(),
     },
     PermissionEntity: {
         belongsTo: vi.fn(),
     },
-    sequelize: {
-        literal: vi.fn(value => value),
-    },
 }));
 
-vi.mock("../utils", () => ({
+// Keep the real `sanitizeWhere` so the renumber assertions cover the tenant/deleted scoping; only
+// the database-touching helpers are replaced.
+vi.mock("../utils", async importOriginal => ({
+    ...(await importOriginal<typeof import("../utils")>()),
     afterTransactionCommit: vi.fn(),
     createOne: vi.fn(),
     deleteOne: vi.fn(),
     findAll: findAllMock,
     findOne: findOneMock,
-    sanitizeWhere: vi.fn(value => value),
     updateOne: updateOneMock,
     withTransaction: vi.fn((_transaction, callback) => callback({ id: "transaction" })),
 }));
@@ -47,6 +45,9 @@ vi.mock("../projects", () => ({ ProjectsLoader: {} }));
 vi.mock("../../events", () => ({ sendRealtimeUpdate: vi.fn() }));
 vi.mock("../../utils/cache", () => ({ invalidateApiCacheForCurrentRequest: vi.fn() }));
 
+import { Op } from "sequelize";
+
+import { DocumentEntity } from "@stacks/db";
 import { DocumentsLoader } from "../documents";
 
 const rootId = "00000000-0000-0000-0000-000000000000";
@@ -71,6 +72,8 @@ describe("DocumentsLoader update ACL", () => {
         vi.clearAllMocks();
         findOneMock.mockImplementation(({ id }) => Promise.resolve(document(id)));
         updateOneMock.mockResolvedValue(document(documentId));
+        findAllMock.mockResolvedValue([]);
+        vi.mocked(DocumentEntity.update).mockResolvedValue([0]);
     });
 
     it("allows ACL-visible documents to be moved into an ACL-visible folder", async () => {
@@ -82,6 +85,77 @@ describe("DocumentsLoader update ACL", () => {
                 writePolicy: "visible",
             })
         );
+    });
+
+    it("renumbers the destination parent densely instead of trusting the stored order values", async () => {
+        // Root siblings whose stored orders have holes (archived and deleted children keep theirs).
+        findAllMock.mockResolvedValue([
+            { id: "a", parent: rootId, order: 0 },
+            { id: "b", parent: rootId, order: 4 },
+            { id: documentId, parent: rootId, order: 9 },
+        ]);
+
+        await DocumentsLoader.update(documentId, { parent: rootId, order: 1 });
+
+        // Position 1 means "between a and b", so the sequence becomes a=0, moved=1, b=2. Only b
+        // actually changes, so the dense rewrite touches a single row in one bulk update; a keeps
+        // order 0 and the moved document is written by the main update below.
+        expect(DocumentEntity.update).toHaveBeenCalledTimes(1);
+        const [data, options] = vi.mocked(DocumentEntity.update).mock.calls[0];
+        // The CASE expression is built with sequelize's `literal`, which the loader imports from the
+        // real package, so assert on the raw SQL fragment it carries.
+        expect(data).toEqual({
+            order: expect.objectContaining({ val: 'CASE "id"::text WHEN \'b\' THEN 2 ELSE "order" END' }),
+        });
+        // The real `sanitizeWhere` runs here, so this also pins the tenant/deleted scoping the bulk
+        // write relies on.
+        expect(options).toEqual(
+            expect.objectContaining({
+                where: { id: { [Op.in]: ["b"] }, tenant: "tenant-1", deleted: null },
+                returning: false,
+            })
+        );
+        expect((updateOneMock.mock.calls[0][0] as any).data).toEqual(
+            expect.objectContaining({ parent: rootId, order: 1 })
+        );
+    });
+
+    it("rewrites every changed sibling in one CASE update", async () => {
+        findAllMock.mockResolvedValue([
+            { id: "a", parent: rootId, order: 0 },
+            { id: "b", parent: rootId, order: 4 },
+            { id: "c", parent: rootId, order: 8 },
+            { id: documentId, parent: rootId, order: 9 },
+        ]);
+
+        await DocumentsLoader.update(documentId, { parent: rootId, order: 1 });
+
+        // Sequence becomes a=0, moved=1, b=2, c=3: a and the moved document are unchanged, so b and
+        // c must both be rewritten by the single statement and no other id may be in its scope.
+        expect(DocumentEntity.update).toHaveBeenCalledTimes(1);
+        const [data, options] = vi.mocked(DocumentEntity.update).mock.calls[0];
+        expect(data).toEqual({
+            order: expect.objectContaining({
+                val: "CASE \"id\"::text WHEN 'b' THEN 2 WHEN 'c' THEN 3 ELSE \"order\" END",
+            }),
+        });
+        expect(options).toEqual(
+            expect.objectContaining({
+                where: { id: { [Op.in]: ["b", "c"] }, tenant: "tenant-1", deleted: null },
+            })
+        );
+    });
+
+    it("skips the bulk rewrite when the sibling sequence is already dense", async () => {
+        findAllMock.mockResolvedValue([
+            { id: "a", parent: rootId, order: 0 },
+            { id: documentId, parent: rootId, order: 1 },
+            { id: "b", parent: rootId, order: 2 },
+        ]);
+
+        await DocumentsLoader.update(documentId, { parent: rootId, order: 1 });
+
+        expect(DocumentEntity.update).not.toHaveBeenCalled();
     });
 
     it("keeps non-move document updates restricted to the ACL owner", async () => {

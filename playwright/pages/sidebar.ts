@@ -475,8 +475,13 @@ class Sidebar extends Base {
     }
 
     public async dragDocumentOnto(documentId: string, folderId: string) {
-        const sourceBox = await this.documentItem(documentId).boundingBox();
-        const targetBox = await this.folderItem(folderId).boundingBox();
+        const source = this.documentItem(documentId);
+        const target = this.folderItem(folderId);
+        await source.scrollIntoViewIfNeeded();
+        await target.scrollIntoViewIfNeeded();
+        await source.scrollIntoViewIfNeeded();
+        const sourceBox = await source.boundingBox();
+        const targetBox = await target.boundingBox();
         if (!sourceBox || !targetBox) {
             throw new Error(`Cannot drag document ${documentId} because a tree row has no bounding box`);
         }
@@ -493,6 +498,10 @@ class Sidebar extends Base {
         await mouse.move(targetBox.x + targetBox.width / 2, targetBox.y + targetBox.height * 0.75, {
             steps: 12,
         });
+        // Restate the final position: Chromium coalesces the `dragover` events of a multi-step
+        // synthetic move, and a real pointer keeps producing them while it is held there.
+        await this.page.waitForTimeout(100);
+        await mouse.move(targetBox.x + targetBox.width / 2, targetBox.y + targetBox.height * 0.75 + 1);
         await mouse.up();
 
         const response = await responsePromise;
@@ -500,6 +509,116 @@ class Sidebar extends Base {
             response.ok(),
             `Document reorder PATCH returned ${response.status()}: ${await response.text()}`
         ).toBeTruthy();
+    }
+
+    public treeRowItem(id: string): Locator {
+        return this.documentsTree.locator(
+            `[data-testid="sidebar-document-${id}"], [data-testid="sidebar-folder-${id}"]`
+        );
+    }
+
+    /**
+     * Drags a tree row (document or folder) onto another tree row at a vertical
+     * position within the target row ("top" | "middle" | "bottom") and waits
+     * for the reorder PATCH.
+     */
+    public async dragTreeRowToPosition(
+        sourceId: string,
+        targetId: string,
+        position: "top" | "middle" | "bottom"
+    ) {
+        const { sourceBox, targetBox } = await this.treeRowBoxes(sourceId, targetId);
+        const yRatio = position === "top" ? 0.08 : position === "bottom" ? 0.92 : 0.5;
+        const nudge = position === "top" ? -1 : 1;
+        const mouse = this.page.mouse;
+
+        const responsePromise = this.page.waitForResponse(
+            (response: any) =>
+                response.request().method() === "PATCH" &&
+                new URL(response.url()).pathname === `/api/documents/${sourceId}`
+        );
+
+        await mouse.move(sourceBox.x + sourceBox.width / 2, sourceBox.y + sourceBox.height / 2);
+        await mouse.down();
+        await mouse.move(targetBox.x + targetBox.width / 2, targetBox.y + targetBox.height * yRatio, {
+            steps: 12,
+        });
+        // Chromium coalesces the `dragover` events of a multi-step synthetic move, so restate the
+        // final position: a real pointer keeps producing `dragover` while it is held there.
+        await this.page.waitForTimeout(100);
+        await mouse.move(targetBox.x + targetBox.width / 2, targetBox.y + targetBox.height * yRatio + nudge);
+        await mouse.up();
+
+        const response = await responsePromise;
+        expect(
+            response.ok(),
+            `Tree row reorder PATCH returned ${response.status()}: ${await response.text()}`
+        ).toBeTruthy();
+        return response;
+    }
+
+    /**
+     * Drags a tree row onto another row, pauses the hover for `hoverMs` (to
+     * exercise the 500 ms closed-folder auto-open) and then drops.
+     */
+    public async dragTreeRowWithHover(
+        sourceId: string,
+        targetId: string,
+        position: "top" | "middle" | "bottom",
+        hoverMs: number
+    ) {
+        const { sourceBox, targetBox } = await this.treeRowBoxes(sourceId, targetId);
+        const yRatio = position === "top" ? 0.08 : position === "bottom" ? 0.92 : 0.5;
+        const mouse = this.page.mouse;
+
+        const responsePromise = this.page.waitForResponse(
+            (response: any) =>
+                response.request().method() === "PATCH" &&
+                new URL(response.url()).pathname === `/api/documents/${sourceId}`
+        );
+
+        await mouse.move(sourceBox.x + sourceBox.width / 2, sourceBox.y + sourceBox.height / 2);
+        await mouse.down();
+        await mouse.move(targetBox.x + targetBox.width / 2, targetBox.y + targetBox.height * yRatio, {
+            steps: 12,
+        });
+        await this.page.waitForTimeout(hoverMs);
+        // A closed folder auto-opens under the pointer, which moves its own row and inserts the
+        // first child where the pointer was resting. Re-acquire the row's own title band before
+        // releasing, the way a user follows the row that just expanded.
+        const expandedBox = await this.treeRowItem(targetId).boundingBox();
+        if (!expandedBox) throw new Error(`Tree row ${targetId} disappeared after auto-open`);
+        await mouse.move(expandedBox.x + expandedBox.width / 2, expandedBox.y + expandedBox.height * yRatio);
+        await mouse.up();
+
+        const response = await responsePromise;
+        expect(
+            response.ok(),
+            `Tree row reorder PATCH returned ${response.status()}: ${await response.text()}`
+        ).toBeTruthy();
+        return response;
+    }
+
+    /**
+     * Scrolls both rows into view and returns their boxes. The sidebar tree is a
+     * long scroller, so a row that exists in the DOM can still be outside the
+     * viewport - mouse coordinates only reach what is actually visible.
+     */
+    private async treeRowBoxes(sourceId: string, targetId: string) {
+        const source = this.treeRowItem(sourceId);
+        const target = this.treeRowItem(targetId);
+        await source.scrollIntoViewIfNeeded();
+        await target.scrollIntoViewIfNeeded();
+        await source.scrollIntoViewIfNeeded();
+
+        const sourceBox = await source.boundingBox();
+        const targetBox = await target.boundingBox();
+        if (!sourceBox || !targetBox) {
+            throw new Error(
+                `Cannot drag tree row ${sourceId} onto ${targetId} because a tree row has no bounding box`
+            );
+        }
+        return { sourceBox, targetBox };
     }
 
     public async expectDocumentAbove(aboveId: string, belowId: string) {

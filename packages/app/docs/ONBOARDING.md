@@ -23,7 +23,7 @@ A getting-started guide for new contributors landing in `packages/app`. The goal
 - **Realtime**: a WebSocket client (`window.updatePoller`) connected to the server's `/ws` endpoint, with REST polling for fallback. See [ARCHITECTURE.md](ARCHITECTURE.md#real-time-updates).
 - **UI kit**: [Blueprint v6](https://blueprintjs.com/) for primitives (buttons, dialogs, toasts, popovers, datetime), plus app-local components in `src/app/components/`.
 - **Rich text**: Tiptap 3 with a curated extension set.
-- **Drag & drop**: `@hello-pangea/dnd` for the board, `@minoru/react-dnd-treeview` for the sidebar tree.
+- **Drag & drop**: `@hello-pangea/dnd` for the board, the in-repo `Tree` component (`components/common/Tree`, native HTML5 drag events) for the sidebar tree.
 - **Calendar**: FullCalendar. **Gantt**: internal React component (`components/common/GanttChart/`), with calendar-day geometry and viewport rendering.
 - **i18n**: `@stacks/translations` + UI locale JSON under `packages/server/locales/app/`, managed through `@stacks/locales-tui`.
 - **Tests**: Jest (configured but the test surface is thin — see "Conventions").

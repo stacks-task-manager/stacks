@@ -17,6 +17,7 @@ import { LicenseActions, ProjectFiltersActions, ProjectsStatusActions } from "ap
 import { getBrowserLocale } from "app/utils/browser";
 import { setStorageTenant } from "app/utils/storage";
 import { PeopleStore } from "app/store/people";
+import { loadOpenedFolders } from "app/store/sidebar";
 
 const App = React.lazy(() => import("./app/App"));
 
@@ -48,6 +49,7 @@ void (async () => {
     const { session, translations, license, preferences, aiChat, integrations } = await BootAPI.load();
     setStorageTenant(session.tenantId);
     ProjectsStatusActions.loadSaved();
+    loadOpenedFolders();
     PeopleStore.set(state => ({ ...state, me: session.userId }));
     setTranslations(translations, { locale: getBrowserLocale() });
     LicenseActions.setLicense(license);

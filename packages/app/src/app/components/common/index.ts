@@ -9,6 +9,7 @@ export * from "./Announcement/Announcement";
 export * from "./ErrorBoundary/ErrorBoundary";
 export * from "./HotkeyChip/HotkeyChip";
 export * from "./Layout";
+export * from "./Tree";
 export * from "./Icon/Icon";
 export * from "./IconPill/IconPill";
 export * from "./Counter/Counter";

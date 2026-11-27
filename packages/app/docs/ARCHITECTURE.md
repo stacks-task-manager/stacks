@@ -215,10 +215,10 @@ Each action receives `(update, hasPermissions)` and decides what to do — usual
 
 ## Drag-and-drop
 
-Two libraries, one provider:
+Two systems, one provider:
 
 - **[`@hello-pangea/dnd`](https://github.com/hello-pangea/dnd)** — used for the project board (drag cards between stacks, reorder stacks), the task list, and other linear lists.
-- **[`@minoru/react-dnd-treeview`](https://github.com/minop1205/react-dnd-treeview)** — used for the sidebar document tree (drag folders and files into folders).
+- **[`Tree`](../src/app/components/common/Tree/Tree.tsx)** — in-repo render-prop tree with native HTML5 drag events, used for the sidebar document tree (drag folders and files into folders).
 
 Both sit under a single [`<DragDropProvider>`](../src/app/components/draggable/context/DragDropContext.tsx) in `App.tsx` that brokers cross-library drags (e.g. drag a task card onto a sidebar folder). Drag _intent_ and _result_ state lives in the provider's context; the consumer components subscribe and dispatch the relevant action (`TasksActions.move`, `StacksActions.reorder`, etc.).
 

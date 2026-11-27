@@ -1,7 +1,6 @@
 // Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
 import { translate } from "@stacks/translations";
 import { Button, Colors, Menu, MenuDivider, MenuItem, Popover, useHotkeys } from "@blueprintjs/core";
-import { TreeMethods } from "@minoru/react-dnd-treeview";
 import React, { FunctionComponent, useMemo, useRef, useState } from "react";
 
 import { APPICONS, FILES_TYPE, IAttachment, IProject, RECORDTYPE, ROLE_SECTIONS } from "@stacks/types";
@@ -10,6 +9,7 @@ import { QuickTimeLogDialog } from "app/components/project";
 import { useCanAccess, useNav, useOnClickOutside } from "app/hooks";
 import { RecordActions } from "app/store/actions";
 import { toggleNewBookmark, toggleNewTask } from "app/store/global";
+import { openFolder } from "app/store/sidebar";
 import { NewFolderDialog } from "../NewFolderDialog/NewFolderDialog";
 import { NewNotepadDialog } from "../NewNotepadDialog/NewNotepadDialog";
 import { NewProjectDialog } from "../NewProjectDialog/NewProjectDialog";
@@ -18,10 +18,9 @@ import { useUpload } from "app/hooks/fileUpload";
 import { DocumentsArchiveDialog } from "app/widgets/common";
 
 interface IDocumentsAdderProps {
-    treeMethods: TreeMethods | null;
     padded?: boolean;
 }
-const DocumentsAdderPure: FunctionComponent<IDocumentsAdderProps> = ({ treeMethods, padded }) => {
+const DocumentsAdderPure: FunctionComponent<IDocumentsAdderProps> = ({ padded }) => {
     const navigate = useNav();
     const quickAddOpen = useRef(false);
     const popoverRef = useRef(null);
@@ -169,15 +168,14 @@ const DocumentsAdderPure: FunctionComponent<IDocumentsAdderProps> = ({ treeMetho
 
         return hotkeys;
     }, [canLogTime]);
+
     const { handleKeyDown, handleKeyUp } = useHotkeys(hotkeys);
 
     const handleAddFolder = async (title: string, isPublic: boolean) => {
         const selectedRecord = RecordActions.getSelected();
 
         if (selectedRecord && selectedRecord.droppable) {
-            if (treeMethods && treeMethods) {
-                treeMethods.open(selectedRecord.id);
-            }
+            openFolder(selectedRecord.id);
         }
 
         await RecordActions.addDocument({
