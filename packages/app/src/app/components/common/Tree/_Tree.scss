@@ -1,0 +1,30 @@
+// Copyright (C) 2026 Cristian Barlutiu — Licensed under AGPL v3. See LICENSE.
+.tree,
+.tree ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.tree {
+    margin-bottom: 10px;
+}
+
+// The insertion line is drawn over the neighbouring rows instead of pushing them down, and it is
+// inert: a row that moves out from under the pointer loses the native `drop`, and a line that
+// takes the pointer resolves the drop against the list that holds it instead of the row beneath.
+.tree [data-tree-placeholder] {
+    height: 0;
+    position: relative;
+    pointer-events: none;
+    list-style: none;
+}
+
+.tree-placeholder {
+    position: absolute;
+    left: 0;
+    right: 10px;
+    top: -1px;
+    height: 2px;
+    background-color: #1967d2;
+}
