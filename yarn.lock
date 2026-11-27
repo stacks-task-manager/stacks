@@ -6069,21 +6069,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-navigation/core@npm:^7.21.13":
-  version: 7.21.13
-  resolution: "@react-navigation/core@npm:7.21.13"
+"@react-navigation/core@npm:^7.25.0":
+  version: 7.25.0
+  resolution: "@react-navigation/core@npm:7.25.0"
   dependencies:
-    "@react-navigation/routers": ^7.6.4
+    "@react-navigation/routers": ^7.6.6
     escape-string-regexp: ^4.0.0
     fast-deep-equal: ^3.1.3
-    nanoid: ^3.3.11
-    query-string: ^7.1.3
-    react-is: ^19.1.0
+    react-is: ^19.3.1
     use-latest-callback: ^0.2.4
-    use-sync-external-store: ^1.5.0
   peerDependencies:
     react: ">= 18.2.0"
-  checksum: b0b6f3aef0aa7d34c50056d9cf36bfd70ce1d0665619a06bcb4191c1b15457cb28bc3f4fb8b060d23eb2486698678fdee37caf187aaec33d2eddc6656975eb6b
+  checksum: c38c9dd654858a4cf386c8a1dd246999b6a5b844cbd736d5f1aaa3ace4bd97f9e32a6b6fef3a15befe89ac77705a923bcee6f1d770f3fd6c5d6629d35edf5d0e
   languageName: node
   linkType: hard
 
@@ -6127,29 +6124,29 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-navigation/native@npm:^7.0.0":
-  version: 7.3.17
-  resolution: "@react-navigation/native@npm:7.3.17"
+"@react-navigation/native@npm:^7.5.2":
+  version: 7.5.2
+  resolution: "@react-navigation/native@npm:7.5.2"
   dependencies:
-    "@react-navigation/core": ^7.21.13
+    "@react-navigation/core": ^7.25.0
     escape-string-regexp: ^4.0.0
     fast-deep-equal: ^3.1.3
-    nanoid: ^3.3.11
-    standard-navigation: ^0.0.8
+    nanoid: ^3.3.20
+    standard-navigation: ^0.0.9
     use-latest-callback: ^0.2.4
   peerDependencies:
     react: ">= 18.2.0"
     react-native: "*"
-  checksum: 64faa0448b08d37c50b9479ae021497dc5de529bd4d76b85c32054421ca983168d29909dcc3430b682b4855187ef52a8c271358cc49985f8e525ec38cbf2e197
+  checksum: 99e3ba2236fcda634b76d006ebfe0470013dd7474083ec1d1c7dd569f7eef11b17bad5b5ae7b980b788302279322b0078060bd69c3d422704de5ae6dd6a7e713
   languageName: node
   linkType: hard
 
-"@react-navigation/routers@npm:^7.6.4":
-  version: 7.6.4
-  resolution: "@react-navigation/routers@npm:7.6.4"
+"@react-navigation/routers@npm:^7.6.6":
+  version: 7.6.6
+  resolution: "@react-navigation/routers@npm:7.6.6"
   dependencies:
-    nanoid: ^3.3.11
-  checksum: 4a111285cd99ddf91a456c464a302b1bb5da94359fcf426c819ae79d24f71d808bda23c12b5497778bc6a8c581114e267f4ec3b12f0ec57847a7af91e8a89b55
+    nanoid: ^3.3.20
+  checksum: 8c538ced1c46832b15028cf198dfc4e28ecbd62b8387938ecce6e54db5d8bc84f64e66f31b41e4db31c2fe489a2566eb9c2d485e06dd96569a5377182a3a5000
   languageName: node
   linkType: hard
 
@@ -6566,7 +6563,7 @@ __metadata:
     "@react-native-community/datetimepicker": 9.2.1
     "@react-native-masked-view/masked-view": 0.3.2
     "@react-navigation/drawer": ^7.5.0
-    "@react-navigation/native": ^7.0.0
+    "@react-navigation/native": ^7.5.2
     "@stacks/types": "workspace:*"
     "@tanstack/react-query": ^5.107.1
     "@tiptap/core": 3.32.0
@@ -18912,21 +18909,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nanoid@npm:^3.3.11, nanoid@npm:^3.3.8":
-  version: 3.3.12
-  resolution: "nanoid@npm:3.3.12"
-  bin:
-    nanoid: bin/nanoid.cjs
-  checksum: 38699257447dc59e21e73e0510d0dfb16b7a610d9ca80633d5c3a68f9b4298c990513d30404ca8f163c2d03225ee01695ff8898bea6179183f38f0477b7635ac
-  languageName: node
-  linkType: hard
-
 "nanoid@npm:^3.3.20":
   version: 3.3.20
   resolution: "nanoid@npm:3.3.20"
   bin:
     nanoid: bin/nanoid.cjs
   checksum: e5061282c25412663f527abe382b3dc7165585f18b5edb7c6500a5f56d9570b1de8b26500c231ae5e28e299f20d3877f839268ed5c302f997b5627237a04dcf9
+  languageName: node
+  linkType: hard
+
+"nanoid@npm:^3.3.8":
+  version: 3.3.12
+  resolution: "nanoid@npm:3.3.12"
+  bin:
+    nanoid: bin/nanoid.cjs
+  checksum: 38699257447dc59e21e73e0510d0dfb16b7a610d9ca80633d5c3a68f9b4298c990513d30404ca8f163c2d03225ee01695ff8898bea6179183f38f0477b7635ac
   languageName: node
   linkType: hard
 
@@ -21307,6 +21304,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-is@npm:^19.3.1":
+  version: 19.3.1
+  resolution: "react-is@npm:19.3.1"
+  checksum: e66f96e15807a8d5948502a026780b53ac95f993c5772f999e4e71ab591d5632fcc7f966abf6a8208ec6a2b880473ad61eb4767c332571422b2852e93f4750dc
+  languageName: node
+  linkType: hard
+
 "react-leaflet@npm:^4.2.1":
   version: 4.2.1
   resolution: "react-leaflet@npm:4.2.1"
@@ -23346,12 +23350,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"standard-navigation@npm:^0.0.8":
-  version: 0.0.8
-  resolution: "standard-navigation@npm:0.0.8"
+"standard-navigation@npm:^0.0.9":
+  version: 0.0.9
+  resolution: "standard-navigation@npm:0.0.9"
   peerDependencies:
     react: "*"
-  checksum: 06f45f2a7dacf88e42ac675b6ae33efd30bb3d81d44e5470d2ea9eb206bf6d5fb2c1546c75c463034a98c6761f099be933d8813ed6d581196854c65946d35bb9
+  checksum: 67381be75f33ee302a8267028d179a4a52a7f80a542a8059e4e2aaedc64ea9a40211a52a32c5ca723ad4ed10567aeb2e471df7e54b7bb79d0d975d032b3a012c
   languageName: node
   linkType: hard
 

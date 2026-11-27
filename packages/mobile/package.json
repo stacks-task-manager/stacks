@@ -23,7 +23,7 @@
         "@react-native-community/datetimepicker": "9.2.1",
         "@react-native-masked-view/masked-view": "0.3.2",
         "@react-navigation/drawer": "^7.5.0",
-        "@react-navigation/native": "^7.0.0",
+        "@react-navigation/native": "^7.5.2",
         "@stacks/types": "workspace:*",
         "@tanstack/react-query": "^5.107.1",
         "@tiptap/core": "3.32.0",
