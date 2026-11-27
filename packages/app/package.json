@@ -36,7 +36,7 @@
         "@fullcalendar/timegrid": "^6.1.20",
         "@hello-pangea/dnd": "^18.0.0",
         "@stacks/translations": "workspace:*",
-        "@tiptap/core": "3.32.0",
+        "@tiptap/core": "3.35.0",
         "@tiptap/extension-code-block": "3.32.0",
         "@tiptap/extension-code-block-lowlight": "3.32.0",
         "@tiptap/extension-color": "3.32.0",
